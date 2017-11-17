@@ -1,0 +1,40 @@
+{
+  "name": "myRN",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node node_modules/react-native/local-cli/cli.js start",
+    "test": "jest"
+  },
+  "dependencies": {
+    "native-base": "^2.3.3",
+    "react": "16.0.0",
+    "react-native": "0.50.3",
+    "react-native-elements": "^0.18.2",
+    "react-native-vector-icons": "^4.4.2",
+    "react-navigation": "^1.0.0-beta.19"
+  },
+  "devDependencies": {
+    "babel-jest": "21.2.0",
+    "babel-preset-react-native": "4.0.0",
+    "detox": "^5.10.0",
+    "jest": "21.2.1",
+    "react-test-renderer": "16.0.0"
+  },
+  "jest": {
+    "preset": "react-native",
+    "transformIgnorePatterns": [
+      "node_modules/(?!(jest-)?react-native|react-navigation)"
+    ]
+  },
+  "detox": {
+    "configurations": {
+      "ios.sim.debug": {
+        "binaryPath": "ios/build/Build/Products/Debug-iphonesimulator/myRN.app",
+        "build": "xcodebuild -project ios/myRN.xcodeproj -scheme myRN -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build",
+        "type": "ios.simulator",
+        "name": "iPhone 6"
+      }
+    }
+  }
+}

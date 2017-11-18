@@ -6,8 +6,10 @@ import {
 } from 'react-native';
 import { StackNavigator, TabNavigator } from 'react-navigation';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { Root } from 'native-base';
 
 import Login from './screens/Login';
+import Signup from './screens/Signup';
 import Home from './screens/Home';
 // import BlankPage from './screens/BlankPage';
 // import Sidebar from './screens/Sidebar';
@@ -68,9 +70,10 @@ const tabBarConfiguration = {
 
 export const Tabs = TabNavigator(routeConfiguration, tabBarConfiguration);
 
-const App = StackNavigator(
+const AppNavigator = StackNavigator(
   {
     Login: { screen: Login },
+    Signup: { screen: Signup },
     Tabs: { screen: Tabs },
   },
   {
@@ -79,4 +82,7 @@ const App = StackNavigator(
   }
 );
 
-export default App;
+export default () =>
+<Root>
+  <AppNavigator />
+</Root>;

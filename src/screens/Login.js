@@ -2,91 +2,185 @@
 
 import React from 'react';
 import {
-  Platform,
+  Modal,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
 import {
   Button,
   FormInput,
-  FormLabel,
 } from 'react-native-elements';
+import { Toast } from 'native-base';
+import { NavigationActions } from 'react-navigation';
+
+import * as api from '../utils/api';
 import colors from '../config/colors';
 
 export default class LoginScreen extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      emailValue: '',
-      passValue: '',
-      enableLogin: false,
-    };
-  }
-
-  onChange(key: string, value: string) {
-    this.setState({
-      [key]: value
-    });
+  state = {
+    email: 'hello@gmail.com',
+    // email: '',
+    password: '***REMOVED***',
+    // password: '',
+    modalVisible: false,
+    emailReset: '',
+    loadingLogin: false,
+    loadingReset: false
   }
 
   onLogin() {
-    console.log('onLogin', this.state.emailValue, this.state.passValue);
+    this.setState({ loadingLogin: true });
+    console.log('onLogin', this.state.email, this.state.password);
+    api
+      .post('/api/auth/login', {
+        emailAddress: this.state.email,
+        password:     this.state.password
+      })
+      .then(res => {
+        if (res.user) {
+          console.log('user logged in', res.user);
+          console.log('token', res.token);
+          this.setState({ loadingLogin: false });
+          this.resetNavigation('Tabs');
+        } else {
+          this.setState({ loadingLogin: false });
+          console.log(res);
+          // Toast.show({
+          //   text: res.toString(),
+          //   duration: 2000,
+          //   position: "top",
+          //   textStyle: { textAlign: "center" },
+          // });
+        }
+      })
+      .catch((err: APIError) => {
+        if (err.status = 400) {
+          Toast.show({
+            text: err.message,
+            duration: 2000,
+            position: "top",
+            textStyle: { textAlign: "center" },
+          });
+        }
+        this.setState({ loadingLogin: false })
+      });
+  }
+
+  resetNavigation(targetRoute) {
+    const resetAction = NavigationActions.reset({
+      index: 0,
+      actions: [
+        NavigationActions.navigate({ routeName: targetRoute }),
+      ],
+    });
+    this.props.navigation.dispatch(resetAction);
+  }
+
+  setModalVisible(visible) {
+    this.setState({ modalVisible: visible });
+  }
+
+  onResetPassword() {
+    this.setState({ loadingReset: true });
   }
 
   render() {
     return (
       <View>
         <View style={styles.header}>
-          <View style={{ alignItems: "center" }}>
-            <Icon name="flash" style={{ fontSize: 104 }} />
+          <View style={{ alignItems: 'center' }}>
+            <Icon name='flash' style={{ fontSize: 104 }} />
             <Text>Onova.co</Text>
             <View>
-              <Text style={{ color: Platform.OS === "ios" ? "#000" : "#FFF" }}>
-                Re-sell Something Amazing
+              <Text style={{ color: '#000' }}>
+                Discover and Buy Amazing Clothing
               </Text>
             </View>
           </View>
         </View>
         <View>
-          {/* {this.props.loginForm} */}
           <FormInput
             inputStyle={styles.input}
-            // ref="form2"
-            // containerRef="containerRefYOYO"
-            // textInputRef="textInputRef"
-            placeholder="Email"
-            autoCapitalize="none"
-            value={this.state.emailValue}
-            onChangeText={text => this.onChange('emailValue', text)}
+            placeholder='Email'
+            autoCapitalize='none'
+            autoCorrect={false}
+            keyboardType='email-address'
+            returnKeyType='next'
+            onSubmitEditing={(event) =>
+              this.refs.PwdInput.focus()
+            }
+            value={this.state.email}
+            onChangeText={(text) => this.setState({'email': text})}
             />
           <FormInput
+            ref='PwdInput'
             inputStyle={styles.input}
-            // ref="form2"
-            // containerRef="containerRefYOYO"
-            // textInputRef="textInputRef"
-            placeholder="Password"
-            autoCapitalize="none"
-            value={this.state.passValue}
-            onChangeText={text => this.onChange('passValue', text)}
+            secureTextEntry
+            autoCorrect={false}
+            placeholder='Password'
+            autoCapitalize='none'
+            returnKeyType='go'
+            value={this.state.password}
+            onChangeText={(text) => this.setState({'password': text})}
           />
+          {<Text style={styles.hr}
+            onPress={() => {this.setModalVisible(true)}}
+            >Forgot Password?</Text>}
           <View style={{ marginTop: 15 }}>
             <Button
               buttonStyle={styles.LoginButton}
               raised
-              // disabled={!this.state.enableLogin}
-              disabled={!this.state.emailValue || !this.state.passValue}
+              loading={this.state.loadingLogin}
+              disabled={!this.state.email || !this.state.password || this.state.loadingLogin}
               onPress={() => this.onLogin()}
               title='Login' />
-            <Text style={styles.hr}>- or -</Text>
+            <Text style={styles.hr}><Text style={styles.hrLine}>────────</Text> or <Text style={styles.hrLine}>────────</Text></Text>
             <Button
               buttonStyle={styles.SignupButton}
               raised
+              onPress={() => this.props.navigation.navigate('Signup')}
               title='Signup' />
+            {/* <Footer></Footer> */}
           </View>
         </View>
+        <Modal
+          animationType="slide"
+          transparent={false}
+          visible={this.state.modalVisible}
+          onRequestClose={() => {alert("Modal has been closed.")}}
+          >
+         <View style={{marginTop: 22}}>
+          <View>
+            <View style={{ alignSelf: 'center' }}>
+              <Text style={{ fontWeight: 'bold' }}>Trouble loggin in?</Text>
+              <Text>Enter your email and we'll send a link to reset your password</Text>
+            </View>
+
+            <FormInput
+              inputStyle={styles.input}
+              placeholder='Email'
+              autoCapitalize='none'
+              autoCorrect={false}
+              keyboardType='email-address'
+              returnKeyType='go'
+              value={this.state.emailReset}
+              onChangeText={(text) => this.setState({'emailReset': text})}
+              />
+
+            <Button
+              buttonStyle={styles.LoginButton}
+              loading={this.state.loadingReset}
+              disabled={!this.state.emailReset || this.state.loadingReset}
+              onPress={() => this.onResetPassword()}
+              title="Send email" />
+            <Button
+              onPress={() => {this.setModalVisible(!this.state.modalVisible)}}
+              title="Back To Login" />
+          </View>
+         </View>
+        </Modal>
       </View>
     );
   }
@@ -107,7 +201,10 @@ const styles = StyleSheet.create({
     backgroundColor: colors.pDark,
   },
   hr: {
-    alignSelf: "center",
-    margin: 5,
+    alignSelf: 'center',
+    margin: 10,
+  },
+  hrLine: {
+    color: colors.grey4,
   }
 });

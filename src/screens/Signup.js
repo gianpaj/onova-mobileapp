@@ -13,6 +13,7 @@ import {
 } from 'react-native-elements';
 import { Toast } from "native-base";
 import { NavigationActions } from 'react-navigation';
+import isEmail from 'validator/lib/isEmail';
 
 import * as api from '../utils/api';
 import * as ui from '../utils/ui';
@@ -148,7 +149,7 @@ export default class LoginScreen extends React.Component<Props, State> {
               buttonStyle={styles.SignupButton}
               raised
               loading={this.state.loading}
-              disabled={ !this.state.email || !this.state.password }
+              disabled={ !isEmail(this.state.email) || this.state.username.length < 9 || this.state.username.length < 3 }
               onPress={() => this.onSignup()}
               title='Signup' />
             <Text style={styles.hr}>Already have an account? <Text

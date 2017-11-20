@@ -13,6 +13,7 @@ import {
   FormInput,
 } from 'react-native-elements';
 import { NavigationActions } from 'react-navigation';
+import isEmail from 'validator/lib/isEmail';
 
 import * as api from '../utils/api';
 import * as ui from '../utils/ui';
@@ -82,10 +83,16 @@ export default class LoginScreen extends React.Component<Props, State> {
   }
 
   setModalVisible(visible: boolean) {
-    this.setState({ modalVisible: visible });
+    this.setState({
+      emailReset: this.state.emailReset ? this.state.emailReset : this.state.email,
+      modalVisible: visible
+    });
   }
 
   onResetPassword() {
+    if (!isEmail(this.state.emailReset)) {
+      return
+    }
     this.setState({ loadingReset: true });
   }
 
@@ -175,7 +182,7 @@ export default class LoginScreen extends React.Component<Props, State> {
             <Button
               buttonStyle={styles.LoginButton}
               loading={this.state.loadingReset}
-              disabled={!this.state.emailReset || this.state.loadingReset}
+              disabled={!isEmail(this.state.emailReset) || this.state.loadingReset}
               onPress={() => this.onResetPassword()}
               title="Send email" />
             <Button
@@ -211,3 +218,4 @@ const styles = StyleSheet.create({
     color: colors.grey4,
   }
 });
+

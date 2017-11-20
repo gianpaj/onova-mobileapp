@@ -12,10 +12,10 @@ import {
   Button,
   FormInput,
 } from 'react-native-elements';
-import { Toast } from 'native-base';
 import { NavigationActions } from 'react-navigation';
 
 import * as api from '../utils/api';
+import * as ui from '../utils/ui';
 import colors from '../config/colors';
 
 type Props = {
@@ -60,22 +60,12 @@ export default class LoginScreen extends React.Component<Props, State> {
         } else {
           this.setState({ loadingLogin: false });
           console.log(res);
-          // Toast.show({
-          //   text: res.toString(),
-          //   duration: 2000,
-          //   position: "top",
-          //   textStyle: { textAlign: "center" },
-          // });
+          // ui.showToast(res.toString());
         }
       })
       .catch((err: api.APIError) => {
         if (err.status = 400) {
-          Toast.show({
-            text: err.message,
-            duration: 2000,
-            position: "top",
-            textStyle: { textAlign: "center" },
-          });
+          ui.showToast(err.message);
         }
         this.setState({ loadingLogin: false })
       });

@@ -44,7 +44,6 @@ const tabBarConfiguration = {
             : 'md-person';
       }
       return (
-        // <Text>{iconName}</Text>
         <Ionicons
           name={iconName}
           size={28}

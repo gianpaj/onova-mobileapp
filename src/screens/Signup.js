@@ -17,20 +17,27 @@ import { NavigationActions } from 'react-navigation';
 import * as api from '../utils/api';
 import colors from '../config/colors';
 
-export interface APIError {
-  status: number,
-  message: string
-}
+type Props = {
+  navigation: any,
+};
 
-export default class LoginScreen extends React.Component {
+type State = {
+  username: string,
+  email: string,
+  password: string,
+  loading: boolean,
+};
+
+export default class LoginScreen extends React.Component<Props, State> {
   state = {
+    username: '',
     email: '',
     password: '',
     loading: false
   }
 
   onSignup() {
-    this.setState({ loading: true })
+    this.setState({ loading: true });
     console.log('onSignup', this.state.email, this.state.password);
 
     // username min(3) max(30)
@@ -80,7 +87,7 @@ export default class LoginScreen extends React.Component {
       });
   }
 
-  resetNavigation(targetRoute) {
+  resetNavigation(targetRoute: string) {
     const resetAction = NavigationActions.reset({
       index: 0,
       actions: [

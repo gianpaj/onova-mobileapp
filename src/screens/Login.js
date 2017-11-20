@@ -18,7 +18,20 @@ import { NavigationActions } from 'react-navigation';
 import * as api from '../utils/api';
 import colors from '../config/colors';
 
-export default class LoginScreen extends React.Component {
+type Props = {
+  navigation: any,
+};
+
+type State = {
+  email: string,
+  password: string,
+  modalVisible: boolean,
+  emailReset: string,
+  loadingLogin: boolean,
+  loadingReset: boolean,
+};
+
+export default class LoginScreen extends React.Component<Props, State> {
   state = {
     email: 'hello@gmail.com',
     // email: '',
@@ -55,7 +68,7 @@ export default class LoginScreen extends React.Component {
           // });
         }
       })
-      .catch((err: APIError) => {
+      .catch((err: api.APIError) => {
         if (err.status = 400) {
           Toast.show({
             text: err.message,
@@ -68,7 +81,7 @@ export default class LoginScreen extends React.Component {
       });
   }
 
-  resetNavigation(targetRoute) {
+  resetNavigation(targetRoute: any) {
     const resetAction = NavigationActions.reset({
       index: 0,
       actions: [
@@ -78,7 +91,7 @@ export default class LoginScreen extends React.Component {
     this.props.navigation.dispatch(resetAction);
   }
 
-  setModalVisible(visible) {
+  setModalVisible(visible: boolean) {
     this.setState({ modalVisible: visible });
   }
 

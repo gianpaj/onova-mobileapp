@@ -52,7 +52,7 @@ export async function del(path, suppressRedBox) {
  */
 export async function request(method, path, body, suppressRedBox) {
   try {
-    const response = await sendRequest(method, path, body, suppressRedBox);
+    const response = await sendRequest(method, path, body);
     return handleResponse(
       path,
       response
@@ -61,6 +61,9 @@ export async function request(method, path, body, suppressRedBox) {
   catch (error) {
     if (!suppressRedBox) {
       logError(error, url(path), method);
+    }
+    if (error.message == 'Network request failed') {
+      error.message = 'Please check your Internetz. Issue connecting with Onova servers';
     }
     throw error;
   }
@@ -197,4 +200,9 @@ function logError(error, endpoint, method) {
   else {
     console.error(`API request ${method.toUpperCase()} ${endpoint} failed with message "${error.message}"`);
   }
+}
+
+export type APIError = {
+  status: number,
+  message: string
 }

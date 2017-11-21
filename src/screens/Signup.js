@@ -11,7 +11,6 @@ import {
   Button,
   FormInput,
 } from 'react-native-elements';
-import { Toast } from "native-base";
 import { NavigationActions } from 'react-navigation';
 import isEmail from 'validator/lib/isEmail';
 
@@ -56,7 +55,7 @@ export default class LoginScreen extends React.Component<Props, State> {
 
     api
       .post('/api/users', {
-        username:     this.state.username,
+        username: this.state.username,
         emailAddress: this.state.email,
         password: this.state.password,
       })
@@ -96,7 +95,7 @@ export default class LoginScreen extends React.Component<Props, State> {
             <Text>Onova.co</Text>
             <View>
               <Text style={{ color: '#000' }}>
-              Discover and Buy Amazing Clothing
+                Discover and Buy Amazing Clothing
               </Text>
             </View>
           </View>
@@ -108,52 +107,62 @@ export default class LoginScreen extends React.Component<Props, State> {
             autoCapitalize="none"
             autoCorrect={false}
             returnKeyType="next"
-            onSubmitEditing={(event) =>
-              this.refs.EmailInput.focus()
-            }
+            onSubmitEditing={() => this.EmailInput.focus()}
             value={this.state.username}
-            onChangeText={(text) => this.setState({'username': text})}
-            />
+            editable={!this.state.loading}
+            onChangeText={text => this.setState({ username: text })}
+          />
           <FormInput
-            ref="EmailInput"
+            ref={c => {
+              this.EmailInput = c;
+            }}
             inputStyle={styles.input}
             placeholder="Email"
             autoCapitalize="none"
             autoCorrect={false}
             keyboardType="email-address"
             returnKeyType="next"
-            onSubmitEditing={(event) =>
-              this.refs.PwdInput.focus()
-            }
+            onSubmitEditing={() => this.PwdInput.focus()}
             value={this.state.email}
-            onChangeText={(text) => this.setState({'email': text})}
-            />
+            editable={!this.state.loading}
+            onChangeText={text => this.setState({ email: text })}
+          />
           <FormInput
-            ref="PwdInput"
+            ref={c => {
+              this.PwdInput = c;
+            }}
             inputStyle={styles.input}
             secureTextEntry
             autoCorrect={false}
             placeholder="Password"
             autoCapitalize="none"
-            returnKeyType="next"
-            onSubmitEditing={(event) =>
-              this.refs.PwdAgainInput.focus()
-            }
+            returnKeyType="go"
+            onSubmitEditing={() => this.onSignup()}
             value={this.state.password}
-            onChangeText={(text) => this.setState({'password': text})}
+            editable={!this.state.loading}
+            onChangeText={text => this.setState({ password: text })}
           />
           <View style={{ marginTop: 15 }}>
             <Button
               buttonStyle={styles.SignupButton}
               raised
               loading={this.state.loading}
-              disabled={ !isEmail(this.state.email) || this.state.username.length < 9 || this.state.username.length < 3 }
+              disabled={
+                !isEmail(this.state.email) ||
+                this.state.password.length < 9 ||
+                this.state.username.length < 3
+              }
               onPress={() => this.onSignup()}
-              title='Signup' />
-            <Text style={styles.hr}>Already have an account? <Text
-              style={styles.linkText}
-              onPress={() => this.props.navigation.goBack()}
-              >Login</Text></Text>
+              title="Signup"
+            />
+            <Text style={styles.hr}>
+              Already have an account?&nbsp;
+              <Text
+                style={styles.linkText}
+                onPress={() => this.props.navigation.goBack()}>
+                Login
+              </Text>
+            </Text>
           </View>
         </View>
       </View>

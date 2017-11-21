@@ -60,9 +60,10 @@ export default class LoginScreen extends React.Component<Props, State> {
           console.log('token', res.token);
           this.setState({ loadingLogin: false });
           ui.showToast('Welcome!');
-          const JSONstring = JSON.stringify(
-            Object.assign(res.user, { token: res.token })
-          );
+          const JSONstring = JSON.stringify({
+            ...res.user,
+            ...{ token: res.token },
+          });
           AsyncStorage.setItem('userData', JSONstring)
             .then(userData => {
               console.log(userData);

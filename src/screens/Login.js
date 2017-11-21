@@ -12,6 +12,7 @@ import {
   Button,
   FormInput,
 } from 'react-native-elements';
+import { Button as NBButton } from 'native-base';
 import { NavigationActions } from 'react-navigation';
 import isEmail from 'validator/lib/isEmail';
 
@@ -57,6 +58,7 @@ export default class LoginScreen extends React.Component<Props, State> {
           console.log('user logged in', res.user);
           console.log('token', res.token);
           this.setState({ loadingLogin: false });
+          ui.showToast('Welcome!');
           this.resetNavigation('Tabs');
         } else {
           this.setState({ loadingLogin: false });
@@ -66,8 +68,9 @@ export default class LoginScreen extends React.Component<Props, State> {
       })
       .catch((err: api.APIError) => {
         if (err.status = 400) {
-          ui.showToast(err.message);
+          ui.showToast(err.message, 'danger');
         }
+        console.log(err);
         this.setState({ loadingLogin: false })
       });
   }
@@ -91,9 +94,26 @@ export default class LoginScreen extends React.Component<Props, State> {
 
   onResetPassword() {
     if (!isEmail(this.state.emailReset)) {
-      return
+      return;
     }
     this.setState({ loadingReset: true });
+    api
+      .post('/api/auth/reset', {
+        emailAddress: this.state.email,
+      })
+      .then(res => {
+        if (res.message) {
+          ui.showToast(res.message);
+        }
+        console.log(res);
+        this.setState({ loadingReset: false });
+      })
+      .catch((err: api.APIError) => {
+        // if (err.status = 400) {
+          ui.showToast(err.message);
+        // }
+        this.setState({ loadingReset: false })
+      });
   }
 
   render() {
@@ -140,7 +160,7 @@ export default class LoginScreen extends React.Component<Props, State> {
             >Forgot Password?</Text>}
           <View style={{ marginTop: 15 }}>
             <Button
-              buttonStyle={styles.LoginButton}
+              buttonStyle={styles.PrimaryButton}
               raised
               loading={this.state.loadingLogin}
               disabled={!this.state.email || !this.state.password || this.state.loadingLogin}
@@ -148,7 +168,7 @@ export default class LoginScreen extends React.Component<Props, State> {
               title='Login' />
             <Text style={styles.hr}><Text style={styles.hrLine}>────────</Text> or <Text style={styles.hrLine}>────────</Text></Text>
             <Button
-              buttonStyle={styles.SignupButton}
+              buttonStyle={styles.PDarkButton}
               raised
               onPress={() => this.props.navigation.navigate('Signup')}
               title='Signup' />
@@ -157,14 +177,12 @@ export default class LoginScreen extends React.Component<Props, State> {
         </View>
         <Modal
           animationType="slide"
-          transparent={false}
           visible={this.state.modalVisible}
-          onRequestClose={() => {alert("Modal has been closed.")}}
           >
          <View style={{marginTop: 22}}>
           <View>
             <View style={{ alignSelf: 'center' }}>
-              <Text style={{ fontWeight: 'bold' }}>Trouble loggin in?</Text>
+              <Text style={{ fontWeight: 'bold' }}>Trouble logging in?</Text>
               <Text>Enter your email and we'll send a link to reset your password</Text>
             </View>
 
@@ -180,14 +198,19 @@ export default class LoginScreen extends React.Component<Props, State> {
               />
 
             <Button
-              buttonStyle={styles.LoginButton}
+              buttonStyle={styles.PrimaryButton}
+              raised
               loading={this.state.loadingReset}
               disabled={!isEmail(this.state.emailReset) || this.state.loadingReset}
               onPress={() => this.onResetPassword()}
               title="Send email" />
-            <Button
+            <NBButton
+              small
+              style={styles.SecondaryButtonNB}
               onPress={() => {this.setModalVisible(!this.state.modalVisible)}}
-              title="Back To Login" />
+              >
+              <Text>Back To Login</Text>
+            </NBButton>
           </View>
          </View>
         </Modal>
@@ -204,11 +227,18 @@ const styles = StyleSheet.create({
   input: {
     color: colors.black
   },
-  LoginButton: {
+  PrimaryButton: {
     backgroundColor: colors.primary,
   },
-  SignupButton: {
+  PDarkButton: {
     backgroundColor: colors.pDark,
+  },
+  SecondaryButtonNB: {
+    borderRadius: 0,
+    marginTop: 10,
+    padding: 15,
+    alignSelf: 'center',
+    backgroundColor: colors.secondary,
   },
   hr: {
     alignSelf: 'center',

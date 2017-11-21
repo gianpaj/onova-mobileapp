@@ -16,6 +16,9 @@
 ; Ignore polyfills
 .*/Libraries/polyfills/.*
 
+# Using flow-scripts
+.*node_modules/.*
+
 [include]
 
 [libs]
@@ -43,6 +46,14 @@ suppress_comment=\\(.\\|\n\\)*\\$FlowFixedInNextDeploy
 suppress_comment=\\(.\\|\n\\)*\\$FlowExpectedError
 
 unsafe.enable_getters_and_setters=true
+
+include_warnings=true
+
+[lints]
+# all=off by default
+all=warn
+# untyped-type-import=error
+# sketchy-null-bool=off
 
 [version]
 ^0.56.0

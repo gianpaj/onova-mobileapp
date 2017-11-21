@@ -1,3 +1,5 @@
+// @flow
+
 const TIMEOUT = 6000;
 const apiRoot = 'http://localhost:4040';
 
@@ -53,17 +55,14 @@ export async function del(path, suppressRedBox) {
 export async function request(method, path, body, suppressRedBox) {
   try {
     const response = await sendRequest(method, path, body);
-    return handleResponse(
-      path,
-      response
-    );
-  }
-  catch (error) {
+    return handleResponse(path, response);
+  } catch (error) {
     if (!suppressRedBox) {
       logError(error, url(path), method);
     }
     if (error.message == 'Network request failed') {
-      error.message = 'Please check your Internetz. Issue connecting with Onova servers';
+      error.message =
+        'Please check your Internetz. Issue connecting with Onova servers';
     }
     throw error;
   }
@@ -74,24 +73,21 @@ export async function request(method, path, body, suppressRedBox) {
  */
 export function url(path) {
   // const apiRoot = getConfiguration('API_ROOT');
-  return path.indexOf('/') === 0
-    ? apiRoot + path
-    : apiRoot + '/' + path;
+  return path.indexOf('/') === 0 ? apiRoot + path : apiRoot + '/' + path;
 }
 
 /**
  * Constructs and fires a HTTP request
  */
 async function sendRequest(method, path, body) {
-
   try {
     const endpoint = url(path);
     // const token = await getAuthenticationToken();
     // const headers = getRequestHeaders(body, token);
     const headers = getRequestHeaders(body);
     const options = body
-      ? {method, headers, body: JSON.stringify(body)}
-      : {method, headers};
+      ? { method, headers, body: JSON.stringify(body) }
+      : { method, headers };
 
     return timeout(fetch(endpoint, options), TIMEOUT);
   } catch (e) {
@@ -113,7 +109,7 @@ async function handleResponse(path, response) {
       // const error = new Error({status: status, message: message});
 
       // throw error;
-      throw {status: status, message: message};
+      throw { status: status, message: message };
     }
 
     // parse response text
@@ -121,7 +117,7 @@ async function handleResponse(path, response) {
     return {
       status: response.status,
       headers: response.headers,
-      body: responseBody ? JSON.parse(responseBody) : null
+      body: responseBody ? JSON.parse(responseBody) : null,
     };
   } catch (e) {
     throw e;
@@ -130,11 +126,11 @@ async function handleResponse(path, response) {
 
 function getRequestHeaders(body, token) {
   const headers = body
-    ? {'Accept': 'application/json', 'Content-Type': 'application/json'}
-    : {'Accept': 'application/json'};
+    ? { Accept: 'application/json', 'Content-Type': 'application/json' }
+    : { Accept: 'application/json' };
 
   if (token) {
-    return {...headers, Authorization: token};
+    return { ...headers, Authorization: token };
   }
 
   return headers;
@@ -158,7 +154,6 @@ async function getErrorMessageSafely(response) {
 
     // Should that fail, return the whole response body as text
     return body;
-
   } catch (e) {
     // Unreadable body, return whatever the server returned
     return response._bodyInit;
@@ -195,14 +190,21 @@ async function bodyOf(requestPromise) {
 function logError(error, endpoint, method) {
   if (error.status) {
     const summary = `(${error.status} ${error.statusText}): ${error._bodyInit}`;
-    console.error(`API request ${method.toUpperCase()} ${endpoint} responded with ${summary}`);
-  }
-  else {
-    console.error(`API request ${method.toUpperCase()} ${endpoint} failed with message "${error.message}"`);
+    console.error(
+      `API request ${method.toUpperCase()} ${endpoint} responded with ${
+        summary
+      }`
+    );
+  } else {
+    console.error(
+      `API request ${method.toUpperCase()} ${endpoint} failed with message "${
+        error.message
+      }"`
+    );
   }
 }
 
 export type APIError = {
   status: number,
-  message: string
-}
+  message: string,
+};

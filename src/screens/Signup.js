@@ -35,8 +35,8 @@ export default class LoginScreen extends React.Component<Props, State> {
     username: '',
     email: '',
     password: '',
-    loading: false
-  }
+    loading: false,
+  };
 
   onSignup() {
     this.setState({ loading: true });
@@ -58,7 +58,7 @@ export default class LoginScreen extends React.Component<Props, State> {
       .post('/api/users', {
         username:     this.state.username,
         emailAddress: this.state.email,
-        password:     this.state.password
+        password: this.state.password,
       })
       .then(res => {
         if (res.user) {
@@ -72,19 +72,17 @@ export default class LoginScreen extends React.Component<Props, State> {
         this.setState({ loading: false });
       })
       .catch((err: APIError) => {
-        if (err.status = 400) {
+        if (err.status == 400) {
           ui.showToast(err.message);
         }
-        this.setState({ loading: false })
+        this.setState({ loading: false });
       });
   }
 
   resetNavigation(targetRoute: string) {
     const resetAction = NavigationActions.reset({
       index: 0,
-      actions: [
-        NavigationActions.navigate({ routeName: targetRoute }),
-      ],
+      actions: [NavigationActions.navigate({ routeName: targetRoute })],
     });
     this.props.navigation.dispatch(resetAction);
   }
@@ -93,11 +91,11 @@ export default class LoginScreen extends React.Component<Props, State> {
     return (
       <View>
         <View style={styles.header}>
-          <View style={{ alignItems: "center" }}>
+          <View style={{ alignItems: 'center' }}>
             <Icon name="flash" style={{ fontSize: 104 }} />
             <Text>Onova.co</Text>
             <View>
-              <Text style={{ color: "#000" }}>
+              <Text style={{ color: '#000' }}>
               Discover and Buy Amazing Clothing
               </Text>
             </View>
@@ -169,17 +167,17 @@ const styles = StyleSheet.create({
     height: 180,
   },
   input: {
-    color: colors.black
+    color: colors.black,
   },
   SignupButton: {
     backgroundColor: colors.pDark,
   },
   hr: {
-    alignSelf: "center",
+    alignSelf: 'center',
     margin: 5,
   },
   linkText: {
     margin: 5,
-    color: colors.secondary
-  }
+    color: colors.secondary,
+  },
 });

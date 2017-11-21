@@ -19,7 +19,7 @@ export default class HomeScreen extends React.Component<Props, State> {
       .then(() => {
         this.props.navigation.navigate('Login');
       })
-      .catch((err) => {
+      .catch(err => {
         console.error(err);
       });
   }
@@ -28,9 +28,7 @@ export default class HomeScreen extends React.Component<Props, State> {
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <Text>Home Screen</Text>
-        <TouchableOpacity
-          onPress={() => this.onLogout()}
-          >
+        <TouchableOpacity onPress={() => this.onLogout()}>
           <Text>Logout</Text>
         </TouchableOpacity>
       </View>

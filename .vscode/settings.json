@@ -1,4 +1,6 @@
 {
+  // Enable/disable JavaScript validation. (For Flow)
   "javascript.validate.enable": false,
-  "flow.useNPMPackagedFlow": true
+  "flow.useNPMPackagedFlow": true,
+  "eslint.enable": true
 }

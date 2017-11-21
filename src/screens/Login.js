@@ -2,6 +2,7 @@
 
 import React from 'react';
 import {
+  AsyncStorage,
   Modal,
   StyleSheet,
   Text,
@@ -59,7 +60,16 @@ export default class LoginScreen extends React.Component<Props, State> {
           console.log('token', res.token);
           this.setState({ loadingLogin: false });
           ui.showToast('Welcome!');
-          this.resetNavigation('Tabs');
+          try {
+            const JSONstring = JSON.stringify(Object.assign(res.user, { token: res.token }));
+            AsyncStorage.setItem('userData', JSONstring).then((userData) => {
+              console.log(userData);
+              this.resetNavigation('Tabs');
+            })
+          } catch (error) {
+            // Error saving data
+            console.error(error);
+          }
         } else {
           this.setState({ loadingLogin: false });
           console.log(res);

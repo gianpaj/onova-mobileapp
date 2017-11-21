@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
-    "test": "jest",
+    "test": "jest __tests__ --setupTestFrameworkScriptFile=./e2e/setup-unit-tests.js",
+    "test-e2e": "jest e2e --setupTestFrameworkScriptFile=./e2e/setup-e2e-tests.js --bail",
     "flow": "flow",
     "flow-start": "flow start",
     "flow-stop": "flow stop"
@@ -40,7 +41,7 @@
   "jest": {
     "preset": "react-native",
     "transformIgnorePatterns": [
-      "node_modules/(?!(jest-)?react-native|react-navigation)"
+      "node_modules/(?!(jest-)?react-native|react-navigation|native-base-shoutem-theme)"
     ]
   },
   "detox": {

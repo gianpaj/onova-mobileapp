@@ -1,12 +1,14 @@
 // @flow
 
 import React from 'react';
+// prettier-ignore
 import {
   StyleSheet,
   Text,
   View,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
+// prettier-ignore
 import {
   Button,
   FormInput,

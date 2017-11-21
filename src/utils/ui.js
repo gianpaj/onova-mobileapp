@@ -1,6 +1,5 @@
 // @flow
 
-import React from 'react';
 import { Toast } from 'native-base';
 
 /**
@@ -13,7 +12,7 @@ export function showToast(message: string, type: string = '') {
     text: message,
     type: type,
     duration: 2000,
-    position: "top",
-    textStyle: { textAlign: "center" },
+    position: 'top',
+    textStyle: { textAlign: 'center' },
   });
 }

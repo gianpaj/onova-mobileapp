@@ -1,6 +1,7 @@
 // @flow
 
 import React from 'react';
+// prettier-ignore
 import {
   AsyncStorage,
   Modal,
@@ -9,6 +10,7 @@ import {
   View,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
+// prettier-ignore
 import {
   Button,
   FormInput,
@@ -109,6 +111,7 @@ export default class LoginScreen extends React.Component<Props, State> {
     if (!isEmail(this.state.emailReset)) {
       return;
     }
+
     this.setState({ loadingReset: true });
     api
       .post('/api/auth/reset', {
@@ -137,7 +140,7 @@ export default class LoginScreen extends React.Component<Props, State> {
             <Icon name="flash" style={{ fontSize: 104 }} />
             <Text>Onova.co</Text>
             <View>
-              <Text style={{ color: '#000' }}>
+              <Text style={{ color: '#000' }} testID="welcome">
                 Discover and Buy Amazing Clothing
               </Text>
             </View>
@@ -152,7 +155,7 @@ export default class LoginScreen extends React.Component<Props, State> {
             keyboardType="email-address"
             returnKeyType="next"
             onSubmitEditing={() => this.PwdInput.focus()}
-            enablesReturnKeyAutomatically={true}
+            enablesReturnKeyAutomatically
             value={this.state.email}
             editable={!this.state.loadingLogin}
             onChangeText={text => this.setState({ email: text })}
@@ -168,7 +171,7 @@ export default class LoginScreen extends React.Component<Props, State> {
             autoCorrect={false}
             returnKeyType="go"
             onSubmitEditing={() => this.onLogin()}
-            enablesReturnKeyAutomatically={true}
+            enablesReturnKeyAutomatically
             value={this.state.password}
             editable={!this.state.loadingLogin}
             onChangeText={text => this.setState({ password: text })}

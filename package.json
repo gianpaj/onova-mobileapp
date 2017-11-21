@@ -15,7 +15,7 @@
     "react-native": "0.50.3",
     "react-native-elements": "^0.18.2",
     "react-native-vector-icons": "^4.4.2",
-    "react-navigation": "^1.0.0-beta.19",
+    "react-navigation": "^1.0.0-beta.20",
     "validator": "^9.1.1"
   },
   "devDependencies": {

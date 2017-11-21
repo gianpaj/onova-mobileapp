@@ -5,7 +5,6 @@ import {
   AsyncStorage,
   Platform,
   StyleSheet,
-  Text,
   View,
 } from 'react-native';
 import { StackNavigator, TabNavigator } from 'react-navigation';
@@ -33,9 +32,10 @@ const tabBarConfiguration = {
       let iconName;
       switch (routeName) {
         case 'Home':
-          iconName = Platform.OS === 'ios'
-            ? `ios-home${focused ? '' : '-outline'}`
-            : 'md-home';
+          iconName =
+            Platform.OS === 'ios'
+              ? `ios-home${focused ? '' : '-outline'}`
+              : 'md-home';
           break;
         // case 'Links':
         //   iconName = Platform.OS === 'ios'
@@ -43,9 +43,10 @@ const tabBarConfiguration = {
         //     : 'md-link';
         //   break;
         case 'Profile':
-          iconName = Platform.OS === 'ios'
-            ? `ios-person${focused ? '' : '-outline'}`
-            : 'md-person';
+          iconName =
+            Platform.OS === 'ios'
+              ? `ios-person${focused ? '' : '-outline'}`
+              : 'md-person';
       }
       return (
         <Ionicons
@@ -58,17 +59,16 @@ const tabBarConfiguration = {
     },
   }),
   animationEnabled: true,
-  tabBarOptions:{
-    showIcon : true,
+  tabBarOptions: {
+    showIcon: true,
     // tint color is passed to text and icons (if enabled) on the tab bar
     activeTintColor: '#2f95dc',
     inactiveTintColor: '#ccc',
     // background color is for the tab component
     activeBackgroundColor: '#fefefe',
     inactiveBackgroundColor: 'white',
-  }
+  },
 };
-
 
 export const Tabs = TabNavigator(routeConfiguration, tabBarConfiguration);
 
@@ -99,14 +99,14 @@ export default class App extends React.Component {
 
   componentWillMount() {
     AsyncStorage.getItem('userData')
-      .then((userData) => {
+      .then(userData => {
         if (userData) {
           const jsonData = JSON.parse(userData);
           console.log(jsonData);
-          this.setState({ loggedIn: true, loading: false, userData: jsonData })
+          this.setState({ loggedIn: true, loading: false, userData: jsonData });
         } else {
           console.log(userData);
-          this.setState({ loggedIn: false, loading: false, userData: null })
+          this.setState({ loggedIn: false, loading: false, userData: null });
         }
       })
       .catch(err => console.error(err));
@@ -118,14 +118,14 @@ export default class App extends React.Component {
     if (loading) {
       return (
         <View style={styles.container}>
-          <ActivityIndicator size="large"/>
+          <ActivityIndicator size="large" />
         </View>
       );
     }
 
     return (
       <Root>
-        <NavWrapper initialRouteName={loggedIn ? 'Tabs' : 'Login'}/>
+        <NavWrapper initialRouteName={loggedIn ? 'Tabs' : 'Login'} />
       </Root>
     );
   }
@@ -133,8 +133,8 @@ export default class App extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-     flex: 1,
-     justifyContent: 'center',
-     alignItems: 'center',
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-})
+});

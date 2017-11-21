@@ -43,8 +43,8 @@ export default class LoginScreen extends React.Component<Props, State> {
     modalVisible: false,
     emailReset: '',
     loadingLogin: false,
-    loadingReset: false
-  }
+    loadingReset: false,
+  };
 
   onLogin() {
     this.setState({ loadingLogin: true });
@@ -52,7 +52,7 @@ export default class LoginScreen extends React.Component<Props, State> {
     api
       .post('/api/auth/login', {
         emailAddress: this.state.email,
-        password:     this.state.password
+        password: this.state.password,
       })
       .then(res => {
         if (res.user) {
@@ -60,16 +60,18 @@ export default class LoginScreen extends React.Component<Props, State> {
           console.log('token', res.token);
           this.setState({ loadingLogin: false });
           ui.showToast('Welcome!');
-          try {
-            const JSONstring = JSON.stringify(Object.assign(res.user, { token: res.token }));
-            AsyncStorage.setItem('userData', JSONstring).then((userData) => {
+          const JSONstring = JSON.stringify(
+            Object.assign(res.user, { token: res.token })
+          );
+          AsyncStorage.setItem('userData', JSONstring)
+            .then(userData => {
               console.log(userData);
               this.resetNavigation('Tabs');
             })
-          } catch (error) {
-            // Error saving data
-            console.error(error);
-          }
+            .catch(error => {
+              // Error saving data
+              console.error(error);
+            });
         } else {
           this.setState({ loadingLogin: false });
           console.log(res);
@@ -77,28 +79,28 @@ export default class LoginScreen extends React.Component<Props, State> {
         }
       })
       .catch((err: api.APIError) => {
-        if (err.status = 400) {
+        if (err.status == 400) {
           ui.showToast(err.message, 'danger');
         }
         console.log(err);
-        this.setState({ loadingLogin: false })
+        this.setState({ loadingLogin: false });
       });
   }
 
   resetNavigation(targetRoute: any) {
     const resetAction = NavigationActions.reset({
       index: 0,
-      actions: [
-        NavigationActions.navigate({ routeName: targetRoute }),
-      ],
+      actions: [NavigationActions.navigate({ routeName: targetRoute })],
     });
     this.props.navigation.dispatch(resetAction);
   }
 
   setModalVisible(visible: boolean) {
     this.setState({
-      emailReset: this.state.emailReset ? this.state.emailReset : this.state.email,
-      modalVisible: visible
+      emailReset: this.state.emailReset
+        ? this.state.emailReset
+        : this.state.email,
+      modalVisible: visible,
     });
   }
 
@@ -120,9 +122,9 @@ export default class LoginScreen extends React.Component<Props, State> {
       })
       .catch((err: api.APIError) => {
         // if (err.status = 400) {
-          ui.showToast(err.message);
+        ui.showToast(err.message);
         // }
-        this.setState({ loadingReset: false })
+        this.setState({ loadingReset: false });
       });
   }
 
@@ -131,7 +133,7 @@ export default class LoginScreen extends React.Component<Props, State> {
       <View>
         <View style={styles.header}>
           <View style={{ alignItems: 'center' }}>
-            <Icon name='flash' style={{ fontSize: 104 }} />
+            <Icon name="flash" style={{ fontSize: 104 }} />
             <Text>Onova.co</Text>
             <View>
               <Text style={{ color: '#000' }}>
@@ -143,86 +145,108 @@ export default class LoginScreen extends React.Component<Props, State> {
         <View>
           <FormInput
             inputStyle={styles.input}
-            placeholder='Email'
-            autoCapitalize='none'
+            placeholder="Email"
+            autoCapitalize="none"
             autoCorrect={false}
-            keyboardType='email-address'
-            returnKeyType='next'
-            onSubmitEditing={(event) =>
-              this.refs.PwdInput.focus()
-            }
+            keyboardType="email-address"
+            returnKeyType="next"
+            onSubmitEditing={() => this.PwdInput.focus()}
+            enablesReturnKeyAutomatically={true}
             value={this.state.email}
-            onChangeText={(text) => this.setState({'email': text})}
-            />
+            editable={!this.state.loadingLogin}
+            onChangeText={text => this.setState({ email: text })}
+          />
           <FormInput
-            ref='PwdInput'
+            ref={c => {
+              this.PwdInput = c;
+            }}
             inputStyle={styles.input}
             secureTextEntry
+            placeholder="Password"
+            autoCapitalize="none"
             autoCorrect={false}
-            placeholder='Password'
-            autoCapitalize='none'
-            returnKeyType='go'
+            returnKeyType="go"
+            onSubmitEditing={() => this.onLogin()}
+            enablesReturnKeyAutomatically={true}
             value={this.state.password}
-            onChangeText={(text) => this.setState({'password': text})}
+            editable={!this.state.loadingLogin}
+            onChangeText={text => this.setState({ password: text })}
           />
-          {<Text style={styles.hr}
-            onPress={() => {this.setModalVisible(true)}}
-            >Forgot Password?</Text>}
+          <Text
+            style={styles.hr}
+            onPress={() => {
+              this.setModalVisible(true);
+            }}>
+            Forgot Password?
+          </Text>
           <View style={{ marginTop: 15 }}>
             <Button
               buttonStyle={styles.PrimaryButton}
               raised
               loading={this.state.loadingLogin}
-              disabled={!this.state.email || !this.state.password || this.state.loadingLogin}
+              disabled={
+                !this.state.email ||
+                !this.state.password ||
+                this.state.loadingLogin
+              }
               onPress={() => this.onLogin()}
-              title='Login' />
-            <Text style={styles.hr}><Text style={styles.hrLine}>────────</Text> or <Text style={styles.hrLine}>────────</Text></Text>
+              title="Login"
+            />
+            <Text style={styles.hr}>
+              <Text style={styles.hrLine}>────────</Text> or{' '}
+              <Text style={styles.hrLine}>────────</Text>
+            </Text>
             <Button
               buttonStyle={styles.PDarkButton}
               raised
               onPress={() => this.props.navigation.navigate('Signup')}
-              title='Signup' />
+              title="Signup"
+            />
             {/* <Footer></Footer> */}
           </View>
         </View>
-        <Modal
-          animationType="slide"
-          visible={this.state.modalVisible}
-          >
-         <View style={{marginTop: 22}}>
-          <View>
-            <View style={{ alignSelf: 'center' }}>
-              <Text style={{ fontWeight: 'bold' }}>Trouble logging in?</Text>
-              <Text>Enter your email and we'll send a link to reset your password</Text>
-            </View>
+        <Modal animationType="slide" visible={this.state.modalVisible}>
+          <View style={{ marginTop: 22 }}>
+            <View>
+              <View style={{ alignSelf: 'center' }}>
+                <Text style={{ fontWeight: 'bold' }}>Trouble logging in?</Text>
+                <Text>
+                  Enter your email and we&apos;ll send a link to reset your
+                  password
+                </Text>
+              </View>
 
-            <FormInput
-              inputStyle={styles.input}
-              placeholder='Email'
-              autoCapitalize='none'
-              autoCorrect={false}
-              keyboardType='email-address'
-              returnKeyType='go'
-              value={this.state.emailReset}
-              onChangeText={(text) => this.setState({'emailReset': text})}
+              <FormInput
+                inputStyle={styles.input}
+                placeholder="Email"
+                autoCapitalize="none"
+                autoCorrect={false}
+                keyboardType="email-address"
+                returnKeyType="go"
+                value={this.state.emailReset}
+                onChangeText={text => this.setState({ emailReset: text })}
               />
 
-            <Button
-              buttonStyle={styles.PrimaryButton}
-              raised
-              loading={this.state.loadingReset}
-              disabled={!isEmail(this.state.emailReset) || this.state.loadingReset}
-              onPress={() => this.onResetPassword()}
-              title="Send email" />
-            <NBButton
-              small
-              style={styles.SecondaryButtonNB}
-              onPress={() => {this.setModalVisible(!this.state.modalVisible)}}
-              >
-              <Text>Back To Login</Text>
-            </NBButton>
+              <Button
+                buttonStyle={styles.PrimaryButton}
+                raised
+                loading={this.state.loadingReset}
+                disabled={
+                  !isEmail(this.state.emailReset) || this.state.loadingReset
+                }
+                onPress={() => this.onResetPassword()}
+                title="Send email"
+              />
+              <NBButton
+                small
+                style={styles.SecondaryButtonNB}
+                onPress={() => {
+                  this.setModalVisible(!this.state.modalVisible);
+                }}>
+                <Text>Back To Login</Text>
+              </NBButton>
+            </View>
           </View>
-         </View>
         </Modal>
       </View>
     );
@@ -235,7 +259,7 @@ const styles = StyleSheet.create({
     height: 180,
   },
   input: {
-    color: colors.black
+    color: colors.black,
   },
   PrimaryButton: {
     backgroundColor: colors.primary,
@@ -256,6 +280,5 @@ const styles = StyleSheet.create({
   },
   hrLine: {
     color: colors.grey4,
-  }
+  },
 });
-

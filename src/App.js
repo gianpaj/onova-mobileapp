@@ -1,8 +1,12 @@
 // @flow
 import React from 'react';
 import {
+  ActivityIndicator,
+  AsyncStorage,
   Platform,
+  StyleSheet,
   Text,
+  View,
 } from 'react-native';
 import { StackNavigator, TabNavigator } from 'react-navigation';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -48,7 +52,6 @@ const tabBarConfiguration = {
           name={iconName}
           size={28}
           style={{ marginBottom: -3 }}
-          /* color={focused} */
           color={focused ? '#2f95dc' : '#ccc'}
         />
       );
@@ -69,19 +72,69 @@ const tabBarConfiguration = {
 
 export const Tabs = TabNavigator(routeConfiguration, tabBarConfiguration);
 
-const AppNavigator = StackNavigator(
-  {
+const Navigator = ({ initialRouteName, screenProps }) => {
+  const routeConfigs = {
     Login: { screen: Login },
     Signup: { screen: Signup },
     Tabs: { screen: Tabs },
-  },
-  {
-    initialRouteName: 'Login',
+  };
+  const stackNavigatorConfigs = {
+    initialRouteName,
     headerMode: 'none',
-  }
+  };
+  const CustomNavigator = StackNavigator(routeConfigs, stackNavigatorConfigs);
+  return <CustomNavigator screenProps={screenProps} />;
+};
+
+const NavWrapper = ({ initialRouteName, screenProps }) => (
+  <Navigator screenProps={screenProps} initialRouteName={initialRouteName} />
 );
 
-export default () =>
-<Root>
-  <AppNavigator />
-</Root>;
+export default class App extends React.Component {
+  state = {
+    loggedIn: false,
+    loading: true,
+    userData: null,
+  };
+
+  componentWillMount() {
+    AsyncStorage.getItem('userData')
+      .then((userData) => {
+        if (userData) {
+          const jsonData = JSON.parse(userData);
+          console.log(jsonData);
+          this.setState({ loggedIn: true, loading: false, userData: jsonData })
+        } else {
+          console.log(userData);
+          this.setState({ loggedIn: false, loading: false, userData: null })
+        }
+      })
+      .catch(err => console.error(err));
+  }
+
+  render() {
+    const { loading, loggedIn } = this.state;
+
+    if (loading) {
+      return (
+        <View style={styles.container}>
+          <ActivityIndicator size="large"/>
+        </View>
+      );
+    }
+
+    return (
+      <Root>
+        <NavWrapper initialRouteName={loggedIn ? 'Tabs' : 'Login'}/>
+      </Root>
+    );
+  }
+}
+
+const styles = StyleSheet.create({
+  container: {
+     flex: 1,
+     justifyContent: 'center',
+     alignItems: 'center',
+  },
+})

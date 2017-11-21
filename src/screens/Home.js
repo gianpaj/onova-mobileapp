@@ -1,12 +1,39 @@
 // @flow
 
 import React from 'react';
-import { View, Text } from 'react-native';
+import {
+  AsyncStorage,
+  View,
+  Text,
+  TouchableOpacity
+} from 'react-native';
 
-const HomeScreen = () => (
-  <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-    <Text>Home Screen</Text>
-  </View>
-);
 
-export default HomeScreen;
+type Props = {
+  navigation: any,
+};
+export default class HomeScreen extends React.Component<Props, State> {
+
+  onLogout() {
+    AsyncStorage.removeItem('userData')
+      .then(() => {
+        this.props.navigation.navigate('Login');
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }
+
+  render() {
+    return (
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <Text>Home Screen</Text>
+        <TouchableOpacity
+          onPress={() => this.onLogout()}
+          >
+          <Text>Logout</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+}

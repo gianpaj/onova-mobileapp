@@ -17,5 +17,6 @@ export default {
   grey5: '#e1e8ee',
   dkGreyBg: '#232323',
   greyOutline: '#cbd2d9',
-  black: '#000000'
+  black: '#000000',
+  white: '#ffffff',
 };

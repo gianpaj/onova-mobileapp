@@ -15,8 +15,6 @@ import {
 } from 'react-native-elements';
 import { NavigationActions } from 'react-navigation';
 import isEmail from 'validator/lib/isEmail';
-import * as firebase from 'firebase';
-import { GoogleSignin } from 'react-native-google-signin';
 
 import * as api from '../utils/api';
 import * as ui from '../utils/ui';
@@ -34,13 +32,6 @@ type State = {
 };
 
 export default class LoginScreen extends React.Component<Props, State> {
-  componentWillMount() {
-    GoogleSignin.hasPlayServices({ autoResolve: true });
-    GoogleSignin.configure({
-      iosClientId:
-        '530398476253-s5dfiv2ilfn1nbrhk5otj8k2mnne101l.apps.googleusercontent.com', // only for iOS
-    });
-  }
   state = {
     username: '',
     email: '',
@@ -95,32 +86,6 @@ export default class LoginScreen extends React.Component<Props, State> {
       actions: [NavigationActions.navigate({ routeName: targetRoute })],
     });
     this.props.navigation.dispatch(resetAction);
-  }
-
-  googleSignin() {
-    GoogleSignin.signIn().then(user => {
-      console.log(user);
-      this.signInWithCredential(user.idToken);
-    });
-  }
-
-  signInWithCredential(token: string) {
-    const provider = firebase.auth.GoogleAuthProvider;
-    const credential = provider.credential(token);
-    return firebase
-      .auth()
-      .signInWithCredential(credential)
-      .then(user => {
-        console.log(user);
-        console.log('signed in');
-      })
-      .catch(error => {
-        console.error(`Login fail with error: ${error}`);
-      });
-  }
-
-  getCredential(token: string) {
-    return { token, secret: 'SomeRandomNumber', provider: 'google' };
   }
 
   render() {
@@ -191,13 +156,6 @@ export default class LoginScreen extends React.Component<Props, State> {
               }
               onPress={() => this.onSignup()}
               title="Signup"
-            />
-            <Button
-              // buttonStyle={styles.SignupButton}
-              raised
-              // loading={this.state.loading}
-              onPress={() => this.googleSignin()}
-              title="Google Login"
             />
             <Text style={styles.hr}>
               Already have an account?&nbsp;

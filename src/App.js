@@ -11,6 +11,7 @@ import {
 import { StackNavigator, TabNavigator } from 'react-navigation';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Root } from 'native-base';
+import * as firebase from 'firebase';
 
 import Login from './screens/Login';
 import Signup from './screens/Signup';
@@ -99,6 +100,17 @@ export default class App extends React.Component {
   };
 
   componentWillMount() {
+    // Initialize Firebase
+    const firebaseConfig = {
+      apiKey: '***REMOVED***',
+      authDomain: 'onova-183307.firebaseapp.com',
+      databaseURL: 'https://onova-183307.firebaseio.com',
+      projectId: 'onova-183307',
+      storageBucket: 'onova-183307.appspot.com',
+      messagingSenderId: '530398476253',
+    };
+    firebase.initializeApp(firebaseConfig);
+
     AsyncStorage.getItem('userData')
       .then(userData => {
         if (userData) {

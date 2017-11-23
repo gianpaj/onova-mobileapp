@@ -5,6 +5,7 @@ import React from 'react';
 import {
   AsyncStorage,
   Modal,
+  Platform,
   StyleSheet,
   Text,
   View,
@@ -18,6 +19,8 @@ import {
 import { Button as NBButton } from 'native-base';
 import { NavigationActions } from 'react-navigation';
 import isEmail from 'validator/lib/isEmail';
+import * as firebase from 'firebase';
+import { GoogleSignin, User as GoogleUser } from 'react-native-google-signin';
 
 import * as api from '../utils/api';
 import * as ui from '../utils/ui';
@@ -37,6 +40,14 @@ type State = {
 };
 
 export default class LoginScreen extends React.Component<Props, State> {
+  componentWillMount() {
+    GoogleSignin.hasPlayServices({ autoResolve: true });
+    GoogleSignin.configure({
+      iosClientId:
+        '530398476253-s5dfiv2ilfn1nbrhk5otj8k2mnne101l.apps.googleusercontent.com', // only for iOS
+    });
+  }
+
   state = {
     email: 'hello@gmail.com',
     // email: '',
@@ -77,6 +88,28 @@ export default class LoginScreen extends React.Component<Props, State> {
         console.log(err);
         this.setState({ loadingLogin: false });
       });
+  }
+
+  googleSignin() {
+    console.log('googleSignin()');
+    GoogleSignin.signIn().then((user: GoogleUser) => {
+      const provider = firebase.auth.GoogleAuthProvider;
+      const credential = provider.credential(user.idToken);
+      return firebase
+        .auth()
+        .signInWithCredential(credential)
+        .then(user => {
+          console.log('signed in with Google');
+          const userData = {
+            emailAddress: user.email,
+            provider: 'google',
+          };
+          this.afterLogin(userData);
+        })
+        .catch(error => {
+          console.error(`Login fail with error: ${error}`);
+        });
+    });
   }
 
   afterLogin(userData: any) {
@@ -209,6 +242,12 @@ export default class LoginScreen extends React.Component<Props, State> {
               onPress={() => this.props.navigation.navigate('Signup')}
               title="Signup"
             />
+            <NBButton
+              style={[styles.GoogleButton, styles.raised]}
+              // loading={this.state.loading}
+              onPress={() => this.googleSignin()}>
+              <Text>Google Login</Text>
+            </NBButton>
             {/* <Footer></Footer> */}
           </View>
         </View>
@@ -281,11 +320,32 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     backgroundColor: colors.secondary,
   },
+  GoogleButton: {
+    backgroundColor: colors.white,
+    padding: 8,
+    marginTop: 10,
+    borderRadius: 0,
+    alignSelf: 'center',
+  },
   hr: {
     alignSelf: 'center',
     margin: 10,
   },
   hrLine: {
     color: colors.grey4,
+  },
+  raised: {
+    ...Platform.select({
+      ios: {
+        shadowColor: 'rgba(0,0,0, .4)',
+        shadowOffset: { height: 1, width: 1 },
+        shadowOpacity: 1,
+        shadowRadius: 1,
+      },
+      android: {
+        backgroundColor: '#fff',
+        elevation: 2,
+      },
+    }),
   },
 });

@@ -1,7 +1,11 @@
 {
-  "name": "myRN",
+  "name": "mobile.app",
   "version": "0.0.1",
   "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://bitbucket.org/onova/mobileapp.git"
+  },
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "test": "jest __tests__ --setupTestFrameworkScriptFile=./e2e/setup-unit-tests.js",
@@ -44,7 +48,7 @@
     "setupTestFrameworkScriptFile": "./e2e/init.js",
     "preset": "react-native",
     "transformIgnorePatterns": [
-      "node_modules/(?!(jest-)?react-native|react-navigation|native-base-shoutem-theme)"
+      "node_modules/(?!(jest-)?react-native|react-native-vector-icons|react-navigation|native-base-shoutem-theme)"
     ]
   },
   "detox": {

@@ -50,7 +50,7 @@ export default class LoginScreen extends React.Component<Props, State> {
 
   onLogin() {
     this.setState({ loadingLogin: true });
-    console.log('onLogin', this.state.email, this.state.password);
+    console.log('onLogin()', this.state.email, this.state.password);
     api
       .post('/api/auth/login', {
         emailAddress: this.state.email,
@@ -58,23 +58,12 @@ export default class LoginScreen extends React.Component<Props, State> {
       })
       .then(res => {
         if (res.user) {
-          console.log('user logged in', res.user);
-          console.log('token', res.token);
-          this.setState({ loadingLogin: false });
-          ui.showToast('Welcome!');
-          const JSONstring = JSON.stringify({
+          console.log('user logged in via email');
+          const userData = {
             ...res.user,
-            ...{ token: res.token },
-          });
-          AsyncStorage.setItem('userData', JSONstring)
-            .then(userData => {
-              console.log(userData);
-              this.resetNavigation('Tabs');
-            })
-            .catch(error => {
-              // Error saving data
-              console.error(error);
-            });
+            ...{ token: res.token, provider: 'email' },
+          };
+          this.afterLogin(userData);
         } else {
           this.setState({ loadingLogin: false });
           console.log(res);
@@ -82,12 +71,23 @@ export default class LoginScreen extends React.Component<Props, State> {
         }
       })
       .catch((err: api.APIError) => {
-        if (err.status == 400) {
+        if (err.status == 400 || err.status == 500) {
           ui.showToast(err.message, 'danger');
         }
         console.log(err);
         this.setState({ loadingLogin: false });
       });
+  }
+
+  afterLogin(userData: any) {
+    console.log('afterLogin()');
+    console.log(userData);
+    const JSONstring = JSON.stringify(userData);
+    return AsyncStorage.setItem('userData', JSONstring).then(() => {
+      ui.showToast('Welcome!');
+      this.setState({ loadingLogin: false });
+      this.resetNavigation('Tabs');
+    });
   }
 
   resetNavigation(targetRoute: any) {
@@ -158,6 +158,7 @@ export default class LoginScreen extends React.Component<Props, State> {
             enablesReturnKeyAutomatically
             value={this.state.email}
             editable={!this.state.loadingLogin}
+            testID="EmailField"
             onChangeText={text => this.setState({ email: text })}
           />
           <FormInput
@@ -174,6 +175,7 @@ export default class LoginScreen extends React.Component<Props, State> {
             enablesReturnKeyAutomatically
             value={this.state.password}
             editable={!this.state.loadingLogin}
+            testID="PasswordField"
             onChangeText={text => this.setState({ password: text })}
           />
           <Text
@@ -195,6 +197,7 @@ export default class LoginScreen extends React.Component<Props, State> {
               }
               onPress={() => this.onLogin()}
               title="Login"
+              testID="LoginButton"
             />
             <Text style={styles.hr}>
               <Text style={styles.hrLine}>────────</Text> or{' '}

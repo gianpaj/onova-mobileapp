@@ -1,6 +1,7 @@
 // @flow
 
 import React from 'react';
+// prettier-ignore
 import {
   AsyncStorage,
   View,
@@ -26,7 +27,9 @@ export default class HomeScreen extends React.Component<Props, State> {
 
   render() {
     return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <View
+        testID="Home"
+        style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <Text>Home Screen</Text>
         <TouchableOpacity onPress={() => this.onLogout()}>
           <Text>Logout</Text>

@@ -4,12 +4,16 @@ import React from 'react';
 // prettier-ignore
 import {
   AsyncStorage,
-  View,
+  StyleSheet,
   Text,
-  TouchableOpacity
+  TouchableOpacity,
+  View,
+// flow-disable-next-line
 } from 'react-native';
 import { GoogleSignin } from 'react-native-google-signin';
 import * as firebase from 'firebase';
+
+import ImageGrid from '../components/ImageGrid';
 
 type Props = {
   navigation: any,
@@ -58,9 +62,8 @@ export default class HomeScreen extends React.Component<Props, State> {
     const { provider } = this.state;
 
     return (
-      <View
-        testID="Home"
-        style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <View testID="Home" style={styles.container}>
+        <ImageGrid />
         <Text>Home Screen</Text>
         {provider == 'email' && (
           <TouchableOpacity onPress={() => this.onLogout()}>
@@ -76,3 +79,11 @@ export default class HomeScreen extends React.Component<Props, State> {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    alignItems: 'center',
+    flex: 1,
+    justifyContent: 'center',
+  },
+});

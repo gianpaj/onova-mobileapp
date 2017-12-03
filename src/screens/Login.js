@@ -68,10 +68,10 @@ export default class LoginScreen extends React.Component<Props, State> {
         password: this.state.password,
       })
       .then(res => {
-        if (res.user) {
+        if (res.data) {
           console.log('user logged in via email');
           const userData = {
-            ...res.user,
+            ...res.data,
             ...{ token: res.token, provider: 'email' },
           };
           this.afterLogin(userData);

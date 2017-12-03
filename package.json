@@ -11,6 +11,7 @@
     "test": "jest __tests__ --setupTestFrameworkScriptFile=./e2e/setup-unit-tests.js",
     "test-e2e": "jest e2e --setupTestFrameworkScriptFile=./e2e/init.js --bail",
     "flow": "flow",
+    "flow-check": "flow check",
     "flow-start": "flow start",
     "flow-stop": "flow stop"
   },

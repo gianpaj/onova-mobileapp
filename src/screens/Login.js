@@ -174,7 +174,7 @@ export default class LoginScreen extends React.Component<Props, State> {
             <Text>Onova.co</Text>
             <View>
               <Text style={{ color: '#000' }} testID="welcome">
-                Discover and Buy Amazing Clothing
+                Buy and sell clothes from your phone
               </Text>
             </View>
           </View>

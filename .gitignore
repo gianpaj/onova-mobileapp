@@ -44,7 +44,7 @@ buck-out/
 
 # Flow
 #
-flow-typed/
+# flow-typed/
 
 # fastlane
 #

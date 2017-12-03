@@ -1,5 +1,3 @@
-// @flow
-
 describe('Login', () => {
   beforeEach(async () => {
     await device.reloadReactNative();

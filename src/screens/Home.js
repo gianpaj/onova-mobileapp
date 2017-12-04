@@ -4,94 +4,103 @@ import colors from '../config/colors';
 import React from 'react';
 // prettier-ignore
 import {
-  AsyncStorage,
   StyleSheet,
   Text,
   Platform,
-  TouchableOpacity,
-  View,
+  Dimensions,
 } from 'react-native';
 // prettier-ignore
 import {
+  Body,
+  Left,
+  Right,
+  Button,
+  Icon,
   Container,
-  ScrollableTab,
-  Tab,
-  Tabs,
+  Header,
  } from 'native-base';
-import { GoogleSignin } from 'react-native-google-signin';
-import * as firebase from 'firebase';
+import { TabViewAnimated, TabBar, SceneMap } from 'react-native-tab-view';
 
 import ImageGrid from '../components/ImageGrid';
+
+const initialLayout = {
+  height: 0,
+  width: Dimensions.get('window').width,
+};
+
+const ClothesRoute = () => <ImageGrid URL="https://picsum.photos/list" />;
+const ShoesRoute = () => <ImageGrid URL="https://picsum.photos/list" />;
+const OtherRoute = () => <ImageGrid URL="https://picsum.photos/list" />;
 
 type Props = {
   navigation: any,
 };
 
-type State = {
-  provider: string,
-};
-export default class HomeScreen extends React.Component<Props, State> {
+type State = {};
+
+export default class HomeScreen extends React.PureComponent<Props, State> {
   state = {
-    provider: '',
+    index: 0,
+    routes: [
+      { key: 'clothes', title: 'Clothes' },
+      { key: 'shoes', title: 'Shoes' },
+      { key: 'other', title: 'Other' },
+    ],
   };
 
-  componentWillMount() {
-    AsyncStorage.getItem('userData').then(userData => {
-      const jsonData = JSON.parse(userData);
-      // console.log(jsonData);
-      this.setState({ provider: jsonData.provider });
-    });
-  }
+  _handleIndexChange = index => this.setState({ index });
 
-  onLogout() {
-    AsyncStorage.removeItem('userData')
-      .then(() => {
-        this.props.navigation.navigate('Login');
-      })
-      .catch(err => {
-        console.error(err);
-      });
-  }
+  _renderHeader = props => (
+    <TabBar
+      {...props}
+      scrollEnabled
+      indicatorStyle={styles.indicator}
+      style={styles.header}
+      tabStyle={styles.tab}
+      labelStyle={styles.label}
+    />
+  );
 
-  onGoogleLogout() {
-    GoogleSignin.signOut()
-      .then(() => firebase.auth().signOut())
-      .then(() => AsyncStorage.removeItem('userData'))
-      .then(() => {
-        console.log('out');
-        this.props.navigation.navigate('Login');
-      })
-      .catch(err => {
-        console.error(err);
-      });
+  _renderScene = SceneMap({
+    clothes: ClothesRoute,
+    shoes: ShoesRoute,
+    other: OtherRoute,
+  });
+
+  onShare() {
+    alert('to do');
   }
 
   render() {
-    const { provider } = this.state;
-
     return (
-      <Container testID="Home" style={styles.container}>
-        <View style={styles.statusBarUnderlay} />
-        <Tabs
-          style={{ backgroundColor: colors.bgDefault }}
-          renderTabBar={() => <ScrollableTab />}>
-          <Tab heading="Tab1">
-            <ImageGrid URL="https://picsum.photos/list" />
-          </Tab>
-          <Tab heading="Tab2">
-            <ImageGrid URL="https://picsum.photos/list" />
-          </Tab>
-        </Tabs>
-        {provider == 'email' && (
-          <TouchableOpacity onPress={() => this.onLogout()}>
-            <Text>Logout</Text>
-          </TouchableOpacity>
-        )}
-        {provider == 'google' && (
-          <TouchableOpacity onPress={() => this.onGoogleLogout()}>
-            <Text>Google Logout</Text>
-          </TouchableOpacity>
-        )}
+      <Container testID="Home">
+        {/* <View style={styles.statusBarUnderlay} /> */}
+        <Header hasTabs>
+          <Left />
+          <Body>
+            <Text style={{ fontWeight: 'bold' }}>ØNOVA</Text>
+          </Body>
+          <Right>
+            <Button transparent>
+              <Icon
+                style={{ color: colors.black }}
+                onPress={this.onShare}
+                disabled
+                name={
+                  Platform.OS === 'ios' ? 'ios-person-add' : 'md-person-add'
+                }
+              />
+            </Button>
+          </Right>
+        </Header>
+        <TabViewAnimated
+          style={styles.container}
+          navigationState={this.state}
+          renderScene={this._renderScene}
+          renderHeader={this._renderHeader}
+          onIndexChange={this._handleIndexChange}
+          initialLayout={initialLayout}
+        />
       </Container>
     );
   }
@@ -104,9 +113,20 @@ const styles = StyleSheet.create({
     marginTop: STATUS_BAR_HEIGHT,
   },
   container: {
-    backgroundColor: colors.bgDefault,
-    alignItems: 'center',
     flex: 1,
-    justifyContent: 'center',
+  },
+  indicator: {
+    height: 3,
+    backgroundColor: colors.primary,
+  },
+  label: {
+    color: colors.primary,
+    fontWeight: '400',
+  },
+  header: {
+    backgroundColor: colors.bgDefault,
+  },
+  tab: {
+    width: 120,
   },
 });

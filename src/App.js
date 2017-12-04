@@ -17,15 +17,18 @@ import colors from './config/colors';
 import Login from './screens/Login';
 import Signup from './screens/Signup';
 import Home from './screens/Home';
-// import BlankPage from './screens/BlankPage';
+import Profile from './screens/Profile';
 // import Sidebar from './screens/Sidebar';
+
+const isiOS = Platform.OS === 'ios';
 
 const routeConfiguration = {
   Home: { screen: Home },
+  Home2: { screen: Home },
   // Search
   // Add
   // Orders
-  // Profile: { screen: BlankPage },
+  Profile: { screen: Profile },
 };
 
 const tabBarConfiguration = {
@@ -35,21 +38,17 @@ const tabBarConfiguration = {
       let iconName;
       switch (routeName) {
         case 'Home':
-          iconName =
-            Platform.OS === 'ios'
-              ? `ios-home${focused ? '' : '-outline'}`
-              : 'md-home';
+          iconName = isiOS ? `ios-home${focused ? '' : '-outline'}` : 'md-home';
           break;
         // case 'Links':
-        //   iconName = Platform.OS === 'ios'
+        //   iconName = isiOS
         //     ? `ios-link${focused ? '' : '-outline'}`
         //     : 'md-link';
         //   break;
         case 'Profile':
-          iconName =
-            Platform.OS === 'ios'
-              ? `ios-person${focused ? '' : '-outline'}`
-              : 'md-person';
+          iconName = isiOS
+            ? `ios-person${focused ? '' : '-outline'}`
+            : 'md-person';
       }
       return (
         <Ionicons
@@ -57,9 +56,7 @@ const tabBarConfiguration = {
           size={28}
           style={{ marginBottom: -3 }}
           color={
-            focused
-              ? Platform.OS === 'ios' ? colors.active : colors.gray1
-              : colors.gray5
+            focused ? (isiOS ? colors.active : colors.gray1) : colors.gray5
           }
         />
       );
@@ -69,15 +66,14 @@ const tabBarConfiguration = {
   tabBarOptions: {
     showIcon: true,
     // tint color is passed to text and icons (if enabled) on the tab bar
-    activeTintColor: Platform.OS === 'ios' ? colors.active : colors.gray1,
+    activeTintColor: isiOS ? colors.active : colors.gray1,
     inactiveTintColor: colors.gray5,
     // background color is for the tab component
-    activeBackgroundColor:
-      Platform.OS === 'android' ? colors.primary : undefined,
+    activeBackgroundColor: !isiOS ? colors.primary : undefined,
     inactiveBackgroundColor: colors.white,
     style: {
-      backgroundColor: Platform.OS === 'android' ? colors.grey3 : undefined,
-  },
+      backgroundColor: !isiOS ? colors.grey3 : undefined,
+    },
   },
   tabBarPosition: 'bottom',
 };

@@ -120,6 +120,7 @@ export default class ImageGrid extends React.Component<Props, State> {
             numColumns={3}
             keyExtractor={this._extractKey}
             getItemLayout={this.getItemLayout}
+            showsVerticalScrollIndicator={false}
             // ListHeaderComponent={this.renderHeader}
           />
         )}

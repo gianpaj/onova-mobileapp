@@ -4105,6 +4105,13 @@ react-native-fast-image@^2.0.1:
   dependencies:
     prop-types "^15.5.10"
 
+react-native-gesture-handler@^1.0.0-alpha.35:
+  version "1.0.0-alpha.35"
+  resolved "https://registry.yarnpkg.com/react-native-gesture-handler/-/react-native-gesture-handler-1.0.0-alpha.35.tgz#c16cf97151223cb8d4902d6dd597dc1612d8cb33"
+  dependencies:
+    invariant "^2.2.2"
+    prop-types "^15.5.10"
+
 react-native-google-signin@^0.12.0:
   version "0.12.0"
   resolved "https://registry.yarnpkg.com/react-native-google-signin/-/react-native-google-signin-0.12.0.tgz#fc549593adbc92ed2a5a683a957f157650ece961"
@@ -4122,6 +4129,12 @@ react-native-tab-view@^0.0.70:
   resolved "https://registry.yarnpkg.com/react-native-tab-view/-/react-native-tab-view-0.0.70.tgz#1dd2ded32acd0cb6bfef38d26e53675db733b37b"
   dependencies:
     prop-types "^15.5.10"
+
+react-native-tab-view@^0.0.72:
+  version "0.0.72"
+  resolved "https://registry.yarnpkg.com/react-native-tab-view/-/react-native-tab-view-0.0.72.tgz#9f481c9cd497a086a2edf14189732677e641ea1a"
+  dependencies:
+    prop-types "^15.6.0"
 
 react-native-vector-icons@^4.4.2, react-native-vector-icons@~4.4.2:
   version "4.4.2"

@@ -132,12 +132,10 @@ export default class LoginScreen extends React.Component<Props, State> {
   }
 
   setModalVisible(visible: boolean) {
-    this.setState({
-      emailReset: this.state.emailReset
-        ? this.state.emailReset
-        : this.state.email,
+    this.setState(prevState => ({
+      emailReset: prevState.emailReset ? prevState.emailReset : prevState.email,
       modalVisible: visible,
-    });
+    }));
   }
 
   onResetPassword() {

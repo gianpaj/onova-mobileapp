@@ -1,15 +1,28 @@
 // @flow
 import React from 'react';
 import {
+  ActivityIndicator,
   StyleSheet,
   View,
   FlatList,
   Platform,
+  RefreshControl,
   StatusBar,
   Text,
   TouchableHighlight,
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
+
+type Props = {
+  loadImages(): void,
+};
+
+type State = {
+  images: Array,
+  itemHeight: number,
+  loading: boolean,
+  refreshing: boolean,
+};
 
 const getImageUrl = (id, width, height) =>
   `https://picsum.photos/${width}/${height}?image=${id}`;
@@ -17,17 +30,24 @@ const getImageUrl = (id, width, height) =>
 export default class ImageGrid extends React.Component<Props, State> {
   constructor(props: Object) {
     super(props);
-
-    fetch('https://picsum.photos/list')
-      .then(res => res.json())
-      .then(this._onFetchImagesSuccess)
-      .catch(this._onFetchImagesError);
   }
 
   state = {
     images: [],
     itemHeight: 0,
+    loading: true,
+    refreshing: false,
   };
+
+  componentDidMount() {
+    this._fetchImages();
+  }
+
+  _fetchImages() {
+    this.props.loadImages
+      .then(this._onFetchImagesSuccess)
+      .catch(this._onFetchImagesError);
+  }
 
   _onLayout = e => {
     const width = e.nativeEvent.layout.width;
@@ -44,8 +64,8 @@ export default class ImageGrid extends React.Component<Props, State> {
 
   _onFetchImagesSuccess = images => {
     this.setState({
-      // images,
-      images: images.splice(0, 10),
+      images,
+      loading: false,
     });
   };
 
@@ -79,7 +99,14 @@ export default class ImageGrid extends React.Component<Props, State> {
     if (this.state.error) {
       return (
         <View style={styles.container}>
-          <Text style={styles.text}>Error fetching images.</Text>
+          <Text style={styles.text}>Error fetching listing.</Text>
+        </View>
+      );
+    }
+    if (this.state.loading) {
+      return (
+        <View style={styles.container}>
+          <ActivityIndicator size="large" />
         </View>
       );
     }
@@ -92,6 +119,7 @@ export default class ImageGrid extends React.Component<Props, State> {
             styles.columnWrapper,
             { height: this.state.itemHeight },
           ]}
+          refreshControl={this._renderRefreshControl()}
           data={this.state.images}
           renderItem={this._renderItem}
           numColumns={3}
@@ -100,6 +128,15 @@ export default class ImageGrid extends React.Component<Props, State> {
         />
         <View style={styles.statusBarUnderlay} />
       </View>
+    );
+  }
+
+  _renderRefreshControl() {
+    return (
+      <RefreshControl
+        refreshing={this.state.refreshing}
+        onRefresh={this._fetchImages.bind(this)}
+      />
     );
   }
 }

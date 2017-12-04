@@ -35,6 +35,13 @@ export default class HomeScreen extends React.Component<Props, State> {
     });
   }
 
+  loadImages() {
+    // the success and catch methods are handled by the ImageGrid component
+    return fetch('https://picsum.photos/list')
+      .then(res => res.json())
+      .then(images => images.splice(0, 10));
+  }
+
   onLogout() {
     AsyncStorage.removeItem('userData')
       .then(() => {
@@ -63,7 +70,7 @@ export default class HomeScreen extends React.Component<Props, State> {
 
     return (
       <View testID="Home" style={styles.container}>
-        <ImageGrid />
+        <ImageGrid loadImages={this.loadImages()} />
         <Text>Home Screen</Text>
         {provider == 'email' && (
           <TouchableOpacity onPress={() => this.onLogout()}>

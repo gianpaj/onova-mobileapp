@@ -1,6 +1,6 @@
 # Onova mobile app
 
-Created using React Native CLI (`react-native`) not Create React Native App (CRNA) or Expo client.
+> Created using React Native CLI (`react-native`) not Create React Native App (CRNA) or Expo client.
 
 Follow [these instructions](https://facebook.github.io/react-native/docs/getting-started.html) to install the React Native requirements.
 

@@ -13,6 +13,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Root } from 'native-base';
 import * as firebase from 'firebase';
 
+import colors from './config/colors';
 import Login from './screens/Login';
 import Signup from './screens/Signup';
 import Home from './screens/Home';
@@ -55,7 +56,11 @@ const tabBarConfiguration = {
           name={iconName}
           size={28}
           style={{ marginBottom: -3 }}
-          color={focused ? '#2f95dc' : '#ccc'}
+          color={
+            focused
+              ? Platform.OS === 'ios' ? colors.active : colors.gray1
+              : colors.gray5
+          }
         />
       );
     },
@@ -64,12 +69,16 @@ const tabBarConfiguration = {
   tabBarOptions: {
     showIcon: true,
     // tint color is passed to text and icons (if enabled) on the tab bar
-    activeTintColor: '#2f95dc',
-    inactiveTintColor: '#ccc',
+    activeTintColor: Platform.OS === 'ios' ? colors.active : colors.gray1,
+    inactiveTintColor: colors.gray5,
     // background color is for the tab component
-    activeBackgroundColor: '#fefefe',
-    inactiveBackgroundColor: 'white',
+    activeBackgroundColor: colors.primary,
+    inactiveBackgroundColor: colors.white,
+    style: {
+      backgroundColor: colors.grey3,
   },
+  },
+  tabBarPosition: 'bottom',
 };
 
 export const Tabs = TabNavigator(routeConfiguration, tabBarConfiguration);

@@ -71,7 +71,6 @@ export default class HomeScreen extends React.Component<Props, State> {
     return (
       <View testID="Home" style={styles.container}>
         <ImageGrid loadImages={this.loadImages()} />
-        <Text>Home Screen</Text>
         {provider == 'email' && (
           <TouchableOpacity onPress={() => this.onLogout()}>
             <Text>Logout</Text>

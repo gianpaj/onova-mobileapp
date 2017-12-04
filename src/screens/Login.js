@@ -138,6 +138,11 @@ export default class LoginScreen extends React.Component<Props, State> {
     }));
   }
 
+  // Required on Android
+  _onModalDismiss() {
+    console.log('modal dismissed');
+  }
+
   onResetPassword() {
     if (!isEmail(this.state.emailReset)) {
       return;
@@ -249,7 +254,10 @@ export default class LoginScreen extends React.Component<Props, State> {
             {/* <Footer></Footer> */}
           </View>
         </View>
-        <Modal animationType="slide" visible={this.state.modalVisible}>
+        <Modal
+          animationType="slide"
+          visible={this.state.modalVisible}
+          onRequestClose={this._onModalDismiss}>
           <View style={{ marginTop: 22 }}>
             <View>
               <View style={{ alignSelf: 'center' }}>

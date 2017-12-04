@@ -5,6 +5,7 @@
 
 export default {
   primary: '#303f9f',
+  active: '#2f95dc',
   pLight: '#666ad1',
   pDark: '#001970',
   secondary: '#ffb74d',

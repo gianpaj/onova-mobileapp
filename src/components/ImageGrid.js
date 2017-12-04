@@ -2,14 +2,15 @@
 import React from 'react';
 import {
   ActivityIndicator,
-  StyleSheet,
-  View,
+  Dimensions,
   FlatList,
   Platform,
   RefreshControl,
   StatusBar,
+  StyleSheet,
   Text,
-  TouchableHighlight,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
 
@@ -23,6 +24,8 @@ type State = {
   loading: boolean,
   refreshing: boolean,
 };
+
+var { height, width } = Dimensions.get('window');
 
 const getImageUrl = (id, width, height) =>
   `https://picsum.photos/${width}/${height}?image=${id}`;
@@ -50,7 +53,7 @@ export default class ImageGrid extends React.Component<Props, State> {
   }
 
   _onLayout = e => {
-    const width = e.nativeEvent.layout.width;
+    // const width = e.nativeEvent.layout.width;
     this.setState({
       itemHeight: width / 3,
     });
@@ -82,11 +85,11 @@ export default class ImageGrid extends React.Component<Props, State> {
     const uri = getImageUrl(item.id, 200, 200);
     return (
       <View style={styles.imageContainer}>
-        <TouchableHighlight
+        <TouchableOpacity
           style={{ flex: 1 }}
           onPress={() => this._onItemPress(item)}>
           <FastImage source={{ uri }} style={styles.image} />
-        </TouchableHighlight>
+        </TouchableOpacity>
       </View>
     );
   };
@@ -142,27 +145,27 @@ export default class ImageGrid extends React.Component<Props, State> {
 }
 
 const MARGIN = 1;
-const STATUS_BAR_HEIGHT = Platform.OS === 'ios' ? 20 : StatusBar.currentHeight;
+const STATUS_BAR_HEIGHT = Platform.OS === 'ios' ? 20 : 0;
 
 const styles = StyleSheet.create({
   statusBarUnderlay: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
     height: STATUS_BAR_HEIGHT,
+    left: 0,
+    position: 'absolute',
+    right: 0,
+    top: 0,
   },
   container: {
-    flex: 1,
     alignItems: 'stretch',
+    flex: 1,
     justifyContent: 'center',
   },
   text: {
     textAlign: 'center',
   },
   list: {
-    marginTop: STATUS_BAR_HEIGHT,
     flex: 1,
+    marginTop: STATUS_BAR_HEIGHT,
   },
   columnWrapper: {
     flex: 1,
@@ -172,12 +175,11 @@ const styles = StyleSheet.create({
   },
   image: {
     flex: 1,
-    width: 121,
     // height: 121,
     margin: MARGIN,
+    width: width / 3 - MARGIN * 2,
   },
   imageContainer: {
-    flex: 1,
     alignItems: 'stretch',
   },
 });

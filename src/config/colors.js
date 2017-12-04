@@ -6,6 +6,7 @@
 export default {
   primary: '#303f9f',
   active: '#2f95dc',
+  bgDefault: '#f8f8f8',
   pLight: '#666ad1',
   pDark: '#001970',
   secondary: '#ffb74d',

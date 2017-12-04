@@ -65,17 +65,18 @@ const tabBarConfiguration = {
       );
     },
   }),
-  animationEnabled: true,
+  animationEnabled: false,
   tabBarOptions: {
     showIcon: true,
     // tint color is passed to text and icons (if enabled) on the tab bar
     activeTintColor: Platform.OS === 'ios' ? colors.active : colors.gray1,
     inactiveTintColor: colors.gray5,
     // background color is for the tab component
-    activeBackgroundColor: colors.primary,
+    activeBackgroundColor:
+      Platform.OS === 'android' ? colors.primary : undefined,
     inactiveBackgroundColor: colors.white,
     style: {
-      backgroundColor: colors.grey3,
+      backgroundColor: Platform.OS === 'android' ? colors.grey3 : undefined,
   },
   },
   tabBarPosition: 'bottom',

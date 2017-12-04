@@ -1,4 +1,5 @@
 // @flow
+import colors from '../config/colors';
 
 import React from 'react';
 // prettier-ignore
@@ -6,10 +7,17 @@ import {
   AsyncStorage,
   StyleSheet,
   Text,
+  Platform,
   TouchableOpacity,
   View,
-// flow-disable-next-line
 } from 'react-native';
+// prettier-ignore
+import {
+  Container,
+  ScrollableTab,
+  Tab,
+  Tabs,
+ } from 'native-base';
 import { GoogleSignin } from 'react-native-google-signin';
 import * as firebase from 'firebase';
 
@@ -33,13 +41,6 @@ export default class HomeScreen extends React.Component<Props, State> {
       // console.log(jsonData);
       this.setState({ provider: jsonData.provider });
     });
-  }
-
-  loadImages() {
-    // the success and catch methods are handled by the ImageGrid component
-    return fetch('https://picsum.photos/list')
-      .then(res => res.json())
-      .then(images => images.splice(0, 10));
   }
 
   onLogout() {
@@ -69,8 +70,18 @@ export default class HomeScreen extends React.Component<Props, State> {
     const { provider } = this.state;
 
     return (
-      <View testID="Home" style={styles.container}>
-        <ImageGrid loadImages={this.loadImages()} />
+      <Container testID="Home" style={styles.container}>
+        <View style={styles.statusBarUnderlay} />
+        <Tabs
+          style={{ backgroundColor: colors.bgDefault }}
+          renderTabBar={() => <ScrollableTab />}>
+          <Tab heading="Tab1">
+            <ImageGrid URL="https://picsum.photos/list" />
+          </Tab>
+          <Tab heading="Tab2">
+            <ImageGrid URL="https://picsum.photos/list" />
+          </Tab>
+        </Tabs>
         {provider == 'email' && (
           <TouchableOpacity onPress={() => this.onLogout()}>
             <Text>Logout</Text>
@@ -81,13 +92,19 @@ export default class HomeScreen extends React.Component<Props, State> {
             <Text>Google Logout</Text>
           </TouchableOpacity>
         )}
-      </View>
+      </Container>
     );
   }
 }
 
+const STATUS_BAR_HEIGHT = Platform.OS === 'ios' ? 20 : 0;
+
 const styles = StyleSheet.create({
+  statusBarUnderlay: {
+    marginTop: STATUS_BAR_HEIGHT,
+  },
   container: {
+    backgroundColor: colors.bgDefault,
     alignItems: 'center',
     flex: 1,
     justifyContent: 'center',

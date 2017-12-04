@@ -6,7 +6,6 @@ import {
   FlatList,
   Platform,
   RefreshControl,
-  StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -15,17 +14,18 @@ import {
 import FastImage from 'react-native-fast-image';
 
 type Props = {
-  loadImages(): void,
+  URL: string,
 };
 
 type State = {
   images: Array,
   itemHeight: number,
   loading: boolean,
+  loadingMore: boolean,
   refreshing: boolean,
 };
 
-var { height, width } = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 
 const getImageUrl = (id, width, height) =>
   `https://picsum.photos/${width}/${height}?image=${id}`;
@@ -43,51 +43,52 @@ export default class ImageGrid extends React.Component<Props, State> {
   };
 
   componentDidMount() {
-    this._fetchImages();
+    this.fetchImages();
   }
 
-  _fetchImages() {
-    this.props.loadImages
-      .then(this._onFetchImagesSuccess)
-      .catch(this._onFetchImagesError);
+  fetchImages() {
+    // return fetch(`${this.props.URL}?skip=${this.state.skip}`)
+    setTimeout(() => {
+      return fetch(`${this.props.URL}`)
+        .then(res => res.json())
+        .then(images => images.splice(0, 20))
+        .then(images => {
+          this.setState({
+            images,
+            loading: false,
+          });
+        })
+        .catch(() => {
+          this.setState({
+            error: true,
+          });
+        });
+
+    }, 2000);
   }
 
-  _onLayout = e => {
-    // const width = e.nativeEvent.layout.width;
+  onLayout = () => {
     this.setState({
       itemHeight: width / 3,
     });
   };
 
-  _onFetchImagesError = () => {
-    this.setState({
-      error: true,
-    });
-  };
-
-  _onFetchImagesSuccess = images => {
-    this.setState({
-      images,
-      loading: false,
-    });
-  };
-
-  _getItemLayout = (data, index) => {
+  getItemLayout = (data, index) => {
     const { itemHeight } = this.state;
     return { length: itemHeight, offset: itemHeight * index, index };
   };
 
-  _onItemPress(item) {
+  onItemPress(item) {
     console.log(item);
   }
 
-  _renderItem = ({ item }) => {
+  renderItem = ({ item }) => {
     const uri = getImageUrl(item.id, 200, 200);
     return (
       <View style={styles.imageContainer}>
         <TouchableOpacity
           style={{ flex: 1 }}
-          onPress={() => this._onItemPress(item)}>
+          onPress={() => this.onItemPress(item)}>
           <FastImage source={{ uri }} style={styles.image} />
         </TouchableOpacity>
       </View>
@@ -99,62 +100,58 @@ export default class ImageGrid extends React.Component<Props, State> {
   };
 
   render() {
-    if (this.state.error) {
-      return (
-        <View style={styles.container}>
-          <Text style={styles.text}>Error fetching listing.</Text>
-        </View>
-      );
-    }
-    if (this.state.loading) {
-      return (
-        <View style={styles.container}>
-          <ActivityIndicator size="large" />
-        </View>
-      );
-    }
     return (
       <View style={styles.container}>
-        <FlatList
-          onLayout={this._onLayout}
-          style={styles.list}
-          columnWrapperStyle={[
-            styles.columnWrapper,
-            { height: this.state.itemHeight },
-          ]}
-          refreshControl={this._renderRefreshControl()}
-          data={this.state.images}
-          renderItem={this._renderItem}
-          numColumns={3}
-          keyExtractor={this._extractKey}
-          getItemLayout={this._getItemLayout}
-        />
-        <View style={styles.statusBarUnderlay} />
+        {this.state.error && (
+          <Text style={styles.text}>Error fetching listing.</Text>
+        )}
+        {this.state.loading && this.renderLoading()}
+        {!this.state.loading && (
+          <FlatList
+            onLayout={this.onLayout}
+            style={styles.list}
+            columnWrapperStyle={[
+              styles.columnWrapper,
+              { height: this.state.itemHeight },
+            ]}
+            refreshControl={this.renderRefreshControl()}
+            data={this.state.images}
+            renderItem={this.renderItem}
+            numColumns={3}
+            keyExtractor={this._extractKey}
+            getItemLayout={this.getItemLayout}
+            // ListHeaderComponent={this.renderHeader}
+          />
+        )}
       </View>
     );
   }
 
-  _renderRefreshControl() {
+  renderLoading() {
+    return (
+      <View style={styles.container}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
+
+  renderHeader() {
+    return <Text>Yo</Text>;
+  }
+
+  renderRefreshControl() {
     return (
       <RefreshControl
         refreshing={this.state.refreshing}
-        onRefresh={this._fetchImages.bind(this)}
+        onRefresh={this.fetchImages.bind(this)}
       />
     );
   }
 }
 
 const MARGIN = 1;
-const STATUS_BAR_HEIGHT = Platform.OS === 'ios' ? 20 : 0;
 
 const styles = StyleSheet.create({
-  statusBarUnderlay: {
-    height: STATUS_BAR_HEIGHT,
-    left: 0,
-    position: 'absolute',
-    right: 0,
-    top: 0,
-  },
   container: {
     alignItems: 'stretch',
     flex: 1,
@@ -165,7 +162,7 @@ const styles = StyleSheet.create({
   },
   list: {
     flex: 1,
-    marginTop: STATUS_BAR_HEIGHT,
+    marginTop: -1,
   },
   columnWrapper: {
     flex: 1,
@@ -177,7 +174,7 @@ const styles = StyleSheet.create({
     flex: 1,
     // height: 121,
     margin: MARGIN,
-    width: width / 3 - MARGIN * 2,
+    width: (width + MARGIN * 2) / 3,
   },
   imageContainer: {
     alignItems: 'stretch',

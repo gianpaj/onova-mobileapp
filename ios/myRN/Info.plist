@@ -47,7 +47,7 @@
 		</dict>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string/>
+	<string></string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Entypo.ttf</string>
@@ -77,7 +77,15 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Onova would like access to your photo gallery to add a product listing</string>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Onova would like to save photos to your photo gallery</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Onova would like to use your camera</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Onova would like to your microphone (for videos)</string>
 </dict>
 </plist>

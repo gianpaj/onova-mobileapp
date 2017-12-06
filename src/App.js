@@ -11,22 +11,23 @@ import {
 import { StackNavigator, TabNavigator } from 'react-navigation';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Root } from 'native-base';
+import { updateFocus } from '@patwoz/react-navigation-is-focused-hoc';
+
 import * as firebase from 'firebase';
 
 import colors from './config/colors';
 import Login from './screens/Login';
 import Signup from './screens/Signup';
 import Home from './screens/Home';
+import AddProduct from './screens/AddProduct';
 import Profile from './screens/Profile';
-// import Sidebar from './screens/Sidebar';
 
 const isiOS = Platform.OS === 'ios';
 
 const routeConfiguration = {
   Home: { screen: Home },
-  Home2: { screen: Home },
   // Search
-  // Add
+  New: { screen: AddProduct },
   // Orders
   Profile: { screen: Profile },
 };
@@ -40,11 +41,11 @@ const tabBarConfiguration = {
         case 'Home':
           iconName = isiOS ? `ios-home${focused ? '' : '-outline'}` : 'md-home';
           break;
-        // case 'Links':
-        //   iconName = isiOS
-        //     ? `ios-link${focused ? '' : '-outline'}`
-        //     : 'md-link';
-        //   break;
+        case 'New':
+          iconName = isiOS
+            ? `ios-add-circle${focused ? '' : '-outline'}`
+            : 'md-add-circle';
+          break;
         case 'Profile':
           iconName = isiOS
             ? `ios-person${focused ? '' : '-outline'}`
@@ -75,8 +76,24 @@ const tabBarConfiguration = {
       backgroundColor: !isiOS ? colors.grey3 : undefined,
     },
   },
+  // needed to open the Camera the first time opening the 'AddProduct' screen
+  // i.e componentWillMount() of AddProduct
+  lazy: true,
   tabBarPosition: 'bottom',
 };
+
+// gets the current screen from navigation state
+function getCurrentRouteName(navigationState) {
+  if (!navigationState) {
+    return null;
+  }
+  const route = navigationState.routes[navigationState.index];
+  // dive into nested navigators
+  if (route.routes) {
+    return getCurrentRouteName(route);
+  }
+  return route.routeName;
+}
 
 export const Tabs = TabNavigator(routeConfiguration, tabBarConfiguration);
 
@@ -91,7 +108,27 @@ const Navigator = ({ initialRouteName, screenProps }) => {
     headerMode: 'none',
   };
   const CustomNavigator = StackNavigator(routeConfigs, stackNavigatorConfigs);
-  return <CustomNavigator screenProps={screenProps} />;
+  return (
+    <CustomNavigator
+      onNavigationStateChange={(prevState, currentState) => {
+        const currentScreen = getCurrentRouteName(currentState);
+        const prevScreen = getCurrentRouteName(prevState);
+
+        if (prevScreen !== currentScreen) {
+          // If you want to ignore the state changed from `DrawerNavigator`, use this:
+          /*
+            if (/^Drawer(Open|Close|Toggle)$/.tes(newState)) === false) {
+              updateFocus(newState);
+              return;
+            }
+          */
+
+          updateFocus(currentState);
+        }
+      }}
+      screenProps={screenProps}
+    />
+  );
 };
 
 const NavWrapper = ({ initialRouteName, screenProps }) => (

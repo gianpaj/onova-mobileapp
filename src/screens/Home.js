@@ -9,7 +9,6 @@ import {
   Platform,
   Dimensions,
 } from 'react-native';
-// prettier-ignore
 import {
   Body,
   Left,
@@ -18,7 +17,7 @@ import {
   Icon,
   Container,
   Header,
- } from 'native-base';
+} from 'native-base';
 import { TabViewAnimated, TabBar, SceneMap } from 'react-native-tab-view';
 
 import ImageGrid from '../components/ImageGrid';

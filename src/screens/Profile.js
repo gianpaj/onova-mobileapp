@@ -10,12 +10,13 @@ import {
 } from 'react-native';
 // prettier-ignore
 import {
-  Card,CardItem,
+  Card,
+  CardItem,
   Body,
   Button,
   Container,
-  Header,Content,
- } from 'native-base';
+  Content,
+} from 'native-base';
 import { GoogleSignin } from 'react-native-google-signin';
 import * as firebase from 'firebase';
 

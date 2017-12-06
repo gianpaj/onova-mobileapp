@@ -4,7 +4,6 @@ import {
   ActivityIndicator,
   Dimensions,
   FlatList,
-  Platform,
   RefreshControl,
   StyleSheet,
   Text,
@@ -121,7 +120,6 @@ export default class ImageGrid extends React.Component<Props, State> {
             keyExtractor={this._extractKey}
             getItemLayout={this.getItemLayout}
             showsVerticalScrollIndicator={false}
-            // ListHeaderComponent={this.renderHeader}
           />
         )}
       </View>

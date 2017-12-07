@@ -4,7 +4,6 @@ import colors from '../config/colors';
 import React from 'react';
 // prettier-ignore
 import {
-  ActivityIndicator,
   AsyncStorage,
   Platform,
   Text,
@@ -17,12 +16,10 @@ import {
   Card,
   CardItem,
   Container,
-  Content,
   Header,
   Icon,
   Left,
   Right,
-  Title,
 } from 'native-base';
 import { GoogleSignin } from 'react-native-google-signin';
 import * as firebase from 'firebase';

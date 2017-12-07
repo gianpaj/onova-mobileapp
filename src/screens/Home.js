@@ -84,7 +84,6 @@ export default class HomeScreen extends React.PureComponent<Props, State> {
               <Icon
                 style={{ color: colors.black }}
                 onPress={this.onShare}
-                disabled
                 name={
                   Platform.OS === 'ios' ? 'ios-person-add' : 'md-person-add'
                 }

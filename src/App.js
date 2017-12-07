@@ -21,6 +21,7 @@ import Signup from './screens/Signup';
 import Home from './screens/Home';
 import AddProduct from './screens/AddProduct';
 import Profile from './screens/Profile';
+import Product from './screens/Product';
 
 const isiOS = Platform.OS === 'ios';
 
@@ -102,6 +103,7 @@ const Navigator = ({ initialRouteName, screenProps }) => {
     Login: { screen: Login },
     Signup: { screen: Signup },
     Tabs: { screen: Tabs },
+    Product: { screen: Product },
   };
   const stackNavigatorConfigs = {
     initialRouteName,

@@ -22,6 +22,7 @@ type State = {
   loading: boolean,
   loadingMore: boolean,
   refreshing: boolean,
+  skip: number,
 };
 
 const { width } = Dimensions.get('window');
@@ -39,6 +40,7 @@ export default class ImageGrid extends React.Component<Props, State> {
     itemHeight: 0,
     loading: true,
     refreshing: false,
+    skip: 0,
   };
 
   componentDidMount() {
@@ -47,23 +49,22 @@ export default class ImageGrid extends React.Component<Props, State> {
 
   fetchImages() {
     // return fetch(`${this.props.URL}?skip=${this.state.skip}`)
-    setTimeout(() => {
-      return fetch(`${this.props.URL}`)
-        .then(res => res.json())
-        .then(images => images.splice(0, 20))
-        .then(images => {
-          this.setState({
-            images,
-            loading: false,
-          });
-        })
-        .catch(() => {
-          this.setState({
-            error: true,
-          });
+    // setTimeout(() => {
+    return fetch(`${this.props.URL}`)
+      .then(res => res.json())
+      .then(images => images.splice(0, 20))
+      .then(images => {
+        this.setState({
+          images,
+          loading: false,
         });
-
-    }, 2000);
+      })
+      .catch(() => {
+        this.setState({
+          error: true,
+        });
+      });
+    // }, 2000);
   }
 
   onLayout = () => {
@@ -94,10 +95,6 @@ export default class ImageGrid extends React.Component<Props, State> {
     );
   };
 
-  _extractKey = item => {
-    return item.id;
-  };
-
   render() {
     return (
       <View style={styles.container}>
@@ -117,7 +114,7 @@ export default class ImageGrid extends React.Component<Props, State> {
             data={this.state.images}
             renderItem={this.renderItem}
             numColumns={3}
-            keyExtractor={this._extractKey}
+            keyExtractor={el => el.id}
             getItemLayout={this.getItemLayout}
             showsVerticalScrollIndicator={false}
           />

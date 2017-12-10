@@ -16,7 +16,7 @@ import {
   Button,
   FormInput,
 } from 'react-native-elements';
-import { Button as NBButton } from 'native-base';
+import { Button as NBButton, Content } from 'native-base';
 import { NavigationActions } from 'react-navigation';
 import isEmail from 'validator/lib/isEmail';
 import * as firebase from 'firebase';
@@ -174,7 +174,7 @@ export default class LoginScreen extends React.Component<Props, State> {
 
   render() {
     return (
-      <View>
+      <Content>
         <View style={styles.header}>
           <View style={{ alignItems: 'center' }}>
             <Icon name="flash" style={{ fontSize: 104 }} />
@@ -304,7 +304,7 @@ export default class LoginScreen extends React.Component<Props, State> {
             </View>
           </View>
         </Modal>
-      </View>
+      </Content>
     );
   }
 }

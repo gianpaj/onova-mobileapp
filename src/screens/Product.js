@@ -3,7 +3,7 @@
 import React from 'react';
 // prettier-ignore
 import {
-  ActivityIndicator,
+  Share,
   StyleSheet,
   Text,
   Image,
@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 // prettier-ignore
 import {
+  ActionSheet,
   Body,
   Button as NBButton,
   Container,
@@ -52,7 +53,54 @@ type State = {
   refreshing: boolean,
 };
 
+// @TODO: if Product is mine Delete, Edit
+const BUTTONS = ['Share', 'Copy Link', 'Report', 'Cancel'];
+
+const isIOS = Platform.OS === 'ios';
+
 export default class Product extends React.Component<Props, State> {
+  showActionSheet() {
+    ActionSheet.show(
+      {
+        options: BUTTONS,
+        destructiveButtonIndex: BUTTONS.indexOf('Report'),
+        cancelButtonIndex: BUTTONS.indexOf('Cancel'),
+      },
+      buttonIndex => {
+        switch (buttonIndex) {
+          case BUTTONS.indexOf('Report'):
+            // report action
+            break;
+          case BUTTONS.indexOf('Share'):
+            this.showShareActionSheet();
+            break;
+          default:
+            console.log('Cancel or Copy link');
+            break;
+        }
+      }
+    );
+  }
+
+  showShareActionSheet() {
+    Share.share({
+      title: 'cool',
+      url: 'https://onova.co', // ios only
+    }).then(res => {
+      console.log(res);
+      if (isIOS) {
+        if (res.action == Share.dismissedAction) {
+          console.log('iOS: user cancelled sharing');
+        } else if (res.action == Share.sharedAction) {
+          console.log('iOS: user shared on:', res.activityType);
+        }
+      } else {
+        // android
+        console.log("Android: we don't know if user shared item");
+      }
+    });
+  }
+
   render() {
     return (
       <Container style={styles.container}>
@@ -70,7 +118,11 @@ export default class Product extends React.Component<Props, State> {
           <Body />
           <Right>
             <NBButton transparent dark>
-              <Icon style={styles.moreIcon} name="ios-more" />
+              <Icon
+                name="ios-more"
+                style={styles.moreIcon}
+                onPress={() => this.showActionSheet()}
+              />
             </NBButton>
           </Right>
         </Header>
@@ -80,7 +132,6 @@ export default class Product extends React.Component<Props, State> {
             <Text style={styles.username}>{item.username}</Text>
             <Text style={styles.location}>{item.location}</Text>
           </View>
-
           <View style={{ flex: 1 }} />
           <Text style={styles.price}>{item.price}</Text>
         </View>
@@ -88,7 +139,11 @@ export default class Product extends React.Component<Props, State> {
         <View style={styles.bottomSection}>
           <Icon name="ios-bookmark-outline" style={styles.iconSave} />
           <Icon name="ios-text-outline" style={styles.iconCommmentAndShare} />
-          <Icon name="ios-share-outline" style={styles.iconCommmentAndShare} />
+          <Icon
+            name="ios-share-outline"
+            style={styles.iconCommmentAndShare}
+            onPress={() => this.showShareActionSheet()}
+          />
 
           <View style={{ flex: 1 }} />
           <Button

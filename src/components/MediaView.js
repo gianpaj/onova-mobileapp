@@ -1,14 +1,15 @@
 // @flow
 
 import React from 'react';
-import { View, Image, Dimensions } from 'react-native';
-// import FastImage from 'react-native-fast-image';
+import { View, Image, Dimensions, StyleSheet } from 'react-native';
+import Swiper from 'react-native-swiper';
+import { colors } from 'react-native-elements';
 
 const { width } = Dimensions.get('window');
 
 type Props = {
   product: any,
-  source: string,
+  source: string | Array,
 };
 
 type State = {
@@ -27,13 +28,45 @@ export default class MediaView extends React.Component<Props, State> {
 
   componentWillMount() {
     // if (this.props.type === 'image') {
-    Image.getSize(this.props.source, (w, h) => {
-      this.setState({ imageHeight: Math.floor(h * (width / w)) });
-    });
-    // }
+    if (typeof this.props.source != 'object') {
+      Image.getSize(this.props.source, (w, h) => {
+        this.setState({ imageHeight: Math.floor(h * (width / w)) });
+      });
+    } else {
+      Image.getSize(this.props.source['0'], (w, h) => {
+        this.setState({ imageHeight: Math.floor(h * (width / w)) });
+      });
+      for (let key in this.props.source) {
+        const url = this.props.source[key];
+        console.log(url);
+      }
+    }
   }
 
   render() {
+    if (typeof this.props.source == 'object') {
+      const images = this.props.source;
+      return (
+        <View style={[styles.container, { height: this.state.imageHeight }]}>
+          <Swiper
+            style={styles.wrapper}
+            autoplay={false}
+            loop={false}
+            bounces
+            paginationStyle={styles.pagination}
+            activeDotColor={colors.dkGreyBg}>
+            {Object.keys(images).map(key => (
+              <Image
+                key={key}
+                source={{ uri: images[key] }}
+                style={{ width, height: this.state.imageHeight }}
+                resizeMode={'contain'}
+              />
+            ))}
+          </Swiper>
+        </View>
+      );
+    }
     return (
       <View>
         <Image
@@ -45,3 +78,12 @@ export default class MediaView extends React.Component<Props, State> {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    zIndex: 99,
+  },
+  pagination: {
+    bottom: -35,
+  },
+});

@@ -3,6 +3,7 @@
   "extends": [
     "plugin:flowtype/recommended",
     "plugin:react/recommended",
+    "plugin:react-native/all",
     "plugin:import/errors",
     "plugin:import/warnings",
     "prettier",
@@ -12,6 +13,7 @@
   "plugins": [
     "flowtype",
     "react",
+    "react-native",
     "prettier"
   ],
   "globals": {
@@ -42,6 +44,10 @@
     "react/jsx-wrap-multilines": 2,
     "react/self-closing-comp": 2,
     "react/prefer-es6-class": [2, "always"],
+    "react-native/no-unused-styles": 2,
+    "react-native/no-inline-styles": 1,
+    "react-native/no-color-literals": 2,
+    "react-native/split-platform-components": 2,
     "prettier/prettier": [
       "error",
       {

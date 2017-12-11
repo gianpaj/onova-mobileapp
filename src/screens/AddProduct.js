@@ -14,13 +14,13 @@ import {
 // prettier-ignore
 import {
   Body,
-  Button,
   Container,
   Header,
-  Content,
 } from 'native-base';
 import ImagePicker from 'react-native-image-crop-picker';
 import { withNavigationFocus } from '@patwoz/react-navigation-is-focused-hoc';
+
+import colors from '../config/colors';
 
 type Props = {
   isFocused: boolean,
@@ -58,7 +58,7 @@ class AddProduct extends React.Component<Props, State> {
     // }
   }
 
-  selectPhotoTapped() {
+  selectPhotoTapped = () => {
     ImagePicker.openCamera({
       width: 700,
       height: 700,
@@ -79,7 +79,7 @@ class AddProduct extends React.Component<Props, State> {
       .catch(() => {
         this.props.navigation.goBack();
       });
-  }
+  };
 
   render() {
     return (
@@ -90,7 +90,7 @@ class AddProduct extends React.Component<Props, State> {
           </Body>
         </Header>
         <Body>
-          <TouchableOpacity onPress={this.selectPhotoTapped.bind(this)}>
+          <TouchableOpacity onPress={this.selectPhotoTapped}>
             <View
               style={[
                 styles.avatar,
@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F5FCFF',
   },
   avatarContainer: {
-    borderColor: '#9B9B9B',
+    borderColor: colors.grey4,
     borderWidth: 1 / PixelRatio.get(),
     justifyContent: 'center',
     alignItems: 'center',

@@ -113,12 +113,12 @@ class AddProduct extends React.Component<Props, State> {
 export default withNavigationFocus(AddProduct);
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
+  // container: {
+  //   flex: 1,
+  //   justifyContent: 'center',
+  //   alignItems: 'center',
+  //   backgroundColor: '#F5FCFF',
+  // },
   avatarContainer: {
     borderColor: colors.grey4,
     borderWidth: 1 / PixelRatio.get(),

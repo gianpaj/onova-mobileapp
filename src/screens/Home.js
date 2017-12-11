@@ -20,16 +20,12 @@ import {
 } from 'native-base';
 import { TabViewAnimated, TabBar, SceneMap } from 'react-native-tab-view';
 
-import ImageGrid from '../components/ImageGrid';
+import { ImageGrid } from '../components/ImageGrid';
 
 const initialLayout = {
   height: 0,
   width: Dimensions.get('window').width,
 };
-
-const ClothesRoute = () => <ImageGrid URL="https://picsum.photos/list" />;
-const ShoesRoute = () => <ImageGrid URL="https://picsum.photos/list" />;
-const OtherRoute = () => <ImageGrid URL="https://picsum.photos/list" />;
 
 type Props = {
   navigation: any,
@@ -60,10 +56,16 @@ export class Home extends React.PureComponent<Props, State> {
     />
   );
 
+  _openItem = item => {
+    this.props.navigation.navigate('Product', item);
+  };
+
   _renderScene = SceneMap({
-    clothes: ClothesRoute,
-    shoes: ShoesRoute,
-    other: OtherRoute,
+    clothes: () => (
+      <ImageGrid openItem={this._openItem} apiURL="/api/products" />
+    ),
+    shoes: () => <ImageGrid openItem={this._openItem} apiURL="/api/products" />,
+    other: () => <ImageGrid openItem={this._openItem} apiURL="/api/products" />,
   });
 
   onShare() {
@@ -104,12 +106,12 @@ export class Home extends React.PureComponent<Props, State> {
   }
 }
 
-const STATUS_BAR_HEIGHT = Platform.OS === 'ios' ? 20 : 0;
+// const STATUS_BAR_HEIGHT = Platform.OS === 'ios' ? 20 : 0;
 
 const styles = StyleSheet.create({
-  statusBarUnderlay: {
-    marginTop: STATUS_BAR_HEIGHT,
-  },
+  // statusBarUnderlay: {
+  //   marginTop: STATUS_BAR_HEIGHT,
+  // },
   container: {
     flex: 1,
   },

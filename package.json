@@ -13,7 +13,8 @@
     "flow": "flow",
     "flow-check": "flow check",
     "flow-start": "flow start",
-    "flow-stop": "flow stop"
+    "flow-stop": "flow stop",
+    "postinstall": "react-native link"
   },
   "dependencies": {
     "@patwoz/react-navigation-is-focused-hoc": "^1.1.0",

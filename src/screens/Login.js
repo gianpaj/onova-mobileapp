@@ -39,7 +39,7 @@ type State = {
   loadingReset: boolean,
 };
 
-export default class LoginScreen extends React.Component<Props, State> {
+export class Login extends React.Component<Props, State> {
   componentWillMount() {
     GoogleSignin.hasPlayServices({ autoResolve: true });
     GoogleSignin.configure({

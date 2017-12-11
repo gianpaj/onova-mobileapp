@@ -58,7 +58,7 @@ const BUTTONS = ['Share', 'Copy Link', 'Report', 'Cancel'];
 
 const isIOS = Platform.OS === 'ios';
 
-export default class Product extends React.Component<Props, State> {
+export class Product extends React.Component<Props, State> {
   showActionSheet() {
     ActionSheet.show(
       {

@@ -16,12 +16,12 @@ import { updateFocus } from '@patwoz/react-navigation-is-focused-hoc';
 import * as firebase from 'firebase';
 
 import colors from './config/colors';
-import Login from './screens/Login';
-import Signup from './screens/Signup';
-import Home from './screens/Home';
+import { Login } from './screens/Login';
+import { Signup } from './screens/Signup';
+import { Home } from './screens/Home';
 import AddProduct from './screens/AddProduct';
-import Profile from './screens/Profile';
-import Product from './screens/Product';
+import { Profile } from './screens/Profile';
+import { Product } from './screens/Product';
 
 const isiOS = Platform.OS === 'ios';
 

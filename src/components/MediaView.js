@@ -16,7 +16,7 @@ type State = {
   imageHeight: number,
 };
 
-export default class MediaView extends React.Component<Props, State> {
+export class MediaView extends React.Component<Props, State> {
   state = {
     // isLoading: false,
     imageHeight: 0,

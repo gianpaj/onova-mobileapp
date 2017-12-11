@@ -30,7 +30,7 @@ const { width } = Dimensions.get('window');
 const getImageUrl = (id, width, height) =>
   `https://picsum.photos/${width}/${height}?image=${id}`;
 
-export default class ImageGrid extends React.Component<Props, State> {
+export class ImageGrid extends React.Component<Props, State> {
   constructor(props: Object) {
     super(props);
   }

@@ -31,7 +31,7 @@ type State = {
   loading: boolean,
 };
 
-export default class LoginScreen extends React.Component<Props, State> {
+export class Signup extends React.Component<Props, State> {
   state = {
     username: '',
     email: '',

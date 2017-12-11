@@ -37,7 +37,7 @@ type Props = {
 
 type State = {};
 
-export default class HomeScreen extends React.PureComponent<Props, State> {
+export class Home extends React.PureComponent<Props, State> {
   state = {
     index: 0,
     routes: [

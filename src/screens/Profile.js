@@ -38,7 +38,7 @@ type State = {
   provider: string,
   userData: any,
 };
-export default class HomeScreen extends React.Component<Props, State> {
+export class Profile extends React.Component<Props, State> {
   state = {
     provider: '',
     userData: {},

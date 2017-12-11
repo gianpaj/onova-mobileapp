@@ -49,9 +49,9 @@ export default class LoginScreen extends React.Component<Props, State> {
   }
 
   state = {
-    email: 'hello@gmail.com',
+    email: 'gianpa+test2@gmail.com',
     // email: '',
-    password: '***REMOVED***',
+    password: 'americano',
     // password: '',
     modalVisible: false,
     emailReset: '',
@@ -84,6 +84,8 @@ export default class LoginScreen extends React.Component<Props, State> {
       .catch((err: api.APIError) => {
         if (err.status == 400 || err.status == 500) {
           ui.showToast(err.message, 'danger');
+        } else if (err.status == 401) {
+          ui.showToast(err.message.toString());
         }
         console.log(err);
         this.setState({ loadingLogin: false });
@@ -172,6 +174,15 @@ export default class LoginScreen extends React.Component<Props, State> {
       });
   }
 
+  _inputProps = {
+    autoCapitalize: 'none',
+    autoCorrect: false,
+    clearButtonMode: 'while-editing',
+    editable: !this.state.loading,
+    enablesReturnKeyAutomatically: true,
+    inputStyle: styles.input,
+  };
+
   render() {
     return (
       <Content>
@@ -188,35 +199,27 @@ export default class LoginScreen extends React.Component<Props, State> {
         </View>
         <View>
           <FormInput
-            inputStyle={styles.input}
             placeholder="Email"
-            autoCapitalize="none"
-            autoCorrect={false}
             keyboardType="email-address"
             returnKeyType="next"
             onSubmitEditing={() => this.PwdInput.focus()}
-            enablesReturnKeyAutomatically
             value={this.state.email}
-            editable={!this.state.loadingLogin}
             testID="EmailField"
             onChangeText={text => this.setState({ email: text })}
+            {...this._inputProps}
           />
           <FormInput
             ref={c => {
               this.PwdInput = c;
             }}
-            inputStyle={styles.input}
             secureTextEntry
             placeholder="Password"
-            autoCapitalize="none"
-            autoCorrect={false}
             returnKeyType="go"
             onSubmitEditing={() => this.onLogin()}
-            enablesReturnKeyAutomatically
             value={this.state.password}
-            editable={!this.state.loadingLogin}
             testID="PasswordField"
             onChangeText={text => this.setState({ password: text })}
+            {...this._inputProps}
           />
           <Text
             style={styles.hr}
@@ -263,45 +266,45 @@ export default class LoginScreen extends React.Component<Props, State> {
           visible={this.state.modalVisible}
           onRequestClose={this._onModalDismiss}>
           <View style={{ marginTop: 22 }}>
-            <View>
-              <View style={{ alignSelf: 'center' }}>
-                <Text style={{ fontWeight: 'bold' }}>Trouble logging in?</Text>
-                <Text>
-                  Enter your email and we&apos;ll send a link to reset your
-                  password
-                </Text>
-              </View>
-
-              <FormInput
-                inputStyle={styles.input}
-                placeholder="Email"
-                autoCapitalize="none"
-                autoCorrect={false}
-                keyboardType="email-address"
-                returnKeyType="go"
-                value={this.state.emailReset}
-                onChangeText={text => this.setState({ emailReset: text })}
-              />
-
-              <Button
-                buttonStyle={styles.PrimaryButton}
-                raised
-                loading={this.state.loadingReset}
-                disabled={
-                  !isEmail(this.state.emailReset) || this.state.loadingReset
-                }
-                onPress={() => this.onResetPassword()}
-                title="Send email"
-              />
-              <NBButton
-                small
-                style={styles.SecondaryButtonNB}
-                onPress={() => {
-                  this.setModalVisible(!this.state.modalVisible);
-                }}>
-                <Text>Back To Login</Text>
-              </NBButton>
+            <View style={{ alignSelf: 'center', margin: 22 }}>
+              <Text style={{ fontWeight: 'bold' }}>Trouble logging in?</Text>
+              <Text>
+                Enter your email and we&apos;ll send a link to reset your
+                password
+              </Text>
             </View>
+
+            <FormInput
+              inputStyle={[styles.input]}
+              containerStyle={{ margin: 10 }}
+              placeholder="Email"
+              autoCapitalize="none"
+              autoCorrect={false}
+              clearButtonMode="while-editing"
+              keyboardType="email-address"
+              returnKeyType="go"
+              value={this.state.emailReset}
+              onChangeText={text => this.setState({ emailReset: text })}
+            />
+
+            <Button
+              buttonStyle={styles.PrimaryButton}
+              raised
+              loading={this.state.loadingReset}
+              disabled={
+                !isEmail(this.state.emailReset) || this.state.loadingReset
+              }
+              onPress={() => this.onResetPassword()}
+              title="Send email"
+            />
+            <NBButton
+              small
+              style={styles.SecondaryButtonNB}
+              onPress={() => {
+                this.setModalVisible(!this.state.modalVisible);
+              }}>
+              <Text>Back To Login</Text>
+            </NBButton>
           </View>
         </Modal>
       </Content>
@@ -316,6 +319,7 @@ const styles = StyleSheet.create({
   },
   input: {
     color: colors.black,
+    width: '100%',
   },
   PrimaryButton: {
     backgroundColor: colors.primary,

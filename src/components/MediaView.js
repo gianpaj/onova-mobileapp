@@ -3,7 +3,7 @@
 import React from 'react';
 import { View, Image, Dimensions, StyleSheet } from 'react-native';
 import Swiper from 'react-native-swiper';
-import { colors } from 'react-native-elements';
+import colors from '../config/colors';
 
 const { width } = Dimensions.get('window');
 

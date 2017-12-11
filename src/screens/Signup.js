@@ -88,6 +88,14 @@ export default class LoginScreen extends React.Component<Props, State> {
     this.props.navigation.dispatch(resetAction);
   }
 
+  _inputProps = {
+    autoCapitalize: 'none',
+    autoCorrect: false,
+    clearButtonMode: 'while-editing',
+    editable: !this.state.loading,
+    inputStyle: styles.input,
+  };
+
   render() {
     return (
       <View>
@@ -104,45 +112,36 @@ export default class LoginScreen extends React.Component<Props, State> {
         </View>
         <View>
           <FormInput
-            inputStyle={styles.input}
             placeholder="Username"
-            autoCapitalize="none"
-            autoCorrect={false}
             returnKeyType="next"
             onSubmitEditing={() => this.EmailInput.focus()}
             value={this.state.username}
-            editable={!this.state.loading}
             onChangeText={text => this.setState({ username: text })}
+            {...this._inputProps}
           />
           <FormInput
             ref={c => {
               this.EmailInput = c;
             }}
-            inputStyle={styles.input}
             placeholder="Email"
-            autoCapitalize="none"
-            autoCorrect={false}
             keyboardType="email-address"
             returnKeyType="next"
             onSubmitEditing={() => this.PwdInput.focus()}
             value={this.state.email}
-            editable={!this.state.loading}
             onChangeText={text => this.setState({ email: text })}
+            {...this._inputProps}
           />
           <FormInput
             ref={c => {
               this.PwdInput = c;
             }}
-            inputStyle={styles.input}
             secureTextEntry
-            autoCorrect={false}
             placeholder="Password"
-            autoCapitalize="none"
             returnKeyType="go"
             onSubmitEditing={() => this.onSignup()}
             value={this.state.password}
-            editable={!this.state.loading}
             onChangeText={text => this.setState({ password: text })}
+            {...this._inputProps}
           />
           <View style={{ marginTop: 15 }}>
             <Button
@@ -179,6 +178,7 @@ const styles = StyleSheet.create({
   },
   input: {
     color: colors.black,
+    width: '100%',
   },
   SignupButton: {
     backgroundColor: colors.pDark,

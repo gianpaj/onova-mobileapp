@@ -1,7 +1,7 @@
 // @flow
-import colors from '../config/colors';
-
 import React from 'react';
+import { connect } from 'react-redux';
+
 // prettier-ignore
 import {
   AsyncStorage,
@@ -24,10 +24,13 @@ import {
 import { GoogleSignin } from 'react-native-google-signin';
 import * as firebase from 'firebase';
 
+import { logout } from '../actions/actionCreator';
+import colors from '../config/colors';
+
 const USER_KEY = 'userData';
 
 type Props = {
-  navigation: any,
+  logout: any,
 };
 
 type UserData = {
@@ -38,7 +41,7 @@ type State = {
   provider: string,
   userData: any,
 };
-export default class HomeScreen extends React.Component<Props, State> {
+class Profile extends React.Component<Props, State> {
   state = {
     provider: '',
     userData: {},
@@ -54,7 +57,7 @@ export default class HomeScreen extends React.Component<Props, State> {
   }
 
   goToSettings() {
-    this.props.navigation.navigate('Settings');
+    // this.props.navigation.navigate('Settings');
   }
 
   onLogout() {
@@ -68,7 +71,7 @@ export default class HomeScreen extends React.Component<Props, State> {
   afterLogout() {
     return AsyncStorage.removeItem(USER_KEY)
       .then(() => {
-        this.props.navigation.navigate('Login');
+        this.props.logout();
       })
       .catch(err => {
         console.error(err);
@@ -142,3 +145,10 @@ export default class HomeScreen extends React.Component<Props, State> {
     );
   }
 }
+
+const mapDispatchToProps = {
+  logout,
+};
+
+const Logout = connect(null, mapDispatchToProps)(Profile);
+export default Logout;

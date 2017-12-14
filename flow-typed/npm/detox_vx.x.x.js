@@ -1,4 +1,4 @@
-// flow-typed signature: 9c0666efc5c224c717114430b55cce0e
+// flow-typed signature: b279cf15ddcd7b3fe279098b7d590ae3
 // flow-typed version: <<STUB>>/detox_v^5.10.0/flow_v0.56.0
 
 /**
@@ -22,6 +22,14 @@ declare module 'detox' {
  * require those files directly. Feel free to delete any files that aren't
  * needed.
  */
+declare module 'detox/ios_src/EarlGrey/Tests/FunctionalTests/TestRig/Resources/www/material.min' {
+  declare module.exports: any;
+}
+
+declare module 'detox/ios_src/SocketRocket/TestChatServer/static/proxy' {
+  declare module.exports: any;
+}
+
 declare module 'detox/lib/android/expect' {
   declare module.exports: any;
 }
@@ -507,6 +515,12 @@ declare module 'detox/wallaby' {
 }
 
 // Filename aliases
+declare module 'detox/ios_src/EarlGrey/Tests/FunctionalTests/TestRig/Resources/www/material.min.js' {
+  declare module.exports: $Exports<'detox/ios_src/EarlGrey/Tests/FunctionalTests/TestRig/Resources/www/material.min'>;
+}
+declare module 'detox/ios_src/SocketRocket/TestChatServer/static/proxy.js' {
+  declare module.exports: $Exports<'detox/ios_src/SocketRocket/TestChatServer/static/proxy'>;
+}
 declare module 'detox/lib/android/expect.js' {
   declare module.exports: $Exports<'detox/lib/android/expect'>;
 }

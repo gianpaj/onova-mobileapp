@@ -1,6 +1,7 @@
 // @flow
 
 import React from 'react';
+import { connect } from 'react-redux';
 // prettier-ignore
 import {
   AsyncStorage,
@@ -22,12 +23,15 @@ import isEmail from 'validator/lib/isEmail';
 import * as firebase from 'firebase';
 import { GoogleSignin, User as GoogleUser } from 'react-native-google-signin';
 
+import { login } from '../actions/actionCreator';
+
 import * as api from '../utils/api';
 import * as ui from '../utils/ui';
 import colors from '../config/colors';
 
 type Props = {
   navigation: any,
+  login: any,
 };
 
 type State = {
@@ -39,7 +43,7 @@ type State = {
   loadingReset: boolean,
 };
 
-export default class LoginScreen extends React.Component<Props, State> {
+class LoginScreen extends React.Component<Props, State> {
   componentWillMount() {
     GoogleSignin.hasPlayServices({ autoResolve: true });
     GoogleSignin.configure({
@@ -51,7 +55,7 @@ export default class LoginScreen extends React.Component<Props, State> {
   state = {
     email: 'gianpa+test2@gmail.com',
     // email: '',
-    password: 'americano',
+    password: 'express2',
     // password: '',
     modalVisible: false,
     emailReset: '',
@@ -85,9 +89,16 @@ export default class LoginScreen extends React.Component<Props, State> {
         if (err.status == 400 || err.status == 500) {
           ui.showToast(err.message, 'danger');
         } else if (err.status == 401) {
-          ui.showToast(err.message.toString());
+          // auth error
+          ui.showToast(err.message, 'warning');
+        } else if (err.message == 'timeout') {
+          ui.showToast(
+            'Onova servers might be taking a nap. Please retry',
+            'warning'
+          );
+        } else {
+          console.log(err);
         }
-        console.log(err);
         this.setState({ loadingLogin: false });
       });
   }
@@ -121,17 +132,18 @@ export default class LoginScreen extends React.Component<Props, State> {
     return AsyncStorage.setItem('userData', JSONstring).then(() => {
       ui.showToast('Welcome!');
       this.setState({ loadingLogin: false });
-      this.resetNavigation('Tabs');
+      // this.resetNavigation('Tabs');
+      this.props.login();
     });
   }
 
-  resetNavigation(targetRoute: any) {
-    const resetAction = NavigationActions.reset({
-      index: 0,
-      actions: [NavigationActions.navigate({ routeName: targetRoute })],
-    });
-    this.props.navigation.dispatch(resetAction);
-  }
+  // resetNavigation(targetRoute: any) {
+  //   const resetAction = NavigationActions.reset({
+  //     index: 0,
+  //     actions: [NavigationActions.navigate({ routeName: targetRoute })],
+  //   });
+  //   this.props.navigation.dispatch(resetAction);
+  // }
 
   setModalVisible(visible: boolean) {
     this.setState(prevState => {
@@ -311,6 +323,14 @@ export default class LoginScreen extends React.Component<Props, State> {
     );
   }
 }
+
+const mapDispatchToProps = {
+  login,
+};
+
+const Login = connect(null, mapDispatchToProps)(LoginScreen);
+
+export default Login;
 
 const styles = StyleSheet.create({
   header: {

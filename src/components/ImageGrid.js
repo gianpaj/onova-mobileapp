@@ -11,9 +11,11 @@ import {
   View,
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
+import { NavigationActions } from 'react-navigation';
 
 type Props = {
   URL: string,
+  navigation: any,
 };
 
 type State = {
@@ -79,7 +81,12 @@ export default class ImageGrid extends React.Component<Props, State> {
   };
 
   onItemPress(item) {
-    console.log(item);
+    const navigateToProduct = NavigationActions.navigate({
+      routeName: 'product',
+      params: item,
+    });
+
+    this.props.navigation.dispatch(navigateToProduct);
   }
 
   renderItem = ({ item }) => {

@@ -101,6 +101,10 @@ export default class Product extends React.Component<Props, State> {
     });
   }
 
+  componentWillMount() {
+    console.warn(this.props);
+  }
+
   render() {
     return (
       <Container style={styles.container}>

@@ -8,7 +8,7 @@
   },
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
-    "test": "jest __tests__ --setupTestFrameworkScriptFile=./e2e/setup-unit-tests.js",
+    "test": "jest __tests__",
     "test-e2e": "jest e2e --setupTestFrameworkScriptFile=./e2e/init.js --bail",
     "flow": "flow",
     "flow-check": "flow check",
@@ -59,7 +59,7 @@
     "setupTestFrameworkScriptFile": "./e2e/init.js",
     "preset": "react-native",
     "transformIgnorePatterns": [
-      "node_modules/(?!(jest-)?react-native|react-native-vector-icons|react-navigation|native-base-shoutem-theme)"
+      "node_modules/(?!(jest-)?react-native|react-native-vector-icons|react-navigation|native-base-shoutem-theme|redux-persist)"
     ]
   },
   "detox": {

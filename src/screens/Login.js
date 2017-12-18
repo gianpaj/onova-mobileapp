@@ -31,7 +31,8 @@ import colors from '../config/colors';
 
 type Props = {
   navigation: any,
-  login: any,
+  loadingLogin: true,
+  login(): any,
 };
 
 type State = {
@@ -59,48 +60,15 @@ class LoginScreen extends React.Component<Props, State> {
     // password: '',
     modalVisible: false,
     emailReset: '',
-    loadingLogin: false,
     loadingReset: false,
   };
 
   onLogin() {
-    this.setState({ loadingLogin: true });
     console.log('onLogin()', this.state.email, this.state.password);
-    api
-      .post('/api/auth/login', {
-        emailAddress: this.state.email,
-        password: this.state.password,
-      })
-      .then(res => {
-        if (res.data) {
-          console.log('user logged in via email');
-          const userData = {
-            ...res.data,
-            ...{ token: res.token, provider: 'email' },
-          };
-          this.afterLogin(userData);
-        } else {
-          this.setState({ loadingLogin: false });
-          console.log(res);
-          // ui.showToast(res.toString());
-        }
-      })
-      .catch((err: api.APIError) => {
-        if (err.status == 400 || err.status == 500) {
-          ui.showToast(err.message, 'danger');
-        } else if (err.status == 401) {
-          // auth error
-          ui.showToast(err.message, 'warning');
-        } else if (err.message == 'timeout') {
-          ui.showToast(
-            'Onova servers might be taking a nap. Please retry',
-            'warning'
-          );
-        } else {
-          console.log(err);
-        }
-        this.setState({ loadingLogin: false });
-      });
+    this.props.login({
+      emailAddress: this.state.email,
+      password: this.state.password,
+    });
   }
 
   googleSignin() {
@@ -131,9 +99,7 @@ class LoginScreen extends React.Component<Props, State> {
     const JSONstring = JSON.stringify(userData);
     return AsyncStorage.setItem('userData', JSONstring).then(() => {
       ui.showToast('Welcome!');
-      this.setState({ loadingLogin: false });
       // this.resetNavigation('Tabs');
-      this.props.login();
     });
   }
 
@@ -208,6 +174,7 @@ class LoginScreen extends React.Component<Props, State> {
               </Text>
             </View>
           </View>
+          {/* {this.props.hasError && <Text>errors</Text>} */}
         </View>
         <View>
           <FormInput
@@ -244,11 +211,11 @@ class LoginScreen extends React.Component<Props, State> {
             <Button
               buttonStyle={styles.PrimaryButton}
               raised
-              loading={this.state.loadingLogin}
+              loading={this.props.loadingLogin}
               disabled={
                 !this.state.email ||
                 !this.state.password ||
-                this.state.loadingLogin
+                this.props.loadingLogin
               }
               onPress={() => this.onLogin()}
               title="Login"
@@ -324,11 +291,18 @@ class LoginScreen extends React.Component<Props, State> {
   }
 }
 
-const mapDispatchToProps = {
-  login,
-};
+const mapStateToProps = state => ({
+  loadingLogin: state.LoginReducer.loading,
+  hasError: state.LoginReducer.hasError,
+});
 
-const Login = connect(null, mapDispatchToProps)(LoginScreen);
+const mapActionsToProps = dispatch => ({
+  login(data) {
+    dispatch(login(data));
+  },
+});
+
+const Login = connect(mapStateToProps, mapActionsToProps)(LoginScreen);
 
 export default Login;
 

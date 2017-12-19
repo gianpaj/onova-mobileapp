@@ -20,12 +20,14 @@ import {
 } from 'native-base';
 import ImagePicker from 'react-native-image-crop-picker';
 import { withNavigationFocus } from '@patwoz/react-navigation-is-focused-hoc';
+// $FlowFixMe
+import { NavigationScreenProp } from 'react-navigation';
 
 import colors from '../config/colors';
 
 type Props = {
   isFocused: boolean,
-  navigation: any,
+  navigation: NavigationScreenProp,
 };
 
 type State = {

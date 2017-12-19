@@ -19,7 +19,8 @@ import {
   FormInput,
 } from 'react-native-elements';
 import { Button as NBButton, Content } from 'native-base';
-// import { NavigationActions } from 'react-navigation';
+// $FlowFixMe
+import { NavigationScreenProp } from 'react-navigation';
 import isEmail from 'validator/lib/isEmail';
 import * as firebase from 'firebase';
 import { GoogleSignin, User as GoogleUser } from 'react-native-google-signin';
@@ -32,9 +33,9 @@ import * as ui from '../utils/ui';
 import colors from '../config/colors';
 
 type Props = {
-  navigation: any,
-  loadingLogin: true,
+  loadingLogin: boolean,
   login(LoginData): any,
+  navigation?: NavigationScreenProp,
 };
 
 type State = {
@@ -233,7 +234,11 @@ class LoginScreen extends React.Component<Props, State> {
             <Button
               buttonStyle={styles.PDarkButton}
               raised
-              onPress={() => this.props.navigation.navigate('Signup')}
+              onPress={() =>
+                this.props.navigation
+                  ? this.props.navigation.navigate('Signup')
+                  : null
+              }
               title="Signup"
             />
             <NBButton

@@ -20,6 +20,8 @@ import {
   Header,
 } from 'native-base';
 import { TabViewAnimated, TabBar, SceneMap } from 'react-native-tab-view';
+// $FlowFixMe
+import { NavigationScreenProp } from 'react-navigation';
 
 import ImageGrid from '../components/ImageGrid';
 
@@ -33,7 +35,7 @@ const ShoesRoute = () => <ImageGrid URL="https://picsum.photos/list" />;
 const OtherRoute = () => <ImageGrid URL="https://picsum.photos/list" />;
 
 type Props = {
-  navigation: any,
+  navigation?: NavigationScreenProp,
 };
 
 type State = {
@@ -65,7 +67,12 @@ export default class HomeScreen extends React.PureComponent<Props, State> {
   );
 
   _renderScene = SceneMap({
-    clothes: () => <ImageGrid navigation={this.props.navigation} URL="https://picsum.photos/list" />,
+    clothes: () => (
+      <ImageGrid
+        navigation={this.props.navigation}
+        URL="https://picsum.photos/list"
+      />
+    ),
     shoes: ShoesRoute,
     other: OtherRoute,
   });

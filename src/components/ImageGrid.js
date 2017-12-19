@@ -14,13 +14,11 @@ import {
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
 // $FlowFixMe
-import { NavigationActions } from 'react-navigation';
-// $FlowFixMe
-import type { NavigationState } from 'react-navigation/src/TypeDefinition';
+import { NavigationActions, NavigationScreenProp } from 'react-navigation';
 
 type Props = {
   URL: string,
-  navigation?: NavigationState,
+  navigation?: NavigationScreenProp,
 };
 
 type State = {
@@ -93,10 +91,11 @@ export default class ImageGrid extends React.Component<Props, State> {
       params: item,
     });
 
-    this.props.navigation.dispatch(navigateToProduct);
+    if (this.props.navigation)
+      this.props.navigation.dispatch(navigateToProduct);
   }
 
-  renderItem = ({ item }) => {
+  renderItem = ({ item }: any) => {
     const uri = getImageUrl(item.id, 200, 200);
     return (
       <View style={styles.imageContainer}>

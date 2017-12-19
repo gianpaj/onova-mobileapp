@@ -26,6 +26,8 @@ import {
 import {
   Button,
 } from 'react-native-elements';
+// $FlowFixMe
+import { NavigationScreenProp } from 'react-navigation';
 import MediaView from '../components/MediaView';
 
 import colors from '../config/colors';
@@ -41,7 +43,7 @@ const item = {
 };
 
 type Props = {
-  navigation: navigation,
+  navigation?: NavigationScreenProp,
   product: any,
   URL: string,
 };
@@ -116,7 +118,9 @@ export default class Product extends React.Component<Props, State> {
                 name={
                   Platform.OS === 'ios' ? 'ios-arrow-back' : 'md-arrow-back'
                 }
-                onPress={() => this.props.navigation.goBack()}
+                onPress={() =>
+                  this.props.navigation ? this.props.navigation.goBack() : null
+                }
               />
             </NBButton>
           </Left>

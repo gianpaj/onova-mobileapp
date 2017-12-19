@@ -15,7 +15,7 @@ import {
   FormInput,
 } from 'react-native-elements';
 // $FlowFixMe
-import { NavigationActions } from 'react-navigation';
+import { NavigationActions, NavigationScreenProp } from 'react-navigation';
 import isEmail from 'validator/lib/isEmail';
 
 import * as api from '../utils/api';
@@ -23,7 +23,7 @@ import * as ui from '../utils/ui';
 import colors from '../config/colors';
 
 type Props = {
-  navigation: any,
+  navigation: NavigationScreenProp,
 };
 
 type State = {
@@ -90,7 +90,7 @@ export default class LoginScreen extends React.Component<Props, State> {
       index: 0,
       actions: [NavigationActions.navigate({ routeName: targetRoute })],
     });
-    this.props.navigation.dispatch(resetAction);
+    if (this.props.navigation) this.props.navigation.dispatch(resetAction);
   }
 
   _inputProps = {
@@ -169,7 +169,9 @@ export default class LoginScreen extends React.Component<Props, State> {
               Already have an account?&nbsp;
               <Text
                 style={styles.linkText}
-                onPress={() => this.props.navigation.goBack()}>
+                onPress={() =>
+                  this.props.navigation ? this.props.navigation.goBack() : null
+                }>
                 Login
               </Text>
             </Text>

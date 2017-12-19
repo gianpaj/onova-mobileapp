@@ -6,6 +6,7 @@ import {
   AsyncStorage,
   StyleSheet,
   View,
+  // $FlowFixMe
 } from 'react-native';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/lib/integration/react';
@@ -19,7 +20,10 @@ import * as firebase from 'firebase';
 
 const { store, persistor } = configureStore();
 
-export default class App extends React.Component {
+type State = {
+  userData: any,
+};
+export default class LoginScreen extends React.Component<*, State> {
   state = {
     userData: null,
   };

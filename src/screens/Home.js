@@ -8,6 +8,7 @@ import {
   Text,
   Platform,
   Dimensions,
+  // $FlowFixMe
 } from 'react-native';
 import {
   Body,
@@ -35,7 +36,10 @@ type Props = {
   navigation: any,
 };
 
-type State = {};
+type State = {
+  index: number,
+  routes: Array<{ key: string, title: string }>,
+};
 
 export default class HomeScreen extends React.PureComponent<Props, State> {
   state = {
@@ -47,7 +51,7 @@ export default class HomeScreen extends React.PureComponent<Props, State> {
     ],
   };
 
-  _handleIndexChange = index => this.setState({ index });
+  _handleIndexChange = (index: number) => this.setState({ index });
 
   _renderHeader = props => (
     <TabBar
@@ -61,7 +65,7 @@ export default class HomeScreen extends React.PureComponent<Props, State> {
   );
 
   _renderScene = SceneMap({
-    clothes: ClothesRoute,
+    clothes: () => <ImageGrid navigation={this.props.navigation} URL="https://picsum.photos/list" />,
     shoes: ShoesRoute,
     other: OtherRoute,
   });
@@ -107,9 +111,9 @@ export default class HomeScreen extends React.PureComponent<Props, State> {
 const STATUS_BAR_HEIGHT = Platform.OS === 'ios' ? 20 : 0;
 
 const styles = StyleSheet.create({
-  statusBarUnderlay: {
-    marginTop: STATUS_BAR_HEIGHT,
-  },
+  // statusBarUnderlay: {
+  //   marginTop: STATUS_BAR_HEIGHT,
+  // },
   container: {
     flex: 1,
   },

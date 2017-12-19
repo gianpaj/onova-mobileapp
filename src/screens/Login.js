@@ -10,6 +10,7 @@ import {
   StyleSheet,
   Text,
   View,
+// $FlowFixMe
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
 // prettier-ignore
@@ -18,12 +19,13 @@ import {
   FormInput,
 } from 'react-native-elements';
 import { Button as NBButton, Content } from 'native-base';
-import { NavigationActions } from 'react-navigation';
+// import { NavigationActions } from 'react-navigation';
 import isEmail from 'validator/lib/isEmail';
 import * as firebase from 'firebase';
 import { GoogleSignin, User as GoogleUser } from 'react-native-google-signin';
 
 import { login } from '../actions/actionCreator';
+import type { LoginData } from '../types';
 
 import * as api from '../utils/api';
 import * as ui from '../utils/ui';
@@ -32,7 +34,7 @@ import colors from '../config/colors';
 type Props = {
   navigation: any,
   loadingLogin: true,
-  login(): any,
+  login(LoginData): any,
 };
 
 type State = {
@@ -40,11 +42,12 @@ type State = {
   password: string,
   modalVisible: boolean,
   emailReset: string,
-  loadingLogin: boolean,
   loadingReset: boolean,
 };
 
 class LoginScreen extends React.Component<Props, State> {
+  PwdInput: ?FormInput;
+
   componentWillMount() {
     GoogleSignin.hasPlayServices({ autoResolve: true });
     GoogleSignin.configure({
@@ -137,7 +140,7 @@ class LoginScreen extends React.Component<Props, State> {
       .post('/api/auth/reset', {
         emailAddress: this.state.email,
       })
-      .then(res => {
+      .then((res: any) => {
         if (res.message) {
           ui.showToast(res.message);
         }
@@ -156,7 +159,7 @@ class LoginScreen extends React.Component<Props, State> {
     autoCapitalize: 'none',
     autoCorrect: false,
     clearButtonMode: 'while-editing',
-    editable: !this.state.loading,
+    editable: !this.props.loadingLogin,
     enablesReturnKeyAutomatically: true,
     inputStyle: styles.input,
   };
@@ -169,7 +172,7 @@ class LoginScreen extends React.Component<Props, State> {
             <Icon name="flash" style={{ fontSize: 104 }} />
             <Text>Onova.co</Text>
             <View>
-              <Text style={{ color: '#000' }} testID="welcome">
+              <Text style={{ color: colors.black }} testID="welcome">
                 Buy and sell clothes from your phone
               </Text>
             </View>
@@ -181,7 +184,9 @@ class LoginScreen extends React.Component<Props, State> {
             placeholder="Email"
             keyboardType="email-address"
             returnKeyType="next"
-            onSubmitEditing={() => this.PwdInput.focus()}
+            onSubmitEditing={() =>
+              this.PwdInput ? this.PwdInput.focus() : undefined
+            }
             value={this.state.email}
             testID="EmailField"
             onChangeText={text => this.setState({ email: text })}

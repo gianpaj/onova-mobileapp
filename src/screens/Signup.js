@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Text,
   View,
+// $FlowFixMe
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
 // prettier-ignore
@@ -13,6 +14,7 @@ import {
   Button,
   FormInput,
 } from 'react-native-elements';
+// $FlowFixMe
 import { NavigationActions } from 'react-navigation';
 import isEmail from 'validator/lib/isEmail';
 
@@ -32,6 +34,9 @@ type State = {
 };
 
 export default class LoginScreen extends React.Component<Props, State> {
+  EmailInput: ?FormInput;
+  PwdInput: ?FormInput;
+
   state = {
     username: '',
     email: '',
@@ -72,7 +77,7 @@ export default class LoginScreen extends React.Component<Props, State> {
         }
         this.setState({ loading: false });
       })
-      .catch((err: APIError) => {
+      .catch((err: api.APIError) => {
         if (err.status == 400) {
           ui.showToast(err.message);
         }
@@ -104,7 +109,7 @@ export default class LoginScreen extends React.Component<Props, State> {
             <Icon name="flash" style={{ fontSize: 104 }} />
             <Text>Onova.co</Text>
             <View>
-              <Text style={{ color: '#000' }}>
+              <Text style={{ color: colors.black }}>
                 Buy and sell clothes from your phone
               </Text>
             </View>
@@ -114,7 +119,9 @@ export default class LoginScreen extends React.Component<Props, State> {
           <FormInput
             placeholder="Username"
             returnKeyType="next"
-            onSubmitEditing={() => this.EmailInput.focus()}
+            onSubmitEditing={() =>
+              this.EmailInput ? this.EmailInput.focus() : null
+            }
             value={this.state.username}
             onChangeText={text => this.setState({ username: text })}
             {...this._inputProps}
@@ -126,7 +133,9 @@ export default class LoginScreen extends React.Component<Props, State> {
             placeholder="Email"
             keyboardType="email-address"
             returnKeyType="next"
-            onSubmitEditing={() => this.PwdInput.focus()}
+            onSubmitEditing={() =>
+              this.PwdInput ? this.PwdInput.focus() : null
+            }
             value={this.state.email}
             onChangeText={text => this.setState({ email: text })}
             {...this._inputProps}

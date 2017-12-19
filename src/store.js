@@ -30,11 +30,17 @@ const rootReducer = combineReducers({
   LoginReducer,
 });
 
+if (__DEV__) {
+  console.warn('dev mode');
+}
+
 function configureStore() {
   const store = createStore(
     rootReducer,
-    window.__REDUX_DEVTOOLS_EXTENSION__ &&
-      window.__REDUX_DEVTOOLS_EXTENSION__(),
+    __DEV__
+      ? window.__REDUX_DEVTOOLS_EXTENSION__ &&
+        window.__REDUX_DEVTOOLS_EXTENSION__()
+      : undefined,
     applyMiddleware(thunk)
   );
   const persistor = persistStore(store);

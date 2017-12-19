@@ -1,6 +1,7 @@
 // @flow
 
 import React from 'react';
+// $FlowFixMe
 import { View, Image, Dimensions, StyleSheet } from 'react-native';
 import Swiper from 'react-native-swiper';
 import colors from '../config/colors';
@@ -9,7 +10,7 @@ const { width } = Dimensions.get('window');
 
 type Props = {
   product: any,
-  source: string | Array,
+  source: any,
 };
 
 type State = {
@@ -22,7 +23,7 @@ export default class MediaView extends React.Component<Props, State> {
     imageHeight: 0,
   };
 
-  constructor(props) {
+  constructor(props: Props) {
     super(props);
   }
 

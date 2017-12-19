@@ -8,6 +8,7 @@ import {
   Platform,
   Text,
   View,
+  // $FlowFixMe
 } from 'react-native';
 // prettier-ignore
 import {

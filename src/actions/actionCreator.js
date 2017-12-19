@@ -8,6 +8,7 @@ import {
   LOGIN_SUCCESS,
   Logout,
 } from './actionTypes';
+import type { Dispatch, LoginData } from '../types';
 import * as api from '../utils/api';
 
 const incrementAction = () => ({
@@ -18,7 +19,7 @@ const decrementAction = () => ({
   type: decrementCounter,
 });
 
-const login = data => dispatch => (
+const login = (data: LoginData) => (dispatch: Dispatch) => (
   dispatch({ type: LOGIN_PENDING }),
   // setTimeout(() => {
 

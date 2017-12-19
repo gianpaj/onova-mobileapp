@@ -5,54 +5,73 @@ const apiRoot = 'http://localhost:4040';
 
 /**
  * GET a path relative to API root url.
- * @param {String}  path Relative path to the configured API endpoint
- * @param {Boolean} suppressRedBox If true, no warning is shown on failed request
- * @returns {Promise} of response body
+ * @param path Relative path to the configured API endpoint
+ * @param suppressRedBox If true, no warning is shown on failed request
+ * @returns Promise of response body
  */
-export async function get(path, suppressRedBox) {
+export async function get(
+  path: string,
+  suppressRedBox: boolean = true
+): Promise<any> {
   return bodyOf(request('get', path, null, suppressRedBox));
 }
 
 /**
  * POST JSON to a path relative to API root url
- * @param {String} path Relative path to the configured API endpoint
- * @param {Object} body Anything that you can pass to JSON.stringify
- * @param {Boolean} suppressRedBox If true, no warning is shown on failed request
- * @returns {Promise}  of response body
+ * @param path Relative path to the configured API endpoint
+ * @param body Anything that you can pass to JSON.stringify
+ * @param suppressRedBox If true, no warning is shown on failed request
+ * @returns Promise of response body
  */
-export async function post(path, body, suppressRedBox) {
+export async function post(
+  path: string,
+  body?: any,
+  suppressRedBox: boolean = true
+): Promise<any> {
   return bodyOf(request('post', path, body, suppressRedBox));
 }
 
 /**
  * PUT JSON to a path relative to API root url
- * @param {String} path Relative path to the configured API endpoint
- * @param {Object} body Anything that you can pass to JSON.stringify
- * @param {Boolean} suppressRedBox If true, no warning is shown on failed request
- * @returns {Promise}  of response body
+ * @param path Relative path to the configured API endpoint
+ * @param body Anything that you can pass to JSON.stringify
+ * @param suppressRedBox If true, no warning is shown on failed request
+ * @returns Promise of response body
  */
-export async function put(path, body, suppressRedBox) {
+export async function put(
+  path: string,
+  body: any,
+  suppressRedBox: boolean = true
+): Promise<any> {
   return bodyOf(request('put', path, body, suppressRedBox));
 }
 
 /**
  * DELETE a path relative to API root url
- * @param {String} path Relative path to the configured API endpoint
- * @param {Boolean} suppressRedBox If true, no warning is shown on failed request
- * @returns {Promise}  of response body
+ * @param path Relative path to the configured API endpoint
+ * @param suppressRedBox If true, no warning is shown on failed request
+ * @returns Promise of response body
  */
-export async function del(path, suppressRedBox) {
+export async function del(
+  path: string,
+  suppressRedBox: boolean = true
+): Promise<any> {
   return bodyOf(request('delete', path, null, suppressRedBox));
 }
 
 /**
  * Make arbitrary fetch request to a path relative to API root url
- * @param {String} method One of: get|post|put|delete
- * @param {String} path Relative path to the configured API endpoint
- * @param {Object} body Anything that you can pass to JSON.stringify
- * @param {Boolean} suppressRedBox If true, no warning is shown on failed request
+ * @param method One of: get|post|put|delete
+ * @param path Relative path to the configured API endpoint
+ * @param body Anything that you can pass to JSON.stringify
+ * @param suppressRedBox If true, no warning is shown on failed request
  */
-export async function request(method, path, body, suppressRedBox) {
+export async function request(
+  method: string,
+  path: string,
+  body: any,
+  suppressRedBox: boolean
+) {
   try {
     const response = await sendRequest(method, path, body);
     return handleResponse(path, response);
@@ -71,7 +90,7 @@ export async function request(method, path, body, suppressRedBox) {
 /**
  * Takes a relative path and makes it a full URL to API server
  */
-export function url(path) {
+export function url(path: string) {
   // const apiRoot = getConfiguration('API_ROOT');
   return path.indexOf('/') === 0 ? apiRoot + path : apiRoot + '/' + path;
 }

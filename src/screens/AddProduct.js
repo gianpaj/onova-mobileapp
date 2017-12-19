@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   PixelRatio,
   StyleSheet,
+// $FlowFixMe
 } from 'react-native';
 // prettier-ignore
 import {
@@ -28,7 +29,7 @@ type Props = {
 };
 
 type State = {
-  images: Array,
+  images: any,
 };
 
 class AddProduct extends React.Component<Props, State> {
@@ -113,12 +114,12 @@ class AddProduct extends React.Component<Props, State> {
 export default withNavigationFocus(AddProduct);
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
+  // container: {
+  //   flex: 1,
+  //   justifyContent: 'center',
+  //   alignItems: 'center',
+  //   backgroundColor: '#F5FCFF',
+  // },
   avatarContainer: {
     borderColor: colors.grey4,
     borderWidth: 1 / PixelRatio.get(),

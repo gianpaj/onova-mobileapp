@@ -9,6 +9,7 @@ import {
   Image,
   Platform,
   View,
+  // $FlowFixMe
 } from 'react-native';
 // prettier-ignore
 import {
@@ -46,7 +47,7 @@ type Props = {
 };
 
 type State = {
-  images: Array,
+  images: any,
   itemHeight: number,
   loading: boolean,
   loadingMore: boolean,
@@ -220,12 +221,12 @@ const styles = StyleSheet.create({
     paddingRight: 12,
     paddingTop: 8,
   },
-  bottomSectionAfter: {
-    marginBottom: 20,
-    paddingLeft: 15,
-  },
-  timeAgo: {
-    color: colors.grey3,
-    fontSize: 12,
-  },
+  // bottomSectionAfter: {
+  //   marginBottom: 20,
+  //   paddingLeft: 15,
+  // },
+  // timeAgo: {
+  //   color: colors.grey3,
+  //   fontSize: 12,
+  // },
 });

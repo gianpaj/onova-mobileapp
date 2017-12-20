@@ -3,13 +3,13 @@
 import React from 'react';
 // prettier-ignore
 import {
-  // AsyncStorage,
   Image,
   Text,
   View,
   TouchableOpacity,
   PixelRatio,
   StyleSheet,
+// $FlowFixMe
 } from 'react-native';
 // prettier-ignore
 import {
@@ -19,19 +19,21 @@ import {
 } from 'native-base';
 import ImagePicker from 'react-native-image-crop-picker';
 import { withNavigationFocus } from '@patwoz/react-navigation-is-focused-hoc';
+// $FlowFixMe
+import { NavigationScreenProp } from 'react-navigation';
 
 import colors from '../config/colors';
 
 type Props = {
   isFocused: boolean,
-  navigation: any,
+  navigation: NavigationScreenProp,
 };
 
 type State = {
-  images: Array,
+  images: any,
 };
 
-class AddProduct extends React.Component<Props, State> {
+class AddProductScreen extends React.Component<Props, State> {
   state = {
     images: [],
   };
@@ -110,15 +112,15 @@ class AddProduct extends React.Component<Props, State> {
   }
 }
 
-export default withNavigationFocus(AddProduct);
+export const AddProduct = withNavigationFocus(AddProductScreen);
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
+  // container: {
+  //   flex: 1,
+  //   justifyContent: 'center',
+  //   alignItems: 'center',
+  //   backgroundColor: '#F5FCFF',
+  // },
   avatarContainer: {
     borderColor: colors.grey4,
     borderWidth: 1 / PixelRatio.get(),

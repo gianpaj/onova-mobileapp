@@ -9,6 +9,7 @@ import {
   Image,
   Platform,
   View,
+  // $FlowFixMe
 } from 'react-native';
 // prettier-ignore
 import {
@@ -25,6 +26,8 @@ import {
 import {
   Button,
 } from 'react-native-elements';
+// $FlowFixMe
+import { NavigationScreenProp } from 'react-navigation';
 import MediaView from '../components/MediaView';
 
 import colors from '../config/colors';
@@ -40,13 +43,13 @@ const item = {
 };
 
 type Props = {
-  navigation: navigation,
+  navigation?: NavigationScreenProp,
   product: any,
   URL: string,
 };
 
 type State = {
-  images: Array,
+  images: any,
   itemHeight: number,
   loading: boolean,
   loadingMore: boolean,
@@ -101,6 +104,10 @@ export class Product extends React.Component<Props, State> {
     });
   }
 
+  componentWillMount() {
+    console.warn(this.props);
+  }
+
   render() {
     return (
       <Container style={styles.container}>
@@ -111,7 +118,9 @@ export class Product extends React.Component<Props, State> {
                 name={
                   Platform.OS === 'ios' ? 'ios-arrow-back' : 'md-arrow-back'
                 }
-                onPress={() => this.props.navigation.goBack()}
+                onPress={() =>
+                  this.props.navigation ? this.props.navigation.goBack() : null
+                }
               />
             </NBButton>
           </Left>
@@ -216,12 +225,12 @@ const styles = StyleSheet.create({
     paddingRight: 12,
     paddingTop: 8,
   },
-  bottomSectionAfter: {
-    marginBottom: 20,
-    paddingLeft: 15,
-  },
-  timeAgo: {
-    color: colors.grey3,
-    fontSize: 12,
-  },
+  // bottomSectionAfter: {
+  //   marginBottom: 20,
+  //   paddingLeft: 15,
+  // },
+  // timeAgo: {
+  //   color: colors.grey3,
+  //   fontSize: 12,
+  // },
 });

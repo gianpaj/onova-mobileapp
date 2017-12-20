@@ -1,4 +1,5 @@
 // @flow
+
 import React from 'react';
 import {
   ActivityIndicator,
@@ -9,18 +10,23 @@ import {
   Text,
   TouchableOpacity,
   View,
+  // $FlowFixMe
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
+// $FlowFixMe
+import { NavigationActions, NavigationScreenProp } from 'react-navigation';
 
 type Props = {
   URL: string,
+  navigation?: NavigationScreenProp,
 };
 
 type State = {
-  images: Array,
+  error: boolean,
+  images: Array<string>,
   itemHeight: number,
   loading: boolean,
-  loadingMore: boolean,
+  // loadingMore: boolean,
   refreshing: boolean,
   skip: number,
 };
@@ -36,6 +42,7 @@ export class ImageGrid extends React.Component<Props, State> {
   }
 
   state = {
+    error: false,
     images: [],
     itemHeight: 0,
     loading: true,
@@ -73,16 +80,22 @@ export class ImageGrid extends React.Component<Props, State> {
     });
   };
 
-  getItemLayout = (data, index) => {
+  getItemLayout = (data: any, index: number) => {
     const { itemHeight } = this.state;
     return { length: itemHeight, offset: itemHeight * index, index };
   };
 
-  onItemPress(item) {
-    console.log(item);
+  onItemPress(item: React$Element<any>) {
+    const navigateToProduct = NavigationActions.navigate({
+      routeName: 'product',
+      params: item,
+    });
+
+    if (this.props.navigation)
+      this.props.navigation.dispatch(navigateToProduct);
   }
 
-  renderItem = ({ item }) => {
+  renderItem = ({ item }: any) => {
     const uri = getImageUrl(item.id, 200, 200);
     return (
       <View style={styles.imageContainer}>

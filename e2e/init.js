@@ -12,6 +12,6 @@ afterAll(async () => {
   await detox.cleanup();
 });
 
-beforeEach(async () => {
-  await device.reloadReactNative();
-});
+// beforeEach(async () => {
+//   await device.reloadReactNative();
+// });

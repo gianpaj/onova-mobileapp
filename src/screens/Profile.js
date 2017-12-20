@@ -1,13 +1,13 @@
 // @flow
-import colors from '../config/colors';
-
 import React from 'react';
+import { connect } from 'react-redux';
+
 // prettier-ignore
 import {
-  AsyncStorage,
   Platform,
   Text,
   View,
+  // $FlowFixMe
 } from 'react-native';
 // prettier-ignore
 import {
@@ -21,69 +21,37 @@ import {
   Left,
   Right,
 } from 'native-base';
-import { GoogleSignin } from 'react-native-google-signin';
-import * as firebase from 'firebase';
 
-const USER_KEY = 'userData';
+import { logout } from '../actions/actionCreator';
+import colors from '../config/colors';
 
 type Props = {
-  navigation: any,
-};
-
-type UserData = {
-  emailAddress: string,
+  logout: any,
+  userData: any,
 };
 
 type State = {
-  provider: string,
-  userData: any,
+  // provider: string,
 };
-export class Profile extends React.Component<Props, State> {
-  state = {
-    provider: '',
-    userData: {},
-  };
+
+class ProfileScreen extends React.Component<Props, State> {
+  // state = {
+  // };
 
   componentDidMount() {
-    AsyncStorage.getItem(USER_KEY).then(userData => {
-      const jsonData = JSON.parse(userData);
-      console.log(jsonData);
-      this.setState({ provider: jsonData.provider });
-      this.setState({ userData: jsonData });
-    });
+    console.log(this.props.userData);
   }
 
   goToSettings() {
-    this.props.navigation.navigate('Settings');
+    // this.props.navigation.navigate('Settings');
   }
 
   onLogout() {
-    if (this.state.provider == 'email') {
-      this.afterLogout();
-    } else {
-      this.onGoogleLogout();
-    }
-  }
-
-  afterLogout() {
-    return AsyncStorage.removeItem(USER_KEY)
-      .then(() => {
-        this.props.navigation.navigate('Login');
-      })
-      .catch(err => {
-        console.error(err);
-      });
-  }
-
-  onGoogleLogout() {
-    GoogleSignin.signOut()
-      .then(() => firebase.auth().signOut())
-      .then(() => AsyncStorage.removeItem(USER_KEY))
-      .then(() => this.afterLogout());
+    this.props.logout({ provider: this.props.userData.provider });
   }
 
   render() {
-    // const { username } = this.state.userData;
+    const { username } = this.props.userData;
 
     return (
       <Container>
@@ -91,8 +59,7 @@ export class Profile extends React.Component<Props, State> {
           <Left />
           {/* notifications */}
           <View>
-            <Text style={{ marginTop: 15 }}>@username</Text>
-            {/* <Text style={{ marginTop: 15 }}>@{username}</Text> */}
+            <Text style={{ marginTop: 15 }}>@{username}</Text>
           </View>
           <Right>
             <Button transparent onPress={this.goToSettings()}>
@@ -119,17 +86,6 @@ export class Profile extends React.Component<Props, State> {
                 }}>
                 <Text style={{ color: 'white', fontSize: 28 }}>JD</Text>
               </View>
-
-              {/* {provider == 'email' && (
-            <TouchableOpacity onPress={() => this.onLogout()}>
-              <Text>Logout</Text>
-            </TouchableOpacity>
-          )}
-          {provider == 'google' && (
-            <TouchableOpacity onPress={() => this.onGoogleLogout()}>
-              <Text>Google Logout</Text>
-            </TouchableOpacity>
-          )} */}
             </Body>
           </CardItem>
           <CardItem>
@@ -142,3 +98,15 @@ export class Profile extends React.Component<Props, State> {
     );
   }
 }
+
+const mapStateToProps: any = (state: any) => ({
+  userData: state.LoginReducer.data,
+});
+
+const mapDispatchToProps = {
+  logout,
+};
+
+export const Profile = connect(mapStateToProps, mapDispatchToProps)(
+  ProfileScreen
+);

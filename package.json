@@ -8,7 +8,7 @@
   },
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
-    "test": "jest __tests__ --setupTestFrameworkScriptFile=./e2e/setup-unit-tests.js",
+    "test": "jest __tests__",
     "test-e2e": "jest e2e --setupTestFrameworkScriptFile=./e2e/init.js --bail",
     "flow": "flow",
     "flow-check": "flow check",
@@ -18,7 +18,7 @@
   "dependencies": {
     "@patwoz/react-navigation-is-focused-hoc": "^1.1.0",
     "firebase": "^4.6.2",
-    "native-base": "^2.3.3",
+    "native-base": "^2.3.5",
     "react": "16.0.0",
     "react-native": "0.50.3",
     "react-native-elements": "^0.18.2",
@@ -29,7 +29,11 @@
     "react-native-swiper": "^1.5.13",
     "react-native-tab-view": "^0.0.72",
     "react-native-vector-icons": "^4.4.2",
-    "react-navigation": "^1.0.0-beta.20",
+    "react-navigation": "^1.0.0-beta.21",
+    "react-redux": "^5.0.6",
+    "redux": "^3.7.2",
+    "redux-persist": "^5.4.0",
+    "redux-thunk": "^2.2.0",
     "validator": "^9.1.1"
   },
   "devDependencies": {
@@ -46,7 +50,7 @@
     "eslint-plugin-prettier": "^2.3.1",
     "eslint-plugin-react": "^7.3.0",
     "eslint-plugin-react-native": "^3.1.0",
-    "flow-bin": "^0.56.0",
+    "flow-bin": "^0.59.0",
     "jest": "21.2.1",
     "prettier": "^1.8.2",
     "react-test-renderer": "16.0.0"
@@ -55,7 +59,7 @@
     "setupTestFrameworkScriptFile": "./e2e/init.js",
     "preset": "react-native",
     "transformIgnorePatterns": [
-      "node_modules/(?!(jest-)?react-native|react-native-vector-icons|react-navigation|native-base-shoutem-theme)"
+      "node_modules/(?!(jest-)?react-native|react-native-vector-icons|react-navigation|native-base-shoutem-theme|redux-persist)"
     ]
   },
   "detox": {

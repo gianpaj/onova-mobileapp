@@ -1,47 +1,61 @@
 // @flow
 
 import React from 'react';
+import { connect } from 'react-redux';
 // prettier-ignore
 import {
   StyleSheet,
   Text,
   View,
+// $FlowFixMe
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
 // prettier-ignore
 import {
   Button,
   FormInput,
+  FormValidationMessage,
 } from 'react-native-elements';
-import { NavigationActions } from 'react-navigation';
+// $FlowFixMe
+import { NavigationScreenProp } from 'react-navigation';
 import isEmail from 'validator/lib/isEmail';
 
-import * as api from '../utils/api';
-import * as ui from '../utils/ui';
+import { logout, signup, goback } from '../actions/actionCreator';
+import type { Dispatch } from '../types';
+// import * as ui from '../utils/ui';
 import colors from '../config/colors';
 
 type Props = {
-  navigation: any,
+  dispatch: Dispatch,
+  loading: boolean,
+  navigation: NavigationScreenProp,
+  hasError: string,
+  errorMsg: string,
 };
 
 type State = {
   username: string,
-  email: string,
+  emailAddress: string,
   password: string,
-  loading: boolean,
 };
 
-export class Signup extends React.Component<Props, State> {
+class SignupScreen extends React.Component<Props, State> {
+  EmailInput: ?FormInput;
+  PwdInput: ?FormInput;
+
   state = {
-    username: '',
-    email: '',
-    password: '',
+    username: 'testaccoun',
+    emailAddress: 'gianpa+registertest@gmail.com',
+    password: '***REMOVED***99',
+    // username: '',
+    // email: '',
+    // password: '',
     loading: false,
   };
 
   onSignup() {
-    this.setState({ loading: true });
-    console.log('onSignup', this.state.email, this.state.password);
+    const { username, emailAddress, password } = this.state;
+    console.log('onSignup()', username, emailAddress, password);
 
     // username min(3) max(30)
     // password min(8) max(50)
@@ -55,44 +69,23 @@ export class Signup extends React.Component<Props, State> {
     //   });
     // }
 
-    api
-      .post('/api/users', {
-        username: this.state.username,
-        emailAddress: this.state.email,
-        password: this.state.password,
-      })
-      .then(res => {
-        if (res.user) {
-          console.log('user created', res.user);
-          console.log('token', res.token);
-          this.resetNavigation('Tabs');
-        } else {
-          console.log(res);
-          // ui.showToast(res.toString());
-        }
-        this.setState({ loading: false });
-      })
-      .catch((err: APIError) => {
-        if (err.status == 400) {
-          ui.showToast(err.message);
-        }
-        this.setState({ loading: false });
-      });
+    this.props.dispatch(signup({ username, emailAddress, password }));
   }
 
-  resetNavigation(targetRoute: string) {
-    const resetAction = NavigationActions.reset({
-      index: 0,
-      actions: [NavigationActions.navigate({ routeName: targetRoute })],
-    });
-    this.props.navigation.dispatch(resetAction);
+  resetNavigation() {
+    // if (this.props.navigation) this.props.navigation.dispatch(resetAction);
+    if (this.props.navigation) this.props.navigation.dispatch(logout());
+  }
+
+  onGoback() {
+    if (this.props.navigation) this.props.navigation.dispatch(goback());
   }
 
   _inputProps = {
     autoCapitalize: 'none',
     autoCorrect: false,
     clearButtonMode: 'while-editing',
-    editable: !this.state.loading,
+    editable: !this.props.loading,
     inputStyle: styles.input,
   };
 
@@ -104,7 +97,7 @@ export class Signup extends React.Component<Props, State> {
             <Icon name="flash" style={{ fontSize: 104 }} />
             <Text>Onova.co</Text>
             <View>
-              <Text style={{ color: '#000' }}>
+              <Text style={{ color: colors.black }}>
                 Buy and sell clothes from your phone
               </Text>
             </View>
@@ -114,9 +107,12 @@ export class Signup extends React.Component<Props, State> {
           <FormInput
             placeholder="Username"
             returnKeyType="next"
-            onSubmitEditing={() => this.EmailInput.focus()}
+            onSubmitEditing={() =>
+              this.EmailInput ? this.EmailInput.focus() : null
+            }
             value={this.state.username}
             onChangeText={text => this.setState({ username: text })}
+            accessibilityLabel="username"
             {...this._inputProps}
           />
           <FormInput
@@ -126,9 +122,12 @@ export class Signup extends React.Component<Props, State> {
             placeholder="Email"
             keyboardType="email-address"
             returnKeyType="next"
-            onSubmitEditing={() => this.PwdInput.focus()}
-            value={this.state.email}
-            onChangeText={text => this.setState({ email: text })}
+            onSubmitEditing={() =>
+              this.PwdInput ? this.PwdInput.focus() : null
+            }
+            value={this.state.emailAddress}
+            onChangeText={text => this.setState({ emailAddress: text })}
+            accessibilityLabel="email address"
             {...this._inputProps}
           />
           <FormInput
@@ -136,31 +135,33 @@ export class Signup extends React.Component<Props, State> {
               this.PwdInput = c;
             }}
             secureTextEntry
-            placeholder="Password"
+            placeholder="Password (minimum 8 characters)"
             returnKeyType="go"
             onSubmitEditing={() => this.onSignup()}
             value={this.state.password}
             onChangeText={text => this.setState({ password: text })}
+            accessibilityLabel="password"
             {...this._inputProps}
           />
+          {this.props.hasError && (
+            <FormValidationMessage>{this.props.errorMsg}</FormValidationMessage>
+          )}
           <View style={{ marginTop: 15 }}>
             <Button
               buttonStyle={styles.SignupButton}
               raised
-              loading={this.state.loading}
+              loading={this.props.loading}
               disabled={
-                !isEmail(this.state.email) ||
+                !isEmail(this.state.emailAddress) ||
                 this.state.password.length < 9 ||
                 this.state.username.length < 3
               }
               onPress={() => this.onSignup()}
-              title="Signup"
+              title="Create account"
             />
-            <Text style={styles.hr}>
+            <Text style={[styles.hr, { marginTop: 15 }]}>
               Already have an account?&nbsp;
-              <Text
-                style={styles.linkText}
-                onPress={() => this.props.navigation.goBack()}>
+              <Text style={styles.linkText} onPress={() => this.onGoback()}>
                 Login
               </Text>
             </Text>
@@ -170,6 +171,14 @@ export class Signup extends React.Component<Props, State> {
     );
   }
 }
+
+const mapStateToProps: any = (state: any) => ({
+  loading: state.LoginReducer.loading,
+  hasError: state.LoginReducer.hasError,
+  errorMsg: state.LoginReducer.errorMsg,
+});
+
+export const Signup = connect(mapStateToProps)(SignupScreen);
 
 const styles = StyleSheet.create({
   header: {

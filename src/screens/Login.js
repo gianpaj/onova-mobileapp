@@ -1,14 +1,15 @@
 // @flow
 
 import React from 'react';
+import { connect } from 'react-redux';
 // prettier-ignore
 import {
-  AsyncStorage,
   Modal,
   Platform,
   StyleSheet,
   Text,
   View,
+// $FlowFixMe
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
 // prettier-ignore
@@ -17,120 +18,57 @@ import {
   FormInput,
 } from 'react-native-elements';
 import { Button as NBButton, Content } from 'native-base';
-import { NavigationActions } from 'react-navigation';
+// $FlowFixMe
+import { NavigationScreenProp } from 'react-navigation';
 import isEmail from 'validator/lib/isEmail';
-import * as firebase from 'firebase';
-import { GoogleSignin, User as GoogleUser } from 'react-native-google-signin';
+
+import { login, loginWithGoogle, goToSignup } from '../actions/actionCreator';
+import type { Dispatch } from '../types';
 
 import * as api from '../utils/api';
 import * as ui from '../utils/ui';
 import colors from '../config/colors';
 
 type Props = {
-  navigation: any,
+  dispatch: Dispatch,
+  errorMsg: string,
+  loadingGoogleLogin: boolean,
+  loadingLogin: boolean,
+  navigation?: NavigationScreenProp,
 };
 
 type State = {
-  email: string,
-  password: string,
-  modalVisible: boolean,
+  emailAddress: string,
   emailReset: string,
-  loadingLogin: boolean,
   loadingReset: boolean,
+  modalVisible: boolean,
+  password: string,
 };
 
-export class Login extends React.Component<Props, State> {
-  componentWillMount() {
-    GoogleSignin.hasPlayServices({ autoResolve: true });
-    GoogleSignin.configure({
-      iosClientId:
-        '530398476253-s5dfiv2ilfn1nbrhk5otj8k2mnne101l.apps.googleusercontent.com', // only for iOS
-    });
-  }
+class LoginScreen extends React.Component<Props, State> {
+  PwdInput: ?FormInput;
 
   state = {
-    email: 'gianpa+test2@gmail.com',
+    emailAddress: 'gianpa+test2@gmail.com',
     // email: '',
-    password: 'americano',
+    password: 'express2',
     // password: '',
     modalVisible: false,
     emailReset: '',
-    loadingLogin: false,
     loadingReset: false,
   };
 
   onLogin() {
-    this.setState({ loadingLogin: true });
-    console.log('onLogin()', this.state.email, this.state.password);
-    api
-      .post('/api/auth/login', {
-        emailAddress: this.state.email,
-        password: this.state.password,
-      })
-      .then(res => {
-        if (res.data) {
-          console.log('user logged in via email');
-          const userData = {
-            ...res.data,
-            ...{ token: res.token, provider: 'email' },
-          };
-          this.afterLogin(userData);
-        } else {
-          this.setState({ loadingLogin: false });
-          console.log(res);
-          // ui.showToast(res.toString());
-        }
-      })
-      .catch((err: api.APIError) => {
-        if (err.status == 400 || err.status == 500) {
-          ui.showToast(err.message, 'danger');
-        } else if (err.status == 401) {
-          ui.showToast(err.message.toString());
-        }
-        console.log(err);
-        this.setState({ loadingLogin: false });
-      });
+    const { emailAddress, password } = this.state;
+    this.props.dispatch(login({ emailAddress, password }));
+  }
+
+  onSignup() {
+    if (this.props.navigation) this.props.navigation.dispatch(goToSignup());
   }
 
   googleSignin() {
-    console.log('googleSignin()');
-    GoogleSignin.signIn().then((user: GoogleUser) => {
-      const provider = firebase.auth.GoogleAuthProvider;
-      const credential = provider.credential(user.idToken);
-      return firebase
-        .auth()
-        .signInWithCredential(credential)
-        .then(user => {
-          console.log('signed in with Google');
-          const userData = {
-            emailAddress: user.email,
-            provider: 'google',
-          };
-          this.afterLogin(userData);
-        })
-        .catch(error => {
-          console.error(`Login fail with error: ${error}`);
-        });
-    });
-  }
-
-  afterLogin(userData: any) {
-    console.log('afterLogin()');
-    console.log(userData);
-    const JSONstring = JSON.stringify(userData);
-    return AsyncStorage.setItem('userData', JSONstring).then(() => {
-      ui.showToast('Welcome!');
-      this.setState({ loadingLogin: false });
-      this.resetNavigation('Tabs');
-    });
-  }
-
-  resetNavigation(targetRoute: any) {
-    const resetAction = NavigationActions.reset({
-      index: 0,
-      actions: [NavigationActions.navigate({ routeName: targetRoute })],
-    });
-    this.props.navigation.dispatch(resetAction);
+    this.props.dispatch(loginWithGoogle());
   }
 
   setModalVisible(visible: boolean) {
@@ -138,7 +76,7 @@ export class Login extends React.Component<Props, State> {
       return {
         emailReset: prevState.emailReset
           ? prevState.emailReset
-          : prevState.email,
+          : prevState.emailAddress,
         modalVisible: visible,
       };
     });
@@ -157,9 +95,9 @@ export class Login extends React.Component<Props, State> {
     this.setState({ loadingReset: true });
     api
       .post('/api/auth/reset', {
-        emailAddress: this.state.email,
+        emailAddress: this.state.emailAddress,
       })
-      .then(res => {
+      .then((res: any) => {
         if (res.message) {
           ui.showToast(res.message);
         }
@@ -178,7 +116,7 @@ export class Login extends React.Component<Props, State> {
     autoCapitalize: 'none',
     autoCorrect: false,
     clearButtonMode: 'while-editing',
-    editable: !this.state.loading,
+    editable: !this.props.loadingLogin,
     enablesReturnKeyAutomatically: true,
     inputStyle: styles.input,
   };
@@ -191,21 +129,24 @@ export class Login extends React.Component<Props, State> {
             <Icon name="flash" style={{ fontSize: 104 }} />
             <Text>Onova.co</Text>
             <View>
-              <Text style={{ color: '#000' }} testID="welcome">
+              <Text style={{ color: colors.black }} testID="welcome">
                 Buy and sell clothes from your phone
               </Text>
             </View>
           </View>
+          {this.props.hasError && <Text>errors</Text>}
         </View>
         <View>
           <FormInput
             placeholder="Email"
             keyboardType="email-address"
             returnKeyType="next"
-            onSubmitEditing={() => this.PwdInput.focus()}
-            value={this.state.email}
+            onSubmitEditing={() =>
+              this.PwdInput ? this.PwdInput.focus() : undefined
+            }
+            value={this.state.emailAddress}
             testID="EmailField"
-            onChangeText={text => this.setState({ email: text })}
+            onChangeText={text => this.setState({ emailAddress: text })}
             {...this._inputProps}
           />
           <FormInput
@@ -232,14 +173,14 @@ export class Login extends React.Component<Props, State> {
             <Button
               buttonStyle={styles.PrimaryButton}
               raised
-              loading={this.state.loadingLogin}
+              loading={this.props.loadingLogin}
               disabled={
-                !this.state.email ||
+                !this.state.emailAddress ||
                 !this.state.password ||
-                this.state.loadingLogin
+                this.props.loadingLogin
               }
               onPress={() => this.onLogin()}
-              title="Login"
+              title="Log in"
               testID="LoginButton"
             />
             <Text style={styles.hr}>
@@ -249,12 +190,12 @@ export class Login extends React.Component<Props, State> {
             <Button
               buttonStyle={styles.PDarkButton}
               raised
-              onPress={() => this.props.navigation.navigate('Signup')}
-              title="Signup"
+              onPress={() => this.onSignup()}
+              title="Sign up"
             />
             <NBButton
               style={[styles.GoogleButton, styles.raised]}
-              // loading={this.state.loading}
+              disabled={this.props.loadingGoogleLogin}
               onPress={() => this.googleSignin()}>
               <Text>Google Login</Text>
             </NBButton>
@@ -311,6 +252,14 @@ export class Login extends React.Component<Props, State> {
     );
   }
 }
+
+const mapStateToProps: any = (state: any) => ({
+  hasError: state.LoginReducer.hasError,
+  loadingLogin: state.LoginReducer.loading,
+  loadingGoogleLogin: state.LoginReducer.loadingGoogleLogin,
+});
+
+export const Login = connect(mapStateToProps)(LoginScreen);
 
 const styles = StyleSheet.create({
   header: {

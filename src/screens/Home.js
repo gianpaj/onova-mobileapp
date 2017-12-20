@@ -8,6 +8,7 @@ import {
   Text,
   Platform,
   Dimensions,
+  // $FlowFixMe
 } from 'react-native';
 import {
   Body,
@@ -19,8 +20,10 @@ import {
   Header,
 } from 'native-base';
 import { TabViewAnimated, TabBar, SceneMap } from 'react-native-tab-view';
+// $FlowFixMe
+import { NavigationScreenProp } from 'react-navigation';
 
-import ImageGrid from '../components/ImageGrid';
+import { ImageGrid } from '../components/ImageGrid';
 
 const initialLayout = {
   height: 0,
@@ -32,10 +35,13 @@ const ShoesRoute = () => <ImageGrid URL="https://picsum.photos/list" />;
 const OtherRoute = () => <ImageGrid URL="https://picsum.photos/list" />;
 
 type Props = {
-  navigation: any,
+  navigation?: NavigationScreenProp,
 };
 
-type State = {};
+type State = {
+  index: number,
+  routes: Array<{ key: string, title: string }>,
+};
 
 export class Home extends React.PureComponent<Props, State> {
   state = {
@@ -47,7 +53,7 @@ export class Home extends React.PureComponent<Props, State> {
     ],
   };
 
-  _handleIndexChange = index => this.setState({ index });
+  _handleIndexChange = (index: number) => this.setState({ index });
 
   _renderHeader = props => (
     <TabBar
@@ -61,7 +67,12 @@ export class Home extends React.PureComponent<Props, State> {
   );
 
   _renderScene = SceneMap({
-    clothes: ClothesRoute,
+    clothes: () => (
+      <ImageGrid
+        navigation={this.props.navigation}
+        URL="https://picsum.photos/list"
+      />
+    ),
     shoes: ShoesRoute,
     other: OtherRoute,
   });
@@ -107,9 +118,9 @@ export class Home extends React.PureComponent<Props, State> {
 const STATUS_BAR_HEIGHT = Platform.OS === 'ios' ? 20 : 0;
 
 const styles = StyleSheet.create({
-  statusBarUnderlay: {
-    marginTop: STATUS_BAR_HEIGHT,
-  },
+  // statusBarUnderlay: {
+  //   marginTop: STATUS_BAR_HEIGHT,
+  // },
   container: {
     flex: 1,
   },

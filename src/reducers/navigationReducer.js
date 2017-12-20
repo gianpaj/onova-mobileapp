@@ -4,6 +4,7 @@ import AppNavigator from '../navigation/navigationStack';
 // prettier-ignore
 import {
   LOGIN_SUCCESS,
+  SIGNUP_SUCCESS,
   LOGOUT,
   SIGNUP,
   BACK,
@@ -39,6 +40,7 @@ const navigationReducer = (state = initialState, action) => {
       };
 
     case LOGIN_SUCCESS:
+    case SIGNUP_SUCCESS:
       return {
         ...state,
         stateForLoggedIn: AppNavigator.router.getStateForAction(

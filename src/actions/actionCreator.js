@@ -9,11 +9,14 @@ import {
   LOGIN_FAIL,
   LOGIN_SUCCESS,
   GOOGLE_LOGIN_PENDING,
+  SIGNUP_PENDING,
+  SIGNUP_SUCCESS,
+  SIGNUP_FAIL,
   LOGOUT,
   SIGNUP,
   BACK,
 } from './actionTypes';
-import type { Dispatch, LoginData } from '../types';
+import type { Dispatch, LoginData, SignupData } from '../types';
 import * as api from '../utils/api';
 
 const incrementAction = () => ({
@@ -101,9 +104,36 @@ const loginWithGoogle = () => (dispatch: Dispatch) => {
     });
 };
 
-// const signup = (data: SignupData) => (dispatch: Dispatch) => (
-//   dispatch({ type: SIGNUP_PENDING }),
-// );
+const signup = (data: SignupData) => (dispatch: Dispatch) => (
+  dispatch({ type: SIGNUP_PENDING }),
+  api
+    .post('/api/users', {
+      username: data.username,
+      emailAddress: data.emailAddress,
+      password: data.password,
+    })
+    .then(res => {
+      if (res.data) {
+        console.debug('user created', res.data);
+        console.debug('token', res.token);
+        const userData = {
+          ...res.data,
+          ...{ token: res.token, provider: 'email' },
+        };
+        dispatch({ type: SIGNUP_SUCCESS, payload: userData });
+      } else {
+        console.warn(res);
+        dispatch({ type: SIGNUP_FAIL });
+        // ui.showToast(res.toString());
+      }
+    })
+    .catch((err: api.APIError) => {
+      if (err.status == 400) {
+        // ui.showToast(err.message);
+      }
+      dispatch({ type: SIGNUP_FAIL, payload: err.message });
+    })
+);
 
 const logout = (data: any) => (dispatch: Dispatch) => {
   console.log(data);
@@ -129,6 +159,7 @@ export {
   decrementAction,
   login,
   loginWithGoogle,
+  signup,
   logout,
   goToSignup,
   goback,

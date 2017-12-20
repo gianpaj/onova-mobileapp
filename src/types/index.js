@@ -12,6 +12,10 @@ export type LoginData = {
   password: string,
 };
 
+export type SignupData = LoginData & {
+  username: string,
+};
+
 export type LoginActionTypes = 'SHOW_ALL' | 'SHOW_ACTIVE' | 'SHOW_COMPLETED';
 
 // export type Store = ReduxStore<State, Action>;

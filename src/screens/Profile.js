@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 
 // prettier-ignore
 import {
-  AsyncStorage,
   Platform,
   Text,
   View,
@@ -32,12 +31,12 @@ type Props = {
 };
 
 type State = {
-  provider: string,
+  // provider: string,
 };
+
 class ProfileScreen extends React.Component<Props, State> {
-  state = {
-    provider: '',
-  };
+  // state = {
+  // };
 
   componentDidMount() {
     console.log(this.props.userData);
@@ -52,7 +51,7 @@ class ProfileScreen extends React.Component<Props, State> {
   }
 
   render() {
-    // const { username } = this.state.userData;
+    const { username } = this.props.userData;
 
     return (
       <Container>
@@ -60,8 +59,7 @@ class ProfileScreen extends React.Component<Props, State> {
           <Left />
           {/* notifications */}
           <View>
-            <Text style={{ marginTop: 15 }}>@username</Text>
-            {/* <Text style={{ marginTop: 15 }}>@{username}</Text> */}
+            <Text style={{ marginTop: 15 }}>@{username}</Text>
           </View>
           <Right>
             <Button transparent onPress={this.goToSettings()}>

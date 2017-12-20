@@ -4,7 +4,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 // prettier-ignore
 import {
-  AsyncStorage,
   Modal,
   Platform,
   StyleSheet,
@@ -31,25 +30,26 @@ import * as ui from '../utils/ui';
 import colors from '../config/colors';
 
 type Props = {
-  loadingLogin: boolean,
-  loadingGoogleLogin: boolean,
   dispatch: Dispatch,
+  errorMsg: string,
+  loadingGoogleLogin: boolean,
+  loadingLogin: boolean,
   navigation?: NavigationScreenProp,
 };
 
 type State = {
-  email: string,
-  password: string,
-  modalVisible: boolean,
+  emailAddress: string,
   emailReset: string,
   loadingReset: boolean,
+  modalVisible: boolean,
+  password: string,
 };
 
 class LoginScreen extends React.Component<Props, State> {
   PwdInput: ?FormInput;
 
   state = {
-    email: 'gianpa+test2@gmail.com',
+    emailAddress: 'gianpa+test2@gmail.com',
     // email: '',
     password: 'express2',
     // password: '',
@@ -59,12 +59,8 @@ class LoginScreen extends React.Component<Props, State> {
   };
 
   onLogin() {
-    this.props.dispatch(
-      login({
-        emailAddress: this.state.email,
-        password: this.state.password,
-      })
-    );
+    const { emailAddress, password } = this.state;
+    this.props.dispatch(login({ emailAddress, password }));
   }
 
   onSignup() {
@@ -80,7 +76,7 @@ class LoginScreen extends React.Component<Props, State> {
       return {
         emailReset: prevState.emailReset
           ? prevState.emailReset
-          : prevState.email,
+          : prevState.emailAddress,
         modalVisible: visible,
       };
     });
@@ -99,7 +95,7 @@ class LoginScreen extends React.Component<Props, State> {
     this.setState({ loadingReset: true });
     api
       .post('/api/auth/reset', {
-        emailAddress: this.state.email,
+        emailAddress: this.state.emailAddress,
       })
       .then((res: any) => {
         if (res.message) {
@@ -148,9 +144,9 @@ class LoginScreen extends React.Component<Props, State> {
             onSubmitEditing={() =>
               this.PwdInput ? this.PwdInput.focus() : undefined
             }
-            value={this.state.email}
+            value={this.state.emailAddress}
             testID="EmailField"
-            onChangeText={text => this.setState({ email: text })}
+            onChangeText={text => this.setState({ emailAddress: text })}
             {...this._inputProps}
           />
           <FormInput
@@ -179,7 +175,7 @@ class LoginScreen extends React.Component<Props, State> {
               raised
               loading={this.props.loadingLogin}
               disabled={
-                !this.state.email ||
+                !this.state.emailAddress ||
                 !this.state.password ||
                 this.props.loadingLogin
               }
@@ -258,14 +254,12 @@ class LoginScreen extends React.Component<Props, State> {
 }
 
 const mapStateToProps: any = (state: any) => ({
+  hasError: state.LoginReducer.hasError,
   loadingLogin: state.LoginReducer.loading,
   loadingGoogleLogin: state.LoginReducer.loadingGoogleLogin,
-  hasError: state.LoginReducer.hasError,
 });
 
-const Login = connect(mapStateToProps)(LoginScreen);
-
-export default Login;
+export default connect(mapStateToProps)(LoginScreen);
 
 const styles = StyleSheet.create({
   header: {

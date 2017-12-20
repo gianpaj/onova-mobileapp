@@ -18,11 +18,6 @@ const ActionForLoggedIn = NavigationActions.reset({
   actions: [NavigationActions.navigate({ routeName: 'tabs' })],
 });
 
-const ActionForLogout = NavigationActions.reset({
-  index: 0,
-  actions: [NavigationActions.navigate({ routeName: 'login' })],
-});
-
 const stateForLoggedOut = AppNavigator.router.getStateForAction(
   ActionForLoggedOut
 );
@@ -55,7 +50,7 @@ const navigationReducer = (state = initialState, action) => {
     case Logout:
       return {
         stateForLoggedOut: AppNavigator.router.getStateForAction(
-          ActionForLogout
+          stateForLoggedOut
         ),
       };
 

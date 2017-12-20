@@ -3,7 +3,6 @@
 import React from 'react';
 // prettier-ignore
 import {
-  // AsyncStorage,
   Image,
   Text,
   View,

@@ -46,13 +46,10 @@ const login = (data: LoginData) => (dispatch: Dispatch) => (
     .catch((err: api.APIError) => {
       if (err.status == 400 || err.status == 500) {
         // ui.showToast(err.message, 'danger');
-        dispatch({ type: LOGIN_FAIL, payload: err });
       } else if (err.status == 401) {
         // auth error
-        dispatch({ type: LOGIN_FAIL, payload: err });
         // ui.showToast(err.message, 'warning');
       } else if (err.message == 'timeout') {
-        dispatch({ type: LOGIN_FAIL, payload: err });
         // ui.showToast(
         //   'Onova servers might be taking a nap. Please retry',
         //   'warning'
@@ -60,6 +57,7 @@ const login = (data: LoginData) => (dispatch: Dispatch) => (
       } else {
         console.log(err);
       }
+      dispatch({ type: LOGIN_FAIL, payload: err });
     })
   // }, 5000)
 );

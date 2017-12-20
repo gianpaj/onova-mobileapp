@@ -26,7 +26,7 @@ import * as firebase from 'firebase';
 import { GoogleSignin, User as GoogleUser } from 'react-native-google-signin';
 
 import { login } from '../actions/actionCreator';
-import type { LoginData } from '../types';
+import type { Dispatch } from '../types';
 
 import * as api from '../utils/api';
 import * as ui from '../utils/ui';
@@ -34,7 +34,7 @@ import colors from '../config/colors';
 
 type Props = {
   loadingLogin: boolean,
-  login(LoginData): any,
+  dispatch: Dispatch,
   navigation?: NavigationScreenProp,
 };
 
@@ -234,11 +234,7 @@ class LoginScreen extends React.Component<Props, State> {
             <Button
               buttonStyle={styles.PDarkButton}
               raised
-              onPress={() =>
-                this.props.navigation
-                  ? this.props.navigation.navigate('Signup')
-                  : null
-              }
+              onPress={() => this.onSignup()}
               title="Signup"
             />
             <NBButton
@@ -301,18 +297,12 @@ class LoginScreen extends React.Component<Props, State> {
   }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps: any = (state: any) => ({
   loadingLogin: state.LoginReducer.loading,
   hasError: state.LoginReducer.hasError,
 });
 
-const mapActionsToProps = dispatch => ({
-  login(data) {
-    dispatch(login(data));
-  },
-});
-
-const Login = connect(mapStateToProps, mapActionsToProps)(LoginScreen);
+const Login = connect(mapStateToProps)(LoginScreen);
 
 export default Login;
 

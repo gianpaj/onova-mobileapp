@@ -1,7 +1,7 @@
 // @flow
 
-const TIMEOUT = 6000;
 const apiRoot = 'http://localhost:4040';
+const TIMEOUT = 4000;
 
 /**
  * GET a path relative to API root url.

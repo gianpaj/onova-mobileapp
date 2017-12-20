@@ -3,7 +3,7 @@ import {
   LOGIN_SUCCESS,
   LOGIN_FAIL,
   GOOGLE_LOGIN_PENDING,
-  Logout,
+  LOGOUT,
 } from '../actions/actionTypes';
 
 const initialState = {

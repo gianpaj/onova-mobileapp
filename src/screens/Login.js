@@ -184,7 +184,7 @@ class LoginScreen extends React.Component<Props, State> {
                 this.props.loadingLogin
               }
               onPress={() => this.onLogin()}
-              title="Login"
+              title="Log in"
               testID="LoginButton"
             />
             <Text style={styles.hr}>
@@ -195,7 +195,7 @@ class LoginScreen extends React.Component<Props, State> {
               buttonStyle={styles.PDarkButton}
               raised
               onPress={() => this.onSignup()}
-              title="Signup"
+              title="Sign up"
             />
             <NBButton
               style={[styles.GoogleButton, styles.raised]}

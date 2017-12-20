@@ -9,7 +9,7 @@ import {
   LOGIN_FAIL,
   LOGIN_SUCCESS,
   GOOGLE_LOGIN_PENDING,
-  Logout,
+  LOGOUT,
   SIGNUP,
   BACK,
 } from './actionTypes';
@@ -108,11 +108,11 @@ const loginWithGoogle = () => (dispatch: Dispatch) => {
 const logout = (data: any) => (dispatch: Dispatch) => {
   console.log(data);
   if (data.provider == 'email') {
-    return dispatch({ type: Logout });
+    return dispatch({ type: LOGOUT });
   } else if (data.provider == 'google') {
     return GoogleSignin.signOut()
       .then(() => firebase.auth().signOut())
-      .then(dispatch({ type: Logout }));
+      .then(dispatch({ type: LOGOUT }));
   }
 };
 

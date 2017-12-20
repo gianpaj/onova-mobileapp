@@ -34,7 +34,7 @@ type Props = {
 type State = {
   provider: string,
 };
-class Profile extends React.Component<Props, State> {
+class ProfileScreen extends React.Component<Props, State> {
   state = {
     provider: '',
   };
@@ -109,5 +109,5 @@ const mapDispatchToProps = {
   logout,
 };
 
-const Logout = connect(mapStateToProps, mapDispatchToProps)(Profile);
-export default Logout;
+const Profile = connect(mapStateToProps, mapDispatchToProps)(ProfileScreen);
+export default Profile;

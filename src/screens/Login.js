@@ -20,12 +20,10 @@ import {
 } from 'react-native-elements';
 import { Button as NBButton, Content } from 'native-base';
 // $FlowFixMe
-import { NavigationActions, NavigationScreenProp } from 'react-navigation';
+import { NavigationScreenProp } from 'react-navigation';
 import isEmail from 'validator/lib/isEmail';
-import * as firebase from 'firebase';
-import { GoogleSignin, User as GoogleUser } from 'react-native-google-signin';
 
-import { login, signup } from '../actions/actionCreator';
+import { login, loginWithGoogle, goToSignup } from '../actions/actionCreator';
 import type { Dispatch } from '../types';
 
 import * as api from '../utils/api';
@@ -34,6 +32,7 @@ import colors from '../config/colors';
 
 type Props = {
   loadingLogin: boolean,
+  loadingGoogleLogin: boolean,
   dispatch: Dispatch,
   navigation?: NavigationScreenProp,
 };
@@ -49,14 +48,6 @@ type State = {
 class LoginScreen extends React.Component<Props, State> {
   PwdInput: ?FormInput;
 
-  componentWillMount() {
-    GoogleSignin.hasPlayServices({ autoResolve: true });
-    GoogleSignin.configure({
-      iosClientId:
-        '530398476253-s5dfiv2ilfn1nbrhk5otj8k2mnne101l.apps.googleusercontent.com', // only for iOS
-    });
-  }
-
   state = {
     email: 'gianpa+test2@gmail.com',
     // email: '',
@@ -68,7 +59,6 @@ class LoginScreen extends React.Component<Props, State> {
   };
 
   onLogin() {
-    console.log('onLogin()', this.state.email, this.state.password);
     this.props.dispatch(
       login({
         emailAddress: this.state.email,
@@ -78,48 +68,12 @@ class LoginScreen extends React.Component<Props, State> {
   }
 
   onSignup() {
-    if (this.props.navigation) this.props.navigation.dispatch(signup());
+    if (this.props.navigation) this.props.navigation.dispatch(goToSignup());
   }
 
   googleSignin() {
-    console.log('googleSignin()');
-    GoogleSignin.signIn().then((user: GoogleUser) => {
-      const provider = firebase.auth.GoogleAuthProvider;
-      const credential = provider.credential(user.idToken);
-      return firebase
-        .auth()
-        .signInWithCredential(credential)
-        .then(user => {
-          console.log('signed in with Google');
-          const userData = {
-            emailAddress: user.email,
-            provider: 'google',
-          };
-          this.afterLogin(userData);
-        })
-        .catch(error => {
-          console.error(`Login fail with error: ${error}`);
-        });
-    });
+    this.props.dispatch(loginWithGoogle());
   }
-
-  afterLogin(userData: any) {
-    console.log('afterLogin()');
-    console.log(userData);
-    const JSONstring = JSON.stringify(userData);
-    return AsyncStorage.setItem('userData', JSONstring).then(() => {
-      ui.showToast('Welcome!');
-      // this.resetNavigation('Tabs');
-    });
-  }
-
-  // resetNavigation(targetRoute: any) {
-  //   const resetAction = NavigationActions.reset({
-  //     index: 0,
-  //     actions: [NavigationActions.navigate({ routeName: targetRoute })],
-  //   });
-  //   this.props.navigation.dispatch(resetAction);
-  // }
 
   setModalVisible(visible: boolean) {
     this.setState(prevState => {
@@ -245,7 +199,7 @@ class LoginScreen extends React.Component<Props, State> {
             />
             <NBButton
               style={[styles.GoogleButton, styles.raised]}
-              // loading={this.state.loading}
+              disabled={this.props.loadingGoogleLogin}
               onPress={() => this.googleSignin()}>
               <Text>Google Login</Text>
             </NBButton>
@@ -305,6 +259,7 @@ class LoginScreen extends React.Component<Props, State> {
 
 const mapStateToProps: any = (state: any) => ({
   loadingLogin: state.LoginReducer.loading,
+  loadingGoogleLogin: state.LoginReducer.loadingGoogleLogin,
   hasError: state.LoginReducer.hasError,
 });
 

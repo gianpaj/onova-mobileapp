@@ -22,39 +22,25 @@ import {
   Left,
   Right,
 } from 'native-base';
-import { GoogleSignin } from 'react-native-google-signin';
-import * as firebase from 'firebase';
 
 import { logout } from '../actions/actionCreator';
 import colors from '../config/colors';
 
-const USER_KEY = 'userData';
-
 type Props = {
   logout: any,
-};
-
-type UserData = {
-  emailAddress: string,
+  userData: any,
 };
 
 type State = {
   provider: string,
-  userData: any,
 };
 class Profile extends React.Component<Props, State> {
   state = {
     provider: '',
-    userData: {},
   };
 
   componentDidMount() {
-    AsyncStorage.getItem(USER_KEY).then(userData => {
-      const jsonData = JSON.parse(userData);
-      console.log(jsonData);
-      this.setState({ provider: jsonData.provider });
-      this.setState({ userData: jsonData });
-    });
+    console.log(this.props.userData);
   }
 
   goToSettings() {
@@ -62,28 +48,7 @@ class Profile extends React.Component<Props, State> {
   }
 
   onLogout() {
-    if (this.state.provider == 'email') {
-      this.afterLogout();
-    } else {
-      this.onGoogleLogout();
-    }
-  }
-
-  afterLogout() {
-    return AsyncStorage.removeItem(USER_KEY)
-      .then(() => {
-        this.props.logout();
-      })
-      .catch(err => {
-        console.error(err);
-      });
-  }
-
-  onGoogleLogout() {
-    GoogleSignin.signOut()
-      .then(() => firebase.auth().signOut())
-      .then(() => AsyncStorage.removeItem(USER_KEY))
-      .then(() => this.afterLogout());
+    this.props.logout({ provider: this.props.userData.provider });
   }
 
   render() {
@@ -123,17 +88,6 @@ class Profile extends React.Component<Props, State> {
                 }}>
                 <Text style={{ color: 'white', fontSize: 28 }}>JD</Text>
               </View>
-
-              {/* {provider == 'email' && (
-            <TouchableOpacity onPress={() => this.onLogout()}>
-              <Text>Logout</Text>
-            </TouchableOpacity>
-          )}
-          {provider == 'google' && (
-            <TouchableOpacity onPress={() => this.onGoogleLogout()}>
-              <Text>Google Logout</Text>
-            </TouchableOpacity>
-          )} */}
             </Body>
           </CardItem>
           <CardItem>
@@ -147,9 +101,13 @@ class Profile extends React.Component<Props, State> {
   }
 }
 
+const mapStateToProps: any = (state: any) => ({
+  userData: state.LoginReducer.data,
+});
+
 const mapDispatchToProps = {
   logout,
 };
 
-const Logout = connect(null, mapDispatchToProps)(Profile);
+const Logout = connect(mapStateToProps, mapDispatchToProps)(Profile);
 export default Logout;

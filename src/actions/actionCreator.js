@@ -1,4 +1,6 @@
 // @flow
+import * as firebase from 'firebase';
+import { GoogleSignin, User as GoogleUser } from 'react-native-google-signin';
 
 import {
   incrementCounter,
@@ -6,6 +8,7 @@ import {
   LOGIN_PENDING,
   LOGIN_FAIL,
   LOGIN_SUCCESS,
+  GOOGLE_LOGIN_PENDING,
   Logout,
   SIGNUP,
   BACK,
@@ -32,7 +35,7 @@ const login = (data: LoginData) => (dispatch: Dispatch) => (
     })
     .then(res => {
       if (res.data) {
-        console.log('user logged in via email');
+        console.debug('user logged in via email');
         const userData = {
           ...res.data,
           ...{ token: res.token, provider: 'email' },
@@ -40,7 +43,7 @@ const login = (data: LoginData) => (dispatch: Dispatch) => (
         dispatch({ type: LOGIN_SUCCESS, payload: userData });
         // this.afterLogin(userData);
       } else {
-        console.log(res);
+        console.debug(res);
         dispatch({ type: LOGIN_FAIL });
         // ui.showToast(res.toString());
       }
@@ -57,22 +60,63 @@ const login = (data: LoginData) => (dispatch: Dispatch) => (
         //   'warning'
         // );
       } else {
-        console.log(err);
+        console.error(err);
       }
       dispatch({ type: LOGIN_FAIL, payload: err });
     })
   // }, 5000)
 );
 
+const loginWithGoogle = () => (dispatch: Dispatch) => {
+  dispatch({ type: GOOGLE_LOGIN_PENDING });
+
+  GoogleSignin.hasPlayServices({ autoResolve: true });
+  GoogleSignin.configure({
+    iosClientId:
+      '530398476253-s5dfiv2ilfn1nbrhk5otj8k2mnne101l.apps.googleusercontent.com', // only for iOS
+  });
+  return GoogleSignin.signIn()
+    .then((user: GoogleUser) => {
+      const provider = firebase.auth.GoogleAuthProvider;
+      const credential = provider.credential(user.idToken);
+      return firebase
+        .auth()
+        .signInWithCredential(credential)
+        .then(user => {
+          console.log('signed in with Google');
+          const userData = {
+            emailAddress: user.email,
+            provider: 'google',
+          };
+          dispatch({ type: LOGIN_SUCCESS, payload: userData });
+        })
+        .catch(error => {
+          dispatch({ type: LOGIN_FAIL, payload: error });
+          console.error(`Login fail with error: ${error}`);
+        });
+    })
+    .catch(error => {
+      if (error.code == -5) console.debug('User cancelled Google Login');
+      dispatch({ type: LOGIN_FAIL, payload: error });
+    });
+};
+
 // const signup = (data: SignupData) => (dispatch: Dispatch) => (
 //   dispatch({ type: SIGNUP_PENDING }),
 // );
 
-const logout = () => ({
-  type: Logout,
-});
+const logout = (data: any) => (dispatch: Dispatch) => {
+  console.log(data);
+  if (data.provider == 'email') {
+    return dispatch({ type: Logout });
+  } else if (data.provider == 'google') {
+    return GoogleSignin.signOut()
+      .then(() => firebase.auth().signOut())
+      .then(dispatch({ type: Logout }));
+  }
+};
 
-const signup = () => ({
+const goToSignup = () => ({
   type: SIGNUP,
 });
 
@@ -80,4 +124,12 @@ const goback = () => ({
   type: BACK,
 });
 
-export { incrementAction, decrementAction, login, logout, signup, goback };
+export {
+  incrementAction,
+  decrementAction,
+  login,
+  loginWithGoogle,
+  logout,
+  goToSignup,
+  goback,
+};

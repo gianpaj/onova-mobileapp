@@ -3,7 +3,6 @@
 import React from 'react';
 import {
   ActivityIndicator,
-  AsyncStorage,
   StyleSheet,
   View,
   // $FlowFixMe
@@ -40,21 +39,6 @@ export default class LoginScreen extends React.Component<*, State> {
       messagingSenderId: '530398476253',
     };
     firebase.initializeApp(firebaseConfig);
-  }
-
-  componentWillMount() {
-    AsyncStorage.getItem('userData')
-      .then(userData => {
-        if (userData) {
-          const jsonData = JSON.parse(userData);
-          console.log(jsonData);
-          this.setState({ userData: jsonData });
-        } else {
-          console.log(userData);
-          this.setState({ userData: null });
-        }
-      })
-      .catch(err => console.error(err));
   }
 
   _renderLoading = () => (

@@ -2,12 +2,14 @@ import {
   LOGIN_PENDING,
   LOGIN_SUCCESS,
   LOGIN_FAIL,
+  GOOGLE_LOGIN_PENDING,
   Logout,
 } from '../actions/actionTypes';
 
 const initialState = {
   isLoggedIn: false,
   loading: false,
+  loadingGoogleLogin: false,
   data: null,
   hasError: false,
   errorMsg: null,
@@ -38,13 +40,30 @@ const loginReducer = (state = initialState, action) => {
         ...state,
         isLoggedIn: false,
         loading: false,
+        loadingGoogleLogin: false,
         data: null,
         hasError: true,
         errorMsg: action.payload,
       };
 
+    case GOOGLE_LOGIN_PENDING:
+      return {
+        ...state,
+        isLoggedIn: false,
+        loading: false,
+        loadingGoogleLogin: true,
+        data: null,
+        hasError: false,
+        errorMsg: null,
+      };
+
     case Logout:
-      return { ...state, isLoggedIn: false };
+      return {
+        ...state,
+        isLoggedIn: false,
+        loadingGoogleLogin: false,
+        data: null,
+      };
 
     default:
       return state;

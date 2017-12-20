@@ -18,7 +18,7 @@
   "dependencies": {
     "@patwoz/react-navigation-is-focused-hoc": "^1.1.0",
     "firebase": "^4.6.2",
-    "native-base": "^2.3.3",
+    "native-base": "^2.3.5",
     "react": "16.0.0",
     "react-native": "0.50.3",
     "react-native-elements": "^0.18.2",

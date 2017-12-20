@@ -1,16 +1,26 @@
 import { NavigationActions } from 'react-navigation';
 
 import AppNavigator from '../navigation/navigationStack';
-import { Login, Logout } from '../actions/actionTypes';
+// prettier-ignore
+import {
+  LOGIN_SUCCESS,
+  Logout,
+  SIGNUP,
+  BACK,
+} from '../actions/actionTypes';
 
 const ActionForLoggedOut = AppNavigator.router.getActionForPathAndParams(
   'login'
 );
-// const ActionForLoggedIn = AppNavigator.router.getActionForPathAndParams('tabs');
 
 const ActionForLoggedIn = NavigationActions.reset({
   index: 0,
   actions: [NavigationActions.navigate({ routeName: 'tabs' })],
+});
+
+const ActionForLogout = NavigationActions.reset({
+  index: 0,
+  actions: [NavigationActions.navigate({ routeName: 'login' })],
 });
 
 const stateForLoggedOut = AppNavigator.router.getStateForAction(
@@ -22,6 +32,7 @@ const stateForLoggedIn = AppNavigator.router.getStateForAction(
 const initialState = { stateForLoggedOut, stateForLoggedIn };
 
 const navigationReducer = (state = initialState, action) => {
+  console.log(action);
   switch (action.type) {
     case '@@redux/INIT':
       return {
@@ -32,7 +43,7 @@ const navigationReducer = (state = initialState, action) => {
         ),
       };
 
-    case Login:
+    case LOGIN_SUCCESS:
       return {
         ...state,
         stateForLoggedIn: AppNavigator.router.getStateForAction(
@@ -43,12 +54,27 @@ const navigationReducer = (state = initialState, action) => {
 
     case Logout:
       return {
+        stateForLoggedOut: AppNavigator.router.getStateForAction(
+          ActionForLogout
+        ),
+      };
+
+    case SIGNUP:
+      return {
         ...state,
         stateForLoggedOut: AppNavigator.router.getStateForAction(
-          NavigationActions.reset({
-            index: 0,
-            actions: [NavigationActions.navigate({ routeName: 'login' })],
-          })
+          NavigationActions.navigate({
+            routeName: 'signup',
+          }),
+          state.stateForLoggedOut
+        ),
+      };
+
+    case BACK:
+      return {
+        ...state,
+        stateForLoggedOut: AppNavigator.router.getStateForAction(
+          NavigationActions.back()
         ),
       };
 

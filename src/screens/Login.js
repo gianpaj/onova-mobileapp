@@ -20,12 +20,12 @@ import {
 } from 'react-native-elements';
 import { Button as NBButton, Content } from 'native-base';
 // $FlowFixMe
-import { NavigationScreenProp } from 'react-navigation';
+import { NavigationActions, NavigationScreenProp } from 'react-navigation';
 import isEmail from 'validator/lib/isEmail';
 import * as firebase from 'firebase';
 import { GoogleSignin, User as GoogleUser } from 'react-native-google-signin';
 
-import { login } from '../actions/actionCreator';
+import { login, signup } from '../actions/actionCreator';
 import type { Dispatch } from '../types';
 
 import * as api from '../utils/api';
@@ -69,10 +69,16 @@ class LoginScreen extends React.Component<Props, State> {
 
   onLogin() {
     console.log('onLogin()', this.state.email, this.state.password);
-    this.props.login({
-      emailAddress: this.state.email,
-      password: this.state.password,
-    });
+    this.props.dispatch(
+      login({
+        emailAddress: this.state.email,
+        password: this.state.password,
+      })
+    );
+  }
+
+  onSignup() {
+    if (this.props.navigation) this.props.navigation.dispatch(signup());
   }
 
   googleSignin() {
@@ -178,7 +184,7 @@ class LoginScreen extends React.Component<Props, State> {
               </Text>
             </View>
           </View>
-          {/* {this.props.hasError && <Text>errors</Text>} */}
+          {this.props.hasError && <Text>errors</Text>}
         </View>
         <View>
           <FormInput

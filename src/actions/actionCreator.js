@@ -7,6 +7,8 @@ import {
   LOGIN_FAIL,
   LOGIN_SUCCESS,
   Logout,
+  SIGNUP,
+  BACK,
 } from './actionTypes';
 import type { Dispatch, LoginData } from '../types';
 import * as api from '../utils/api';
@@ -62,8 +64,20 @@ const login = (data: LoginData) => (dispatch: Dispatch) => (
   // }, 5000)
 );
 
+// const signup = (data: SignupData) => (dispatch: Dispatch) => (
+//   dispatch({ type: SIGNUP_PENDING }),
+// );
+
 const logout = () => ({
   type: Logout,
 });
 
-export { incrementAction, decrementAction, login, logout };
+const signup = () => ({
+  type: SIGNUP,
+});
+
+const goback = () => ({
+  type: BACK,
+});
+
+export { incrementAction, decrementAction, login, logout, signup, goback };

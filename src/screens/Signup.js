@@ -18,6 +18,7 @@ import {
 import { NavigationActions, NavigationScreenProp } from 'react-navigation';
 import isEmail from 'validator/lib/isEmail';
 
+import { logout, goback } from '../actions/actionCreator';
 import * as api from '../utils/api';
 import * as ui from '../utils/ui';
 import colors from '../config/colors';
@@ -70,7 +71,7 @@ export default class LoginScreen extends React.Component<Props, State> {
         if (res.user) {
           console.log('user created', res.user);
           console.log('token', res.token);
-          this.resetNavigation('Tabs');
+          // this.resetNavigation('tabs');
         } else {
           console.log(res);
           // ui.showToast(res.toString());
@@ -85,12 +86,14 @@ export default class LoginScreen extends React.Component<Props, State> {
       });
   }
 
-  resetNavigation(targetRoute: string) {
-    const resetAction = NavigationActions.reset({
-      index: 0,
-      actions: [NavigationActions.navigate({ routeName: targetRoute })],
-    });
-    if (this.props.navigation) this.props.navigation.dispatch(resetAction);
+  resetNavigation() {
+    // if (this.props.navigation) this.props.navigation.dispatch(resetAction);
+    if (this.props.navigation)
+      this.props.navigation.dispatch(logout());
+  }
+
+  onGoback() {
+    if (this.props.navigation) this.props.navigation.dispatch(goback());
   }
 
   _inputProps = {
@@ -167,11 +170,7 @@ export default class LoginScreen extends React.Component<Props, State> {
             />
             <Text style={styles.hr}>
               Already have an account?&nbsp;
-              <Text
-                style={styles.linkText}
-                onPress={() =>
-                  this.props.navigation ? this.props.navigation.goBack() : null
-                }>
+              <Text style={styles.linkText} onPress={() => this.onGoback()}>
                 Login
               </Text>
             </Text>

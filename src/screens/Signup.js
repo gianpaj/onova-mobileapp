@@ -44,7 +44,7 @@ class SignupScreen extends React.Component<Props, State> {
   PwdInput: ?FormInput;
 
   state = {
-    username: 'testaccoun',
+    username: 'testaccount',
     emailAddress: 'gianpa+registertest@gmail.com',
     password: '***REMOVED***99',
     // username: '',

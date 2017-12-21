@@ -8,6 +8,7 @@
   },
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
+    "start-emulator": "cd $ANDROID_HOME/tools && ./emulator -avd Nexus_5X_API_25_7.1.1_",
     "test": "jest __tests__",
     "test-e2e": "jest e2e --setupTestFrameworkScriptFile=./e2e/init.js --bail",
     "flow": "flow",

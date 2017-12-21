@@ -56,10 +56,16 @@ class ProfileScreen extends React.Component<Props, State> {
     return (
       <Container>
         <Header>
-          <Left />
+          <Left style={{ flex: 1 }} />
           {/* notifications */}
           <View>
-            <Text style={{ marginTop: 15 }}>@{username}</Text>
+            {username == null ? (
+              <Text style={{ marginTop: 15, fontStyle: 'italic' }}>
+                @select your username
+              </Text>
+            ) : (
+              <Text style={{ marginTop: 15 }}>@{username}</Text>
+            )}
           </View>
           <Right>
             <Button transparent onPress={this.goToSettings()}>

@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 // prettier-ignore
 import {
   Modal,
-  Platform,
+  // Platform,
   StyleSheet,
   Text,
   View,
@@ -22,7 +22,7 @@ import { Button as NBButton, Content } from 'native-base';
 import { NavigationScreenProp } from 'react-navigation';
 import isEmail from 'validator/lib/isEmail';
 
-import { login, loginWithGoogle, goToSignup } from '../actions/actionCreator';
+import { login, goToSignup } from '../actions/actionCreator';
 import type { Dispatch } from '../types';
 
 import * as api from '../utils/api';
@@ -67,9 +67,9 @@ class LoginScreen extends React.Component<Props, State> {
     if (this.props.navigation) this.props.navigation.dispatch(goToSignup());
   }
 
-  googleSignin() {
-    this.props.dispatch(loginWithGoogle());
-  }
+  // googleSignin() {
+  //   this.props.dispatch(loginWithGoogle());
+  // }
 
   setModalVisible(visible: boolean) {
     this.setState(prevState => {
@@ -193,12 +193,6 @@ class LoginScreen extends React.Component<Props, State> {
               onPress={() => this.onSignup()}
               title="Sign up"
             />
-            <NBButton
-              style={[styles.GoogleButton, styles.raised]}
-              disabled={this.props.loadingGoogleLogin}
-              onPress={() => this.googleSignin()}>
-              <Text>Google Login</Text>
-            </NBButton>
             {/* <Footer></Footer> */}
           </View>
         </View>
@@ -283,13 +277,13 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     backgroundColor: colors.secondary,
   },
-  GoogleButton: {
-    backgroundColor: colors.white,
-    padding: 8,
-    marginTop: 10,
-    borderRadius: 0,
-    alignSelf: 'center',
-  },
+  // GoogleButton: {
+  //   backgroundColor: colors.white,
+  //   padding: 8,
+  //   marginTop: 10,
+  //   borderRadius: 0,
+  //   alignSelf: 'center',
+  // },
   hr: {
     alignSelf: 'center',
     margin: 10,
@@ -297,18 +291,18 @@ const styles = StyleSheet.create({
   hrLine: {
     color: colors.grey4,
   },
-  raised: {
-    ...Platform.select({
-      ios: {
-        shadowColor: 'rgba(0,0,0, .4)',
-        shadowOffset: { height: 1, width: 1 },
-        shadowOpacity: 1,
-        shadowRadius: 1,
-      },
-      android: {
-        backgroundColor: '#fff',
-        elevation: 2,
-      },
-    }),
-  },
+  // raised: {
+  //   ...Platform.select({
+  //     ios: {
+  //       shadowColor: 'rgba(0,0,0, .4)',
+  //       shadowOffset: { height: 1, width: 1 },
+  //       shadowOpacity: 1,
+  //       shadowRadius: 1,
+  //     },
+  //     android: {
+  //       backgroundColor: '#fff',
+  //       elevation: 2,
+  //     },
+  //   }),
+  // },
 });

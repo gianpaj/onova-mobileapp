@@ -1,6 +1,6 @@
 // @flow
 import * as firebase from 'firebase';
-import { GoogleSignin, User as GoogleUser } from 'react-native-google-signin';
+// import { GoogleSignin, User as GoogleUser } from 'react-native-google-signin';
 
 import {
   incrementCounter,
@@ -8,7 +8,7 @@ import {
   LOGIN_PENDING,
   LOGIN_FAIL,
   LOGIN_SUCCESS,
-  GOOGLE_LOGIN_PENDING,
+  // GOOGLE_LOGIN_PENDING,
   SIGNUP_PENDING,
   SIGNUP_SUCCESS,
   SIGNUP_FAIL,
@@ -70,6 +70,7 @@ const login = (data: LoginData) => (dispatch: Dispatch) => (
   // }, 5000)
 );
 
+/* @DISABLED
 const loginWithGoogle = () => (dispatch: Dispatch) => {
   dispatch({ type: GOOGLE_LOGIN_PENDING });
 
@@ -103,6 +104,7 @@ const loginWithGoogle = () => (dispatch: Dispatch) => {
       dispatch({ type: LOGIN_FAIL, payload: error });
     });
 };
+*/
 
 const signup = (data: SignupData) => (dispatch: Dispatch) => (
   dispatch({ type: SIGNUP_PENDING }),
@@ -158,7 +160,7 @@ export {
   incrementAction,
   decrementAction,
   login,
-  loginWithGoogle,
+  // loginWithGoogle,
   signup,
   logout,
   goToSignup,

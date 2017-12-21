@@ -1,8 +1,5 @@
 import { StackNavigator } from 'react-navigation';
-
-import { Login } from '../screens/Login';
-import { Signup } from '../screens/Signup';
-import { Product } from '../screens/Product';
+import { Login, Signup, Product } from '../screens';
 import { Tabs } from './navigationTabs';
 
 const navigator = StackNavigator(

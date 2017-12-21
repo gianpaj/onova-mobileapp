@@ -3,9 +3,7 @@ import { Platform } from 'react-native';
 import { TabNavigator } from 'react-navigation';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-import { Home } from '../screens/Home';
-import { AddProduct } from '../screens/AddProduct';
-import { Profile } from '../screens/Profile';
+import { Home, AddProduct, Profile } from '../screens';
 import colors from '../config/colors';
 
 const isiOS = Platform.OS === 'ios';
@@ -66,6 +64,7 @@ const tabBarConfiguration = {
   // i.e componentWillMount() of AddProduct
   lazy: true,
   tabBarPosition: 'bottom',
+  swipeEnabled: false,
 };
 
 export const Tabs = TabNavigator(routeConfiguration, tabBarConfiguration);

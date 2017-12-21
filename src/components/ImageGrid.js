@@ -19,14 +19,13 @@ import { NavigationActions, NavigationScreenProp } from 'react-navigation';
 import * as api from '../utils/api';
 
 type Props = {
-  URL: string,
+  apiURL: string,
   navigation?: NavigationScreenProp,
 };
 
 type State = {
   error: boolean,
-  apiURL: string,
-  items: Array,
+  items: Array<any>,
   itemHeight: number,
   loading: boolean,
   // loadingMore: boolean,
@@ -62,7 +61,7 @@ export class ImageGrid extends React.Component<Props, State> {
   }
 
   fetchItems = () => {
-    // return fetch(`${this.props.apiURL}?skip=${this.state.skip}`)
+    // ?skip=${this.state.skip}
     // setTimeout(() => {
     return api
       .get(this.props.apiURL)
@@ -108,8 +107,8 @@ export class ImageGrid extends React.Component<Props, State> {
     // const uri = getImageUrl(item.id, 200, 200);
 
     // const uri = item.photoURIs[0];
-    const uri = 'http://0.0.0.0:8000/boots1.jpg';
-    console.log(uri);
+    const uri = 'http://192.168.1.4:8000/boots1.jpg';
+    // console.log(uri);
     return (
       <View style={styles.imageContainer}>
         <TouchableOpacity

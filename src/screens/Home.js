@@ -1,7 +1,7 @@
 // @flow
 import colors from '../config/colors';
 
-import React from 'react';
+import React, { PureComponent } from 'react';
 // prettier-ignore
 import {
   StyleSheet,
@@ -19,9 +19,11 @@ import {
   Container,
   Header,
 } from 'native-base';
-import { TabViewAnimated, TabBar, SceneMap } from 'react-native-tab-view';
 // $FlowFixMe
 import { NavigationScreenProp } from 'react-navigation';
+import { TabViewAnimated, TabBar, SceneMap } from 'react-native-tab-view';
+// $FlowFixMe
+import type { Route, NavigationState } from 'react-native-tab-view/types';
 
 import { ImageGrid } from '../components/ImageGrid';
 
@@ -34,12 +36,15 @@ type Props = {
   navigation?: NavigationScreenProp,
 };
 
-type State = {
-  index: number,
-  routes: Array<{ key: string, title: string }>,
-};
+type State = NavigationState<
+  Route<{
+    key: string,
+    title: string,
+  }>
+>;
 
-export class Home extends React.PureComponent<Props, State> {
+export class Home extends PureComponent<Props, State> {
+
   state = {
     index: 0,
     routes: [
@@ -131,6 +136,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.bgDefault,
   },
   tab: {
-    width: 120,
+    width: initialLayout.width / 3,
   },
 });

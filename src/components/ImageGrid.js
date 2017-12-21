@@ -16,6 +16,8 @@ import FastImage from 'react-native-fast-image';
 // $FlowFixMe
 import { NavigationActions, NavigationScreenProp } from 'react-navigation';
 
+import * as api from '../utils/api';
+
 type Props = {
   URL: string,
   navigation?: NavigationScreenProp,
@@ -23,7 +25,8 @@ type Props = {
 
 type State = {
   error: boolean,
-  images: Array<string>,
+  apiURL: string,
+  items: Array,
   itemHeight: number,
   loading: boolean,
   // loadingMore: boolean,
@@ -33,8 +36,12 @@ type State = {
 
 const { width } = Dimensions.get('window');
 
-const getImageUrl = (id, width, height) =>
-  `https://picsum.photos/${width}/${height}?image=${id}`;
+// const CLOUD_BUCKET = 'staging.onova-183307.appspot.com';
+
+// const getImageUrl = id => `https://${CLOUD_BUCKET}/${id}-.jpeg`;
+
+// const getImageUrl = (id, width, height) =>
+//   `https://picsum.photos/${width}/${height}?image=${id}`;
 
 export class ImageGrid extends React.Component<Props, State> {
   constructor(props: Object) {
@@ -43,7 +50,7 @@ export class ImageGrid extends React.Component<Props, State> {
 
   state = {
     error: false,
-    images: [],
+    items: [],
     itemHeight: 0,
     loading: true,
     refreshing: false,
@@ -51,18 +58,17 @@ export class ImageGrid extends React.Component<Props, State> {
   };
 
   componentDidMount() {
-    this.fetchImages();
+    this.fetchItems();
   }
 
-  fetchImages() {
-    // return fetch(`${this.props.URL}?skip=${this.state.skip}`)
+  fetchItems = () => {
+    // return fetch(`${this.props.apiURL}?skip=${this.state.skip}`)
     // setTimeout(() => {
-    return fetch(`${this.props.URL}`)
-      .then(res => res.json())
-      .then(images => images.splice(0, 20))
-      .then(images => {
+    return api
+      .get(this.props.apiURL)
+      .then(res => {
         this.setState({
-          images,
+          items: res.data,
           loading: false,
         });
       })
@@ -72,7 +78,7 @@ export class ImageGrid extends React.Component<Props, State> {
         });
       });
     // }, 2000);
-  }
+  };
 
   onLayout = () => {
     this.setState({
@@ -93,10 +99,17 @@ export class ImageGrid extends React.Component<Props, State> {
 
     if (this.props.navigation)
       this.props.navigation.dispatch(navigateToProduct);
+
+    console.log(JSON.stringify(item));
+    // this.props.openItem(item);
   }
 
   renderItem = ({ item }: any) => {
-    const uri = getImageUrl(item.id, 200, 200);
+    // const uri = getImageUrl(item.id, 200, 200);
+
+    // const uri = item.photoURIs[0];
+    const uri = 'http://0.0.0.0:8000/boots1.jpg';
+    console.log(uri);
     return (
       <View style={styles.imageContainer}>
         <TouchableOpacity
@@ -124,7 +137,7 @@ export class ImageGrid extends React.Component<Props, State> {
               { height: this.state.itemHeight },
             ]}
             refreshControl={this.renderRefreshControl()}
-            data={this.state.images}
+            data={this.state.items}
             renderItem={this.renderItem}
             numColumns={3}
             keyExtractor={el => el.id}
@@ -152,7 +165,7 @@ export class ImageGrid extends React.Component<Props, State> {
     return (
       <RefreshControl
         refreshing={this.state.refreshing}
-        onRefresh={this.fetchImages.bind(this)}
+        onRefresh={this.fetchItems}
       />
     );
   }

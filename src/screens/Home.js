@@ -30,10 +30,6 @@ const initialLayout = {
   width: Dimensions.get('window').width,
 };
 
-const ClothesRoute = () => <ImageGrid URL="https://picsum.photos/list" />;
-const ShoesRoute = () => <ImageGrid URL="https://picsum.photos/list" />;
-const OtherRoute = () => <ImageGrid URL="https://picsum.photos/list" />;
-
 type Props = {
   navigation?: NavigationScreenProp,
 };
@@ -66,15 +62,14 @@ export class Home extends React.PureComponent<Props, State> {
     />
   );
 
+  // _openItem = item => {
+  //   this.props.navigation.navigate('Product', item);
+  // };
+
   _renderScene = SceneMap({
-    clothes: () => (
-      <ImageGrid
-        navigation={this.props.navigation}
-        URL="https://picsum.photos/list"
-      />
-    ),
-    shoes: ShoesRoute,
-    other: OtherRoute,
+    clothes: () => <ImageGrid apiURL="/api/products" />,
+    shoes: () => <ImageGrid apiURL="/api/products" />,
+    other: () => <ImageGrid apiURL="/api/products" />,
   });
 
   onShare() {
@@ -115,7 +110,7 @@ export class Home extends React.PureComponent<Props, State> {
   }
 }
 
-const STATUS_BAR_HEIGHT = Platform.OS === 'ios' ? 20 : 0;
+// const STATUS_BAR_HEIGHT = Platform.OS === 'ios' ? 20 : 0;
 
 const styles = StyleSheet.create({
   // statusBarUnderlay: {

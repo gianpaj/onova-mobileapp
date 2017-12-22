@@ -103,6 +103,7 @@ export class Home extends PureComponent<Props, State> {
           </Right>
         </Header>
         <TabViewAnimated
+          testID="Tabs"
           style={styles.container}
           navigationState={this.state}
           renderScene={this._renderScene}

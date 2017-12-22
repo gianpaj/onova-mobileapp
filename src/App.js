@@ -15,7 +15,7 @@ import AppNavigation from './navigation';
 
 import { Root } from 'native-base';
 
-import * as firebase from 'firebase';
+import { initializeApp } from 'firebase';
 
 const { store, persistor } = configureStore();
 
@@ -38,7 +38,7 @@ export default class LoginScreen extends React.Component<*, State> {
       storageBucket: 'onova-183307.appspot.com',
       messagingSenderId: '530398476253',
     };
-    firebase.initializeApp(firebaseConfig);
+    initializeApp(firebaseConfig);
   }
 
   _renderLoading = () => (

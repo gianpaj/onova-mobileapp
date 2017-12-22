@@ -26,9 +26,9 @@ describe('Login', () => {
     await element(by.id('EmailField')).tap();
 
     await element(by.id('EmailField')).clearText();
-    await element(by.id('EmailField')).typeText('hello@gmail.com');
+    await element(by.id('EmailField')).typeText('gianpa+test2@gmail.com');
     await element(by.id('PasswordField')).clearText();
-    await element(by.id('PasswordField')).typeText('***REMOVED***');
+    await element(by.id('PasswordField')).typeText('express2');
 
     await element(by.id('LoginButton')).tap();
 

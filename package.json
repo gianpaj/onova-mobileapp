@@ -10,7 +10,8 @@
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "start-emulator": "cd $ANDROID_HOME/tools && ./emulator -avd Nexus_5X_API_25_7.1.1_",
     "test": "jest __tests__",
-    "test-e2e": "jest e2e --setupTestFrameworkScriptFile=./e2e/init.js --bail",
+    "test-e2e-ios": "detox test --platform ios",
+    "test-e2e-android": "detox test --platform android",
     "flow": "flow",
     "flow-check": "flow check",
     "flow-start": "flow start",
@@ -43,7 +44,7 @@
     "babel-jest": "21.2.0",
     "babel-preset-flow": "^6.23.0",
     "babel-preset-react-native": "4.0.0",
-    "detox": "^5.10.0",
+    "detox": "^6.0.4",
     "eslint": "^4.6.1",
     "eslint-config-prettier": "^2.8.0",
     "eslint-plugin-babel": "^4.1.2",
@@ -65,7 +66,8 @@
     ]
   },
   "detox": {
-    "runner": "jest",
+    "test-runner": "jest",
+    "runner-config": "e2e/config.json",
     "configurations": {
       "ios.sim.debug": {
         "binaryPath": "ios/build/Build/Products/Debug-iphonesimulator/myRN.app",

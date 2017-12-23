@@ -12,11 +12,19 @@ import {
   View,
   // $FlowFixMe
 } from 'react-native';
-import FastImage from 'react-native-fast-image';
+import {
+  CachedImage,
+  ImageCacheProvider,
+  ImageCacheManager,
+} from 'react-native-cached-image';
 // $FlowFixMe
 import { NavigationActions, NavigationScreenProp } from 'react-navigation';
 
 import * as api from '../utils/api';
+
+// $FlowFixMe
+const loading = require('../assets/images/loading.jpg');
+const TTL = 4 * 60 * 60; // cache images for 4 hours
 
 type Props = {
   apiURL: string,
@@ -26,6 +34,7 @@ type Props = {
 type State = {
   error: boolean,
   items: Array<any>,
+  images: Array<string>,
   itemHeight: number,
   loading: boolean,
   // loadingMore: boolean,
@@ -34,13 +43,6 @@ type State = {
 };
 
 const { width } = Dimensions.get('window');
-
-// const CLOUD_BUCKET = 'staging.onova-183307.appspot.com';
-
-// const getImageUrl = id => `https://${CLOUD_BUCKET}/${id}-.jpeg`;
-
-// const getImageUrl = (id, width, height) =>
-//   `https://picsum.photos/${width}/${height}?image=${id}`;
 
 export class ImageGrid extends React.Component<Props, State> {
   constructor(props: Object) {
@@ -57,6 +59,8 @@ export class ImageGrid extends React.Component<Props, State> {
   };
 
   componentDidMount() {
+    // const defaultImageCacheManager = ImageCacheManager();
+    // defaultImageCacheManager.clearCache();
     this.fetchItems();
   }
 
@@ -68,6 +72,7 @@ export class ImageGrid extends React.Component<Props, State> {
       .then(res => {
         this.setState({
           items: res.data,
+          images: res.data.map(i => i.photoURIs[0]),
           loading: false,
         });
       })
@@ -104,17 +109,21 @@ export class ImageGrid extends React.Component<Props, State> {
   }
 
   renderItem = ({ item }: any) => {
-    // const uri = getImageUrl(item.id, 200, 200);
-
-    // const uri = item.photoURIs[0];
-    const uri = 'http://192.168.1.4:8000/boots1.jpg';
-    // console.log(uri);
+    const uri = JSON.parse(JSON.stringify(item)).photoURIs[0];
+    // const uri = 'http://localhost:8000/boots1.jpg';
     return (
       <View style={styles.imageContainer}>
         <TouchableOpacity
           style={{ flex: 1 }}
           onPress={() => this.onItemPress(item)}>
-          <FastImage source={{ uri }} style={styles.image} />
+          <ImageCacheProvider
+            numberOfConcurrentPreloads={3}
+            ttl={TTL} // num of seconds to cache the image url for
+            defaultSource={loading}
+            // urlsToPreload={this.state.images}
+            >
+            <CachedImage style={styles.image} source={{ uri }} />
+          </ImageCacheProvider>
         </TouchableOpacity>
       </View>
     );

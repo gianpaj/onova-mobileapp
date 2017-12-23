@@ -10,8 +10,8 @@
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "start-emulator": "cd $ANDROID_HOME/tools && ./emulator -avd Nexus_5X_API_25_7.1.1_",
     "test": "jest __tests__",
-    "test-e2e-ios": "detox test --platform ios",
-    "test-e2e-android": "detox test --platform android",
+    "test-e2e-ios": "detox test -c ios.sim.debug",
+    "test-e2e-android": "detox test -c android.emu.debug --loglevel verbose",
     "flow": "flow",
     "flow-check": "flow check",
     "flow-start": "flow start",
@@ -26,7 +26,6 @@
     "react-native": "0.51.0",
     "react-native-elements": "^0.18.2",
     "react-native-fast-image": "^2.0.1",
-    "react-native-gesture-handler": "^1.0.0-alpha.35",
     "react-native-image-crop-picker": "^0.18.2",
     "react-native-swiper": "^1.5.13",
     "react-native-tab-view": "^0.0.73",
@@ -73,6 +72,18 @@
         "build": "xcodebuild -project ios/myRN.xcodeproj -scheme myRN -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build",
         "type": "ios.simulator",
         "name": "iPhone 6"
+      },
+      "android.emu.debug": {
+        "binaryPath": "android/app/build/outputs/apk/app-debug.apk",
+        "build": "pushd android && ./gradlew assembleDebug assembleAndroidTest -DtestBuildType=debug && popd",
+        "type": "android.emulator",
+        "name": "Nexus_5X_API_25_7.1.1_"
+      },
+      "android.emu.release": {
+        "binaryPath": "android/app/build/outputs/apk/app-debug.apk",
+        "build": "pushd android && ./gradlew assembleRelease assembleAndroidTest -DtestBuildType=release && popd",
+        "type": "android.emulator",
+        "name": "Nexus_5X_API_25_7.1.1_"
       }
     }
   }

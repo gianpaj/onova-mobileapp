@@ -7,7 +7,7 @@ target 'myRN' do
 
   # Pods for myRN
   pod 'Firebase/Core'
-  pod 'GoogleSignIn'
+  # pod 'GoogleSignIn'
 
   target 'myRN-tvOSTests' do
     inherit! :search_paths

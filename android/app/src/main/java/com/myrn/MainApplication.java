@@ -6,7 +6,6 @@ import com.facebook.react.ReactApplication;
 import com.reactnative.ivpusic.imagepicker.PickerPackage;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
 import com.dylanvann.fastimage.FastImageViewPackage;
-import co.apptailor.googlesignin.RNGoogleSigninPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
@@ -31,7 +30,6 @@ public class MainApplication extends Application implements ReactApplication {
             new PickerPackage(),
             new RNGestureHandlerPackage(),
             new FastImageViewPackage(),
-            new RNGoogleSigninPackage(),
             new VectorIconsPackage()
       );
     }

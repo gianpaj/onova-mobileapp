@@ -12,6 +12,7 @@
     "test": "jest __tests__",
     "test-e2e-ios": "detox test -c ios.sim.debug",
     "test-e2e-android": "detox test -c android.emu.debug --loglevel verbose",
+    "start-nuke-ios": "watchman watch-del-all && rm -rf ios/build/ModuleCache && rm -rf ~/Library/Developer/Xcode/DerivedData/* && yarn start --reset-cache",
     "flow": "flow",
     "flow-check": "flow check",
     "flow-start": "flow start",

@@ -129,14 +129,14 @@ class LoginScreen extends React.Component<Props, State> {
             <Icon name="flash" style={{ fontSize: 104 }} />
             <Text>Onova.co</Text>
             <View>
-              <Text style={{ color: colors.black }} testID="welcome">
+              <Text style={{ color: colors.black }}>
                 Buy and sell clothes from your phone
               </Text>
             </View>
           </View>
           {this.props.hasError && <Text>errors</Text>}
         </View>
-        <View>
+        <View testID="login-form">
           <FormInput
             placeholder="Email"
             keyboardType="email-address"

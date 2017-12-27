@@ -103,7 +103,7 @@ class SignupScreen extends React.Component<Props, State> {
             </View>
           </View>
         </View>
-        <View>
+        <View testID="signup-form">
           <FormInput
             placeholder="Username"
             returnKeyType="next"
@@ -126,6 +126,7 @@ class SignupScreen extends React.Component<Props, State> {
               this.PwdInput ? this.PwdInput.focus() : null
             }
             value={this.state.emailAddress}
+            testID="EmailField"
             onChangeText={text => this.setState({ emailAddress: text })}
             accessibilityLabel="email address"
             {...this._inputProps}
@@ -144,7 +145,9 @@ class SignupScreen extends React.Component<Props, State> {
             {...this._inputProps}
           />
           {this.props.hasError && (
-            <FormValidationMessage>{this.props.errorMsg}</FormValidationMessage>
+            <FormValidationMessage accessibilityLabel="error message">
+              {this.props.errorMsg}
+            </FormValidationMessage>
           )}
           <View style={{ marginTop: 15 }}>
             <Button
@@ -158,6 +161,7 @@ class SignupScreen extends React.Component<Props, State> {
               }
               onPress={() => this.onSignup()}
               title="Create account"
+              accessibilityLabel="Create account"
             />
             <Text style={[styles.hr, { marginTop: 15 }]}>
               Already have an account?&nbsp;

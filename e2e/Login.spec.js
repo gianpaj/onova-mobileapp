@@ -4,7 +4,7 @@ describe('Login', () => {
   });
 
   it('should not login', async () => {
-    await waitFor(element(by.id('welcome')))
+    await waitFor(element(by.id('login-form')))
       .toBeVisible()
       .withTimeout(5000);
 
@@ -21,7 +21,7 @@ describe('Login', () => {
   });
 
   it('should login', async () => {
-    await waitFor(element(by.id('welcome'))).toBeVisible();
+    await waitFor(element(by.id('login-form'))).toBeVisible();
 
     await element(by.id('EmailField')).tap();
 

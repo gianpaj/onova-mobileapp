@@ -1,5 +1,5 @@
 // @flow
-import * as firebase from 'firebase';
+// import * as firebase from 'firebase';
 // import { GoogleSignin, User as GoogleUser } from 'react-native-google-signin';
 
 import {
@@ -43,6 +43,7 @@ const login = (data: LoginData) => (dispatch: Dispatch) => (
           ...res.data,
           ...{ token: res.token, provider: 'email' },
         };
+        // @TODO: send analytics login event
         dispatch({ type: LOGIN_SUCCESS, payload: userData });
         // this.afterLogin(userData);
       } else {
@@ -141,10 +142,10 @@ const logout = (data: any) => (dispatch: Dispatch) => {
   console.log(data);
   if (data.provider == 'email') {
     return dispatch({ type: LOGOUT });
-  } else if (data.provider == 'google') {
-    return GoogleSignin.signOut()
-      .then(() => firebase.auth().signOut())
-      .then(dispatch({ type: LOGOUT }));
+  // } else if (data.provider == 'google') {
+  //   return GoogleSignin.signOut()
+  //     .then(() => firebase.auth().signOut())
+  //     .then(dispatch({ type: LOGOUT }));
   }
 };
 
@@ -156,6 +157,11 @@ const goback = () => ({
   type: BACK,
 });
 
+const openProduct = (item: any) => ({
+  type: 'PRODUCT',
+  payload: item,
+});
+
 export {
   incrementAction,
   decrementAction,
@@ -165,4 +171,5 @@ export {
   logout,
   goToSignup,
   goback,
+  openProduct,
 };

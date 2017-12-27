@@ -34,7 +34,6 @@ type Props = {
 type State = {
   error: boolean,
   items: Array<any>,
-  images: Array<string>,
   itemHeight: number,
   loading: boolean,
   // loadingMore: boolean,
@@ -43,6 +42,7 @@ type State = {
 };
 
 const { width } = Dimensions.get('window');
+const { height } = Dimensions.get('window');
 
 export class ImageGrid extends React.Component<Props, State> {
   constructor(props: Object) {
@@ -72,7 +72,6 @@ export class ImageGrid extends React.Component<Props, State> {
       .then(res => {
         this.setState({
           items: res.data,
-          images: res.data.map(i => i.photoURIs[0]),
           loading: false,
         });
       })
@@ -130,13 +129,16 @@ export class ImageGrid extends React.Component<Props, State> {
   };
 
   render() {
+    const { error, loading, items } = this.state;
+
     return (
       <View style={styles.container}>
-        {this.state.error && (
+        {error ? (
           <Text style={styles.text}>Error fetching listing.</Text>
-        )}
-        {this.state.loading && this.renderLoading()}
-        {!this.state.loading && (
+        ) : loading ? (
+          this.renderLoading()
+        ) : (
+          // if not loading or error
           <FlatList
             onLayout={this.onLayout}
             style={styles.list}
@@ -145,17 +147,27 @@ export class ImageGrid extends React.Component<Props, State> {
               { height: this.state.itemHeight },
             ]}
             refreshControl={this.renderRefreshControl()}
-            data={this.state.items}
+            data={items}
             renderItem={this.renderItem}
             numColumns={3}
             keyExtractor={el => el.id}
             getItemLayout={this.getItemLayout}
             showsVerticalScrollIndicator={false}
+            ListFooterComponent={this.renderEmptyState}
           />
         )}
       </View>
     );
   }
+
+  renderEmptyState = () => {
+    if (this.state.items.length > 1) return null;
+    return (
+      <View style={[styles.container, { height: height - 150 }]}>
+        <Text style={styles.text}>No items found</Text>
+      </View>
+    );
+  };
 
   renderLoading() {
     return (

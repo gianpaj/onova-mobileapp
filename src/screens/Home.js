@@ -44,7 +44,6 @@ type State = NavigationState<
 >;
 
 export class Home extends PureComponent<Props, State> {
-
   state = {
     index: 0,
     routes: [
@@ -66,10 +65,6 @@ export class Home extends PureComponent<Props, State> {
       labelStyle={styles.label}
     />
   );
-
-  // _openItem = item => {
-  //   this.props.navigation.navigate('Product', item);
-  // };
 
   _renderScene = SceneMap({
     clothes: () => <ImageGrid apiURL="/api/products" />,

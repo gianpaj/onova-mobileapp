@@ -44,7 +44,7 @@ type State = {
 const { width } = Dimensions.get('window');
 const { height } = Dimensions.get('window');
 
-export class ImageGrid extends React.Component<Props, State> {
+export class ImageGridComponent extends React.Component<Props, State> {
   constructor(props: Object) {
     super(props);
   }
@@ -94,7 +94,8 @@ export class ImageGrid extends React.Component<Props, State> {
     return { length: itemHeight, offset: itemHeight * index, index };
   };
 
-  onItemPress(item: React$Element<any>) {
+  onItemPress(item: any) {
+    console.debug(item);
     const navigateToProduct = NavigationActions.navigate({
       routeName: 'product',
       params: item,
@@ -102,16 +103,13 @@ export class ImageGrid extends React.Component<Props, State> {
 
     if (this.props.navigation)
       this.props.navigation.dispatch(navigateToProduct);
-
-    console.log(JSON.stringify(item));
-    // this.props.openItem(item);
   }
 
   renderItem = ({ item }: any) => {
     const uri = JSON.parse(JSON.stringify(item)).photoURIs[0];
     // const uri = 'http://localhost:8000/boots1.jpg';
     return (
-      <View style={styles.imageContainer}>
+      <View style={styles.imageContainer} id={item.uuid}>
         <TouchableOpacity
           style={{ flex: 1 }}
           onPress={() => this.onItemPress(item)}>
@@ -120,7 +118,7 @@ export class ImageGrid extends React.Component<Props, State> {
             ttl={TTL} // num of seconds to cache the image url for
             defaultSource={loading}
             // urlsToPreload={this.state.images}
-            >
+          >
             <CachedImage style={styles.image} source={{ uri }} />
           </ImageCacheProvider>
         </TouchableOpacity>
@@ -150,7 +148,7 @@ export class ImageGrid extends React.Component<Props, State> {
             data={items}
             renderItem={this.renderItem}
             numColumns={3}
-            keyExtractor={el => el.id}
+            keyExtractor={el => el.uuid}
             getItemLayout={this.getItemLayout}
             showsVerticalScrollIndicator={false}
             ListFooterComponent={this.renderEmptyState}
@@ -190,6 +188,8 @@ export class ImageGrid extends React.Component<Props, State> {
     );
   }
 }
+
+export const ImageGrid = ImageGridComponent;
 
 const MARGIN = 1;
 

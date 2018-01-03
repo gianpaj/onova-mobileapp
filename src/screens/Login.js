@@ -192,6 +192,7 @@ class LoginScreen extends React.Component<Props, State> {
               raised
               onPress={() => this.onSignup()}
               title="Sign up"
+              testID="SignupButton"
             />
             {/* <Footer></Footer> */}
           </View>

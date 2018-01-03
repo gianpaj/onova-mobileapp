@@ -142,10 +142,10 @@ const logout = (data: any) => (dispatch: Dispatch) => {
   console.log(data);
   if (data.provider == 'email') {
     return dispatch({ type: LOGOUT });
-  // } else if (data.provider == 'google') {
-  //   return GoogleSignin.signOut()
-  //     .then(() => firebase.auth().signOut())
-  //     .then(dispatch({ type: LOGOUT }));
+    // } else if (data.provider == 'google') {
+    //   return GoogleSignin.signOut()
+    //     .then(() => firebase.auth().signOut())
+    //     .then(dispatch({ type: LOGOUT }));
   }
 };
 
@@ -157,11 +157,6 @@ const goback = () => ({
   type: BACK,
 });
 
-const openProduct = (item: any) => ({
-  type: 'PRODUCT',
-  payload: item,
-});
-
 export {
   incrementAction,
   decrementAction,
@@ -171,5 +166,4 @@ export {
   logout,
   goToSignup,
   goback,
-  openProduct,
 };

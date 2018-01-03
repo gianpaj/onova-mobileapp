@@ -25,6 +25,7 @@ const stateForLoggedOut = AppNavigator.router.getStateForAction(
 const stateForLoggedIn = AppNavigator.router.getStateForAction(
   ActionForLoggedIn
 );
+
 const initialState = { stateForLoggedOut, stateForLoggedIn };
 
 const navigationReducer = (state = initialState, action) => {

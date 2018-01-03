@@ -3,14 +3,15 @@
 import React from 'react';
 // $FlowFixMe
 import { View, Image, Dimensions, StyleSheet } from 'react-native';
-import { Swiper } from 'react-native-swiper';
+// eslint-disable-next-line
+import Swiper from 'react-native-swiper';
 import colors from '../config/colors';
 
 const { width } = Dimensions.get('window');
 
 type Props = {
   product: any,
-  source: any,
+  source: Array<string>,
 };
 
 type State = {
@@ -23,43 +24,28 @@ export class MediaView extends React.Component<Props, State> {
     imageHeight: 0,
   };
 
-  constructor(props: Props) {
-    super(props);
-  }
-
   componentWillMount() {
-    // if (this.props.type === 'image') {
-    if (typeof this.props.source != 'object') {
-      Image.getSize(this.props.source, (w, h) => {
-        this.setState({ imageHeight: Math.floor(h * (width / w)) });
-      });
-    } else {
-      Image.getSize(this.props.source['0'], (w, h) => {
-        this.setState({ imageHeight: Math.floor(h * (width / w)) });
-      });
-      for (let key in this.props.source) {
-        const url = this.props.source[key];
-        console.log(url);
-      }
-    }
+    Image.getSize(this.props.source[0], (w, h) => {
+      this.setState({ imageHeight: Math.floor(h * (width / w)) });
+    });
   }
 
   render() {
-    if (typeof this.props.source == 'object') {
-      const images = this.props.source;
+    const { source } = this.props;
+    if (source.length > 1) {
+      const images = source;
       return (
         <View style={[styles.container, { height: this.state.imageHeight }]}>
           <Swiper
-            style={styles.wrapper}
             autoplay={false}
             loop={false}
             bounces
             paginationStyle={styles.pagination}
             activeDotColor={colors.dkGreyBg}>
-            {Object.keys(images).map(key => (
+            {images.map((image, i) => (
               <Image
-                key={key}
-                source={{ uri: images[key] }}
+                key={i}
+                source={{ uri: image }}
                 style={{ width, height: this.state.imageHeight }}
                 resizeMode={'contain'}
               />
@@ -67,16 +53,18 @@ export class MediaView extends React.Component<Props, State> {
           </Swiper>
         </View>
       );
+    } else {
+      const uri = source[0];
+      return (
+        <View>
+          <Image
+            source={{ uri }}
+            style={{ width, height: this.state.imageHeight }}
+            resizeMode={'contain'}
+          />
+        </View>
+      );
     }
-    return (
-      <View>
-        <Image
-          source={{ uri: this.props.source }}
-          style={{ width, height: this.state.imageHeight }}
-          resizeMode={'contain'}
-        />
-      </View>
-    );
   }
 }
 

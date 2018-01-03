@@ -4305,7 +4305,7 @@ react-native-fetch-blob@0.10.8, react-native-fetch-blob@^0.10.8:
     base-64 "0.1.0"
     glob "7.0.6"
 
-react-native-image-crop-picker@0.18.2:
+react-native-image-crop-picker@^0.18.2:
   version "0.18.2"
   resolved "https://registry.yarnpkg.com/react-native-image-crop-picker/-/react-native-image-crop-picker-0.18.2.tgz#f0cfbe4227449d84f6d5885ef37462edf6920090"
 

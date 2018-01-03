@@ -67,9 +67,15 @@ export class Home extends PureComponent<Props, State> {
   );
 
   _renderScene = SceneMap({
-    clothes: () => <ImageGrid apiURL="/api/products" />,
-    shoes: () => <ImageGrid apiURL="/api/products" />,
-    other: () => <ImageGrid apiURL="/api/products" />,
+    clothes: () => (
+      <ImageGrid apiURL="/api/products" navigation={this.props.navigation} />
+    ),
+    shoes: () => (
+      <ImageGrid apiURL="/api/products" navigation={this.props.navigation} />
+    ),
+    other: () => (
+      <ImageGrid apiURL="/api/products" navigation={this.props.navigation} />
+    ),
   });
 
   onShare() {

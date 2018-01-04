@@ -47,6 +47,7 @@ type State = {
     price: string,
     photoURIs: Array<string>,
     description: string,
+    location: string,
   } | null,
 };
 
@@ -165,22 +166,25 @@ export class Product extends React.Component<Props, State> {
                 /> */}
                 <View style={{ flex: 1, height: 35, marginTop: 12 }}>
                   <Text style={styles.username}>{item.seller.username}</Text>
-                  {/* <Text style={styles.location}>{item.location}</Text> */}
+                  <Text style={styles.location}>{item.location}</Text>
                 </View>
-                <View style={{ flex: 1 }} />
+                <View style={styles.flex} />
                 <Text style={styles.price}>{item.price}</Text>
               </View>
               <MediaView source={item.photoURIs} />
               <View style={styles.bottomSection}>
                 <Icon name="ios-bookmark-outline" style={styles.iconSave} />
-                <Icon name="ios-text-outline" style={styles.iconCommmentAndShare} />
+                <Icon
+                  name="ios-text-outline"
+                  style={styles.iconCommmentAndShare}
+                />
                 <Icon
                   name="ios-share-outline"
                   style={styles.iconCommmentAndShare}
                   onPress={() => this.showShareActionSheet()}
                 />
 
-                <View style={{ flex: 1 }} />
+                <View style={styles.flex} />
                 <Button
                   // disabled
                   // loading
@@ -207,19 +211,22 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.white,
   },
+  flex: {
+    flex: 1,
+  },
   topSection: {
     backgroundColor: colors.white,
     height: 60,
     flexDirection: 'row',
   },
-  avatar: {
-    width: 36,
-    height: 36,
-    margin: 12,
-    borderRadius: 18,
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor: colors.grey5,
-  },
+  // avatar: {
+  //   width: 36,
+  //   height: 36,
+  //   margin: 12,
+  //   borderRadius: 18,
+  //   borderWidth: StyleSheet.hairlineWidth,
+  //   borderColor: colors.grey5,
+  // },
   username: {
     fontWeight: 'bold',
     flex: 1,
@@ -240,9 +247,10 @@ const styles = StyleSheet.create({
     height: 54,
     backgroundColor: colors.white,
     flexDirection: 'row',
+    marginLeft: 15,
+    marginRight: 0,
   },
   iconSave: {
-    marginLeft: 15,
     marginTop: 12,
   },
   iconCommmentAndShare: {
@@ -251,16 +259,16 @@ const styles = StyleSheet.create({
   },
   buyButton: {
     backgroundColor: colors.grey1,
-    marginRight: 0,
     marginTop: 9,
     paddingBottom: 8,
     paddingRight: 12,
     paddingTop: 8,
   },
-  // bottomSectionAfter: {
-  //   marginBottom: 20,
-  //   paddingLeft: 15,
-  // },
+  bottomSectionAfter: {
+    marginTop: 9,
+    marginBottom: 20,
+    marginLeft: 15,
+  },
   // timeAgo: {
   //   color: colors.grey3,
   //   fontSize: 12,

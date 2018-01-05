@@ -11,11 +11,15 @@ import {
   StyleSheet,
 // $FlowFixMe
 } from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 // prettier-ignore
 import {
   Body,
+  Button,
   Container,
   Header,
+  Left,
+  Right,
 } from 'native-base';
 import ImagePicker from 'react-native-image-crop-picker';
 import { withNavigationFocus } from '@patwoz/react-navigation-is-focused-hoc';
@@ -34,19 +38,23 @@ type State = {
 };
 
 class AddProductScreen extends React.Component<Props, State> {
+  static navigationOptions = props => {
+    return {
+      tabBarOnPress: ({ scene }) => {
+        if (!scene.focused) {
+          props.navigation.navigate('addProduct');
+        }
+      },
+    };
+  };
+
   state = {
     images: [],
   };
 
   componentWillMount() {
     console.log('componentWillMount');
-    this.takePicture();
-  }
-
-  takePicture() {
-    if (this.state.images.length < 1) {
-      this.selectPhotoTapped();
-    }
+    // this.takePicture();
   }
 
   componentWillReceiveProps(nextProps) {
@@ -58,6 +66,12 @@ class AddProductScreen extends React.Component<Props, State> {
     // if (this.props.isFocused && !nextProps.isFocused) {
     //   console.log('screen exit');
     // }
+  }
+
+  takePicture() {
+    if (this.state.images.length < 1) {
+      this.selectPhotoTapped();
+    }
   }
 
   selectPhotoTapped = () => {
@@ -79,17 +93,35 @@ class AddProductScreen extends React.Component<Props, State> {
         });
       })
       .catch(() => {
-        this.props.navigation.goBack();
+        this.closeModal();
       });
   };
+
+  closeModal() {
+    this.props.navigation.goBack();
+  }
+
+  addItem() {
+    console.warn('implement me');
+  }
 
   render() {
     return (
       <Container>
         <Header>
+          <Left>
+            <Button transparent onPress={() => this.closeModal()}>
+              <Icon name="close" size={28} />
+            </Button>
+          </Left>
           <Body>
             <Text>Add Item</Text>
           </Body>
+          <Right>
+            <Button transparent onPress={this.addItem}>
+              <Icon name="check" size={28} />
+            </Button>
+          </Right>
         </Header>
         <Body>
           <TouchableOpacity onPress={this.selectPhotoTapped}>

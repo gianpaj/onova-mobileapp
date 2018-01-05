@@ -1,13 +1,20 @@
 import { StackNavigator } from 'react-navigation';
-import { Login, Signup, Product } from '../screens';
-import { Tabs } from './navigationTabs';
+import { AddProduct, Login, Signup, Product } from '../screens';
+import { TabsStack } from './navigationTabs';
 
 const navigator = StackNavigator(
   {
     login: { screen: Login },
-    signup: { screen: Signup },
-    product: { screen: Product },
-    tabs: { screen: Tabs },
+    signup: {
+      screen: Signup,
+      navigationOptions: { gesturesEnabled: false },
+    },
+    product: {
+      screen: Product,
+      navigationOptions: { gesturesEnabled: false },
+    },
+    tabs: { screen: TabsStack },
+    addProduct: { screen: AddProduct },
   },
   {
     headerMode: 'none',

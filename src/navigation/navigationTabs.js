@@ -47,7 +47,6 @@ const tabBarConfiguration = {
       );
     },
   }),
-  animationEnabled: false,
   tabBarOptions: {
     showIcon: true,
     // tint color is passed to text and icons (if enabled) on the tab bar
@@ -64,7 +63,8 @@ const tabBarConfiguration = {
   // i.e componentWillMount() of AddProduct
   lazy: true,
   tabBarPosition: 'bottom',
+  animationEnabled: false,
   swipeEnabled: false,
 };
 
-export const Tabs = TabNavigator(routeConfiguration, tabBarConfiguration);
+export const TabsStack = TabNavigator(routeConfiguration, tabBarConfiguration);

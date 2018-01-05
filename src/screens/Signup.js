@@ -4,6 +4,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 // prettier-ignore
 import {
+  Linking,
   StyleSheet,
   Text,
   View,
@@ -81,6 +82,12 @@ class SignupScreen extends React.Component<Props, State> {
     if (this.props.navigation) this.props.navigation.dispatch(goback());
   }
 
+  openTermPolicy() {
+    Linking.openURL('https://onova.co').catch(err =>
+      console.error('An error occurred', err)
+    );
+  }
+
   _inputProps = {
     autoCapitalize: 'none',
     autoCorrect: false,
@@ -149,7 +156,7 @@ class SignupScreen extends React.Component<Props, State> {
               {this.props.errorMsg}
             </FormValidationMessage>
           )}
-          <View style={{ marginTop: 15 }}>
+          <View style={styles.mt15}>
             <Button
               buttonStyle={styles.SignupButton}
               raised
@@ -163,10 +170,18 @@ class SignupScreen extends React.Component<Props, State> {
               title="Create account"
               accessibilityLabel="Create account"
             />
-            <Text style={[styles.hr, { marginTop: 15 }]}>
+            <Text style={[styles.hr, styles.mt15]}>
               Already have an account?&nbsp;
               <Text style={styles.linkText} onPress={() => this.onGoback()}>
                 Login
+              </Text>
+            </Text>
+            <Text style={[styles.hr, styles.mt15, { color: colors.grey1 }]}>
+              By signing up you agree to the&nbsp;
+              <Text
+                style={[styles.linkText, styles.termsLink]}
+                onPress={this.openTermPolicy}>
+                Terms and Policy
               </Text>
             </Text>
           </View>
@@ -200,8 +215,15 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     margin: 5,
   },
+  mt15: {
+    marginTop: 15,
+  },
   linkText: {
-    margin: 5,
     color: colors.secondary,
+    margin: 5,
+  },
+  termsLink: {
+    color: colors.grey2,
+    textDecorationLine: 'underline',
   },
 });

@@ -1,7 +1,6 @@
 // @flow
 
 import React from 'react';
-// prettier-ignore
 import {
   Dimensions,
   Image,
@@ -10,10 +9,9 @@ import {
   Text,
   TouchableOpacity,
   View,
-// $FlowFixMe
+  // $FlowFixMe
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-// prettier-ignore
 import {
   Body,
   Button,
@@ -96,7 +94,6 @@ class AddProductScreen extends React.Component<Props, State> {
       // mediaType: 'photo',
     })
       .then(response => {
-        console.log(response);
         let source = response.path;
 
         this.setState(prevState => {
@@ -127,6 +124,16 @@ class AddProductScreen extends React.Component<Props, State> {
       description: text,
       descHeight: contentSize.height > 50 ? contentSize.height : 50,
     });
+  }
+
+  /**
+   * min 3 letters, max 30. max 30 tags
+   */
+  changeTags(tags: string) {
+    const pattern = /^(\b[a-z][a-z0-9,]*)$/i;
+    if ((pattern.test(tags) || tags == '') && tags.indexOf(',,') == -1) {
+      this.setState({ tags: tags });
+    }
   }
 
   renderSquare(uri, i) {
@@ -173,7 +180,7 @@ class AddProductScreen extends React.Component<Props, State> {
           <FormLabel labelStyle={styles.label}>Price:</FormLabel>
           <FormInput
             inputStyle={styles.input}
-            containerStyle={{ marginTop: 10, marginBottom: 10 }}
+            containerStyle={{ margin: 10 }}
             autoCorrect={false}
             keyboardType="numeric"
             placeholder="123 UAH"
@@ -191,6 +198,16 @@ class AddProductScreen extends React.Component<Props, State> {
             value={this.state.description}
             onContentSizeChange={this.onDescriptionChange.bind(this)}
             maxLength={settings.MAX_LENGTH_DESCRIPTION}
+          />
+          <FormLabel labelStyle={styles.label}>#tags:</FormLabel>
+          <FormInput
+            inputStyle={styles.input}
+            autoCapitalize="none"
+            containerStyle={{ marginTop: 10, marginBottom: 10 }}
+            clearButtonMode="while-editing"
+            placeholder="winter,adidas,hat"
+            value={this.state.tags}
+            onChangeText={t => this.changeTags(t)}
           />
         </Content>
       </Container>

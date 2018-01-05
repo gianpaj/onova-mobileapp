@@ -3,12 +3,13 @@
 import React from 'react';
 // prettier-ignore
 import {
+  Dimensions,
   Image,
-  Text,
-  View,
-  TouchableOpacity,
   PixelRatio,
   StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 // $FlowFixMe
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -17,16 +18,19 @@ import {
   Body,
   Button,
   Container,
+  Content,
   Header,
   Left,
   Right,
 } from 'native-base';
+import { FormInput, FormLabel } from 'react-native-elements';
 import ImagePicker from 'react-native-image-crop-picker';
 import { withNavigationFocus } from '@patwoz/react-navigation-is-focused-hoc';
 // $FlowFixMe
 import { NavigationScreenProp } from 'react-navigation';
 
 import colors from '../config/colors';
+import settings from '../config/settings';
 
 type Props = {
   isFocused: boolean,
@@ -34,7 +38,11 @@ type Props = {
 };
 
 type State = {
+  descHeight: number,
+  description: string,
   images: any,
+  price: string,
+  tags: string,
 };
 
 class AddProductScreen extends React.Component<Props, State> {
@@ -50,7 +58,11 @@ class AddProductScreen extends React.Component<Props, State> {
   };
 
   state = {
-    images: [],
+    descHeight: 50,
+    description: '',
+    images: ['', '', '', '', '', ''],
+    price: '',
+    tags: '',
   };
 
   componentWillMount() {
@@ -75,7 +87,7 @@ class AddProductScreen extends React.Component<Props, State> {
     }
   }
 
-  selectPhotoTapped = () => {
+  selectPhotoTapped = i => {
     ImagePicker.openCamera({
       width: 700,
       height: 700,
@@ -85,11 +97,13 @@ class AddProductScreen extends React.Component<Props, State> {
     })
       .then(response => {
         console.log(response);
-        let source = { uri: response.path };
+        let source = response.path;
 
         this.setState(prevState => {
+          const copy = [...prevState.images];
+          copy[i] = source;
           return {
-            images: [...prevState.images, source],
+            images: copy,
           };
         });
       })
@@ -104,6 +118,34 @@ class AddProductScreen extends React.Component<Props, State> {
 
   addItem() {
     console.warn('implement me');
+  }
+
+  onDescriptionChange(event) {
+    const { contentSize, text } = event.nativeEvent;
+
+    this.setState({
+      description: text,
+      descHeight: contentSize.height > 50 ? contentSize.height : 50,
+    });
+  }
+
+  renderSquare(uri, i) {
+    return (
+      <TouchableOpacity key={i} onPress={() => this.selectPhotoTapped(i)}>
+        <View
+          style={[
+            styles.image,
+            styles.imageContainer,
+            { marginBottom: 20, borderRightWidth: 0 },
+          ]}>
+          {uri == '' ? (
+            <Text>Select a Photo</Text>
+          ) : (
+            <Image style={styles.image} source={{ uri }} />
+          )}
+        </View>
+      </TouchableOpacity>
+    );
   }
 
   render() {
@@ -124,22 +166,33 @@ class AddProductScreen extends React.Component<Props, State> {
             </Button>
           </Right>
         </Header>
-        <Body>
-          <TouchableOpacity onPress={this.selectPhotoTapped}>
-            <View
-              style={[
-                styles.avatar,
-                styles.avatarContainer,
-                { marginBottom: 20 },
-              ]}>
-              {this.state.images[0] === null ? (
-                <Text>Select a Photo</Text>
-              ) : (
-                <Image style={styles.avatar} source={this.state.images[0]} />
-              )}
-            </View>
-          </TouchableOpacity>
-        </Body>
+        <Content>
+          <View style={{ flex: 1, flexDirection: 'row' }}>
+            {this.state.images.map((square, i) => this.renderSquare(square, i))}
+          </View>
+          <FormLabel labelStyle={styles.label}>Price:</FormLabel>
+          <FormInput
+            inputStyle={styles.input}
+            containerStyle={{ marginTop: 10, marginBottom: 10 }}
+            autoCorrect={false}
+            keyboardType="numeric"
+            placeholder="123 UAH"
+            value={this.state.price}
+            onChangeText={t => this.setState({ price: t })}
+            maxLength={8} // 10000.99
+          />
+          <FormLabel labelStyle={styles.label}>Description:</FormLabel>
+          <FormInput
+            multiline
+            inputStyle={[styles.input, { height: this.state.descHeight }]}
+            containerStyle={{ marginTop: 10, marginBottom: 10 }}
+            clearButtonMode="while-editing"
+            placeholder="Please provide details such as brand, size, condition about the item"
+            value={this.state.description}
+            onContentSizeChange={this.onDescriptionChange.bind(this)}
+            maxLength={settings.MAX_LENGTH_DESCRIPTION}
+          />
+        </Content>
       </Container>
     );
   }
@@ -147,22 +200,25 @@ class AddProductScreen extends React.Component<Props, State> {
 
 export const AddProduct = withNavigationFocus(AddProductScreen);
 
+const { width } = Dimensions.get('window');
+
 const styles = StyleSheet.create({
-  // container: {
-  //   flex: 1,
-  //   justifyContent: 'center',
-  //   alignItems: 'center',
-  //   backgroundColor: '#F5FCFF',
-  // },
-  avatarContainer: {
-    borderColor: colors.grey4,
-    borderWidth: 1 / PixelRatio.get(),
+  imageContainer: {
+    borderColor: colors.grey3,
+    borderWidth: 3 / PixelRatio.get(),
     justifyContent: 'center',
     alignItems: 'center',
   },
-  avatar: {
-    borderRadius: 75,
-    width: 150,
-    height: 150,
+  image: {
+    width: width / 6,
+    height: width / 6,
+  },
+  label: {
+    fontWeight: '600',
+    color: colors.black,
+  },
+  input: {
+    paddingRight: 20,
+    color: colors.black,
   },
 });

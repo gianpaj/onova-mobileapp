@@ -4,7 +4,6 @@ import React from 'react';
 // prettier-ignore
 import {
   ActivityIndicator,
-  Share,
   StyleSheet,
   Text,
   Platform,
@@ -52,9 +51,9 @@ type State = {
 };
 
 // @TODO: if Product is mine Delete, Edit
-const BUTTONS = ['Share', 'Copy Link', 'Report', 'Cancel'];
+const BUTTONS = ['Report', 'Cancel'];
 
-const isIOS = Platform.OS === 'ios';
+// const isIOS = Platform.OS === 'ios';
 
 export class Product extends React.Component<Props, State> {
   state = {
@@ -74,35 +73,35 @@ export class Product extends React.Component<Props, State> {
           case BUTTONS.indexOf('Report'):
             // report action
             break;
-          case BUTTONS.indexOf('Share'):
-            this.showShareActionSheet();
-            break;
+          // case BUTTONS.indexOf('Share'):
+          //   this.showShareActionSheet();
+          //   break;
           default:
-            console.log('Cancel or Copy link');
+            console.log('Cancel');
             break;
         }
       }
     );
   }
 
-  showShareActionSheet() {
-    Share.share({
-      title: 'cool',
-      url: 'https://onova.co', // ios only
-    }).then(res => {
-      console.log(res);
-      if (isIOS) {
-        if (res.action == Share.dismissedAction) {
-          console.log('iOS: user cancelled sharing');
-        } else if (res.action == Share.sharedAction) {
-          console.log('iOS: user shared on:', res.activityType);
-        }
-      } else {
-        // android
-        console.log("Android: we don't know if user shared item");
-      }
-    });
-  }
+  // showShareActionSheet() {
+  //   Share.share({
+  //     title: 'cool',
+  //     url: 'https://onova.co', // ios only
+  //   }).then(res => {
+  //     console.log(res);
+  //     if (isIOS) {
+  //       if (res.action == Share.dismissedAction) {
+  //         console.log('iOS: user cancelled sharing');
+  //       } else if (res.action == Share.sharedAction) {
+  //         console.log('iOS: user shared on:', res.activityType);
+  //       }
+  //     } else {
+  //       // android
+  //       console.log("Android: we don't know if user shared item");
+  //     }
+  //   });
+  // }
 
   componentWillMount() {
     const { params } = this.props.navigation.state;
@@ -133,25 +132,23 @@ export class Product extends React.Component<Props, State> {
       <Container>
         <Header>
           <Left>
-            <NBButton transparent dark>
+            <NBButton
+              transparent
+              dark
+              onPress={() =>
+                this.props.navigation ? this.props.navigation.goBack() : null
+              }>
               <Icon
                 name={
                   Platform.OS === 'ios' ? 'ios-arrow-back' : 'md-arrow-back'
-                }
-                onPress={() =>
-                  this.props.navigation ? this.props.navigation.goBack() : null
                 }
               />
             </NBButton>
           </Left>
           <Body />
           <Right>
-            <NBButton transparent dark>
-              <Icon
-                name="ios-more"
-                style={styles.moreIcon}
-                onPress={() => this.showActionSheet()}
-              />
+            <NBButton transparent dark onPress={() => this.showActionSheet()}>
+              <Icon name="ios-more" style={styles.moreIcon} />
             </NBButton>
           </Right>
         </Header>
@@ -173,16 +170,16 @@ export class Product extends React.Component<Props, State> {
               </View>
               <MediaView source={item.photoURIs} />
               <View style={styles.bottomSection}>
-                <Icon name="ios-bookmark-outline" style={styles.iconSave} />
+                {/* <Icon name="ios-bookmark-outline" style={styles.iconSave} /> */}
                 <Icon
                   name="ios-text-outline"
                   style={styles.iconCommmentAndShare}
                 />
-                <Icon
+                {/* <Icon
                   name="ios-share-outline"
                   style={styles.iconCommmentAndShare}
                   onPress={() => this.showShareActionSheet()}
-                />
+                /> */}
 
                 <View style={styles.flex} />
                 <Button
@@ -218,6 +215,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     height: 60,
     flexDirection: 'row',
+    marginLeft: 15,
   },
   // avatar: {
   //   width: 36,
@@ -250,11 +248,11 @@ const styles = StyleSheet.create({
     marginLeft: 15,
     marginRight: 0,
   },
-  iconSave: {
-    marginTop: 12,
-  },
+  // iconSave: {
+  //   marginTop: 12,
+  // },
   iconCommmentAndShare: {
-    marginLeft: 20,
+    // marginLeft: 20,
     marginTop: 12,
   },
   buyButton: {

@@ -31,6 +31,7 @@ import colors from '../config/colors';
 
 type Props = {
   dispatch: Dispatch,
+  hasError: boolean,
   errorMsg: string,
   loadingGoogleLogin: boolean,
   loadingLogin: boolean,
@@ -211,7 +212,7 @@ class LoginScreen extends React.Component<Props, State> {
             </View>
 
             <FormInput
-              inputStyle={[styles.input]}
+              inputStyle={styles.input}
               containerStyle={{ margin: 10 }}
               placeholder="Email"
               autoCapitalize="none"

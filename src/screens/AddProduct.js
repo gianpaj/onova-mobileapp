@@ -40,6 +40,7 @@ type State = {
 class AddProductScreen extends React.Component<Props, State> {
   static navigationOptions = props => {
     return {
+      // navigate to the screen instead of showing as a normal tab screen
       tabBarOnPress: ({ scene }) => {
         if (!scene.focused) {
           props.navigation.navigate('addProduct');

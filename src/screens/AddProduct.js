@@ -22,6 +22,11 @@ import {
   Right,
 } from 'native-base';
 import { FormInput, FormLabel } from 'react-native-elements';
+import RadioForm, {
+  RadioButton,
+  RadioButtonInput,
+  RadioButtonLabel,
+} from 'react-native-simple-radio-button';
 import ImagePicker from 'react-native-image-crop-picker';
 import { withNavigationFocus } from '@patwoz/react-navigation-is-focused-hoc';
 // $FlowFixMe
@@ -29,6 +34,12 @@ import { NavigationScreenProp } from 'react-navigation';
 
 import colors from '../config/colors';
 import settings from '../config/settings';
+
+const category_radio_grp_1 = [
+  { label: 'Clothes', value: 0 },
+  { label: 'Shoes', value: 1 },
+  { label: 'Other', value: 2 },
+];
 
 type Props = {
   isFocused: boolean,
@@ -41,6 +52,7 @@ type State = {
   images: any,
   price: string,
   tags: string,
+  grp_1: number,
 };
 
 class AddProductScreen extends React.Component<Props, State> {
@@ -61,6 +73,7 @@ class AddProductScreen extends React.Component<Props, State> {
     images: ['', '', '', '', '', ''],
     price: '',
     tags: '',
+    grp_1: -1,
   };
 
   componentWillMount() {
@@ -80,12 +93,13 @@ class AddProductScreen extends React.Component<Props, State> {
   }
 
   takePicture() {
-    if (this.state.images.length < 1) {
+    if (this.state.images[0] == '') {
       this.selectPhotoTapped();
     }
   }
 
   selectPhotoTapped = i => {
+    // console.warn('taking pic');
     ImagePicker.openCamera({
       width: 700,
       height: 700,
@@ -203,7 +217,7 @@ class AddProductScreen extends React.Component<Props, State> {
           <FormInput
             multiline
             inputStyle={[styles.input, { height: this.state.descHeight }]}
-            containerStyle={{ marginTop: 10, marginBottom: 10 }}
+            containerStyle={styles.inputContainer}
             clearButtonMode="while-editing"
             placeholder="Please provide details such as brand, size, condition about the item"
             value={this.state.description}
@@ -214,12 +228,39 @@ class AddProductScreen extends React.Component<Props, State> {
           <FormInput
             inputStyle={styles.input}
             autoCapitalize="none"
-            containerStyle={{ marginTop: 10, marginBottom: 10 }}
+            containerStyle={styles.inputContainer}
             clearButtonMode="while-editing"
             placeholder="winter,adidas,hat"
             value={this.state.tags}
             onChangeText={t => this.changeTags(t)}
           />
+          <View style={{ alignItems: 'center' }}>
+            <RadioForm animation formHorizontal>
+              {category_radio_grp_1.map((option, i) => (
+                <RadioButton labelHorizontal={false} key={i}>
+                  <RadioButtonLabel
+                    labelHorizontal
+                    obj={option}
+                    index={i}
+                    onPress={grp_1 => this.setState({ grp_1 })}
+                    labelStyle={styles.radioButtonLabel}
+                  />
+                  <RadioButtonInput
+                    obj={option}
+                    index={i}
+                    isSelected={this.state.grp_1 == i}
+                    onPress={grp_1 => this.setState({ grp_1 })}
+                    borderWidth={2}
+                    buttonInnerColor={colors.black}
+                    buttonOuterColor={colors.black}
+                    buttonSize={19}
+                    buttonOuterSize={35}
+                    buttonWrapStyle={styles.radiobButtonInput}
+                  />
+                </RadioButton>
+              ))}
+            </RadioForm>
+          </View>
         </Content>
       </Container>
     );
@@ -248,5 +289,18 @@ const styles = StyleSheet.create({
   input: {
     color: colors.black,
     width: '100%',
+  },
+  inputContainer: {
+    marginTop: 10,
+    marginBottom: 10,
+  },
+  radioButtonLabel: {
+    marginBottom: 10,
+    paddingLeft: '5%',
+    paddingRight: '5%',
+  },
+  radiobButtonInput: {
+    marginLeft: '5%',
+    marginRight: '5%',
   },
 });

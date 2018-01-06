@@ -41,6 +41,12 @@ const category_radio_grp_1 = [
   { label: 'Other', value: 2 },
 ];
 
+const category_radio_grp_2 = [
+  { label: 'Man', value: 0 },
+  { label: 'Woman', value: 1 },
+  { label: 'Other', value: 2 },
+];
+
 type Props = {
   isFocused: boolean,
   navigation: NavigationScreenProp,
@@ -53,6 +59,7 @@ type State = {
   price: string,
   tags: string,
   grp_1: number,
+  grp_2: number,
 };
 
 class AddProductScreen extends React.Component<Props, State> {
@@ -74,6 +81,7 @@ class AddProductScreen extends React.Component<Props, State> {
     price: '',
     tags: '',
     grp_1: -1,
+    grp_2: -1,
   };
 
   componentWillMount() {
@@ -128,6 +136,8 @@ class AddProductScreen extends React.Component<Props, State> {
   }
 
   addItem() {
+    const pricePattern = /^\d+(\.\d{2})?$/;
+    const tagsPattern = /^(\b[a-z][a-z0-9]*)$/i;
     console.warn('implement me');
   }
 
@@ -234,7 +244,7 @@ class AddProductScreen extends React.Component<Props, State> {
             value={this.state.tags}
             onChangeText={t => this.changeTags(t)}
           />
-          <View style={{ alignItems: 'center' }}>
+          <View style={styles.grps}>
             <RadioForm animation formHorizontal>
               {category_radio_grp_1.map((option, i) => (
                 <RadioButton labelHorizontal={false} key={i}>
@@ -255,7 +265,35 @@ class AddProductScreen extends React.Component<Props, State> {
                     buttonOuterColor={colors.black}
                     buttonSize={19}
                     buttonOuterSize={35}
-                    buttonWrapStyle={styles.radiobButtonInput}
+                    buttonWrapStyle={styles.radioButtonInput}
+                  />
+                </RadioButton>
+              ))}
+            </RadioForm>
+          </View>
+          <View style={styles.hr} />
+          <View style={styles.grps}>
+            <RadioForm animation formHorizontal>
+              {category_radio_grp_2.map((option, i) => (
+                <RadioButton labelHorizontal={false} key={i}>
+                  <RadioButtonLabel
+                    labelHorizontal
+                    obj={option}
+                    index={i}
+                    onPress={grp_2 => this.setState({ grp_2 })}
+                    labelStyle={styles.radioButtonLabel}
+                  />
+                  <RadioButtonInput
+                    obj={option}
+                    index={i}
+                    isSelected={this.state.grp_2 == i}
+                    onPress={grp_2 => this.setState({ grp_2 })}
+                    borderWidth={2}
+                    buttonInnerColor={colors.black}
+                    buttonOuterColor={colors.black}
+                    buttonSize={19}
+                    buttonOuterSize={35}
+                    buttonWrapStyle={styles.radioButtonInput}
                   />
                 </RadioButton>
               ))}
@@ -294,13 +332,27 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 10,
   },
+  grps: {
+    alignItems: 'center',
+    left: -7,
+    justifyContent: 'center',
+    width: '100%',
+  },
+  hr: {
+    alignSelf: 'center',
+    borderTopWidth: 1,
+    borderColor: colors.grey4,
+    margin: 10,
+    width: '89.5%',
+  },
   radioButtonLabel: {
     marginBottom: 10,
     paddingLeft: '5%',
     paddingRight: '5%',
   },
-  radiobButtonInput: {
+  radioButtonInput: {
     marginLeft: '5%',
     marginRight: '5%',
+    width: 60,
   },
 });

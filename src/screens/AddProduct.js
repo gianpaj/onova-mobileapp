@@ -132,7 +132,17 @@ class AddProductScreen extends React.Component<Props, State> {
   changeTags(tags: string) {
     const pattern = /^(\b[a-z][a-z0-9,]*)$/i;
     if ((pattern.test(tags) || tags == '') && tags.indexOf(',,') == -1) {
-      this.setState({ tags: tags });
+      this.setState({ tags });
+    }
+  }
+
+  /**
+   * numbers only, one dot and 2 decimal points
+   */
+  changePrice(price: string) {
+    const pattern = /^(\b[\d]+[\.]?[\d]{0,2})$/;
+    if (pattern.test(price) || price == '') {
+      this.setState({ price });
     }
   }
 
@@ -184,8 +194,9 @@ class AddProductScreen extends React.Component<Props, State> {
             autoCorrect={false}
             keyboardType="numeric"
             placeholder="123 UAH"
+            clearButtonMode="while-editing"
             value={this.state.price}
-            onChangeText={t => this.setState({ price: t })}
+            onChangeText={t => this.changePrice(t)}
             maxLength={8} // 10000.99
           />
           <FormLabel labelStyle={styles.label}>Description:</FormLabel>
@@ -235,7 +246,7 @@ const styles = StyleSheet.create({
     color: colors.black,
   },
   input: {
-    paddingRight: 20,
     color: colors.black,
+    width: '100%',
   },
 });

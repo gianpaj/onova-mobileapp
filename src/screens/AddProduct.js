@@ -34,6 +34,7 @@ import { NavigationScreenProp } from 'react-navigation';
 
 import colors from '../config/colors';
 import settings from '../config/settings';
+import * as api from '../utils/api';
 
 const category_radio_grp_1 = [
   { label: 'Clothes', value: 0 },
@@ -60,6 +61,7 @@ type State = {
   tags: string,
   grp_1: number,
   grp_2: number,
+  pending: boolean,
 };
 
 class AddProductScreen extends React.Component<Props, State> {
@@ -135,17 +137,45 @@ class AddProductScreen extends React.Component<Props, State> {
     this.props.navigation.goBack();
   }
 
-  addItem() {
-    const pricePattern = /^\d+(\.\d{2})?$/;
-    const tagsPattern = /^(\b[a-z][a-z0-9]*)$/i;
-    console.warn('implement me');
+  addItem = () => {
+    this.setState({ pending: true });
+    const formData = new FormData();
+    this.state.images.forEach((image, i) => {
+      if (image !== '') {
+        // $FlowFixMe
+        formData.append('files', {
+          uri: image,
+          name: 'image' + i,
+        });
   }
+    });
+    formData.append('description', this.state.description);
+    formData.append('price', this.state.price);
+    formData.append('categoryIds', this.state.grp_1.toString());
+    formData.append('typeIds', this.state.grp_2.toString());
+    formData.append('tags', this.state.tags);
+
+    // const config = {
+    //   onUploadProgress: function(progressEvent) {
+    //     const percentCompleted = Math.round( (progressEvent.loaded * 100) / progressEvent.total );
+    //   },
+    // };
+    api
+      .post('/api/products', formData /*, config */)
+      .then(res => {
+        this.setState({ pending: false });
+        console.log(res);
+      })
+      .catch(err => {
+        // console.error(err);
+        // this.setState({ pending: false });
+      });
+  };
 
   onDescriptionChange(event) {
-    const { contentSize, text } = event.nativeEvent;
+    const { contentSize } = event.nativeEvent;
 
     this.setState({
-      description: text,
       descHeight: contentSize.height > 50 ? contentSize.height : 50,
     });
   }
@@ -170,9 +200,25 @@ class AddProductScreen extends React.Component<Props, State> {
     }
   }
 
+  addEnabled(): boolean {
+    const pricePattern = /^\d+(\.\d{2})?$/;
+    const tagsPattern = /^(\b[a-z][a-z0-9]*)$/i;
+
+    return (
+      !this.state.pending &&
+      this.state.price !== '' &&
+      this.state.description.length > 7 &&
+      this.state.tags.length > 2 &&
+      this.state.grp_1 > -1 &&
+      this.state.grp_2 > -1
+    );
+  }
+
   renderSquare(uri, i) {
     return (
-      <TouchableOpacity key={i} onPress={() => this.selectPhotoTapped(i)}>
+      <TouchableOpacity
+        key={i}
+        onPress={() => !this.state.pending && this.selectPhotoTapped(i)}>
         <View
           style={[
             styles.image,
@@ -202,8 +248,16 @@ class AddProductScreen extends React.Component<Props, State> {
             <Text>Add Item</Text>
           </Body>
           <Right>
-            <Button transparent onPress={this.addItem}>
-              <Icon name="check" size={28} />
+            <Button
+              transparent
+              disabled={!this.addEnabled()}
+              style={{ backgroundColor: 'transparent' }}
+              onPress={this.addItem}>
+              <Icon
+                name="check"
+                style={!this.addEnabled() ? { color: colors.grey3 } : null}
+                size={28}
+              />
             </Button>
           </Right>
         </Header>
@@ -213,36 +267,39 @@ class AddProductScreen extends React.Component<Props, State> {
           </View>
           <FormLabel labelStyle={styles.label}>Price:</FormLabel>
           <FormInput
-            inputStyle={styles.input}
-            containerStyle={{ margin: 10 }}
             autoCorrect={false}
-            keyboardType="numeric"
-            placeholder="123 UAH"
             clearButtonMode="while-editing"
-            value={this.state.price}
-            onChangeText={t => this.changePrice(t)}
+            containerStyle={styles.inputContainer}
+            editable={!this.state.pending}
+            inputStyle={styles.input}
+            keyboardType="numeric"
             maxLength={8} // 10000.99
+            onChangeText={t => this.changePrice(t)}
+            placeholder="123 UAH"
+            value={this.state.price}
           />
           <FormLabel labelStyle={styles.label}>Description:</FormLabel>
           <FormInput
-            multiline
-            inputStyle={[styles.input, { height: this.state.descHeight }]}
-            containerStyle={styles.inputContainer}
             clearButtonMode="while-editing"
+            containerStyle={styles.inputContainer}
+            editable={!this.state.pending}
+            inputStyle={[styles.input, { height: this.state.descHeight }]}
+            maxLength={settings.MAX_LENGTH_DESCRIPTION}
+            multiline
+            onChangeText={t => this.setState({ description: t })}
+            onContentSizeChange={this.onDescriptionChange.bind(this)}
             placeholder="Please provide details such as brand, size, condition about the item"
             value={this.state.description}
-            onContentSizeChange={this.onDescriptionChange.bind(this)}
-            maxLength={settings.MAX_LENGTH_DESCRIPTION}
           />
           <FormLabel labelStyle={styles.label}>#tags:</FormLabel>
           <FormInput
-            inputStyle={styles.input}
             autoCapitalize="none"
             containerStyle={styles.inputContainer}
-            clearButtonMode="while-editing"
+            editable={!this.state.pending}
+            inputStyle={styles.input}
+            onChangeText={t => this.changeTags(t)}
             placeholder="winter,adidas,hat"
             value={this.state.tags}
-            onChangeText={t => this.changeTags(t)}
           />
           <View style={styles.grps}>
             <RadioForm animation formHorizontal>
@@ -252,14 +309,18 @@ class AddProductScreen extends React.Component<Props, State> {
                     labelHorizontal
                     obj={option}
                     index={i}
-                    onPress={grp_1 => this.setState({ grp_1 })}
+                    onPress={grp_1 =>
+                      !this.state.pending && this.setState({ grp_1 })
+                    }
                     labelStyle={styles.radioButtonLabel}
                   />
                   <RadioButtonInput
                     obj={option}
                     index={i}
                     isSelected={this.state.grp_1 == i}
-                    onPress={grp_1 => this.setState({ grp_1 })}
+                    onPress={grp_1 =>
+                      !this.state.pending && this.setState({ grp_1 })
+                    }
                     borderWidth={2}
                     buttonInnerColor={colors.black}
                     buttonOuterColor={colors.black}
@@ -280,14 +341,18 @@ class AddProductScreen extends React.Component<Props, State> {
                     labelHorizontal
                     obj={option}
                     index={i}
-                    onPress={grp_2 => this.setState({ grp_2 })}
+                    onPress={grp_2 =>
+                      !this.state.pending && this.setState({ grp_2 })
+                    }
                     labelStyle={styles.radioButtonLabel}
                   />
                   <RadioButtonInput
                     obj={option}
                     index={i}
                     isSelected={this.state.grp_2 == i}
-                    onPress={grp_2 => this.setState({ grp_2 })}
+                    onPress={grp_2 =>
+                      !this.state.pending && this.setState({ grp_2 })
+                    }
                     borderWidth={2}
                     buttonInnerColor={colors.black}
                     buttonOuterColor={colors.black}
@@ -329,8 +394,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   inputContainer: {
-    marginTop: 10,
-    marginBottom: 10,
+    marginVertical: 10,
   },
   grps: {
     alignItems: 'center',
@@ -351,8 +415,7 @@ const styles = StyleSheet.create({
     paddingRight: '5%',
   },
   radioButtonInput: {
-    marginLeft: '5%',
-    marginRight: '5%',
+    marginHorizontal: '5%',
     width: 60,
   },
 });

@@ -5,11 +5,10 @@ import { connect } from 'react-redux';
 // prettier-ignore
 import {
   Modal,
-  // Platform,
   StyleSheet,
   Text,
   View,
-// $FlowFixMe
+  // $FlowFixMe
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
 // prettier-ignore
@@ -217,6 +216,7 @@ class LoginScreen extends React.Component<Props, State> {
               placeholder="Email"
               autoCapitalize="none"
               autoCorrect={false}
+              autoFocus
               clearButtonMode="while-editing"
               keyboardType="email-address"
               returnKeyType="go"

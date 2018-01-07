@@ -143,9 +143,10 @@ class AddProductScreen extends React.Component<Props, State> {
     this.state.images.forEach((image, i) => {
       if (image !== '') {
         // $FlowFixMe
-        formData.append('files', {
+        formData.append('photos', {
           uri: image,
-          name: 'image' + i,
+          // type: 'image/jpeg',
+          name: 'image' + i + '.jpg',
         });
   }
     });
@@ -167,8 +168,8 @@ class AddProductScreen extends React.Component<Props, State> {
         console.log(res);
       })
       .catch(err => {
-        // console.error(err);
-        // this.setState({ pending: false });
+        console.error(err);
+        this.setState({ pending: false });
       });
   };
 
@@ -204,7 +205,10 @@ class AddProductScreen extends React.Component<Props, State> {
     const pricePattern = /^\d+(\.\d{2})?$/;
     const tagsPattern = /^(\b[a-z][a-z0-9]*)$/i;
 
+    const images = this.state.images.filter(i => i !== '');
+
     return (
+      images.length > 0 &&
       !this.state.pending &&
       this.state.price !== '' &&
       this.state.description.length > 7 &&

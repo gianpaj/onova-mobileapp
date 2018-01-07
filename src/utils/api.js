@@ -1,6 +1,10 @@
 // @flow
 
-const apiRoot = 'http://localhost:4040';
+import axios from 'axios';
+// $FlowFixMe
+import { AsyncStorage } from 'react-native';
+
+axios.defaults.baseURL = 'http://localhost:4040';
 const TIMEOUT = 4000;
 
 /**
@@ -60,7 +64,8 @@ export async function del(
 }
 
 /**
- * Make arbitrary fetch request to a path relative to API root url
+ * Make arbitrary axios request to a path relative to API root url
+ *
  * @param method One of: get|post|put|delete
  * @param path Relative path to the configured API endpoint
  * @param body Anything that you can pass to JSON.stringify
@@ -77,7 +82,7 @@ export async function request(
     return handleResponse(path, response);
   } catch (error) {
     if (!suppressRedBox) {
-      logError(error, url(path), method);
+      logError(error, path, method);
     }
     if (error.message == 'Network request failed') {
       error.message =
@@ -87,12 +92,10 @@ export async function request(
   }
 }
 
-/**
- * Takes a relative path and makes it a full URL to API server
- */
-export function url(path: string) {
-  // const apiRoot = getConfiguration('API_ROOT');
-  return path.indexOf('/') === 0 ? apiRoot + path : apiRoot + '/' + path;
+async function getAuthenticationToken(): Promise<string> {
+  return AsyncStorage.getItem('persist:primary').then(data => {
+    return JSON.parse(JSON.parse(data).data).token;
+  });
 }
 
 /**
@@ -100,15 +103,12 @@ export function url(path: string) {
  */
 async function sendRequest(method, path, body) {
   try {
-    const endpoint = url(path);
-    // const token = await getAuthenticationToken();
-    // const headers = getRequestHeaders(body, token);
-    const headers = getRequestHeaders(body);
-    const options = body
-      ? { method, headers, body: JSON.stringify(body) }
-      : { method, headers };
+    const token = await getAuthenticationToken();
+    const headers = getRequestHeaders(body, token);
+    const defaults = { method, headers, url: path, timeout: TIMEOUT };
+    const options = body ? { ...defaults, data: body } : defaults;
 
-    return timeout(fetch(endpoint, options), TIMEOUT);
+    return axios(options);
   } catch (e) {
     throw new Error(e);
   }
@@ -121,22 +121,20 @@ async function handleResponse(path, response) {
   try {
     const status = response.status;
 
-    // `fetch` promises resolve even if HTTP status indicates failure. Reroute
+    // `axios` promises resolve even if HTTP status indicates failure. Re-route
     // promise flow control to interpret error responses as failures
     if (status >= 400) {
       const message = await getErrorMessageSafely(response);
       // const error = new Error({status: status, message: message});
 
       // throw error;
-      throw { status: status, message: message };
+      throw { status, message };
     }
 
-    // parse response text
-    const responseBody = await response.text();
     return {
       status: response.status,
       headers: response.headers,
-      body: responseBody ? JSON.parse(responseBody) : null,
+      body: response.data,
     };
   } catch (e) {
     throw e;
@@ -177,21 +175,6 @@ async function getErrorMessageSafely(response) {
     // Unreadable body, return whatever the server returned
     return response._bodyInit;
   }
-}
-
-/**
- * Rejects a promise after `ms` number of milliseconds, it is still pending
- */
-function timeout(promise, ms) {
-  return new Promise((resolve, reject) => {
-    const timer = setTimeout(() => reject(new Error('timeout')), ms);
-    promise
-      .then(response => {
-        clearTimeout(timer);
-        resolve(response);
-      })
-      .catch(reject);
-  });
 }
 
 async function bodyOf(requestPromise) {

@@ -38,7 +38,7 @@ class AppNavigation extends Component<{}> {
   }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps: any = (state: any) => ({
   isLoggedIn: state.LoginReducer.isLoggedIn,
   navigationState: state.NavigationReducer,
 });

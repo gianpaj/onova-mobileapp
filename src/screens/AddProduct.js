@@ -32,6 +32,8 @@ import { withNavigationFocus } from '@patwoz/react-navigation-is-focused-hoc';
 // $FlowFixMe
 import { NavigationScreenProp } from 'react-navigation';
 
+import HR from '../components/HR';
+
 import colors from '../config/colors';
 import settings from '../config/settings';
 import * as api from '../utils/api';
@@ -217,7 +219,7 @@ class AddProductScreen extends React.Component<Props, State> {
     const tagsPattern = /^(\b[a-z][a-z0-9]*)$/i;
 
     return (
-      images.length > 0 &&
+      this.state.images.length > 0 &&
       !this.state.pending &&
       this.state.price !== '' &&
       this.state.description.length > 7 &&
@@ -347,7 +349,7 @@ class AddProductScreen extends React.Component<Props, State> {
               ))}
             </RadioForm>
           </View>
-          <View style={styles.hr} />
+          <HR />
           <View style={styles.grps}>
             <RadioForm animation formHorizontal>
               {category_radio_grp_2.map((option, i) => (
@@ -416,13 +418,6 @@ const styles = StyleSheet.create({
     left: -7,
     justifyContent: 'center',
     width: '100%',
-  },
-  hr: {
-    alignSelf: 'center',
-    borderTopWidth: 1,
-    borderColor: colors.grey4,
-    margin: 10,
-    width: '89.5%',
   },
   radioButtonLabel: {
     marginBottom: 10,

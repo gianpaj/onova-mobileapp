@@ -18,6 +18,15 @@ export type SignupData = LoginData & {
 
 export type LoginActionTypes = 'SHOW_ALL' | 'SHOW_ACTIVE' | 'SHOW_COMPLETED';
 
+export type UserData = {
+  _id: string,
+  accountStatus: string,
+  emailAddress: string,
+  provider: string,
+  token: string,
+  username: string,
+};
+
 // export type Store = ReduxStore<State, Action>;
 
 // export type Dispatch = ReduxDispatch<Action>;

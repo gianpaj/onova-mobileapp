@@ -15,6 +15,7 @@ import {
   Button,
   Card,
   CardItem,
+  Content,
   Container,
   Header,
   Icon,
@@ -27,11 +28,12 @@ import NotificationsDot from '../components/NotificationsDot';
 
 import { logout } from '../actions/actionCreator';
 import colors from '../config/colors';
+import type { UserData } from '../types';
 
 type Props = {
   logout: any,
   navigation?: NavigationScreenProp,
-  userData: any,
+  userData: UserData,
 };
 
 type State = {
@@ -87,7 +89,7 @@ class ProfileScreen extends React.Component<Props, State> {
             </Button>
           </Right>
         </Header>
-        <Card>
+        <Content>
           <CardItem>
             <Body>
               <View
@@ -110,7 +112,7 @@ class ProfileScreen extends React.Component<Props, State> {
               <Text>Sign out</Text>
             </Button>
           </CardItem>
-        </Card>
+        </Content>
       </Container>
     );
   }

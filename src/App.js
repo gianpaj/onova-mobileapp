@@ -10,23 +10,16 @@ import {
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/lib/integration/react';
 
-import configureStore from './store';
-import AppNavigation from './navigation';
-
 import { Root } from 'native-base';
 
 import { initializeApp } from 'firebase';
 
+import configureStore from './store';
+import AppNavigation from './navigation';
+
 const { store, persistor } = configureStore();
 
-type State = {
-  userData: any,
-};
-export default class LoginScreen extends React.Component<*, State> {
-  state = {
-    userData: null,
-  };
-
+export default class LoginScreen extends React.Component<*> {
   constructor() {
     super();
     // Initialize Firebase

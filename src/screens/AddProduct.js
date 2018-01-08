@@ -79,11 +79,11 @@ class AddProductScreen extends React.Component<Props, State> {
   state = {
     descHeight: 50,
     description: '',
-    images: ['', '', '', '', '', ''],
     price: '',
     tags: '',
     grp_1: -1,
     grp_2: -1,
+    images: [],
   };
 
   componentWillMount() {
@@ -121,10 +121,17 @@ class AddProductScreen extends React.Component<Props, State> {
         let source = response.path;
 
         this.setState(prevState => {
+          // if we want to replace an existing photo
+          if (prevState.images[i]) {
           const copy = [...prevState.images];
           copy[i] = source;
           return {
             images: copy,
+          };
+          }
+
+          return {
+            images: [...prevState.images, source],
           };
         });
       })
@@ -166,6 +173,7 @@ class AddProductScreen extends React.Component<Props, State> {
       .then(res => {
         this.setState({ pending: false });
         console.log(res);
+        this.closeModal();
       })
       .catch(err => {
         console.error(err);
@@ -218,7 +226,9 @@ class AddProductScreen extends React.Component<Props, State> {
     );
   }
 
-  renderSquare(uri, i) {
+  renderSquare(e, i) {
+    const uri = this.state.images[i];
+
     return (
       <TouchableOpacity
         key={i}
@@ -229,10 +239,10 @@ class AddProductScreen extends React.Component<Props, State> {
             styles.imageContainer,
             { marginBottom: 20, borderRightWidth: 0 },
           ]}>
-          {uri == '' ? (
-            <Text>Select a Photo</Text>
-          ) : (
+          {uri ? (
             <Image style={styles.image} source={{ uri }} />
+          ) : (
+            <Text>Select a Photo</Text>
           )}
         </View>
       </TouchableOpacity>
@@ -267,7 +277,7 @@ class AddProductScreen extends React.Component<Props, State> {
         </Header>
         <Content>
           <View style={{ flex: 1, flexDirection: 'row' }}>
-            {this.state.images.map((square, i) => this.renderSquare(square, i))}
+            {[...Array(6)].map((e, i) => this.renderSquare(e, i))}
           </View>
           <FormLabel labelStyle={styles.label}>Price:</FormLabel>
           <FormInput

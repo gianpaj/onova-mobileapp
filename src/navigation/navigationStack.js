@@ -1,5 +1,5 @@
 import { StackNavigator } from 'react-navigation';
-import { AddProduct, Login, Signup, Product } from '../screens';
+import { AddProduct, Login, Settings, Signup, Product } from '../screens';
 import { TabsStack } from './navigationTabs';
 
 const navigator = StackNavigator(
@@ -15,6 +15,7 @@ const navigator = StackNavigator(
     },
     tabs: { screen: TabsStack },
     addProduct: { screen: AddProduct },
+    settings: { screen: Settings },
   },
   {
     headerMode: 'none',

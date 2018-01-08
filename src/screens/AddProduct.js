@@ -85,6 +85,7 @@ class AddProductScreen extends React.Component<Props, State> {
     grp_1: -1,
     grp_2: -1,
     images: [],
+    pending: false,
   };
 
   componentWillMount() {

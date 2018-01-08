@@ -21,6 +21,8 @@ import {
   Left,
   Right,
 } from 'native-base';
+// $FlowFixMe
+import { NavigationActions, NavigationScreenProp } from 'react-navigation';
 import NotificationsDot from '../components/NotificationsDot';
 
 import { logout } from '../actions/actionCreator';
@@ -28,6 +30,7 @@ import colors from '../config/colors';
 
 type Props = {
   logout: any,
+  navigation?: NavigationScreenProp,
   userData: any,
 };
 
@@ -46,9 +49,14 @@ class ProfileScreen extends React.Component<Props, State> {
     console.log(this.props.userData);
   }
 
-  goToSettings() {
-    // this.props.navigation.navigate('Settings');
-  }
+  goToSettings = () => {
+    const navigateToSettings = NavigationActions.navigate({
+      routeName: 'settings',
+    });
+
+    if (this.props.navigation)
+      this.props.navigation.dispatch(navigateToSettings);
+  };
 
   onLogout() {
     this.props.logout({ provider: this.props.userData.provider });
@@ -60,19 +68,18 @@ class ProfileScreen extends React.Component<Props, State> {
     return (
       <Container>
         <Header>
-          <Left style={{ flex: 1 }} />
-          {/* notifications */}
+          <Left style={{ flex: 1 }}>{/* notifications */}</Left>
           <View>
-            {username == null ? (
+            {username ? (
+              <Text style={{ marginTop: 15 }}>@{username}</Text>
+            ) : (
               <Text style={{ marginTop: 15, fontStyle: 'italic' }}>
                 @select your username
               </Text>
-            ) : (
-              <Text style={{ marginTop: 15 }}>@{username}</Text>
             )}
           </View>
           <Right>
-            <Button transparent onPress={this.goToSettings()}>
+            <Button transparent onPress={this.goToSettings}>
               <Icon
                 style={{ color: colors.black }}
                 name={Platform.OS === 'ios' ? 'ios-cog' : 'md-cog'}

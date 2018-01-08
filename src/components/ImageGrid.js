@@ -208,7 +208,7 @@ const styles = StyleSheet.create({
   columnWrapper: {
     flex: 1,
     flexDirection: 'row',
-    marginHorizontal: -MARGIN,
+    marginHorizontal: -MARGIN * 2,
     marginBottom: -MARGIN * 2,
   },
   image: {

@@ -205,8 +205,7 @@ class LoginScreen extends React.Component<Props, State> {
             <View style={{ alignSelf: 'center', margin: 22 }}>
               <Text style={{ fontWeight: 'bold' }}>Trouble logging in?</Text>
               <Text>
-                Enter your email and we&apos;ll send a link to reset your
-                password
+                Enter your email to receive your password reset instructions
               </Text>
             </View>
 

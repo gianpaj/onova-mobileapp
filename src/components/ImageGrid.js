@@ -135,7 +135,7 @@ export class ImageGridComponent extends React.Component<Props, State> {
         ) : loading ? (
           this.renderLoading()
         ) : (
-          // if not loading or error
+          // if neither loading or error
           <FlatList
             onLayout={this.onLayout}
             style={styles.list}
@@ -208,8 +208,8 @@ const styles = StyleSheet.create({
   columnWrapper: {
     flex: 1,
     flexDirection: 'row',
-    marginLeft: -MARGIN,
-    marginRight: -MARGIN,
+    marginHorizontal: -MARGIN,
+    marginBottom: -MARGIN * 2,
   },
   image: {
     flex: 1,

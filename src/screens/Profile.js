@@ -21,6 +21,7 @@ import {
   Left,
   Right,
 } from 'native-base';
+import NotificationsDot from '../components/NotificationsDot';
 
 import { logout } from '../actions/actionCreator';
 import colors from '../config/colors';
@@ -37,6 +38,9 @@ type State = {
 class ProfileScreen extends React.Component<Props, State> {
   // state = {
   // };
+  static navigationOptions = () => ({
+    tabBarIcon: (props: any) => <NotificationsDot {...props} />,
+  });
 
   componentDidMount() {
     console.log(this.props.userData);

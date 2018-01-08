@@ -30,10 +30,6 @@ const tabBarConfiguration = {
             ? `ios-add-circle${focused ? '' : '-outline'}`
             : 'md-add-circle';
           break;
-        case 'Profile':
-          iconName = isiOS
-            ? `ios-person${focused ? '' : '-outline'}`
-            : 'md-person';
       }
       return (
         <Ionicons

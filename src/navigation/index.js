@@ -1,10 +1,14 @@
+// @flow
+
 import React, { Component } from 'react';
+// $FlowFixMe
 import { BackHandler } from 'react-native';
 import { connect } from 'react-redux';
+// $FlowFixMe
 import { addNavigationHelpers, NavigationActions } from 'react-navigation';
 import NavigationStack from './navigationStack';
 
-class AppNavigation extends Component {
+class AppNavigation extends Component<{}> {
   componentDidMount() {
     BackHandler.addEventListener('hardwareBackPress', this.onBackPress);
   }

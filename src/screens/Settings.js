@@ -1,8 +1,9 @@
 // @flow
 
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 // $FlowFixMe
-import { StyleSheet, Text, Platform, View } from 'react-native';
+import { StyleSheet, Platform, Text } from 'react-native';
 // prettier-ignore
 import {
   Body,
@@ -10,22 +11,56 @@ import {
   Container,
   Content,
   Header,
-  ListItem,
   Icon,
   Left,
   Right,
   Title,
  } from 'native-base';
+import { FormInput, FormLabel } from 'react-native-elements';
 // $FlowFixMe
 import { NavigationScreenProp } from 'react-navigation';
 
+import HR from '../components/HR';
+import colors from '../config/colors';
+import type { UserData } from '../types';
+
 type Props = {
   navigation?: NavigationScreenProp,
-  userData: any,
+  userData: UserData,
 };
 
-class SettingsContainer extends Component<Props> {
+type State = {
+  emailAddress: string,
+  pending: boolean,
+  password: string,
+};
+
+class SettingsContainer extends Component<Props, State> {
+  state = {
+    emailAddress: '',
+    pending: false,
+    password: '',
+  };
+
+  componentDidMount() {
+    const { userData } = this.props;
+    this.setState({ emailAddress: userData.emailAddress });
+  }
+
+  settingsUpdated = (): boolean => {
+    console.log('settingsUpdated');
+    const { userData } = this.props;
+
+    return (
+      this.state.password !== '' ||
+      this.state.emailAddress !== userData.emailAddress
+    );
+  };
+
   render() {
+    const { userData } = this.props;
+    const { pending, password, emailAddress } = this.state;
+
     return (
       <Container>
         <Header>
@@ -46,22 +81,74 @@ class SettingsContainer extends Component<Props> {
           <Body>
             <Title>Settings</Title>
           </Body>
-          <Right />
+          <Right>{this.settingsUpdated() && <Text>Yes</Text>}</Right>
         </Header>
-        <Content>
-          <ListItem>
-            <Body>
-              <Text>
-                This is Content Section
-              </Text>
-            </Body>
-          </ListItem>
+        <Content padder style={{ backgroundColor: colors.white }}>
+          <FormLabel labelStyle={styles.label}>Shipping Address:</FormLabel>
+          <FormInput
+            autoCorrect={false}
+            containerStyle={styles.inputContainer}
+            editable={!pending}
+            inputStyle={styles.input}
+            // onChangeText={t => this.changePrice(t)}
+            placeholder="Enter your shipping address here"
+            // value={userData.shippingAddress}
+          />
+          <FormLabel labelStyle={styles.label}>Payment Info:</FormLabel>
+          <FormInput
+            autoCorrect={false}
+            containerStyle={styles.inputContainer}
+            editable={!pending}
+            inputStyle={styles.input}
+            // onChangeText={t => this.change(t)}
+            placeholder="Enter your shipping address here"
+            // value={userData.paymentInfoShort}
+          />
+          <HR />
+          <FormLabel labelStyle={styles.label}>Email:</FormLabel>
+          <FormInput
+            autoCorrect={false}
+            containerStyle={styles.inputContainer}
+            editable={!pending}
+            inputStyle={styles.input}
+            onChangeText={t => this.setState({ emailAddress: t })}
+            placeholder="Change your email address. Requires validation"
+            value={emailAddress}
+          />
+          <FormLabel labelStyle={styles.label}>Password:</FormLabel>
+          <FormInput
+            autoCorrect={false}
+            containerStyle={styles.inputContainer}
+            editable={!pending}
+            inputStyle={styles.input}
+            onChangeText={t => this.setState({ password: t })}
+            secureTextEntry
+            placeholder="******"
+            value={password}
+          />
         </Content>
       </Container>
     );
   }
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  label: {
+    fontWeight: '600',
+    color: colors.black,
+  },
+  input: {
+    color: colors.black,
+    width: '100%',
+  },
+  inputContainer: {
+    marginVertical: 10,
+    borderBottomWidth: 0,
+  },
+});
 
-export const Settings = SettingsContainer;
+const mapStateToProps: any = (state: any) => ({
+  userData: state.LoginReducer.data,
+});
+
+export const Settings = connect(mapStateToProps)(SettingsContainer);

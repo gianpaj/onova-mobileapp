@@ -2,15 +2,16 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import colors from '../config/colors';
 
-const HR = () => <View style={styles.hr} />;
+const HR = props => (
+  <View style={[styles.hr, { width: `${props.full ? '100%' : '89.5%'}` }]} />
+);
 
 const styles = StyleSheet.create({
   hr: {
     alignSelf: 'center',
-    borderTopWidth: 1,
+    borderTopWidth: StyleSheet.hairlineWidth,
     borderColor: colors.grey4,
-    margin: 10,
-    width: '89.5%',
+    marginVertical: 10,
   },
 });
 

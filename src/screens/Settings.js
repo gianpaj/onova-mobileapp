@@ -3,7 +3,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 // $FlowFixMe
-import { StyleSheet, Platform, Text } from 'react-native';
+import { StyleSheet, Platform, Text, View } from 'react-native';
 // prettier-ignore
 import {
   Body,
@@ -83,7 +83,8 @@ class SettingsContainer extends Component<Props, State> {
           </Body>
           <Right>{this.settingsUpdated() && <Text>Yes</Text>}</Right>
         </Header>
-        <Content padder style={{ backgroundColor: colors.white }}>
+        <Content style={{ backgroundColor: colors.white }}>
+          <View style={{ padding: 10 }}>
           <FormLabel labelStyle={styles.label}>Shipping Address:</FormLabel>
           <FormInput
             autoCorrect={false}
@@ -104,7 +105,9 @@ class SettingsContainer extends Component<Props, State> {
             placeholder="Enter your shipping address here"
             // value={userData.paymentInfoShort}
           />
-          <HR />
+          </View>
+          <HR full />
+          <View style={{ padding: 10 }}>
           <FormLabel labelStyle={styles.label}>Email:</FormLabel>
           <FormInput
             autoCorrect={false}
@@ -126,6 +129,7 @@ class SettingsContainer extends Component<Props, State> {
             placeholder="******"
             value={password}
           />
+          </View>
         </Content>
       </Container>
     );

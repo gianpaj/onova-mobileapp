@@ -106,7 +106,6 @@ export class ImageGridComponent extends React.Component<Props, State> {
 
   renderItem = ({ item }: any) => {
     const uri = JSON.parse(JSON.stringify(item)).photoURIs[0];
-    // const uri = 'http://localhost:8000/boots1.jpg';
     return (
       <View style={styles.imageContainer} id={item.uuid}>
         <TouchableOpacity

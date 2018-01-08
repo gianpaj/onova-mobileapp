@@ -35,6 +35,7 @@ import { NavigationScreenProp } from 'react-navigation';
 import colors from '../config/colors';
 import settings from '../config/settings';
 import * as api from '../utils/api';
+import * as ui from '../utils/ui';
 
 const category_radio_grp_1 = [
   { label: 'Clothes', value: 0 },
@@ -176,8 +177,9 @@ class AddProductScreen extends React.Component<Props, State> {
         this.closeModal();
       })
       .catch(err => {
-        console.error(err);
+        console.log(err);
         this.setState({ pending: false });
+        ui.showToast(err.message, 'warning');
       });
   };
 
@@ -212,8 +214,6 @@ class AddProductScreen extends React.Component<Props, State> {
   addEnabled(): boolean {
     const pricePattern = /^\d+(\.\d{2})?$/;
     const tagsPattern = /^(\b[a-z][a-z0-9]*)$/i;
-
-    const images = this.state.images.filter(i => i !== '');
 
     return (
       images.length > 0 &&

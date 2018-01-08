@@ -94,7 +94,8 @@ export async function request(
 
 async function getAuthenticationToken(): Promise<string> {
   return AsyncStorage.getItem('persist:primary').then(data => {
-    return JSON.parse(JSON.parse(data).data).token;
+    const object = JSON.parse(JSON.parse(data).data);
+    return object ? object.token : null;
   });
 }
 
@@ -103,9 +104,16 @@ async function getAuthenticationToken(): Promise<string> {
  */
 async function sendRequest(method, path, body) {
   try {
-    const token = await getAuthenticationToken();
-    const headers = getRequestHeaders(body, token);
-    const defaults = { method, headers, url: path, timeout: TIMEOUT };
+    const headers = await getRequestHeaders(body);
+    const defaults = {
+      method,
+      headers,
+      url: path,
+      timeout: TIMEOUT,
+      validateStatus: function(status) {
+        return status >= 200 && status < 500;
+      },
+    };
     const options = body ? { ...defaults, data: body } : defaults;
 
     return axios(options);
@@ -121,14 +129,13 @@ async function handleResponse(path, response) {
   try {
     const status = response.status;
 
-    // `axios` promises resolve even if HTTP status indicates failure. Re-route
-    // promise flow control to interpret error responses as failures
+    // `axios` is configured to resolve even if HTTP status indicates failure.
+    // Re-route promise flow control to interpret error responses as failures
     if (status >= 400) {
-      const message = await getErrorMessageSafely(response);
       // const error = new Error({status: status, message: message});
 
       // throw error;
-      throw { status, message };
+      throw { status, message: response.data.message };
     }
 
     return {
@@ -141,40 +148,17 @@ async function handleResponse(path, response) {
   }
 }
 
-function getRequestHeaders(body, token) {
+async function getRequestHeaders(body) {
   const headers = body
     ? { Accept: 'application/json', 'Content-Type': 'application/json' }
     : { Accept: 'application/json' };
 
+  const token = await getAuthenticationToken();
   if (token) {
     return { ...headers, Authorization: token };
   }
 
   return headers;
-}
-
-// try to get the best possible error message out of a response
-// without throwing errors while parsing
-async function getErrorMessageSafely(response) {
-  try {
-    const body = await response.text();
-    // console.log('body', body);
-    if (!body) {
-      return '';
-    }
-
-    // Optimal case is JSON with a defined message property
-    const payload = JSON.parse(body);
-    if (payload && payload.message) {
-      return payload.message;
-    }
-
-    // Should that fail, return the whole response body as text
-    return body;
-  } catch (e) {
-    // Unreadable body, return whatever the server returned
-    return response._bodyInit;
-  }
 }
 
 async function bodyOf(requestPromise) {

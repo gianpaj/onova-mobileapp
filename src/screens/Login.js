@@ -202,7 +202,7 @@ class LoginScreen extends React.Component<Props, State> {
           visible={this.state.modalVisible}
           onRequestClose={this._onModalDismiss}>
           <View style={{ marginTop: 22 }}>
-            <View style={{ alignSelf: 'center', margin: 22 }}>
+            <View style={{ margin: 20 }}>
               <Text style={{ fontWeight: 'bold' }}>Trouble logging in?</Text>
               <Text>
                 Enter your email to receive your password reset instructions

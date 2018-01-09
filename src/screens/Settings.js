@@ -48,7 +48,6 @@ class SettingsContainer extends Component<Props, State> {
   }
 
   settingsUpdated = (): boolean => {
-    console.log('settingsUpdated');
     const { userData } = this.props;
 
     return (
@@ -56,6 +55,14 @@ class SettingsContainer extends Component<Props, State> {
       this.state.emailAddress !== userData.emailAddress
     );
   };
+
+  onEmail() {
+    Linking.openURL('mailto:hello@onova.co')
+      .then(() => {
+        console.log('email client opened');
+      })
+      .catch(err => console.error('An error occurred', err));
+  }
 
   render() {
     const { userData } = this.props;
@@ -84,7 +91,7 @@ class SettingsContainer extends Component<Props, State> {
           <Right>{this.settingsUpdated() && <Text>Yes</Text>}</Right>
         </Header>
         <Content style={{ backgroundColor: colors.white }}>
-          <View style={{ padding: 10 }}>
+          <View style={styles.padder}>
           <FormLabel labelStyle={styles.label}>Shipping Address:</FormLabel>
           <FormInput
             autoCorrect={false}
@@ -107,7 +114,7 @@ class SettingsContainer extends Component<Props, State> {
           />
           </View>
           <HR full />
-          <View style={{ padding: 10 }}>
+          <View style={styles.padder}>
           <FormLabel labelStyle={styles.label}>Email:</FormLabel>
           <FormInput
             autoCorrect={false}
@@ -130,6 +137,13 @@ class SettingsContainer extends Component<Props, State> {
             value={password}
           />
           </View>
+          <HR full />
+          <View style={[styles.padder, { alignItems: 'center' }]}>
+            <TouchableOpacity onPress={this.onEmail}>
+              <Text style={styles.centerText}>hello@onova.co</Text>
+            </TouchableOpacity>
+            <Text style={styles.centerText}>__version__</Text>
+          </View>
         </Content>
       </Container>
     );
@@ -138,16 +152,23 @@ class SettingsContainer extends Component<Props, State> {
 
 const styles = StyleSheet.create({
   label: {
-    fontWeight: '600',
     color: colors.black,
+    fontWeight: '600',
   },
   input: {
     color: colors.black,
     width: '100%',
   },
+  padder: {
+    padding: 10,
+  },
   inputContainer: {
-    marginVertical: 10,
     borderBottomWidth: 0,
+    marginVertical: 10,
+  },
+  centerText: {
+    color: colors.grey4,
+    paddingVertical: 10,
   },
 });
 

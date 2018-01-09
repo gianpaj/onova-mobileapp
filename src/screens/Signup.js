@@ -173,7 +173,7 @@ class SignupScreen extends React.Component<Props, State> {
             <Text style={[styles.hr, styles.mt15]}>
               Already have an account?&nbsp;
               <Text style={styles.linkText} onPress={() => this.onGoback()}>
-                Login
+                Log in
               </Text>
             </Text>
             <Text style={[styles.hr, styles.mt15, { color: colors.grey1 }]}>
@@ -219,11 +219,11 @@ const styles = StyleSheet.create({
     marginTop: 15,
   },
   linkText: {
-    color: colors.secondary,
+    fontWeight: 'bold',
     margin: 5,
   },
   termsLink: {
+    fontWeight: 'bold',
     color: colors.grey2,
-    textDecorationLine: 'underline',
   },
 });

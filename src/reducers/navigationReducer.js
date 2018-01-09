@@ -3,7 +3,6 @@
 import { NavigationActions } from 'react-navigation';
 
 import AppNavigator from '../navigation/navigationStack';
-// prettier-ignore
 import {
   LOGIN_SUCCESS,
   SIGNUP_SUCCESS,

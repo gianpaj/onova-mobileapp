@@ -14,7 +14,7 @@ import {
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {
   Body,
-  Button,
+  Button as NBButton,
   Container,
   Content,
   Header,
@@ -257,15 +257,15 @@ class AddProductScreen extends React.Component<Props, State> {
       <Container>
         <Header>
           <Left>
-            <Button transparent onPress={() => this.closeModal()}>
+            <NBButton transparent onPress={() => this.closeModal()}>
               <Icon name="close" size={28} />
-            </Button>
+            </NBButton>
           </Left>
           <Body>
             <Text>Add Item</Text>
           </Body>
           <Right>
-            <Button
+            <NBButton
               transparent
               disabled={!this.addEnabled()}
               style={{ backgroundColor: 'transparent' }}
@@ -275,7 +275,7 @@ class AddProductScreen extends React.Component<Props, State> {
                 style={!this.addEnabled() ? { color: colors.grey3 } : null}
                 size={28}
               />
-            </Button>
+            </NBButton>
           </Right>
         </Header>
         <Content>

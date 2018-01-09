@@ -1,16 +1,13 @@
 // @flow
 
 import React from 'react';
-// prettier-ignore
 import {
   ActivityIndicator,
   StyleSheet,
   Text,
-  Platform,
   View,
   // $FlowFixMe
 } from 'react-native';
-// prettier-ignore
 import {
   ActionSheet,
   Body,
@@ -18,10 +15,10 @@ import {
   Container,
   Content,
   Header,
-  Icon,
+  Icon as NBIcon,
   Left,
   Right,
- } from 'native-base';
+} from 'native-base';
 // prettier-ignore
 import {
   Button,
@@ -138,17 +135,17 @@ export class Product extends React.Component<Props, State> {
               onPress={() =>
                 this.props.navigation ? this.props.navigation.goBack() : null
               }>
-              <Icon
-                name={
-                  Platform.OS === 'ios' ? 'ios-arrow-back' : 'md-arrow-back'
-                }
-              />
+              <NBIcon ios="ios-arrow-back" android="md-arrow-back" />
             </NBButton>
           </Left>
           <Body />
           <Right>
             <NBButton transparent dark onPress={() => this.showActionSheet()}>
-              <Icon name="ios-more" style={styles.moreIcon} />
+              <NBIcon
+                ios="ios-more"
+                android="md-more"
+                style={styles.moreIcon}
+              />
             </NBButton>
           </Right>
         </Header>
@@ -170,12 +167,12 @@ export class Product extends React.Component<Props, State> {
               </View>
               <MediaView source={item.photoURIs} />
               <View style={styles.bottomSection}>
-                {/* <Icon name="ios-bookmark-outline" style={styles.iconSave} /> */}
-                <Icon
+                {/* <NBIcon name="ios-bookmark-outline" style={styles.iconSave} /> */}
+                <NBIcon
                   name="ios-text-outline"
                   style={styles.iconCommmentAndShare}
                 />
-                {/* <Icon
+                {/* <NBIcon
                   name="ios-share-outline"
                   style={styles.iconCommmentAndShare}
                   onPress={() => this.showShareActionSheet()}

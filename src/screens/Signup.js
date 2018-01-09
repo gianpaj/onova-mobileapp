@@ -156,7 +156,8 @@ class SignupScreen extends React.Component<Props, State> {
               disabled={
                 !isEmail(this.state.emailAddress) ||
                 this.state.password.length < 9 ||
-                this.state.username.length < 3
+                this.state.username.length < 3 ||
+                this.props.loading
               }
               onPress={() => this.onSignup()}
               title="Create account"

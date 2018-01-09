@@ -1,3 +1,5 @@
+// @flow
+// $FlowFixMe
 import { NavigationActions } from 'react-navigation';
 
 import AppNavigator from '../navigation/navigationStack';
@@ -28,7 +30,7 @@ const stateForLoggedIn = AppNavigator.router.getStateForAction(
 
 const initialState = { stateForLoggedOut, stateForLoggedIn };
 
-const navigationReducer = (state = initialState, action) => {
+const navigationReducer = (state: any = initialState, action: Function) => {
   switch (action.type) {
     case '@@redux/INIT':
       return {

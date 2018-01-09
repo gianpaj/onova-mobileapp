@@ -18,6 +18,7 @@ import {
 } from './actionTypes';
 import type { Dispatch, LoginData, SignupData } from '../types';
 import * as api from '../utils/api';
+import * as ui from '../utils/ui';
 
 const incrementAction = () => ({
   type: incrementCounter,
@@ -45,28 +46,32 @@ const login = (data: LoginData) => (dispatch: Dispatch) => (
         };
         // @TODO: send analytics login event
         dispatch({ type: LOGIN_SUCCESS, payload: userData });
-        // this.afterLogin(userData);
       } else {
         console.debug(res);
         dispatch({ type: LOGIN_FAIL });
-        // ui.showToast(res.toString());
       }
     })
     .catch((err: api.APIError) => {
+      let errorType;
       if (err.status == 400 || err.status == 500) {
-        // ui.showToast(err.message, 'danger');
+        errorType = 'danger';
       } else if (err.status == 401) {
         // auth error
-        // ui.showToast(err.message, 'warning');
-      } else if (err.message == 'timeout') {
-        // ui.showToast(
-        //   'Onova servers might be taking a nap. Please retry',
-        //   'warning'
-        // );
+        errorType = 'warning';
+      } else if (err.message.includes('timeout')) {
+        err.message = 'Onova servers might be taking a nap. Please retry';
+        errorType = 'danger';
       } else {
         console.error(err);
       }
-      dispatch({ type: LOGIN_FAIL, payload: err });
+      console.debug(err);
+      dispatch(
+        showAlert({
+          type: LOGIN_FAIL,
+          payload: err.message,
+          errorType: errorType,
+        })
+      );
     })
   // }, 5000)
 );
@@ -137,6 +142,14 @@ const signup = (data: SignupData) => (dispatch: Dispatch) => (
       dispatch({ type: SIGNUP_FAIL, payload: err.message });
     })
 );
+
+const showAlert = alert => {
+  ui.showToast(alert.payload, alert.errorType || '');
+  return {
+    type: alert.type,
+    alert,
+  };
+};
 
 const logout = (data: any) => (dispatch: Dispatch) => {
   console.log(data);

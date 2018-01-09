@@ -30,8 +30,6 @@ import colors from '../config/colors';
 
 type Props = {
   dispatch: Dispatch,
-  hasError: boolean,
-  errorMsg: string,
   loadingGoogleLogin: boolean,
   loadingLogin: boolean,
   navigation?: NavigationScreenProp,
@@ -134,7 +132,6 @@ class LoginScreen extends React.Component<Props, State> {
               </Text>
             </View>
           </View>
-          {this.props.hasError && <Text>errors</Text>}
         </View>
         <View testID="login-form">
           <FormInput
@@ -249,7 +246,6 @@ class LoginScreen extends React.Component<Props, State> {
 }
 
 const mapStateToProps: any = (state: any) => ({
-  hasError: state.LoginReducer.hasError,
   loadingLogin: state.LoginReducer.loading,
   loadingGoogleLogin: state.LoginReducer.loadingGoogleLogin,
 });

@@ -94,6 +94,7 @@ export async function request(
 
 async function getAuthenticationToken(): Promise<string> {
   return AsyncStorage.getItem('persist:primary').then(data => {
+    if (!data) return;
     const object = JSON.parse(JSON.parse(data).data);
     return object ? object.token : null;
   });

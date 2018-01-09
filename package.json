@@ -27,6 +27,7 @@
     "react": "16.0.0",
     "react-native": "0.51.0",
     "react-native-cached-image": "^1.4.3",
+    "react-native-credit-card-input": "^0.4.1",
     "react-native-elements": "^0.18.2",
     "react-native-fast-image": "^2.0.1",
     "react-native-image-crop-picker": "^0.18.2",

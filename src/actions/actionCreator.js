@@ -69,7 +69,7 @@ const login = (data: LoginData) => (dispatch: Dispatch) => (
         showAlert({
           type: LOGIN_FAIL,
           payload: err.message,
-          errorType: errorType,
+          errorType,
         })
       );
     })
@@ -132,14 +132,25 @@ const signup = (data: SignupData) => (dispatch: Dispatch) => (
       } else {
         console.warn(res);
         dispatch({ type: SIGNUP_FAIL });
-        // ui.showToast(res.toString());
       }
     })
     .catch((err: api.APIError) => {
-      if (err.status == 400) {
-        // ui.showToast(err.message);
+      let errorType;
+      if (err.status == 400 || err.status == 500) {
+        errorType = 'danger';
+      } else if (err.status == 401) {
+        // auth error
+        errorType = 'warning';
+      } else if (err.message.includes('timeout')) {
+        err.message = 'Onova servers might be taking a nap. Please retry';
+        errorType = 'danger';
+      } else {
+        console.error(err);
       }
-      dispatch({ type: SIGNUP_FAIL, payload: err.message });
+      console.debug(err);
+      dispatch(
+        showAlert({ type: SIGNUP_FAIL, payload: err.message, errorType })
+      );
     })
 );
 

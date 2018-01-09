@@ -15,7 +15,6 @@ import Icon from 'react-native-vector-icons/Entypo';
 import {
   Button,
   FormInput,
-  FormValidationMessage,
 } from 'react-native-elements';
 // $FlowFixMe
 import { NavigationScreenProp } from 'react-navigation';
@@ -30,8 +29,6 @@ type Props = {
   dispatch: Dispatch,
   loading: boolean,
   navigation: NavigationScreenProp,
-  hasError: string,
-  errorMsg: string,
 };
 
 type State = {
@@ -151,11 +148,6 @@ class SignupScreen extends React.Component<Props, State> {
             accessibilityLabel="password"
             {...this._inputProps}
           />
-          {this.props.hasError && (
-            <FormValidationMessage accessibilityLabel="error message">
-              {this.props.errorMsg}
-            </FormValidationMessage>
-          )}
           <View style={styles.mt15}>
             <Button
               buttonStyle={styles.SignupButton}
@@ -193,8 +185,6 @@ class SignupScreen extends React.Component<Props, State> {
 
 const mapStateToProps: any = (state: any) => ({
   loading: state.LoginReducer.loading,
-  hasError: state.LoginReducer.hasError,
-  errorMsg: state.LoginReducer.errorMsg,
 });
 
 export const Signup = connect(mapStateToProps)(SignupScreen);

@@ -52,26 +52,7 @@ const login = (data: LoginData) => (dispatch: Dispatch) => (
       }
     })
     .catch((err: api.APIError) => {
-      let errorType;
-      if (err.status == 400 || err.status == 500) {
-        errorType = 'danger';
-      } else if (err.status == 401) {
-        // auth error
-        errorType = 'warning';
-      } else if (err.message.includes('timeout')) {
-        err.message = 'Onova servers might be taking a nap. Please retry';
-        errorType = 'danger';
-      } else {
-        console.error(err);
-      }
-      console.debug(err);
-      dispatch(
-        showAlert({
-          type: LOGIN_FAIL,
-          payload: err.message,
-          errorType,
-        })
-      );
+      dispatch(handleErrorWithAlert({ type: LOGIN_FAIL }, err));
     })
   // }, 5000)
 );
@@ -135,44 +116,20 @@ const signup = (data: SignupData) => (dispatch: Dispatch) => (
       }
     })
     .catch((err: api.APIError) => {
-      let errorType;
-      if (err.status == 400 || err.status == 500) {
-        errorType = 'danger';
-      } else if (err.status == 401) {
-        // auth error
-        errorType = 'warning';
-      } else if (err.message.includes('timeout')) {
-        err.message = 'Onova servers might be taking a nap. Please retry';
-        errorType = 'danger';
-      } else {
-        console.error(err);
-      }
-      console.debug(err);
-      dispatch(
-        showAlert({ type: SIGNUP_FAIL, payload: err.message, errorType })
-      );
+      dispatch(handleErrorWithAlert({ type: SIGNUP_FAIL }, err));
     })
 );
-
-const showAlert = alert => {
-  ui.showToast(alert.payload, alert.errorType || '');
-  return {
-    type: alert.type,
-    alert,
-  };
-};
 
 const getUserData = (userId: string) => (dispatch: Dispatch) => (
   dispatch({ type: 'GETUSER_PENDING' }),
   api
     .get(`/api/users/${userId}`)
     .then(res => {
-      console.log(res);
+      console.debug(res);
       dispatch({ type: 'GETUSER_SUCCESS', payload: res });
     })
     .catch(err => {
-      console.error(err);
-      dispatch({ type: 'GETUSER_FAIL' });
+      dispatch(handleErrorWithAlert({ type: 'GETUSER_FAIL' }, err));
     })
 );
 
@@ -194,6 +151,25 @@ const goToSignup = () => ({
 const goback = () => ({
   type: BACK,
 });
+
+const handleErrorWithAlert = (data: any, err: any) => {
+  let errorType;
+  if (err.status == 400 || err.status == 500) {
+    errorType = 'danger';
+  } else if (err.status == 401) {
+    // auth error
+    errorType = 'warning';
+  } else if (err.message.includes('timeout')) {
+    err.message = 'Onova servers might be taking a nap. Please retry';
+    errorType = 'danger';
+  } else {
+    console.error(err);
+  }
+  ui.showToast(err.message, errorType || '');
+  return {
+    type: data.type,
+  };
+};
 
 export {
   incrementAction,

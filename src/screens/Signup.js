@@ -22,7 +22,7 @@ import isEmail from 'validator/lib/isEmail';
 
 import { logout, signup, goback } from '../actions/actionCreator';
 import type { Dispatch } from '../types';
-// import * as ui from '../utils/ui';
+import { validPassword } from '../utils/validators';
 import colors from '../config/colors';
 
 type Props = {
@@ -155,7 +155,7 @@ class SignupScreen extends React.Component<Props, State> {
               loading={this.props.loading}
               disabled={
                 !isEmail(this.state.emailAddress) ||
-                this.state.password.length < 9 ||
+                !validPassword(this.state.password) ||
                 this.state.username.length < 3 ||
                 this.props.loading
               }

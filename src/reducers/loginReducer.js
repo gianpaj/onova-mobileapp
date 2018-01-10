@@ -16,6 +16,7 @@ const initialState = {
   data: null,
   hasError: false,
   errorMsg: null,
+  fetchLoading: false,
 };
 
 const loginReducer = (state = initialState, action) => {
@@ -69,6 +70,28 @@ const loginReducer = (state = initialState, action) => {
         isLoggedIn: false,
         loadingGoogleLogin: false,
         data: null,
+      };
+
+    case 'GETUSER_PENDING':
+      return {
+        ...state,
+        fetchLoading: true,
+      };
+
+    case 'GETUSER_SUCCESS':
+      return {
+        ...state,
+        fetchLoading: false,
+        hasError: false,
+        data: { ...state.data, ...action.payload },
+      };
+
+    case 'GETUSER_FAIL':
+      return {
+        ...state,
+        fetchLoading: false,
+        hasError: true,
+        errorMsg: action.payload,
       };
 
     default:

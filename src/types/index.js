@@ -25,6 +25,7 @@ export type UserData = {
   provider: string,
   token: string,
   username: string,
+  paymentInfo: any,
 };
 
 // export type Store = ReduxStore<State, Action>;

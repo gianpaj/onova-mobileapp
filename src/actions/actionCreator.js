@@ -162,6 +162,20 @@ const showAlert = alert => {
   };
 };
 
+const getUserData = (userId: string) => (dispatch: Dispatch) => (
+  dispatch({ type: 'GETUSER_PENDING' }),
+  api
+    .get(`/api/users/${userId}`)
+    .then(res => {
+      console.log(res);
+      dispatch({ type: 'GETUSER_SUCCESS', payload: res });
+    })
+    .catch(err => {
+      console.error(err);
+      dispatch({ type: 'GETUSER_FAIL' });
+    })
+);
+
 const logout = (data: any) => (dispatch: Dispatch) => {
   console.log(data);
   if (data.provider == 'email') {
@@ -187,6 +201,7 @@ export {
   login,
   // loginWithGoogle,
   signup,
+  getUserData,
   logout,
   goToSignup,
   goback,

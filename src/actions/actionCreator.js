@@ -120,10 +120,10 @@ const signup = (data: SignupData) => (dispatch: Dispatch) => (
     })
 );
 
-const getUserData = (userId: string) => (dispatch: Dispatch) => (
+const getPersonalUserData = (userId: string) => (dispatch: Dispatch) => (
   dispatch({ type: 'GETUSER_PENDING' }),
   api
-    .get(`/api/users/${userId}`)
+    .get(`/api/users/${userId}/personal`)
     .then(res => {
       console.debug(res);
       dispatch({ type: 'GETUSER_SUCCESS', payload: res });
@@ -177,7 +177,7 @@ export {
   login,
   // loginWithGoogle,
   signup,
-  getUserData,
+  getPersonalUserData,
   logout,
   goToSignup,
   goback,

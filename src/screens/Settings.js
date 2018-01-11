@@ -30,7 +30,7 @@ import { NavigationScreenProp } from 'react-navigation';
 import { CardView, LiteCreditCardInput } from 'react-native-credit-card-input';
 import isEmail from 'validator/lib/isEmail';
 
-import { getUserData } from '../actions/actionCreator';
+import { getPersonalUserData } from '../actions/actionCreator';
 import HR from '../components/HR';
 import colors from '../config/colors';
 import { validPassword } from '../utils/validators';
@@ -49,19 +49,34 @@ type State = {
   emailAddress: string,
   pending: boolean,
   password: string,
+  paymentInfo: {
+    valid: boolean,
+    values: {
+      expiry: string,
+      number: string,
+    },
+  },
+  showSavedInfo: boolean,
 };
 
 class SettingsContainer extends Component<Props, State> {
   state = {
     emailAddress: '',
     pending: false,
-    password: 'expresss2',
+    password: '',
+    paymentInfo: {
+      valid: false,
+      values: {
+        expiry: '',
+        number: '',
+      },
+    },
+    showSavedInfo: true,
   };
 
   componentWillMount() {
-    // update userData
-    this.props.dispatch(getUserData(this.props.userData._id)).then(() => {
-      const { userData } = this.props;
+    const { userData } = this.props;
+    this.props.dispatch(getPersonalUserData(userData._id)).then(() => {
       this.setState({ emailAddress: userData.emailAddress });
     });
   }
@@ -71,27 +86,25 @@ class SettingsContainer extends Component<Props, State> {
       UIManager.setLayoutAnimationEnabledExperimental &&
         UIManager.setLayoutAnimationEnabledExperimental(true);
     }
-    // const { userData } = this.props;
-    // console.log(userData);
-    // this.setState({ emailAddress: userData.emailAddress });
   }
 
   settingsCanBeUpdated = (): boolean => {
     const { userData } = this.props;
-    const { pending, password, emailAddress } = this.state;
+    const { pending, password, emailAddress, paymentInfo } = this.state;
 
     // @TODO: check password is valid
     // @TODO: check email is valid
     return (
       !pending &&
-      (validPassword(password) ||
+      (paymentInfo.valid ||
+        validPassword(password) ||
         (isEmail(emailAddress) && emailAddress !== userData.emailAddress))
     );
   };
 
   updateSettings = () => {
     const { userData } = this.props;
-    const { password, emailAddress } = this.state;
+    const { password, emailAddress, paymentInfo } = this.state;
 
     this.setState({ pending: true });
 
@@ -101,9 +114,19 @@ class SettingsContainer extends Component<Props, State> {
     if (password !== '') {
       data.password = password;
     }
+
     if (emailAddress !== userData.emailAddress) {
       data.emailAddress = emailAddress;
     }
+
+    if (paymentInfo.valid) {
+      const { values } = paymentInfo;
+
+      data.last_four = values.number.slice(-4);
+      data.exp_month = values.expiry.split('/')[0];
+      data.exp_year = values.expiry.split('/')[0];
+    }
+
     console.log(data);
 
     api
@@ -137,16 +160,17 @@ class SettingsContainer extends Component<Props, State> {
       .catch(err => console.error('An error occurred', err));
   }
 
-  _onCCChange = form => console.log(form);
+  _onCCChange = form => {
+    this.setState({
+      paymentInfo: {
+        valid: form.valid,
+        values: form.values,
+      },
+    });
+  };
 
   formatCardInfo() {
-    // const { paymentInfo } = this.props.userData;
-
-    const paymentInfo = {
-      last_four: '4242',
-      exp_month: 12,
-      exp_year: 12,
-    };
+    const { paymentInfo } = this.props.userData;
 
     return {
       brand: 'visa',
@@ -157,8 +181,8 @@ class SettingsContainer extends Component<Props, State> {
   }
 
   render() {
-    const { userData, fetchLoading } = this.props;
-    const { pending, password, emailAddress } = this.state;
+    const { userData } = this.props;
+    const { pending, password, emailAddress, showSavedInfo } = this.state;
 
     return (
       <Container>
@@ -213,24 +237,18 @@ class SettingsContainer extends Component<Props, State> {
             <FormLabel labelStyle={[styles.label, { paddingBottom: 10 }]}>
               Payment Info:
             </FormLabel>
-            {userData.paymentInfo ? (
+            {userData.paymentInfo && showSavedInfo ? (
               <View style={{ alignSelf: 'center' }}>
-                <CardView {...this.formatCardInfo()} />
+                <TouchableOpacity
+                  onPress={() => this.setState({ showSavedInfo: false })}>
+                  <CardView {...this.formatCardInfo()} />
+                </TouchableOpacity>
               </View>
             ) : (
               <View style={{ paddingLeft: 10 }}>
                 <LiteCreditCardInput onChange={this._onCCChange} />
               </View>
             )}
-            {/* <FormInput
-              autoCorrect={false}
-              containerStyle={styles.inputContainer}
-              editable={!pending}
-              inputStyle={styles.input}
-              // onChangeText={t => this.change(t)}
-              placeholder="Enter your shipping address here"
-              // value={userData.paymentInfoShort}
-            /> */}
           </View>
           <HR full />
           <View style={styles.padder}>

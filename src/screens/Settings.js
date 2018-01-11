@@ -31,33 +31,28 @@ import { CardView, LiteCreditCardInput } from 'react-native-credit-card-input';
 import { Toast } from 'antd-mobile';
 import isEmail from 'validator/lib/isEmail';
 
-import { getPersonalUserData } from '../actions/actionCreator';
 import HR from '../components/HR';
+import Accordion from '../components/Accordion';
+import { getPersonalUserData } from '../actions/actionCreator';
 import colors from '../config/colors';
 import { validPassword } from '../utils/validators';
 import * as api from '../utils/api';
 import * as ui from '../utils/ui';
-import type { UserData, Dispatch } from '../types';
+import type { UserData, Dispatch, PaymentInfo, ShippingInfo } from '../types';
 
 type Props = {
   dispatch: Dispatch,
   navigation?: NavigationScreenProp,
   userData: UserData,
-  fetchLoading: boolean,
 };
 
 type State = {
   emailAddress: string,
   pending: boolean,
   password: string,
-  paymentInfo: {
-    valid: boolean,
-    values: {
-      expiry: string,
-      number: string,
-    },
-  },
   showSavedInfo: boolean,
+  shippingInfo: ShippingInfo,
+  paymentInfo: PaymentInfo,
 };
 
 class SettingsContainer extends Component<Props, State> {
@@ -65,6 +60,7 @@ class SettingsContainer extends Component<Props, State> {
     emailAddress: '',
     pending: false,
     password: '',
+    showSavedInfo: true,
     paymentInfo: {
       valid: false,
       values: {
@@ -72,7 +68,6 @@ class SettingsContainer extends Component<Props, State> {
         number: '',
       },
     },
-    showSavedInfo: true,
   };
 
   componentWillMount() {
@@ -189,7 +184,13 @@ class SettingsContainer extends Component<Props, State> {
 
   render() {
     const { userData } = this.props;
-    const { pending, password, emailAddress, showSavedInfo } = this.state;
+    const {
+      pending,
+      password,
+      emailAddress,
+      showSavedInfo,
+      shippingInfo,
+    } = this.state;
 
     return (
       <Container>
@@ -224,22 +225,39 @@ class SettingsContainer extends Component<Props, State> {
           </Right>
         </Header>
         <Content style={{ backgroundColor: colors.white }}>
-          {/* {fetchLoading ? (
-            <Container style={styles.container}>
-              <ActivityIndicator size="large" />
-            </Container>
-          ) : (
-            <View> */}
           <View style={styles.padder}>
-            <FormLabel labelStyle={styles.label}>Shipping Address:</FormLabel>
-            <FormInput
-              autoCorrect={false}
-              containerStyle={styles.inputContainer}
-              editable={!pending}
-              inputStyle={styles.input}
-              // onChangeText={t => this.changePrice(t)}
-              placeholder="Enter your shipping address here"
-              // value={userData.shippingAddress}
+            <Accordion
+              headerText="Shipping Address:"
+              values={[
+                {
+                  content: [
+                    {
+                      placeholder: 'Address line 2',
+                      value: this.state.shippingInfo.line1,
+                      onChangeValue: t =>
+                        this.setState({ shippingInfo: { line1: t } }),
+                    },
+                    {
+                      placeholder: 'Address line 2',
+                      value: this.state.shippingInfo.line2,
+                      onChangeValue: t =>
+                        this.setState({ shippingInfo: { line2: t } }),
+                    },
+                    {
+                      placeholder: 'City',
+                      value: this.state.shippingInfo.city,
+                      onChangeValue: t =>
+                        this.setState({ shippingInfo: { city: t } }),
+                    },
+                    {
+                      placeholder: 'State',
+                      value: this.state.shippingInfo.state,
+                      onChangeValue: t =>
+                        this.setState({ shippingInfo: { state: t } }),
+                    },
+                  ],
+                },
+              ]}
             />
             <FormLabel labelStyle={[styles.label, { paddingBottom: 10 }]}>
               Payment Info:
@@ -290,8 +308,6 @@ class SettingsContainer extends Component<Props, State> {
             </TouchableOpacity>
             <Text style={styles.centerText}>__version__</Text>
           </View>
-          {/* </View>
-        )} */}
         </Content>
       </Container>
     );
@@ -327,7 +343,6 @@ const styles = StyleSheet.create({
 
 const mapStateToProps: any = (state: any) => ({
   userData: state.LoginReducer.data,
-  fetchLoading: state.LoginReducer.fetchLoading,
 });
 
 export const Settings = connect(mapStateToProps)(SettingsContainer);

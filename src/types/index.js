@@ -25,7 +25,29 @@ export type UserData = {
   provider: string,
   token: string,
   username: string,
-  paymentInfo: any,
+  paymentInfo: {
+    last_four: string,
+    exp_month: string,
+    exp_year: string,
+  },
+  shippingInfo: ShippingInfo,
+};
+
+export type PaymentInfo = {
+  valid: boolean,
+  values: {
+    expiry: string,
+    number: string,
+  },
+};
+
+export type ShippingInfo = {
+  line1: string,
+  line2: string,
+  city: string,
+  state: string,
+  country: string,
+  postcode: string,
 };
 
 // export type Store = ReduxStore<State, Action>;

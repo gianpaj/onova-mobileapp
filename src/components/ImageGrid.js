@@ -44,7 +44,7 @@ type State = {
 const { width, height } = Dimensions.get('window');
 
 export class ImageGridComponent extends React.Component<Props, State> {
-  constructor(props: Object) {
+  constructor(props: any) {
     super(props);
   }
 

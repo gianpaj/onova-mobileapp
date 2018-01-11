@@ -1,10 +1,21 @@
+// @flow
+
 import React from 'react';
+// $FlowFixMe
 import { StyleSheet, View } from 'react-native';
 import colors from '../config/colors';
 
-const HR = props => (
+type Props = {
+  full: boolean,
+};
+
+const HR = (props: Props) => (
   <View style={[styles.hr, { width: `${props.full ? '100%' : '89.5%'}` }]} />
 );
+
+HR.defaultProps = {
+  full: false,
+};
 
 const styles = StyleSheet.create({
   hr: {

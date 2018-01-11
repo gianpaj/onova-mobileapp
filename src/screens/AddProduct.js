@@ -29,6 +29,7 @@ import RadioForm, {
 } from 'react-native-simple-radio-button';
 import ImagePicker from 'react-native-image-crop-picker';
 import { withNavigationFocus } from '@patwoz/react-navigation-is-focused-hoc';
+import { TextareaItem } from 'antd-mobile';
 // $FlowFixMe
 import { NavigationScreenProp } from 'react-navigation';
 
@@ -57,7 +58,6 @@ type Props = {
 };
 
 type State = {
-  descHeight: number,
   description: string,
   images: any,
   price: string,
@@ -80,7 +80,6 @@ class AddProductScreen extends React.Component<Props, State> {
   };
 
   state = {
-    descHeight: 50,
     description: '',
     price: '',
     tags: '',
@@ -186,14 +185,6 @@ class AddProductScreen extends React.Component<Props, State> {
       });
   };
 
-  onDescriptionChange(event) {
-    const { contentSize } = event.nativeEvent;
-
-    this.setState({
-      descHeight: contentSize.height > 50 ? contentSize.height : 50,
-    });
-  }
-
   /**
    * min 3 letters, max 30. max 30 tags
    */
@@ -296,15 +287,13 @@ class AddProductScreen extends React.Component<Props, State> {
             value={this.state.price}
           />
           <FormLabel labelStyle={styles.label}>Description:</FormLabel>
-          <FormInput
-            clearButtonMode="while-editing"
-            containerStyle={styles.inputContainer}
+          <TextareaItem
             editable={!this.state.pending}
-            inputStyle={[styles.input, { height: this.state.descHeight }]}
-            maxLength={settings.MAX_LENGTH_DESCRIPTION}
-            multiline
+            backgroundColor="transparent"
+            style={styles.inputContainerNew}
+            rows={3}
+            count={settings.MAX_LENGTH_DESCRIPTION}
             onChangeText={t => this.setState({ description: t })}
-            onContentSizeChange={this.onDescriptionChange.bind(this)}
             placeholder="Please provide details such as brand, size, condition about the item"
             value={this.state.description}
           />
@@ -412,6 +401,12 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     marginVertical: 10,
+  },
+  inputContainerNew: {
+    marginTop: 10,
+    marginBottom: 28,
+    marginRight: 12,
+    right: 3.3,
   },
   grps: {
     alignItems: 'center',

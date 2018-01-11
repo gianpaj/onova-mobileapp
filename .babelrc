@@ -3,5 +3,6 @@
     "react-native",
     "flow"
   ],
-  "retainLines": true
+  "retainLines": true,
+  "plugins": [["import", { "libraryName": "antd-mobile" }]]
 }

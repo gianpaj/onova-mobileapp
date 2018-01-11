@@ -29,7 +29,11 @@ import RadioForm, {
 } from 'react-native-simple-radio-button';
 import ImagePicker from 'react-native-image-crop-picker';
 import { withNavigationFocus } from '@patwoz/react-navigation-is-focused-hoc';
-import { TextareaItem } from 'antd-mobile';
+import {
+  TextareaItem,
+  ImagePicker as AntImagePicker,
+  WingBlank,
+} from 'antd-mobile';
 // $FlowFixMe
 import { NavigationScreenProp } from 'react-navigation';
 
@@ -106,14 +110,15 @@ class AddProductScreen extends React.Component<Props, State> {
   }
 
   takePicture() {
-    if (this.state.images[0] == '') {
-      this.selectPhotoTapped();
+    if (this.state.images.length == 0) {
+      this.selectPhotoTapped(0);
     }
   }
 
-  selectPhotoTapped = i => {
+  selectPhotoTapped = (i: number = 0) => {
+    if (this.state.pending) return;
     // console.warn('taking pic');
-    ImagePicker.openCamera({
+    ImagePicker.openPicker({
       width: 700,
       height: 700,
       cropping: true,
@@ -121,20 +126,23 @@ class AddProductScreen extends React.Component<Props, State> {
       // mediaType: 'photo',
     })
       .then(response => {
-        let source = response.path;
+        let image = {
+          url: response.path,
+          id: i,
+        };
 
         this.setState(prevState => {
           // if we want to replace an existing photo
           if (prevState.images[i]) {
           const copy = [...prevState.images];
-          copy[i] = source;
+            copy[i] = image;
           return {
             images: copy,
           };
           }
 
           return {
-            images: [...prevState.images, source],
+            images: [...prevState.images, image],
           };
         });
       })
@@ -151,14 +159,12 @@ class AddProductScreen extends React.Component<Props, State> {
     this.setState({ pending: true });
     const formData = new FormData();
     this.state.images.forEach((image, i) => {
-      if (image !== '') {
         // $FlowFixMe
         formData.append('photos', {
-          uri: image,
+        uri: image.url,
           // type: 'image/jpeg',
           name: 'image' + i + '.jpg',
         });
-  }
     });
     formData.append('description', this.state.description);
     formData.append('price', this.state.price);
@@ -244,6 +250,7 @@ class AddProductScreen extends React.Component<Props, State> {
   }
 
   render() {
+    const { images } = this.state;
     return (
       <Container>
         <Header>
@@ -271,7 +278,15 @@ class AddProductScreen extends React.Component<Props, State> {
         </Header>
         <Content>
           <View style={{ flex: 1, flexDirection: 'row' }}>
-            {[...Array(6)].map((e, i) => this.renderSquare(e, i))}
+            <WingBlank>
+              <AntImagePicker
+                files={images}
+                onChange={images => this.setState({ images })}
+                onImageClick={i => this.selectPhotoTapped(i)}
+                onAddImageClick={() => this.selectPhotoTapped(images.length)}
+                selectable={images.length < 6}
+              />
+            </WingBlank>
           </View>
           <FormLabel labelStyle={styles.label}>Price:</FormLabel>
           <FormInput

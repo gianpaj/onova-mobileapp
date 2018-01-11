@@ -75,10 +75,12 @@ class SettingsContainer extends Component<Props, State> {
   };
 
   componentWillMount() {
-    const { userData } = this.props;
-    this.props.dispatch(getPersonalUserData(userData._id)).then(() => {
-      this.setState({ emailAddress: userData.emailAddress });
-    });
+    this.props.dispatch(getPersonalUserData(this.props.userData._id));
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { emailAddress } = nextProps.userData;
+    this.setState({ emailAddress });
   }
 
   componentDidMount() {

@@ -13,6 +13,9 @@ import {
   SIGNUP_SUCCESS,
   SIGNUP_FAIL,
   LOGOUT,
+  GETUSER_PENDING,
+  GETUSER_SUCCESS,
+  GETUSER_FAIL,
   SIGNUP,
   BACK,
 } from './actionTypes';
@@ -121,15 +124,15 @@ const signup = (data: SignupData) => (dispatch: Dispatch) => (
 );
 
 const getPersonalUserData = (userId: string) => (dispatch: Dispatch) => (
-  dispatch({ type: 'GETUSER_PENDING' }),
+  dispatch({ type: GETUSER_PENDING }),
   api
     .get(`/api/users/${userId}/personal`)
     .then(res => {
       console.debug(res);
-      dispatch({ type: 'GETUSER_SUCCESS', payload: res });
+      dispatch({ type: GETUSER_SUCCESS, payload: res });
     })
     .catch(err => {
-      dispatch(handleErrorWithAlert({ type: 'GETUSER_FAIL' }, err));
+      dispatch(handleErrorWithAlert({ type: GETUSER_FAIL }, err));
     })
 );
 

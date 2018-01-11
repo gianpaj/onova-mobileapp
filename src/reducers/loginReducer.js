@@ -7,6 +7,9 @@ import {
   SIGNUP_SUCCESS,
   SIGNUP_FAIL,
   LOGOUT,
+  GETUSER_PENDING,
+  GETUSER_SUCCESS,
+  GETUSER_FAIL,
 } from '../actions/actionTypes';
 
 const initialState = {
@@ -72,13 +75,13 @@ const loginReducer = (state = initialState, action) => {
         data: null,
       };
 
-    case 'GETUSER_PENDING':
+    case GETUSER_PENDING:
       return {
         ...state,
         fetchLoading: true,
       };
 
-    case 'GETUSER_SUCCESS':
+    case GETUSER_SUCCESS:
       return {
         ...state,
         fetchLoading: false,
@@ -86,7 +89,7 @@ const loginReducer = (state = initialState, action) => {
         data: { ...state.data, ...action.payload },
       };
 
-    case 'GETUSER_FAIL':
+    case GETUSER_FAIL:
       return {
         ...state,
         fetchLoading: false,

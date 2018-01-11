@@ -28,6 +28,7 @@ import { FormInput, FormLabel } from 'react-native-elements';
 // $FlowFixMe
 import { NavigationScreenProp } from 'react-navigation';
 import { CardView, LiteCreditCardInput } from 'react-native-credit-card-input';
+import { Toast } from 'antd-mobile';
 import isEmail from 'validator/lib/isEmail';
 
 import { getPersonalUserData } from '../actions/actionCreator';
@@ -131,6 +132,8 @@ class SettingsContainer extends Component<Props, State> {
 
     console.log(data);
 
+    Toast.loading('Loading...', 3);
+
     api
       .put(`/api/users/${userData._id}`, data)
       .then(res => {
@@ -146,8 +149,10 @@ class SettingsContainer extends Component<Props, State> {
         }
         // go back
         this.setState({ pending: false });
+        Toast.hide();
       })
       .catch(err => {
+        Toast.hide();
         console.debug(err);
         ui.showToast(err.message, 'danger');
         this.setState({ pending: false });

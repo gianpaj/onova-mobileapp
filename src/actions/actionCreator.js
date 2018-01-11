@@ -1,6 +1,7 @@
 // @flow
 // import * as firebase from 'firebase';
 // import { GoogleSignin, User as GoogleUser } from 'react-native-google-signin';
+import { Toast } from 'antd-mobile';
 
 import {
   incrementCounter,
@@ -125,14 +126,15 @@ const signup = (data: SignupData) => (dispatch: Dispatch) => (
 
 const getPersonalUserData = (userId: string) => (dispatch: Dispatch) => (
   dispatch({ type: GETUSER_PENDING }),
+  dispatch(showLoader({ type: GETUSER_PENDING })),
   api
     .get(`/api/users/${userId}/personal`)
     .then(res => {
       console.debug(res);
-      dispatch({ type: GETUSER_SUCCESS, payload: res });
+      dispatch(hideLoader({ type: GETUSER_SUCCESS, payload: res }));
     })
     .catch(err => {
-      dispatch(handleErrorWithAlert({ type: GETUSER_FAIL }, err));
+      dispatch(hideLoader(handleErrorWithAlert({ type: GETUSER_FAIL }, err)));
     })
 );
 
@@ -154,6 +156,15 @@ const goToSignup = () => ({
 const goback = () => ({
   type: BACK,
 });
+
+const showLoader = data => {
+  Toast.loading('Loading...', 30);
+  return data;
+};
+const hideLoader = data => {
+  Toast.hide();
+  return data;
+};
 
 const handleErrorWithAlert = (data: any, err: any) => {
   let errorType;

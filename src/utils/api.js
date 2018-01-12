@@ -9,7 +9,7 @@ const TIMEOUT = 4000;
 
 type Options = {
   suppressRedBox: boolean, // If true, no warning is shown on failed request
-  cancelToken: CancelTokenSource,
+  cancelToken?: CancelTokenSource,
 };
 
 /**
@@ -18,7 +18,10 @@ type Options = {
  * @param options Axios options
  * @returns Promise of response body
  */
-export async function get(path: string, options: Options): Promise<any> {
+export async function get(
+  path: string,
+  options?: Options = { suppressRedBox: true }
+): Promise<any> {
   return bodyOf(request('get', path, null, options));
 }
 
@@ -32,7 +35,7 @@ export async function get(path: string, options: Options): Promise<any> {
 export async function post(
   path: string,
   body?: any,
-  options: Options
+  options?: Options = { suppressRedBox: true }
 ): Promise<any> {
   return bodyOf(request('post', path, body, options));
 }
@@ -47,7 +50,7 @@ export async function post(
 export async function put(
   path: string,
   body: any,
-  options: Options
+  options?: Options = { suppressRedBox: true }
 ): Promise<any> {
   return bodyOf(request('put', path, body, options));
 }
@@ -58,7 +61,10 @@ export async function put(
  * @param options Axios options
  * @returns Promise of response body
  */
-export async function del(path: string, options: Options): Promise<any> {
+export async function del(
+  path: string,
+  options?: Options = { suppressRedBox: true }
+): Promise<any> {
   return bodyOf(request('delete', path, null, options));
 }
 
@@ -80,7 +86,7 @@ export async function request(
     const response = await sendRequest(method, path, body, options);
     return handleResponse(path, response);
   } catch (error) {
-    if (options.hasOwnProperty('suppressRedBox') && !options.suppressRedBox) {
+    if (!options.suppressRedBox) {
       logError(error, path, method);
     }
     if (error.message == 'Network request failed') {

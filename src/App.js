@@ -17,6 +17,9 @@ import { initializeApp } from 'firebase';
 import configureStore from './store';
 import AppNavigation from './navigation';
 
+import KeyboardManager from 'react-native-keyboard-manager';
+KeyboardManager.setToolbarPreviousNextButtonEnable(true);
+
 const { store, persistor } = configureStore();
 
 export default class LoginScreen extends React.Component<*> {

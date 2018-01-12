@@ -254,28 +254,44 @@ class SettingsContainer extends Component<Props, State> {
                 {
                   content: [
                     {
-                      placeholder: 'Address line 2',
+                      placeholder: 'Address line 1',
                       value: this.state.shippingInfo.line1,
                       onChangeValue: t =>
-                        this.setState({ shippingInfo: { line1: t } }),
+                        this.setState(
+                          update(this.state, {
+                            shippingInfo: { line1: { $set: t } },
+                          })
+                        ),
                     },
                     {
                       placeholder: 'Address line 2',
                       value: this.state.shippingInfo.line2,
                       onChangeValue: t =>
-                        this.setState({ shippingInfo: { line2: t } }),
+                        this.setState(
+                          update(this.state, {
+                            shippingInfo: { line2: { $set: t } },
+                          })
+                        ),
                     },
                     {
                       placeholder: 'City',
                       value: this.state.shippingInfo.city,
                       onChangeValue: t =>
-                        this.setState({ shippingInfo: { city: t } }),
+                        this.setState(
+                          update(this.state, {
+                            shippingInfo: { city: { $set: t } },
+                          })
+                        ),
                     },
                     {
                       placeholder: 'State',
                       value: this.state.shippingInfo.state,
                       onChangeValue: t =>
-                        this.setState({ shippingInfo: { state: t } }),
+                        this.setState(
+                          update(this.state, {
+                            shippingInfo: { state: { $set: t } },
+                          })
+                        ),
                     },
                   ],
                 },
@@ -306,7 +322,7 @@ class SettingsContainer extends Component<Props, State> {
               editable={!pending}
               inputStyle={styles.input}
               onChangeText={t => this.setState({ emailAddress: t })}
-              placeholder="Change your email address. Requires validation"
+              placeholder="Change your email address. Requires email verification"
               value={emailAddress}
               clearButtonMode="while-editing"
             />

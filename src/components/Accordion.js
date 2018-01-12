@@ -61,12 +61,19 @@ export default class Accordion extends Component<Props> {
           section.content.map((c, i) => (
             <FormInput
               key={i}
+              ref={el => {
+                c.input = el;
+              }}
               autoCorrect={false}
               clearButtonMode="while-editing"
               containerStyle={styles.inputContainer}
               inputStyle={styles.input}
               onChangeText={t => c.onChangeValue(t)}
               placeholder={c.placeholder}
+              onSubmitEditing={() =>
+                section.content[i + 1] && section.content[i + 1].input.focus()
+              }
+              returnKeyType="next"
               value={c.value}
             />
           ))

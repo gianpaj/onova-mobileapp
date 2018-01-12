@@ -124,18 +124,21 @@ const signup = (data: SignupData) => (dispatch: Dispatch) => (
     })
 );
 
-const getPersonalUserData = (userId: string) => (dispatch: Dispatch) => (
+const getPersonalUserData = (userId: string, options: any) => (
+  dispatch: Dispatch
+) => (
+  Toast.loading('Loading...', 30),
   dispatch({ type: GETUSER_PENDING }),
-  dispatch(showLoader({ type: GETUSER_PENDING })),
   api
-    .get(`/api/users/${userId}/personal`)
+    .get(`/api/users/${userId}/personal`, options)
     .then(res => {
       console.debug(res);
-      dispatch(hideLoader({ type: GETUSER_SUCCESS, payload: res }));
+      dispatch({ type: GETUSER_SUCCESS, payload: res });
     })
     .catch(err => {
-      dispatch(hideLoader(handleErrorWithAlert({ type: GETUSER_FAIL }, err)));
+      dispatch(handleErrorWithAlert({ type: GETUSER_FAIL }, err));
     })
+    .then(() => Toast.hide())
 );
 
 const logout = (data: any) => (dispatch: Dispatch) => {
@@ -157,15 +160,6 @@ const goback = () => ({
   type: BACK,
 });
 
-const showLoader = data => {
-  Toast.loading('Loading...', 30);
-  return data;
-};
-const hideLoader = data => {
-  Toast.hide();
-  return data;
-};
-
 const handleErrorWithAlert = (data: any, err: any) => {
   let errorType;
   if (err.status == 400 || err.status == 500) {
@@ -176,6 +170,10 @@ const handleErrorWithAlert = (data: any, err: any) => {
   } else if (err.message.includes('timeout')) {
     err.message = 'Onova servers might be taking a nap. Please retry';
     errorType = 'danger';
+  } else if (err.message == 'operation_canceled') {
+    return {
+      type: data.type,
+    };
   } else {
     console.error(err);
   }

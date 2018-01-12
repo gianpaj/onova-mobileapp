@@ -1,66 +1,65 @@
 // @flow
 
-import axios from 'axios';
+import axios, { CancelTokenSource } from 'axios';
 // $FlowFixMe
 import { AsyncStorage } from 'react-native';
 
 axios.defaults.baseURL = 'http://192.168.1.2:4040';
 const TIMEOUT = 4000;
 
+type Options = {
+  suppressRedBox: boolean, // If true, no warning is shown on failed request
+  cancelToken: CancelTokenSource,
+};
+
 /**
  * GET a path relative to API root url.
  * @param path Relative path to the configured API endpoint
- * @param suppressRedBox If true, no warning is shown on failed request
+ * @param options Axios options
  * @returns Promise of response body
  */
-export async function get(
-  path: string,
-  suppressRedBox: boolean = true
-): Promise<any> {
-  return bodyOf(request('get', path, null, suppressRedBox));
+export async function get(path: string, options: Options): Promise<any> {
+  return bodyOf(request('get', path, null, options));
 }
 
 /**
  * POST JSON to a path relative to API root url
  * @param path Relative path to the configured API endpoint
  * @param body Anything that you can pass to JSON.stringify
- * @param suppressRedBox If true, no warning is shown on failed request
+ * @param options Axios options
  * @returns Promise of response body
  */
 export async function post(
   path: string,
   body?: any,
-  suppressRedBox: boolean = true
+  options: Options
 ): Promise<any> {
-  return bodyOf(request('post', path, body, suppressRedBox));
+  return bodyOf(request('post', path, body, options));
 }
 
 /**
  * PUT JSON to a path relative to API root url
  * @param path Relative path to the configured API endpoint
  * @param body Anything that you can pass to JSON.stringify
- * @param suppressRedBox If true, no warning is shown on failed request
+ * @param options Axios options
  * @returns Promise of response body
  */
 export async function put(
   path: string,
   body: any,
-  suppressRedBox: boolean = true
+  options: Options
 ): Promise<any> {
-  return bodyOf(request('put', path, body, suppressRedBox));
+  return bodyOf(request('put', path, body, options));
 }
 
 /**
  * DELETE a path relative to API root url
  * @param path Relative path to the configured API endpoint
- * @param suppressRedBox If true, no warning is shown on failed request
+ * @param options Axios options
  * @returns Promise of response body
  */
-export async function del(
-  path: string,
-  suppressRedBox: boolean = true
-): Promise<any> {
-  return bodyOf(request('delete', path, null, suppressRedBox));
+export async function del(path: string, options: Options): Promise<any> {
+  return bodyOf(request('delete', path, null, options));
 }
 
 /**
@@ -69,19 +68,19 @@ export async function del(
  * @param method One of: get|post|put|delete
  * @param path Relative path to the configured API endpoint
  * @param body Anything that you can pass to JSON.stringify
- * @param suppressRedBox If true, no warning is shown on failed request
+ * @param options: Axios options
  */
 export async function request(
   method: string,
   path: string,
   body: any,
-  suppressRedBox: boolean
+  options: Options
 ) {
   try {
-    const response = await sendRequest(method, path, body);
+    const response = await sendRequest(method, path, body, options);
     return handleResponse(path, response);
   } catch (error) {
-    if (!suppressRedBox) {
+    if (options.hasOwnProperty('suppressRedBox') && !options.suppressRedBox) {
       logError(error, path, method);
     }
     if (error.message == 'Network request failed') {
@@ -103,7 +102,7 @@ async function getAuthenticationToken(): Promise<string> {
 /**
  * Constructs and fires a HTTP request
  */
-async function sendRequest(method, path, body) {
+async function sendRequest(method, path, body, options) {
   try {
     const headers = await getRequestHeaders(body);
     const defaults = {
@@ -115,9 +114,11 @@ async function sendRequest(method, path, body) {
         return status >= 200 && status < 500;
       },
     };
-    const options = body ? { ...defaults, data: body } : defaults;
+    // $FlowFixMe
+    defaults.cancelToken = options.cancelToken;
+    const allOptions = body ? { ...defaults, data: body } : defaults;
 
-    return axios(options);
+    return axios(allOptions);
   } catch (e) {
     throw new Error(e);
   }

@@ -29,7 +29,9 @@ import { FormInput, FormLabel } from 'react-native-elements';
 import { NavigationScreenProp } from 'react-navigation';
 import { CardView, LiteCreditCardInput } from 'react-native-credit-card-input';
 import { Toast } from 'antd-mobile';
+import axios from 'axios';
 import isEmail from 'validator/lib/isEmail';
+import update from 'immutability-helper';
 
 import HR from '../components/HR';
 import Accordion from '../components/Accordion';
@@ -56,6 +58,7 @@ type State = {
 };
 
 class SettingsContainer extends Component<Props, State> {
+  cancelToken;
   state = {
     emailAddress: '',
     pending: false,
@@ -68,10 +71,29 @@ class SettingsContainer extends Component<Props, State> {
         number: '',
       },
     },
+    shippingInfo: {
+      line1: '',
+      line2: '',
+      city: '',
+      state: '',
+      country: '',
+      postcode: '',
+    },
   };
 
   componentWillMount() {
-    this.props.dispatch(getPersonalUserData(this.props.userData._id));
+    const CancelToken = axios.CancelToken;
+    this.cancelToken = CancelToken.source();
+    this.props.dispatch(
+      getPersonalUserData(this.props.userData._id, {
+        cancelToken: this.cancelToken.token,
+      })
+    );
+  }
+
+  componentWillUnmount() {
+    // trigger Axios to reject the request
+    this.cancelToken.cancel('operation_canceled');
   }
 
   componentWillReceiveProps(nextProps) {

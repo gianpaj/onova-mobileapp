@@ -270,7 +270,7 @@ class AddProductScreen extends React.Component<Props, State> {
               onPress={this.addItem}>
               <Icon
                 name="check"
-                style={!this.addEnabled() ? { color: colors.grey3 } : null}
+                style={!this.addEnabled() && { color: colors.grey3 }}
                 size={28}
               />
             </NBButton>

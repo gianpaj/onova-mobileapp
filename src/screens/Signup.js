@@ -111,9 +111,7 @@ class SignupScreen extends React.Component<Props, State> {
           <FormInput
             placeholder="Username"
             returnKeyType="next"
-            onSubmitEditing={() =>
-              this.EmailInput ? this.EmailInput.focus() : null
-            }
+            onSubmitEditing={() => this.EmailInput && this.EmailInput.focus()}
             value={this.state.username}
             onChangeText={text => this.setState({ username: text })}
             accessibilityLabel="username"
@@ -126,9 +124,7 @@ class SignupScreen extends React.Component<Props, State> {
             placeholder="Email"
             keyboardType="email-address"
             returnKeyType="next"
-            onSubmitEditing={() =>
-              this.PwdInput ? this.PwdInput.focus() : null
-            }
+            onSubmitEditing={() => this.PwdInput && this.PwdInput.focus()}
             value={this.state.emailAddress}
             testID="EmailField"
             onChangeText={text => this.setState({ emailAddress: text })}

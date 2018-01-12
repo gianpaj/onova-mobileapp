@@ -197,7 +197,6 @@ class SettingsContainer extends Component<Props, State> {
     const { paymentInfo } = this.props.userData;
 
     return {
-      brand: 'visa',
       number: `**** **** **** ${paymentInfo.last_four}`,
       expiry: `${paymentInfo.exp_month} / ${paymentInfo.exp_year}`,
       name: ' ',
@@ -222,7 +221,7 @@ class SettingsContainer extends Component<Props, State> {
               transparent
               dark
               onPress={() =>
-                this.props.navigation ? this.props.navigation.goBack() : null
+                this.props.navigation && this.props.navigation.goBack()
               }>
               <NBIcon ios="ios-arrow-back" android="md-arrow-back" />
             </NBButton>
@@ -238,9 +237,7 @@ class SettingsContainer extends Component<Props, State> {
               onPress={this.updateSettings}>
               <Icon
                 name="check"
-                style={
-                  !this.settingsCanBeUpdated() ? { color: colors.grey3 } : null
-                }
+                style={!this.settingsCanBeUpdated() && { color: colors.grey3 }}
                 size={28}
               />
             </NBButton>

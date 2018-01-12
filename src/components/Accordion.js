@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 // $FlowFixMe
 import { Animated, StyleSheet, View, Text } from 'react-native';
 import CollapsibleAccordion from 'react-native-collapsible/Accordion';
@@ -16,7 +16,7 @@ type Props = {
   values: Array<any>,
 };
 
-export default class Accordion extends Component<Props> {
+export default class Accordion extends PureComponent<Props> {
   animatedValue: Animated.Value;
 
   static defaultProps = {

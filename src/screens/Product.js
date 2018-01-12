@@ -133,7 +133,7 @@ export class Product extends React.Component<Props, State> {
               transparent
               dark
               onPress={() =>
-                this.props.navigation ? this.props.navigation.goBack() : null
+                this.props.navigation && this.props.navigation.goBack()
               }>
               <NBIcon ios="ios-arrow-back" android="md-arrow-back" />
             </NBButton>

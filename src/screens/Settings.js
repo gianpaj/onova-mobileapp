@@ -181,14 +181,15 @@ class SettingsContainer extends Component<Props, State> {
         } else {
           ui.showToast('Your settings have been updated', 'success');
         }
-        // go back
-        this.setState({ pending: false });
-        Toast.hide();
+        this.props.navigation && this.props.navigation.goBack();
       })
       .catch(err => {
-        Toast.hide();
         console.debug(err);
         ui.showToast(err.message, 'danger');
+      })
+      .then(() => {
+        // final
+        Toast.hide();
         this.setState({ pending: false });
       });
   };
@@ -308,11 +309,19 @@ class SettingsContainer extends Component<Props, State> {
               Payment Info:
             </FormLabel>
             <FlipCard
-              clickable={Object.keys(userData.paymentInfo).length !== 0}
+              clickable={
+                userData.paymentInfo &&
+                Object.keys(userData.paymentInfo).length > 0
+              }
               style={{ borderWidth: 0 }}
-              flip={Object.keys(userData.paymentInfo).length == 0}>
+              flip={
+                !userData.paymentInfo ||
+                Object.keys(userData.paymentInfo).length == 0
+              }>
               <View style={{ alignSelf: 'center' }}>
-                <CardView {...this.formatCardInfo()} />
+                {userData.paymentInfo && (
+                  <CardView {...this.formatCardInfo()} />
+                )}
               </View>
               <View style={{ paddingLeft: 10 }}>
                 <LiteCreditCardInput onChange={this._onCCChange} />

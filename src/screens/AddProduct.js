@@ -304,7 +304,6 @@ class AddProductScreen extends React.Component<Props, State> {
           <FormLabel labelStyle={styles.label}>Description:</FormLabel>
           <TextareaItem
             editable={!this.state.pending}
-            backgroundColor="transparent"
             style={styles.inputContainerNew}
             rows={3}
             count={settings.MAX_LENGTH_DESCRIPTION}
@@ -418,6 +417,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   inputContainerNew: {
+    backgroundColor: 'transparent',
     marginTop: 10,
     marginBottom: 28,
     marginRight: 12,

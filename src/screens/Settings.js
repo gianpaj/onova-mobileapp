@@ -28,6 +28,7 @@ import { FormInput, FormLabel } from 'react-native-elements';
 // $FlowFixMe
 import { NavigationScreenProp } from 'react-navigation';
 import { CardView, LiteCreditCardInput } from 'react-native-credit-card-input';
+import FlipCard from 'react-native-flip-card';
 import { Toast } from 'antd-mobile';
 import axios from 'axios';
 import isEmail from 'validator/lib/isEmail';
@@ -297,18 +298,17 @@ class SettingsContainer extends Component<Props, State> {
             <FormLabel labelStyle={[styles.label, { paddingBottom: 10 }]}>
               Payment Info:
             </FormLabel>
-            {userData.paymentInfo && showSavedInfo ? (
+            <FlipCard
+              clickable={Object.keys(userData.paymentInfo).length !== 0}
+              style={{ borderWidth: 0 }}
+              flip={Object.keys(userData.paymentInfo).length == 0}>
               <View style={{ alignSelf: 'center' }}>
-                <TouchableOpacity
-                  onPress={() => this.setState({ showSavedInfo: false })}>
                   <CardView {...this.formatCardInfo()} />
-                </TouchableOpacity>
               </View>
-            ) : (
               <View style={{ paddingLeft: 10 }}>
                 <LiteCreditCardInput onChange={this._onCCChange} />
               </View>
-            )}
+            </FlipCard>
           </View>
           <HR full />
           <View style={styles.padder}>

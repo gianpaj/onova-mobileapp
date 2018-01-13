@@ -34,6 +34,7 @@
     "react-native-credit-card-input": "^0.4.1",
     "react-native-elements": "^0.18.2",
     "react-native-fast-image": "^2.0.1",
+    "react-native-flip-card": "^3.5.2",
     "react-native-image-crop-picker": "^0.18.2",
     "react-native-keyboard-manager": "^4.0.13-4",
     "react-native-simple-radio-button": "^2.7.1",

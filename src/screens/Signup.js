@@ -16,6 +16,7 @@ import {
   Button,
   FormInput,
 } from 'react-native-elements';
+import { Content } from 'native-base';
 // $FlowFixMe
 import { NavigationScreenProp } from 'react-navigation';
 import isEmail from 'validator/lib/isEmail';
@@ -95,7 +96,7 @@ class SignupScreen extends React.Component<Props, State> {
 
   render() {
     return (
-      <View>
+      <Content>
         <View style={styles.header}>
           <View style={{ alignItems: 'center' }}>
             <Icon name="flash" style={{ fontSize: 104 }} />
@@ -175,7 +176,7 @@ class SignupScreen extends React.Component<Props, State> {
             </Text>
           </View>
         </View>
-      </View>
+      </Content>
     );
   }
 }

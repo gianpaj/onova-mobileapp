@@ -3,6 +3,7 @@
 import React from 'react';
 import {
   ActivityIndicator,
+  Platform,
   StyleSheet,
   View,
   // $FlowFixMe
@@ -12,13 +13,15 @@ import { PersistGate } from 'redux-persist/lib/integration/react';
 
 import { Root } from 'native-base';
 
-import { initializeApp } from 'firebase';
+import * as firebase from 'firebase';
 
 import configureStore from './store';
 import AppNavigation from './navigation';
-
 import KeyboardManager from 'react-native-keyboard-manager';
-KeyboardManager.setToolbarPreviousNextButtonEnable(true);
+
+if (Platform.OS == 'ios') {
+  KeyboardManager.setToolbarPreviousNextButtonEnable(true);
+}
 
 const { store, persistor } = configureStore();
 
@@ -34,7 +37,9 @@ export default class LoginScreen extends React.Component<*> {
       storageBucket: 'onova-183307.appspot.com',
       messagingSenderId: '530398476253',
     };
-    initializeApp(firebaseConfig);
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+    }
   }
 
   _renderLoading = () => (

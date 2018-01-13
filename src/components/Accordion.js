@@ -65,6 +65,7 @@ export default class Accordion extends PureComponent<Props> {
                 c.input = el;
               }}
               autoCorrect={false}
+              blurOnSubmit={false}
               clearButtonMode="while-editing"
               containerStyle={styles.inputContainer}
               inputStyle={styles.input}

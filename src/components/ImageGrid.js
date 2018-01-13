@@ -129,12 +129,10 @@ export class ImageGridComponent extends React.Component<Props, State> {
 
     return (
       <View style={styles.container}>
-        {error ? (
-          <Text style={styles.text}>Error fetching listing.</Text>
-        ) : loading ? (
+        {!error && loading ? (
           this.renderLoading()
         ) : (
-          // if neither loading or error
+          // if not loading
           <FlatList
             onLayout={this.onLayout}
             style={styles.list}
@@ -160,7 +158,9 @@ export class ImageGridComponent extends React.Component<Props, State> {
     if (this.state.items.length > 1) return null;
     return (
       <View style={[styles.container, { height: height - 150 }]}>
-        <Text style={styles.text}>No items found</Text>
+        <Text style={styles.text}>
+          {this.state.error ? 'Error fetching listing' : 'No items found'}
+        </Text>
       </View>
     );
   };

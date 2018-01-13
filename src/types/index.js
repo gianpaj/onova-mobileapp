@@ -30,7 +30,7 @@ export type UserData = {
     exp_month: string,
     exp_year: string,
   },
-  shippingInfo: ShippingInfo,
+  shippingAddress: ShippingAddress,
 };
 
 export type PaymentInfo = {
@@ -41,7 +41,7 @@ export type PaymentInfo = {
   },
 };
 
-export type ShippingInfo = {
+export type ShippingAddress = {
   line1: string,
   line2: string,
   city: string,

@@ -38,10 +38,15 @@ import HR from '../components/HR';
 import Accordion from '../components/Accordion';
 import { getPersonalUserData } from '../actions/actionCreator';
 import colors from '../config/colors';
-import { validPassword } from '../utils/validators';
+import { validPassword, validShippingAddress } from '../utils/validators';
 import * as api from '../utils/api';
 import * as ui from '../utils/ui';
-import type { UserData, Dispatch, PaymentInfo, ShippingInfo } from '../types';
+import type {
+  UserData,
+  Dispatch,
+  PaymentInfo,
+  ShippingAddress,
+} from '../types';
 
 type Props = {
   dispatch: Dispatch,
@@ -53,8 +58,7 @@ type State = {
   emailAddress: string,
   pending: boolean,
   password: string,
-  showSavedInfo: boolean,
-  shippingInfo: ShippingInfo,
+  shippingAddress: ShippingAddress,
   paymentInfo: PaymentInfo,
 };
 
@@ -64,7 +68,6 @@ class SettingsContainer extends Component<Props, State> {
     emailAddress: '',
     pending: false,
     password: '',
-    showSavedInfo: true,
     paymentInfo: {
       valid: false,
       values: {
@@ -72,7 +75,7 @@ class SettingsContainer extends Component<Props, State> {
         number: '',
       },
     },
-    shippingInfo: {
+    shippingAddress: {
       line1: '',
       line2: '',
       city: '',
@@ -98,8 +101,12 @@ class SettingsContainer extends Component<Props, State> {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { emailAddress } = nextProps.userData;
-    this.setState({ emailAddress });
+    const { emailAddress, shippingAddress } = nextProps.userData;
+    if (shippingAddress) {
+      this.setState({ emailAddress, shippingAddress });
+    } else {
+      this.setState({ emailAddress });
+    }
   }
 
   componentDidMount() {
@@ -111,13 +118,18 @@ class SettingsContainer extends Component<Props, State> {
 
   settingsCanBeUpdated = (): boolean => {
     const { userData } = this.props;
-    const { pending, password, emailAddress, paymentInfo } = this.state;
+    const {
+      pending,
+      password,
+      emailAddress,
+      paymentInfo,
+      shippingAddress,
+    } = this.state;
 
-    // @TODO: check password is valid
-    // @TODO: check email is valid
     return (
       !pending &&
-      (paymentInfo.valid ||
+      (validShippingAddress(shippingAddress) ||
+        paymentInfo.valid ||
         validPassword(password) ||
         (isEmail(emailAddress) && emailAddress !== userData.emailAddress))
     );
@@ -125,7 +137,7 @@ class SettingsContainer extends Component<Props, State> {
 
   updateSettings = () => {
     const { userData } = this.props;
-    const { password, emailAddress, paymentInfo } = this.state;
+    const { password, emailAddress, paymentInfo, shippingAddress } = this.state;
 
     this.setState({ pending: true });
 
@@ -146,6 +158,10 @@ class SettingsContainer extends Component<Props, State> {
       data.last_four = values.number.slice(-4);
       data.exp_month = values.expiry.split('/')[0];
       data.exp_year = values.expiry.split('/')[0];
+    }
+
+    if (validShippingAddress(shippingAddress)) {
+      data.shippingAddress = shippingAddress;
     }
 
     console.log(data);
@@ -206,13 +222,7 @@ class SettingsContainer extends Component<Props, State> {
 
   render() {
     const { userData } = this.props;
-    const {
-      pending,
-      password,
-      emailAddress,
-      showSavedInfo,
-      shippingInfo,
-    } = this.state;
+    const { pending, password, emailAddress, shippingAddress } = this.state;
 
     return (
       <Container>
@@ -232,7 +242,6 @@ class SettingsContainer extends Component<Props, State> {
           </Body>
           <Right>
             <NBButton
-              transparent
               disabled={!this.settingsCanBeUpdated()}
               style={{ backgroundColor: 'transparent' }}
               onPress={this.updateSettings}>
@@ -253,41 +262,41 @@ class SettingsContainer extends Component<Props, State> {
                   content: [
                     {
                       placeholder: 'Address line 1',
-                      value: this.state.shippingInfo.line1,
+                      value: shippingAddress.line1,
                       onChangeValue: t =>
                         this.setState(
                           update(this.state, {
-                            shippingInfo: { line1: { $set: t } },
+                            shippingAddress: { line1: { $set: t } },
                           })
                         ),
                     },
                     {
                       placeholder: 'Address line 2',
-                      value: this.state.shippingInfo.line2,
+                      value: shippingAddress.line2,
                       onChangeValue: t =>
                         this.setState(
                           update(this.state, {
-                            shippingInfo: { line2: { $set: t } },
+                            shippingAddress: { line2: { $set: t } },
                           })
                         ),
                     },
                     {
                       placeholder: 'City',
-                      value: this.state.shippingInfo.city,
+                      value: shippingAddress.city,
                       onChangeValue: t =>
                         this.setState(
                           update(this.state, {
-                            shippingInfo: { city: { $set: t } },
+                            shippingAddress: { city: { $set: t } },
                           })
                         ),
                     },
                     {
                       placeholder: 'State',
-                      value: this.state.shippingInfo.state,
+                      value: shippingAddress.state,
                       onChangeValue: t =>
                         this.setState(
                           update(this.state, {
-                            shippingInfo: { state: { $set: t } },
+                            shippingAddress: { state: { $set: t } },
                           })
                         ),
                     },
@@ -303,7 +312,7 @@ class SettingsContainer extends Component<Props, State> {
               style={{ borderWidth: 0 }}
               flip={Object.keys(userData.paymentInfo).length == 0}>
               <View style={{ alignSelf: 'center' }}>
-                  <CardView {...this.formatCardInfo()} />
+                <CardView {...this.formatCardInfo()} />
               </View>
               <View style={{ paddingLeft: 10 }}>
                 <LiteCreditCardInput onChange={this._onCCChange} />

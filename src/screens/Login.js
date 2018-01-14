@@ -48,7 +48,7 @@ class LoginScreen extends React.Component<Props, State> {
 
   state = {
     emailAddress: 'gianpa+test2@gmail.com',
-    // email: '',
+    // emailAddress: '',
     password: 'express2',
     // password: '',
     modalVisible: false,

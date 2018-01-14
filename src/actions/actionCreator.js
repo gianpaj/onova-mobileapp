@@ -20,7 +20,7 @@ import {
   SIGNUP,
   BACK,
 } from './actionTypes';
-import type { Dispatch, LoginData, SignupData } from '../types';
+import type { Dispatch, LoginData, SignupData, GetState } from '../types';
 import * as api from '../utils/api';
 import * as ui from '../utils/ui';
 
@@ -141,9 +141,9 @@ const getPersonalUserData = (userId: string, options: any) => (
     .then(() => Toast.hide())
 );
 
-const logout = (data: any) => (dispatch: Dispatch) => {
-  console.log(data);
-  if (data.provider == 'email') {
+const logout = () => (dispatch: Dispatch, getState: GetState) => {
+  const provider = getState().LoginReducer.data.provider;
+  if (provider == 'email') {
     return dispatch({ type: LOGOUT });
     // } else if (data.provider == 'google') {
     //   return GoogleSignin.signOut()

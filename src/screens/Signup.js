@@ -167,7 +167,7 @@ class SignupScreen extends React.Component<Props, State> {
               </Text>
             </Text>
             <Text style={[styles.hr, styles.mt15, { color: colors.grey1 }]}>
-              By signing up you agree to the&nbsp;
+              By creating an account you agree to the&nbsp;
               <Text
                 style={[styles.linkText, styles.termsLink]}
                 onPress={this.openTermPolicy}>

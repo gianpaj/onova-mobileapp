@@ -4,10 +4,11 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import {
   Linking,
-  StyleSheet,
   Platform,
+  StyleSheet,
   Text,
   TouchableOpacity,
+  UIManager,
   View,
   // $FlowFixMe
 } from 'react-native';
@@ -21,7 +22,6 @@ import {
   Left,
   Right,
   Title,
-  UIManager,
 } from 'native-base';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { FormInput, FormLabel } from 'react-native-elements';
@@ -243,6 +243,7 @@ class SettingsContainer extends Component<Props, State> {
           </Body>
           <Right>
             <NBButton
+              transparent
               disabled={!this.settingsCanBeUpdated()}
               style={{ backgroundColor: 'transparent' }}
               onPress={this.updateSettings}>
@@ -309,6 +310,7 @@ class SettingsContainer extends Component<Props, State> {
               Payment Info:
             </FormLabel>
             <FlipCard
+              perspective={1000}
               clickable={
                 userData.paymentInfo &&
                 Object.keys(userData.paymentInfo).length > 0

@@ -8,6 +8,8 @@
  */
 
 #import "AppDelegate.h"
+// record Touch indicators / Tap gestures
+#import "TouchVisualizer.h"
 
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
@@ -26,7 +28,9 @@
                                                    launchOptions:launchOptions];
   rootView.backgroundColor = [[UIColor alloc] initWithRed:1.0f green:1.0f blue:1.0f alpha:1];
 
-  self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+  // self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+  // https://github.com/zachgibson/react-native-touch-visualizer
+  self.window = [[TouchVisualizer alloc] initWithFrame:[UIScreen mainScreen].bounds];
   UIViewController *rootViewController = [UIViewController new];
   rootViewController.view = rootView;
   self.window.rootViewController = rootViewController;

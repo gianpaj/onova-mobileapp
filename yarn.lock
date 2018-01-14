@@ -4644,6 +4644,10 @@ react-native-tab-view@^0.0.73:
   dependencies:
     prop-types "^15.6.0"
 
+react-native-touch-visualizer@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/react-native-touch-visualizer/-/react-native-touch-visualizer-0.1.0.tgz#b796def661e131583b33474f8c915b34686ab5f4"
+
 react-native-vector-icons@^4.4.2, react-native-vector-icons@~4.4.2:
   version "4.4.2"
   resolved "https://registry.yarnpkg.com/react-native-vector-icons/-/react-native-vector-icons-4.4.2.tgz#090f42ee0396c4cc4eae0ddaa518028ba8df40c7"

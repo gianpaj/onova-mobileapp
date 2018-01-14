@@ -35,7 +35,7 @@ export class MediaView extends React.Component<Props, State> {
     if (source.length > 1) {
       const images = source;
       return (
-        <View style={[styles.container, { height: this.state.imageHeight }]}>
+        <View style={[styles.container, { height: this.state.imageHeight+35 }]}>
           <Swiper
             autoplay={false}
             loop={false}
@@ -71,8 +71,9 @@ export class MediaView extends React.Component<Props, State> {
 const styles = StyleSheet.create({
   container: {
     zIndex: 99,
+    marginBottom: -35,
   },
   pagination: {
-    bottom: -35,
+    bottom: 0,
   },
 });

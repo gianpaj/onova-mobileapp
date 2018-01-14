@@ -116,7 +116,7 @@ class SettingsContainer extends Component<Props, State> {
     }
   }
 
-  settingsCanBeUpdated = (): boolean => {
+  canUpdate = (): boolean => {
     const { userData } = this.props;
     const {
       pending,
@@ -244,12 +244,12 @@ class SettingsContainer extends Component<Props, State> {
           <Right>
             <NBButton
               transparent
-              disabled={!this.settingsCanBeUpdated()}
+              disabled={!this.canUpdate()}
               style={{ backgroundColor: 'transparent' }}
               onPress={this.updateSettings}>
               <Icon
                 name="check"
-                style={!this.settingsCanBeUpdated() && { color: colors.grey3 }}
+                style={!this.canUpdate() && { color: colors.grey3 }}
                 size={28}
               />
             </NBButton>

@@ -71,7 +71,7 @@ export class Home extends PureComponent<Props, State> {
       <ImageGrid apiURL="/api/products" navigation={this.props.navigation} />
     ),
     shoes: () => (
-      <ImageGrid apiURL="/api/products" navigation={this.props.navigation} />
+      <ImageGrid apiURL="/api/products/?tags=shoes" navigation={this.props.navigation} />
     ),
     other: () => (
       <ImageGrid apiURL="/api/products" navigation={this.props.navigation} />
@@ -87,9 +87,9 @@ export class Home extends PureComponent<Props, State> {
       <Container testID="Home">
         {/* <View style={styles.statusBarUnderlay} /> */}
         <Header hasTabs>
-          <Left />
-          <Body>
-            <Text style={{ fontWeight: 'bold' }}>ØNOVA</Text>
+          <Left style={styles.container} />
+          <Body style={styles.container}>
+            <Text style={{ alignSelf:'center', fontWeight: 'bold' }}>ØNOVA</Text>
           </Body>
           <Right>
             <Button transparent>

@@ -148,6 +148,7 @@ export class ImageGridComponent extends React.Component<Props, State> {
             getItemLayout={this.getItemLayout}
             showsVerticalScrollIndicator={false}
             ListFooterComponent={this.renderEmptyState}
+            ListEmptyComponent={this.renderEmptyState}
           />
         )}
       </View>

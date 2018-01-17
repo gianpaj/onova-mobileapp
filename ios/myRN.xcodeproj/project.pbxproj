@@ -50,6 +50,7 @@
 		587790651FEE9F4C00BCC918 /* libRNFetchBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5877903D1FEE9F4B00BCC918 /* libRNFetchBlob.a */; };
 		58CD84522009289400423407 /* IQKeyboardManager.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 58CD84512009289400423407 /* IQKeyboardManager.bundle */; };
 		58DC32C51FC4E04C005831B1 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 58DC32C41FC4E04C005831B1 /* GoogleService-Info.plist */; };
+		5D4A4E3D8CC6441A8FA5727C /* libTouchVisualizer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 50649BB0AE894F8D8955AA46 /* libTouchVisualizer.a */; };
 		5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
 		76DD83C12B5D45D6B7969065 /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9E4F63E61C244D5AB62EAC65 /* MaterialCommunityIcons.ttf */; };
 		8126EFCCB6064A16ADA917D1 /* libFastImage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D01F977D1A6471FAF6D1384 /* libFastImage.a */; };
@@ -75,7 +76,6 @@
 		EA48F082A08848E38327C2F8 /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0292A46EAE1447A5A0DD0E45 /* EvilIcons.ttf */; };
 		F0AF3C6362AD43C1A26CDA4F /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8F441159CA1B439CAED5FE31 /* Zocial.ttf */; };
 		FC86928F892845C4A83C6E70 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 33924B8E01DB45EBB858276F /* Zocial.ttf */; };
-		5D4A4E3D8CC6441A8FA5727C /* libTouchVisualizer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 50649BB0AE894F8D8955AA46 /* libTouchVisualizer.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -317,6 +317,13 @@
 			remoteGlobalIDString = 9936F32F1F5F2E5B0010BF04;
 			remoteInfo = "privatedata-tvOS";
 		};
+		589B4B71200B8C8500017A0C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A4660D69936D44B7AE499522 /* TouchVisualizer.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 134814201AA4EA6300B7C361;
+			remoteInfo = TouchVisualizer;
+		};
 		58B08D711FED0E7300B8BE2E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 777D59D4FBE247409E43DACD /* imageCropPicker.xcodeproj */;
@@ -426,6 +433,7 @@
 		33924B8E01DB45EBB858276F /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/native-base/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
 		35C614706C3941D14F3B50BF /* Pods-myRN.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-myRN.debug.xcconfig"; path = "Pods/Target Support Files/Pods-myRN/Pods-myRN.debug.xcconfig"; sourceTree = "<group>"; };
 		44B6C177B3744EA3BF7115FE /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/native-base/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
+		50649BB0AE894F8D8955AA46 /* libTouchVisualizer.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libTouchVisualizer.a; sourceTree = "<group>"; };
 		509454B7984D4F669FFBE857 /* FontAwesome.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome.ttf; path = "../node_modules/native-base/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
 		514E7B726AFE2E0ADB8F0803 /* libPods-myRN.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-myRN.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		580B64421FD82A2E00463A61 /* QBImagePicker.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = QBImagePicker.framework; sourceTree = "<group>"; };
@@ -446,6 +454,7 @@
 		98BF2FF90B1E4ED383752964 /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SimpleLineIcons.ttf; path = "../node_modules/native-base/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; };
 		99AD09FAF58F4249B394DCB7 /* ReactNativeKeyboardManager.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = ReactNativeKeyboardManager.xcodeproj; path = "../node_modules/react-native-keyboard-manager/ios/ReactNativeKeyboardManager.xcodeproj"; sourceTree = "<group>"; };
 		9E4F63E61C244D5AB62EAC65 /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialCommunityIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf"; sourceTree = "<group>"; };
+		A4660D69936D44B7AE499522 /* TouchVisualizer.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = TouchVisualizer.xcodeproj; path = "../node_modules/react-native-touch-visualizer/TouchVisualizer.xcodeproj"; sourceTree = "<group>"; };
 		ADBDB91F1DFEBF0600ED6528 /* RCTBlob.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTBlob.xcodeproj; path = "../node_modules/react-native/Libraries/Blob/RCTBlob.xcodeproj"; sourceTree = "<group>"; };
 		B03AF74A52B2474387272157 /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../node_modules/native-base/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
 		B6F9AA1F71324E72ACE2F8B1 /* EvilIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = EvilIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
@@ -462,8 +471,6 @@
 		F545CF3BE2A6417A88758964 /* MaterialIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialIcons.ttf; path = "../node_modules/native-base/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
 		F6D76D0F794842E685C85E68 /* FontAwesome.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
 		F747FAA7C2234F918BB7B30B /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SimpleLineIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; };
-		A4660D69936D44B7AE499522 /* TouchVisualizer.xcodeproj */ = {isa = PBXFileReference; name = "TouchVisualizer.xcodeproj"; path = "../node_modules/react-native-touch-visualizer/TouchVisualizer.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
-		50649BB0AE894F8D8955AA46 /* libTouchVisualizer.a */ = {isa = PBXFileReference; name = "libTouchVisualizer.a"; path = "libTouchVisualizer.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -685,6 +692,7 @@
 				2D01F977D1A6471FAF6D1384 /* libFastImage.a */,
 				2E3F6FBF1A934EBD896F2B4B /* libimageCropPicker.a */,
 				E77DC3FA25AE4E09BEA2A73C /* libReactNativeKeyboardManager.a */,
+				50649BB0AE894F8D8955AA46 /* libTouchVisualizer.a */,
 			);
 			name = "Recovered References";
 			sourceTree = "<group>";
@@ -693,6 +701,14 @@
 			isa = PBXGroup;
 			children = (
 				5883717C1FC4CC1000C4C3CE /* libRNVectorIcons.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		589B4B6E200B8C8400017A0C /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				589B4B72200B8C8500017A0C /* libTouchVisualizer.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1047,6 +1063,10 @@
 					ProductGroup = 588371781FC4CC1000C4C3CE /* Products */;
 					ProjectRef = 943B4306A7D249AE97E3B60B /* RNVectorIcons.xcodeproj */;
 				},
+				{
+					ProductGroup = 589B4B6E200B8C8400017A0C /* Products */;
+					ProjectRef = A4660D69936D44B7AE499522 /* TouchVisualizer.xcodeproj */;
+				},
 			);
 			projectRoot = "";
 			targets = (
@@ -1281,6 +1301,13 @@
 			fileType = archive.ar;
 			path = "libprivatedata-tvOS.a";
 			remoteRef = 588371BE1FC4CFE200C4C3CE /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		589B4B72200B8C8500017A0C /* libTouchVisualizer.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libTouchVisualizer.a;
+			remoteRef = 589B4B71200B8C8500017A0C /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		58B08D721FED0E7300B8BE2E /* libimageCropPicker.a */ = {

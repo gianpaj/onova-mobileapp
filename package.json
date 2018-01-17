@@ -7,17 +7,17 @@
     "url": "https://bitbucket.org/onova/mobileapp.git"
   },
   "scripts": {
-    "start": "node node_modules/react-native/local-cli/cli.js start",
-    "start-emulator": "cd $ANDROID_HOME/tools && ./emulator -avd Nexus_5X_API_25_7.1.1_",
-    "test": "jest __tests__",
-    "test-e2e-ios": "detox test -c ios.sim.debug",
-    "test-e2e-android": "detox test -c android.emu.debug --loglevel verbose",
-    "start-nuke-ios": "watchman watch-del-all && rm -rf ios/build/ModuleCache && rm -rf ~/Library/Developer/Xcode/DerivedData/* && yarn start --reset-cache",
-    "flow": "flow",
     "flow-check": "flow check",
     "flow-start": "flow start",
     "flow-stop": "flow stop",
-    "postinstall": "react-native link"
+    "flow": "flow",
+    "postinstall": "react-native link",
+    "start-emulator": "cd $ANDROID_HOME/tools && ./emulator -avd Nexus_5X_API_25_7.1.1_",
+    "start-nuke-ios": "watchman watch-del-all && rm -rf ios/build/ModuleCache && rm -rf ~/Library/Developer/Xcode/DerivedData/* && yarn start --reset-cache",
+    "start": "node node_modules/react-native/local-cli/cli.js start",
+    "test-e2e-android": "detox test -c android.emu.debug --loglevel verbose",
+    "test-e2e-ios": "detox test -c ios.sim.debug",
+    "test": "jest __tests__"
   },
   "dependencies": {
     "@patwoz/react-navigation-is-focused-hoc": "^1.1.0",

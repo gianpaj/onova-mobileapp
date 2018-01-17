@@ -26,12 +26,10 @@ import {
 import { NavigationActions, NavigationScreenProp } from 'react-navigation';
 import NotificationsDot from '../components/NotificationsDot';
 
-import { logout } from '../actions/actionCreator';
 import colors from '../config/colors';
 import type { UserData } from '../types';
 
 type Props = {
-  logout: any,
   navigation?: NavigationScreenProp,
   userData: UserData,
 };
@@ -59,10 +57,6 @@ class ProfileScreen extends React.Component<Props, State> {
     if (this.props.navigation)
       this.props.navigation.dispatch(navigateToSettings);
   };
-
-  onLogout() {
-    this.props.logout({ provider: this.props.userData.provider });
-  }
 
   render() {
     const { username } = this.props.userData;
@@ -102,9 +96,6 @@ class ProfileScreen extends React.Component<Props, State> {
             </Body>
           </CardItem>
           <CardItem>
-            <Button primary onPress={() => this.onLogout()}>
-              <Text>Sign out</Text>
-            </Button>
           </CardItem>
         </Content>
       </Container>
@@ -117,7 +108,6 @@ const mapStateToProps: any = (state: any) => ({
 });
 
 const mapDispatchToProps = {
-  logout,
 };
 
 export const Profile = connect(mapStateToProps, mapDispatchToProps)(

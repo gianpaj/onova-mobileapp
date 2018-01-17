@@ -36,7 +36,7 @@ import update from 'immutability-helper';
 
 import HR from '../components/HR';
 import Accordion from '../components/Accordion';
-import { getPersonalUserData } from '../actions/actionCreator';
+import { getPersonalUserData, logout } from '../actions/actionCreator';
 import colors from '../config/colors';
 import { validPassword, validShippingAddress } from '../utils/validators';
 import * as api from '../utils/api';
@@ -50,6 +50,7 @@ import type {
 
 type Props = {
   dispatch: Dispatch,
+  logout: () => any,
   navigation?: NavigationScreenProp,
   userData: UserData,
 };
@@ -135,7 +136,7 @@ class SettingsContainer extends Component<Props, State> {
     );
   };
 
-  updateSettings = () => {
+  onUpdateSettings = () => {
     const { userData } = this.props;
     const { password, emailAddress, paymentInfo, shippingAddress } = this.state;
 
@@ -194,7 +195,7 @@ class SettingsContainer extends Component<Props, State> {
       });
   };
 
-  onEmail() {
+  onSendEmail() {
     Linking.openURL('mailto:hello@onova.co')
       .then(() => {
         console.log('email client opened');
@@ -202,13 +203,17 @@ class SettingsContainer extends Component<Props, State> {
       .catch(err => console.error('An error occurred', err));
   }
 
-  _onCCChange = form => {
+  onCCChange = form => {
     this.setState({
       paymentInfo: {
         valid: form.valid,
         values: form.values,
       },
     });
+  };
+
+  onLogout = () => {
+    this.props.logout();
   };
 
   formatCardInfo() {
@@ -246,7 +251,7 @@ class SettingsContainer extends Component<Props, State> {
               transparent
               disabled={!this.canUpdate()}
               style={{ backgroundColor: 'transparent' }}
-              onPress={this.updateSettings}>
+              onPress={this.onUpdateSettings}>
               <Icon
                 name="check"
                 style={!this.canUpdate() && { color: colors.grey3 }}
@@ -326,7 +331,7 @@ class SettingsContainer extends Component<Props, State> {
                 )}
               </View>
               <View style={{ paddingLeft: 10 }}>
-                <LiteCreditCardInput onChange={this._onCCChange} />
+                <LiteCreditCardInput onChange={this.onCCChange} />
               </View>
             </FlipCard>
           </View>
@@ -358,7 +363,13 @@ class SettingsContainer extends Component<Props, State> {
           </View>
           <HR full />
           <View style={[styles.padder, { alignItems: 'center' }]}>
-            <TouchableOpacity onPress={this.onEmail}>
+            <TouchableOpacity onPress={this.onLogout}>
+              <Text>Sign out</Text>
+            </TouchableOpacity>
+          </View>
+          <HR full />
+          <View style={[styles.padder, { alignItems: 'center' }]}>
+            <TouchableOpacity onPress={this.onSendEmail}>
               <Text style={styles.centerText}>hello@onova.co</Text>
             </TouchableOpacity>
             <Text style={styles.centerText}>__version__</Text>
@@ -398,6 +409,7 @@ const styles = StyleSheet.create({
 
 const mapStateToProps: any = (state: any) => ({
   userData: state.LoginReducer.data,
+  logout,
 });
 
 export const Settings = connect(mapStateToProps)(SettingsContainer);

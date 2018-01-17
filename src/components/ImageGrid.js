@@ -15,7 +15,7 @@ import {
 import {
   CachedImage,
   ImageCacheProvider,
-  ImageCacheManager,
+  // ImageCacheManager,
 } from 'react-native-cached-image';
 // $FlowFixMe
 import { NavigationActions, NavigationScreenProp } from 'react-navigation';

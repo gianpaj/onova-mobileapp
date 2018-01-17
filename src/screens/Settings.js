@@ -36,11 +36,14 @@ import update from 'immutability-helper';
 
 import HR from '../components/HR';
 import Accordion from '../components/Accordion';
+
 import { getPersonalUserData, logout } from '../actions/actionCreator';
+
 import colors from '../config/colors';
 import { validPassword, validShippingAddress } from '../utils/validators';
 import * as api from '../utils/api';
 import * as ui from '../utils/ui';
+
 import type {
   UserData,
   Dispatch,

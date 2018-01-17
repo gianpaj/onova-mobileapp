@@ -17,7 +17,6 @@ type Props = {
 
 class NotificationsDot extends React.Component<Props> {
   render() {
-    console.log(this.props);
     const { userData, focused } = this.props;
     userData.notifications = false;
 

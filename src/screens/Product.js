@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Text,
   View,
+  TouchableHighlight,
   // $FlowFixMe
 } from 'react-native';
 import {
@@ -24,7 +25,8 @@ import {
   Button,
 } from 'react-native-elements';
 // $FlowFixMe
-import { NavigationScreenProp } from 'react-navigation';
+import { NavigationActions, NavigationScreenProp } from 'react-navigation';
+
 import { MediaView } from '../components/MediaView';
 
 import colors from '../config/colors';
@@ -58,7 +60,7 @@ export class Product extends React.Component<Props, State> {
     item: null,
   };
 
-  showActionSheet() {
+  showActionSheet = () => {
     ActionSheet.show(
       {
         options: BUTTONS,
@@ -79,7 +81,7 @@ export class Product extends React.Component<Props, State> {
         }
       }
     );
-  }
+  };
 
   // showShareActionSheet() {
   //   Share.share({
@@ -122,6 +124,19 @@ export class Product extends React.Component<Props, State> {
       .catch(e => console.error(e));
   }
 
+  goToProfile = () => {
+    if (this.state.item) {
+      const user = this.state.item.seller;
+
+      const navigateToProfile = NavigationActions.navigate({
+        routeName: 'profile',
+        params: user,
+      });
+
+      this.props.navigation.dispatch(navigateToProfile);
+    }
+  };
+
   render() {
     const { item, loading } = this.state;
 
@@ -140,12 +155,8 @@ export class Product extends React.Component<Props, State> {
           </Left>
           <Body />
           <Right>
-            <NBButton transparent dark onPress={() => this.showActionSheet()}>
-              <NBIcon
-                ios="ios-more"
-                android="md-more"
-                style={styles.moreIcon}
-              />
+            <NBButton transparent dark onPress={this.showActionSheet}>
+              <NBIcon ios="ios-more" android="md-more" />
             </NBButton>
           </Right>
         </Header>
@@ -159,7 +170,9 @@ export class Product extends React.Component<Props, State> {
                   source={{ uri: item.avatarUrl }}
                 /> */}
                 <View style={{ flex: 1, height: 35, marginTop: 12 }}>
-                  <Text style={styles.username}>{item.seller.username}</Text>
+                  <TouchableHighlight style={styles.flex} onPress={this.goToProfile}>
+                    <Text style={styles.username}>{item.seller.username}</Text>
+                  </TouchableHighlight>
                   <Text style={styles.location}>{item.location}</Text>
                 </View>
                 <View style={styles.flex} />
@@ -224,7 +237,6 @@ const styles = StyleSheet.create({
   // },
   username: {
     fontWeight: 'bold',
-    flex: 1,
   },
   location: {
     // height: 20,
@@ -234,9 +246,6 @@ const styles = StyleSheet.create({
   price: {
     lineHeight: 60,
     marginRight: 15,
-  },
-  moreIcon: {
-    // marginRight: 15,
   },
   bottomSection: {
     height: 54,

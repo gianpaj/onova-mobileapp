@@ -141,6 +141,21 @@ const getPersonalUserData = (userId: string, options: any) => (
     .then(() => Toast.hide())
 );
 
+const getUserData = (userId: string, options: any) => (dispatch: Dispatch) => (
+  Toast.loading('Loading...', 30),
+  dispatch({ type: GETUSER_PENDING }),
+  api
+    .get(`/api/users/${userId}`, options)
+    .then(res => {
+      console.debug(res);
+      dispatch({ type: GETUSER_SUCCESS, payload: res });
+    })
+    .catch(err => {
+      dispatch(handleErrorWithAlert({ type: GETUSER_FAIL }, err));
+    })
+    .then(() => Toast.hide())
+);
+
 const logout = () => (dispatch: Dispatch, getState: GetState) => {
   const provider = getState().LoginReducer.data.provider;
   if (provider == 'email') {
@@ -190,6 +205,7 @@ export {
   // loginWithGoogle,
   signup,
   getPersonalUserData,
+  getUserData,
   logout,
   goToSignup,
   goback,

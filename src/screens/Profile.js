@@ -25,6 +25,11 @@ import {
 import { NavigationActions, NavigationScreenProp } from 'react-navigation';
 import NotificationsDot from '../components/NotificationsDot';
 
+import {
+  EditableText,
+  ImageGrid,
+  NotificationsDot,
+} from '../components';
 import { getPersonalUserData, getUserData } from '../actions/actionCreator';
 
 import colors from '../config/colors';
@@ -38,15 +43,20 @@ type Props = {
 };
 
 type State = {
-  // provider: string,
+  bio: string,
+  displayName: string,
 };
 
 // @TODO: if Product is mine Delete, Edit
 const BUTTONS = ['Report', 'Cancel'];
 
 class ProfileScreen extends React.Component<Props, State> {
-  // state = {
-  // };
+  state = {
+    avatar: '',
+    bio: '',
+    displayName: '',
+  };
+
   static navigationOptions = () => ({
     tabBarIcon: (props: any) => <NotificationsDot {...props} />,
   });
@@ -73,6 +83,16 @@ class ProfileScreen extends React.Component<Props, State> {
           // cancelToken: this.cancelToken.token,
         })
       );
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { displayName, bio } = nextProps.userData;
+    if (bio) {
+      this.setState({ bio });
+    }
+    if (displayName) {
+      this.setState({ displayName });
     }
   }
 
@@ -126,12 +146,12 @@ class ProfileScreen extends React.Component<Props, State> {
   };
 
   render() {
-    const { username } = this.props.userData;
+    const { _id, username, bio } = this.props.userData;
 
     return (
       <Container>
         <Header>
-          <Left style={{ flex: 1 }}>
+          <Left style={styles.flex1}>
             {this.ifNavigatedFromProduct() ? (
               <NBButton
                 transparent
@@ -183,17 +203,33 @@ class ProfileScreen extends React.Component<Props, State> {
                   marginBottom: 20,
                 }}>
                 <Text style={{ color: 'white', fontSize: 28 }}>JD</Text>
+            <View style={styles.flex1}>
+              <EditableText
+                text={this.state.displayName} //required
+                sendText={t => this.setState({ displayName: t })} //required
+                // loading={this.isLoading} //optional false
+                isTextEditable={true} // optional true
+                textInputProps={{ style: { color: colors.red } }}
+              />
               </View>
             </Body>
           </CardItem>
           <CardItem>
           </CardItem>
         </Content>
+        <ImageGrid
+          apiURL={`/api/products?userid=${_id}`}
+          navigation={this.props.navigation}
+        />
       </Container>
     );
   }
 }
 
+const styles = StyleSheet.create({
+  flex1: {
+    flex: 1,
+  },
 const mapStateToProps: any = (state: any) => ({
   userData: state.LoginReducer.data,
 });

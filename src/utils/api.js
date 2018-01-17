@@ -15,57 +15,79 @@ type Options = {
 /**
  * GET a path relative to API root url.
  * @param path Relative path to the configured API endpoint
- * @param options Axios options
+ * @param options Axios options (optional)
  * @returns Promise of response body
  */
-export async function get(
-  path: string,
-  options?: Options = { suppressRedBox: true }
-): Promise<any> {
-  return bodyOf(request('get', path, null, options));
+export async function get(path: string, options?: Options): Promise<any> {
+  let asiosOptions = { suppressRedBox: true };
+  if (options && !options.suppressRedBox) {
+    asiosOptions = { ...options, suppressRedBox: true };
+  }
+  if (options && options.suppressRedBox) {
+    asiosOptions = options;
+  }
+  return bodyOf(request('get', path, null, asiosOptions));
 }
 
 /**
  * POST JSON to a path relative to API root url
  * @param path Relative path to the configured API endpoint
  * @param body Anything that you can pass to JSON.stringify
- * @param options Axios options
+ * @param options Axios options (optional)
  * @returns Promise of response body
  */
 export async function post(
   path: string,
   body?: any,
-  options?: Options = { suppressRedBox: true }
+  options?: Options
 ): Promise<any> {
-  return bodyOf(request('post', path, body, options));
+  let asiosOptions = { suppressRedBox: true };
+  if (options && !options.suppressRedBox) {
+    asiosOptions = { ...options, suppressRedBox: true };
+  }
+  if (options && options.suppressRedBox) {
+    asiosOptions = options;
+  }
+  return bodyOf(request('post', path, body, asiosOptions));
 }
 
 /**
  * PUT JSON to a path relative to API root url
  * @param path Relative path to the configured API endpoint
  * @param body Anything that you can pass to JSON.stringify
- * @param options Axios options
+ * @param options Axios options (optional)
  * @returns Promise of response body
  */
 export async function put(
   path: string,
   body: any,
-  options?: Options = { suppressRedBox: true }
+  options?: Options
 ): Promise<any> {
-  return bodyOf(request('put', path, body, options));
+  let asiosOptions = { suppressRedBox: true };
+  if (options && !options.suppressRedBox) {
+    asiosOptions = { ...options, suppressRedBox: true };
+  }
+  if (options && options.suppressRedBox) {
+    asiosOptions = options;
+  }
+  return bodyOf(request('put', path, body, asiosOptions));
 }
 
 /**
  * DELETE a path relative to API root url
  * @param path Relative path to the configured API endpoint
- * @param options Axios options
+ * @param options Axios options (optional)
  * @returns Promise of response body
  */
-export async function del(
-  path: string,
-  options?: Options = { suppressRedBox: true }
-): Promise<any> {
-  return bodyOf(request('delete', path, null, options));
+export async function del(path: string, options?: Options): Promise<any> {
+  let asiosOptions = { suppressRedBox: true };
+  if (options && !options.suppressRedBox) {
+    asiosOptions = { ...options, suppressRedBox: true };
+  }
+  if (options && options.suppressRedBox) {
+    asiosOptions = options;
+  }
+  return bodyOf(request('delete', path, null, asiosOptions));
 }
 
 /**

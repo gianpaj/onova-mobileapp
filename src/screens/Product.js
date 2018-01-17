@@ -27,7 +27,7 @@ import {
 // $FlowFixMe
 import { NavigationActions, NavigationScreenProp } from 'react-navigation';
 
-import { MediaView } from '../components/MediaView';
+import { MediaView } from '../components';
 
 import colors from '../config/colors';
 import * as api from '../utils/api';

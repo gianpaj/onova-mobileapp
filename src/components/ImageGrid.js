@@ -188,7 +188,7 @@ export class ImageGridComponent extends React.Component<Props, State> {
   }
 }
 
-export const ImageGrid = ImageGridComponent;
+export default ImageGridComponent;
 
 const MARGIN = 1;
 

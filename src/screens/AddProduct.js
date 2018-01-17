@@ -37,7 +37,7 @@ import {
 // $FlowFixMe
 import { NavigationScreenProp } from 'react-navigation';
 
-import HR from '../components/HR';
+import { HR } from '../components';
 
 import colors from '../config/colors';
 import settings from '../config/settings';

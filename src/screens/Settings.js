@@ -34,8 +34,7 @@ import axios from 'axios';
 import isEmail from 'validator/lib/isEmail';
 import update from 'immutability-helper';
 
-import HR from '../components/HR';
-import Accordion from '../components/Accordion';
+import { Accordion, HR } from '../components';
 
 import { getPersonalUserData, logout } from '../actions/actionCreator';
 

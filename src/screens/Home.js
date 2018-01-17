@@ -25,7 +25,7 @@ import { TabViewAnimated, TabBar, SceneMap } from 'react-native-tab-view';
 // $FlowFixMe
 import type { Route, NavigationState } from 'react-native-tab-view/types';
 
-import { ImageGrid } from '../components/ImageGrid';
+import { ImageGrid } from '../components';
 
 const initialLayout = {
   height: 0,

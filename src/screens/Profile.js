@@ -3,7 +3,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import {
-  Image,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -208,17 +207,11 @@ class ProfileScreen extends React.Component<Props, State> {
                     withBorder
                     onChange={p => this.setState({ profilePic: p.sourceURL })}
                     interactive={editingEnabled}
-                    uri={profilePic !== '' ? profilePic : null}
-                    placeholderSource={require('../assets/images/loading.jpg')}
+                    uri={profilePic}
+                    placeholderText={username[0]}
+                    // placeholderSource={require('../assets/images/loading.jpg')}
                   />
                 </View>
-                {/* <View style={[styles.avatar, styles.avatarContainer]}>
-                  {this.state.profilePic ? (
-                <Text style={{ color: 'white', fontSize: 28 }}>JD</Text>
-                  ) : (
-                    <Image style={styles.avatar} source={this.state.profilePic} />
-                  )}
-                </View> */}
               </TouchableOpacity>
             </View>
             <View style={styles.flex1}>

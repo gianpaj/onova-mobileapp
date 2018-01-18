@@ -7,12 +7,13 @@ import {
   Platform,
   StyleSheet,
   TouchableWithoutFeedback,
+  Text,
+  View,
   // $FlowFixMe
 } from 'react-native';
 import ImagePicker from 'react-native-image-crop-picker';
-// import { ImageCache, ImageCacheProvider } from 'react-native-cached-image';
+import colors from '../config/colors';
 
-// const TTL = 7 * 24 * 60 * 60; // cache images for 7 days
 const isiOS = Platform.OS === 'ios';
 
 const PICKER_OPTIONS = {
@@ -21,26 +22,21 @@ const PICKER_OPTIONS = {
   cropping: true,
 };
 
-const colors = {
-  defaultBackgroundColor: '#AAAAAA',
-  defaultBorderColor: '#FFFFFF',
-  defaultOverlayColor: '#FFFFFF',
-};
-
 type Props = {
   interactive: boolean,
   onChange?: Image => void, // called on change when interactive is true
   onChangeFailed?: () => void, // called on change failure when interactive is true
   onPress?: () => void,
-  overlayColor: string, // On android only, should be the same than the backgroundColor of the surrounding View
-  pickerOptions?: any, // TODO: Define better
+  overlayColor: string, // On Android only, should be the same than the backgroundColor of the surrounding View
+  pickerOptions?: any,
   placeholderSource: number,
+  placeholderText?: string,
   placeholderURI?: string,
   resizeMode: Image.resizeMode,
   size: string, // oneOf(['default', 'mini', 'verySmall', 'small', 'medium']),
   source?: Image.source,
   style?: Image.style,
-  uri: string | null,
+  uri: string,
   withBorder: boolean,
 };
 
@@ -52,7 +48,7 @@ type State = {
 export default class Avatar extends Component<Props, State> {
   static defaultProps = {
     interactive: false,
-    overlayColor: colors.defaultOverlayColor,
+    overlayColor: colors.white,
     resizeMode: 'cover',
     size: 'default',
     withBorder: false,
@@ -97,7 +93,7 @@ export default class Avatar extends Component<Props, State> {
   getAppropriateSource = () => {
     let { source, uri } = this.props;
 
-    if (uri) {
+    if (uri !== '') {
       source = { uri };
     }
 
@@ -119,26 +115,36 @@ export default class Avatar extends Component<Props, State> {
   };
 
   renderAvatarImage = () => {
-    return (
-      // <ImageCacheProvider
-      //   numberOfConcurrentPreloads={1}
-      //   ttl={TTL} // num of seconds to cache the image url for
-      //   // defaultSource={loading}
-      //   // urlsToPreload={this.state.images}
-      // >
-        <Image
+    const { placeholderText } = this.props;
+    const { source } = this.state;
+    if (!source && placeholderText !== undefined) {
+      return (
+        <View
           style={[
             !isiOS && { overlayColor: this.props.overlayColor },
-            styles.avatar,
+            styles.avatarContainer,
             styles[`${this.props.size}Avatar`],
             this.props.withBorder ? styles.border : {},
             this.props.style,
-          ]}
-          defaultSource={this.getPlaceholder()}
-          resizeMode={this.props.resizeMode}
-          source={this.state.source || this.getAppropriateSource()}
-        />
-      /* </ImageCacheProvider> */
+          ]}>
+          <Text style={styles.text}>{placeholderText}</Text>
+        </View>
+      );
+    }
+
+    return (
+      <Image
+        style={[
+          !isiOS && { overlayColor: this.props.overlayColor },
+          styles.avatar,
+          styles[`${this.props.size}Avatar`],
+          this.props.withBorder ? styles.border : {},
+          this.props.style,
+        ]}
+        defaultSource={this.getPlaceholder()}
+        resizeMode={this.props.resizeMode}
+        source={this.state.source || this.getAppropriateSource()}
+      />
     );
   };
 
@@ -164,7 +170,21 @@ export default class Avatar extends Component<Props, State> {
 
 const styles = StyleSheet.create({
   avatar: {
-    backgroundColor: colors.defaultBackgroundColor,
+    backgroundColor: colors.grey3,
+  },
+  avatarContainer: {
+    alignItems: 'center',
+    backgroundColor: colors.grey3,
+    borderColor: colors.grey4,
+    borderRadius: 75,
+    borderWidth: 1 / 2,
+    height: 150,
+    justifyContent: 'center',
+    width: 150,
+  },
+  text: {
+    color: colors.white,
+    fontSize: 28,
   },
   /* eslint-disable */
   miniAvatar: {
@@ -194,7 +214,7 @@ const styles = StyleSheet.create({
   },
   /* eslint-enable */
   border: {
-    borderColor: colors.defaultBorderColor,
+    borderColor: colors.grey5,
     borderWidth: 2,
   },
 });

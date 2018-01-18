@@ -76,7 +76,7 @@ export class Product extends React.Component<Props, State> {
           //   this.showShareActionSheet();
           //   break;
           default:
-            console.log('Cancel');
+            console.debug('Cancel');
             break;
         }
       }

@@ -29,7 +29,7 @@ type Props = {
   onPress?: () => void,
   overlayColor: string, // On Android only, should be the same than the backgroundColor of the surrounding View
   pickerOptions?: any,
-  placeholderSource: number,
+  placeholderSource?: number,
   placeholderText?: string,
   placeholderURI?: string,
   resizeMode: Image.resizeMode,
@@ -77,7 +77,7 @@ export default class Avatar extends Component<Props, State> {
         }
       })
       .catch(e => {
-        if (e.code == ImagePicker) {
+        if (e.code == 'E_PICKER_CANCELLED') {
           this.setState({
             failed: true,
           });

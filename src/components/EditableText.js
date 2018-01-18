@@ -15,7 +15,9 @@ type Props = {
   autoCorrect: boolean,
   isTextEditable: boolean,
   loading: boolean,
-  sendText: (text: string) => any,
+  onChangeText: (text: string) => any,
+  placeholder: string,
+  placeholderColor: string,
   text: string,
   textInputProps: any,
   textProps: any,
@@ -41,6 +43,7 @@ class EditableText extends React.Component<Props, State> {
   static defaultProps = {
     autoCorrect: false,
     isTextEditable: true,
+    placeholderColor: '#cccccc',
     loading: false,
     textInputProps: {},
     textProps: {},
@@ -54,21 +57,31 @@ class EditableText extends React.Component<Props, State> {
     if (this.props.isTextEditable) {
       this.setState({
         editing: true,
-        text: this.props.text
+        text: this.props.text,
       });
     }
   };
 
-  stopEditing = () => {
-    this.props.sendText(this.state.text);
-    this.setState({ editing: false });
+  onChangeText = (text: string) => {
+    this.props.onChangeText(text);
+    this.setState({ text });
   };
 
   renderText() {
-    if (!this.state.editing && !this.props.loading) {
+    const {
+      loading,
+      placeholder,
+      placeholderColor,
+      textProps,
+      text,
+    } = this.props;
+
+    if (!this.state.editing && !loading) {
       return (
         <TouchableOpacity onPress={this.startEditing}>
-          <Text {...this.props.textProps}>{this.props.text}</Text>
+          <Text {...textProps} style={text ? {} : { color: placeholderColor }}>
+            {text || placeholder}
+          </Text>
         </TouchableOpacity>
       );
     }
@@ -76,7 +89,7 @@ class EditableText extends React.Component<Props, State> {
   }
 
   renderTextInput() {
-    const { autoCorrect, loading } = this.props;
+    const { autoCorrect, loading, placeholder } = this.props;
 
     if (this.state.editing || loading) {
       return (
@@ -85,10 +98,11 @@ class EditableText extends React.Component<Props, State> {
             <TextInput
               autoFocus
               autoCorrect={autoCorrect}
-              onBlur={this.stopEditing}
-              onChangeText={text => this.setState({ text })}
+              onBlur={() => this.setState({ editing: false })}
+              onChangeText={t => this.onChangeText(t)}
               opacity={this.state.editing ? 1 : 0.1}
               returnKeyType={'done'}
+              placeholder={placeholder}
               value={this.state.text}
               {...this.props.textInputProps}
             />

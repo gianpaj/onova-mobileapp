@@ -339,6 +339,7 @@ class SettingsContainer extends Component<Props, State> {
           </View>
           <HR full />
           <View style={styles.padder}>
+            <FormLabel>Private information</FormLabel>
             <FormLabel labelStyle={styles.label}>Email:</FormLabel>
             <FormInput
               autoCorrect={false}
@@ -365,9 +366,9 @@ class SettingsContainer extends Component<Props, State> {
           </View>
           <HR full />
           <View style={[styles.padder, { alignItems: 'center' }]}>
-            <TouchableOpacity onPress={this.onLogout}>
+            <NBButton light full onPress={this.onLogout}>
               <Text>Sign out</Text>
-            </TouchableOpacity>
+            </NBButton>
           </View>
           <HR full />
           <View style={[styles.padder, { alignItems: 'center' }]}>

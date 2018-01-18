@@ -22,8 +22,11 @@ export type LoginActionTypes = 'SHOW_ALL' | 'SHOW_ACTIVE' | 'SHOW_COMPLETED';
 export type UserData = {
   _id: string,
   accountStatus: string,
+  bio?: string,
+  displayName?: string,
   emailAddress: string,
   provider: string,
+  profilePic?: string,
   token: string,
   username: string,
   paymentInfo: {

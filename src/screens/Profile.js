@@ -3,6 +3,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import {
+  Image,
+  StyleSheet,
   Text,
   TouchableOpacity,
   View,
@@ -13,6 +15,7 @@ import {
   ActionSheet,
   Body,
   Button as NBButton,
+  Card,
   CardItem,
   Content,
   Container,
@@ -23,9 +26,9 @@ import {
 } from 'native-base';
 // $FlowFixMe
 import { NavigationActions, NavigationScreenProp } from 'react-navigation';
-import NotificationsDot from '../components/NotificationsDot';
 
 import {
+  Avatar,
   EditableText,
   ImageGrid,
   NotificationsDot,
@@ -45,6 +48,8 @@ type Props = {
 type State = {
   bio: string,
   displayName: string,
+  profilePic: string,
+  editingEnabled: boolean,
 };
 
 // @TODO: if Product is mine Delete, Edit
@@ -52,9 +57,10 @@ const BUTTONS = ['Report', 'Cancel'];
 
 class ProfileScreen extends React.Component<Props, State> {
   state = {
-    avatar: '',
     bio: '',
     displayName: '',
+    editingEnabled: false,
+    profilePic: '',
   };
 
   static navigationOptions = () => ({
@@ -62,8 +68,6 @@ class ProfileScreen extends React.Component<Props, State> {
   });
 
   componentWillMount() {
-    let userId;
-
     const { params } = this.props.navigation.state;
     const { userData } = this.props;
 
@@ -87,12 +91,15 @@ class ProfileScreen extends React.Component<Props, State> {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { displayName, bio } = nextProps.userData;
-    if (bio) {
+    const { bio, displayName, profilePic } = nextProps.userData;
+    if (bio !== '') {
       this.setState({ bio });
     }
-    if (displayName) {
+    if (displayName !== '') {
       this.setState({ displayName });
+    }
+    if (profilePic !== '') {
+      this.setState({ profilePic });
     }
   }
 
@@ -147,6 +154,7 @@ class ProfileScreen extends React.Component<Props, State> {
 
   render() {
     const { _id, username, bio } = this.props.userData;
+    const { profilePic, editingEnabled } = this.state;
 
     return (
       <Container>
@@ -188,35 +196,47 @@ class ProfileScreen extends React.Component<Props, State> {
             )}
           </Right>
         </Header>
-        <Content>
+        <View>
           <CardItem>
-            <Body>
-              <View
-                style={{
-                  backgroundColor: '#bcbec1',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: 80,
-                  height: 80,
-                  borderRadius: 40,
-                  alignSelf: 'center',
-                  marginBottom: 20,
-                }}>
+            <View style={{ }}>
+              <TouchableOpacity
+              // onPress={this.selectPhotoTapped}
+              >
+                <View style={{ width: 125, height: 125 }}>
+                  <Avatar
+                    size={'default'}
+                    withBorder
+                    onChange={p => this.setState({ profilePic: p.sourceURL })}
+                    interactive={editingEnabled}
+                    uri={profilePic !== '' ? profilePic : null}
+                    placeholderSource={require('../assets/images/loading.jpg')}
+                  />
+                </View>
+                {/* <View style={[styles.avatar, styles.avatarContainer]}>
+                  {this.state.profilePic ? (
                 <Text style={{ color: 'white', fontSize: 28 }}>JD</Text>
+                  ) : (
+                    <Image style={styles.avatar} source={this.state.profilePic} />
+                  )}
+                </View> */}
+              </TouchableOpacity>
+            </View>
             <View style={styles.flex1}>
               <EditableText
                 text={this.state.displayName} //required
                 sendText={t => this.setState({ displayName: t })} //required
                 // loading={this.isLoading} //optional false
-                isTextEditable={true} // optional true
+                isTextEditable={editingEnabled} // optional true
                 textInputProps={{ style: { color: colors.red } }}
               />
               </View>
-            </Body>
           </CardItem>
-          <CardItem>
+          <CardItem header>
+            <Text style={bio ? styles.bio : styles.bioEmpty}>
+              {bio ? bio : 'Edit and write your profile description'}
+            </Text>
           </CardItem>
-        </Content>
+        </View>
         <ImageGrid
           apiURL={`/api/products?userid=${_id}`}
           navigation={this.props.navigation}

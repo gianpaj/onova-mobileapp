@@ -25,6 +25,7 @@ import { logout, signup, goback } from '../actions/actionCreator';
 import type { Dispatch } from '../types';
 import { validPassword } from '../utils/validators';
 import colors from '../config/colors';
+import settings from '../config/settings';
 
 type Props = {
   dispatch: Dispatch,
@@ -36,6 +37,8 @@ type State = {
   username: string,
   emailAddress: string,
   password: string,
+  loading: false,
+  usernameError: false,
 };
 
 class SignupScreen extends React.Component<Props, State> {
@@ -50,6 +53,7 @@ class SignupScreen extends React.Component<Props, State> {
     // email: '',
     // password: '',
     loading: false,
+    usernameError: false,
   };
 
   onSignup() {
@@ -70,6 +74,18 @@ class SignupScreen extends React.Component<Props, State> {
 
     this.props.dispatch(signup({ username, emailAddress, password }));
   }
+
+  onUserChange = (u: string) => {
+    if (!settings.USERNAME_REGEX.test(u)) {
+      this.setState({ usernameError: true });
+    } else {
+      return this.setState({ username: u });
+    }
+
+    setTimeout(() => {
+      this.setState({ usernameError: false });
+    }, 100);
+  };
 
   resetNavigation() {
     // if (this.props.navigation) this.props.navigation.dispatch(resetAction);
@@ -114,7 +130,7 @@ class SignupScreen extends React.Component<Props, State> {
             returnKeyType="next"
             onSubmitEditing={() => this.EmailInput && this.EmailInput.focus()}
             value={this.state.username}
-            onChangeText={text => this.setState({ username: text })}
+            onChangeText={t => this.onUserChange(t)}
             accessibilityLabel="username"
             {...this._inputProps}
           />

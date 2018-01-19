@@ -111,22 +111,21 @@ class SettingsContainer extends Component<Props, State> {
   componentWillReceiveProps(nextProps) {
     const { emailAddress, shippingAddress, username } = nextProps.userData;
 
-    if (this.shouldWeResetTheState(nextProps, 'shippingAddress')) {
+    if (this.hasStateDifferedFromProps(nextProps, 'shippingAddress')) {
       this.setState({ shippingAddress });
     }
 
-    if (this.shouldWeResetTheState(nextProps, 'username')) {
+    if (this.hasStateDifferedFromProps(nextProps, 'username')) {
       this.setState({ username });
     }
 
-    if (this.shouldWeResetTheState(nextProps, 'emailAddress')) {
+    if (this.hasStateDifferedFromProps(nextProps, 'emailAddress')) {
       this.setState({ emailAddress });
     }
   }
 
-  shouldWeResetTheState(nextProps: any, key: string): boolean {
-    return !nextProps[key] || Object.is(nextProps[key], this.props[key]);
-    // return nextProps[key] !== this.props[key];
+  hasStateDifferedFromProps(nextProps: any, key: string): boolean {
+    return !Object.is(nextProps[key], this.props[key]);
   }
 
   componentDidMount() {

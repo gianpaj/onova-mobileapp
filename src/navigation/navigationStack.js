@@ -1,4 +1,7 @@
+// @flow
+// $FlowFixMe
 import { StackNavigator } from 'react-navigation';
+
 import {
   AddProduct,
   Login,

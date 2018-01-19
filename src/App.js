@@ -10,7 +10,6 @@ import {
 } from 'react-native';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/lib/integration/react';
-
 import { Root } from 'native-base';
 
 import * as firebase from 'firebase';

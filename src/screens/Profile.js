@@ -48,27 +48,30 @@ type Props = {
 type State = {
   bio: string,
   displayName: string,
-  profilePic: string,
   editing: boolean,
+  following: boolean,
+  profilePic: string,
+};
+
+const defaultState = {
+  bio: '',
+  displayName: '',
+  editing: false,
+  following: false,
+  profilePic: '',
 };
 
 // @TODO: if Product is mine Delete, Edit
 const BUTTONS = ['Report', 'Cancel'];
 
 class ProfileScreen extends React.Component<Props, State> {
-  state = {
-    bio: '',
-    displayName: '',
-    editing: false,
-    following: false,
-    profilePic: '',
-  };
+  state = defaultState;
 
   static navigationOptions = () => ({
     tabBarIcon: (props: any) => <NotificationsDot {...props} />,
   });
 
-  componentWillMount() {
+  refresh() {
     const { params } = this.props.navigation.state;
     const { userData } = this.props;
 
@@ -91,21 +94,32 @@ class ProfileScreen extends React.Component<Props, State> {
     }
   }
 
+  componentWillMount() {
+    this.refresh();
+  }
+
   componentWillUnmount() {
-    this.setState({ editing: false });
+    // this.setState({ editing: false });
   }
 
   componentWillReceiveProps(nextProps) {
     const { bio, displayName, profilePic } = nextProps.userData;
-    if (bio !== undefined) {
+
+    if (this.hasStateDifferedFromProps(nextProps, 'bio')) {
       this.setState({ bio });
     }
-    if (displayName !== undefined) {
+
+    if (this.hasStateDifferedFromProps(nextProps, 'displayName')) {
       this.setState({ displayName });
     }
-    if (profilePic !== undefined) {
+
+    if (this.hasStateDifferedFromProps(nextProps, 'profilePic')) {
       this.setState({ profilePic });
     }
+  }
+
+  hasStateDifferedFromProps(nextProps: any, key: string): boolean {
+    return !Object.is(nextProps[key], this.props[key]);
   }
 
   onGoToSettings = () => {
@@ -124,6 +138,8 @@ class ProfileScreen extends React.Component<Props, State> {
   };
 
   goToSettings = () => {
+    // reset state
+    this.setState(defaultState);
     const navigateToSettings = NavigationActions.navigate({
       routeName: 'settings',
     });

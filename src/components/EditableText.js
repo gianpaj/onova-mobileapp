@@ -1,7 +1,7 @@
 // @flow
 // inspired by https://github.com/ElinaSchaefer77/react-native-inline-edit/
 
-import React from 'react';
+import React, { PureComponent } from 'react';
 import {
   ActivityIndicator,
   Text,
@@ -18,6 +18,7 @@ type Props = {
   onChangeText: (text: string) => any,
   placeholder: string,
   placeholderColor: string,
+  style?: any,
   text: string,
   textInputProps: any,
   textProps: any,
@@ -34,7 +35,7 @@ const styles = {
   },
 };
 
-class EditableText extends React.Component<Props, State> {
+class EditableText extends PureComponent<Props, State> {
   state = {
     editing: false,
     text: '',
@@ -45,13 +46,10 @@ class EditableText extends React.Component<Props, State> {
     isTextEditable: true,
     placeholderColor: '#cccccc',
     loading: false,
+    style: {},
     textInputProps: {},
     textProps: {},
   };
-
-  // constructor(props: Props) {
-  //   super(props);
-  // }
 
   startEditing = () => {
     if (this.props.isTextEditable) {
@@ -72,6 +70,7 @@ class EditableText extends React.Component<Props, State> {
       loading,
       placeholder,
       placeholderColor,
+      style,
       textProps,
       text,
     } = this.props;
@@ -79,7 +78,9 @@ class EditableText extends React.Component<Props, State> {
     if (!this.state.editing && !loading) {
       return (
         <TouchableOpacity onPress={this.startEditing}>
-          <Text {...textProps} style={text ? {} : { color: placeholderColor }}>
+          <Text
+            {...textProps}
+            style={[style, text ? style : { color: placeholderColor }]}>
             {text || placeholder}
           </Text>
         </TouchableOpacity>
@@ -89,7 +90,7 @@ class EditableText extends React.Component<Props, State> {
   }
 
   renderTextInput() {
-    const { autoCorrect, loading, placeholder } = this.props;
+    const { autoCorrect, loading, placeholder, style } = this.props;
 
     if (this.state.editing || loading) {
       return (
@@ -105,6 +106,7 @@ class EditableText extends React.Component<Props, State> {
               placeholder={placeholder}
               value={this.state.text}
               {...this.props.textInputProps}
+              style={style}
             />
           </View>
           {this.renderActivityIndicator()}

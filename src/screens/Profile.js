@@ -198,15 +198,15 @@ class ProfileScreen extends React.Component<Props, State> {
             ) : (
               <NBButton transparent dark onPress={this.openNotifications}>
                 <NBIcon
-                  style={{ fontSize: 27 }}
                   ios="ios-notifications"
                   android="md-notifications"
+                  style={styles.icon}
                 />
               </NBButton>
             )}
           </Left>
           <View>
-            <Text style={{ marginTop: 15 }}>@{username}</Text>
+            <Text style={styles.username}>@{username}</Text>
           </View>
           <Right>
             {this.ifNavigatedFromProduct() ? (
@@ -215,74 +215,80 @@ class ProfileScreen extends React.Component<Props, State> {
               </NBButton>
             ) : (
               <NBButton transparent onPress={this.onGoToSettings}>
-                <NBIcon
-                  ios="ios-cog"
-                  android="md-cog"
-                  style={{ color: colors.black }}
-                />
+                <NBIcon ios="ios-cog" android="md-cog" style={styles.icon} />
               </NBButton>
             )}
           </Right>
         </Header>
         <View>
-          <CardItem>
-            <View style={{ width: 125, height: 125 }}>
-              <Avatar
-                size={'default'}
-                withBorder
-                onChange={p => this.setState({ profilePic: p.sourceURL })}
-                interactive={editing}
-                uri={profilePic}
-                placeholderText={username[0]}
-              />
-            </View>
-            {this.isMe() ? (
-              <View style={styles.flex1}>
-                <EditableText
-                  text={displayName}
-                  onChangeText={t => this.setState({ displayName: t })}
-                  placeholder="Enter your shop name"
-                  placeholderColor={colors.grey3}
-                  isTextEditable={editing}
+          <View style={styles.profileTop}>
+            <View>
+              <View style={styles.row}>
+                <Avatar
+                  style={styles.avatarContainer}
+                  size={'default'}
+                  withBorder
+                  onChange={p => this.setState({ profilePic: p.sourceURL })}
+                  interactive={editing}
+                  uri={profilePic}
+                  placeholderText={username[0]}
                 />
-                <NBButton
-                  transparent
-                  bordered
-                  small
-                  block
-                  style={styles.editButton}
-                  onPress={() => this.setState({ editing: !editing })}>
-                  <Text>{editing ? 'Save' : 'Edit Profile'}</Text>
-                </NBButton>
+                <View style={styles.flex1}>
+                  {this.isMe() ? (
+                    <View style={styles.profileRight}>
+                      <EditableText
+                        text={displayName}
+                        onChangeText={t => this.setState({ displayName: t })}
+                        placeholder="Enter your shop name"
+                        placeholderColor={colors.grey3}
+                        isTextEditable={editing}
+                        style={styles.displayName}
+                      />
+                      <NBButton
+                        transparent
+                        bordered
+                        small
+                        full
+                        style={styles.editOrFollowButton}
+                        onPress={() => this.setState({ editing: !editing })}>
+                        <Text style={styles.editOrFollowButtonText}>
+                          {editing ? 'Save' : 'Edit Profile'}
+                        </Text>
+                      </NBButton>
+                    </View>
+                  ) : (
+                    <View style={styles.profileRight}>
+                      {displayName !== '' && <Text>{displayName}</Text>}
+                      <NBButton
+                        transparent
+                        bordered
+                        small
+                        full
+                        style={styles.editOrFollowButton}
+                        onPress={() => console.warn('f')}>
+                        <Text style={styles.editOrFollowButtonText}>
+                          {following ? 'Unfollow' : 'Follow'}
+                        </Text>
+                      </NBButton>
+                    </View>
+                  )}
+                </View>
               </View>
-            ) : (
-              <View>
-                {displayName !== '' && <Text>{displayName}</Text>}
-                <NBButton
-                  transparent
-                  bordered
-                  small
-                  block
-                  style={styles.editButton}
-                  onPress={() => console.warn('f')}>
-                  <Text>{following ? 'Unfollow' : 'Follow'}</Text>
-                </NBButton>
+              <View {...padder}>
+                {this.isMe() ? (
+                  <EditableText
+                    text={bio}
+                    onChangeText={t => this.setState({ bio: t })}
+                    placeholder="Write your profile description"
+                    placeholderColor={colors.grey3}
+                    isTextEditable={editing}
+                  />
+                ) : (
+                  bio !== '' && <Text>{bio}</Text>
+                )}
               </View>
-            )}
-          </CardItem>
-          <CardItem>
-            {this.isMe() ? (
-              <EditableText
-                text={bio}
-                onChangeText={t => this.setState({ bio: t })}
-                placeholder="Write your profile description"
-                placeholderColor={colors.grey3}
-                isTextEditable={editing}
-              />
-            ) : (
-              bio !== '' && <Text>{bio}</Text>
-            )}
-          </CardItem>
+            </View>
+          </View>
         </View>
         <ImageGrid
           apiURL={`/api/products?userid=${_id}`}
@@ -293,14 +299,53 @@ class ProfileScreen extends React.Component<Props, State> {
   }
 }
 
+const padder = { padding: 10 };
+
 const styles = StyleSheet.create({
   flex1: {
     flex: 1,
   },
-  editButton: {
-    marginHorizontal: 20,
+  row: {
+    flexDirection: 'row',
+  },
+  username: {
+    color: colors.grey1,
+    marginVertical: 15,
+  },
+  icon: {
+    color: colors.grey1,
+    fontSize: 27,
+  },
+  avatarContainer: {
+    height: 125,
+    width: 125,
+  },
+  profileRight: {
+    alignSelf: 'flex-start',
+    flex: 1,
+    paddingLeft: 10,
+    width: '100%',
+  },
+  profileTop: {
+    paddingLeft: 10,
+    paddingTop: 10,
+    backgroundColor: colors.white,
+  },
+  displayName: {
+    color: colors.grey1,
+    fontSize: 20,
+    fontWeight: '400',
+    // elipsis?
+  },
+  editOrFollowButton: {
+    marginRight: 20,
+    marginVertical: 10,
     backgroundColor: colors.bgDefault,
     borderColor: colors.greyOutline,
+    borderRadius: 5,
+  },
+  editOrFollowButtonText: {
+    color: colors.grey1,
   },
 });
 

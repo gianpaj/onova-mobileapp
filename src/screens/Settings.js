@@ -39,6 +39,7 @@ import { Accordion, HR } from '../components';
 import { getPersonalUserData, logout } from '../actions/actionCreator';
 
 import colors from '../config/colors';
+import settings from '../config/settings';
 import { validPassword, validShippingAddress } from '../utils/validators';
 import * as api from '../utils/api';
 import * as ui from '../utils/ui';
@@ -61,6 +62,8 @@ type State = {
   emailAddress: string,
   pending: boolean,
   password: string,
+  username: string,
+  usernameError: boolean,
   shippingAddress: ShippingAddress,
   paymentInfo: PaymentInfo,
 };
@@ -86,6 +89,8 @@ class SettingsContainer extends Component<Props, State> {
       country: '',
       postcode: '',
     },
+    username: '',
+    usernameError: false,
   };
 
   componentWillMount() {
@@ -104,12 +109,24 @@ class SettingsContainer extends Component<Props, State> {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { emailAddress, shippingAddress } = nextProps.userData;
-    if (shippingAddress) {
-      this.setState({ emailAddress, shippingAddress });
-    } else {
+    const { emailAddress, shippingAddress, username } = nextProps.userData;
+
+    if (this.shouldWeResetTheState(nextProps, 'shippingAddress')) {
+      this.setState({ shippingAddress });
+    }
+
+    if (this.shouldWeResetTheState(nextProps, 'username')) {
+      this.setState({ username });
+    }
+
+    if (this.shouldWeResetTheState(nextProps, 'emailAddress')) {
       this.setState({ emailAddress });
     }
+  }
+
+  shouldWeResetTheState(nextProps: any, key: string): boolean {
+    return !nextProps[key] || Object.is(nextProps[key], this.props[key]);
+    // return nextProps[key] !== this.props[key];
   }
 
   componentDidMount() {
@@ -127,25 +144,37 @@ class SettingsContainer extends Component<Props, State> {
       emailAddress,
       paymentInfo,
       shippingAddress,
+      username,
     } = this.state;
 
     return (
       !pending &&
-      (validShippingAddress(shippingAddress) ||
+      ((validShippingAddress(shippingAddress) &&
+        !Object.is(shippingAddress, userData.shippingAddress)) ||
         paymentInfo.valid ||
         validPassword(password) ||
-        (isEmail(emailAddress) && emailAddress !== userData.emailAddress))
+        (isEmail(emailAddress) && emailAddress !== userData.emailAddress) ||
+        (username !== '' && username !== userData.username))
     );
   };
 
   onUpdateSettings = () => {
     const { userData } = this.props;
-    const { password, emailAddress, paymentInfo, shippingAddress } = this.state;
+    const {
+      password,
+      emailAddress,
+      paymentInfo,
+      shippingAddress,
+      username,
+    } = this.state;
 
     this.setState({ pending: true });
 
     const data = {};
-    data.username = userData.username;
+
+    if (username !== '') {
+      data.username = username;
+    }
 
     if (password !== '') {
       data.password = password;
@@ -214,6 +243,18 @@ class SettingsContainer extends Component<Props, State> {
     });
   };
 
+  onUserChange = (u: string) => {
+    if (!settings.USERNAME_REGEX.test(u)) {
+      this.setState({ usernameError: true });
+    } else {
+      return this.setState({ username: u });
+    }
+
+    setTimeout(() => {
+      this.setState({ usernameError: false });
+    }, 100);
+  };
+
   onLogout = () => {
     this.props.logout();
   };
@@ -230,7 +271,14 @@ class SettingsContainer extends Component<Props, State> {
 
   render() {
     const { userData } = this.props;
-    const { pending, password, emailAddress, shippingAddress } = this.state;
+    const {
+      pending,
+      password,
+      emailAddress,
+      shippingAddress,
+      username,
+      usernameError,
+    } = this.state;
 
     return (
       <Container>
@@ -339,6 +387,18 @@ class SettingsContainer extends Component<Props, State> {
           </View>
           <HR full />
           <View style={styles.padder}>
+            <FormLabel labelStyle={styles.label}>Username:</FormLabel>
+            <FormInput
+              autoCorrect={false}
+              containerStyle={styles.inputContainer}
+              editable={!pending}
+              inputStyle={styles.input}
+              onChangeText={t => this.onUserChange(t)}
+              placeholder="Change your username"
+              value={username}
+              clearButtonMode="while-editing"
+              shake={usernameError}
+            />
             <FormLabel>Private information</FormLabel>
             <FormLabel labelStyle={styles.label}>Email:</FormLabel>
             <FormInput

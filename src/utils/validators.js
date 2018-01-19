@@ -1,5 +1,5 @@
 // @flow
-import type { ShippingInfo } from '../types';
+import type { ShippingAddress } from '../types';
 
 function validPassword(password: string) {
   return password.length > 7 && password.length < 51;
@@ -8,7 +8,7 @@ function validPassword(password: string) {
 /**
  * If any of the fields is not empty
  */
-function validShippingAddress(stateShippingInfo: ShippingInfo) {
+function validShippingAddress(stateShippingInfo: ShippingAddress) {
   return (
     stateShippingInfo.line1 !== '' ||
     stateShippingInfo.line2 !== '' ||

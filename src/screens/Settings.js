@@ -135,7 +135,7 @@ class SettingsContainer extends Component<Props, State> {
     }
   }
 
-  canUpdate = (): boolean => {
+  hasUnsavedChanges = (): boolean => {
     const { userData } = this.props;
     const {
       pending,
@@ -157,7 +157,7 @@ class SettingsContainer extends Component<Props, State> {
     );
   };
 
-  onUpdateSettings = () => {
+  onSave = () => {
     const { userData } = this.props;
     const {
       password,
@@ -166,10 +166,9 @@ class SettingsContainer extends Component<Props, State> {
       shippingAddress,
       username,
     } = this.state;
+    const data = {};
 
     this.setState({ pending: true });
-
-    const data = {};
 
     if (username !== '') {
       data.username = username;
@@ -298,12 +297,12 @@ class SettingsContainer extends Component<Props, State> {
           <Right>
             <NBButton
               transparent
-              disabled={!this.canUpdate()}
+              disabled={!this.hasUnsavedChanges()}
               style={{ backgroundColor: 'transparent' }}
-              onPress={this.onUpdateSettings}>
+              onPress={this.onSave}>
               <Icon
                 name="check"
-                style={!this.canUpdate() && { color: colors.grey3 }}
+                style={!this.hasUnsavedChanges() && { color: colors.grey3 }}
                 size={28}
               />
             </NBButton>
@@ -443,11 +442,6 @@ class SettingsContainer extends Component<Props, State> {
 }
 
 const styles = StyleSheet.create({
-  // container: {
-  //   flex: 1,
-  //   justifyContent: 'center',
-  //   alignItems: 'center',
-  // },
   label: {
     color: colors.black,
     fontWeight: '600',

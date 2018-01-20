@@ -156,9 +156,11 @@ class AddProductScreen extends React.Component<Props, State> {
   }
 
   addItem = () => {
+    const { description, images, price, grp_1, grp_2, tags } = this.state;
+
     this.setState({ pending: true });
     const formData = new FormData();
-    this.state.images.forEach((image, i) => {
+    images.forEach((image, i) => {
         // $FlowFixMe
         formData.append('photos', {
         uri: image.url,
@@ -166,11 +168,11 @@ class AddProductScreen extends React.Component<Props, State> {
           name: 'image' + i + '.jpg',
         });
     });
-    formData.append('description', this.state.description);
-    formData.append('price', this.state.price);
-    formData.append('categoryIds', this.state.grp_1.toString());
-    formData.append('typeIds', this.state.grp_2.toString());
-    formData.append('tags', this.state.tags);
+    formData.append('description', description);
+    formData.append('price', price);
+    formData.append('categoryIds', grp_1.toString());
+    formData.append('typeIds', grp_2.toString());
+    formData.append('tags', tags);
 
     // const config = {
     //   onUploadProgress: function(progressEvent) {
@@ -180,14 +182,16 @@ class AddProductScreen extends React.Component<Props, State> {
     api
       .post('/api/products', formData /*, config */)
       .then(res => {
-        this.setState({ pending: false });
         console.log(res);
         this.closeModal();
       })
       .catch(err => {
         console.log(err);
-        this.setState({ pending: false });
         ui.showToast(err.message, 'warning');
+      })
+      // final
+      .then(() => {
+        this.setState({ pending: false });
       });
   };
 

@@ -1,8 +1,9 @@
 // @flow
 // inspired by https://github.com/Osedea/react-native-interactive-avatar
 
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import {
+  ActivityIndicator,
   Image,
   Platform,
   StyleSheet,
@@ -11,6 +12,9 @@ import {
   View,
   // $FlowFixMe
 } from 'react-native';
+import {
+  CachedImage,
+} from 'react-native-cached-image';
 import ImagePicker from 'react-native-image-crop-picker';
 import colors from '../config/colors';
 
@@ -24,7 +28,7 @@ const PICKER_OPTIONS = {
 
 type Props = {
   interactive: boolean,
-  onChange?: Image => void, // called on change when interactive is true
+  onChange: Image => void, // called on change when interactive is true
   onChangeFailed?: () => void, // called on change failure when interactive is true
   onPress?: () => void,
   overlayColor: string, // On Android only, should be the same than the backgroundColor of the surrounding View
@@ -34,18 +38,16 @@ type Props = {
   placeholderURI?: string,
   resizeMode: Image.resizeMode,
   size: string, // oneOf(['default', 'mini', 'verySmall', 'small', 'medium']),
-  source?: Image.source,
   style?: Image.style,
-  uri: string,
+  uri: string | Image,
   withBorder: boolean,
 };
 
 type State = {
   failed: boolean,
-  source?: any,
 };
 
-export default class Avatar extends Component<Props, State> {
+export default class Avatar extends PureComponent<Props, State> {
   static defaultProps = {
     interactive: false,
     overlayColor: colors.white,
@@ -56,25 +58,17 @@ export default class Avatar extends Component<Props, State> {
 
   state = {
     failed: false,
-    source: null,
   };
 
   handleInteractivePress = () => {
-    console.log('handleInteractivePress');
     ImagePicker.openPicker({
       ...PICKER_OPTIONS,
       ...this.props.pickerOptions,
     })
       .then((response: Image) => {
-        const source = {
-          uri: response.path,
-          // scale
-        };
+        this.setState({ failed: false });
 
-        this.setState({ source, failed: false });
-        if (this.props.onChange) {
-          this.props.onChange(response);
-        }
+        this.props.onChange(response);
       })
       .catch(e => {
         if (e.code == 'E_PICKER_CANCELLED') {
@@ -91,17 +85,19 @@ export default class Avatar extends Component<Props, State> {
   };
 
   getAppropriateSource = () => {
-    let { source, uri } = this.props;
+    const { uri } = this.props;
 
-    if (uri !== '') {
-      source = { uri };
+    if (typeof uri == 'object' && uri !== '') {
+      return { uri: uri.path };
     }
 
-    if (!isiOS && !source) {
-      source = this.getPlaceholder();
+    if (typeof uri == 'string' && uri !== '') {
+      return { uri };
     }
 
-    return source;
+    if (!isiOS && !uri) {
+      return this.getPlaceholder();
+    }
   };
 
   getPlaceholder = () => {
@@ -115,9 +111,9 @@ export default class Avatar extends Component<Props, State> {
   };
 
   renderAvatarImage = () => {
-    const { placeholderText } = this.props;
-    const { source } = this.state;
-    if (!source && placeholderText !== undefined) {
+    const { placeholderText, uri } = this.props;
+
+    if (!uri && placeholderText !== undefined) {
       return (
         <View
           style={[
@@ -143,28 +139,19 @@ export default class Avatar extends Component<Props, State> {
         ]}
         defaultSource={this.getPlaceholder()}
         resizeMode={this.props.resizeMode}
-        source={this.state.source || this.getAppropriateSource()}
+        source={this.getAppropriateSource()}
       />
+      // <CachedImage source={this.getAppropriateSource()} />
     );
   };
 
   render() {
-    if (this.props.onPress) {
-      return (
-        <TouchableWithoutFeedback onPress={this.props.onPress}>
-          {this.renderAvatarImage()}
-        </TouchableWithoutFeedback>
-      );
-    }
-    if (this.props.interactive) {
-      return (
-        <TouchableWithoutFeedback onPress={this.handleInteractivePress}>
-          {this.renderAvatarImage()}
-        </TouchableWithoutFeedback>
-      );
-    }
-
-    return this.renderAvatarImage();
+    return (
+      <TouchableWithoutFeedback
+        onPress={() => this.props.interactive && this.handleInteractivePress()}>
+        {this.renderAvatarImage()}
+      </TouchableWithoutFeedback>
+    );
   }
 }
 
@@ -216,5 +203,10 @@ const styles = StyleSheet.create({
   border: {
     borderColor: colors.grey5,
     borderWidth: 2,
+  },
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

@@ -147,7 +147,6 @@ export class ImageGridComponent extends React.Component<Props, State> {
             keyExtractor={el => el.uuid}
             getItemLayout={this.getItemLayout}
             showsVerticalScrollIndicator={false}
-            ListFooterComponent={this.renderEmptyState}
             ListEmptyComponent={this.renderEmptyState}
           />
         )}

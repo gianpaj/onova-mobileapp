@@ -3,20 +3,16 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import {
+  Image,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
   // $FlowFixMe
 } from 'react-native';
 // prettier-ignore
 import {
   ActionSheet,
-  Body,
   Button as NBButton,
-  Card,
-  CardItem,
-  Content,
   Container,
   Header,
   Icon as NBIcon,
@@ -25,6 +21,7 @@ import {
 } from 'native-base';
 // $FlowFixMe
 import { NavigationActions, NavigationScreenProp } from 'react-navigation';
+import { Toast } from 'antd-mobile';
 
 import {
   Avatar,
@@ -35,6 +32,7 @@ import {
 import { getPersonalUserData, getUserData } from '../actions/actionCreator';
 
 import colors from '../config/colors';
+import * as api from '../utils/api';
 import * as ui from '../utils/ui';
 
 import type { UserData, Dispatch } from '../types';
@@ -50,7 +48,7 @@ type State = {
   displayName: string,
   editing: boolean,
   following: boolean,
-  profilePic: string,
+  profilePic: string | Image,
 };
 
 const defaultState = {
@@ -65,7 +63,7 @@ const defaultState = {
 const BUTTONS = ['Report', 'Cancel'];
 
 class ProfileScreen extends React.Component<Props, State> {
-  state = defaultState;
+  state = { ...defaultState };
 
   static navigationOptions = () => ({
     tabBarIcon: (props: any) => <NotificationsDot {...props} />,
@@ -119,7 +117,10 @@ class ProfileScreen extends React.Component<Props, State> {
   }
 
   hasStateDifferedFromProps(nextProps: any, key: string): boolean {
-    return !Object.is(nextProps[key], this.props[key]);
+    return (
+      nextProps.userData.displayName ||
+      !Object.is(nextProps[key], this.props[key])
+    );
   }
 
   onGoToSettings = () => {
@@ -144,6 +145,50 @@ class ProfileScreen extends React.Component<Props, State> {
       routeName: 'settings',
     });
     this.props.navigation.dispatch(navigateToSettings);
+  };
+
+  onSave = () => {
+    const { userData } = this.props;
+    const { bio, displayName, profilePic } = this.state;
+    const formData = new FormData();
+
+    if (bio && bio !== '') {
+      formData.append('bio', bio);
+    }
+
+    if (displayName && displayName !== '') {
+      formData.append('displayName', displayName);
+    }
+
+    if (profilePic && profilePic.path) {
+      // $FlowFixMe
+      formData.append('profilePic', {
+        uri: profilePic.path,
+        type: 'image/jpeg',
+        name: 'image.jpg',
+      });
+    }
+
+    Toast.loading('Loading...', 30);
+
+    api
+      .put(`/api/users/${userData._id}`, formData, {
+        suppressRedBox: true,
+        timeout: 30000,
+      })
+      .then(res => {
+        this.setState({ editing: false });
+        console.debug(res);
+        ui.showToast('Your profile has been updated', 'success');
+      })
+      .catch(err => {
+        console.debug(err);
+        ui.showToast(err.message, 'danger');
+      })
+      // final
+      .then(() => {
+        Toast.hide();
+      });
   };
 
   hasUnsavedChanges(): boolean {
@@ -183,8 +228,7 @@ class ProfileScreen extends React.Component<Props, State> {
       return true;
     }
 
-    const { userData } = this.props;
-    return navState.params.userID == userData._id;
+    return navState.params._id == this.props.userData._id;
   }
 
   ifNavigatedFromProduct = () => {
@@ -244,7 +288,7 @@ class ProfileScreen extends React.Component<Props, State> {
                   style={styles.avatarContainer}
                   size={'default'}
                   withBorder
-                  onChange={p => this.setState({ profilePic: p.sourceURL })}
+                  onChange={p => this.setState({ profilePic: p })}
                   interactive={editing}
                   uri={profilePic}
                   placeholderText={username[0]}
@@ -266,7 +310,11 @@ class ProfileScreen extends React.Component<Props, State> {
                         small
                         full
                         style={styles.editOrFollowButton}
-                        onPress={() => this.setState({ editing: !editing })}>
+                        onPress={() => {
+                          editing
+                            ? this.onSave()
+                            : this.setState({ editing: !editing });
+                        }}>
                         <Text style={styles.editOrFollowButtonText}>
                           {editing ? 'Save' : 'Edit Profile'}
                         </Text>

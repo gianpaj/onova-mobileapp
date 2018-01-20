@@ -10,6 +10,7 @@ const TIMEOUT = 4000;
 type Options = {
   suppressRedBox: boolean, // If true, no warning is shown on failed request
   cancelToken?: CancelTokenSource,
+  timeout?: number,
 };
 
 /**
@@ -137,7 +138,7 @@ async function sendRequest(method, path, body, options) {
       method,
       headers,
       url: path,
-      timeout: TIMEOUT,
+      timeout: options.timeout || TIMEOUT,
       validateStatus: function(status) {
         return status >= 200 && status < 500;
       },

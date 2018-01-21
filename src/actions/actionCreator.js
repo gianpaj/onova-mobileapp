@@ -157,14 +157,14 @@ const getUserData = (userId: string, options: any) => (dispatch: Dispatch) => (
 );
 
 const logout = () => (dispatch: Dispatch, getState: GetState) => {
-  const provider = getState().LoginReducer.data.provider;
-  if (provider == 'email') {
-    return dispatch({ type: LOGOUT });
-    // } else if (data.provider == 'google') {
-    //   return GoogleSignin.signOut()
-    //     .then(() => firebase.auth().signOut())
-    //     .then(dispatch({ type: LOGOUT }));
-  }
+  // const provider = getState().LoginReducer.data.provider;
+  // if (provider == 'email') {
+  return dispatch({ type: LOGOUT });
+  // } else if (data.provider == 'google') {
+  //   return GoogleSignin.signOut()
+  //     .then(() => firebase.auth().signOut())
+  //     .then(dispatch({ type: LOGOUT }));
+  // }
 };
 
 const goToSignup = () => ({

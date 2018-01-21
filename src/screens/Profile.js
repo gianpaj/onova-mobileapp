@@ -96,11 +96,10 @@ class ProfileScreen extends React.Component<Props, State> {
     this.refresh();
   }
 
-  componentWillUnmount() {
-    // this.setState({ editing: false });
-  }
-
   componentWillReceiveProps(nextProps) {
+    // fix error when logging out
+    if (!nextProps.userData) return;
+
     const { bio, displayName, profilePic } = nextProps.userData;
 
     if (this.hasStateDifferedFromProps(nextProps, 'bio')) {
@@ -237,8 +236,17 @@ class ProfileScreen extends React.Component<Props, State> {
   };
 
   openNotifications = () => {
-    console.warn('code me like those french girls 🎨');
+    alert('code me like those french girls 🎨');
   };
+
+  shouldComponentUpdate(nextProps) {
+    // fix error when logging out
+    if (!nextProps.userData) {
+      return false;
+    } else {
+      return true;
+    }
+  }
 
   render() {
     const { _id, username } = this.props.userData;

@@ -16,6 +16,15 @@ type Props = {
 };
 
 class NotificationsDot extends React.Component<Props> {
+  shouldComponentUpdate(nextProps) {
+    // fix error when logging out
+    if (!nextProps.userData) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
   render() {
     const { userData, focused } = this.props;
     userData.notifications = false;

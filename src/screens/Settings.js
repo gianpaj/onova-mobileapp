@@ -53,7 +53,6 @@ import type {
 
 type Props = {
   dispatch: Dispatch,
-  logout: () => any,
   navigation?: NavigationScreenProp,
   userData: UserData,
 };
@@ -109,6 +108,9 @@ class SettingsContainer extends Component<Props, State> {
   }
 
   componentWillReceiveProps(nextProps) {
+    // fix error when logging out
+    if (!nextProps.userData) return;
+
     const { emailAddress, shippingAddress, username } = nextProps.userData;
 
     if (this.hasStateDifferedFromProps(nextProps, 'shippingAddress')) {
@@ -253,8 +255,8 @@ class SettingsContainer extends Component<Props, State> {
     }, 100);
   };
 
-  onLogout = () => {
-    this.props.logout();
+  onSignout = () => {
+    this.props.dispatch(logout());
   };
 
   formatCardInfo() {
@@ -265,6 +267,15 @@ class SettingsContainer extends Component<Props, State> {
       expiry: `${paymentInfo.exp_month} / ${paymentInfo.exp_year}`,
       name: ' ',
     };
+  }
+
+  shouldComponentUpdate(nextProps) {
+    // fix error when logging out
+    if (!nextProps.userData) {
+      return false;
+    } else {
+      return true;
+    }
   }
 
   render() {
@@ -424,7 +435,7 @@ class SettingsContainer extends Component<Props, State> {
           </View>
           <HR full />
           <View style={[styles.padder, { alignItems: 'center' }]}>
-            <NBButton light full onPress={this.onLogout}>
+            <NBButton light full onPress={this.onSignout}>
               <Text>Sign out</Text>
             </NBButton>
           </View>
@@ -465,7 +476,6 @@ const styles = StyleSheet.create({
 
 const mapStateToProps: any = (state: any) => ({
   userData: state.LoginReducer.data,
-  logout,
 });
 
 export const Settings = connect(mapStateToProps)(SettingsContainer);

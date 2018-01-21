@@ -79,7 +79,7 @@ export class Home extends PureComponent<Props, State> {
   });
 
   onShare() {
-    alert('to do');
+    alert('code me like those french girls 🎨');
   }
 
   render() {

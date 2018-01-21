@@ -1,7 +1,7 @@
 // @flow
 
 // $FlowFixMe
-import { Alert, AlertIOS } from 'react-native';
+import { Alert } from 'react-native';
 import { Toast } from 'native-base';
 
 /**

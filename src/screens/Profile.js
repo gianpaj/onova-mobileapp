@@ -21,7 +21,7 @@ import {
 } from 'native-base';
 // $FlowFixMe
 import { NavigationActions, NavigationScreenProp } from 'react-navigation';
-import { Toast } from 'antd-mobile';
+import { NoticeBar, Toast } from 'antd-mobile';
 
 import {
   Avatar,
@@ -138,12 +138,12 @@ class ProfileScreen extends React.Component<Props, State> {
   };
 
   goToSettings = () => {
-    // reset state
-    this.setState(defaultState);
     const navigateToSettings = NavigationActions.navigate({
-      routeName: 'settings',
-    });
-    this.props.navigation.dispatch(navigateToSettings);
+        routeName: 'settings',
+      });
+      this.props.navigation.dispatch(navigateToSettings);
+      // reset state
+      this.setState(defaultState);
   };
 
   onSave = () => {
@@ -248,6 +248,10 @@ class ProfileScreen extends React.Component<Props, State> {
     }
   }
 
+  shouldShowNoticeBar() {
+    return this.props.userData.accountStatus == 'notverified';
+  }
+
   render() {
     const { _id, username } = this.props.userData;
     const { bio, displayName, editing, profilePic, following } = this.state;
@@ -289,6 +293,16 @@ class ProfileScreen extends React.Component<Props, State> {
           </Right>
         </Header>
         <View>
+          {this.shouldShowNoticeBar && (
+            <View>
+              <NoticeBar
+                style={{  }}
+                marqueeProps={{ loop: false, style: styles.noticeBar }}
+                icon={false}>
+                Please verify you email to start buying or selling.
+              </NoticeBar>
+            </View>
+          )}
           <View style={styles.profileTop}>
             <View>
               <View style={styles.row}>
@@ -418,6 +432,11 @@ const styles = StyleSheet.create({
   },
   editOrFollowButtonText: {
     color: colors.grey1,
+  },
+  noticeBar: {
+    color: colors.grey2,
+    textAlign: 'center',
+    width: '34.5%',
   },
 });
 

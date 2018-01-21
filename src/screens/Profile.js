@@ -197,7 +197,7 @@ class ProfileScreen extends React.Component<Props, State> {
     return (
       (bio !== userData.bio && bio !== '') ||
       (displayName !== userData.displayName && displayName !== '') ||
-      profilePic !== ''
+      (profilePic !== userData.profilePic && profilePic !== '')
     );
   }
 

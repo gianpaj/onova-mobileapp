@@ -182,6 +182,7 @@ class OrdersListContainer extends Component<Props, State> {
             <NBButton
               transparent
               disabled={!this.hasUnsavedChanges()}
+              // eslint-disable-next-line
               style={{ backgroundColor: 'transparent' }}
               onPress={this.onSave}>
               <Icon

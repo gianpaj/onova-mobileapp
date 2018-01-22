@@ -3,6 +3,7 @@
 import React from 'react';
 import {
   ActivityIndicator,
+  AppState,
   Platform,
   StyleSheet,
   View,
@@ -12,8 +13,11 @@ import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/lib/integration/react';
 import { Root } from 'native-base';
 
+// import Notifications from 'react-native-push-notification';
 import * as firebase from 'firebase';
+import SendBird from 'sendbird';
 
+import settings from './config/settings';
 import configureStore from './store';
 import AppNavigation from './navigation';
 import KeyboardManager from 'react-native-keyboard-manager';

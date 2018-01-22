@@ -420,6 +420,7 @@ const styles = StyleSheet.create({
   inputContainer: {
     marginVertical: 10,
   },
+  // eslint-disable-next-line
   inputContainerNew: {
     backgroundColor: 'transparent',
     marginTop: 10,

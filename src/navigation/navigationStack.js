@@ -5,6 +5,7 @@ import { StackNavigator } from 'react-navigation';
 import {
   AddProduct,
   Login,
+  OrderThread,
   Product,
   Profile,
   Settings,
@@ -27,6 +28,7 @@ const navigator = StackNavigator(
     addProduct: { screen: AddProduct },
     settings: { screen: Settings },
     profile: { screen: Profile },
+    orderThread: { screen: OrderThread },
   },
   {
     headerMode: 'none',

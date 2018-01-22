@@ -1,12 +1,14 @@
 {
   "compilerOptions": {
-    "experimentalDecorators": true,
+    "target": "ES6",
+    "checkJs": true,
     "allowSyntheticDefaultImports": true,
-    "baseUrl": ".",
+    "jsx": "react-native",
     "paths": {
       "src/*": "./*"
     }
   },
+
   "exclude": [
     "node_modules"
   ]

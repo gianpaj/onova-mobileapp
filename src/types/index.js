@@ -1,5 +1,5 @@
 // @flow
-import type { Store as ReduxStore, Dispatch as ReduxDispatch } from 'redux';
+import type { Dispatch as ReduxDispatch } from 'redux';
 import type { Reducers } from '../reducers';
 
 // export type Product = {
@@ -52,6 +52,17 @@ export type ShippingAddress = {
   state: string,
   country: string,
   postcode: string,
+};
+
+export type Message = {
+  _id: number,
+  text: string,
+  createdAt: Date,
+  user: {
+    _id: number,
+    name: string,
+    avatar: string,
+  },
 };
 
 type $ExtractFunctionReturn = <V>(v: (...args: any) => V) => V;

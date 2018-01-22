@@ -1,6 +1,7 @@
 import { AddProduct } from '../screens/AddProduct';
 import { Home } from '../screens/Home';
 import { Login } from '../screens/Login';
+import { OrdersList } from '../screens/OrdersList';
 import { Product } from '../screens/Product';
 import { Profile } from '../screens/Profile';
 import { Settings } from '../screens/Settings';
@@ -11,6 +12,7 @@ export {
   AddProduct,
   Home,
   Login,
+  OrdersList,
   Product,
   Profile,
   Settings,

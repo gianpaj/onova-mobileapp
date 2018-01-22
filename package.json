@@ -17,7 +17,8 @@
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "test-e2e-android": "detox test -c android.emu.debug --loglevel verbose",
     "test-e2e-ios": "detox test -c ios.sim.debug",
-    "test": "jest __tests__"
+    "test": "jest __tests__",
+    "test:lint": "eslint src --quiet"
   },
   "dependencies": {
     "@patwoz/react-navigation-is-focused-hoc": "^1.1.0",
@@ -35,6 +36,7 @@
     "react-native-elements": "^0.18.2",
     "react-native-fast-image": "^2.0.1",
     "react-native-flip-card": "^3.5.2",
+    "react-native-gifted-chat": "^0.3.0",
     "react-native-image-crop-picker": "^0.18.2",
     "react-native-keyboard-manager": "^4.0.13-4",
     "react-native-simple-radio-button": "^2.7.1",
@@ -46,6 +48,7 @@
     "redux": "^3.7.2",
     "redux-persist": "^5.4.0",
     "redux-thunk": "^2.2.0",
+    "sendbird": "^3.0.51",
     "validator": "^9.1.1"
   },
   "devDependencies": {

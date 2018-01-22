@@ -9,7 +9,7 @@ type Props = {
   full: boolean,
 };
 
-const HR = (props: Props) => (
+const HR = (props: Props): React$Element<any> => (
   <View style={[styles.hr, { width: `${props.full ? '100%' : '89.5%'}` }]} />
 );
 

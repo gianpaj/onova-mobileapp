@@ -21,6 +21,7 @@ import { Button as NBButton, Content } from 'native-base';
 import { NavigationScreenProp } from 'react-navigation';
 import isEmail from 'validator/lib/isEmail';
 
+import { SpinningIcon } from '../components';
 import { login, goToSignup } from '../actions/actionCreator';
 import type { Dispatch } from '../types';
 
@@ -120,6 +121,9 @@ class LoginScreen extends React.Component<Props, State> {
   };
 
   render() {
+    const { loadingLogin } = this.props;
+    const { emailAddress, password } = this.state;
+
     return (
       <Content>
         <View style={styles.header}>
@@ -141,7 +145,7 @@ class LoginScreen extends React.Component<Props, State> {
             onSubmitEditing={() =>
               this.PwdInput ? this.PwdInput.focus() : undefined
             }
-            value={this.state.emailAddress}
+            value={emailAddress}
             testID="EmailField"
             onChangeText={text => this.setState({ emailAddress: text })}
             {...this._inputProps}
@@ -154,7 +158,7 @@ class LoginScreen extends React.Component<Props, State> {
             placeholder="Password"
             returnKeyType="go"
             onSubmitEditing={() => this.onLogin()}
-            value={this.state.password}
+            value={password}
             testID="PasswordField"
             onChangeText={text => this.setState({ password: text })}
             {...this._inputProps}
@@ -168,14 +172,19 @@ class LoginScreen extends React.Component<Props, State> {
           </Text>
           <View style={{ marginTop: 15 }}>
             <Button
+              iconRight={{}}
+              iconComponent={() =>
+                loadingLogin && (
+                  <SpinningIcon
+                    styleContainer={{ position: 'absolute', left: '63%' }}
+                    size={24}
+                    color={colors.primary}
+                  />
+                )
+              }
               buttonStyle={styles.PrimaryButton}
               raised
-              loading={this.props.loadingLogin}
-              disabled={
-                !this.state.emailAddress ||
-                !this.state.password ||
-                this.props.loadingLogin
-              }
+              disabled={!emailAddress || !password || loadingLogin}
               onPress={() => this.onLogin()}
               title="Log in"
               testID="LoginButton"

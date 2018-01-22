@@ -58,11 +58,12 @@ export type Message = {
   _id: number,
   text: string,
   createdAt: Date,
-  user: {
-    _id: number,
+  user?: {
+    _id: string,
     name: string,
     avatar: string,
   },
+  system?: boolean,
 };
 
 type $ExtractFunctionReturn = <V>(v: (...args: any) => V) => V;

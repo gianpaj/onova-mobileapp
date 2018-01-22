@@ -21,7 +21,8 @@ import { Content } from 'native-base';
 import { NavigationScreenProp } from 'react-navigation';
 import isEmail from 'validator/lib/isEmail';
 
-import { logout, signup, goback } from '../actions/actionCreator';
+import { SpinningIcon } from '../components';
+import { signup, goback } from '../actions/actionCreator';
 import type { Dispatch } from '../types';
 import { validPassword } from '../utils/validators';
 import colors from '../config/colors';
@@ -38,7 +39,7 @@ type State = {
   emailAddress: string,
   password: string,
   loading: false,
-  usernameError: false,
+  usernameError: boolean,
 };
 
 class SignupScreen extends React.Component<Props, State> {
@@ -86,15 +87,6 @@ class SignupScreen extends React.Component<Props, State> {
       this.setState({ usernameError: false });
     }, 100);
   };
-
-  resetNavigation() {
-    // if (this.props.navigation) this.props.navigation.dispatch(resetAction);
-    if (this.props.navigation) this.props.navigation.dispatch(logout());
-  }
-
-  onGoback() {
-    if (this.props.navigation) this.props.navigation.dispatch(goback());
-  }
 
   openTermPolicy() {
     Linking.openURL('https://onova.co').catch(err =>
@@ -165,7 +157,16 @@ class SignupScreen extends React.Component<Props, State> {
             <Button
               buttonStyle={styles.SignupButton}
               raised
-              loading={this.props.loading}
+              iconRight={{}}
+              iconComponent={() =>
+                this.props.loading && (
+                  <SpinningIcon
+                    styleContainer={{ position: 'absolute', left: '73%' }}
+                    size={24}
+                    color={colors.primary}
+                  />
+                )
+              }
               disabled={
                 !isEmail(this.state.emailAddress) ||
                 !validPassword(this.state.password) ||
@@ -178,7 +179,9 @@ class SignupScreen extends React.Component<Props, State> {
             />
             <Text style={[styles.hr, styles.mt15]}>
               Already have an account?&nbsp;
-              <Text style={styles.linkText} onPress={() => this.onGoback()}>
+              <Text
+                style={styles.linkText}
+                onPress={() => this.props.navigation.dispatch(goback())}>
                 Log in
               </Text>
             </Text>

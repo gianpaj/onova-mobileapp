@@ -1,5 +1,5 @@
 // @flow
-import type { Dispatch as ReduxDispatch } from 'redux';
+import type { Dispatch as ReduxDispatch, Store as ReduxStore } from 'redux';
 import type { Reducers } from '../reducers';
 
 // export type Product = {
@@ -69,6 +69,7 @@ export type Message = {
 type $ExtractFunctionReturn = <V>(v: (...args: any) => V) => V;
 export type State = $ObjMap<Reducers, $ExtractFunctionReturn>;
 // export type Store = ReduxStore<State, Action>;
+export type Store = ReduxStore<State, any>;
 
 // export type Dispatch = ReduxDispatch<Action>;
 export type Dispatch = ReduxDispatch<any>;

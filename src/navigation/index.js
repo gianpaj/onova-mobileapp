@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 // $FlowFixMe
 import { addNavigationHelpers, NavigationActions } from 'react-navigation';
 import NavigationStack from './navigationStack';
+import type { Dispatch, UserData, ReduxState } from '../types';
 
 class AppNavigation extends Component<{}> {
   componentDidMount() {
@@ -38,7 +39,7 @@ class AppNavigation extends Component<{}> {
   }
 }
 
-const mapStateToProps: any = (state: any) => ({
+const mapStateToProps: any = (state: ReduxState) => ({
   isLoggedIn: state.LoginReducer.isLoggedIn,
   navigationState: state.NavigationReducer,
 });

@@ -35,8 +35,7 @@ import type { NavigationScreenProp } from 'react-navigation';
 import KeyboardManager from 'react-native-keyboard-manager';
 
 // import { ChatActions } from '../components/ChatActions';
-import type { Message, UserData } from '../types';
-import settings from '../config/settings';
+import type { Message, UserData, ReduxState } from '../types';
 import colors from '../config/colors';
 
 if (Platform.OS == 'ios') {
@@ -334,7 +333,7 @@ const st = StyleSheet.create({
   // },
 });
 
-const mapStateToProps: any = (state: any) => ({
+const mapStateToProps: any = (state: ReduxState) => ({
   userData: state.LoginReducer.data,
 });
 

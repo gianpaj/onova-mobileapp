@@ -19,8 +19,8 @@ import {
   Left,
   Right,
 } from 'native-base';
-// $FlowFixMe
-import { NavigationActions, NavigationScreenProp } from 'react-navigation';
+import { NavigationActions } from 'react-navigation';
+import type { NavigationScreenProp } from 'react-navigation';
 import { NoticeBar, Toast } from 'antd-mobile';
 
 import {
@@ -35,11 +35,11 @@ import colors from '../config/colors';
 import * as api from '../utils/api';
 import * as ui from '../utils/ui';
 
-import type { UserData, Dispatch } from '../types';
+import type { UserData, Dispatch, ReduxState } from '../types';
 
 type Props = {
   dispatch: Dispatch,
-  navigation: NavigationScreenProp,
+  navigation: NavigationScreenProp<*>,
   userData: UserData,
 };
 
@@ -440,7 +440,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps: any = (state: any) => ({
+const mapStateToProps: any = (state: ReduxState) => ({
   userData: state.LoginReducer.data,
 });
 

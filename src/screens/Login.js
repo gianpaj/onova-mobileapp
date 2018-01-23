@@ -17,13 +17,12 @@ import {
   FormInput,
 } from 'react-native-elements';
 import { Button as NBButton, Content } from 'native-base';
-// $FlowFixMe
-import { NavigationScreenProp } from 'react-navigation';
+import type { NavigationScreenProp } from 'react-navigation';
 import isEmail from 'validator/lib/isEmail';
 
 import { SpinningIcon } from '../components';
 import { login, goToSignup } from '../actions/actionCreator';
-import type { Dispatch } from '../types';
+import type { Dispatch, ReduxState } from '../types';
 
 import * as api from '../utils/api';
 import * as ui from '../utils/ui';
@@ -33,7 +32,7 @@ type Props = {
   dispatch: Dispatch,
   loadingGoogleLogin: boolean,
   loadingLogin: boolean,
-  navigation?: NavigationScreenProp,
+  navigation?: NavigationScreenProp<*>,
 };
 
 type State = {
@@ -254,7 +253,7 @@ class LoginScreen extends React.Component<Props, State> {
   }
 }
 
-const mapStateToProps: any = (state: any) => ({
+const mapStateToProps: any = (state: ReduxState) => ({
   loadingLogin: state.LoginReducer.loading,
   loadingGoogleLogin: state.LoginReducer.loadingGoogleLogin,
 });

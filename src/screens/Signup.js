@@ -23,7 +23,7 @@ import isEmail from 'validator/lib/isEmail';
 
 import { SpinningIcon } from '../components';
 import { signup, goback } from '../actions/actionCreator';
-import type { Dispatch } from '../types';
+import type { Dispatch, ReduxState } from '../types';
 import { validPassword } from '../utils/validators';
 import colors from '../config/colors';
 import settings from '../config/settings';
@@ -200,7 +200,7 @@ class SignupScreen extends React.Component<Props, State> {
   }
 }
 
-const mapStateToProps: any = (state: any) => ({
+const mapStateToProps: any = (state: ReduxState) => ({
   loading: state.LoginReducer.loading,
 });
 

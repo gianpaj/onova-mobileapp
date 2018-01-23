@@ -43,7 +43,7 @@
     "react-native-swiper": "^1.5.13",
     "react-native-tab-view": "^0.0.73",
     "react-native-vector-icons": "^4.4.2",
-    "react-navigation": "1.0.0-beta.22",
+    "react-navigation": "1.0.0-beta.26",
     "react-redux": "^5.0.6",
     "redux": "^3.7.2",
     "redux-persist": "^5.4.0",
@@ -76,7 +76,7 @@
     "setupTestFrameworkScriptFile": "./e2e/init.js",
     "preset": "react-native",
     "transformIgnorePatterns": [
-      "node_modules/(?!(jest-)?react-native|react-native-vector-icons|react-navigation|native-base-shoutem-theme|redux-persist)"
+      "node_modules/(?!(jest-)?react-native|react-native-vector-icons|react-navigation|native-base-shoutem-theme|redux-persist|@patwoz/react-navigation-is-focused-hoc)"
     ]
   },
   "detox": {

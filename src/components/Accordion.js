@@ -16,7 +16,7 @@ type Props = {
   values: Array<any>,
 };
 
-export default class Accordion extends PureComponent<Props> {
+export default class Accordion extends PureComponent<Props, void> {
   animatedValue: Animated.Value;
 
   static defaultProps = {

@@ -1,6 +1,10 @@
+/*global sb*/
 // @flow
+
 // import * as firebase from 'firebase';
 // import { GoogleSignin, User as GoogleUser } from 'react-native-google-signin';
+
+import SendBird from 'sendbird';
 import { Toast } from 'antd-mobile';
 
 import {

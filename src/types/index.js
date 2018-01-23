@@ -66,11 +66,16 @@ export type Message = {
   system?: boolean,
 };
 
-type $ExtractFunctionReturn = <V>(v: (...args: any) => V) => V;
-export type State = $ObjMap<Reducers, $ExtractFunctionReturn>;
-// export type Store = ReduxStore<State, Action>;
-export type Store = ReduxStore<State, any>;
+export type State = {
+  app: AppType,
+  counter: CounterType,
+  history: HistoryState,
+};
 
-// export type Dispatch = ReduxDispatch<Action>;
-export type Dispatch = ReduxDispatch<any>;
-export type GetState = () => State;
+export type ReduxAction = AppAction | HistoryAction | CounterAction;
+// export type Store = ReduxStore<State, Action>;
+export type Store = ReduxStore<State, ReduxAction>;
+
+export type Dispatch = ReduxDispatch<ReduxAction>;
+// export type Dispatch = ReduxDispatch<any>;
+export type GetState = () => ReduxState;

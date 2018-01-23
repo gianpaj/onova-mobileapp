@@ -49,6 +49,7 @@ import type {
   Dispatch,
   PaymentInfo,
   ShippingAddress,
+  ReduxState,
 } from '../types';
 
 type Props = {
@@ -474,7 +475,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps: any = (state: any) => ({
+const mapStateToProps: any = (state: ReduxState) => ({
   userData: state.LoginReducer.data,
 });
 

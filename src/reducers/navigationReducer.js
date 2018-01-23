@@ -1,5 +1,4 @@
 // @flow
-// $FlowFixMe
 import { NavigationActions } from 'react-navigation';
 
 import AppNavigator from '../navigation/navigationStack';

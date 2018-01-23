@@ -1,3 +1,5 @@
+// @flow
+
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/es/storage';
@@ -12,10 +14,10 @@ const config1 = {
   // blacklist: ['counterString'],
 };
 
-// We are only persisting the counterReducer and loginReducer
+// We are only persisting the loginReducer
 const LoginReducer = persistReducer(config1, loginReducer);
 
-// combineReducer applied on persisted(counterReducer) and NavigationReducer
+// combineReducer applied on persisted(loginReducer) and NavigationReducer
 const rootReducer = combineReducers({
   NavigationReducer,
   LoginReducer,

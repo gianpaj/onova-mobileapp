@@ -34,8 +34,9 @@ import {
   ImagePicker as AntImagePicker,
   WingBlank,
 } from 'antd-mobile';
-// $FlowFixMe
-import { NavigationScreenProp } from 'react-navigation';
+
+import type { NavigationScreenProp } from 'react-navigation';
+import type { ReduxState } from '../types';
 
 import { HR } from '../components';
 
@@ -58,7 +59,7 @@ const category_radio_grp_2 = [
 
 type Props = {
   isFocused: boolean,
-  navigation: NavigationScreenProp,
+  navigation: NavigationScreenProp<any>,
 };
 
 type State = {

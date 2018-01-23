@@ -1,3 +1,5 @@
+// @flow
+
 import {
   LOGIN_PENDING,
   LOGIN_SUCCESS,
@@ -11,18 +13,22 @@ import {
   GETUSER_SUCCESS,
   GETUSER_FAIL,
 } from '../actions/actionTypes';
+import type { Action, LoginState } from '../types/loginReducer';
 
-const initialState = {
+const initialState: LoginState = {
   isLoggedIn: false,
   loading: false,
   loadingGoogleLogin: false,
   data: null,
   hasError: false,
-  errorMsg: null,
+  // errorMsg: null,
   fetchLoading: false,
 };
 
-const loginReducer = (state = initialState, action) => {
+export default function(
+  state: LoginState = initialState,
+  action: Action
+): LoginState {
   switch (action.type) {
     case LOGIN_PENDING:
     case SIGNUP_PENDING:
@@ -32,7 +38,7 @@ const loginReducer = (state = initialState, action) => {
         loading: true,
         data: null,
         hasError: false,
-        errorMsg: null,
+        // errorMsg: null,
       };
 
     case LOGIN_SUCCESS:
@@ -53,7 +59,7 @@ const loginReducer = (state = initialState, action) => {
         loadingGoogleLogin: false,
         data: null,
         hasError: true,
-        errorMsg: action.payload,
+        // errorMsg: action.payload,
       };
 
     case GOOGLE_LOGIN_PENDING:
@@ -64,7 +70,7 @@ const loginReducer = (state = initialState, action) => {
         loadingGoogleLogin: true,
         data: null,
         hasError: false,
-        errorMsg: null,
+        // errorMsg: null,
       };
 
     case LOGOUT:
@@ -94,12 +100,10 @@ const loginReducer = (state = initialState, action) => {
         ...state,
         fetchLoading: false,
         hasError: true,
-        errorMsg: action.payload,
+        // errorMsg: action.payload,
       };
 
     default:
       return state;
   }
-};
-
-export default loginReducer;
+}

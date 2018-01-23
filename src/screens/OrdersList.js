@@ -28,7 +28,6 @@ import { FormInput, FormLabel } from 'react-native-elements';
 // $FlowFixMe
 import { NavigationScreenProp } from 'react-navigation';
 import { CardView, LiteCreditCardInput } from 'react-native-credit-card-input';
-import SendBird from 'sendbird';
 import { Toast } from 'antd-mobile';
 import axios from 'axios';
 import update from 'immutability-helper';
@@ -41,7 +40,7 @@ import { validShippingAddress } from '../utils/validators';
 import * as api from '../utils/api';
 import * as ui from '../utils/ui';
 
-import type { UserData, Dispatch } from '../types';
+import type { UserData, Dispatch, ReduxState } from '../types';
 
 type Props = {
   dispatch: Dispatch,
@@ -348,7 +347,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps: any = (state: any) => ({
+const mapStateToProps: any = (state: ReduxState) => ({
   userData: state.LoginReducer.data,
 });
 

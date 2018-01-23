@@ -1,0 +1,20 @@
+/* @flow */
+
+export type Action = {
+  // type: LOGIN_PENDING | LOGIN_SUCCESS | LOGIN_FAIL,
+  payload?: {
+    counter: number,
+  },
+};
+
+export type LoginState = {
+  // isLoading: boolean,
+  // isHydrated: boolean,
+  isLoggedIn: boolean,
+  loading: boolean,
+  loadingGoogleLogin: boolean,
+  data: any,
+  hasError: boolean,
+  // errorMsg: string | null,
+  fetchLoading: boolean,
+};

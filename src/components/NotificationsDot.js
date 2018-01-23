@@ -6,6 +6,7 @@ import { View, Platform } from 'react-native';
 import { connect } from 'react-redux';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
+import type { State } from '../types';
 import colors from '../config/colors';
 
 const isiOS = Platform.OS === 'ios';
@@ -15,7 +16,7 @@ type Props = {
   userData: any,
 };
 
-class NotificationsDot extends React.Component<Props> {
+class NotificationsDot extends React.Component<Props, void> {
   shouldComponentUpdate(nextProps) {
     // fix error when logging out
     if (!nextProps.userData) {
@@ -66,7 +67,7 @@ class NotificationsDot extends React.Component<Props> {
   }
 }
 
-const mapStateToProps: any = (state: any) => ({
+const mapStateToProps: any = (state: ReduxState) => ({
   userData: state.LoginReducer.data,
 });
 

@@ -9,7 +9,14 @@ import { addNavigationHelpers, NavigationActions } from 'react-navigation';
 import NavigationStack from './navigationStack';
 import type { Dispatch, UserData, ReduxState } from '../types';
 
-class AppNavigation extends Component<{}> {
+type Props = {
+  dispatch?: Dispatch,
+  navigationState?: any,
+  isLoggedIn?: boolean,
+  userData?: UserData,
+};
+
+class AppNavigation extends Component<Props, void> {
   componentDidMount() {
     BackHandler.addEventListener('hardwareBackPress', this.onBackPress);
   }
@@ -42,6 +49,7 @@ class AppNavigation extends Component<{}> {
 const mapStateToProps: any = (state: ReduxState) => ({
   isLoggedIn: state.LoginReducer.isLoggedIn,
   navigationState: state.NavigationReducer,
+  userData: state.LoginReducer.data,
 });
 
 export default connect(mapStateToProps)(AppNavigation);

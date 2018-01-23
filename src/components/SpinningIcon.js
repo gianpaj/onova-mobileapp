@@ -11,7 +11,7 @@ type Props = {
   styleContainer: any,
 };
 
-export default class SpinningIcon extends PureComponent<Props> {
+export default class SpinningIcon extends PureComponent<Props, void> {
   spinValue = new Animated.Value(0);
 
   componentDidMount() {

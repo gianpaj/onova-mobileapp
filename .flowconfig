@@ -17,7 +17,8 @@
 .*/react-native/Libraries/.*
 .*/react-native/lib/.*
 .*/react-native-tab-view/.*
-.*/react-navigation/.*
+.*/node_modules/protobufjs/src/bower.json
+.*/node_modules/rc-util/lib/PureRenderMixin.js
 
 ; Ignore polyfills
 .*/Libraries/polyfills/.*

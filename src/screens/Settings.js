@@ -25,8 +25,7 @@ import {
 } from 'native-base';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { FormInput, FormLabel } from 'react-native-elements';
-// $FlowFixMe
-import { NavigationScreenProp } from 'react-navigation';
+import type { NavigationScreenProp } from 'react-navigation';
 import { CardView, LiteCreditCardInput } from 'react-native-credit-card-input';
 import FlipCard from 'react-native-flip-card';
 import { Toast } from 'antd-mobile';
@@ -54,7 +53,7 @@ import type {
 
 type Props = {
   dispatch: Dispatch,
-  navigation?: NavigationScreenProp,
+  navigation?: NavigationScreenProp<any>,
   userData: UserData,
 };
 

@@ -9,7 +9,6 @@ import {
   View,
   // $FlowFixMe
 } from 'react-native';
-// prettier-ignore
 import {
   ActionSheet,
   Button as NBButton,
@@ -39,7 +38,7 @@ import type { UserData, Dispatch, ReduxState } from '../types';
 
 type Props = {
   dispatch: Dispatch,
-  navigation: NavigationScreenProp<*>,
+  navigation: NavigationScreenProp<any>,
   userData: UserData,
 };
 

@@ -4,7 +4,6 @@ import React, { Component } from 'react';
 // $FlowFixMe
 import { BackHandler } from 'react-native';
 import { connect } from 'react-redux';
-// $FlowFixMe
 import { addNavigationHelpers, NavigationActions } from 'react-navigation';
 
 import { initializeSendBird } from '../actions/actionCreator';

@@ -12,7 +12,7 @@ import {
 } from '../screens';
 import { TabsStack } from './navigationTabs';
 
-const navigator = StackNavigator(
+export default StackNavigator(
   {
     login: { screen: Login },
     signup: {
@@ -33,5 +33,3 @@ const navigator = StackNavigator(
     headerMode: 'none',
   }
 );
-
-export default navigator;

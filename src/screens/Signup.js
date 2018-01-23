@@ -2,23 +2,17 @@
 
 import React from 'react';
 import { connect } from 'react-redux';
-// prettier-ignore
 import {
   Linking,
   StyleSheet,
   Text,
   View,
-// $FlowFixMe
+  // $FlowFixMe
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
-// prettier-ignore
-import {
-  Button,
-  FormInput,
-} from 'react-native-elements';
+import { Button, FormInput } from 'react-native-elements';
 import { Content } from 'native-base';
-// $FlowFixMe
-import { NavigationScreenProp } from 'react-navigation';
+import type { NavigationScreenProp } from 'react-navigation';
 import isEmail from 'validator/lib/isEmail';
 
 import { SpinningIcon } from '../components';
@@ -31,7 +25,7 @@ import settings from '../config/settings';
 type Props = {
   dispatch: Dispatch,
   loading: boolean,
-  navigation: NavigationScreenProp,
+  navigation: NavigationScreenProp<any>,
 };
 
 type State = {

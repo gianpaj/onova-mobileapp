@@ -25,8 +25,7 @@ import {
 } from 'native-base';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { FormInput, FormLabel } from 'react-native-elements';
-// $FlowFixMe
-import { NavigationScreenProp } from 'react-navigation';
+import type { NavigationScreenProp } from 'react-navigation';
 import { CardView, LiteCreditCardInput } from 'react-native-credit-card-input';
 import { Toast } from 'antd-mobile';
 import axios from 'axios';
@@ -44,7 +43,7 @@ import type { UserData, Dispatch, ReduxState } from '../types';
 
 type Props = {
   dispatch: Dispatch,
-  navigation?: NavigationScreenProp,
+  navigation?: NavigationScreenProp<any>,
   userData: UserData,
   ordersData: any,
 };

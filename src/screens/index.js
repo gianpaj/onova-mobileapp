@@ -8,7 +8,6 @@ import { Profile } from '../screens/Profile';
 import { Settings } from '../screens/Settings';
 import { Signup } from '../screens/Signup';
 
-// prettier-ignore
 export {
   AddProduct,
   Home,

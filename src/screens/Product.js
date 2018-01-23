@@ -20,12 +20,9 @@ import {
   Left,
   Right,
 } from 'native-base';
-// prettier-ignore
-import {
-  Button,
-} from 'react-native-elements';
-// $FlowFixMe
-import { NavigationActions, NavigationScreenProp } from 'react-navigation';
+import { Button } from 'react-native-elements';
+import { NavigationActions } from 'react-navigation';
+import type { NavigationScreenProp } from 'react-navigation';
 
 import { MediaView } from '../components';
 
@@ -33,7 +30,7 @@ import colors from '../config/colors';
 import * as api from '../utils/api';
 
 type Props = {
-  navigation: NavigationScreenProp,
+  navigation: NavigationScreenProp<any>,
   product: any,
   URL: string,
 };

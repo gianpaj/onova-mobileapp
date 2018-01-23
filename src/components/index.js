@@ -10,7 +10,6 @@ import MediaView from './MediaView';
 import NotificationsDot from './NotificationsDot';
 import SpinningIcon from './SpinningIcon';
 
-// prettier-ignore
 export {
   Accordion,
   Avatar,

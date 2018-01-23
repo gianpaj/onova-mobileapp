@@ -34,7 +34,6 @@ import {
   ImagePicker as AntImagePicker,
   WingBlank,
 } from 'antd-mobile';
-
 import type { NavigationScreenProp } from 'react-navigation';
 import type { ReduxState } from '../types';
 

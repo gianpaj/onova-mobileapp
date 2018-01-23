@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { connect } from 'react-redux';
-// prettier-ignore
 import {
   Modal,
   StyleSheet,
@@ -11,11 +10,7 @@ import {
   // $FlowFixMe
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
-// prettier-ignore
-import {
-  Button,
-  FormInput,
-} from 'react-native-elements';
+import { Button, FormInput } from 'react-native-elements';
 import { Button as NBButton, Content } from 'native-base';
 import type { NavigationScreenProp } from 'react-navigation';
 import isEmail from 'validator/lib/isEmail';
@@ -32,7 +27,7 @@ type Props = {
   dispatch: Dispatch,
   loadingGoogleLogin: boolean,
   loadingLogin: boolean,
-  navigation?: NavigationScreenProp<*>,
+  navigation?: NavigationScreenProp<any>,
 };
 
 type State = {

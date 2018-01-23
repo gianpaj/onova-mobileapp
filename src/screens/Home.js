@@ -2,7 +2,6 @@
 import colors from '../config/colors';
 
 import React, { PureComponent } from 'react';
-// prettier-ignore
 import {
   StyleSheet,
   Text,
@@ -19,8 +18,7 @@ import {
   Container,
   Header,
 } from 'native-base';
-// $FlowFixMe
-import { NavigationScreenProp } from 'react-navigation';
+import type { NavigationScreenProp } from 'react-navigation';
 import { TabViewAnimated, TabBar, SceneMap } from 'react-native-tab-view';
 // $FlowFixMe
 import type { Route, NavigationState } from 'react-native-tab-view/types';
@@ -33,7 +31,7 @@ const initialLayout = {
 };
 
 type Props = {
-  navigation?: NavigationScreenProp,
+  navigation?: NavigationScreenProp<any>,
 };
 
 type State = NavigationState<

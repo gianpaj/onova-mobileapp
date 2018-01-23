@@ -17,8 +17,8 @@ import {
   ImageCacheProvider,
   // ImageCacheManager,
 } from 'react-native-cached-image';
-// $FlowFixMe
-import { NavigationActions, NavigationScreenProp } from 'react-navigation';
+import { NavigationActions } from 'react-navigation';
+import type { NavigationScreenProp } from 'react-navigation';
 
 import * as api from '../utils/api';
 
@@ -28,7 +28,7 @@ const TTL = 4 * 60 * 60; // cache images for 4 hours
 
 type Props = {
   apiURL: string,
-  navigation?: NavigationScreenProp,
+  navigation?: NavigationScreenProp<any>,
 };
 
 type State = {

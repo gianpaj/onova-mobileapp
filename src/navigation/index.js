@@ -6,6 +6,8 @@ import { BackHandler } from 'react-native';
 import { connect } from 'react-redux';
 // $FlowFixMe
 import { addNavigationHelpers, NavigationActions } from 'react-navigation';
+
+import { initializeSendBird } from '../actions/actionCreator';
 import NavigationStack from './navigationStack';
 import type { Dispatch, UserData, ReduxState } from '../types';
 
@@ -19,6 +21,20 @@ type Props = {
 class AppNavigation extends Component<Props, void> {
   componentDidMount() {
     BackHandler.addEventListener('hardwareBackPress', this.onBackPress);
+    const { isLoggedIn, userData } = this.props;
+    // @TODO: use redux with
+    // this.setState({ rehydrated: true });
+    if (isLoggedIn === true && userData) {
+      initializeSendBird(userData)
+        .then(() => {
+          console.debug('sendbird initialized');
+          // dispatch({ type: LOGIN_SUCCESS, payload: userData });
+        })
+        .catch(err => {
+          console.warn(err);
+          // dispatch({ type: LOGIN_FAIL });
+        });
+    }
   }
 
   componentWillUnmount() {

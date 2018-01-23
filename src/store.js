@@ -39,7 +39,10 @@ function configureStore() {
       // analytics,
     )
   );
-  const persistor = persistStore(store);
+  const persistor = persistStore(store, {}, () => {
+    // console.warn('rehydrationComplete');
+    // store.dispatch(reloadUserAndInitialize());
+  });
   // persistor.purge();
   return { persistor, store };
 }

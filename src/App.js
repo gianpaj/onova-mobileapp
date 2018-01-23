@@ -15,9 +15,7 @@ import { Root } from 'native-base';
 
 // import Notifications from 'react-native-push-notification';
 import * as firebase from 'firebase';
-import SendBird from 'sendbird';
 
-import settings from './config/settings';
 import configureStore from './store';
 import AppNavigation from './navigation';
 import KeyboardManager from 'react-native-keyboard-manager';
@@ -27,8 +25,17 @@ if (Platform.OS == 'ios') {
 }
 
 const { store, persistor } = configureStore();
+let sb = null;
 
-export default class LoginScreen extends React.Component<*> {
+type State = {
+  appState: AppState,
+};
+
+export default class App extends React.Component<*, State> {
+  state = {
+    appState: AppState.currentState,
+  };
+
   constructor() {
     super();
     // Initialize Firebase
@@ -43,6 +50,32 @@ export default class LoginScreen extends React.Component<*> {
     if (!firebase.apps.length) {
       firebase.initializeApp(firebaseConfig);
     }
+  }
+
+  _handleAppStateChange = (nextAppState: any) => {
+    if (
+      this.state.appState.match(/inactive|background/) &&
+      nextAppState === 'active'
+    ) {
+      console.log('appstate - foreground');
+      if (sb) {
+        sb.setForegroundState();
+      }
+    } else {
+      console.log('appstate - background');
+      if (sb) {
+        sb.setBackgroundState();
+      }
+    }
+  };
+
+  componentDidMount() {
+    AppState.addEventListener('change', this._handleAppStateChange);
+
+  }
+
+  componentWillUnmount() {
+    AppState.removeEventListener('change', this._handleAppStateChange);
   }
 
   _renderLoading = () => (

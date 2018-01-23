@@ -24,7 +24,14 @@ import {
   SIGNUP,
   BACK,
 } from './actionTypes';
-import type { Dispatch, LoginData, SignupData, GetState } from '../types';
+import type {
+  Dispatch,
+  LoginData,
+  SignupData,
+  GetState,
+  UserData,
+} from '../types';
+import settings from '../config/settings';
 import * as api from '../utils/api';
 import * as ui from '../utils/ui';
 
@@ -53,7 +60,14 @@ const login = (data: LoginData) => (dispatch: Dispatch) => (
           ...{ token: res.token, provider: 'email' },
         };
         // @TODO: send analytics login event
+        initializeSendBird(userData)
+          .then(() => {
         dispatch({ type: LOGIN_SUCCESS, payload: userData });
+          })
+          .catch(err => {
+            console.warn(err);
+            dispatch({ type: LOGIN_FAIL });
+          });
       } else {
         console.debug(res);
         dispatch({ type: LOGIN_FAIL });
@@ -64,6 +78,21 @@ const login = (data: LoginData) => (dispatch: Dispatch) => (
     })
   // }, 5000)
 );
+
+const initializeSendBird = (userData: UserData): Promise<any> => {
+  return new Promise((resolve, reject) => {
+    // $FlowFixMe
+    sb = new SendBird({ appId: settings.SENDBIRD_APP_ID });
+    sb.connect(userData._id, (user, err) => {
+      if (err) return reject(err);
+
+      sb.updateCurrentUserInfo(userData.username, '', (res, err) => {
+        if (err) return reject(err);
+        resolve(res);
+      });
+    });
+  });
+};
 
 /* @DISABLED
 const loginWithGoogle = () => (dispatch: Dispatch) => {
@@ -161,6 +190,8 @@ const getUserData = (userId: string, options: any) => (dispatch: Dispatch) => (
 );
 
 const logout = () => (dispatch: Dispatch, getState: GetState) => {
+  // $FlowFixMe
+  sb.disconnect();
   // const provider = getState().LoginReducer.data.provider;
   // if (provider == 'email') {
   return dispatch({ type: LOGOUT });
@@ -205,6 +236,7 @@ const handleErrorWithAlert = (data: any, err: any) => {
 export {
   incrementAction,
   decrementAction,
+  initializeSendBird,
   login,
   // loginWithGoogle,
   signup,

@@ -9,6 +9,7 @@ import {
   Linking,
   Platform,
   View,
+  Text,
   // $FlowFixMe
 } from 'react-native';
 import {
@@ -23,13 +24,13 @@ import {
 } from 'native-base';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { NavigationActions } from 'react-navigation';
 import SendBird from 'sendbird';
 import {
   GiftedChat,
   // Actions,
   Send,
   SystemMessage,
-  Time,
 } from 'react-native-gifted-chat';
 import type { NavigationScreenProp } from 'react-navigation';
 // import moment from 'moment';
@@ -38,7 +39,13 @@ import KeyboardManager from 'react-native-keyboard-manager';
 
 // import { sbCreateOpenChannelListQuery } from '../actions/sendbird';
 // import { ChatActions } from '../components/ChatActions';
-import type { Message, SendBirdMessage, UserData, ReduxState } from '../types';
+import type {
+  Message,
+  Product,
+  SendBirdMessage,
+  UserData,
+  ReduxState,
+} from '../types';
 import colors from '../config/colors';
 import { call, email } from '../utils/linking';
 import * as api from '../utils/api';
@@ -116,14 +123,14 @@ class OrderThreadContainer extends Component<Props, State> {
 
   _getProduct(uuid: string): Promise<any> {
     return new Promise((resolve, reject) => {
-    return api
-      .get(`/api/products/${uuid}`)
-      .then(res => {
-        const data = res.data;
+      return api
+        .get(`/api/products/${uuid}`)
+        .then(res => {
+          const data = res.data;
           console.debug(res.data);
           this.setState({ product: data });
           resolve();
-      })
+        })
         .catch(err => {
           reject(err);
         });
@@ -136,11 +143,11 @@ class OrderThreadContainer extends Component<Props, State> {
     console.log(params);
     const Promises = [];
 
-    let userId = '5a660cd459b74818e68c3b6e';
+    // let userId = '5a660cd459b74818e68c3b6e';
 
     // Promises.push(this._getProduct(params.uuid));
-    Promises.push(this._getUserData(userId));
-    Promises.push(this.initSendBirdChatRoom());
+    Promises.push(this._getUserData(params.seller._id));
+    Promises.push(this.connectToSendBird());
 
     Promise.all(Promises)
       .then(() => {
@@ -149,7 +156,7 @@ class OrderThreadContainer extends Component<Props, State> {
       .catch(err => console.error(err));
   }
 
-  initSendBirdChatRoom(): Promise<any> {
+  connectToSendBird(): Promise<any> {
     return new Promise((resolve, reject) => {
       // @TODO: remove this if don't get a warning when quickly opening a chat thread.
       // Maybe from a deeplink, opening app from background?
@@ -184,14 +191,14 @@ class OrderThreadContainer extends Component<Props, State> {
   }
 
   createChannelHandler(): any {
-    const { interlocutor } = this.state;
+    const { interlocutor: int } = this.state;
 
     const ChannelHandler = new this.sb.ChannelHandler();
 
-    ChannelHandler.onMessageReceived = (
+    ChannelHandler.onMessageReceived = function(
       receivedChannel: Channel,
       msg: SendBirdMessage
-    ): void => {
+    ): void {
       if (
         this.state.channel &&
         receivedChannel.url !== this.state.channel.url
@@ -199,13 +206,12 @@ class OrderThreadContainer extends Component<Props, State> {
         console.log('Channel urls do not match');
       }
 
-      if (!interlocutor) return console.error('err');
+      if (!int) return console.error('err');
 
       const user = {
-        _id: interlocutor._id,
-        name: interlocutor.username,
-        avatar:
-          interlocutor.profilePic == null ? interlocutor.profilePic : null,
+        _id: int._id,
+        name: int.username,
+        avatar: int.profilePic == null ? int.profilePic : null,
       };
 
       const giftedMsg = this.createGiftedMessage(msg, user);
@@ -239,48 +245,54 @@ class OrderThreadContainer extends Component<Props, State> {
   }
 
   componentWillUnmount() {
-    this.sb.disconnect(() => console.log('SendBird disconnected'));
+    this.sb.disconnect(() => console.debug('SendBird disconnected'));
     this.sb.removeChannelHandler('ChatView');
     this.sb.removeConnectionHandler('ChatView');
   }
 
   onSend = (messages: Array<Message>) => {
-    const { userData } = this.props;
+    const { userData: ud } = this.props;
 
     if (this.state.channel) {
       const text = messages[0].text;
-      this.state.channel.sendUserMessage(text, '', (msg, err) => {
-        if (err) return console.error(err);
+      this.state.channel.sendUserMessage(
+        text,
+        '',
+        (msg: SendBirdMessage, err) => {
+          if (err) return console.error(err);
 
-        const user = {
-          _id: userData._id,
-          name: userData.username,
-          // or msg.sender.profileUrl ?
-          avatar: userData.profilePic,
-        };
+          // const user = {
+          //   _id: ud._id,
+          //   name: ud.username,
+          //   // or msg.sender.profileUrl ?
+          //   avatar: ud.profilePic,
+          // };
 
-        const giftedMsg = this.createGiftedMessage(msg, user);
+          const mymsg = {
+            _id: msg.messageId,
+            createdAt: new Date(msg.createdAt),
+            text: msg.message,
+            user: {
+              _id: ud._id,
+              name: ud.username,
+              // or msg.sender.profileUrl ?
+              avatar: ud.profilePic,
+            },
+            // user: {
+            //   _id: user._id,
+            //   name: ud.username || user.name,
+            //   avatar: ud.profilePic,
+            // },
+          };
 
-        const mymsg = {
-          _id: msg.messageId,
-          createdAt: new Date(msg.createdAt),
-          text: msg.message,
-          user: {
-            _id: user._id,
-            // $FlowFixMe
-            name: userData.username || user.name,
-            // $FlowFixMe
-            avatar: userData.profilePic,
-            // avatar: user.profilePic !== null ? user.profilePic : null,
-            // avatar: user.profilePic || msg.sender.profileUrl,
-          },
-        };
+          console.warn(mymsg);
 
-        this.setState(prevState => ({
-          messages: GiftedChat.append(prevState.messages, mymsg),
-          // messages: GiftedChat.append(prevState.messages, msg),
-        }));
-      });
+          this.setState(prevState => ({
+            messages: GiftedChat.append(prevState.messages, mymsg),
+            // messages: GiftedChat.append(prevState.messages, msg),
+          }));
+        }
+      );
     }
   };
 
@@ -444,6 +456,17 @@ class OrderThreadContainer extends Component<Props, State> {
   }
   */
 
+  goToProfile = () => {
+    const user = this.props.navigation.state.params.seller;
+
+    const navigateToProfile = NavigationActions.navigate({
+      routeName: 'profile',
+      params: user,
+    });
+
+    this.props.navigation.dispatch(navigateToProfile);
+  };
+
   render() {
     const { navigation, userData } = this.props;
     const { messages, isLoading, interlocutor } = this.state;
@@ -459,9 +482,7 @@ class OrderThreadContainer extends Component<Props, State> {
           <Body>
             {!isLoading &&
               interlocutor && (
-                <Title
-                // onPress={this.onUserPress}
-                >
+                <Title onPress={this.goToProfile}>
                   @{interlocutor.username}
                 </Title>
               )}
@@ -471,8 +492,7 @@ class OrderThreadContainer extends Component<Props, State> {
               transparent
               // eslint-disable-next-line
               style={{ backgroundColor: 'transparent' }}
-              // onPress={this.onUserPress}
-            >
+              onPress={this.goToProfile}>
               <FontAwesome name="user-circle" size={28} />
             </NBButton>
           </Right>

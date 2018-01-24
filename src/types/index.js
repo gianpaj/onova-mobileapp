@@ -8,11 +8,11 @@ import type {
 } from './navigationReducer';
 
 export type Product = {
-  seller: any,
-  price: string,
-  photoURIs: Array<string>,
   description: string,
   location: string,
+  photoURIs: Array<string>,
+  price: string,
+  seller: any,
 };
 
 export type LoginData = {

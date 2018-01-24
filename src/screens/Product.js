@@ -1,6 +1,7 @@
 // @flow
 
 import React from 'react';
+import { connect } from 'react-redux';
 import {
   ActivityIndicator,
   StyleSheet,
@@ -29,12 +30,13 @@ import { MediaView } from '../components';
 import colors from '../config/colors';
 import * as api from '../utils/api';
 import * as ui from '../utils/ui';
-import type { Product as ProductType } from '../types';
+import type { Product as ProductType, UserData, ReduxState } from '../types';
 
 type Props = {
   navigation: NavigationScreenProp<any>,
   product: ProductType,
   URL: string,
+  userData: UserData,
 };
 
 type State = {
@@ -47,7 +49,7 @@ const BUTTONS = ['Report', 'Cancel'];
 
 // const isIOS = Platform.OS === 'ios';
 
-export class Product extends React.Component<Props, State> {
+export class ProductContainer extends React.Component<Props, State> {
   state = {
     loading: true,
     item: null,
@@ -130,6 +132,28 @@ export class Product extends React.Component<Props, State> {
     }
   };
 
+  onPressBuy = () => {
+    // @TODO: enable me
+    // ui.showConfirmAlert(
+    //   'Unsaved Changes',
+    //   'Are you sure you want to Cancel?',
+    //   () => {
+    //   }
+    // );
+    // on continue
+    const navigateToOrderThread = NavigationActions.navigate({
+      routeName: 'orderThread',
+      params: this.state.item,
+    });
+
+    this.props.navigation.dispatch(navigateToOrderThread);
+  };
+
+  isMyProduct(): boolean | null {
+    if (!this.state.item) return null;
+    return this.state.item.seller._id == this.props.userData._id;
+  }
+
   render() {
     const { item, loading } = this.state;
 
@@ -163,7 +187,9 @@ export class Product extends React.Component<Props, State> {
                   source={{ uri: item.avatarUrl }}
                 /> */}
                 <View style={{ flex: 1, height: 35, marginTop: 12 }}>
-                  <TouchableHighlight style={styles.flex} onPress={this.goToProfile}>
+                  <TouchableHighlight
+                    style={styles.flex}
+                    onPress={this.goToProfile}>
                     <Text style={styles.username}>{item.seller.username}</Text>
                   </TouchableHighlight>
                   <Text style={styles.location}>{item.location}</Text>
@@ -185,12 +211,15 @@ export class Product extends React.Component<Props, State> {
                 /> */}
 
                 <View style={styles.flex} />
-                <Button
-                  // disabled
-                  // loading
-                  buttonStyle={styles.buyButton}
-                  title="Buy"
-                />
+                {!this.isMyProduct() && (
+                  <Button
+                    // disabled
+                    // loading
+                    buttonStyle={styles.buyButton}
+                    onPress={() => this.onPressBuy()}
+                    title="Buy"
+                  />
+                )}
               </View>
               {/* <View style={styles.bottomSectionAfter}>
                 <Text style={styles.timeAgo}>{'X MINUTES AGO'}</Text>
@@ -271,3 +300,9 @@ const styles = StyleSheet.create({
   //   fontSize: 12,
   // },
 });
+
+const mapStateToProps: any = (state: ReduxState) => ({
+  userData: state.LoginReducer.data,
+});
+
+export const Product = connect(mapStateToProps)(ProductContainer);

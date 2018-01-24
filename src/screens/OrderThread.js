@@ -43,15 +43,10 @@ import colors from '../config/colors';
 import { call, email } from '../utils/linking';
 import * as api from '../utils/api';
 
-declare var sb: any;
-
 if (Platform.OS == 'ios') {
   KeyboardManager.setEnable(false);
   KeyboardManager.setEnableAutoToolbar(false);
 }
-
-const myUserId = '5a54bbd253ee11345f32b4e2';
-const friendUserId = 'Testid';
 
 type Channel = {
   createPreviousMessageListQuery: () => void,
@@ -68,6 +63,7 @@ type Props = {
   navigation: NavigationScreenProp<any>,
   userData: UserData,
 };
+
 type State = {
   channel: Channel | null,
   hasRendered: boolean,
@@ -76,6 +72,8 @@ type State = {
   lastMessage?: Message,
   messageQuery: any,
   messages: Array<Message> | null,
+  interlocutor: UserData | null,
+  product: Product | null,
 };
 
 const tempMessages = [
@@ -87,8 +85,6 @@ const tempMessages = [
   },
 ];
 
-// const sb = new SendBird({ appId: '***REMOVED***' });
-
 class OrderThreadContainer extends Component<Props, State> {
   sb: any;
 
@@ -99,6 +95,8 @@ class OrderThreadContainer extends Component<Props, State> {
     isTyping: false,
     messageQuery: null,
     messages: null,
+    interlocutor: null,
+    product: null,
   };
 
   _getUserData(userId: string): Promise<any> {
@@ -107,7 +105,8 @@ class OrderThreadContainer extends Component<Props, State> {
         .get(`/api/users/${userId}`)
         .then(res => {
           console.debug(res);
-          resolve(res);
+          this.setState({ interlocutor: res });
+          resolve();
         })
         .catch(err => {
           reject(err);
@@ -115,29 +114,35 @@ class OrderThreadContainer extends Component<Props, State> {
     });
   }
 
-  _getProduct(uuid) {
+  _getProduct(uuid: string): Promise<any> {
+    return new Promise((resolve, reject) => {
     return api
       .get(`/api/products/${uuid}`)
       .then(res => {
         const data = res.data;
-        console.log(res.data);
-        this.setState({
-          item: data,
-        });
+          console.debug(res.data);
+          this.setState({ product: data });
+          resolve();
       })
-      .catch(e => console.error(e));
+        .catch(err => {
+          reject(err);
+        });
+    });
   }
 
   componentWillMount() {
     const { params } = this.props.navigation.state;
 
     console.log(params);
-    const promises = [];
+    const Promises = [];
 
-    // promises.push(this._getProduct(params.uuid));
-    promises.push(this.initSendBirdChatRoom());
+    let userId = '5a660cd459b74818e68c3b6e';
 
-    Promise.all(promises)
+    // Promises.push(this._getProduct(params.uuid));
+    Promises.push(this._getUserData(userId));
+    Promises.push(this.initSendBirdChatRoom());
+
+    Promise.all(Promises)
       .then(() => {
         this.setState({ hasRendered: true, isLoading: false });
       })
@@ -151,45 +156,36 @@ class OrderThreadContainer extends Component<Props, State> {
       setTimeout(() => {
         this.sb = SendBird.getInstance();
         if (!this.state.hasRendered) {
-          this.sb.connect(myUserId, (user, err) => {
+          this.sb.connect(this.state.interlocutor._id, (user, err) => {
             if (err) return reject(err);
 
             console.debug(user);
 
-            this.sb.updateCurrentUserInfo(
-              this.props.userData.username,
-              '',
-              (res, err) => {
-                if (err) return reject(err);
+            this.createRoomAndGetMessages(this.state.interlocutor._id);
 
-                this.createRoomAndGetMessages(friendUserId);
+            this.sb.addChannelHandler('ChatView', this.createChannelHandler());
 
-                this.sb.addChannelHandler(
-                  'ChatView',
-                  this.createChannelHandler()
-                );
+            const ConnectionHandler = new this.sb.ConnectionHandler();
+            ConnectionHandler.onReconnectSucceeded = () => {
+              this.getRoomMessages(true);
+              // $FlowFixMe
+              this.state.channel.refresh();
+            };
+            this.sb.addConnectionHandler('ChatView', ConnectionHandler);
 
-                const ConnectionHandler = new this.sb.ConnectionHandler();
-                ConnectionHandler.onReconnectSucceeded = () => {
-                  this.getRoomMessages(true);
-                  // $FlowFixMe
-                  this.state.channel.refresh();
-                };
-                this.sb.addConnectionHandler('ChatView', ConnectionHandler);
-
-                this.getRoomMessages(false);
-                resolve();
-              }
-            );
+            this.getRoomMessages(false);
+            resolve();
           });
         } else {
           console.warn('sendbird not initiated OR hasRendered is true');
         }
-      }, 100);
+      }, 500);
     });
   }
 
   createChannelHandler(): any {
+    const { interlocutor } = this.state;
+
     const ChannelHandler = new this.sb.ChannelHandler();
 
     ChannelHandler.onMessageReceived = (
@@ -203,12 +199,16 @@ class OrderThreadContainer extends Component<Props, State> {
         console.log('Channel urls do not match');
       }
 
-      const interlocutor = {
-        _id: friendUserId,
-        name: 'interlocutor',
+      if (!interlocutor) return console.error('err');
+
+      const user = {
+        _id: interlocutor._id,
+        name: interlocutor.username,
+        avatar:
+          interlocutor.profilePic == null ? interlocutor.profilePic : null,
       };
 
-      const giftedMsg = this.createGiftedMessage(msg, interlocutor);
+      const giftedMsg = this.createGiftedMessage(msg, user);
 
       this.setState(prevState => ({
         messages: GiftedChat.append(prevState.messages, giftedMsg),
@@ -221,15 +221,19 @@ class OrderThreadContainer extends Component<Props, State> {
     return ChannelHandler;
   }
 
-  createGiftedMessage(msg: SendBirdMessage, user): Message {
+  createGiftedMessage(msg: SendBirdMessage, user: UserData | any): Message {
     return {
       _id: msg.messageId,
       createdAt: new Date(msg.createdAt),
       text: msg.message,
       user: {
         _id: user._id,
-        name: user.name,
-        // avatar: msg.sender.profileUrl,
+        // $FlowFixMe
+        name: user.username || user.name,
+        // $FlowFixMe
+        avatar: user.profilePic,
+        // avatar: user.profilePic !== null ? user.profilePic : null,
+        // avatar: user.profilePic || msg.sender.profileUrl,
       },
     };
   }
@@ -242,27 +246,11 @@ class OrderThreadContainer extends Component<Props, State> {
 
   onSend = (messages: Array<Message>) => {
     const { userData } = this.props;
+
     if (this.state.channel) {
       const text = messages[0].text;
       this.state.channel.sendUserMessage(text, '', (msg, err) => {
         if (err) return console.error(err);
-
-        // var _messages = [];
-        // _messages.push(msg);
-        // if (
-        //   _SELF.state.lastMessage &&
-        //   message.createdAt - _SELF.state.lastMessage.createdAt > 1000 * 60 * 60
-        // ) {
-        //   _messages.push({ isDate: true, createdAt: message.createdAt });
-        // }
-
-        // var _newMessageList = _messages.concat(_SELF.state.messages);
-        // _SELF.setState({
-        //   messages: _newMessageList,
-        //   // dataSource: _SELF.state.dataSource.cloneWithRows(_newMessageList)
-        // });
-        // this.setState({ messages: [msg, ...this.state.messages] });
-        // _SELF.state.lastMessage = message;
 
         const user = {
           _id: userData._id,
@@ -273,8 +261,24 @@ class OrderThreadContainer extends Component<Props, State> {
 
         const giftedMsg = this.createGiftedMessage(msg, user);
 
+        const mymsg = {
+          _id: msg.messageId,
+          createdAt: new Date(msg.createdAt),
+          text: msg.message,
+          user: {
+            _id: user._id,
+            // $FlowFixMe
+            name: userData.username || user.name,
+            // $FlowFixMe
+            avatar: userData.profilePic,
+            // avatar: user.profilePic !== null ? user.profilePic : null,
+            // avatar: user.profilePic || msg.sender.profileUrl,
+          },
+        };
+
         this.setState(prevState => ({
-          messages: GiftedChat.append(prevState.messages, giftedMsg),
+          messages: GiftedChat.append(prevState.messages, mymsg),
+          // messages: GiftedChat.append(prevState.messages, msg),
         }));
       });
     }
@@ -290,11 +294,10 @@ class OrderThreadContainer extends Component<Props, State> {
     );
   }
 
-  createRoomAndGetMessages(friendUserId: string) {
-    const name = 'sample group channel';
-    // $FlowFixMe
+  createRoomAndGetMessages(otherUser: string) {
+    const name = 'order for item X';
     this.sb.GroupChannel.createChannelWithUserIds(
-      [friendUserId],
+      [otherUser],
       true, // isDistinct
       name,
       null, // coverUrl
@@ -314,7 +317,7 @@ class OrderThreadContainer extends Component<Props, State> {
   }
 
   getRoomMessages(refresh: boolean) {
-    const { messageQuery, messages } = this.state;
+    const { messageQuery, messages, interlocutor } = this.state;
     const { userData } = this.props;
 
     if (refresh) {
@@ -334,17 +337,18 @@ class OrderThreadContainer extends Component<Props, State> {
 
       const reverse = false;
       messageQuery.load(20, reverse, (msgs, err) => {
-        if (err) return console.error(err);
+        if (err || !interlocutor) return console.error(err);
+        if (!interlocutor) return console.error('no interlocutor');
 
-        const interlocutor = {
-          _id: friendUserId,
-          name: 'interlocutor',
+        const otherUser = {
+          _id: interlocutor._id,
+          name: interlocutor.username,
         };
 
         const newMessages = [];
         for (let i = 0; i < msgs.length; i++) {
           const user =
-            msgs[i].sender.userId == userData._id ? userData : interlocutor;
+            msgs[i].sender.userId == userData._id ? userData : otherUser;
           newMessages.push(this.createGiftedMessage(msgs[i], user));
         }
 
@@ -442,8 +446,7 @@ class OrderThreadContainer extends Component<Props, State> {
 
   render() {
     const { navigation, userData } = this.props;
-    const interlocutor = { username: 'interlocutor' };
-    const { messages, isLoading } = this.state;
+    const { messages, isLoading, interlocutor } = this.state;
 
     return (
       <Container style={st.flex1}>
@@ -454,7 +457,14 @@ class OrderThreadContainer extends Component<Props, State> {
             </NBButton>
           </Left>
           <Body>
-            <Title>@{interlocutor.username}</Title>
+            {!isLoading &&
+              interlocutor && (
+                <Title
+                // onPress={this.onUserPress}
+                >
+                  @{interlocutor.username}
+                </Title>
+              )}
           </Body>
           <Right>
             <NBButton
@@ -463,7 +473,7 @@ class OrderThreadContainer extends Component<Props, State> {
               style={{ backgroundColor: 'transparent' }}
               // onPress={this.onUserPress}
             >
-              <FontAwesome name="user-circle" style={st.user} size={28} />
+              <FontAwesome name="user-circle" size={28} />
             </NBButton>
           </Right>
         </Header>
@@ -481,6 +491,8 @@ class OrderThreadContainer extends Component<Props, State> {
                 _id: userData._id,
                 name: userData.username,
                 avatar: userData.profilePic,
+                // avatar:
+                //   userData.profilePic !== null ? userData.profilePic : null,
               }}
               // locale=""
               // timeformat="LT"
@@ -510,8 +522,6 @@ const st = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-
-  user: {},
   flex1: {
     flex: 1,
   },
@@ -524,9 +534,6 @@ const st = StyleSheet.create({
     fontSize: 15,
     fontWeight: '400',
   },
-  // hashtag: {
-  //   color: colors.primary,
-  // },
 });
 
 const mapStateToProps: any = (state: ReduxState) => ({

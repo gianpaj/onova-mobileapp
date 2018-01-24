@@ -28,22 +28,18 @@ import { MediaView } from '../components';
 
 import colors from '../config/colors';
 import * as api from '../utils/api';
+import * as ui from '../utils/ui';
+import type { Product as ProductType } from '../types';
 
 type Props = {
   navigation: NavigationScreenProp<any>,
-  product: any,
+  product: ProductType,
   URL: string,
 };
 
 type State = {
   loading: boolean,
-  item: {
-    seller: Object,
-    price: string,
-    photoURIs: Array<string>,
-    description: string,
-    location: string,
-  } | null,
+  item: ProductType | null,
 };
 
 // @TODO: if Product is mine Delete, Edit

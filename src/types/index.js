@@ -7,11 +7,13 @@ import type {
   NavigationState,
 } from './navigationReducer';
 
-// export type Product = {
-//   id: Id,
-//   text: Text,
-//   completed: boolean,
-// };
+export type Product = {
+  seller: any,
+  price: string,
+  photoURIs: Array<string>,
+  description: string,
+  location: string,
+};
 
 export type LoginData = {
   emailAddress: string,
@@ -77,6 +79,7 @@ export type SendBirdMessage = {
   customType: string,
   createdAt: number,
   updatedAt: number,
+  sender: any,
 
   isUserMessage(): boolean,
   isFileMessage(): boolean,

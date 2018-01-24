@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 
 import {
   ActivityIndicator,
+  Alert,
   StyleSheet,
   Linking,
   Platform,
@@ -163,16 +164,27 @@ class OrderThreadContainer extends Component<Props, State> {
         },
       });
     });
-  }
+  }*/
 
-  /*
-  parsePatterns(linkStyle: any) {
+  call = (phoneNumber: string): void => {
+    Linking.canOpenURL(`tel:${phoneNumber}`)
+      .then(supported => {
+        return !supported
+          ? `We can't open the following phone number 😯: ${phoneNumber}`
+          : Linking.openURL(`tel:${phoneNumber}`);
+      })
+      .catch(err => {
+        console.error(err);
+        Alert.alert('Something went wrong during the redirection 😯…');
+      });
+  };
+
+  parsePatterns = (linkStyle: any) => {
     return [
-      @TODO: add https://github.com/joshswan/react-native-autolink
       {
         type: 'phone',
         style: linkStyle,
-        onPress: (h: string) => console.warn(h, 'phone') && Linking.openURL(''),
+        onPress: (p: string) => this.call(p),
       },
       {
         pattern: /#(\w+)/,
@@ -180,7 +192,7 @@ class OrderThreadContainer extends Component<Props, State> {
         onPress: (p: any) => Linking.caller.openURL(p),
       },
     ];
-  }*/
+  };
 
   /*
   renderComposer(props: any) {
@@ -299,7 +311,7 @@ class OrderThreadContainer extends Component<Props, State> {
             // keyboardShouldPersistTaps="handled"
             maxInputLength={300}
             // renderInputToolbar={this.renderInputToolbar}
-            // parsePatterns={this.parsePatterns}
+            parsePatterns={this.parsePatterns}
             showUserAvatar
           />
         </View>

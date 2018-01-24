@@ -23,6 +23,7 @@ class AppNavigation extends Component<Props, void> {
     const { isLoggedIn, userData } = this.props;
     // @TODO: use redux with
     // this.setState({ rehydrated: true });
+
     if (isLoggedIn === true && userData) {
       initializeSendBird(userData)
         .then(() => {

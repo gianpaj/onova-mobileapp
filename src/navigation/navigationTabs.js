@@ -35,6 +35,7 @@ const tabBarConfiguration = {
         <Ionicons
           name={iconName}
           size={28}
+          // eslint-disable-next-line
           style={{ marginBottom: -3 }}
           color={
             focused ? (isiOS ? colors.active : colors.gray1) : colors.gray5

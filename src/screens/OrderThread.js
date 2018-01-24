@@ -1,4 +1,3 @@
-/*global sb*/
 // @flow
 
 import React, { Component } from 'react';
@@ -6,11 +5,9 @@ import { connect } from 'react-redux';
 
 import {
   ActivityIndicator,
-  Alert,
   StyleSheet,
   Linking,
   Platform,
-  Text,
   View,
   // $FlowFixMe
 } from 'react-native';
@@ -18,7 +15,6 @@ import {
   Body,
   Button as NBButton,
   Container,
-  Content,
   Header,
   Icon as NBIcon,
   Left,
@@ -28,106 +24,261 @@ import {
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import SendBird from 'sendbird';
-import { GiftedChat, Actions, Send, SystemMessage } from 'react-native-gifted-chat';
-// $FlowFixMe
+import {
+  GiftedChat,
+  // Actions,
+  Send,
+  SystemMessage,
+  Time,
+} from 'react-native-gifted-chat';
 import type { NavigationScreenProp } from 'react-navigation';
 // import moment from 'moment';
 // import ImagePicker from 'react-native-image-crop-picker';
 import KeyboardManager from 'react-native-keyboard-manager';
 
+// import { sbCreateOpenChannelListQuery } from '../actions/sendbird';
 // import { ChatActions } from '../components/ChatActions';
-import type { Message, UserData, ReduxState } from '../types';
+import type { Message, SendBirdMessage, UserData, ReduxState } from '../types';
 import colors from '../config/colors';
+import { call, email } from '../utils/linking';
+import * as api from '../utils/api';
+
+declare var sb: any;
 
 if (Platform.OS == 'ios') {
   KeyboardManager.setEnable(false);
   KeyboardManager.setEnableAutoToolbar(false);
 }
 
+const myUserId = '5a54bbd253ee11345f32b4e2';
+const friendUserId = 'Testid';
+
+type Channel = {
+  createPreviousMessageListQuery: () => void,
+  refresh: () => void,
+  sendUserMessage: (
+    message: string,
+    data: string,
+    (msg: any, err: any) => void
+  ) => void,
+  url: string,
+};
+
 type Props = {
-  navigation: NavigationScreenProp,
+  navigation: NavigationScreenProp<any>,
   userData: UserData,
 };
 type State = {
-  messages: Array<Message>,
+  channel: Channel | null,
+  hasRendered: boolean,
+  isLoading: boolean,
+  isTyping: boolean,
+  lastMessage?: Message,
+  messageQuery: any,
+  messages: Array<Message> | null,
 };
 
+const tempMessages = [
+  {
+    _id: 3,
+    text: 'You are officially rocking GiftedChat.',
+    createdAt: new Date(Date.UTC(2016, 7, 30, 17, 20, 0)),
+    system: true,
+  },
+];
+
+// const sb = new SendBird({ appId: '***REMOVED***' });
+
 class OrderThreadContainer extends Component<Props, State> {
+  sb: any;
+
   state = {
-    messages: [
-      {
-        _id: 1,
-        text: 'Hello buyer',
-        createdAt: new Date(),
-        user: {
-          _id: '1',
-          name: 'buyer',
-          avatar:
-            'https://storage.googleapis.com/staging.onova-183307.appspot.com/users/5a54bbd253ee11345f32b4e2.jpg',
-        },
-      },
-      {
-        _id: 2,
-        text: 'Hello seller. do you have little boots? my feet are tiny',
-        createdAt: new Date(),
-        user: {
-          _id: '5a54bbd253ee11345f32b4e2',
-          name: 'seller',
-          avatar:
-            'https://storage.googleapis.com/staging.onova-183307.appspot.com/users/5a54bbd253ee11345f32b4e2.jpg',
-        },
-      },
-      {
-        _id: 3,
-        text: 'You are officially rocking GiftedChat.',
-        createdAt: new Date(Date.UTC(2016, 7, 30, 17, 20, 0)),
-        system: true,
-      },
-    ],
+    channel: null,
+    hasRendered: false,
+    isLoading: false,
+    isTyping: false,
+    messageQuery: null,
+    messages: null,
   };
 
-  constructor(props: any) {
-    super(props);
-    // this.sb = new SendBird({
-    //   appId: settings.APP_ID,
-    // });
-    // $FlowFixMe
-    sb = SendBird.getInstance();
-  }
-
-  componentDidMount() {}
-
-  componentWillMount() {
-    // this.setState({
-    //   messages:
-    // });
-  }
-  componentWillUnmount() {
-    SendBird.disconnect(() => console.log('SendBird disconnected'));
-  }
-
-  onSend = (messages: Message) => {
-    this.setState(prevState => ({
-      messages: GiftedChat.append(prevState.messages, messages),
-    }));
-  };
-
-  onReceive(text: string) {
-    this.setState(prevState => {
-      return {
-        messages: GiftedChat.append(prevState.messages, {
-          _id: Math.round(Math.random() * 1000000),
-          text: text,
-          createdAt: new Date(),
-          user: {
-            _id: 2,
-            name: 'React Native',
-            // avatar: 'https://facebook.github.io/react/img/logo_og.png',
-          },
-        }),
-      };
+  _getUserData(userId: string): Promise<any> {
+    return new Promise((resolve, reject) => {
+      api
+        .get(`/api/users/${userId}`)
+        .then(res => {
+          console.debug(res);
+          resolve(res);
+        })
+        .catch(err => {
+          reject(err);
+        });
     });
   }
+
+  _getProduct(uuid) {
+    return api
+      .get(`/api/products/${uuid}`)
+      .then(res => {
+        const data = res.data;
+        console.log(res.data);
+        this.setState({
+          item: data,
+        });
+      })
+      .catch(e => console.error(e));
+  }
+
+  componentWillMount() {
+    const { params } = this.props.navigation.state;
+
+    console.log(params);
+    const promises = [];
+
+    // promises.push(this._getProduct(params.uuid));
+    promises.push(this.initSendBirdChatRoom());
+
+    Promise.all(promises)
+      .then(() => {
+        this.setState({ hasRendered: true, isLoading: false });
+      })
+      .catch(err => console.error(err));
+  }
+
+  initSendBirdChatRoom(): Promise<any> {
+    return new Promise((resolve, reject) => {
+      // @TODO: remove this if don't get a warning when quickly opening a chat thread.
+      // Maybe from a deeplink, opening app from background?
+      setTimeout(() => {
+        this.sb = SendBird.getInstance();
+        if (!this.state.hasRendered) {
+          this.sb.connect(myUserId, (user, err) => {
+            if (err) return reject(err);
+
+            console.debug(user);
+
+            this.sb.updateCurrentUserInfo(
+              this.props.userData.username,
+              '',
+              (res, err) => {
+                if (err) return reject(err);
+
+                this.createRoomAndGetMessages(friendUserId);
+
+                this.sb.addChannelHandler(
+                  'ChatView',
+                  this.createChannelHandler()
+                );
+
+                const ConnectionHandler = new this.sb.ConnectionHandler();
+                ConnectionHandler.onReconnectSucceeded = () => {
+                  this.getRoomMessages(true);
+                  // $FlowFixMe
+                  this.state.channel.refresh();
+                };
+                this.sb.addConnectionHandler('ChatView', ConnectionHandler);
+
+                this.getRoomMessages(false);
+                resolve();
+              }
+            );
+          });
+        } else {
+          console.warn('sendbird not initiated OR hasRendered is true');
+        }
+      }, 100);
+    });
+  }
+
+  createChannelHandler(): any {
+    const ChannelHandler = new this.sb.ChannelHandler();
+
+    ChannelHandler.onMessageReceived = (
+      receivedChannel: Channel,
+      msg: SendBirdMessage
+    ): void => {
+      if (
+        this.state.channel &&
+        receivedChannel.url !== this.state.channel.url
+      ) {
+        console.log('Channel urls do not match');
+      }
+
+      const interlocutor = {
+        _id: friendUserId,
+        name: 'interlocutor',
+      };
+
+      const giftedMsg = this.createGiftedMessage(msg, interlocutor);
+
+      this.setState(prevState => ({
+        messages: GiftedChat.append(prevState.messages, giftedMsg),
+      }));
+    };
+
+    ChannelHandler.onTypingStatusUpdated = channel => {
+      console.log(channel);
+    };
+    return ChannelHandler;
+  }
+
+  createGiftedMessage(msg: SendBirdMessage, user): Message {
+    return {
+      _id: msg.messageId,
+      createdAt: new Date(msg.createdAt),
+      text: msg.message,
+      user: {
+        _id: user._id,
+        name: user.name,
+        // avatar: msg.sender.profileUrl,
+      },
+    };
+  }
+
+  componentWillUnmount() {
+    this.sb.disconnect(() => console.log('SendBird disconnected'));
+    this.sb.removeChannelHandler('ChatView');
+    this.sb.removeConnectionHandler('ChatView');
+  }
+
+  onSend = (messages: Array<Message>) => {
+    const { userData } = this.props;
+    if (this.state.channel) {
+      const text = messages[0].text;
+      this.state.channel.sendUserMessage(text, '', (msg, err) => {
+        if (err) return console.error(err);
+
+        // var _messages = [];
+        // _messages.push(msg);
+        // if (
+        //   _SELF.state.lastMessage &&
+        //   message.createdAt - _SELF.state.lastMessage.createdAt > 1000 * 60 * 60
+        // ) {
+        //   _messages.push({ isDate: true, createdAt: message.createdAt });
+        // }
+
+        // var _newMessageList = _messages.concat(_SELF.state.messages);
+        // _SELF.setState({
+        //   messages: _newMessageList,
+        //   // dataSource: _SELF.state.dataSource.cloneWithRows(_newMessageList)
+        // });
+        // this.setState({ messages: [msg, ...this.state.messages] });
+        // _SELF.state.lastMessage = message;
+
+        const user = {
+          _id: userData._id,
+          name: userData.username,
+          // or msg.sender.profileUrl ?
+          avatar: userData.profilePic,
+        };
+
+        const giftedMsg = this.createGiftedMessage(msg, user);
+
+        this.setState(prevState => ({
+          messages: GiftedChat.append(prevState.messages, giftedMsg),
+        }));
+      });
+    }
+  };
 
   renderSystemMessage(props: any) {
     return (
@@ -139,52 +290,90 @@ class OrderThreadContainer extends Component<Props, State> {
     );
   }
 
-  joinRoom(room: string): Promise<any> {
-    return new Promise((resolve, reject) => {
-      SendBird.joinChannel(room, {
-        successFunc: data => {
-          resolve({
-            joinChannelSuccessful: true,
-            joinChannelResponse: data,
-          });
-          SendBird.connect({
-            successFunc: test => {
-              // console.log(test);
-            },
-            errorFunc: (status, error) => {
-              // console.log(status, error);
-            },
-          });
-        },
-        errorFunc: (status, error) => {
-          // console.log(status, error);
-          reject({
-            error: new Error(error),
-          });
-        },
-      });
-    });
-  }*/
+  createRoomAndGetMessages(friendUserId: string) {
+    const name = 'sample group channel';
+    // $FlowFixMe
+    this.sb.GroupChannel.createChannelWithUserIds(
+      [friendUserId],
+      true, // isDistinct
+      name,
+      null, // coverUrl
+      '',
+      (createdChannel, err) => {
+        if (err) return console.error(err);
+        this.setState({ channel: createdChannel }, () => {
+          console.debug('Room created', createdChannel);
+        });
+        this.setState(prevState => ({
+          // $FlowFixMe
+          messageQuery: prevState.channel.createPreviousMessageListQuery(),
+        }));
+        this.getRoomMessages(false);
+      }
+    );
+  }
 
-  call = (phoneNumber: string): void => {
-    Linking.canOpenURL(`tel:${phoneNumber}`)
-      .then(supported => {
-        return !supported
-          ? `We can't open the following phone number 😯: ${phoneNumber}`
-          : Linking.openURL(`tel:${phoneNumber}`);
-      })
-      .catch(err => {
-        console.error(err);
-        Alert.alert('Something went wrong during the redirection 😯…');
+  getRoomMessages(refresh: boolean) {
+    const { messageQuery, messages } = this.state;
+    const { userData } = this.props;
+
+    if (refresh) {
+      console.debug('refreshing messages');
+      this.setState({
+        // $FlowFixMe
+        messageQuery: this.state.channel.createPreviousMessageListQuery(),
+        messages: null,
       });
-  };
+    }
+
+    if (messageQuery) {
+      if (!messageQuery.hasMore) {
+        console.warn('no messageQuery OR no hasMore');
+        return;
+      }
+
+      const reverse = false;
+      messageQuery.load(20, reverse, (msgs, err) => {
+        if (err) return console.error(err);
+
+        const interlocutor = {
+          _id: friendUserId,
+          name: 'interlocutor',
+        };
+
+        const newMessages = [];
+        for (let i = 0; i < msgs.length; i++) {
+          const user =
+            msgs[i].sender.userId == userData._id ? userData : interlocutor;
+          newMessages.push(this.createGiftedMessage(msgs[i], user));
+        }
+
+        if (messages && messages.length) {
+          const newMessageList = [...messages, newMessages];
+          this.setState(prevState => ({
+            // lastMessage: lastNewMsg,
+            messages: GiftedChat.append(prevState.messages, newMessageList),
+          }));
+        } else {
+          this.setState({
+            // lastMessage: lastNewMsg,
+            messages: newMessages,
+          });
+        }
+        // const lastNewMsg = messages[messages.length - 1];
+        // this.setState({
+        //   messages: newMessageList,
+        // });
+      });
+    }
+  }
 
   parsePatterns = (linkStyle: any) => {
     return [
       {
         type: 'phone',
         style: linkStyle,
-        onPress: (p: string) => this.call(p),
+        onPress: (p: string) => call(p),
       },
       {
         pattern: /#(\w+)/,
@@ -254,11 +443,10 @@ class OrderThreadContainer extends Component<Props, State> {
   render() {
     const { navigation, userData } = this.props;
     const interlocutor = { username: 'interlocutor' };
-    const { username } = this.props.userData;
-    const { messages } = this.state;
+    const { messages, isLoading } = this.state;
 
     return (
-      <Container style={st.flex1} keyboardShouldPersistTaps="always">
+      <Container style={st.flex1}>
         <Header>
           <Left>
             <NBButton transparent dark onPress={() => navigation.goBack()}>
@@ -279,41 +467,37 @@ class OrderThreadContainer extends Component<Props, State> {
             </NBButton>
           </Right>
         </Header>
-        <View style={st.container} keyboardShouldPersistTaps="always">
-          {/* <Text>d</Text> */}
-          <GiftedChat
-            messages={messages}
-            onSend={m => this.onSend(m)}
-            placeholder="Type a message"
-            user={{
-              _id: userData._id,
-              name: userData.username,
-              avatar: userData.profilePic,
-            }}
-            // locale=""
-            // timeformat="LT"
-            // dateformat="ll"
-            isAnimated
-            // loadEarlier
-            // onLoadEarlier={() => {}}
-            // isLoadingEarlier={isLoadingEarlier}
-            onPressAvatar={() => alert('code me like those french girls 🎨')}
-            // renderSystemMessage
-            renderLoading={() => (
-              <View style={st.container}>
-                <ActivityIndicator size="large" />
-              </View>
-            )}
-            renderSend={this.renderSend}
-            renderSystemMessage={this.renderSystemMessage}
-            // renderActions={this.renderActions}
-            // renderComposer={this.renderComposer}
-            // keyboardShouldPersistTaps="handled"
-            maxInputLength={300}
-            // renderInputToolbar={this.renderInputToolbar}
-            parsePatterns={this.parsePatterns}
-            showUserAvatar
-          />
+        <View style={st.flex1}>
+          {!messages || isLoading ? (
+            <View style={st.container}>
+              <ActivityIndicator size="large" />
+            </View>
+          ) : (
+            <GiftedChat
+              messages={messages}
+              onSend={m => this.onSend(m)}
+              placeholder="Type a message"
+              user={{
+                _id: userData._id,
+                name: userData.username,
+                avatar: userData.profilePic,
+              }}
+              // locale=""
+              // timeformat="LT"
+              // dateformat="ll"
+              onPressAvatar={() => alert('code me like those french girls 🎨')}
+              // renderLoading={() => ()}
+              renderSend={this.renderSend}
+              renderSystemMessage={this.renderSystemMessage}
+              // renderActions={this.renderActions}
+              // renderComposer={this.renderComposer}
+              // keyboardShouldPersistTaps="handled"
+              maxInputLength={300}
+              // renderInputToolbar={this.renderInputToolbar}
+              parsePatterns={this.parsePatterns}
+              showUserAvatar
+            />
+          )}
         </View>
       </Container>
     );
@@ -323,8 +507,8 @@ class OrderThreadContainer extends Component<Props, State> {
 const st = StyleSheet.create({
   container: {
     flex: 1,
-    // justifyContent: 'center',
-    // alignItems: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 
   user: {},

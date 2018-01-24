@@ -10,6 +10,4 @@ const reducers = {
   LoginReducer,
 };
 
-export type Reducers = typeof reducers;
-
 export default combineReducers(reducers);

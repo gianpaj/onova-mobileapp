@@ -59,9 +59,10 @@ const login = (data: LoginData) => (dispatch: Dispatch) => (
           ...res.data,
           ...{ token: res.token, provider: 'email' },
         };
-        // @TODO: send analytics login event
+        // @TODO:1 send analytics login event
         initializeSendBird(userData)
           .then(() => {
+            // @FIXME: fix use `userData` key in payload
         dispatch({ type: LOGIN_SUCCESS, payload: userData });
           })
           .catch(err => {

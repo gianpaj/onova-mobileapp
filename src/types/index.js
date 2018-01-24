@@ -1,6 +1,6 @@
 // @flow
 import type { Dispatch as ReduxDispatch, Store as ReduxStore } from 'redux';
-import type { Reducers } from '../reducers';
+// import type { Reducers } from '../reducers';
 import type { Action as LoginAction, LoginState } from './loginReducer';
 import type {
   Action as NavigationAction,
@@ -58,7 +58,7 @@ export type ShippingAddress = {
 };
 
 export type Message = {
-  _id: number,
+  _id: string,
   text: string,
   createdAt: Date,
   user?: {
@@ -67,6 +67,20 @@ export type Message = {
     avatar: string,
   },
   system?: boolean,
+};
+
+export type SendBirdMessage = {
+  messageId: string,
+  message: string,
+  messageType: string,
+  data: string,
+  customType: string,
+  createdAt: number,
+  updatedAt: number,
+
+  isUserMessage(): boolean,
+  isFileMessage(): boolean,
+  isAdminMessage(): boolean,
 };
 
 export type ReduxState = {
@@ -78,5 +92,4 @@ export type ReduxAction = LoginAction | NavigationAction;
 export type Store = ReduxStore<ReduxState, ReduxAction>;
 
 export type Dispatch = ReduxDispatch<ReduxAction>;
-// export type Dispatch = ReduxDispatch<any>;
 export type GetState = () => ReduxState;

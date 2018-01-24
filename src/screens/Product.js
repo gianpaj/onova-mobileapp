@@ -102,7 +102,7 @@ export class Product extends React.Component<Props, State> {
   componentWillMount() {
     const { params } = this.props.navigation.state;
 
-    console.log(params);
+    console.debug(params);
     this._getProduct(params.uuid).then(() => {
       this.setState({ loading: false });
     });

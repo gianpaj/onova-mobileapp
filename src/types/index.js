@@ -1,6 +1,11 @@
 // @flow
 import type { Dispatch as ReduxDispatch, Store as ReduxStore } from 'redux';
 import type { Reducers } from '../reducers';
+import type { Action as LoginAction, LoginState } from './loginReducer';
+import type {
+  Action as NavigationAction,
+  NavigationState,
+} from './navigationReducer';
 
 // export type Product = {
 //   id: Id,
@@ -16,8 +21,6 @@ export type LoginData = {
 export type SignupData = LoginData & {
   username: string,
 };
-
-export type LoginActionTypes = 'SHOW_ALL' | 'SHOW_ACTIVE' | 'SHOW_COMPLETED';
 
 export type UserData = {
   _id: string,
@@ -66,15 +69,13 @@ export type Message = {
   system?: boolean,
 };
 
-export type State = {
-  app: AppType,
-  counter: CounterType,
-  history: HistoryState,
+export type ReduxState = {
+  LoginReducer: LoginState,
+  NavigationReducer: NavigationState,
 };
 
-export type ReduxAction = AppAction | HistoryAction | CounterAction;
-// export type Store = ReduxStore<State, Action>;
-export type Store = ReduxStore<State, ReduxAction>;
+export type ReduxAction = LoginAction | NavigationAction;
+export type Store = ReduxStore<ReduxState, ReduxAction>;
 
 export type Dispatch = ReduxDispatch<ReduxAction>;
 // export type Dispatch = ReduxDispatch<any>;

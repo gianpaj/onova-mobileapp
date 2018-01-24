@@ -1,7 +1,7 @@
 /* @flow */
 
 export type Action = {
-  // type: LOGIN_PENDING | LOGIN_SUCCESS | LOGIN_FAIL,
+  type: string,
   payload?: {
     counter: number,
   },

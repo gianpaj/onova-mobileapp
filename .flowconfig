@@ -26,6 +26,8 @@
 # Using flow-scripts
 # .*node_modules/.*
 
+<PROJECT_ROOT>/flow-typed/.*
+
 [include]
 
 [libs]

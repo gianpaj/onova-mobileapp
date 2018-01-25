@@ -1,3 +1,5 @@
+// @flow
+
 const incrementCounter = 'INCREMENT_COUNTER';
 const decrementCounter = 'DECREMENT_COUNTER';
 const LOGIN_PENDING = 'LOGIN_PENDING';

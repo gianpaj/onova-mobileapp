@@ -55,7 +55,7 @@ const login = (data: LoginData) => (dispatch: Dispatch) => (
     .then(res => {
       if (res.data) {
         console.debug('user logged in via email');
-        const userData = {
+        const userData: UserData = {
           ...res.data,
           ...{ token: res.token, provider: 'email' },
         };
@@ -63,7 +63,7 @@ const login = (data: LoginData) => (dispatch: Dispatch) => (
         initializeSendBird(userData)
           .then(() => {
             // @FIXME: fix use `userData` key in payload
-        dispatch({ type: LOGIN_SUCCESS, payload: userData });
+            dispatch({ type: LOGIN_SUCCESS, payload: userData });
           })
           .catch(err => {
             console.warn(err);
@@ -143,7 +143,7 @@ const signup = (data: SignupData) => (dispatch: Dispatch) => (
       if (res.data) {
         console.debug('user created', res.data);
         console.debug('token', res.token);
-        const userData = {
+        const userData: UserData = {
           ...res.data,
           ...{ token: res.token, provider: 'email' },
         };
@@ -165,7 +165,7 @@ const getPersonalUserData = (userId: string, options: any) => (
   dispatch({ type: GETUSER_PENDING }),
   api
     .get(`/api/users/${userId}/personal`, options)
-    .then(res => {
+    .then((res: UserData) => {
       console.debug(res);
       dispatch({ type: GETUSER_SUCCESS, payload: res });
     })
@@ -180,7 +180,7 @@ const getUserData = (userId: string, options: any) => (dispatch: Dispatch) => (
   dispatch({ type: GETUSER_PENDING }),
   api
     .get(`/api/users/${userId}`, options)
-    .then(res => {
+    .then((res: UserData) => {
       console.debug(res);
       dispatch({ type: GETUSER_SUCCESS, payload: res });
     })

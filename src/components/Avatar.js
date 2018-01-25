@@ -3,19 +3,17 @@
 
 import React, { PureComponent } from 'react';
 import {
-  ActivityIndicator,
+  // ActivityIndicator,
   Image,
   Platform,
   StyleSheet,
   TouchableWithoutFeedback,
-  Text,
   View,
   // $FlowFixMe
 } from 'react-native';
-import {
-  CachedImage,
-} from 'react-native-cached-image';
+// import { CachedImage } from 'react-native-cached-image';
 import ImagePicker from 'react-native-image-crop-picker';
+import { GiftedAvatar } from 'react-native-gifted-chat';
 import colors from '../config/colors';
 
 const isiOS = Platform.OS === 'ios';
@@ -115,15 +113,14 @@ export default class Avatar extends PureComponent<Props, State> {
 
     if (!uri && placeholderText !== undefined) {
       return (
-        <View
-          style={[
-            !isiOS && { overlayColor: this.props.overlayColor },
-            styles.avatarContainer,
-            styles[`${this.props.size}Avatar`],
-            this.props.withBorder ? styles.border : {},
-            this.props.style,
-          ]}>
-          <Text style={styles.text}>{placeholderText}</Text>
+        <View>
+          <GiftedAvatar
+            avatarStyle={StyleSheet.flatten([
+              styles[`${this.props.size}Avatar`],
+            ])}
+            user={{ name: placeholderText }}
+            textStyle={{ fontSize: 50 }}
+          />
         </View>
       );
     }
@@ -159,20 +156,6 @@ const styles = StyleSheet.create({
   avatar: {
     backgroundColor: colors.grey3,
   },
-  avatarContainer: {
-    alignItems: 'center',
-    backgroundColor: colors.grey3,
-    borderColor: colors.grey4,
-    borderRadius: 75,
-    borderWidth: 1 / 2,
-    height: 150,
-    justifyContent: 'center',
-    width: 150,
-  },
-  text: {
-    color: colors.white,
-    fontSize: 28,
-  },
   /* eslint-disable */
   miniAvatar: {
     width: 20,
@@ -204,9 +187,9 @@ const styles = StyleSheet.create({
     borderColor: colors.grey5,
     borderWidth: 2,
   },
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
+  // container: {
+  //   flex: 1,
+  //   justifyContent: 'center',
+  //   alignItems: 'center',
+  // },
 });

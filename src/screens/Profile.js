@@ -312,7 +312,7 @@ class ProfileScreen extends React.Component<Props, State> {
                   onChange={p => this.setState({ profilePic: p })}
                   interactive={editing}
                   uri={profilePic}
-                  placeholderText={username[0]}
+                  placeholderText={username}
                 />
                 <View style={styles.flex1}>
                   {this.isMe() ? (

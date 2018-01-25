@@ -273,13 +273,6 @@ class OrderThreadContainer extends Component<Props, State> {
         (msg: SendBirdMessage, err) => {
           if (err) return console.error(err);
 
-          // const user = {
-          //   _id: ud._id,
-          //   name: ud.username,
-          //   // or msg.sender.profileUrl ?
-          //   avatar: ud.profilePic,
-          // };
-
           const mymsg = {
             _id: msg.messageId,
             createdAt: new Date(msg.createdAt),
@@ -290,19 +283,13 @@ class OrderThreadContainer extends Component<Props, State> {
               // or msg.sender.profileUrl ?
               avatar: ud.profilePic,
             },
-            // user: {
-            //   _id: user._id,
-            //   name: ud.username || user.name,
-            //   avatar: ud.profilePic,
-            // },
           };
 
-          console.warn(mymsg);
-          console.warn(msg);
-
           this.setState(prevState => ({
-            messages: GiftedChat.append(prevState.messages, mymsg),
-            // messages: GiftedChat.append(prevState.messages, msg),
+            messages: GiftedChat.append(
+              prevState.messages,
+              this.createGiftedMessage(msg, ud)
+            ),
           }));
         }
       );

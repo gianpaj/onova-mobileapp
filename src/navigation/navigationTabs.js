@@ -1,4 +1,7 @@
+// @flow
+
 import React from 'react';
+// $FlowFixMe
 import { Platform } from 'react-native';
 import { TabNavigator } from 'react-navigation';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -30,6 +33,12 @@ const tabBarConfiguration = {
             ? `ios-add-circle${focused ? '' : '-outline'}`
             : 'md-add-circle';
           break;
+        case 'OrdersList':
+          iconName = isiOS
+            ? `ios-add-circle${focused ? '' : '-outline'}`
+            : 'md-add-circle';
+          break;
+        // Profile uses <NotificationsDot> as its tabBarIcon
       }
       return (
         <Ionicons
@@ -58,7 +67,6 @@ const tabBarConfiguration = {
   },
   // needed to open the Camera the first time opening the 'AddProduct' screen
   // i.e componentWillMount() of AddProduct
-  lazy: true,
   tabBarPosition: 'bottom',
   animationEnabled: false,
   swipeEnabled: false,

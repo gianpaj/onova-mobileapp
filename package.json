@@ -21,7 +21,6 @@
     "test:lint": "eslint src --quiet"
   },
   "dependencies": {
-    "@patwoz/react-navigation-is-focused-hoc": "^1.1.0",
     "antd-mobile": "^2.1.3",
     "axios": "^0.17.1",
     "firebase": "^4.8.1",

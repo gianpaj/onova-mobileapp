@@ -28,14 +28,12 @@ import RadioForm, {
   RadioButtonLabel,
 } from 'react-native-simple-radio-button';
 import ImagePicker from 'react-native-image-crop-picker';
-import { withNavigationFocus } from '@patwoz/react-navigation-is-focused-hoc';
 import {
   TextareaItem,
   ImagePicker as AntImagePicker,
   WingBlank,
 } from 'antd-mobile';
 import type { NavigationScreenProp } from 'react-navigation';
-import type { ReduxState } from '../types';
 
 import { HR } from '../components';
 
@@ -71,13 +69,13 @@ type State = {
   pending: boolean,
 };
 
-class AddProductScreen extends React.Component<Props, State> {
+export class AddProduct extends React.Component<Props, State> {
   static navigationOptions = props => {
     return {
       // navigate to the screen instead of showing as a normal tab screen
-      tabBarOnPress: ({ scene }) => {
+      tabBarOnPress: ({ scene }: any) => {
         if (!scene.focused) {
-          props.navigation.navigate('addProduct');
+          props.navigation.navigate('addProduct', { focused: !scene.focused });
         }
       },
     };
@@ -93,20 +91,12 @@ class AddProductScreen extends React.Component<Props, State> {
     pending: false,
   };
 
-  componentWillMount() {
-    console.log('componentWillMount');
-    // this.takePicture();
-  }
+  componentDidMount() {
+    const { params } = this.props.navigation.state;
 
-  componentWillReceiveProps(nextProps) {
-    if (!this.props.isFocused && nextProps.isFocused) {
-      // screen re-enter (refresh data, update ui ...)
+    if (params && params.focused) {
       this.takePicture();
     }
-
-    // if (this.props.isFocused && !nextProps.isFocused) {
-    //   console.log('screen exit');
-    // }
   }
 
   takePicture() {
@@ -393,8 +383,6 @@ class AddProductScreen extends React.Component<Props, State> {
     );
   }
 }
-
-export const AddProduct = withNavigationFocus(AddProductScreen);
 
 const { width } = Dimensions.get('window');
 

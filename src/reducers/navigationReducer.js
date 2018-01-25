@@ -1,7 +1,7 @@
 // @flow
 import { NavigationActions } from 'react-navigation';
 
-import AppNavigator from '../navigation/navigationStack';
+import NavigationStack from '../navigation/navigationStack';
 import {
   LOGIN_SUCCESS,
   SIGNUP_SUCCESS,
@@ -10,7 +10,7 @@ import {
   BACK,
 } from '../actions/actionTypes';
 
-const ActionForLoggedOut = AppNavigator.router.getActionForPathAndParams(
+const ActionForLoggedOut = NavigationStack.router.getActionForPathAndParams(
   'login'
 );
 
@@ -19,10 +19,10 @@ const ActionForLoggedIn = NavigationActions.reset({
   actions: [NavigationActions.navigate({ routeName: 'tabs' })],
 });
 
-const stateForLoggedOut = AppNavigator.router.getStateForAction(
+const stateForLoggedOut = NavigationStack.router.getStateForAction(
   ActionForLoggedOut
 );
-const stateForLoggedIn = AppNavigator.router.getStateForAction(
+const stateForLoggedIn = NavigationStack.router.getStateForAction(
   ActionForLoggedIn
 );
 
@@ -33,7 +33,7 @@ const navigationReducer = (state: any = initialState, action: Function) => {
     case '@@redux/INIT':
       return {
         ...state,
-        stateForLoggedIn: AppNavigator.router.getStateForAction(
+        stateForLoggedIn: NavigationStack.router.getStateForAction(
           ActionForLoggedIn,
           stateForLoggedOut
         ),
@@ -43,7 +43,7 @@ const navigationReducer = (state: any = initialState, action: Function) => {
     case SIGNUP_SUCCESS:
       return {
         ...state,
-        stateForLoggedIn: AppNavigator.router.getStateForAction(
+        stateForLoggedIn: NavigationStack.router.getStateForAction(
           ActionForLoggedIn,
           stateForLoggedOut
         ),
@@ -51,7 +51,7 @@ const navigationReducer = (state: any = initialState, action: Function) => {
 
     case LOGOUT:
       return {
-        stateForLoggedOut: AppNavigator.router.getStateForAction(
+        stateForLoggedOut: NavigationStack.router.getStateForAction(
           stateForLoggedOut
         ),
       };
@@ -59,7 +59,7 @@ const navigationReducer = (state: any = initialState, action: Function) => {
     case SIGNUP:
       return {
         ...state,
-        stateForLoggedOut: AppNavigator.router.getStateForAction(
+        stateForLoggedOut: NavigationStack.router.getStateForAction(
           NavigationActions.navigate({
             routeName: 'signup',
           }),
@@ -70,7 +70,7 @@ const navigationReducer = (state: any = initialState, action: Function) => {
     case BACK:
       return {
         ...state,
-        stateForLoggedOut: AppNavigator.router.getStateForAction(
+        stateForLoggedOut: NavigationStack.router.getStateForAction(
           NavigationActions.back()
         ),
       };
@@ -78,7 +78,7 @@ const navigationReducer = (state: any = initialState, action: Function) => {
     default:
       return {
         ...state,
-        stateForLoggedIn: AppNavigator.router.getStateForAction(
+        stateForLoggedIn: NavigationStack.router.getStateForAction(
           action,
           state.stateForLoggedIn
         ),

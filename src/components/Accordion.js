@@ -2,7 +2,7 @@
 
 import React, { PureComponent } from 'react';
 // $FlowFixMe
-import { Animated, StyleSheet, View, Text } from 'react-native';
+import { Animated, StyleSheet, View } from 'react-native';
 import CollapsibleAccordion from 'react-native-collapsible/Accordion';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { FormInput, FormLabel } from 'react-native-elements';

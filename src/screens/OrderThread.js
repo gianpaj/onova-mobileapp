@@ -52,6 +52,8 @@ import * as api from '../utils/api';
 
 if (Platform.OS == 'ios') {
   KeyboardManager.setEnable(false);
+
+  // ? Fixed problem with setEnableAutoToolbar:false https://github.com/douglasjunior/react-native-keyboard-manager/commit/e43ee9a9b75711235bc06e70be5a47f8c560944b
   KeyboardManager.setEnableAutoToolbar(false);
 }
 

@@ -37,17 +37,9 @@ npm-debug.log
 yarn-error.log
 
 # BUCK
-#
 buck-out/
 \.buckd/
 *.keystore
-
-# Flow
-#
-# flow-typed/
-
-# Jest
-coverage
 
 # fastlane
 #

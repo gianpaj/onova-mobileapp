@@ -106,7 +106,7 @@ class OrderThreadContainer extends Component<Props, State> {
     product: null,
   };
 
-  _getUserData(userId: string): Promise<any> {
+  _getInterlucutorUserData(userId: string): Promise<any> {
     return new Promise((resolve, reject) => {
       api
         .get(`/api/users/${userId}`)
@@ -140,13 +140,27 @@ class OrderThreadContainer extends Component<Props, State> {
   componentWillMount() {
     const { params } = this.props.navigation.state;
 
-    console.log(params);
     const Promises = [];
+    console.log(params);
 
-    // let userId = '5a660cd459b74818e68c3b6e';
+    let userId = '';
+    if (!params) {
+      // @TODO: for test
+      // firstperson
+      userId = '5a69d21de270b4d9b481f69c';
+    }
+    // coming from Product
+    if (params && params.seller) {
+      userId = params.seller._id;
+    }
 
+    // coming from OrdersList
+    // if (params && params.seller) {
+    //   userId = params.seller._id;
+    // }
+
+    Promises.push(this._getInterlucutorUserData(userId));
     // Promises.push(this._getProduct(params.uuid));
-    Promises.push(this._getUserData(params.seller._id));
     Promises.push(this.connectToSendBird());
 
     Promise.all(Promises)
@@ -163,7 +177,7 @@ class OrderThreadContainer extends Component<Props, State> {
       setTimeout(() => {
         this.sb = SendBird.getInstance();
         if (!this.state.hasRendered) {
-          this.sb.connect(this.state.interlocutor._id, (user, err) => {
+          this.sb.connect(this.props.userData._id, (user, err) => {
             if (err) return reject(err);
 
             console.debug(user);
@@ -191,18 +205,16 @@ class OrderThreadContainer extends Component<Props, State> {
   }
 
   createChannelHandler(): any {
-    const { interlocutor: int } = this.state;
+    const { interlocutor: int, channel } = this.state;
 
     const ChannelHandler = new this.sb.ChannelHandler();
 
-    ChannelHandler.onMessageReceived = function(
+    // fat-arrow necessary to pass `this` context
+    ChannelHandler.onMessageReceived = (
       receivedChannel: Channel,
       msg: SendBirdMessage
-    ): void {
-      if (
-        this.state.channel &&
-        receivedChannel.url !== this.state.channel.url
-      ) {
+    ): void => {
+      if (channel && receivedChannel.url !== channel.url) {
         console.log('Channel urls do not match');
       }
 
@@ -286,6 +298,7 @@ class OrderThreadContainer extends Component<Props, State> {
           };
 
           console.warn(mymsg);
+          console.warn(msg);
 
           this.setState(prevState => ({
             messages: GiftedChat.append(prevState.messages, mymsg),

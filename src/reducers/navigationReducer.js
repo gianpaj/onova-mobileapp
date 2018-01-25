@@ -19,6 +19,7 @@ const ActionForLoggedIn = NavigationActions.reset({
   actions: [NavigationActions.navigate({ routeName: 'tabs' })],
 });
 
+// $FlowFixMe
 const stateForLoggedOut = NavigationStack.router.getStateForAction(
   ActionForLoggedOut
 );

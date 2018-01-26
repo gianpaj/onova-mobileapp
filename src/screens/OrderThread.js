@@ -26,19 +26,13 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { NavigationActions } from 'react-navigation';
 import SendBird from 'sendbird';
-import {
-  GiftedChat,
-  // Actions,
-  Send,
-  SystemMessage,
-} from 'react-native-gifted-chat';
+import { GiftedChat, SystemMessage } from 'react-native-gifted-chat';
 import type { NavigationScreenProp } from 'react-navigation';
 // import moment from 'moment';
-// import ImagePicker from 'react-native-image-crop-picker';
 import KeyboardManager from 'react-native-keyboard-manager';
 
 // import { sbCreateOpenChannelListQuery } from '../actions/sendbird';
-// import { ChatActions } from '../components/ChatActions';
+import Send from '../components/Send';
 import type {
   Message,
   Product,
@@ -275,17 +269,17 @@ class OrderThreadContainer extends Component<Props, State> {
         (msg: SendBirdMessage, err) => {
           if (err) return console.error(err);
 
-          const mymsg = {
-            _id: msg.messageId,
-            createdAt: new Date(msg.createdAt),
-            text: msg.message,
-            user: {
-              _id: ud._id,
-              name: ud.username,
-              // or msg.sender.profileUrl ?
-              avatar: ud.profilePic,
-            },
-          };
+          // const mymsg = {
+          //   _id: msg.messageId,
+          //   createdAt: new Date(msg.createdAt),
+          //   text: msg.message,
+          //   user: {
+          //     _id: userData._id,
+          //     name: userData.username,
+          //     // or msg.sender.profileUrl ?
+          //     avatar: userData.profilePic,
+          //   },
+          // };
 
           this.setState(prevState => ({
             messages: GiftedChat.append(
@@ -418,7 +412,11 @@ class OrderThreadContainer extends Component<Props, State> {
     return (
       <Send {...props}>
         <View style={st.send}>
-          <Ionicons name="md-send" size={29} />
+          <Ionicons
+            style={{ opacity: props.text.trim().length > 0 ? 1 : 0.7 }}
+            name="md-send"
+            size={29}
+          />
         </View>
       </Send>
     );

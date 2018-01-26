@@ -2,7 +2,7 @@
 
 import Accordion from './Accordion';
 import Avatar from './Avatar';
-import ChatActions from './ChatActions';
+// import ChatActions from './ChatActions';
 import EditableText from './EditableText';
 import HR from './HR';
 import ImageGrid from './ImageGrid';
@@ -13,7 +13,7 @@ import SpinningIcon from './SpinningIcon';
 export {
   Accordion,
   Avatar,
-  ChatActions,
+  // ChatActions,
   EditableText,
   HR,
   ImageGrid,

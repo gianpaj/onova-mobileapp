@@ -1,3 +1,5 @@
+// @flow
+
 import { AddProduct } from '../screens/AddProduct';
 import { Home } from '../screens/Home';
 import { Login } from '../screens/Login';

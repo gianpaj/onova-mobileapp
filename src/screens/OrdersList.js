@@ -2,150 +2,192 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+
 import {
-  Linking,
-  Platform,
+  ActivityIndicator,
   StyleSheet,
+  Linking,
+  FlatList,
+  Platform,
+  View,
   Text,
   TouchableOpacity,
-  UIManager,
-  View,
+  RefreshControl,
   // $FlowFixMe
 } from 'react-native';
 import {
   Body,
   Button as NBButton,
   Container,
-  Content,
   Header,
   Icon as NBIcon,
   Left,
   Right,
   Title,
 } from 'native-base';
-import Icon from 'react-native-vector-icons/MaterialIcons';
-import { FormInput, FormLabel } from 'react-native-elements';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import { NavigationActions } from 'react-navigation';
+import SendBird from 'sendbird';
 import type { NavigationScreenProp } from 'react-navigation';
-import { CardView, LiteCreditCardInput } from 'react-native-credit-card-input';
-import { Toast } from 'antd-mobile';
-import axios from 'axios';
-import update from 'immutability-helper';
 
-import { getOrdersAndThreads } from '../actions/actionCreator';
+import { format, differenceInHours, distanceInWordsToNow } from 'date-fns';
 
+import type { Message, UserData, ReduxState } from '../types';
 import colors from '../config/colors';
-import settings from '../config/settings';
-import { validShippingAddress } from '../utils/validators';
 import * as api from '../utils/api';
-import * as ui from '../utils/ui';
+import { Avatar } from '../components/index';
 
-import type { UserData, Dispatch, ReduxState } from '../types';
+type Order = {
+  _id: number,
+  lastMessage: Message,
+  unreadMessageCount: number,
+};
 
 type Props = {
-  dispatch: Dispatch,
-  navigation?: NavigationScreenProp<any>,
+  navigation: NavigationScreenProp<any>,
   userData: UserData,
-  ordersData: any,
 };
 
 type State = {
-  loading: boolean,
+  hasError: boolean,
+  isRefreshing: boolean,
+  isLoading: boolean,
+  orders: Array<Order>,
 };
 
+const temp = [
+  {
+    _id: 1,
+    unreadMessageCount: 0,
+    lastMessage: {
+      _id: '1',
+      text: 'hi',
+      createdAt: new Date('2018-01-26T12:00:00'),
+      user: {
+        _id: '1',
+        name: 'john',
+        avatar: '',
+      },
+    },
+  },
+  {
+    _id: 2,
+    unreadMessageCount: 0,
+    lastMessage: {
+      _id: '1',
+      text: 'selling good clothes',
+      createdAt: new Date('2018-01-16T12:00:00'),
+      user: {
+        _id: '1',
+        name: 'marry',
+        avatar: '',
+      },
+    },
+  },
+  {
+    _id: 3,
+    unreadMessageCount: 0,
+    lastMessage: {
+      _id: '1',
+      text: 'who is this Jesus you talk about',
+      createdAt: new Date('0017-01-26T12:00:00'),
+      user: {
+        _id: '1',
+        name: 'joseph',
+        avatar: '',
+      },
+    },
+  },
+];
+
 class OrdersListContainer extends Component<Props, State> {
-  cancelToken;
+  sb: any;
+
   state = {
-    loading: false,
+    hasError: false,
+    isRefreshing: false,
+    isLoading: true,
+    orders: [],
   };
 
   componentWillMount() {
-    const CancelToken = axios.CancelToken;
-    this.cancelToken = CancelToken.source();
-    this.props.dispatch(
-      getOrdersAndThreads(this.props.userData._id, {
-        cancelToken: this.cancelToken.token,
-      })
-    );
+    // this.setState({ isLoading: true });
+
+    setTimeout(() => {
+      this.setState({
+        orders: temp,
+      });
+    }, 1000);
+
+    this.setState({ isLoading: false });
+  }
+
+  fetchItems = () => {
+    setTimeout(() => {
+      const one = temp[0];
+      const two = temp[1];
+      this.setState({ orders: [one, two] });
+    }, 1000);
+  };
+
+  connectToSendBird(): Promise<null | any> {
+    return new Promise((resolve, reject) => {
+      // @TODO: remove this if don't get a warning when quickly opening a chat thread.
+      // Maybe from a deeplink, opening app from background?
+      setTimeout(() => {
+        this.sb = SendBird.getInstance();
+        this.sb.connect(this.props.userData._id, (user, err: any) => {
+          if (err) return reject(err);
+
+          console.debug(user);
+
+          this.createRoomAndGetMessages(this.state.interlocutor._id);
+
+          this.sb.addChannelHandler('ChatView', this.createChannelHandler());
+
+          const ConnectionHandler = new this.sb.ConnectionHandler();
+          ConnectionHandler.onReconnectSucceeded = () => {
+            this.getRoomMessages(true);
+            // $FlowFixMe
+            this.state.channel.refresh(() => {
+              this.getRoomMessages(false);
+            });
+          };
+          this.sb.addConnectionHandler('ChatView', ConnectionHandler);
+
+          this.getRoomMessages(false);
+          resolve();
+        });
+      }, 500);
+    });
+  }
+
+  createGiftedMessage(msg: SendBirdMessage, user: UserData | any): Message {
+    return {
+      _id: msg.messageId,
+      createdAt: new Date(msg.createdAt),
+      text: msg.message,
+      user: {
+        _id: user._id,
+        // $FlowFixMe
+        name: user.username || user.name,
+        // $FlowFixMe
+        avatar: user.profilePic,
+        // avatar: user.profilePic !== null ? user.profilePic : null,
+        // avatar: user.profilePic || msg.sender.profileUrl,
+      },
+    };
   }
 
   componentWillUnmount() {
-    // trigger Axios to reject the request
-    this.cancelToken.cancel('operation_canceled');
+    // this.sb.disconnect(() => console.debug('SendBird disconnected'));
   }
 
   componentWillReceiveProps(nextProps) {
     // fix error when logging out
     if (!nextProps.userData) return;
-
-    // const { username } = nextProps.userData;
   }
-
-  onSave = () => {
-    const { userData } = this.props;
-    const {
-      password,
-      emailAddress,
-      paymentInfo,
-      shippingAddress,
-      username,
-    } = this.state;
-    const data = {};
-
-    this.setState({ pending: true });
-
-    if (username !== '') {
-      data.username = username;
-    }
-
-    if (password !== '') {
-      data.password = password;
-    }
-
-    if (emailAddress !== userData.emailAddress) {
-      data.emailAddress = emailAddress;
-    }
-
-    if (paymentInfo.valid) {
-      const { values } = paymentInfo;
-
-      data.last_four = values.number.slice(-4);
-      data.exp_month = values.expiry.split('/')[0];
-      data.exp_year = values.expiry.split('/')[0];
-    }
-
-    if (validShippingAddress(shippingAddress)) {
-      data.shippingAddress = shippingAddress;
-    }
-
-    console.log(data);
-
-    Toast.loading('Loading...', 3);
-
-    api
-      .put(`/api/users/${userData._id}`, data)
-      .then(res => {
-        console.log(res);
-        // if we changed the email
-        if (data.emailAddress) {
-          ui.showToast(
-            'The new email address requires to be valided. Please check your inbox',
-            'success'
-          );
-        } else {
-          ui.showToast('Your settings have been updated', 'success');
-        }
-        this.props.navigation && this.props.navigation.goBack();
-      })
-      .catch(err => {
-        console.debug(err);
-        ui.showToast(err.message, 'danger');
-      })
-      .then(() => {
-        // final
-        Toast.hide();
-        this.setState({ pending: false });
-      });
-  };
 
   shouldComponentUpdate(nextProps) {
     // fix error when logging out
@@ -156,193 +198,154 @@ class OrdersListContainer extends Component<Props, State> {
     }
   }
 
+  goToProfile = () => {
+    const user = this.props.navigation.state.params.seller;
+
+    const navigateToProfile = NavigationActions.navigate({
+      routeName: 'profile',
+      params: user,
+    });
+
+    this.props.navigation.dispatch(navigateToProfile);
+  };
+
+  _renderItem = (item: any) => {
+    const { lastMessage } = item.item;
+    return (
+      <TouchableOpacity
+        onPress={() =>
+          this.props.navigation.navigate('orderThread', {
+            order: item.order,
+          })
+        }>
+        <View style={st.itemContainer}>
+          <Avatar
+            // style={styles.avatarContainer}
+            size={'verySmall'}
+            withBorder
+            uri={''}
+            placeholderText={lastMessage.user.name}
+          />
+          <View style={[st.flex1, st.content]}>
+            <View style={st.contentHeader}>
+              {/* displayName */}
+              <Text style={st.name}>{lastMessage.user.name}</Text>
+              {differenceInHours(new Date(), lastMessage.createdAt) < 24 ? (
+                <Text style={st.datetime}>
+                  {distanceInWordsToNow(lastMessage.createdAt)}
+                </Text>
+              ) : (
+                <Text style={st.datetime}>
+                  {format(lastMessage.createdAt, 'D MMM')}
+                </Text>
+              )}
+            </View>
+            <Text numberOfLines={2} rkType="primary3 mediumLine">
+              {lastMessage.text}
+            </Text>
+          </View>
+        </View>
+      </TouchableOpacity>
+    );
+  };
+
+  _keyExtractor(item) {
+    return item._id;
+  }
+
+  _renderSeparator() {
+    return <View style={st.separator} />;
+  }
+
+  renderEmptyState = () => {
+    if (this.state.orders.length > 1 || !this.state.isLoading) return null;
+    return (
+      <View style={[st.container]}>
+        <Text style={st.text}>
+          {this.state.hasError ? 'Error fetching orders' : 'No orders found'}
+        </Text>
+      </View>
+    );
+  };
+
+  renderRefreshControl = (
+    <RefreshControl
+      refreshing={this.state.isRefreshing}
+      onRefresh={this.fetchItems}
+    />
+  );
+
   render() {
-    const { userData } = this.props;
-    const { pending } = this.state;
+    const { hasError, orders, isLoading } = this.state;
 
     return (
       <Container>
         <Header>
-          <Left>
-            <NBButton
-              transparent
-              dark
-              onPress={() =>
-                this.props.navigation && this.props.navigation.goBack()
-              }>
-              <NBIcon ios="ios-arrow-back" android="md-arrow-back" />
-            </NBButton>
-          </Left>
+          <Left />
           <Body>
-            <Title>OrdersList</Title>
+            <Title>Orders</Title>
           </Body>
-          <Right>
-            <NBButton
-              transparent
-              disabled={!this.hasUnsavedChanges()}
-              // eslint-disable-next-line
-              style={{ backgroundColor: 'transparent' }}
-              onPress={this.onSave}>
-              <Icon
-                name="check"
-                style={!this.hasUnsavedChanges() && { color: colors.grey3 }}
-                size={28}
-              />
-            </NBButton>
-          </Right>
+          <Right />
         </Header>
-        <Content style={{ backgroundColor: colors.white }}>
-          <View style={styles.padder}>
-            <Accordion
-              headerText="Shipping Address:"
-              values={[
-                {
-                  content: [
-                    {
-                      placeholder: 'Address line 1',
-                      value: shippingAddress.line1,
-                      onChangeValue: t =>
-                        this.setState(
-                          update(this.state, {
-                            shippingAddress: { line1: { $set: t } },
-                          })
-                        ),
-                    },
-                    {
-                      placeholder: 'Address line 2',
-                      value: shippingAddress.line2,
-                      onChangeValue: t =>
-                        this.setState(
-                          update(this.state, {
-                            shippingAddress: { line2: { $set: t } },
-                          })
-                        ),
-                    },
-                    {
-                      placeholder: 'City',
-                      value: shippingAddress.city,
-                      onChangeValue: t =>
-                        this.setState(
-                          update(this.state, {
-                            shippingAddress: { city: { $set: t } },
-                          })
-                        ),
-                    },
-                    {
-                      placeholder: 'State',
-                      value: shippingAddress.state,
-                      onChangeValue: t =>
-                        this.setState(
-                          update(this.state, {
-                            shippingAddress: { state: { $set: t } },
-                          })
-                        ),
-                    },
-                  ],
-                },
-              ]}
+        <View style={st.flex1}>
+          {!hasError && isLoading ? (
+            <View style={st.container}>
+              <ActivityIndicator size="large" />
+            </View>
+          ) : (
+            <FlatList
+              style={st.root}
+              data={orders}
+              extraData={this.state} // make sure will re-render when the state.selected changes
+              refreshControl={this.renderRefreshControl}
+              ItemSeparatorComponent={this._renderSeparator}
+              keyExtractor={this._keyExtractor}
+              ListEmptyComponent={this.renderEmptyState}
+              renderItem={this._renderItem}
             />
-            <FormLabel labelStyle={[styles.label, { paddingBottom: 10 }]}>
-              Payment Info:
-            </FormLabel>
-            <FlipCard
-              perspective={1000}
-              clickable={
-                userData.paymentInfo &&
-                Object.keys(userData.paymentInfo).length > 0
-              }
-              style={{ borderWidth: 0 }}
-              flip={
-                !userData.paymentInfo ||
-                Object.keys(userData.paymentInfo).length == 0
-              }>
-              <View style={{ alignSelf: 'center' }}>
-                {userData.paymentInfo && (
-                  <CardView {...this.formatCardInfo()} />
-                )}
-              </View>
-              <View style={{ paddingLeft: 10 }}>
-                <LiteCreditCardInput onChange={this.onCCChange} />
-              </View>
-            </FlipCard>
-          </View>
-          <HR full />
-          <View style={styles.padder}>
-            <FormLabel labelStyle={styles.label}>Username:</FormLabel>
-            <FormInput
-              autoCorrect={false}
-              containerStyle={styles.inputContainer}
-              editable={!pending}
-              inputStyle={styles.input}
-              onChangeText={t => this.onUserChange(t)}
-              placeholder="Change your username"
-              value={username}
-              clearButtonMode="while-editing"
-              shake={usernameError}
-            />
-            <FormLabel>Private information</FormLabel>
-            <FormLabel labelStyle={styles.label}>Email:</FormLabel>
-            <FormInput
-              autoCorrect={false}
-              containerStyle={styles.inputContainer}
-              editable={!pending}
-              inputStyle={styles.input}
-              onChangeText={t => this.setState({ emailAddress: t })}
-              placeholder="Change your email address. Requires email verification"
-              value={emailAddress}
-              clearButtonMode="while-editing"
-            />
-            <FormLabel labelStyle={styles.label}>Password:</FormLabel>
-            <FormInput
-              autoCorrect={false}
-              containerStyle={styles.inputContainer}
-              editable={!pending}
-              inputStyle={styles.input}
-              onChangeText={t => this.setState({ password: t })}
-              secureTextEntry
-              placeholder="******"
-              value={password}
-              clearButtonMode="while-editing"
-            />
-          </View>
-          <HR full />
-          <View style={[styles.padder, { alignItems: 'center' }]}>
-            <NBButton light full onPress={this.onSignout}>
-              <Text>Sign out</Text>
-            </NBButton>
-          </View>
-          <HR full />
-          <View style={[styles.padder, { alignItems: 'center' }]}>
-            <TouchableOpacity onPress={this.onSendEmail}>
-              <Text style={styles.centerText}>hello@onova.co</Text>
-            </TouchableOpacity>
-            <Text style={styles.centerText}>__version__</Text>
-          </View>
-        </Content>
+          )}
+        </View>
       </Container>
     );
   }
 }
 
-const styles = StyleSheet.create({
-  label: {
-    color: colors.black,
-    fontWeight: '600',
+const st = StyleSheet.create({
+  container: {
+    alignItems: 'stretch',
+    flex: 1,
+    justifyContent: 'center',
   },
-  input: {
-    color: colors.black,
-    width: '100%',
+  root: {
+    backgroundColor: colors.bgDefault,
   },
-  padder: {
-    padding: 10,
+  flex1: {
+    flex: 1,
   },
-  inputContainer: {
-    borderBottomWidth: 0,
-    marginVertical: 10,
+  itemContainer: {
+    paddingLeft: 19,
+    paddingRight: 16,
+    paddingVertical: 12,
+    flexDirection: 'row',
   },
-  centerText: {
-    color: colors.grey4,
-    paddingVertical: 10,
+  content: {
+    marginLeft: 16,
+  },
+  name: {
+    color: colors.grey1,
+    fontWeight: '800',
+  },
+  datetime: {
+    color: colors.grey1,
+  },
+  contentHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 6,
+  },
+  separator: {
+    height: StyleSheet.hairlineWidth,
+    backgroundColor: colors.grey4,
   },
 });
 

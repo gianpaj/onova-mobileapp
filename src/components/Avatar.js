@@ -26,7 +26,7 @@ const PICKER_OPTIONS = {
 
 type Props = {
   interactive: boolean,
-  onChange: Image => void, // called on change when interactive is true
+  onChange?: Image => void, // called on change when interactive is true
   onChangeFailed?: () => void, // called on change failure when interactive is true
   onPress?: () => void,
   overlayColor: string, // On Android only, should be the same than the backgroundColor of the surrounding View
@@ -66,7 +66,7 @@ export default class Avatar extends PureComponent<Props, State> {
       .then((response: Image) => {
         this.setState({ failed: false });
 
-        this.props.onChange(response);
+        this.props.onChange && this.props.onChange(response);
       })
       .catch(e => {
         if (e.code == 'E_PICKER_CANCELLED') {
@@ -115,11 +115,9 @@ export default class Avatar extends PureComponent<Props, State> {
       return (
         <View>
           <GiftedAvatar
-            avatarStyle={StyleSheet.flatten([
-              styles[`${this.props.size}Avatar`],
-            ])}
+            avatarStyle={styles[`${this.props.size}Avatar`]}
             user={{ name: placeholderText }}
-            textStyle={{ fontSize: 50 }}
+            textStyle={styles[`${this.props.size}AvatarPlaceHolderText`]}
           />
         </View>
       );
@@ -181,6 +179,21 @@ const styles = StyleSheet.create({
     width: 125,
     height: 125,
     borderRadius: 63,
+  },
+  miniAvatarPlaceHolderText: {
+    fontSize: 20
+  },
+  verySmallAvatarPlaceHolderText: {
+    fontSize: 30
+  },
+  smallAvatarPlaceHolderText: {
+    fontSize: 40,
+  },
+  mediumAvatarPlaceHolderText: {
+    fontSize: 50,
+  },
+  defaultAvatarPlaceHolderText: {
+    fontSize: 50,
   },
   /* eslint-enable */
   border: {

@@ -5,6 +5,7 @@ import {
   AddProduct,
   Login,
   OrderThread,
+  OrdersList,
   Product,
   Profile,
   Settings,
@@ -28,6 +29,7 @@ export default StackNavigator(
     settings: { screen: Settings },
     profile: { screen: Profile },
     orderThread: { screen: OrderThread },
+    ordersList: { screen: OrdersList },
   },
   {
     headerMode: 'none',

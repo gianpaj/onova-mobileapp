@@ -186,7 +186,9 @@ class OrderThreadContainer extends Component<Props, State> {
             ConnectionHandler.onReconnectSucceeded = () => {
               this.getRoomMessages(true);
               // $FlowFixMe
-              this.state.channel.refresh();
+              this.state.channel.refresh(() => {
+                this.getRoomMessages(false);
+              });
             };
             this.sb.addConnectionHandler('ChatView', ConnectionHandler);
 
@@ -339,7 +341,7 @@ class OrderThreadContainer extends Component<Props, State> {
 
     if (messageQuery) {
       if (!messageQuery.hasMore) {
-        console.warn('no messageQuery OR no hasMore');
+        console.warn('no hasMore');
         return;
       }
 
@@ -515,7 +517,7 @@ class OrderThreadContainer extends Component<Props, State> {
               // locale=""
               // timeformat="LT"
               // dateformat="ll"
-              onPressAvatar={() => alert('code me like those french girls 🎨')}
+              // onPressAvatar={() => alert('code me like those french girls 🎨')}
               // renderLoading={() => ()}
               renderSend={this.renderSend}
               renderSystemMessage={this.renderSystemMessage}

@@ -108,7 +108,7 @@ class OrderThreadContainer extends Component<Props, State> {
     product: null,
   };
 
-  _getInterlucutorUserData(userId: string): Promise<any> {
+  _getInterlucutorUserData(userId: string): Promise<null | any> {
     return new Promise((resolve, reject) => {
       api
         .get(`/api/users/${userId}`)
@@ -123,7 +123,7 @@ class OrderThreadContainer extends Component<Props, State> {
     });
   }
 
-  _getProduct(uuid: string): Promise<any> {
+  _getProduct(uuid: string): Promise<null | any> {
     return new Promise((resolve, reject) => {
       return api
         .get(`/api/products/${uuid}`)
@@ -133,7 +133,7 @@ class OrderThreadContainer extends Component<Props, State> {
           this.setState({ product: data });
           resolve();
         })
-        .catch(err => {
+        .catch((err: any) => {
           reject(err);
         });
     });
@@ -172,14 +172,14 @@ class OrderThreadContainer extends Component<Props, State> {
       .catch(err => console.error(err));
   }
 
-  connectToSendBird(): Promise<any> {
+  connectToSendBird(): Promise<null | any> {
     return new Promise((resolve, reject) => {
       // @TODO: remove this if don't get a warning when quickly opening a chat thread.
       // Maybe from a deeplink, opening app from background?
       setTimeout(() => {
         this.sb = SendBird.getInstance();
         if (!this.state.hasRendered) {
-          this.sb.connect(this.props.userData._id, (user, err) => {
+          this.sb.connect(this.props.userData._id, (user, err: any) => {
             if (err) return reject(err);
 
             console.debug(user);
@@ -235,9 +235,9 @@ class OrderThreadContainer extends Component<Props, State> {
       }));
     };
 
-    ChannelHandler.onTypingStatusUpdated = channel => {
-      console.log(channel);
-    };
+    // ChannelHandler.onTypingStatusUpdated = channel => {
+    //   console.log(channel);
+    // };
     return ChannelHandler;
   }
 
@@ -265,7 +265,7 @@ class OrderThreadContainer extends Component<Props, State> {
   }
 
   onSend = (messages: Array<Message>) => {
-    const { userData: ud } = this.props;
+    const { userData } = this.props;
 
     if (this.state.channel) {
       const text = messages[0].text;
@@ -290,7 +290,7 @@ class OrderThreadContainer extends Component<Props, State> {
           this.setState(prevState => ({
             messages: GiftedChat.append(
               prevState.messages,
-              this.createGiftedMessage(msg, ud)
+              this.createGiftedMessage(msg, userData)
             ),
           }));
         }
@@ -349,8 +349,8 @@ class OrderThreadContainer extends Component<Props, State> {
         return;
       }
 
-      const reverse = false;
-      messageQuery.load(20, reverse, (msgs, err) => {
+      const reverse = true;
+      messageQuery.load(50, reverse, (msgs, err) => {
         if (err || !interlocutor) return console.error(err);
         if (!interlocutor) return console.error('no interlocutor');
 
@@ -359,18 +359,15 @@ class OrderThreadContainer extends Component<Props, State> {
           name: interlocutor.username,
         };
 
-        const newMessages = [];
-        for (let i = 0; i < msgs.length; i++) {
-          const user =
-            msgs[i].sender.userId == userData._id ? userData : otherUser;
-          newMessages.push(this.createGiftedMessage(msgs[i], user));
-        }
+        const newMessages = msgs.map(m => {
+          const user = m.sender.userId == userData._id ? userData : otherUser;
+          return this.createGiftedMessage(m, user);
+        });
 
         if (messages && messages.length) {
           const newMessageList = [...messages, newMessages];
           this.setState(prevState => ({
-            // lastMessage: lastNewMsg,
-            messages: GiftedChat.append(prevState.messages, newMessageList),
+            messages: GiftedChat.append(prevState.messages, newMessages),
           }));
         } else {
           this.setState({
@@ -396,7 +393,7 @@ class OrderThreadContainer extends Component<Props, State> {
       {
         pattern: /#(\w+)/,
         style: { ...linkStyle, ...st.hashtag },
-        onPress: (p: any) => Linking.caller.openURL(p),
+        onPress: (p: string) => Linking.caller.openURL(p),
       },
     ];
   };
@@ -509,6 +506,7 @@ class OrderThreadContainer extends Component<Props, State> {
               messages={messages}
               onSend={m => this.onSend(m)}
               placeholder="Type a message"
+              // placeholder={I18n.t('chat.typeAMessage')}
               user={{
                 _id: userData._id,
                 name: userData.username,

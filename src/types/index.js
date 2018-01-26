@@ -69,6 +69,9 @@ export type Message = {
     avatar: string,
   },
   system?: boolean,
+  sent?: boolean,
+  received?: boolean,
+  image?: File,
 };
 
 export type SendBirdMessage = {
@@ -80,6 +83,8 @@ export type SendBirdMessage = {
   createdAt: number,
   updatedAt: number,
   sender: any,
+  sent?: boolean,
+  received?: boolean,
 
   isUserMessage(): boolean,
   isFileMessage(): boolean,

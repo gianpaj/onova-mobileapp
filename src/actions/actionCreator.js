@@ -158,7 +158,7 @@ const signup = (data: SignupData) => (dispatch: Dispatch) => (
     })
 );
 
-const getPersonalUserData = (userId: string, options: any) => (
+const getPersonalUserData = (userId: string, options?: any = {}) => (
   dispatch: Dispatch
 ) => (
   Toast.loading('Loading...', 30),
@@ -175,7 +175,7 @@ const getPersonalUserData = (userId: string, options: any) => (
     .then(() => Toast.hide())
 );
 
-const getUserData = (userId: string, options: any) => (dispatch: Dispatch) => (
+const getUserData = (userId: string, options?: any = {}) => (dispatch: Dispatch) => (
   Toast.loading('Loading...', 30),
   dispatch({ type: GETUSER_PENDING }),
   api

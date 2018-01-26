@@ -43,16 +43,20 @@ type Props = {
 };
 
 type State = {
+  _id: string,
   bio: string,
   displayName: string,
+  username: string,
   editing: boolean,
   following: boolean,
   profilePic: string | Image,
 };
 
 const defaultState = {
+  _id: '',
   bio: '',
   displayName: '',
+  username: '',
   editing: false,
   following: false,
   profilePic: '',
@@ -76,17 +80,22 @@ class ProfileScreen extends React.Component<Props, State> {
     // this.cancelToken = CancelToken.source();
 
     // if the screen navigated with an userID
-    if (params && params.userID) {
-      this.props.dispatch(
-        getUserData(params.userId, {
-          // cancelToken: this.cancelToken.token,
+    if (params && params._id) {
+      // cancelToken: this.cancelToken.token,
+      api
+        .get(`/api/users/${params._id}`)
+        .then((res: UserData) => {
+          const { _id, bio, displayName, profilePic, username } = res;
+          this.setState({ _id, bio, displayName, profilePic, username });
         })
-      );
+        .catch(err => {
+          console.error(err);
+        });
     } else {
       this.props.dispatch(
-        getPersonalUserData(userData._id, {
-          // cancelToken: this.cancelToken.token,
-        })
+        getPersonalUserData(userData._id) //, {
+        // cancelToken: this.cancelToken.token,
+        //})
       );
     }
   }
@@ -99,7 +108,9 @@ class ProfileScreen extends React.Component<Props, State> {
     // fix error when logging out
     if (!nextProps.userData) return;
 
-    const { bio, displayName, profilePic } = nextProps.userData;
+    const { _id, bio, displayName, profilePic, username } = nextProps.userData;
+
+    this.setState({ _id, username });
 
     if (this.hasStateDifferedFromProps(nextProps, 'bio')) {
       this.setState({ bio });
@@ -252,8 +263,15 @@ class ProfileScreen extends React.Component<Props, State> {
   }
 
   render() {
-    const { _id, username } = this.props.userData;
-    const { bio, displayName, editing, profilePic, following } = this.state;
+    const {
+      _id,
+      bio,
+      displayName,
+      editing,
+      profilePic,
+      following,
+      username,
+    } = this.state;
 
     return (
       <Container>
@@ -295,7 +313,7 @@ class ProfileScreen extends React.Component<Props, State> {
           {this.shouldShowNoticeBar && (
             <View>
               <NoticeBar
-                style={{  }}
+                style={{}}
                 marqueeProps={{ loop: false, style: styles.noticeBar }}
                 icon={false}>
                 Please verify you email to start buying or selling.
@@ -375,10 +393,12 @@ class ProfileScreen extends React.Component<Props, State> {
             </View>
           </View>
         </View>
-        <ImageGrid
-          apiURL={`/api/products?userid=${_id}`}
-          navigation={this.props.navigation}
-        />
+        {_id !== '' && (
+          <ImageGrid
+            apiURL={`/api/products?userid=${_id}`}
+            navigation={this.props.navigation}
+          />
+        )}
       </Container>
     );
   }

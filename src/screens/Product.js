@@ -164,9 +164,7 @@ export class ProductContainer extends React.Component<Props, State> {
             <NBButton
               transparent
               dark
-              onPress={() =>
-                this.props.navigation && this.props.navigation.goBack()
-              }>
+              onPress={() => this.props.navigation.goBack()}>
               <NBIcon ios="ios-arrow-back" android="md-arrow-back" />
             </NBButton>
           </Left>

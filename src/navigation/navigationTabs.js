@@ -1,7 +1,6 @@
 // @flow
 
 import React from 'react';
-// $FlowFixMe
 import { Platform } from 'react-native';
 import { TabNavigator } from 'react-navigation';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -34,9 +33,10 @@ const tabBarConfiguration = {
             : 'md-add-circle';
           break;
         case 'OrdersList':
-          iconName = isiOS
-            ? `ios-add-circle${focused ? '' : '-outline'}`
-            : 'md-add-circle';
+          iconName = 'md-basket';
+          // iconName = isiOS
+          // ? `ios-add-circle${focused ? '' : '-outline'}`
+          // : 'md-add-circle';
           break;
         // Profile uses <NotificationsDot> as its tabBarIcon
       }
@@ -47,7 +47,7 @@ const tabBarConfiguration = {
           // eslint-disable-next-line
           style={{ marginBottom: -3 }}
           color={
-            focused ? (isiOS ? colors.active : colors.gray1) : colors.gray5
+            focused ? (isiOS ? colors.active : colors.grey1) : colors.grey1
           }
         />
       );
@@ -56,8 +56,8 @@ const tabBarConfiguration = {
   tabBarOptions: {
     showIcon: true,
     // tint color is passed to text and icons (if enabled) on the tab bar
-    activeTintColor: isiOS ? colors.active : colors.gray1,
-    inactiveTintColor: colors.gray5,
+    activeTintColor: isiOS ? colors.active : colors.grey1,
+    inactiveTintColor: colors.grey1,
     // background color is for the tab component
     activeBackgroundColor: !isiOS ? colors.primary : undefined,
     inactiveBackgroundColor: colors.white,

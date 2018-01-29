@@ -2,12 +2,12 @@
 import colors from '../config/colors';
 
 import React, { PureComponent } from 'react';
+// prettier-ignore
 import {
+  Dimensions,
+  Platform,
   StyleSheet,
   Text,
-  Platform,
-  Dimensions,
-  // $FlowFixMe
 } from 'react-native';
 import {
   Body,
@@ -20,7 +20,6 @@ import {
 } from 'native-base';
 import type { NavigationScreenProp } from 'react-navigation';
 import { TabViewAnimated, TabBar, SceneMap } from 'react-native-tab-view';
-// $FlowFixMe
 import type { Route, NavigationState } from 'react-native-tab-view/types';
 
 import { ImageGrid } from '../components';
@@ -69,7 +68,10 @@ export class Home extends PureComponent<Props, State> {
       <ImageGrid apiURL="/api/products" navigation={this.props.navigation} />
     ),
     shoes: () => (
-      <ImageGrid apiURL="/api/products/?tags=shoes" navigation={this.props.navigation} />
+      <ImageGrid
+        apiURL="/api/products/?tags=shoes"
+        navigation={this.props.navigation}
+      />
     ),
     other: () => (
       <ImageGrid apiURL="/api/products" navigation={this.props.navigation} />
@@ -87,7 +89,9 @@ export class Home extends PureComponent<Props, State> {
         <Header hasTabs>
           <Left style={styles.container} />
           <Body style={styles.container}>
-            <Text style={{ alignSelf:'center', fontWeight: 'bold' }}>ØNOVA</Text>
+            <Text style={{ alignSelf: 'center', fontWeight: 'bold' }}>
+              ØNOVA
+            </Text>
           </Body>
           <Right>
             <Button transparent>

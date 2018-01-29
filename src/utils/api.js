@@ -1,7 +1,6 @@
 // @flow
 
 import axios, { CancelTokenSource } from 'axios';
-// $FlowFixMe
 import { AsyncStorage } from 'react-native';
 
 axios.defaults.baseURL = 'http://192.168.1.3:4040';

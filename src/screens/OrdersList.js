@@ -13,7 +13,6 @@ import {
   Text,
   TouchableOpacity,
   RefreshControl,
-  // $FlowFixMe
 } from 'react-native';
 import {
   Body,
@@ -66,7 +65,7 @@ const temp = [
       createdAt: new Date('2018-01-26T12:00:00'),
       user: {
         _id: '1',
-        name: 'john',
+        name: '@john',
         avatar: '',
       },
     },
@@ -80,7 +79,7 @@ const temp = [
       createdAt: new Date('2018-01-16T12:00:00'),
       user: {
         _id: '1',
-        name: 'marry',
+        name: '@marry',
         avatar: '',
       },
     },
@@ -94,7 +93,7 @@ const temp = [
       createdAt: new Date('0017-01-26T12:00:00'),
       user: {
         _id: '1',
-        name: 'joseph',
+        name: '@joseph',
         avatar: '',
       },
     },
@@ -345,7 +344,7 @@ const st = StyleSheet.create({
   },
   separator: {
     height: StyleSheet.hairlineWidth,
-    backgroundColor: colors.grey4,
+    backgroundColor: colors.grey5,
   },
 });
 

@@ -9,7 +9,6 @@ import {
   Text,
   TouchableOpacity,
   View,
-  // $FlowFixMe
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {

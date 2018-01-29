@@ -9,8 +9,6 @@ import {
   Linking,
   Platform,
   View,
-  Text,
-  // $FlowFixMe
 } from 'react-native';
 import {
   Body,

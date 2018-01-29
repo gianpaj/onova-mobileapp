@@ -1,5 +1,5 @@
 /* @flow */
-// $FlowFixMe
+
 import { Alert, Linking } from 'react-native';
 
 export const call = (phoneNumber: string): void => {

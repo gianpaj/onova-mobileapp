@@ -10,7 +10,6 @@ import {
   Text,
   TouchableOpacity,
   View,
-  // $FlowFixMe
 } from 'react-native';
 import {
   CachedImage,

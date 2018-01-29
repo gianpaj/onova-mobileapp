@@ -8,7 +8,6 @@ import {
   Text,
   View,
   TouchableHighlight,
-  // $FlowFixMe
 } from 'react-native';
 import {
   ActionSheet,
@@ -29,7 +28,7 @@ import { MediaView } from '../components';
 
 import colors from '../config/colors';
 import * as api from '../utils/api';
-import * as ui from '../utils/ui';
+// import * as ui from '../utils/ui';
 import type { Product as ProductType, UserData, ReduxState } from '../types';
 
 type Props = {

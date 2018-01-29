@@ -7,7 +7,6 @@ import {
   StyleSheet,
   Text,
   View,
-  // $FlowFixMe
 } from 'react-native';
 import {
   ActionSheet,
@@ -28,7 +27,7 @@ import {
   ImageGrid,
   NotificationsDot,
 } from '../components';
-import { getPersonalUserData, getUserData } from '../actions/actionCreator';
+import { getPersonalUserData } from '../actions/actionCreator';
 
 import colors from '../config/colors';
 import * as api from '../utils/api';

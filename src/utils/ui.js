@@ -1,6 +1,5 @@
 // @flow
 
-// $FlowFixMe
 import { Alert } from 'react-native';
 import { Toast } from 'native-base';
 

@@ -3,9 +3,10 @@ import { StackNavigator } from 'react-navigation';
 
 import {
   AddProduct,
+  Checkout,
   Login,
-  OrderThread,
   OrdersList,
+  OrderThread,
   Product,
   Profile,
   Settings,
@@ -28,8 +29,9 @@ export default StackNavigator(
     addProduct: { screen: AddProduct },
     settings: { screen: Settings },
     profile: { screen: Profile },
-    orderThread: { screen: OrderThread },
     ordersList: { screen: OrdersList },
+    orderThread: { screen: OrderThread },
+    checkout: { screen: Checkout },
   },
   {
     headerMode: 'none',

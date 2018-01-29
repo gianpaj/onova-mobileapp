@@ -10,7 +10,6 @@ import {
   TouchableOpacity,
   UIManager,
   View,
-  // $FlowFixMe
 } from 'react-native';
 import {
   Body,

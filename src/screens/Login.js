@@ -2,12 +2,12 @@
 
 import React from 'react';
 import { connect } from 'react-redux';
+// prettier-ignore
 import {
   Modal,
   StyleSheet,
   Text,
-  View,
-  // $FlowFixMe
+  View
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
 import { Button, FormInput } from 'react-native-elements';

@@ -1,7 +1,6 @@
 // @flow
 
 import React, { Component } from 'react';
-// $FlowFixMe
 import { BackHandler } from 'react-native';
 import { connect } from 'react-redux';
 import { addNavigationHelpers, NavigationActions } from 'react-navigation';

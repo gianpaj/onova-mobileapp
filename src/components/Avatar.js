@@ -9,7 +9,6 @@ import {
   StyleSheet,
   TouchableWithoutFeedback,
   View,
-  // $FlowFixMe
 } from 'react-native';
 // import { CachedImage } from 'react-native-cached-image';
 import ImagePicker from 'react-native-image-crop-picker';
@@ -110,13 +109,20 @@ export default class Avatar extends PureComponent<Props, State> {
 
   renderAvatarImage = () => {
     const { placeholderText, uri } = this.props;
+    let name;
 
     if (!uri && placeholderText !== undefined) {
+      if (placeholderText[0] == '@') {
+        name = placeholderText.slice(1);
+      } else {
+        name = placeholderText;
+      }
+
       return (
         <View>
           <GiftedAvatar
             avatarStyle={styles[`${this.props.size}Avatar`]}
-            user={{ name: placeholderText }}
+            user={{ name }}
             textStyle={styles[`${this.props.size}AvatarPlaceHolderText`]}
           />
         </View>

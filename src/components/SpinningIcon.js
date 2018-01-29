@@ -1,7 +1,6 @@
 // @flow
 
 import React, { PureComponent } from 'react';
-// $FlowFixMe
 import { Animated, Easing } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 

@@ -8,7 +8,6 @@ import {
   TextInput,
   TouchableOpacity,
   View,
-  // $FlowFixMe
 } from 'react-native';
 
 type Props = {

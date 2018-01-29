@@ -1,7 +1,6 @@
 // @flow
 
 import React from 'react';
-// $FlowFixMe
 import { View, Image, Dimensions, StyleSheet } from 'react-native';
 // eslint-disable-next-line
 import Swiper from 'react-native-swiper';

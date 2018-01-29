@@ -1,7 +1,6 @@
 // @flow
 
 import React, { PureComponent } from 'react';
-// $FlowFixMe
 import { Animated, StyleSheet, View } from 'react-native';
 import CollapsibleAccordion from 'react-native-collapsible/Accordion';
 import Ionicons from 'react-native-vector-icons/Ionicons';

@@ -1,7 +1,6 @@
 // @flow
 
 import React from 'react';
-// $FlowFixMe
 import { StyleSheet, View } from 'react-native';
 import colors from '../config/colors';
 

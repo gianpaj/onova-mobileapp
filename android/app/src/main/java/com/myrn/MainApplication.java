@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.facebook.react.ReactApplication;
 import com.airbnb.android.react.lottie.LottiePackage;
+import com.pw.droplet.braintree.BraintreePackage;
 import com.RNFetchBlob.RNFetchBlobPackage;
 import com.reactnative.ivpusic.imagepicker.PickerPackage;
 import com.dylanvann.fastimage.FastImageViewPackage;
@@ -29,6 +30,7 @@ public class MainApplication extends Application implements ReactApplication {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
             new LottiePackage(),
+            new BraintreePackage(),
             new RNFetchBlobPackage(),
             new PickerPackage(),
             new FastImageViewPackage(),

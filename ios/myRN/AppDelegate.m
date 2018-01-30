@@ -8,6 +8,7 @@
  */
 
 #import "AppDelegate.h"
+#import "RCTBraintree.h"
 // record Touch indicators / Tap gestures
 #import "TouchVisualizer.h"
 
@@ -35,7 +36,17 @@
   rootViewController.view = rootView;
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
+
+  [BTAppSwitch setReturnURLScheme:@"com.onova.app.payments"];
   return YES;
+}
+- (BOOL)application:(UIApplication *)application
+            openURL:(NSURL *)url
+            options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options {
+    if ([url.scheme localizedCaseInsensitiveCompare:@"com.onova.app.payments"] == NSOrderedSame) {
+        return [BTAppSwitch handleOpenURL:url options:options];
+    }
+    return NO;
 }
 
 @end

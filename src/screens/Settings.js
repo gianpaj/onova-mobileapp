@@ -392,6 +392,13 @@ class SettingsContainer extends Component<Props, State> {
                 <LiteCreditCardInput onChange={this.onCCChange} />
               </View>
             </FlipCard>
+            <View style={styles.padder}>
+              <Text style={[styles.padder, styles.secureText]}>
+                Your data is secured with a 2048-bit encryption SSL certificate
+                and stored in PayPal
+                {/* for More info please refer to the FAQ */}
+              </Text>
+            </View>
           </View>
           <HR full />
           <View style={styles.padder}>
@@ -432,6 +439,9 @@ class SettingsContainer extends Component<Props, State> {
               clearButtonMode="while-editing"
             />
           </View>
+          {/* Notifications switch */}
+          {/* You only get notifications for messages and status updates in your sales or purchases.
+            We won't distract when you get new followers and other non-important matters */}
           <HR full />
           <View style={[styles.padder, { alignItems: 'center' }]}>
             <NBButton light full onPress={this.onSignout}>
@@ -470,6 +480,10 @@ const styles = StyleSheet.create({
   centerText: {
     color: colors.grey4,
     paddingVertical: 10,
+  },
+  secureText: {
+    color: colors.grey2,
+    paddingBottom: 0,
   },
 });
 

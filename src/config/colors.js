@@ -1,7 +1,7 @@
 // @flow
 
 /**
- * @providesModule HSColors
+ * providesModule HSColors
  */
 
 export default {

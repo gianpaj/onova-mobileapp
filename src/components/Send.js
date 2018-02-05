@@ -1,3 +1,5 @@
+// @flow
+
 import PropTypes from 'prop-types';
 import React from 'react';
 import {
@@ -15,6 +17,13 @@ export default function Send({
   children,
   textStyle,
   label,
+}: {
+  text: string,
+  containerStyle: any,
+  onSend: ({ text: string }, boolean) => void,
+  children: any,
+  textStyle: any,
+  label: string,
 }) {
   const isDisabled = text.trim().length < 1;
   return (
@@ -27,7 +36,7 @@ export default function Send({
       </View>
     </TouchableOpacity>
   );
-  return <View />;
+  // return <View />;
 }
 
 const styles = StyleSheet.create({

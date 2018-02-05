@@ -39,6 +39,7 @@ import type {
   ReduxState,
 } from '../types';
 import colors from '../config/colors';
+import settings from '../config/settings';
 import { call, email } from '../utils/linking';
 import * as api from '../utils/api';
 
@@ -141,7 +142,7 @@ class OrderThreadContainer extends Component<Props, State> {
     if (!params) {
       // @TODO: for test
       // firstperson
-      userId = '5a69d21de270b4d9b481f69c';
+      userId = '5a7454475331ae236613f2ad';
     }
     // coming from Product
     if (params && params.seller) {
@@ -171,7 +172,7 @@ class OrderThreadContainer extends Component<Props, State> {
       setTimeout(() => {
         this.sb = SendBird.getInstance();
         if (!this.state.hasRendered) {
-          this.sb.connect(this.props.userData._id, (user, err: any) => {
+          this.sb.connect(this.props.userData._id, (user, err) => {
             if (err) return reject(err);
 
             console.debug(user);
@@ -296,7 +297,7 @@ class OrderThreadContainer extends Component<Props, State> {
     return (
       <SystemMessage
         {...props}
-        containerStyle={{ margin: 15 }}
+        containerStyle={st.systemContainer}
         textStyle={st.systemText}
       />
     );
@@ -359,7 +360,7 @@ class OrderThreadContainer extends Component<Props, State> {
         });
 
         if (messages && messages.length) {
-          const newMessageList = [...messages, newMessages];
+          // const newMessageList = [...messages, newMessages];
           this.setState(prevState => ({
             messages: GiftedChat.append(prevState.messages, newMessages),
           }));
@@ -409,11 +410,13 @@ class OrderThreadContainer extends Component<Props, State> {
   }*/
 
   renderSend(props: any) {
+    const showActiveOpacity = props.text.trim().length > 0;
     return (
       <Send {...props}>
         <View style={st.send}>
           <Ionicons
-            style={{ opacity: props.text.trim().length > 0 ? 1 : 0.7 }}
+            // eslint-disable-next-line
+            style={{ opacity: showActiveOpacity ? 1 : 0.7 }}
             name="md-send"
             size={29}
           />
@@ -522,7 +525,7 @@ class OrderThreadContainer extends Component<Props, State> {
               // renderActions={this.renderActions}
               // renderComposer={this.renderComposer}
               // keyboardShouldPersistTaps="handled"
-              maxInputLength={300}
+              maxInputLength={settings.MAX_CHAT_INPUT_LENGTH}
               // renderInputToolbar={this.renderInputToolbar}
               parsePatterns={this.parsePatterns}
               showUserAvatar
@@ -547,8 +550,16 @@ const st = StyleSheet.create({
     marginBottom: 5,
     marginRight: 10,
   },
+  systemContainer: {
+    backgroundColor: colors.primary,
+    borderRadius: 25,
+    borderColor: colors.active,
+    marginVertical: 15,
+    marginHorizontal: 105,
+    paddingVertical: 5,
+  },
   systemText: {
-    color: colors.black,
+    color: colors.white,
     fontSize: 15,
     fontWeight: '400',
   },

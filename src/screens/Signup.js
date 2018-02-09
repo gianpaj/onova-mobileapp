@@ -53,7 +53,7 @@ class SignupScreen extends React.Component<Props, State> {
 
   onSignup() {
     const { username, emailAddress, password } = this.state;
-    console.log('onSignup()', username, emailAddress, password);
+    console.debug('onSignup()', username, emailAddress, password);
 
     // username min(3) max(30)
     // password min(8) max(50)

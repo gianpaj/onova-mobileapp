@@ -204,9 +204,7 @@ class LoginScreen extends React.Component<Props, State> {
           <View style={{ marginTop: 22 }}>
             <View style={{ margin: 20 }}>
               <Text style={{ fontWeight: 'bold' }}>Trouble logging in?</Text>
-              <Text>
-                Enter your email to receive your password reset instructions
-              </Text>
+              <Text>Enter your email address to reset your password</Text>
             </View>
 
             <FormInput
@@ -231,7 +229,7 @@ class LoginScreen extends React.Component<Props, State> {
                 !isEmail(this.state.emailReset) || this.state.loadingReset
               }
               onPress={() => this.onResetPassword()}
-              title="Send email"
+              title="Email instructions"
             />
             <NBButton
               small

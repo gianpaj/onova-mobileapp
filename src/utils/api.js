@@ -2,8 +2,10 @@
 
 import axios, { CancelTokenSource } from 'axios';
 import { AsyncStorage } from 'react-native';
+// $FlowExpectedError
+import { API_URL } from 'react-native-dotenv';
 
-axios.defaults.baseURL = 'http://192.168.1.20:4040';
+axios.defaults.baseURL = API_URL;
 const TIMEOUT = 4000;
 
 type Options = {

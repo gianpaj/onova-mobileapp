@@ -18,12 +18,13 @@
     "postinstall": "rm -f ./node_modules/react-native/local-cli/core/__fixtures__/files/package.json && flow-typed install",
     "start-emulator": "cd $ANDROID_HOME/emulator && ./emulator -avd Nexus_5X_API_25_7.1.1_ &",
     "start": "node node_modules/react-native/local-cli/cli.js start",
+    "storybook": "storybook start -p 7007",
     "test-e2e-android": "detox test -c android.emu.debug --loglevel verbose",
     "test-e2e-ios": "detox test -c ios.sim.debug",
+    "test": "jest",
+    "test:coverage": "jest --coverage",
     "test:lint": "eslint src --quiet",
-    "test:watch": "jest __tests__ --watch",
-    "test": "jest __tests__",
-    "storybook": "storybook start -p 7007"
+    "test:watch": "jest __tests__ --watch"
   },
   "dependencies": {
     "@pusher/chatkit": "^0.7.16",
@@ -88,6 +89,8 @@
     "babel-preset-react-native": "4.0.0",
     "babel-runtime": "^6.26.0",
     "detox": "^6.0.4",
+    "enzyme": "^3.3.0",
+    "enzyme-adapter-react-16": "^1.1.1",
     "eslint": "^4.14.1",
     "eslint-config-prettier": "^2.9.0",
     "eslint-plugin-babel": "^4.1.2",
@@ -98,6 +101,7 @@
     "eslint-plugin-react-native": "^3.2.0",
     "flow-bin": "^0.67.0",
     "jest": "22.4.3",
+    "nock": "^9.1.6",
     "prettier": "^1.12.0",
     "prop-types": "^15.6.1",
     "react-dom": "16.3.1",
@@ -108,13 +112,17 @@
   "jest": {
     "setupTestFrameworkScriptFile": "./e2e/init.js",
     "cacheDirectory": "./.cache",
+    "setupFiles": [
+      "./__tests__/setup"
+    ],
     "testPathIgnorePatterns": [
       "/node_modules/",
-      "App.js"
+      "./__tests__/setup",
+      "./e2e/"
     ],
     "preset": "react-native",
     "transformIgnorePatterns": [
-      "node_modules/(?!(jest-)?react-native|react-native-vector-icons|react-navigation|native-base-shoutem-theme|redux-persist)"
+      "node_modules/(?!(jest-)?react-native|react-native-vector-icons|react-navigation|native-base-shoutem-theme|redux-persist|react-native-gifted-chat)"
     ]
   },
   "detox": {

@@ -3,7 +3,10 @@
 import axios, { CancelTokenSource } from 'axios';
 import { AsyncStorage } from 'react-native';
 // $FlowExpectedError
-import { API_URL } from 'react-native-dotenv';
+import { API_URL, ENV } from 'react-native-dotenv';
+
+console.warn(`Running in ${ENV} environment`);
+console.warn(`API_URL: ${API_URL}`);
 
 axios.defaults.baseURL = API_URL;
 const TIMEOUT = 4000;

@@ -25,9 +25,11 @@ import * as api from '../utils/api';
 const loading = require('../assets/images/loading.jpg');
 const TTL = 4 * 60 * 60; // cache images for 4 hours
 
+// @TODO: define type of Item
+
 type Props = {
   apiURL: string,
-  navigation?: NavigationScreenProp<any>,
+  navigation?: NavigationScreenProp<*>,
 };
 
 type State = {

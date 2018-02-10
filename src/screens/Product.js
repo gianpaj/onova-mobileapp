@@ -32,7 +32,7 @@ import * as api from '../utils/api';
 import type { Product as ProductType, UserData, ReduxState } from '../types';
 
 type Props = {
-  navigation: NavigationScreenProp<any>,
+  navigation: NavigationScreenProp<*>,
   product: ProductType,
   URL: string,
   userData: UserData,
@@ -183,7 +183,7 @@ export class ProductContainer extends React.Component<Props, State> {
                   style={styles.avatar}
                   source={{ uri: item.avatarUrl }}
                 /> */}
-                <View style={{ flex: 1, height: 35, marginTop: 12 }}>
+                <View style={styles.avatar}>
                   <TouchableHighlight
                     style={styles.flex}
                     onPress={this.goToProfile}>
@@ -246,14 +246,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginLeft: 15,
   },
-  // avatar: {
-  //   width: 36,
-  //   height: 36,
-  //   margin: 12,
-  //   borderRadius: 18,
-  //   borderWidth: StyleSheet.hairlineWidth,
-  //   borderColor: colors.grey5,
-  // },
+  avatar: {
+    flex: 1,
+    height: 35,
+    marginTop: 12,
+  },
   username: {
     fontWeight: 'bold',
   },
@@ -298,7 +295,9 @@ const styles = StyleSheet.create({
   // },
 });
 
-const mapStateToProps: any = (state: ReduxState) => ({
+import type { MapStateToProps } from 'react-redux';
+
+const mapStateToProps: MapStateToProps<*, *, *> = (state: ReduxState) => ({
   userData: state.LoginReducer.data,
 });
 

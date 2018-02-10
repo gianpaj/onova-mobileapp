@@ -25,7 +25,7 @@ import settings from '../config/settings';
 type Props = {
   dispatch: Dispatch,
   loading: boolean,
-  navigation: NavigationScreenProp<any>,
+  navigation: NavigationScreenProp<*>,
 };
 
 type State = {

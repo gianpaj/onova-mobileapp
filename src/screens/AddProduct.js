@@ -2,12 +2,12 @@
 
 import React from 'react';
 import {
-  Dimensions,
-  Image,
-  PixelRatio,
+  // Dimensions,
+  // Image,
+  // PixelRatio,
   StyleSheet,
   Text,
-  TouchableOpacity,
+  // TouchableOpacity,
   View,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -55,7 +55,7 @@ const category_radio_grp_2 = [
 
 type Props = {
   isFocused: boolean,
-  navigation: NavigationScreenProp<any>,
+  navigation: NavigationScreenProp<*>,
 };
 
 type State = {
@@ -69,7 +69,7 @@ type State = {
 };
 
 export class AddProduct extends React.Component<Props, State> {
-  static navigationOptions = props => {
+  static navigationOptions = (props: any) => {
     return {
       // navigate to the screen instead of showing as a normal tab screen
       tabBarOnPress: ({ scene }: any) => {
@@ -123,11 +123,11 @@ export class AddProduct extends React.Component<Props, State> {
         this.setState(prevState => {
           // if we want to replace an existing photo
           if (prevState.images[i]) {
-          const copy = [...prevState.images];
+            const copy = [...prevState.images];
             copy[i] = image;
-          return {
-            images: copy,
-          };
+            return {
+              images: copy,
+            };
           }
 
           return {
@@ -150,12 +150,12 @@ export class AddProduct extends React.Component<Props, State> {
     this.setState({ pending: true });
     const formData = new FormData();
     images.forEach((image, i) => {
-        // $FlowFixMe
-        formData.append('photos', {
+      // $FlowFixMe
+      formData.append('photos', {
         uri: image.url,
-          // type: 'image/jpeg',
-          name: 'image' + i + '.jpg',
-        });
+        // type: 'image/jpeg',
+        name: 'image' + i + '.jpg',
+      });
     });
     formData.append('description', description);
     formData.append('price', price);
@@ -205,8 +205,8 @@ export class AddProduct extends React.Component<Props, State> {
   }
 
   addEnabled(): boolean {
-    const pricePattern = /^\d+(\.\d{2})?$/;
-    const tagsPattern = /^(\b[a-z][a-z0-9]*)$/i;
+    // const pricePattern = /^\d+(\.\d{2})?$/;
+    // const tagsPattern = /^(\b[a-z][a-z0-9]*)$/i;
 
     return (
       this.state.images.length > 0 &&
@@ -219,7 +219,7 @@ export class AddProduct extends React.Component<Props, State> {
     );
   }
 
-  renderSquare(e, i) {
+  /*renderSquare(e, i) {
     const uri = this.state.images[i];
 
     return (
@@ -240,7 +240,7 @@ export class AddProduct extends React.Component<Props, State> {
         </View>
       </TouchableOpacity>
     );
-  }
+  }*/
 
   render() {
     const { images } = this.state;
@@ -383,19 +383,19 @@ export class AddProduct extends React.Component<Props, State> {
   }
 }
 
-const { width } = Dimensions.get('window');
+// const { width } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
-  imageContainer: {
-    borderColor: colors.grey3,
-    borderWidth: 3 / PixelRatio.get(),
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  image: {
-    width: width / 6,
-    height: width / 6,
-  },
+  // imageContainer: {
+  //   borderColor: colors.grey3,
+  //   borderWidth: 3 / PixelRatio.get(),
+  //   justifyContent: 'center',
+  //   alignItems: 'center',
+  // },
+  // image: {
+  //   width: width / 6,
+  //   height: width / 6,
+  // },
   label: {
     fontWeight: '600',
     color: colors.black,

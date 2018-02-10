@@ -2,7 +2,6 @@
 
 import axios, { CancelTokenSource } from 'axios';
 import { AsyncStorage } from 'react-native';
-// $FlowExpectedError
 import { API_URL, ENV } from 'react-native-dotenv';
 
 console.warn(`Running in ${ENV} environment`);
@@ -212,9 +211,7 @@ function logError(error, endpoint, method) {
   if (error.status) {
     const summary = `(${error.status} ${error.statusText}): ${error._bodyInit}`;
     console.error(
-      `API request ${method.toUpperCase()} ${endpoint} responded with ${
-        summary
-      }`
+      `API request ${method.toUpperCase()} ${endpoint} responded with ${summary}`
     );
   } else {
     console.error(

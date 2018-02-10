@@ -3,7 +3,7 @@
 import React, { Component } from 'react';
 import { BackHandler } from 'react-native';
 import { connect } from 'react-redux';
-import { addNavigationHelpers, NavigationActions } from 'react-navigation';
+import { addNavigationHelpers, NavigationActions, type NavigationState } from 'react-navigation';
 
 import { initializeSendBird } from '../actions/actionCreator';
 import NavigationStack from './navigationStack';
@@ -11,7 +11,7 @@ import type { Dispatch, UserData, ReduxState } from '../types';
 
 type Props = {
   dispatch?: Dispatch,
-  navigationState?: any,
+  navigationState?: NavigationState,
   isLoggedIn?: boolean,
   userData?: UserData,
 };

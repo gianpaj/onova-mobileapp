@@ -27,7 +27,7 @@ type Props = {
   dispatch: Dispatch,
   loadingGoogleLogin: boolean,
   loadingLogin: boolean,
-  navigation?: NavigationScreenProp<any>,
+  navigation?: NavigationScreenProp<*>,
 };
 
 type State = {

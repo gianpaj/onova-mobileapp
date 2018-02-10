@@ -29,7 +29,7 @@ type Props = {
   onChangeFailed?: () => void, // called on change failure when interactive is true
   onPress?: () => void,
   overlayColor: string, // On Android only, should be the same than the backgroundColor of the surrounding View
-  pickerOptions?: any,
+  // pickerOptions?: any,
   placeholderSource?: number,
   placeholderText?: string,
   placeholderURI?: string,
@@ -60,7 +60,7 @@ export default class Avatar extends PureComponent<Props, State> {
   handleInteractivePress = () => {
     ImagePicker.openPicker({
       ...PICKER_OPTIONS,
-      ...this.props.pickerOptions,
+      // ...this.props.pickerOptions,
     })
       .then((response: Image) => {
         this.setState({ failed: false });
@@ -100,7 +100,7 @@ export default class Avatar extends PureComponent<Props, State> {
   getPlaceholder = () => {
     let placeholder = this.props.placeholderSource;
 
-    if (!placeholder && this.props.placeholderURI !== undefined) {
+    if (placeholder !== null && this.props.placeholderURI !== undefined) {
       placeholder = { uri: this.props.placeholderURI };
     }
 

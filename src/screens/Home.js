@@ -30,7 +30,7 @@ const initialLayout = {
 };
 
 type Props = {
-  navigation?: NavigationScreenProp<any>,
+  navigation?: NavigationScreenProp<*>,
 };
 
 type State = NavigationState<

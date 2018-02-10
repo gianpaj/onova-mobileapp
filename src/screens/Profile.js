@@ -38,7 +38,7 @@ import type { UserData, Dispatch, ReduxState } from '../types';
 
 type Props = {
   dispatch: Dispatch,
-  navigation: NavigationScreenProp<any>,
+  navigation: NavigationScreenProp<*>,
   userData: UserData,
 };
 
@@ -126,10 +126,7 @@ class ProfileScreen extends React.Component<Props, State> {
   }
 
   hasStateDifferedFromProps(nextProps: any, key: string): boolean {
-    return (
-      nextProps.userData.displayName ||
-      !Object.is(nextProps[key], this.props[key])
-    );
+    return !Object.is(nextProps[key], this.props[key]);
   }
 
   onGoToSettings = () => {
@@ -169,7 +166,7 @@ class ProfileScreen extends React.Component<Props, State> {
       formData.append('displayName', displayName);
     }
 
-    if (profilePic && profilePic.path) {
+    if (profilePic && profilePic.path !== undefined) {
       // $FlowFixMe
       formData.append('profilePic', {
         uri: profilePic.path,

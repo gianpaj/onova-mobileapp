@@ -1,4 +1,4 @@
-/* @flow */
+// @flow
 
 import { Alert, Linking } from 'react-native';
 

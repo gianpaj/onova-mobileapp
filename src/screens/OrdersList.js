@@ -44,7 +44,7 @@ type Order = {
 };
 
 type Props = {
-  navigation: NavigationScreenProp<any>,
+  navigation: NavigationScreenProp<*>,
   userData: UserData,
 };
 

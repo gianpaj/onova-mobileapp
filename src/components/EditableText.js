@@ -4,23 +4,25 @@
 import React, { PureComponent } from 'react';
 import {
   ActivityIndicator,
+  StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
   View,
+  type TextProps,
 } from 'react-native';
 
 type Props = {
   autoCorrect: boolean,
   isTextEditable: boolean,
   loading: boolean,
-  onChangeText: (text: string) => any,
+  onChangeText: (text: string) => void,
   placeholder: string,
   placeholderColor: string,
-  style?: any,
+  style?: StyleSheet.Styles,
   text: string,
   textInputProps: any,
-  textProps: any,
+  textProps: TextProps,
 };
 
 type State = {

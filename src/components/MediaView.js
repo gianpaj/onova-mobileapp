@@ -9,7 +9,6 @@ import colors from '../config/colors';
 const { width } = Dimensions.get('window');
 
 type Props = {
-  product: any,
   source: Array<string>,
 };
 
@@ -34,7 +33,8 @@ export default class MediaView extends React.Component<Props, State> {
     if (source.length > 1) {
       const images = source;
       return (
-        <View style={[styles.container, { height: this.state.imageHeight+35 }]}>
+        <View
+          style={[styles.container, { height: this.state.imageHeight + 35 }]}>
           <Swiper
             autoplay={false}
             loop={false}

@@ -3,10 +3,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
+// prettier-ignore
 import {
   ActivityIndicator,
   StyleSheet,
-  Linking,
   Platform,
   View,
 } from 'react-native';
@@ -40,7 +40,6 @@ import type {
 } from '../types';
 import colors from '../config/colors';
 import settings from '../config/settings';
-import { call, email } from '../utils/linking';
 import * as api from '../utils/api';
 
 if (Platform.OS == 'ios') {
@@ -62,7 +61,7 @@ type Channel = {
 };
 
 type Props = {
-  navigation: NavigationScreenProp<any>,
+  navigation: NavigationScreenProp<*>,
   userData: UserData,
 };
 
@@ -293,7 +292,7 @@ class OrderThreadContainer extends Component<Props, State> {
     }
   };
 
-  renderSystemMessage(props: any) {
+  renderSystemMessage(props: any): React$Element<*> {
     return (
       <SystemMessage
         {...props}
@@ -378,21 +377,6 @@ class OrderThreadContainer extends Component<Props, State> {
     }
   }
 
-  parsePatterns = (linkStyle: any) => {
-    return [
-      {
-        type: 'phone',
-        style: linkStyle,
-        onPress: (p: string) => call(p),
-      },
-      {
-        pattern: /#(\w+)/,
-        style: { ...linkStyle, ...st.hashtag },
-        onPress: (p: string) => Linking.caller.openURL(p),
-      },
-    ];
-  };
-
   /*
   renderComposer(props: any) {
     return (
@@ -409,7 +393,7 @@ class OrderThreadContainer extends Component<Props, State> {
     );
   }*/
 
-  renderSend(props: any) {
+  renderSend(props: any): React$Element<*> {
     const showActiveOpacity = props.text.trim().length > 0;
     return (
       <Send {...props}>
@@ -527,7 +511,6 @@ class OrderThreadContainer extends Component<Props, State> {
               // keyboardShouldPersistTaps="handled"
               maxInputLength={settings.MAX_CHAT_INPUT_LENGTH}
               // renderInputToolbar={this.renderInputToolbar}
-              parsePatterns={this.parsePatterns}
               showUserAvatar
             />
           )}

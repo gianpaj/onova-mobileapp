@@ -52,7 +52,7 @@ import type {
 
 type Props = {
   dispatch: Dispatch,
-  navigation?: NavigationScreenProp<any>,
+  navigation?: NavigationScreenProp<*>,
   userData: UserData,
 };
 

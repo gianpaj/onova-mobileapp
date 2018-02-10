@@ -38,7 +38,7 @@ class NotificationsDot extends React.Component<Props, void> {
           // eslint-disable-next-line
           style={{ marginBottom: -3 }}
           color={
-            focused ? (isiOS ? colors.active : colors.gray1) : colors.gray5
+            focused ? (isiOS ? colors.active : colors.grey1) : colors.grey5
           }
         />
       </View>

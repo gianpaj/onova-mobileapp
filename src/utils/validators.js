@@ -1,4 +1,5 @@
 // @flow
+
 import type { ShippingAddress } from '../types';
 
 function validPassword(password: string) {

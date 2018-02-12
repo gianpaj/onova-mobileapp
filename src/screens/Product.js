@@ -23,6 +23,7 @@ import {
   Right,
 } from 'native-base';
 import { Button } from 'react-native-elements';
+// $FlowFixMe
 import LottieView from 'lottie-react-native';
 import { NavigationActions } from 'react-navigation';
 import type { NavigationScreenProp } from 'react-navigation';
@@ -105,14 +106,22 @@ export class ProductContainer extends React.Component<Props, State> {
 
   componentWillMount() {
     const { params } = this.props.navigation.state;
+    let uuid;
 
-    console.debug(params);
-    this._getProduct(params.uuid).then(() => {
+    // for development
+    if (!params) {
+      uuid = 'SJewilLU8z';
+    } else {
+      uuid = params.uuid;
+      console.debug(params);
+    }
+
+    this._getProduct(uuid).then(() => {
       this.setState({ loading: false });
     });
   }
 
-  _getProduct(uuid) {
+  _getProduct(uuid: string) {
     return api
       .get(`/api/products/${uuid}`)
       .then(res => {

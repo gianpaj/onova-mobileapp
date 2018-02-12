@@ -18,6 +18,9 @@ target 'myRN' do
 
     pod 'react-native-fetch-blob', :path => '../node_modules/react-native-fetch-blob'
 
+    pod 'lottie-react-native', :path => '../node_modules/lottie-react-native'
+
+
   end
 
   target 'myRNTests' do

@@ -3,6 +3,7 @@ package com.myrn;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.airbnb.android.react.lottie.LottiePackage;
 import com.RNFetchBlob.RNFetchBlobPackage;
 import com.reactnative.ivpusic.imagepicker.PickerPackage;
 import com.dylanvann.fastimage.FastImageViewPackage;
@@ -27,6 +28,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new LottiePackage(),
             new RNFetchBlobPackage(),
             new PickerPackage(),
             new FastImageViewPackage(),

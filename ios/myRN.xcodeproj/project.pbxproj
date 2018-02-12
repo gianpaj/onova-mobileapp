@@ -47,6 +47,8 @@
 		580B644B1FD82A3E00463A61 /* RSKImageCropper.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 580B64431FD82A2E00463A61 /* RSKImageCropper.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		580B644C1FD82A4E00463A61 /* QBImagePicker.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 580B64421FD82A2E00463A61 /* QBImagePicker.framework */; };
 		580B644D1FD82A4E00463A61 /* QBImagePicker.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 580B64421FD82A2E00463A61 /* QBImagePicker.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		585E155120319ACB00E41342 /* libLottie.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 585E154620319A0800E41342 /* libLottie.a */; };
+		585E155220319AD100E41342 /* libLottieReactNative.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 585E154C20319A1900E41342 /* libLottieReactNative.a */; };
 		587790651FEE9F4C00BCC918 /* libRNFetchBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5877903D1FEE9F4B00BCC918 /* libRNFetchBlob.a */; };
 		58CD84522009289400423407 /* IQKeyboardManager.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 58CD84512009289400423407 /* IQKeyboardManager.bundle */; };
 		58DC32C51FC4E04C005831B1 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 58DC32C41FC4E04C005831B1 /* GoogleService-Info.plist */; };
@@ -238,6 +240,41 @@
 			proxyType = 2;
 			remoteGlobalIDString = A287971D1DE0C0A60081BDFA;
 			remoteInfo = FastImage;
+		};
+		585E153F20319A0800E41342 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 585E153820319A0800E41342 /* Lottie.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 62CA59B81E3C173B002D7188;
+			remoteInfo = Lottie_iOS;
+		};
+		585E154120319A0800E41342 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 585E153820319A0800E41342 /* Lottie.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = FAE1F7E61E428CBE002E0974;
+			remoteInfo = Lottie_macOS;
+		};
+		585E154320319A0800E41342 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 585E153820319A0800E41342 /* Lottie.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 8C5379761FB471D100C1BC65;
+			remoteInfo = Lottie_tvOS;
+		};
+		585E154520319A0800E41342 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 585E153820319A0800E41342 /* Lottie.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 84FE12EF1E4C1485009B157C;
+			remoteInfo = LottieLibraryIOS;
+		};
+		585E154B20319A1900E41342 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 585E154720319A1900E41342 /* LottieReactNative.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 11FA5C511C4A1296003AC2EE;
+			remoteInfo = LottieReactNative;
 		};
 		58795CE32028B51900805166 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -443,6 +480,8 @@
 		514E7B726AFE2E0ADB8F0803 /* libPods-myRN.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-myRN.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		580B64421FD82A2E00463A61 /* QBImagePicker.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = QBImagePicker.framework; sourceTree = "<group>"; };
 		580B64431FD82A2E00463A61 /* RSKImageCropper.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = RSKImageCropper.framework; sourceTree = "<group>"; };
+		585E153820319A0800E41342 /* Lottie.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Lottie.xcodeproj; path = "../node_modules/lottie-ios/Lottie.xcodeproj"; sourceTree = "<group>"; };
+		585E154720319A1900E41342 /* LottieReactNative.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = LottieReactNative.xcodeproj; path = "../node_modules/lottie-react-native/src/ios/LottieReactNative.xcodeproj"; sourceTree = "<group>"; };
 		5877903D1FEE9F4B00BCC918 /* libRNFetchBlob.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libRNFetchBlob.a; path = "../../../temp/SendBird-JavaScript/react-native-sample/SendBirdReactNativeSample/ios/build/Build/Products/Debug-iphonesimulator/libRNFetchBlob.a"; sourceTree = "<group>"; };
 		58CC1FA31FFE4D9200EAE77E /* RNFetchBlob.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNFetchBlob.xcodeproj; path = "../node_modules/react-native-fetch-blob/ios/RNFetchBlob.xcodeproj"; sourceTree = "<group>"; };
 		58CD84512009289400423407 /* IQKeyboardManager.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = IQKeyboardManager.bundle; path = "../node_modules/react-native-keyboard-manager/ios/IQKeyboardManager/Resources/IQKeyboardManager.bundle"; sourceTree = "<group>"; };
@@ -493,6 +532,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				585E155220319AD100E41342 /* libLottieReactNative.a in Frameworks */,
+				585E155120319ACB00E41342 /* libLottie.a in Frameworks */,
 				ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */,
 				5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */,
 				146834051AC3E58100842450 /* libReact.a in Frameworks */,
@@ -693,6 +734,25 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		585E153920319A0800E41342 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				585E154020319A0800E41342 /* Lottie.framework */,
+				585E154220319A0800E41342 /* Lottie.framework */,
+				585E154420319A0800E41342 /* Lottie.framework */,
+				585E154620319A0800E41342 /* libLottie.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		585E154820319A1900E41342 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				585E154C20319A1900E41342 /* libLottieReactNative.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		5883715C1FC4CC1000C4C3CE /* Recovered References */ = {
 			isa = PBXGroup;
 			children = (
@@ -766,6 +826,8 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				585E154720319A1900E41342 /* LottieReactNative.xcodeproj */,
+				585E153820319A0800E41342 /* Lottie.xcodeproj */,
 				5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */,
 				146833FF1AC3E56700842450 /* React.xcodeproj */,
 				00C302A71ABCB8CE00DB3ED1 /* RCTActionSheet.xcodeproj */,
@@ -1012,6 +1074,14 @@
 					ProjectRef = 777D59D4FBE247409E43DACD /* imageCropPicker.xcodeproj */;
 				},
 				{
+					ProductGroup = 585E153920319A0800E41342 /* Products */;
+					ProjectRef = 585E153820319A0800E41342 /* Lottie.xcodeproj */;
+				},
+				{
+					ProductGroup = 585E154820319A1900E41342 /* Products */;
+					ProjectRef = 585E154720319A1900E41342 /* LottieReactNative.xcodeproj */;
+				},
+				{
 					ProductGroup = 00C302A81ABCB8CE00DB3ED1 /* Products */;
 					ProjectRef = 00C302A71ABCB8CE00DB3ED1 /* RCTActionSheet.xcodeproj */;
 				},
@@ -1239,6 +1309,41 @@
 			fileType = archive.ar;
 			path = libFastImage.a;
 			remoteRef = 5827F0A52028F741008193D8 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		585E154020319A0800E41342 /* Lottie.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = Lottie.framework;
+			remoteRef = 585E153F20319A0800E41342 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		585E154220319A0800E41342 /* Lottie.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = Lottie.framework;
+			remoteRef = 585E154120319A0800E41342 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		585E154420319A0800E41342 /* Lottie.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = Lottie.framework;
+			remoteRef = 585E154320319A0800E41342 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		585E154620319A0800E41342 /* libLottie.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libLottie.a;
+			remoteRef = 585E154520319A0800E41342 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		585E154C20319A1900E41342 /* libLottieReactNative.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libLottieReactNative.a;
+			remoteRef = 585E154B20319A1900E41342 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		58795CE42028B51900805166 /* libjsinspector.a */ = {
@@ -1690,10 +1795,7 @@
 				INFOPLIST_FILE = myRNTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lc++",
@@ -1721,10 +1823,7 @@
 				INFOPLIST_FILE = myRNTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lc++",
@@ -1821,10 +1920,7 @@
 				);
 				INFOPLIST_FILE = "myRN-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lc++",
@@ -1859,10 +1955,7 @@
 				);
 				INFOPLIST_FILE = "myRN-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lc++",
@@ -1889,10 +1982,7 @@
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = "myRN-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.myRN-tvOSTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
@@ -1915,10 +2005,7 @@
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = "myRN-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.myRN-tvOSTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;

@@ -4,10 +4,12 @@ import React from 'react';
 import { connect } from 'react-redux';
 import {
   ActivityIndicator,
+  Animated,
   StyleSheet,
   Text,
   View,
   TouchableHighlight,
+  TouchableOpacity,
 } from 'react-native';
 import {
   ActionSheet,
@@ -21,6 +23,7 @@ import {
   Right,
 } from 'native-base';
 import { Button } from 'react-native-elements';
+import LottieView from 'lottie-react-native';
 import { NavigationActions } from 'react-navigation';
 import type { NavigationScreenProp } from 'react-navigation';
 
@@ -41,6 +44,7 @@ type Props = {
 type State = {
   loading: boolean,
   item: ProductType | null,
+  likeAnimValue: number,
 };
 
 // @TODO: if Product is mine Delete, Edit
@@ -49,9 +53,12 @@ const BUTTONS = ['Report', 'Cancel'];
 // const isIOS = Platform.OS === 'ios';
 
 export class ProductContainer extends React.Component<Props, State> {
+  anim: ?React$Element<*>;
+
   state = {
     loading: true,
     item: null,
+    likeAnimValue: new Animated.Value(0.35),
   };
 
   showActionSheet = () => {
@@ -153,6 +160,13 @@ export class ProductContainer extends React.Component<Props, State> {
     return this.state.item.seller._id == this.props.userData._id;
   }
 
+  onPressLike = () => {
+    Animated.timing(this.state.likeAnimValue, {
+      toValue: 0.7,
+      duration: 800,
+    }).start();
+  };
+
   render() {
     const { item, loading } = this.state;
 
@@ -197,6 +211,20 @@ export class ProductContainer extends React.Component<Props, State> {
               <MediaView source={item.photoURIs} />
               <View style={styles.bottomSection}>
                 {/* <NBIcon name="ios-bookmark-outline" style={styles.iconSave} /> */}
+                <TouchableOpacity
+                  onPress={() => this.onPressLike()}
+                  underlayColor="transparent"
+                  // disabled={this.state.midAnimation}
+                  style={styles.likeButton}>
+                  <LottieView
+                    ref={c => {
+                      this.anim = c;
+                    }}
+                    // $FlowFixMe
+                    source={require('../assets/animations/favorite_black.json')}
+                    progress={this.state.likeAnimValue}
+                  />
+                </TouchableOpacity>
                 <NBIcon
                   name="ios-text-outline"
                   style={styles.iconCommmentAndShare}
@@ -276,6 +304,12 @@ const styles = StyleSheet.create({
   iconCommmentAndShare: {
     // marginLeft: 20,
     marginTop: 12,
+  },
+  likeButton: {
+    height: 150,
+    margin: -47,
+    marginLeft: -65,
+    width: 150,
   },
   buyButton: {
     backgroundColor: colors.grey1,

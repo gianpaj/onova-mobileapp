@@ -100,6 +100,18 @@ export type SendBirdMessage = {
   isAdminMessage(): boolean,
 };
 
+export type Order = {
+  _id: number,
+  buyer: string,
+  priceOfItem: number,
+  product: string,
+  seller: string,
+  status: string,
+  transationFee?: number,
+  // lastMessage: Message,
+  // unreadMessageCount: number,
+};
+
 export type ReduxState = {
   LoginReducer: LoginState,
   NavigationReducer: NavigationState,

@@ -6,7 +6,6 @@ import { connect } from 'react-redux';
 import {
   ActivityIndicator,
   StyleSheet,
-  Linking,
   FlatList,
   Platform,
   View,
@@ -32,16 +31,10 @@ import type { NavigationScreenProp } from 'react-navigation';
 
 import { format, differenceInHours, distanceInWordsToNow } from 'date-fns';
 
-import type { Message, UserData, ReduxState } from '../types';
+import type { Message, UserData, ReduxState, Order } from '../types';
 import colors from '../config/colors';
 import * as api from '../utils/api';
 import { Avatar } from '../components/index';
-
-type Order = {
-  _id: number,
-  lastMessage: Message,
-  unreadMessageCount: number,
-};
 
 type Props = {
   navigation: NavigationScreenProp<*>,
@@ -53,6 +46,8 @@ type State = {
   isRefreshing: boolean,
   isLoading: boolean,
   orders: Array<Order>,
+  listQuery: any,
+  channelList: any,
 };
 
 const temp = [
@@ -108,26 +103,46 @@ class OrdersListContainer extends Component<Props, State> {
     isRefreshing: false,
     isLoading: true,
     orders: [],
+    listQuery: null,
+    channelList: null,
   };
 
   componentWillMount() {
-    // this.setState({ isLoading: true });
+    // this.fetchOrders().then(orders => {
+    //   this.fetchChats().then(chats => {
+    //     // const ordersAndChats = orders.filter(o => o.seller ==)
+    //     this.setState({
+    //       orders: orders,
+    //     });
+    //   });
+    // }).catch(err => console.error(err));
 
-    setTimeout(() => {
-      this.setState({
-        orders: temp,
+    this.connectToSendBird()
+      .then(() => {
+        console.log('done');
+        return this.fetchChannelList();
+      })
+      .then(() => {
+        this.setState({ isLoading: false });
+      })
+      .catch(err => {
+        console.error(err);
       });
-    }, 1000);
-
-    this.setState({ isLoading: false });
   }
 
-  fetchItems = () => {
-    setTimeout(() => {
-      const one = temp[0];
-      const two = temp[1];
-      this.setState({ orders: [one, two] });
-    }, 1000);
+  fetchOrders = (): Promise<Array<Order>> => {
+    return new Promise((resolve, reject) => {
+      api
+        .get('/api/orders/')
+        .then(res => {
+          console.debug(res);
+          resolve(res.data);
+        })
+        .catch(err => {
+          console.error(err);
+          reject(err);
+        });
+    });
   };
 
   connectToSendBird(): Promise<null | any> {
@@ -136,51 +151,46 @@ class OrdersListContainer extends Component<Props, State> {
       // Maybe from a deeplink, opening app from background?
       setTimeout(() => {
         this.sb = SendBird.getInstance();
-        this.sb.connect(this.props.userData._id, (user, err: any) => {
+        this.sb.connect(this.props.userData._id, (user, err) => {
           if (err) return reject(err);
 
           console.debug(user);
 
-          this.createRoomAndGetMessages(this.state.interlocutor._id);
-
-          this.sb.addChannelHandler('ChatView', this.createChannelHandler());
-
           const ConnectionHandler = new this.sb.ConnectionHandler();
           ConnectionHandler.onReconnectSucceeded = () => {
-            this.getRoomMessages(true);
-            // $FlowFixMe
-            this.state.channel.refresh(() => {
-              this.getRoomMessages(false);
-            });
+            this.fetchChannelList();
           };
-          this.sb.addConnectionHandler('ChatView', ConnectionHandler);
+          this.sb.addConnectionHandler(
+            'ConnectionHandlerInList',
+            ConnectionHandler
+          );
 
-          this.getRoomMessages(false);
           resolve();
         });
-      }, 500);
+      }, 200);
     });
   }
 
-  createGiftedMessage(msg: SendBirdMessage, user: UserData | any): Message {
-    return {
-      _id: msg.messageId,
-      createdAt: new Date(msg.createdAt),
-      text: msg.message,
-      user: {
-        _id: user._id,
-        // $FlowFixMe
-        name: user.username || user.name,
-        // $FlowFixMe
-        avatar: user.profilePic,
-        // avatar: user.profilePic !== null ? user.profilePic : null,
-        // avatar: user.profilePic || msg.sender.profileUrl,
-      },
-    };
-  }
+  fetchChannelList = () => {
+    return new Promise((resolve, reject) => {
+      const listQuery = this.sb.GroupChannel.createMyGroupChannelListQuery();
+      listQuery.includeEmpty = true;
+      listQuery.limit = 20; // pagination limit could be set up to 100
+      listQuery.next((channelList, err) => {
+        if (err) return reject(err);
+        console.log(channelList);
+
+        this.setState({
+          channelList: channelList,
+        });
+        resolve();
+      });
+    });
+  };
 
   componentWillUnmount() {
     // this.sb.disconnect(() => console.debug('SendBird disconnected'));
+    this.sb.removeChannelHandler('ConnectionHandlerInList');
   }
 
   componentWillReceiveProps(nextProps) {
@@ -197,7 +207,7 @@ class OrdersListContainer extends Component<Props, State> {
     }
   }
 
-  goToProfile = () => {
+  goToOrderThread = () => {
     const user = this.props.navigation.state.params.seller;
 
     const navigateToProfile = NavigationActions.navigate({
@@ -223,12 +233,12 @@ class OrdersListContainer extends Component<Props, State> {
             size={'verySmall'}
             withBorder
             uri={''}
-            placeholderText={lastMessage.user.name}
+            placeholderText={lastMessage._sender.nickname}
           />
           <View style={[st.flex1, st.content]}>
             <View style={st.contentHeader}>
               {/* displayName */}
-              <Text style={st.name}>{lastMessage.user.name}</Text>
+              <Text style={st.name}>{lastMessage._sender.nickname}</Text>
               {differenceInHours(new Date(), lastMessage.createdAt) < 24 ? (
                 <Text style={st.datetime}>
                   {distanceInWordsToNow(lastMessage.createdAt)}
@@ -240,7 +250,7 @@ class OrdersListContainer extends Component<Props, State> {
               )}
             </View>
             <Text numberOfLines={2} rkType="primary3 mediumLine">
-              {lastMessage.text}
+              {lastMessage.message}
             </Text>
           </View>
         </View>
@@ -249,7 +259,7 @@ class OrdersListContainer extends Component<Props, State> {
   };
 
   _keyExtractor(item) {
-    return item._id;
+    return item.url;
   }
 
   _renderSeparator() {
@@ -270,12 +280,12 @@ class OrdersListContainer extends Component<Props, State> {
   renderRefreshControl = (
     <RefreshControl
       refreshing={this.state.isRefreshing}
-      onRefresh={this.fetchItems}
+      onRefresh={this.fetchChannelList}
     />
   );
 
   render() {
-    const { hasError, orders, isLoading } = this.state;
+    const { hasError, channelList, isLoading } = this.state;
 
     return (
       <Container>
@@ -294,7 +304,7 @@ class OrdersListContainer extends Component<Props, State> {
           ) : (
             <FlatList
               style={st.root}
-              data={orders}
+              data={channelList}
               extraData={this.state} // make sure will re-render when the state.selected changes
               refreshControl={this.renderRefreshControl}
               ItemSeparatorComponent={this._renderSeparator}

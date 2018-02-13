@@ -265,7 +265,7 @@ export class ProductContainer extends React.Component<Props, State> {
         </Header>
         <Content style={styles.container}>
           {loading && <ActivityIndicator size="large" />}
-          {item && (
+          {Object.keys(item).length !== 0 && (
             <View>
               <View style={styles.topSection}>
                 {/* <Image

@@ -335,7 +335,7 @@ class ProfileScreen extends React.Component<Props, State> {
                       <EditableText
                         text={displayName}
                         onChangeText={t => this.setState({ displayName: t })}
-                        placeholder="Enter your shop name"
+                        placeholder="Edit your shop name"
                         placeholderColor={colors.grey3}
                         isTextEditable={editing}
                         style={styles.displayName}
@@ -379,7 +379,7 @@ class ProfileScreen extends React.Component<Props, State> {
                   <EditableText
                     text={bio}
                     onChangeText={t => this.setState({ bio: t })}
-                    placeholder="Write your profile description"
+                    placeholder="Edit your profile description"
                     placeholderColor={colors.grey3}
                     isTextEditable={editing}
                   />

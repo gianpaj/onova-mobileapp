@@ -32,7 +32,6 @@ import { MediaView } from '../components';
 
 import colors from '../config/colors';
 import * as api from '../utils/api';
-// import * as ui from '../utils/ui';
 import type { Product as ProductType, UserData, ReduxState } from '../types';
 
 type Props = {
@@ -44,7 +43,8 @@ type Props = {
 
 type State = {
   loading: boolean,
-  item: ProductType | null,
+  loadingBuy: boolean,
+  item: ProductType,
   likeAnimValue: number,
 };
 
@@ -58,8 +58,9 @@ export class ProductContainer extends React.Component<Props, State> {
 
   state = {
     loading: true,
-    item: null,
+    loadingBuy: false,
     likeAnimValue: new Animated.Value(0.35),
+    item: {},
   };
 
   showActionSheet = () => {
@@ -116,22 +117,26 @@ export class ProductContainer extends React.Component<Props, State> {
       console.debug(params);
     }
 
-    this._getProduct(uuid).then(() => {
-      this.setState({ loading: false });
-    });
-  }
-
-  _getProduct(uuid: string) {
-    return api
-      .get(`/api/products/${uuid}`)
-      .then(res => {
-        const data = res.data;
-        console.log(res.data);
+    this._getProduct(uuid)
+      .then(data => {
+        console.log(data);
         this.setState({
           item: data,
+          loading: false,
         });
       })
-      .catch(e => console.error(e));
+      .catch(e => {
+        console.error(e);
+      });
+  }
+
+  _getProduct(uuid: string): Promise<ProductType> {
+    return new Promise((resolve, reject) => {
+      api
+        .get(`/api/products/${uuid}`)
+        .then(res => resolve(res.data))
+        .catch(e => reject(e));
+    });
   }
 
   goToProfile = () => {
@@ -147,21 +152,82 @@ export class ProductContainer extends React.Component<Props, State> {
     }
   };
 
-  onPressBuy = () => {
-    // @TODO: enable me
-    // ui.showConfirmAlert(
-    //   'Unsaved Changes',
-    //   'Are you sure you want to Cancel?',
-    //   () => {
-    //   }
-    // );
-    // on continue
-    const navigateToOrderThread = NavigationActions.navigate({
-      routeName: 'orderThread',
-      params: this.state.item,
+  isProductForSale(product: ProductType): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      this._getProduct(product.uuid)
+        .then(data => {
+          if (!data) return reject();
+          if (data.status == 'forsale') {
+            resolve(true);
+          } else {
+            resolve(false);
+          }
+        })
+        .catch(e => reject(e));
     });
+  }
 
-    this.props.navigation.dispatch(navigateToOrderThread);
+  isUserVerified(): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      api
+        .get(`/api/users/${this.props.userData._id}`)
+        .then((res: UserData) => {
+          console.debug(res);
+          if (res.accountStatus == 'verified') {
+            resolve(true);
+          } else if (res.accountStatus !== 'verified') {
+            resolve(false);
+          }
+        })
+        .catch(err => {
+          reject(err);
+        });
+    });
+  }
+
+  onPressBuy = () => {
+    if (this.state.loadingBuy) return;
+
+    // check if product is still `forsale`
+    this.setState({ loadingBuy: true });
+
+    if (this.state.item) {
+      this.isUserVerified()
+        .then(isVerified => {
+          if (!isVerified) {
+            throw Error('You need to validate your account...');
+          }
+        })
+        .then(() => {
+          return this.isProductForSale(this.state.item).then(isForSale => {
+            // @TODO: check product status. if 'reserved' say you can try again later...
+            if (!isForSale) {
+              throw Error('The product is not longer for sale');
+            } else {
+              const navigateToCheckout = NavigationActions.navigate({
+                routeName: 'checkout',
+                // $FlowFixMe
+                params: this.state.item,
+              });
+              this.props.navigation.dispatch(navigateToCheckout);
+            }
+          });
+        })
+        .catch(err => {
+          // @TODO: show toast with err
+          console.warn(err.message);
+        })
+        .then(() => {
+          this.setState({ loadingBuy: false });
+        });
+    }
+
+    // const navigateToOrderThread = NavigationActions.navigate({
+    //   routeName: 'orderThread',
+    //   params: this.state.item,
+    // });
+
+    // this.props.navigation.dispatch(navigateToOrderThread);
   };
 
   isMyProduct(): boolean | null {
@@ -252,6 +318,7 @@ export class ProductContainer extends React.Component<Props, State> {
                     buttonStyle={styles.buyButton}
                     onPress={() => this.onPressBuy()}
                     title="Buy"
+                    loading={this.state.loadingBuy}
                   />
                 )}
               </View>

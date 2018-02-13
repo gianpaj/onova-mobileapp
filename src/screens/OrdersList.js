@@ -101,7 +101,7 @@ const temp = [
 ];
 
 class OrdersListContainer extends Component<Props, State> {
-  sb: any;
+  sb;
 
   state = {
     hasError: false,

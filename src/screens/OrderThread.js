@@ -87,7 +87,7 @@ const tempMessages = [
 ];
 
 class OrderThreadContainer extends Component<Props, State> {
-  sb: any;
+  sb;
 
   state = {
     channel: null,
@@ -125,7 +125,7 @@ class OrderThreadContainer extends Component<Props, State> {
           this.setState({ product: data });
           resolve();
         })
-        .catch((err: any) => {
+        .catch(err => {
           reject(err);
         });
     });
@@ -292,7 +292,7 @@ class OrderThreadContainer extends Component<Props, State> {
     }
   };
 
-  renderSystemMessage(props: any): React$Element<*> {
+  renderSystemMessage(props): React$Element<*> {
     return (
       <SystemMessage
         {...props}
@@ -393,7 +393,7 @@ class OrderThreadContainer extends Component<Props, State> {
     );
   }*/
 
-  renderSend(props: any): React$Element<*> {
+  renderSend(props): React$Element<*> {
     const showActiveOpacity = props.text.trim().length > 0;
     return (
       <Send {...props}>

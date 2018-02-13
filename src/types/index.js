@@ -7,13 +7,18 @@ import type {
   NavigationState,
 } from './navigationReducer';
 
-export type Product = {
-  description: string,
-  location: string,
-  photoURIs: Array<string>,
-  price: string,
-  seller: any,
-};
+export type Product =
+  | {
+      description: string,
+      currency: string,
+      location: string,
+      photoURIs: Array<string>,
+      price: string,
+      seller: any,
+      status: string,
+      uuid: string,
+    }
+  | {};
 
 export type LoginData = {
   emailAddress: string,
@@ -42,22 +47,26 @@ export type UserData = {
   shippingAddress: ShippingAddress,
 };
 
-export type PaymentInfo = {
-  valid: boolean,
-  values: {
-    expiry: string,
-    number: string,
-  },
-};
+export type PaymentInfo =
+  | {
+      valid: boolean,
+      values: {
+        expiry: string,
+        number: string,
+      },
+    }
+  | {};
 
-export type ShippingAddress = {
-  line1: string,
-  line2: string,
-  city: string,
-  state: string,
-  country: string,
-  postcode: string,
-};
+export type ShippingAddress =
+  | {
+      line1: string,
+      line2: string,
+      city: string,
+      state: string,
+      country: string,
+      postcode: string,
+    }
+  | {};
 
 export type Message = {
   _id: string,

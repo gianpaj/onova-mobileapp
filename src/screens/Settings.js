@@ -72,21 +72,8 @@ class SettingsContainer extends Component<Props, State> {
     emailAddress: '',
     pending: false,
     password: '',
-    paymentInfo: {
-      valid: false,
-      values: {
-        expiry: '',
-        number: '',
-      },
-    },
-    shippingAddress: {
-      line1: '',
-      line2: '',
-      city: '',
-      state: '',
-      country: '',
-      postcode: '',
-    },
+    paymentInfo: {},
+    shippingAddress: {},
     username: '',
     usernameError: false,
   };

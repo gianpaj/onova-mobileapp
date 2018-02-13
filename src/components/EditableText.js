@@ -121,7 +121,7 @@ class EditableText extends PureComponent<Props, State> {
     if (this.props.loading) {
       return (
         <View style={styles.spinnerStyle}>
-          <ActivityIndicator size={'small'} />
+          <ActivityIndicator size="small" />
         </View>
       );
     }

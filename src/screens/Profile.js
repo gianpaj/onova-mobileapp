@@ -50,6 +50,7 @@ type State = {
   editing: boolean,
   following: boolean,
   profilePic: string | Image,
+  isLoading: boolean,
 };
 
 const defaultState = {
@@ -60,6 +61,7 @@ const defaultState = {
   editing: false,
   following: false,
   profilePic: '',
+  isLoading: false,
 };
 
 // @TODO: if Product is mine Delete, Edit
@@ -154,6 +156,7 @@ class ProfileScreen extends React.Component<Props, State> {
   };
 
   onSave = () => {
+    this.setState({ isLoading: true });
     const { userData } = this.props;
     const { bio, displayName, profilePic } = this.state;
     const formData = new FormData();
@@ -194,6 +197,7 @@ class ProfileScreen extends React.Component<Props, State> {
       // final
       .then(() => {
         Toast.hide();
+        this.setState({ isLoading: false });
       });
   };
 
@@ -268,6 +272,7 @@ class ProfileScreen extends React.Component<Props, State> {
       profilePic,
       following,
       username,
+      isLoading,
     } = this.state;
 
     return (
@@ -307,15 +312,12 @@ class ProfileScreen extends React.Component<Props, State> {
           </Right>
         </Header>
         <View>
-          {this.shouldShowNoticeBar && (
-            <View>
-              <NoticeBar
-                style={{}}
-                marqueeProps={{ loop: false, style: styles.noticeBar }}
-                icon={false}>
-                Please verify you email to start buying or selling.
-              </NoticeBar>
-            </View>
+          {this.shouldShowNoticeBar() && (
+            <NoticeBar
+              marqueeProps={{ loop: false, style: styles.noticeBar }}
+              icon={false}>
+              Please verify you email to start buying or selling.
+            </NoticeBar>
           )}
           <View style={styles.profileTop}>
             <View>
@@ -339,13 +341,19 @@ class ProfileScreen extends React.Component<Props, State> {
                         placeholderColor={colors.grey3}
                         isTextEditable={editing}
                         style={styles.displayName}
+                        shouldAutoFocus
+                        loading={isLoading}
                       />
                       <NBButton
                         transparent
                         bordered
                         small
                         full
-                        style={styles.editOrFollowButton}
+                        style={
+                          editing
+                            ? [styles.editOrFollowButton, styles.saveButton]
+                            : styles.editOrFollowButton
+                        }
                         onPress={() => {
                           editing
                             ? this.onSave()
@@ -448,6 +456,9 @@ const styles = StyleSheet.create({
   },
   editOrFollowButtonText: {
     color: colors.grey1,
+  },
+  saveButton: {
+    borderColor: colors.primary,
   },
   noticeBar: {
     color: colors.grey2,

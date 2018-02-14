@@ -7,7 +7,6 @@ import {
   StyleSheet,
   Text,
   TextInput,
-  TouchableOpacity,
   View,
   type TextProps,
 } from 'react-native';
@@ -19,6 +18,7 @@ type Props = {
   onChangeText: (text: string) => void,
   placeholder: string,
   placeholderColor: string,
+  shouldAutoFocus: boolean,
   style?: StyleSheet.Styles,
   text: string,
   textInputProps: any,
@@ -26,7 +26,6 @@ type Props = {
 };
 
 type State = {
-  editing: boolean,
   text: string,
 };
 
@@ -48,17 +47,9 @@ class EditableText extends PureComponent<Props, State> {
     placeholderColor: '#cccccc',
     loading: false,
     style: {},
+    shouldAutoFocus: false,
     textInputProps: {},
     textProps: {},
-  };
-
-  startEditing = () => {
-    if (this.props.isTextEditable) {
-      this.setState({
-        editing: true,
-        text: this.props.text,
-      });
-    }
   };
 
   onChangeText = (text: string) => {
@@ -68,7 +59,6 @@ class EditableText extends PureComponent<Props, State> {
 
   renderText() {
     const {
-      loading,
       placeholder,
       placeholderColor,
       style,
@@ -76,45 +66,36 @@ class EditableText extends PureComponent<Props, State> {
       text,
     } = this.props;
 
-    if (!this.state.editing && !loading) {
-      return (
-        <TouchableOpacity onPress={this.startEditing}>
-          <Text
-            {...textProps}
-            style={[style, text ? style : { color: placeholderColor }]}>
-            {text || placeholder}
-          </Text>
-        </TouchableOpacity>
-      );
-    }
-    return null;
+    return (
+      <Text
+        {...textProps}
+        style={[style, text ? {} : { color: placeholderColor }]}>
+        {text || placeholder}
+      </Text>
+    );
   }
 
   renderTextInput() {
-    const { autoCorrect, loading, placeholder, style } = this.props;
+    const { autoCorrect, placeholder, style } = this.props;
 
-    if (this.state.editing || loading) {
-      return (
-        <View>
-          <View>
-            <TextInput
-              autoFocus
-              autoCorrect={autoCorrect}
-              onBlur={() => this.setState({ editing: false })}
-              onChangeText={t => this.onChangeText(t)}
-              opacity={this.state.editing ? 1 : 0.1}
-              returnKeyType={'done'}
-              placeholder={placeholder}
-              value={this.state.text}
-              {...this.props.textInputProps}
-              style={style}
-            />
-          </View>
-          {this.renderActivityIndicator()}
+    return (
+      <View>
+        <View style={st.textInputContainer}>
+          <TextInput
+            autoFocus={this.props.shouldAutoFocus}
+            autoCorrect={autoCorrect}
+            onChangeText={t => this.onChangeText(t)}
+            opacity={this.props.isTextEditable ? 1 : 0.1}
+            returnKeyType={'done'}
+            placeholder={placeholder}
+            value={this.state.text}
+            style={style}
+            {...this.props.textInputProps}
+          />
         </View>
-      );
-    }
-    return null;
+        {this.renderActivityIndicator()}
+      </View>
+    );
   }
 
   renderActivityIndicator() {
@@ -131,11 +112,19 @@ class EditableText extends PureComponent<Props, State> {
   render() {
     return (
       <View>
-        {this.renderText()}
-        {this.renderTextInput()}
+        {this.props.isTextEditable || this.props.loading
+          ? this.renderTextInput()
+          : this.renderText()}
       </View>
     );
   }
 }
+
+const st = StyleSheet.create({
+  textInputContainer: {
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    marginBottom: -StyleSheet.hairlineWidth,
+  },
+});
 
 export default EditableText;

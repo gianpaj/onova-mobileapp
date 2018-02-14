@@ -31,7 +31,7 @@ import type { NavigationScreenProp } from 'react-navigation';
 
 import { format, differenceInHours, distanceInWordsToNow } from 'date-fns';
 
-import type { UserData, ReduxState, Order } from '../types';
+import type { UserData, ReduxState, Order, Product } from '../types';
 import colors from '../config/colors';
 import * as api from '../utils/api';
 import { Avatar } from '../components/index';
@@ -229,26 +229,52 @@ class OrdersListContainer extends Component<Props, State> {
     }
   }
 
-  goToOrderThread = () => {
-    const user = this.props.navigation.state.params.seller;
-
-    const navigateToProfile = NavigationActions.navigate({
-      routeName: 'profile',
-      params: user,
+  fetchProduct(uuid: string): Promise<Product> {
+    return new Promise((resolve, reject) => {
+      return api
+        .get(`/api/products/${uuid}`)
+        .then(res => {
+          console.debug(res.data);
+          resolve(res.data);
+        })
+        .catch(err => {
+          reject(err);
+        });
     });
+  }
 
-    this.props.navigation.dispatch(navigateToProfile);
+  fetchOrder(orderId: string): Promise<Order> {
+    return new Promise((resolve, reject) => {
+      api
+        .get(`/api/orders/${orderId}`)
+        .then(res => {
+          resolve(res.data);
+        })
+        .catch(err => {
+          reject(err);
+        });
+    });
+  }
+
+  goToOrderThread = (item: any) => {
+    console.log(item);
+    this.fetchOrder(item.orderId)
+      .then((order: Order) => {
+        return this.fetchProduct(order.product.uuid).then((item: Product) => {
+          const navigateToOrderThread = NavigationActions.navigate({
+            routeName: 'orderThread',
+            params: { item, order },
+          });
+          this.props.navigation.dispatch(navigateToOrderThread);
+        });
+      })
+      .catch(e => console.error(e));
   };
 
   _renderItem = (item: any) => {
     const { lastMessage } = item.item;
     return (
-      <TouchableOpacity
-        onPress={() =>
-          this.props.navigation.navigate('orderThread', {
-            order: item.order,
-          })
-        }>
+      <TouchableOpacity onPress={() => this.goToOrderThread(item.item)}>
         <View style={st.itemContainer}>
           <Avatar
             // style={styles.avatarContainer}
@@ -280,7 +306,7 @@ class OrdersListContainer extends Component<Props, State> {
     );
   };
 
-  _keyExtractor(item) {
+  _keyExtractor(item): string {
     return item.url;
   }
 

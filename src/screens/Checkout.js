@@ -42,12 +42,13 @@ import settings from '../config/settings';
 import { validShippingAddress } from '../utils/validators';
 import * as api from '../utils/api';
 // import * as ui from '../utils/ui';
-import { type Product } from '../types';
 
 import type {
   UserData,
   Dispatch,
   PaymentInfo,
+  Product,
+  Order,
   ShippingAddress,
   ReduxState,
 } from '../types';
@@ -219,7 +220,7 @@ class CheckoutContainer extends Component<Props, State> {
     //   });
   };
 
-  createOrder(item): Promise<any> {
+  createOrder(item: Product): Promise<Order> {
     return new Promise((resolve, reject) => {
       api
         .post('/api/orders', { product: item.uuid })
@@ -264,11 +265,7 @@ class CheckoutContainer extends Component<Props, State> {
     // const { userData } = this.props;
     const {
       pending,
-      password,
-      emailAddress,
       shippingAddress,
-      username,
-      usernameError,
       item,
       isLoading,
     } = this.state;

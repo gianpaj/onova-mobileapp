@@ -6,13 +6,16 @@ import { connect } from 'react-redux';
 // prettier-ignore
 import {
   ActivityIndicator,
-  StyleSheet,
   Platform,
+  StyleSheet,
+  Text,
   View,
 } from 'react-native';
 import {
   Body,
   Button as NBButton,
+  Card,
+  CardItem,
   Container,
   Header,
   Icon as NBIcon,
@@ -74,7 +77,7 @@ type State = {
   messageQuery: any,
   messages: Array<Message> | null,
   interlocutor: UserData | null,
-  product: Product | null,
+  product: Product | {},
 };
 
 const tempMessages = [
@@ -97,7 +100,7 @@ class OrderThreadContainer extends Component<Props, State> {
     messageQuery: null,
     messages: null,
     interlocutor: null,
-    product: null,
+    product: {},
   };
 
   _getInterlucutorUserData(userId: string): Promise<null | any> {
@@ -115,7 +118,7 @@ class OrderThreadContainer extends Component<Props, State> {
     });
   }
 
-  _getProduct(uuid: string): Promise<null | any> {
+  fetchProduct(uuid: string): Promise<Product> {
     return new Promise((resolve, reject) => {
       return api
         .get(`/api/products/${uuid}`)
@@ -151,28 +154,29 @@ class OrderThreadContainer extends Component<Props, State> {
 
     let userId = '';
     let orderId = '';
-    // let productId = '';
+    let productId = '';
     // for development
     if (!params) {
       orderId = '5aaa54475331ae236613f2ad';
       // productId = '';
 
       this.getTempUserId('firstperson').then(userId => {
-        this.initialise(userId, orderId);
+        this.initialise(userId, orderId, productId);
       });
     } else if (params && params.item.seller) {
       // coming from Checkout or OrdersList
+      // @TODO: check show is the seller/buyer!
       userId = params.item.seller._id;
       orderId = params.order.id;
-      // productId = params.item.uuid;
-      this.initialise(userId, orderId);
+      productId = params.item.uuid;
+      this.initialise(userId, orderId, productId);
     }
   }
 
-  initialise(userId: string, orderId: string) {
+  initialise(userId: string, orderId: string, productId: string) {
     const Promises = [];
     Promises.push(this._getInterlucutorUserData(userId));
-    // Promises.push(this._getProduct(productId));
+    Promises.push(this.fetchProduct(productId));
     // Promises.push(this._getOrder(orderId));
     Promises.push(this.connectToSendBird(orderId));
 
@@ -489,7 +493,7 @@ class OrderThreadContainer extends Component<Props, State> {
 
   render() {
     const { navigation, userData } = this.props;
-    const { messages, isLoading, interlocutor } = this.state;
+    const { messages, isLoading, interlocutor, product } = this.state;
 
     return (
       <Container style={st.flex1}>
@@ -523,32 +527,39 @@ class OrderThreadContainer extends Component<Props, State> {
               <ActivityIndicator size="large" />
             </View>
           ) : (
-            <GiftedChat
-              messages={messages}
-              onSend={m => this.onSend(m)}
-              placeholder="Type a message"
-              // placeholder={I18n.t('chat.typeAMessage')}
-              user={{
-                _id: userData._id,
-                name: userData.username,
-                avatar: userData.profilePic,
-                // avatar:
-                //   userData.profilePic !== null ? userData.profilePic : null,
-              }}
-              // locale=""
-              // timeformat="LT"
-              // dateformat="ll"
-              // onPressAvatar={() => alert('code me like those french girls 🎨')}
-              // renderLoading={() => ()}
-              renderSend={this.renderSend}
-              renderSystemMessage={this.renderSystemMessage}
-              // renderActions={this.renderActions}
-              // renderComposer={this.renderComposer}
-              // keyboardShouldPersistTaps="handled"
-              maxInputLength={settings.MAX_CHAT_INPUT_LENGTH}
-              // renderInputToolbar={this.renderInputToolbar}
-              showUserAvatar
-            />
+            <View style={st.flex1}>
+              {/* <Card> */}
+                <CardItem header>
+                  <Text>{product.description}</Text>
+                </CardItem>
+              {/* </Card> */}
+              <GiftedChat
+                messages={messages}
+                onSend={m => this.onSend(m)}
+                placeholder="Type a message"
+                // placeholder={I18n.t('chat.typeAMessage')}
+                user={{
+                  _id: userData._id,
+                  name: userData.username,
+                  avatar: userData.profilePic,
+                  // avatar:
+                  //   userData.profilePic !== null ? userData.profilePic : null,
+                }}
+                // locale=""
+                // timeformat="LT"
+                // dateformat="ll"
+                // onPressAvatar={() => alert('code me like those french girls 🎨')}
+                // renderLoading={() => ()}
+                renderSend={this.renderSend}
+                renderSystemMessage={this.renderSystemMessage}
+                // renderActions={this.renderActions}
+                // renderComposer={this.renderComposer}
+                // keyboardShouldPersistTaps="handled"
+                maxInputLength={settings.MAX_CHAT_INPUT_LENGTH}
+                // renderInputToolbar={this.renderInputToolbar}
+                showUserAvatar
+              />
+            </View>
           )}
         </View>
       </Container>

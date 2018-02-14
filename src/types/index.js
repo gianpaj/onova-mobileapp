@@ -7,18 +7,16 @@ import type {
   NavigationState,
 } from './navigationReducer';
 
-export type Product =
-  | {
-      description: string,
-      currency: string,
-      location: string,
-      photoURIs: Array<string>,
-      price: string,
-      seller: any,
-      status: string,
-      uuid: string,
-    }
-  | {};
+export type Product = {
+  description: string,
+  currency: string,
+  location: string,
+  photoURIs: Array<string>,
+  price: string,
+  seller: any,
+  status: string,
+  uuid: string,
+};
 
 export type LoginData = {
   emailAddress: string,

@@ -114,15 +114,15 @@ class ProfileScreen extends React.Component<Props, State> {
 
     this.setState({ _id, username });
 
-    if (this.hasStateDifferedFromProps(nextProps, 'bio')) {
+    if (this.hasStateDifferedFromProps(nextProps.userData, 'bio')) {
       this.setState({ bio });
     }
 
-    if (this.hasStateDifferedFromProps(nextProps, 'displayName')) {
+    if (this.hasStateDifferedFromProps(nextProps.userData, 'displayName')) {
       this.setState({ displayName });
     }
 
-    if (this.hasStateDifferedFromProps(nextProps, 'profilePic')) {
+    if (this.hasStateDifferedFromProps(nextProps.userData, 'profilePic')) {
       this.setState({ profilePic });
     }
   }

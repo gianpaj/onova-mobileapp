@@ -186,47 +186,39 @@ export class ProductContainer extends React.Component<Props, State> {
   }
 
   onPressBuy = () => {
-    if (this.state.loadingBuy) return;
+    if (this.state.loadingBuy || !this.state.item) return;
 
     // check if product is still `forsale`
     this.setState({ loadingBuy: true });
 
-    if (this.state.item) {
-      this.isUserVerified()
-        .then(isVerified => {
-          if (!isVerified) {
-            throw Error('You need to validate your account...');
-          }
-        })
-        .then(() => {
-          return this.isProductForSale(this.state.item).then(isForSale => {
-            // @TODO: if product status is 'reserved' say you can try again later...
-            if (!isForSale) {
-              throw Error('This product is not longer for sale');
-            } else {
-              const navigateToCheckout = NavigationActions.navigate({
-                routeName: 'checkout',
-                params: this.state.item,
-              });
-              this.props.navigation.dispatch(navigateToCheckout);
-            }
+    this.isUserVerified()
+      .then(isVerified => {
+        if (!isVerified) {
+          throw Error('You need to validate your account...');
+        }
+      })
+      .then(() => this.isProductForSale(this.state.item))
+      .then(isForSale => {
+        // @TODO: if product status is 'reserved' say you can try again later...
+        if (!isForSale) {
+          throw Error('This product is not longer for sale');
+        } else {
+          const navigateToCheckout = NavigationActions.navigate({
+            routeName: 'checkout',
+            params: this.state.item,
           });
-        })
-        .catch(err => {
-          // @TODO: show toast with err
-          console.warn(err.message);
-        })
-        .then(() => {
+          return this.props.navigation.dispatch(navigateToCheckout);
+        }
+      })
+      .catch(err => {
+        // @TODO: show toast with err
+        console.warn(err.message);
+      })
+      .then(() => {
+        setTimeout(() => {
           this.setState({ loadingBuy: false });
-        });
-    }
-
-    // const navigateToOrderThread = NavigationActions.navigate({
-    //   routeName: 'orderThread',
-    //   params: this.state.item,
-    // });
-
-    // this.props.navigation.dispatch(navigateToOrderThread);
+        }, 700);
+      });
   };
 
   isMyProduct(): boolean | null {

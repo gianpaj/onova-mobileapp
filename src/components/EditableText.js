@@ -52,11 +52,6 @@ class EditableText extends PureComponent<Props, State> {
     textProps: {},
   };
 
-  onChangeText = (text: string) => {
-    this.props.onChangeText(text);
-    this.setState({ text });
-  };
-
   renderText() {
     const {
       placeholder,
@@ -84,11 +79,11 @@ class EditableText extends PureComponent<Props, State> {
           <TextInput
             autoFocus={this.props.shouldAutoFocus}
             autoCorrect={autoCorrect}
-            onChangeText={t => this.onChangeText(t)}
+            onChangeText={t => this.props.onChangeText(t)}
             opacity={this.props.isTextEditable ? 1 : 0.1}
             returnKeyType={'done'}
             placeholder={placeholder}
-            value={this.state.text}
+            value={this.props.text}
             style={style}
             {...this.props.textInputProps}
           />

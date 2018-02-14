@@ -31,7 +31,7 @@ import type { NavigationScreenProp } from 'react-navigation';
 
 import { format, differenceInHours, distanceInWordsToNow } from 'date-fns';
 
-import type { Message, UserData, ReduxState, Order } from '../types';
+import type { UserData, ReduxState, Order } from '../types';
 import colors from '../config/colors';
 import * as api from '../utils/api';
 import { Avatar } from '../components/index';
@@ -45,9 +45,8 @@ type State = {
   hasError: boolean,
   isRefreshing: boolean,
   isLoading: boolean,
-  orders: Array<Order>,
   listQuery: any,
-  channelList: any,
+  channelList: Array<any>,
 };
 
 const temp = [
@@ -102,32 +101,60 @@ class OrdersListContainer extends Component<Props, State> {
     hasError: false,
     isRefreshing: false,
     isLoading: true,
-    orders: [],
     listQuery: null,
-    channelList: null,
+    channelList: [],
   };
 
   componentWillMount() {
-    // this.fetchOrders().then(orders => {
-    //   this.fetchChats().then(chats => {
-    //     // const ordersAndChats = orders.filter(o => o.seller ==)
-    //     this.setState({
-    //       orders: orders,
-    //     });
-    //   });
-    // }).catch(err => console.error(err));
-
     this.connectToSendBird()
-      .then(() => {
-        console.log('done');
-        return this.fetchChannelList();
-      })
-      .then(() => {
-        this.setState({ isLoading: false });
+      .then(() => this.getOrdersAndChats())
+      .then(ordersAndChats => {
+        console.log(ordersAndChats);
+        this.setState({
+          channelList: ordersAndChats,
+          isLoading: false,
+        });
       })
       .catch(err => {
+        this.setState({ hasError: true });
         console.error(err);
       });
+  }
+
+  getOrdersAndChats(): Promise<Array<any>> {
+    return new Promise((resolve, reject) => {
+      this.getChannels()
+        .then(channels => {
+          return this.fetchOrders().then(orders => {
+            // orders in which the other person (seller or buyer) is the person i am chatting with
+            return channels.filter(c => {
+              return orders.find((o: Order) => o.id == c.orderId);
+            });
+          });
+        })
+        .then(ordersAndChats => resolve(ordersAndChats))
+        .catch(e => reject(e));
+    });
+  }
+
+  getChannels(): Promise<Array<any>> {
+    return new Promise((resolve, reject) => {
+      return this.fetchChannelList().then(channels => {
+        let channelsWithMeta = [];
+
+        var todo = channels.length;
+        if (!todo) return resolve([]);
+
+        channels.forEach(c => {
+          c.getMetaData(['orderId'], (res, err) => {
+            if (err) return reject(err);
+            c.orderId = res.orderId;
+            channelsWithMeta.push(c);
+            if (--todo === 0) resolve(channelsWithMeta);
+          });
+        });
+      });
+    });
   }
 
   fetchOrders = (): Promise<Array<Order>> => {
@@ -135,7 +162,6 @@ class OrdersListContainer extends Component<Props, State> {
       api
         .get('/api/orders/')
         .then(res => {
-          console.debug(res);
           resolve(res.data);
         })
         .catch(err => {
@@ -158,7 +184,7 @@ class OrdersListContainer extends Component<Props, State> {
 
           const ConnectionHandler = new this.sb.ConnectionHandler();
           ConnectionHandler.onReconnectSucceeded = () => {
-            this.fetchChannelList();
+            this.getOrdersAndChats();
           };
           this.sb.addConnectionHandler(
             'ConnectionHandlerInList',
@@ -178,12 +204,8 @@ class OrdersListContainer extends Component<Props, State> {
       listQuery.limit = 20; // pagination limit could be set up to 100
       listQuery.next((channelList, err) => {
         if (err) return reject(err);
-        console.log(channelList);
 
-        this.setState({
-          channelList: channelList,
-        });
-        resolve();
+        resolve(channelList);
       });
     });
   };
@@ -267,7 +289,7 @@ class OrdersListContainer extends Component<Props, State> {
   }
 
   renderEmptyState = () => {
-    if (this.state.orders.length > 1 || !this.state.isLoading) return null;
+    if (this.state.channelList.length > 0) return null;
     return (
       <View style={[st.container]}>
         <Text style={st.text}>
@@ -277,12 +299,22 @@ class OrdersListContainer extends Component<Props, State> {
     );
   };
 
-  renderRefreshControl = (
-    <RefreshControl
-      refreshing={this.state.isRefreshing}
-      onRefresh={this.fetchChannelList}
-    />
-  );
+  refreshChannelList = () => {
+    this.setState({ isRefreshing: true });
+    this.getOrdersAndChats()
+      .then(ordersAndChats => {
+        this.setState({
+          channelList: ordersAndChats,
+          isRefreshing: false,
+        });
+      })
+      .catch(() => {
+        this.setState({
+          hasError: true,
+          isRefreshing: false,
+        });
+      });
+  };
 
   render() {
     const { hasError, channelList, isLoading } = this.state;
@@ -306,7 +338,12 @@ class OrdersListContainer extends Component<Props, State> {
               style={st.root}
               data={channelList}
               extraData={this.state} // make sure will re-render when the state.selected changes
-              refreshControl={this.renderRefreshControl}
+              refreshControl={
+                <RefreshControl
+                  refreshing={this.state.isRefreshing}
+                  onRefresh={this.refreshChannelList}
+                />
+              }
               ItemSeparatorComponent={this._renderSeparator}
               keyExtractor={this._keyExtractor}
               ListEmptyComponent={this.renderEmptyState}

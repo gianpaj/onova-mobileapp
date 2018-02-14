@@ -101,7 +101,7 @@ export type SendBirdMessage = {
 };
 
 export type Order = {
-  _id: number,
+  id: string,
   buyer: string,
   priceOfItem: number,
   product: string,

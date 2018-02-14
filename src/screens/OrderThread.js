@@ -131,31 +131,50 @@ class OrderThreadContainer extends Component<Props, State> {
     });
   }
 
+  getTempUserId(username: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+      api
+        .get('/api/users/')
+        .then((res: Array<UserData>) => {
+          console.debug(res);
+          const user = res.filter(u => u.username == username);
+          resolve(user[0]._id);
+        })
+        .catch(err => reject(err));
+    });
+  }
+
   componentWillMount() {
     const { params } = this.props.navigation.state;
 
-    const Promises = [];
     console.log(params);
 
     let userId = '';
+    let orderId = '';
+    // let productId = '';
+    // for development
     if (!params) {
-      // @TODO: for test
-      // firstperson
-      userId = '5a7454475331ae236613f2ad';
-    }
-    // coming from Product
-    if (params && params.seller) {
-      userId = params.seller._id;
-    }
+      orderId = '5aaa54475331ae236613f2ad';
+      // productId = '';
 
-    // coming from OrdersList
-    // if (params && params.seller) {
-    //   userId = params.seller._id;
-    // }
+      this.getTempUserId('firstperson').then(userId => {
+        this.initialise(userId, orderId);
+      });
+    } else if (params && params.item.seller) {
+      // coming from Checkout or OrdersList
+      userId = params.item.seller._id;
+      orderId = params.order.id;
+      // productId = params.item.uuid;
+      this.initialise(userId, orderId);
+    }
+  }
 
+  initialise(userId: string, orderId: string) {
+    const Promises = [];
     Promises.push(this._getInterlucutorUserData(userId));
-    // Promises.push(this._getProduct(params.uuid));
-    Promises.push(this.connectToSendBird());
+    // Promises.push(this._getProduct(productId));
+    // Promises.push(this._getOrder(orderId));
+    Promises.push(this.connectToSendBird(orderId));
 
     Promise.all(Promises)
       .then(() => {
@@ -164,7 +183,12 @@ class OrderThreadContainer extends Component<Props, State> {
       .catch(err => console.error(err));
   }
 
-  connectToSendBird(): Promise<null | any> {
+  /**
+   * Connect to SendBird and set the orderId as metadata
+   *
+   * @param {*} orderId metadata for channel
+   */
+  connectToSendBird(orderId: string): Promise<null | any> {
     return new Promise((resolve, reject) => {
       // @TODO: remove this if don't get a warning when quickly opening a chat thread.
       // Maybe from a deeplink, opening app from background?
@@ -176,7 +200,7 @@ class OrderThreadContainer extends Component<Props, State> {
 
             console.debug(user);
 
-            this.createRoomAndGetMessages(this.state.interlocutor._id);
+            this.createRoomAndGetMessages(this.state.interlocutor._id, orderId);
 
             this.sb.addChannelHandler('ChatView', this.createChannelHandler());
 
@@ -302,7 +326,7 @@ class OrderThreadContainer extends Component<Props, State> {
     );
   }
 
-  createRoomAndGetMessages(otherUser: string) {
+  createRoomAndGetMessages(otherUser: string, orderId: string) {
     const name = 'order for item X';
     this.sb.GroupChannel.createChannelWithUserIds(
       [otherUser],
@@ -312,8 +336,14 @@ class OrderThreadContainer extends Component<Props, State> {
       '',
       (createdChannel, err) => {
         if (err) return console.error(err);
+
         this.setState({ channel: createdChannel }, () => {
           console.debug('Room created', createdChannel);
+          // $FlowFixMe
+          this.state.channel.updateMetaData({ orderId }, (res, err) => {
+            if (err) return console.error(err);
+            console.log(res);
+          });
         });
         this.setState(prevState => ({
           // $FlowFixMe
@@ -327,6 +357,12 @@ class OrderThreadContainer extends Component<Props, State> {
   getRoomMessages(refresh: boolean) {
     const { messageQuery, messages, interlocutor } = this.state;
     const { userData } = this.props;
+
+    // // $FlowFixMe
+    // this.state.channel.getMetaData(['orderId'], (res, err) => {
+    //   if (err) return console.error(err);
+    //   console.log(res);
+    // });
 
     if (refresh) {
       console.debug('refreshing messages');
@@ -345,7 +381,7 @@ class OrderThreadContainer extends Component<Props, State> {
 
       const reverse = true;
       messageQuery.load(50, reverse, (msgs, err) => {
-        if (err || !interlocutor) return console.error(err);
+        if (err) return console.error(err);
         if (!interlocutor) return console.error('no interlocutor');
 
         const otherUser = {

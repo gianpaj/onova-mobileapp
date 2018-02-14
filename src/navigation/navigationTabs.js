@@ -59,10 +59,10 @@ const tabBarConfiguration = {
     activeTintColor: isiOS ? colors.active : colors.grey1,
     inactiveTintColor: colors.grey1,
     // background color is for the tab component
-    activeBackgroundColor: !isiOS ? colors.primary : undefined,
+    activeBackgroundColor: isiOS ? undefined : colors.primary,
     inactiveBackgroundColor: colors.white,
     style: {
-      backgroundColor: !isiOS ? colors.grey3 : undefined,
+      backgroundColor: isiOS ? undefined : colors.grey3,
     },
   },
   // needed to open the Camera the first time opening the 'AddProduct' screen

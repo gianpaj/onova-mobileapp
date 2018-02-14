@@ -200,13 +200,12 @@ export class ProductContainer extends React.Component<Props, State> {
         })
         .then(() => {
           return this.isProductForSale(this.state.item).then(isForSale => {
-            // @TODO: check product status. if 'reserved' say you can try again later...
+            // @TODO: if product status is 'reserved' say you can try again later...
             if (!isForSale) {
-              throw Error('The product is not longer for sale');
+              throw Error('This product is not longer for sale');
             } else {
               const navigateToCheckout = NavigationActions.navigate({
                 routeName: 'checkout',
-                // $FlowFixMe
                 params: this.state.item,
               });
               this.props.navigation.dispatch(navigateToCheckout);

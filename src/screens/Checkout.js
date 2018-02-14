@@ -25,8 +25,10 @@ import {
 } from 'native-base';
 // import Icon from 'react-native-vector-icons/MaterialIcons';
 // import { FormInput, FormLabel } from 'react-native-elements';
+import { NavigationActions } from 'react-navigation';
 import type { NavigationScreenProp } from 'react-navigation';
 // import { CardView, LiteCreditCardInput } from 'react-native-credit-card-input';
+// $FlowFixMe
 import BTClient from 'react-native-braintree-xplat';
 // import { Toast } from 'antd-mobile';
 import axios from 'axios';
@@ -38,7 +40,7 @@ import { Accordion, HR } from '../components';
 import colors from '../config/colors';
 import settings from '../config/settings';
 import { validShippingAddress } from '../utils/validators';
-// import * as api from '../utils/api';
+import * as api from '../utils/api';
 // import * as ui from '../utils/ui';
 import { type Product } from '../types';
 
@@ -134,6 +136,7 @@ class CheckoutContainer extends Component<Props, State> {
   }
 
   onCheckout = () => {
+    const self = this;
     const { userData } = this.props;
     const { emailAddress, paymentInfo, shippingAddress, username } = this.state;
     const data = {};
@@ -166,11 +169,24 @@ class CheckoutContainer extends Component<Props, State> {
 
     BTClient.showPayPalViewController()
       // BTClient.showPaymentViewController(options)
-      .then(function(nonce) {
+      .then(nonce => {
         //payment succeeded, pass nonce to server
         console.warn(nonce);
+
+        return this.createOrder(self.state.item);
       })
-      .catch(function(err) {
+      .then(order => {
+        console.log(order);
+        const navigateToCheckout = NavigationActions.navigate({
+          routeName: 'orderThread',
+          params: {
+            item: self.state.item,
+            order,
+          },
+        });
+        this.props.navigation.dispatch(navigateToCheckout);
+      })
+      .catch(err => {
         if (err == 'USER_CANCELLATION' || err == null) {
           return;
         }
@@ -202,6 +218,19 @@ class CheckoutContainer extends Component<Props, State> {
     //     this.setState({ pending: false });
     //   });
   };
+
+  createOrder(item): Promise<any> {
+    return new Promise((resolve, reject) => {
+      api
+        .post('/api/orders', { product: item.uuid })
+        .then(res => {
+          resolve(res.data);
+        })
+        .catch(err => {
+          reject(err);
+        });
+    });
+  }
 
   onCCChange = form => {
     this.setState({

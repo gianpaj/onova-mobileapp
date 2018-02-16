@@ -14,7 +14,6 @@ import {
 import {
   Body,
   Button as NBButton,
-  Card,
   CardItem,
   Container,
   Header,
@@ -528,11 +527,9 @@ class OrderThreadContainer extends Component<Props, State> {
             </View>
           ) : (
             <View style={st.flex1}>
-              {/* <Card> */}
-                <CardItem header>
-                  <Text>{product.description}</Text>
-                </CardItem>
-              {/* </Card> */}
+              <CardItem header>
+                <Text>{product.description}</Text>
+              </CardItem>
               <GiftedChat
                 messages={messages}
                 onSend={m => this.onSend(m)}

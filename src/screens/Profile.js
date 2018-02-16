@@ -263,7 +263,23 @@ class ProfileScreen extends React.Component<Props, State> {
     return this.props.userData.accountStatus == 'notverified';
   }
 
+  renderUserNumbers(userData: UserData) {
+    return (
+      <View style={styles.userNumbers}>
+        <View style={styles.alignCenter}>
+          <Text>9999</Text>
+          <Text>stars</Text>
+        </View>
+        <View style={styles.alignCenter}>
+          <Text>{userData.followersCount}</Text>
+          <Text>followers</Text>
+        </View>
+      </View>
+    );
+  }
+
   render() {
+    const { userData } = this.props;
     const {
       _id,
       bio,
@@ -344,6 +360,7 @@ class ProfileScreen extends React.Component<Props, State> {
                         shouldAutoFocus
                         loading={isLoading}
                       />
+                      {this.renderUserNumbers(userData)}
                       <NBButton
                         transparent
                         bordered
@@ -367,6 +384,7 @@ class ProfileScreen extends React.Component<Props, State> {
                   ) : (
                     <View style={styles.profileRight}>
                       {displayName !== '' && <Text>{displayName}</Text>}
+                      {this.renderUserNumbers(userData)}
                       <NBButton
                         transparent
                         bordered
@@ -415,6 +433,9 @@ const styles = StyleSheet.create({
   flex1: {
     flex: 1,
   },
+  alignCenter: {
+    alignItems: 'center',
+  },
   row: {
     flexDirection: 'row',
   },
@@ -440,6 +461,11 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     paddingTop: 10,
     backgroundColor: colors.white,
+  },
+  userNumbers: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginTop: 10,
   },
   displayName: {
     color: colors.grey1,

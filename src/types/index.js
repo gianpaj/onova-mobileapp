@@ -37,6 +37,8 @@ export type UserData = {
   profilePic?: string,
   token: string,
   username: string,
+  followersCount: number,
+  followingCount: number,
   paymentInfo: {
     last_four: string,
     exp_month: string,
@@ -102,7 +104,7 @@ export type Order = {
   id: string,
   buyer: string,
   priceOfItem: number,
-  product: string,
+  product: string | Product,
   seller: string,
   status: string,
   transationFee?: number,

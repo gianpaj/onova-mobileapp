@@ -48,7 +48,8 @@ type State = {
   displayName: string,
   username: string,
   editing: boolean,
-  following: boolean,
+  isFollowing: boolean,
+  followersCount: number,
   profilePic: string | Image,
   isLoading: boolean,
 };
@@ -59,9 +60,10 @@ const defaultState = {
   displayName: '',
   username: '',
   editing: false,
-  following: false,
+  isFollowing: false,
   profilePic: '',
   isLoading: false,
+  followersCount: -1,
 };
 
 // @TODO: if Product is mine Delete, Edit
@@ -83,15 +85,41 @@ class ProfileScreen extends React.Component<Props, State> {
 
     // if the screen navigated with an userID
     if (params && params._id) {
-      // cancelToken: this.cancelToken.token,
       api
         .get(`/api/users/${params._id}`)
         .then((res: UserData) => {
-          const { _id, bio, displayName, profilePic, username } = res;
-          this.setState({ _id, bio, displayName, profilePic, username });
+          const {
+            _id,
+            bio,
+            displayName,
+            profilePic,
+            username,
+            followersCount,
+          } = res;
+          this.setState({
+            _id,
+            bio,
+            displayName,
+            profilePic,
+            username,
+            followersCount,
+          });
         })
         .catch(err => {
           console.error(err);
+        });
+      api
+        .get(`/api/users/${params._id}/follow`)
+        .then(res => {
+          const { following } = res.data;
+          if (following == params._id) {
+            this.setState({
+              isFollowing: true,
+            });
+          }
+        })
+        .catch(err => {
+          console.debug(err);
         });
     } else {
       this.props.dispatch(
@@ -110,9 +138,16 @@ class ProfileScreen extends React.Component<Props, State> {
     // fix error when logging out
     if (!nextProps.userData) return;
 
-    const { _id, bio, displayName, profilePic, username } = nextProps.userData;
+    const {
+      _id,
+      bio,
+      displayName,
+      profilePic,
+      username,
+      followersCount,
+    } = nextProps.userData;
 
-    this.setState({ _id, username });
+    this.setState({ _id, username, followersCount });
 
     if (this.hasStateDifferedFromProps(nextProps.userData, 'bio')) {
       this.setState({ bio });
@@ -263,7 +298,7 @@ class ProfileScreen extends React.Component<Props, State> {
     return this.props.userData.accountStatus == 'notverified';
   }
 
-  renderUserNumbers(userData: UserData) {
+  renderUserNumbers() {
     return (
       <View style={styles.userNumbers}>
         <View style={styles.alignCenter}>
@@ -271,22 +306,33 @@ class ProfileScreen extends React.Component<Props, State> {
           <Text>stars</Text>
         </View>
         <View style={styles.alignCenter}>
-          <Text>{userData.followersCount}</Text>
+          <Text>{this.state.followersCount}</Text>
           <Text>followers</Text>
         </View>
       </View>
     );
   }
 
+  onFollowOrUnfollow() {
+    const followOrUnfollow = !this.state.isFollowing ? 'follow' : 'unfollow';
+    api
+      .post(`/api/users/${this.state._id}/${followOrUnfollow}`)
+      .then(() => {
+        this.setState({ isFollowing: followOrUnfollow == 'follow' });
+      })
+      .catch(err => {
+        console.error(err);
+      });
+  }
+
   render() {
-    const { userData } = this.props;
     const {
       _id,
       bio,
       displayName,
       editing,
       profilePic,
-      following,
+      isFollowing,
       username,
       isLoading,
     } = this.state;
@@ -360,7 +406,7 @@ class ProfileScreen extends React.Component<Props, State> {
                         shouldAutoFocus
                         loading={isLoading}
                       />
-                      {this.renderUserNumbers(userData)}
+                      {this.renderUserNumbers()}
                       <NBButton
                         transparent
                         bordered
@@ -384,16 +430,16 @@ class ProfileScreen extends React.Component<Props, State> {
                   ) : (
                     <View style={styles.profileRight}>
                       {displayName !== '' && <Text>{displayName}</Text>}
-                      {this.renderUserNumbers(userData)}
+                      {this.renderUserNumbers()}
                       <NBButton
                         transparent
                         bordered
                         small
                         full
                         style={styles.editOrFollowButton}
-                        onPress={() => console.warn('f')}>
+                        onPress={() => this.onFollowOrUnfollow()}>
                         <Text style={styles.editOrFollowButtonText}>
-                          {following ? 'Unfollow' : 'Follow'}
+                          {isFollowing ? 'Unfollow' : 'Follow'}
                         </Text>
                       </NBButton>
                     </View>

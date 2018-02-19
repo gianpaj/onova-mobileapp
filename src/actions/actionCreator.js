@@ -59,12 +59,12 @@ const login = (data: LoginData) => (dispatch: Dispatch) => (
           ...res.data,
           ...{ token: res.token, provider: 'email' },
         };
+        // @FIXME: fix use `userData` key in payload
+        dispatch({ type: LOGIN_SUCCESS, payload: userData });
+        console.log('Call to login took ' + (t1 - t0) + ' milliseconds.');
         // @TODO:1 send analytics login event
         initializeSendBird(userData)
-          .then(() => {
-            // @FIXME: fix use `userData` key in payload
-            dispatch({ type: LOGIN_SUCCESS, payload: userData });
-          })
+          .then(() => {})
           .catch(err => {
             console.warn(err);
             dispatch({ type: LOGIN_FAIL });
@@ -159,23 +159,26 @@ const signup = (data: SignupData) => (dispatch: Dispatch) => (
 );
 
 const getPersonalUserData = (userId: string, options?: any = {}) => (
-  dispatch: Dispatch
-) => (
-  Toast.loading('Loading...', 30),
-  dispatch({ type: GETUSER_PENDING }),
-  api
-    .get(`/api/users/${userId}/personal`, options)
+  dispatch: Dispatch,
+  getState: GetState
+) => {
+  Toast.loading('Loading...', 30);
+  const token = getState().LoginReducer.token;
+  dispatch({ type: GETUSER_PENDING });
+  return api
+    .get(`/api/users/${userId}/personal`, { ...options, token })
     .then((res: UserData) => {
-      console.debug(res);
-      dispatch({ type: GETUSER_SUCCESS, payload: res });
+      return dispatch({ type: GETUSER_SUCCESS, payload: res });
     })
     .catch(err => {
-      dispatch(handleErrorWithAlert({ type: GETUSER_FAIL }, err));
+      return dispatch(handleErrorWithAlert({ type: GETUSER_FAIL }, err));
     })
-    .then(() => Toast.hide())
-);
+    .then(() => Toast.hide());
+};
 
-const getUserData = (userId: string, options?: any = {}) => (dispatch: Dispatch) => (
+const getUserData = (userId: string, options?: any = {}) => (
+  dispatch: Dispatch
+) => (
   Toast.loading('Loading...', 30),
   dispatch({ type: GETUSER_PENDING }),
   api

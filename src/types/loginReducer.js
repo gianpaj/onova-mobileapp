@@ -4,6 +4,7 @@ export type Action = {
   type: string,
   payload?: {
     counter: number,
+    token: string,
   },
 };
 
@@ -17,4 +18,5 @@ export type LoginState = {
   hasError: boolean,
   // errorMsg: string | null,
   fetchLoading: boolean,
+  token: string,
 };

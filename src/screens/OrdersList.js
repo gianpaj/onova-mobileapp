@@ -158,9 +158,10 @@ class OrdersListContainer extends Component<Props, State> {
   }
 
   fetchOrders = (): Promise<Array<Order>> => {
+    const token = this.props.userData.token;
     return new Promise((resolve, reject) => {
       api
-        .get('/api/orders/')
+        .get('/api/orders/', { token })
         .then(res => {
           resolve(res.data);
         })
@@ -170,6 +171,21 @@ class OrdersListContainer extends Component<Props, State> {
         });
     });
   };
+
+  fetchOrder(orderId: string): Promise<Order> {
+    const token = this.props.userData.token;
+
+    return new Promise((resolve, reject) => {
+      api
+        .get(`/api/orders/${orderId}`, { token })
+        .then(res => {
+          resolve(res.data);
+        })
+        .catch(err => {
+          reject(err);
+        });
+    });
+  }
 
   connectToSendBird(): Promise<null | any> {
     return new Promise((resolve, reject) => {
@@ -235,19 +251,6 @@ class OrdersListContainer extends Component<Props, State> {
         .get(`/api/products/${uuid}`)
         .then(res => {
           console.debug(res.data);
-          resolve(res.data);
-        })
-        .catch(err => {
-          reject(err);
-        });
-    });
-  }
-
-  fetchOrder(orderId: string): Promise<Order> {
-    return new Promise((resolve, reject) => {
-      api
-        .get(`/api/orders/${orderId}`)
-        .then(res => {
           resolve(res.data);
         })
         .catch(err => {

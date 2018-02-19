@@ -1,7 +1,6 @@
 // @flow
 
 import axios, { CancelTokenSource } from 'axios';
-import { AsyncStorage } from 'react-native';
 import { API_URL, ENV } from 'react-native-dotenv';
 
 console.warn(`Running in ${ENV} environment`);
@@ -14,6 +13,7 @@ type Options = {
   suppressRedBox: boolean, // If true, no warning is shown on failed request
   cancelToken?: CancelTokenSource,
   timeout?: number,
+  token?: string,
 };
 
 /**
@@ -23,14 +23,14 @@ type Options = {
  * @returns Promise of response body
  */
 export async function get(path: string, options?: Options): Promise<any> {
-  let asiosOptions = { suppressRedBox: true };
+  let axiosOptions = { suppressRedBox: true };
   if (options && !options.suppressRedBox) {
-    asiosOptions = { ...options, suppressRedBox: true };
+    axiosOptions = { ...options, suppressRedBox: true };
   }
   if (options && options.suppressRedBox) {
-    asiosOptions = options;
+    axiosOptions = options;
   }
-  return bodyOf(request('get', path, null, asiosOptions));
+  return bodyOf(request('get', path, null, axiosOptions));
 }
 
 /**
@@ -45,14 +45,14 @@ export async function post(
   body?: any,
   options?: Options
 ): Promise<any> {
-  let asiosOptions = { suppressRedBox: true };
+  let axiosOptions = { suppressRedBox: true };
   if (options && !options.suppressRedBox) {
-    asiosOptions = { ...options, suppressRedBox: true };
+    axiosOptions = { ...options, suppressRedBox: true };
   }
   if (options && options.suppressRedBox) {
-    asiosOptions = options;
+    axiosOptions = options;
   }
-  return bodyOf(request('post', path, body, asiosOptions));
+  return bodyOf(request('post', path, body, axiosOptions));
 }
 
 /**
@@ -67,14 +67,14 @@ export async function put(
   body: any,
   options?: Options
 ): Promise<any> {
-  let asiosOptions = { suppressRedBox: true };
+  let axiosOptions = { suppressRedBox: true };
   if (options && !options.suppressRedBox) {
-    asiosOptions = { ...options, suppressRedBox: true };
+    axiosOptions = { ...options, suppressRedBox: true };
   }
   if (options && options.suppressRedBox) {
-    asiosOptions = options;
+    axiosOptions = options;
   }
-  return bodyOf(request('put', path, body, asiosOptions));
+  return bodyOf(request('put', path, body, axiosOptions));
 }
 
 /**
@@ -84,14 +84,14 @@ export async function put(
  * @returns Promise of response body
  */
 export async function del(path: string, options?: Options): Promise<any> {
-  let asiosOptions = { suppressRedBox: true };
+  let axiosOptions = { suppressRedBox: true };
   if (options && !options.suppressRedBox) {
-    asiosOptions = { ...options, suppressRedBox: true };
+    axiosOptions = { ...options, suppressRedBox: true };
   }
   if (options && options.suppressRedBox) {
-    asiosOptions = options;
+    axiosOptions = options;
   }
-  return bodyOf(request('delete', path, null, asiosOptions));
+  return bodyOf(request('delete', path, null, axiosOptions));
 }
 
 /**
@@ -123,25 +123,20 @@ export async function request(
   }
 }
 
-async function getAuthenticationToken(): Promise<string> {
-  return AsyncStorage.getItem('persist:primary').then(data => {
-    if (!data) return;
-    const object = JSON.parse(JSON.parse(data).data);
-    return object ? object.token : null;
-  });
-}
-
 /**
  * Constructs and fires a HTTP request
  */
 async function sendRequest(method, path, body, options) {
   try {
-    const headers = await getRequestHeaders(body);
+    let headers = getRequestHeaders(body);
+    if (options.token !== undefined) {
+      headers = { ...headers, Authorization: options.token };
+    }
     const defaults = {
       method,
       headers,
       url: path,
-      timeout: options.timeout || TIMEOUT,
+      timeout: options.timeout !== undefined ? options.timeout : TIMEOUT,
       validateStatus: function(status) {
         return status >= 200 && status < 500;
       },
@@ -182,15 +177,10 @@ async function handleResponse(path, response) {
   }
 }
 
-async function getRequestHeaders(body) {
+function getRequestHeaders(body) {
   const headers = body
     ? { Accept: 'application/json', 'Content-Type': 'application/json' }
     : { Accept: 'application/json' };
-
-  const token = await getAuthenticationToken();
-  if (token) {
-    return { ...headers, Authorization: token };
-  }
 
   return headers;
 }

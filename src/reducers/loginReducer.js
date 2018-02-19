@@ -23,6 +23,7 @@ const initialState: LoginState = {
   hasError: false,
   // errorMsg: null,
   fetchLoading: false,
+  token: '',
 };
 
 export default function(
@@ -48,6 +49,7 @@ export default function(
         isLoggedIn: true,
         loading: false,
         data: action.payload,
+        token: action.payload ? action.payload.token : '',
       };
 
     case LOGIN_FAIL:
@@ -59,6 +61,7 @@ export default function(
         loadingGoogleLogin: false,
         data: null,
         hasError: true,
+        token: '',
         // errorMsg: action.payload,
       };
 

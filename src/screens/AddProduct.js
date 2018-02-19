@@ -107,12 +107,12 @@ export class AddProduct extends React.Component<Props, State> {
   selectPhotoTapped = (i: number = 0) => {
     if (this.state.pending) return;
     // console.warn('taking pic');
-    ImagePicker.openPicker({
+    ImagePicker.openCamera({
       width: 700,
       height: 700,
       cropping: true,
+      // multiple: true // with openPicker()
       // loadingLabelText: 'Loading image...', // (ios only)
-      // mediaType: 'photo',
     })
       .then(response => {
         let image = {

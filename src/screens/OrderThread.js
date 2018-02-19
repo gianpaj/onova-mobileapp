@@ -490,11 +490,14 @@ class OrderThreadContainer extends Component<Props, State> {
   */
 
   goToProfile = () => {
-    const user = this.props.navigation.state.params.seller;
+    const { interlocutor } = this.state;
+
+    if (!interlocutor) return;
 
     const navigateToProfile = NavigationActions.navigate({
       routeName: 'profile',
-      params: user,
+      params: interlocutor,
+      key: `profile-${interlocutor.username}`,
     });
 
     this.props.navigation.dispatch(navigateToProfile);

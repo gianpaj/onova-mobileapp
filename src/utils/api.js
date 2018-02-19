@@ -23,13 +23,7 @@ type Options = {
  * @returns Promise of response body
  */
 export async function get(path: string, options?: Options): Promise<any> {
-  let axiosOptions = { suppressRedBox: true };
-  if (options && options.suppressRedBox == undefined) {
-    axiosOptions = { ...options, suppressRedBox: true };
-  }
-  if (options && options.suppressRedBox !== undefined) {
-    axiosOptions = options;
-  }
+  const axiosOptions = getAxiosOptions(options);
   return bodyOf(request('get', path, null, axiosOptions));
 }
 
@@ -45,13 +39,7 @@ export async function post(
   body?: any,
   options?: Options
 ): Promise<any> {
-  let axiosOptions = { suppressRedBox: true };
-  if (options && !options.suppressRedBox) {
-    axiosOptions = { ...options, suppressRedBox: true };
-  }
-  if (options && options.suppressRedBox) {
-    axiosOptions = options;
-  }
+  const axiosOptions = getAxiosOptions(options);
   return bodyOf(request('post', path, body, axiosOptions));
 }
 
@@ -67,13 +55,7 @@ export async function put(
   body: any,
   options?: Options
 ): Promise<any> {
-  let axiosOptions = { suppressRedBox: true };
-  if (options && !options.suppressRedBox) {
-    axiosOptions = { ...options, suppressRedBox: true };
-  }
-  if (options && options.suppressRedBox) {
-    axiosOptions = options;
-  }
+  const axiosOptions = getAxiosOptions(options);
   return bodyOf(request('put', path, body, axiosOptions));
 }
 
@@ -84,14 +66,19 @@ export async function put(
  * @returns Promise of response body
  */
 export async function del(path: string, options?: Options): Promise<any> {
+  const axiosOptions = getAxiosOptions(options);
+  return bodyOf(request('delete', path, null, axiosOptions));
+}
+
+function getAxiosOptions(options): any {
   let axiosOptions = { suppressRedBox: true };
-  if (options && !options.suppressRedBox) {
+  if (options && options.suppressRedBox == undefined) {
     axiosOptions = { ...options, suppressRedBox: true };
   }
-  if (options && options.suppressRedBox) {
+  if (options && options.suppressRedBox !== undefined) {
     axiosOptions = options;
   }
-  return bodyOf(request('delete', path, null, axiosOptions));
+  return axiosOptions;
 }
 
 /**

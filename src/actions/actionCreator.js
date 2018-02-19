@@ -61,7 +61,6 @@ const login = (data: LoginData) => (dispatch: Dispatch) => (
         };
         // @FIXME: fix use `userData` key in payload
         dispatch({ type: LOGIN_SUCCESS, payload: userData });
-        console.log('Call to login took ' + (t1 - t0) + ' milliseconds.');
         // @TODO:1 send analytics login event
         initializeSendBird(userData)
           .then(() => {})

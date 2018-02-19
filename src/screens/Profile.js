@@ -163,7 +163,7 @@ class ProfileScreen extends React.Component<Props, State> {
   }
 
   hasStateDifferedFromProps(nextProps: any, key: string): boolean {
-    return !Object.is(nextProps[key], this.props[key]);
+    return nextProps[key] && !Object.is(nextProps[key], this.props[key]);
   }
 
   onGoToSettings = () => {

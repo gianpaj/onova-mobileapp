@@ -42,6 +42,19 @@ import { validPassword, validShippingAddress } from '../utils/validators';
 import * as api from '../utils/api';
 import * as ui from '../utils/ui';
 
+if (!Object.is) {
+  Object.is = function(x, y) {
+    // SameValue algorithm
+    if (x === y) { // Steps 1-5, 7-10
+      // Steps 6.b-6.e: +0 != -0
+      return x !== 0 || 1 / x === 1 / y;
+    } else {
+      // Step 6.a: NaN == NaN
+      return x !== x && y !== y;
+    }
+  };
+}
+
 import type {
   UserData,
   Dispatch,
@@ -113,7 +126,7 @@ class SettingsContainer extends Component<Props, State> {
   }
 
   hasStateDifferedFromProps(nextProps: any, key: string): boolean {
-    return !Object.is(nextProps[key], this.props[key]);
+    return nextProps[key] && !Object.is(nextProps[key], this.props[key]);
   }
 
   componentDidMount() {
@@ -123,6 +136,9 @@ class SettingsContainer extends Component<Props, State> {
     }
   }
 
+  /**
+   * return true if there are any valid and unsaved changes to be able to save them
+   */
   hasUnsavedChanges = (): boolean => {
     const { userData } = this.props;
     const {

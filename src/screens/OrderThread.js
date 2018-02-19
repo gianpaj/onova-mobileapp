@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 // prettier-ignore
 import {
   ActivityIndicator,
+  Alert,
   Platform,
   StyleSheet,
   Text,
@@ -294,7 +295,16 @@ class OrderThreadContainer extends Component<Props, State> {
         text,
         '',
         (msg: SendBirdMessage, err) => {
-          if (err) return console.error(err);
+          if (err) {
+            // profanity filter
+            if (err.code == 900060) {
+              return Alert.alert(
+                'Message blocked by profanity filter',
+                'If you think this is an error please email us at hello@onova.co'
+              );
+            }
+            return console.error(err);
+          }
 
           // const mymsg = {
           //   _id: msg.messageId,

@@ -98,6 +98,7 @@ export class ImageGridComponent extends React.Component<Props, State> {
     console.debug(item);
     const navigateToProduct = NavigationActions.navigate({
       routeName: 'product',
+      key: `product-${item.uuid}`,
       params: item,
     });
 

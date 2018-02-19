@@ -4,6 +4,7 @@ import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/es/storage';
 import thunk from 'redux-thunk';
+import { createReactNavigationReduxMiddleware } from 'react-navigation-redux-helpers';
 
 import NavigationReducer from './reducers/navigationReducer';
 import loginReducer from './reducers/loginReducer';
@@ -13,6 +14,11 @@ const config1 = {
   storage,
   // blacklist: ['counterString'],
 };
+
+const reactNavigation = createReactNavigationReduxMiddleware(
+  'root',
+  state => state.nav
+);
 
 // We are only persisting the loginReducer
 const LoginReducer = persistReducer(config1, loginReducer);
@@ -28,6 +34,7 @@ if (__DEV__) {
 }
 
 function configureStore() {
+  // $FlowFixMe
   const store = createStore(
     rootReducer,
     __DEV__
@@ -35,7 +42,8 @@ function configureStore() {
         window.__REDUX_DEVTOOLS_EXTENSION__()
       : undefined,
     applyMiddleware(
-      thunk
+      thunk,
+      reactNavigation
       // analytics,
     )
   );

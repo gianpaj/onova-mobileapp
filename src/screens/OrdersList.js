@@ -49,51 +49,6 @@ type State = {
   channelList: Array<any>,
 };
 
-const temp = [
-  {
-    _id: 1,
-    unreadMessageCount: 0,
-    lastMessage: {
-      _id: '1',
-      text: 'hi',
-      createdAt: new Date('2018-01-26T12:00:00'),
-      user: {
-        _id: '1',
-        name: '@john',
-        avatar: '',
-      },
-    },
-  },
-  {
-    _id: 2,
-    unreadMessageCount: 0,
-    lastMessage: {
-      _id: '1',
-      text: 'selling good clothes',
-      createdAt: new Date('2018-01-16T12:00:00'),
-      user: {
-        _id: '1',
-        name: '@marry',
-        avatar: '',
-      },
-    },
-  },
-  {
-    _id: 3,
-    unreadMessageCount: 0,
-    lastMessage: {
-      _id: '1',
-      text: 'who is this Jesus you talk about',
-      createdAt: new Date('0017-01-26T12:00:00'),
-      user: {
-        _id: '1',
-        name: '@joseph',
-        avatar: '',
-      },
-    },
-  },
-];
-
 class OrdersListContainer extends Component<Props, State> {
   sb;
 
@@ -266,6 +221,7 @@ class OrdersListContainer extends Component<Props, State> {
           const navigateToOrderThread = NavigationActions.navigate({
             routeName: 'orderThread',
             params: { item, order },
+            key: `orderThread-${order.id}`,
           });
           this.props.navigation.dispatch(navigateToOrderThread);
         });

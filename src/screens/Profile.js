@@ -185,6 +185,7 @@ class ProfileScreen extends React.Component<Props, State> {
   goToSettings = () => {
     const navigateToSettings = NavigationActions.navigate({
       routeName: 'settings',
+      key: 'settings',
     });
     this.props.navigation.dispatch(navigateToSettings);
     // reset state

@@ -3,7 +3,9 @@
 import React, { Component } from 'react';
 import { BackHandler } from 'react-native';
 import { connect } from 'react-redux';
+// $FlowFixMe
 import { addNavigationHelpers, NavigationActions } from 'react-navigation';
+import { createReduxBoundAddListener } from 'react-navigation-redux-helpers';
 
 import { initializeSendBird } from '../actions/actionCreator';
 import NavigationStack from './navigationStack';
@@ -16,6 +18,8 @@ type Props = {
   isLoggedIn?: boolean,
   userData?: UserData,
 };
+
+const addListener = createReduxBoundAddListener('root');
 
 class AppNavigation extends Component<Props, void> {
   componentDidMount() {
@@ -58,7 +62,9 @@ class AppNavigation extends Component<Props, void> {
         ? navigationState.stateForLoggedIn
         : navigationState.stateForLoggedOut;
     return (
-      <NavigationStack navigation={addNavigationHelpers({ dispatch, state })} />
+      <NavigationStack
+        navigation={addNavigationHelpers({ dispatch, state, addListener })}
+      />
     );
   }
 }

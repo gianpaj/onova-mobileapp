@@ -64,6 +64,7 @@ const navigationReducer = (state: any = initialState, action: Action) => {
         stateForLoggedOut: NavigationStack.router.getStateForAction(
           NavigationActions.navigate({
             routeName: 'signup',
+            key: 'signup',
           }),
           state.stateForLoggedOut
         ),

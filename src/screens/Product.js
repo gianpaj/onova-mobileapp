@@ -129,7 +129,7 @@ export class ProductContainer extends React.Component<Props, State> {
   // }
 
   componentWillMount() {
-    const { params } = this.props.navigation.state;
+    const { params }: { params: ProductType } = this.props.navigation.state;
     let uuid;
 
     // for development
@@ -169,15 +169,16 @@ export class ProductContainer extends React.Component<Props, State> {
       const navigateToProfile = NavigationActions.navigate({
         routeName: 'profile',
         params: user,
+        key: `profile-${user.username}`,
       });
 
       this.props.navigation.dispatch(navigateToProfile);
     }
   };
 
-  isProductForSale(product: ProductType): Promise<boolean> {
+  isProductForSale(uuid: string): Promise<boolean> {
     return new Promise((resolve, reject) => {
-      this._getProduct(product.uuid)
+      this._getProduct(uuid)
         .then(data => {
           if (!data) return reject();
           if (data.status == 'forsale') {
@@ -209,7 +210,8 @@ export class ProductContainer extends React.Component<Props, State> {
   }
 
   onPressBuy = () => {
-    if (this.state.loadingBuy || !this.state.item) return;
+    const { item } = this.state;
+    if (this.state.loadingBuy || !item) return;
 
     // check if product is still `forsale`
     this.setState({ loadingBuy: true });
@@ -220,7 +222,7 @@ export class ProductContainer extends React.Component<Props, State> {
           throw Error('You need to validate your account...');
         }
       })
-      .then(() => this.isProductForSale(this.state.item))
+      .then(() => this.isProductForSale(item.uuid))
       .then(isForSale => {
         // @TODO: if product status is 'reserved' say you can try again later...
         if (!isForSale) {

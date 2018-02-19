@@ -1,6 +1,7 @@
 // @flow
 
 import React from 'react';
+import { connect } from 'react-redux';
 import {
   // Dimensions,
   // Image,
@@ -40,6 +41,7 @@ import colors from '../config/colors';
 import settings from '../config/settings';
 import * as api from '../utils/api';
 import * as ui from '../utils/ui';
+import type { UserData, ReduxState } from '../types';
 
 const category_radio_grp_1 = [
   { label: 'Clothes', value: 0 },
@@ -56,6 +58,7 @@ const category_radio_grp_2 = [
 type Props = {
   isFocused: boolean,
   navigation: NavigationScreenProp<*>,
+  userData: UserData,
 };
 
 type State = {
@@ -68,7 +71,7 @@ type State = {
   pending: boolean,
 };
 
-export class AddProduct extends React.Component<Props, State> {
+export class AddProductScreen extends React.Component<Props, State> {
   static navigationOptions = (props: any) => {
     return {
       // navigate to the screen instead of showing as a normal tab screen
@@ -153,7 +156,7 @@ export class AddProduct extends React.Component<Props, State> {
       // $FlowFixMe
       formData.append('photos', {
         uri: image.url,
-        // type: 'image/jpeg',
+        type: 'image/jpeg',
         name: 'image' + i + '.jpg',
       });
     });
@@ -168,8 +171,10 @@ export class AddProduct extends React.Component<Props, State> {
     //     const percentCompleted = Math.round( (progressEvent.loaded * 100) / progressEvent.total );
     //   },
     // };
+
+    const { token } = this.props.userData;
     api
-      .post('/api/products', formData /*, config */)
+      .post('/api/products', formData, { token })
       .then(res => {
         console.log(res);
         this.closeModal();
@@ -259,6 +264,7 @@ export class AddProduct extends React.Component<Props, State> {
             <NBButton
               transparent
               disabled={!this.addEnabled()}
+              // eslint-disable-next-line
               style={{ backgroundColor: 'transparent' }}
               onPress={this.addItem}>
               <Icon
@@ -431,3 +437,9 @@ const styles = StyleSheet.create({
     width: 60,
   },
 });
+
+const mapStateToProps: any = (state: ReduxState) => ({
+  userData: state.LoginReducer.data,
+});
+
+export const AddProduct = connect(mapStateToProps)(AddProductScreen);

@@ -9,6 +9,7 @@ import {
   SIGNUP,
   BACK,
 } from '../actions/actionTypes';
+import type { Action } from '../types/navigationReducer';
 
 const ActionForLoggedOut = NavigationStack.router.getActionForPathAndParams(
   'login'
@@ -29,7 +30,7 @@ const stateForLoggedIn = NavigationStack.router.getStateForAction(
 
 const initialState = { stateForLoggedOut, stateForLoggedIn };
 
-const navigationReducer = (state: any = initialState, action: Function) => {
+const navigationReducer = (state: any = initialState, action: Action) => {
   switch (action.type) {
     case '@@redux/INIT':
       return {

@@ -166,7 +166,6 @@ class OrdersListContainer extends Component<Props, State> {
           resolve(res.data);
         })
         .catch(err => {
-          console.error(err);
           reject(err);
         });
     });
@@ -337,7 +336,8 @@ class OrdersListContainer extends Component<Props, State> {
           isRefreshing: false,
         });
       })
-      .catch(() => {
+      .catch(err => {
+        console.error(err);
         this.setState({
           hasError: true,
           isRefreshing: false,

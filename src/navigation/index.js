@@ -3,11 +3,12 @@
 import React, { Component } from 'react';
 import { BackHandler } from 'react-native';
 import { connect } from 'react-redux';
-import { addNavigationHelpers, NavigationActions, type NavigationState } from 'react-navigation';
+import { addNavigationHelpers, NavigationActions } from 'react-navigation';
 
 import { initializeSendBird } from '../actions/actionCreator';
 import NavigationStack from './navigationStack';
 import type { Dispatch, UserData, ReduxState } from '../types';
+import type { NavigationState } from '../types/navigationReducer';
 
 type Props = {
   dispatch?: Dispatch,
@@ -52,9 +53,10 @@ class AppNavigation extends Component<Props, void> {
 
   render() {
     const { dispatch, navigationState, isLoggedIn } = this.props;
-    const state = isLoggedIn
-      ? navigationState.stateForLoggedIn
-      : navigationState.stateForLoggedOut;
+    const state =
+      isLoggedIn == true
+        ? navigationState.stateForLoggedIn
+        : navigationState.stateForLoggedOut;
     return (
       <NavigationStack navigation={addNavigationHelpers({ dispatch, state })} />
     );

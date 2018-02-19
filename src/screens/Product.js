@@ -32,6 +32,7 @@ import { MediaView } from '../components';
 
 import colors from '../config/colors';
 import * as api from '../utils/api';
+import * as ui from '../utils/ui';
 import type { Product as ProductType, UserData, ReduxState } from '../types';
 
 type Props = {
@@ -44,12 +45,9 @@ type Props = {
 type State = {
   loading: boolean,
   loadingBuy: boolean,
-  item: ProductType,
+  item: ProductType | {},
   likeAnimValue: number,
 };
-
-// @TODO: if Product is mine Delete, Edit
-const BUTTONS = ['Report', 'Cancel'];
 
 // const isIOS = Platform.OS === 'ios';
 
@@ -64,15 +62,29 @@ export class ProductContainer extends React.Component<Props, State> {
   };
 
   showActionSheet = () => {
+    let BUTTONS;
+    if (this.isMyProduct()) {
+      BUTTONS = ['Delete', 'Cancel'];
+    } else {
+      BUTTONS = ['Report', 'Cancel'];
+    }
+
     ActionSheet.show(
       {
         options: BUTTONS,
-        destructiveButtonIndex: BUTTONS.indexOf('Report'),
+        destructiveButtonIndex: 0,
         cancelButtonIndex: BUTTONS.indexOf('Cancel'),
       },
       buttonIndex => {
         switch (buttonIndex) {
           case BUTTONS.indexOf('Report'):
+            alert('report me like those french girls 🎨');
+            // report action
+            break;
+          case BUTTONS.indexOf('Delete'):
+            ui.showConfirmAlert('Confirm deletion?', '', () => {
+              this.deleteItem();
+            });
             // report action
             break;
           // case BUTTONS.indexOf('Share'):
@@ -85,6 +97,17 @@ export class ProductContainer extends React.Component<Props, State> {
       }
     );
   };
+
+  deleteItem() {
+    const { uuid } = this.props.navigation.state.params;
+    const { token } = this.props.userData;
+    api
+      .del(`/api/products/${uuid}`, { token })
+      .then(() => {
+        this.props.navigation.goBack();
+      })
+      .catch(e => console.error(e));
+  }
 
   // showShareActionSheet() {
   //   Share.share({

@@ -108,8 +108,9 @@ class ProfileScreen extends React.Component<Props, State> {
         .catch(err => {
           console.error(err);
         });
+      const { token } = this.props.userData;
       api
-        .get(`/api/users/${params._id}/follow`)
+        .get(`/api/users/${params._id}/follow`, { token })
         .then(res => {
           const { following } = res.data;
           if (following == params._id) {
@@ -314,9 +315,10 @@ class ProfileScreen extends React.Component<Props, State> {
   }
 
   onFollowOrUnfollow() {
+    const token = this.props.userData.token;
     const followOrUnfollow = !this.state.isFollowing ? 'follow' : 'unfollow';
     api
-      .post(`/api/users/${this.state._id}/${followOrUnfollow}`)
+      .post(`/api/users/${this.state._id}/${followOrUnfollow}`, {}, { token })
       .then(() => {
         this.setState({ isFollowing: followOrUnfollow == 'follow' });
       })

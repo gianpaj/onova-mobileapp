@@ -10,7 +10,7 @@ axios.defaults.baseURL = API_URL;
 const TIMEOUT = 4000;
 
 type Options = {
-  suppressRedBox: boolean, // If true, no warning is shown on failed request
+  suppressRedBox?: boolean, // If true, no warning is shown on failed request
   cancelToken?: CancelTokenSource,
   timeout?: number,
   token?: string,
@@ -24,10 +24,10 @@ type Options = {
  */
 export async function get(path: string, options?: Options): Promise<any> {
   let axiosOptions = { suppressRedBox: true };
-  if (options && !options.suppressRedBox) {
+  if (options && options.suppressRedBox == undefined) {
     axiosOptions = { ...options, suppressRedBox: true };
   }
-  if (options && options.suppressRedBox) {
+  if (options && options.suppressRedBox !== undefined) {
     axiosOptions = options;
   }
   return bodyOf(request('get', path, null, axiosOptions));
@@ -177,7 +177,7 @@ async function handleResponse(path, response) {
   }
 }
 
-function getRequestHeaders(body) {
+function getRequestHeaders(body): Headers {
   const headers = body
     ? { Accept: 'application/json', 'Content-Type': 'application/json' }
     : { Accept: 'application/json' };
@@ -185,7 +185,7 @@ function getRequestHeaders(body) {
   return headers;
 }
 
-async function bodyOf(requestPromise) {
+async function bodyOf(requestPromise): Promise<any> {
   try {
     const response = await requestPromise;
     return response.body;
@@ -215,4 +215,9 @@ function logError(error, endpoint, method) {
 export type APIError = {
   status: number,
   message: string,
+};
+
+export type Headers = {
+  Accept: string,
+  'Content-Type'?: string,
 };

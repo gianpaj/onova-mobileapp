@@ -158,7 +158,7 @@ class OrdersListContainer extends Component<Props, State> {
   }
 
   fetchOrders = (): Promise<Array<Order>> => {
-    const token = this.props.userData.token;
+    const { token } = this.props.userData;
     return new Promise((resolve, reject) => {
       api
         .get('/api/orders/', { token })
@@ -173,7 +173,7 @@ class OrdersListContainer extends Component<Props, State> {
   };
 
   fetchOrder(orderId: string): Promise<Order> {
-    const token = this.props.userData.token;
+    const { token } = this.props.userData;
 
     return new Promise((resolve, reject) => {
       api

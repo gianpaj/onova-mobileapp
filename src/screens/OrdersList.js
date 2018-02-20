@@ -7,29 +7,30 @@ import {
   ActivityIndicator,
   StyleSheet,
   FlatList,
-  Platform,
   View,
   Text,
-  TouchableOpacity,
+  TouchableHighlight,
   RefreshControl,
 } from 'react-native';
+// prettier-ignore
 import {
   Body,
-  Button as NBButton,
   Container,
   Header,
-  Icon as NBIcon,
   Left,
   Right,
   Title,
 } from 'native-base';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import { NavigationActions } from 'react-navigation';
 import SendBird from 'sendbird';
 import type { NavigationScreenProp } from 'react-navigation';
-
-import { format, differenceInHours, distanceInWordsToNow } from 'date-fns';
+// $FlowFixMe
+import {
+  format,
+  differenceInHours,
+  distanceInWordsToNow,
+  isYesterday,
+} from 'date-fns';
 
 import type { UserData, ReduxState, Order, Product } from '../types';
 import colors from '../config/colors';
@@ -94,21 +95,23 @@ class OrdersListContainer extends Component<Props, State> {
 
   getChannels(): Promise<Array<any>> {
     return new Promise((resolve, reject) => {
-      return this.fetchChannelList().then(channels => {
-        let channelsWithMeta = [];
+      return this.fetchChannelList()
+        .then(channels => {
+          let channelsWithMeta = [];
 
-        var todo = channels.length;
-        if (!todo) return resolve([]);
+          var todo = channels.length;
+          if (!todo) return resolve([]);
 
-        channels.forEach(c => {
-          c.getMetaData(['orderId'], (res, err) => {
-            if (err) return reject(err);
-            c.orderId = res.orderId;
-            channelsWithMeta.push(c);
-            if (--todo === 0) resolve(channelsWithMeta);
+          channels.forEach(c => {
+            c.getMetaData(['orderId'], (res, err) => {
+              if (err) return reject(err);
+              c.orderId = res.orderId;
+              channelsWithMeta.push(c);
+              if (--todo === 0) resolve(channelsWithMeta);
+            });
           });
-        });
-      });
+        })
+        .catch(e => reject(e));
     });
   }
 
@@ -229,38 +232,50 @@ class OrdersListContainer extends Component<Props, State> {
       .catch(e => console.error(e));
   };
 
-  _renderItem = (item: any) => {
-    const { lastMessage } = item.item;
+  formatTime(createdAt: Date): string {
+    if (differenceInHours(new Date(), createdAt) < 24) {
+      return format(createdAt, 'HH:mm');
+    }
+    if (isYesterday(createdAt)) {
+      return 'Yesterday';
+    } else {
+      return format(createdAt, 'D MMM');
+    }
+  }
+
+  _renderItem = ({ item }) => {
+    console.log(item);
+    const { lastMessage } = item;
+
+    const interlocutor = item.members.find(
+      m => m.userId !== this.props.userData._id
+    ).nickname;
     return (
-      <TouchableOpacity onPress={() => this.goToOrderThread(item.item)}>
+      <TouchableHighlight
+        underlayColor={colors.grey4}
+        onPress={() => this.goToOrderThread(item)}>
         <View style={st.itemContainer}>
           <Avatar
             // style={styles.avatarContainer}
             size={'verySmall'}
             withBorder
             uri={''}
-            placeholderText={lastMessage._sender.nickname}
+            placeholderText={interlocutor}
           />
           <View style={[st.flex1, st.content]}>
             <View style={st.contentHeader}>
               {/* displayName */}
-              <Text style={st.name}>{lastMessage._sender.nickname}</Text>
-              {differenceInHours(new Date(), lastMessage.createdAt) < 24 ? (
-                <Text style={st.datetime}>
-                  {distanceInWordsToNow(lastMessage.createdAt)}
-                </Text>
-              ) : (
-                <Text style={st.datetime}>
-                  {format(lastMessage.createdAt, 'D MMM')}
-                </Text>
-              )}
+              <Text style={st.name}>{interlocutor}</Text>
+              <Text style={st.datetime}>
+                {this.formatTime(lastMessage.createdAt)}
+              </Text>
             </View>
             <Text numberOfLines={2} rkType="primary3 mediumLine">
               {lastMessage.message}
             </Text>
           </View>
         </View>
-      </TouchableOpacity>
+      </TouchableHighlight>
     );
   };
 
@@ -289,16 +304,15 @@ class OrdersListContainer extends Component<Props, State> {
       .then(ordersAndChats => {
         this.setState({
           channelList: ordersAndChats,
-          isRefreshing: false,
         });
       })
       .catch(err => {
         console.error(err);
         this.setState({
           hasError: true,
-          isRefreshing: false,
         });
-      });
+      })
+      .then(() => this.setState({ isRefreshing: false }));
   };
 
   render() {

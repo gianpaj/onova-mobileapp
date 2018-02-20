@@ -2,7 +2,6 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-// prettier-ignore
 import {
   ActivityIndicator,
   StyleSheet,
@@ -29,7 +28,6 @@ import {
 import { NavigationActions } from 'react-navigation';
 import type { NavigationScreenProp } from 'react-navigation';
 // import { CardView, LiteCreditCardInput } from 'react-native-credit-card-input';
-// $FlowFixMe
 import BTClient from 'react-native-braintree-xplat';
 // import { Toast } from 'antd-mobile';
 import axios from 'axios';

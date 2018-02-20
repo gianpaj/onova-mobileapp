@@ -75,7 +75,7 @@ type State = {
   password: string,
   username: string,
   usernameError: boolean,
-  shippingAddress: ShippingAddress,
+  shippingAddress: ShippingAddress | {},
   paymentInfo: PaymentInfo,
 };
 
@@ -112,15 +112,15 @@ class SettingsContainer extends Component<Props, State> {
 
     const { emailAddress, shippingAddress, username } = nextProps.userData;
 
-    if (this.hasStateDifferedFromProps(nextProps, 'shippingAddress')) {
+    if (this.hasStateDifferedFromProps(nextProps.userData, 'shippingAddress')) {
       this.setState({ shippingAddress });
     }
 
-    if (this.hasStateDifferedFromProps(nextProps, 'username')) {
+    if (this.hasStateDifferedFromProps(nextProps.userData, 'username')) {
       this.setState({ username });
     }
 
-    if (this.hasStateDifferedFromProps(nextProps, 'emailAddress')) {
+    if (this.hasStateDifferedFromProps(nextProps.userData, 'emailAddress')) {
       this.setState({ emailAddress });
     }
   }
@@ -412,7 +412,7 @@ class SettingsContainer extends Component<Props, State> {
               editable={!pending}
               inputStyle={styles.input}
               onChangeText={t => this.onUserChange(t)}
-              placeholder="Change your username"
+              placeholder="Edit your username"
               value={username}
               clearButtonMode="while-editing"
               shake={usernameError}
@@ -425,7 +425,7 @@ class SettingsContainer extends Component<Props, State> {
               editable={!pending}
               inputStyle={styles.input}
               onChangeText={t => this.setState({ emailAddress: t })}
-              placeholder="Change your email address. Requires email verification"
+              placeholder="Edit your email address (Requires re-verification)"
               value={emailAddress}
               clearButtonMode="while-editing"
             />

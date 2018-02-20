@@ -297,7 +297,7 @@ export class ProductContainer extends React.Component<Props, State> {
                   <Text style={styles.location}>{item.location}</Text>
                 </View>
                 <View style={styles.flex} />
-                <Text style={styles.price}>{item.price}</Text>
+                <Text style={styles.price}>{item.price} {item.currency}</Text>
               </View>
               <MediaView source={item.photoURIs} />
               <View style={styles.bottomSection}>
@@ -380,7 +380,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   price: {
-    lineHeight: 60,
+    lineHeight: 44,
     marginRight: 15,
   },
   bottomSection: {

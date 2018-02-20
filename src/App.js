@@ -88,6 +88,7 @@ export default class App extends React.Component<*, State> {
       <Provider store={store}>
         <PersistGate loading={this._renderLoading()} persistor={persistor}>
           <Root>
+            {/* $FlowFixMe */}
             <AppNavigation />
           </Root>
         </PersistGate>

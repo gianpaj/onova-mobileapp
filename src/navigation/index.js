@@ -3,7 +3,6 @@
 import React, { Component } from 'react';
 import { BackHandler } from 'react-native';
 import { connect } from 'react-redux';
-// $FlowFixMe
 import { addNavigationHelpers, NavigationActions } from 'react-navigation';
 import { createReduxBoundAddListener } from 'react-navigation-redux-helpers';
 
@@ -13,9 +12,9 @@ import type { Dispatch, UserData, ReduxState } from '../types';
 import type { NavigationState } from '../types/navigationReducer';
 
 type Props = {
-  dispatch?: Dispatch,
-  navigationState?: NavigationState,
-  isLoggedIn?: boolean,
+  dispatch: Dispatch,
+  navigationState: NavigationState,
+  isLoggedIn: boolean,
   userData?: UserData,
 };
 
@@ -28,7 +27,7 @@ class AppNavigation extends Component<Props, void> {
     // @TODO: use redux with
     // this.setState({ rehydrated: true });
 
-    if (isLoggedIn === true && userData) {
+    if (isLoggedIn && userData) {
       initializeSendBird(userData)
         .then(() => {
           console.debug('sendbird initialized');
@@ -47,10 +46,10 @@ class AppNavigation extends Component<Props, void> {
 
   onBackPress = () => {
     const { dispatch, navigationState } = this.props;
-    if (navigationState.stateForLoggedIn.index <= 1) {
-      BackHandler.exitApp();
-      return;
-    }
+    console.log(navigationState.stateForLoggedIn);
+    // if (navigationState.stateForLoggedIn.index === 0) {
+    //   return false;
+    // }
     dispatch(NavigationActions.back());
     return true;
   };

@@ -36,10 +36,11 @@ import KeyboardManager from 'react-native-keyboard-manager';
 import Send from '../components/Send';
 import type {
   Message,
+  Order,
   Product,
+  ReduxState,
   SendBirdMessage,
   UserData,
-  ReduxState,
 } from '../types';
 import colors from '../config/colors';
 import settings from '../config/settings';
@@ -78,6 +79,7 @@ type State = {
   messages: Array<Message> | null,
   interlocutor: UserData | null,
   product: Product | {},
+  product: Order | {},
 };
 
 const tempMessages = [
@@ -101,6 +103,7 @@ class OrderThreadContainer extends Component<Props, State> {
     messages: null,
     interlocutor: null,
     product: {},
+    order: {},
   };
 
   _getInterlucutorUserData(userId: string): Promise<null | any> {
@@ -126,6 +129,23 @@ class OrderThreadContainer extends Component<Props, State> {
           const data = res.data;
           console.debug(res.data);
           this.setState({ product: data });
+          resolve();
+        })
+        .catch(err => {
+          reject(err);
+        });
+    });
+  }
+
+  fetchOrder(uuid: string): Promise<Order> {
+    const { token } = this.props.userData;
+    return new Promise((resolve, reject) => {
+      return api
+        .get(`/api/orders/${uuid}`, { token })
+        .then(res => {
+          const data = res.data;
+          console.debug(res.data);
+          this.setState({ order: data });
           resolve();
         })
         .catch(err => {
@@ -177,7 +197,7 @@ class OrderThreadContainer extends Component<Props, State> {
     const Promises = [];
     Promises.push(this._getInterlucutorUserData(userId));
     Promises.push(this.fetchProduct(productId));
-    // Promises.push(this._getOrder(orderId));
+    Promises.push(this.fetchOrder(orderId));
     Promises.push(this.connectToSendBird(orderId));
 
     Promise.all(Promises)
@@ -505,7 +525,7 @@ class OrderThreadContainer extends Component<Props, State> {
 
   render() {
     const { navigation, userData } = this.props;
-    const { messages, isLoading, interlocutor, product } = this.state;
+    const { messages, isLoading, interlocutor, product, order } = this.state;
 
     return (
       <Container style={st.flex1}>
@@ -541,7 +561,18 @@ class OrderThreadContainer extends Component<Props, State> {
           ) : (
             <View style={st.flex1}>
               <CardItem header>
-                <Text>{product.description}</Text>
+                <Text numberOfLines={1} style={{ width: '50%', top: -1.5 }}>
+                  description: {product.description}
+                </Text>
+                <View style={st.row}>
+                  <Text>order status: {order.status}</Text>
+                  <NBButton
+                    transparent
+                    style={{ height: 20 }}
+                    onPress={() => alert('code me like those french girls 🎨')}>
+                    <NBIcon name="ios-information-circle-outline" />
+                  </NBButton>
+                </View>
               </CardItem>
               <GiftedChat
                 messages={messages}
@@ -585,6 +616,9 @@ const st = StyleSheet.create({
   },
   flex1: {
     flex: 1,
+  },
+  row: {
+    flexDirection: 'row',
   },
   send: {
     marginBottom: 5,

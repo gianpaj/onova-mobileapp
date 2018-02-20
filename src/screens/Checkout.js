@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import {
   ActivityIndicator,
   StyleSheet,
+  Platform,
   Text,
   View,
 } from 'react-native';
@@ -65,9 +66,9 @@ type State = {
   password: string,
   username: string,
   usernameError: boolean,
-  shippingAddress: ShippingAddress,
+  shippingAddress: ShippingAddress | {},
   paymentInfo: PaymentInfo,
-  item: Product,
+  item: Product | {},
   isLoading: boolean,
 };
 
@@ -116,12 +117,14 @@ class CheckoutContainer extends Component<Props, State> {
       isLoading: false,
     });
 
-    // BTClient.setup(settings.BRAINTREE_TOKENIZATION_KEY);
-    // only IOS
-    BTClient.setupWithURLScheme(
-      settings.BRAINTREE_TOKENIZATION_KEY,
-      'com.onova.app.payments'
-    );
+    if (Platform.OS === 'ios') {
+      BTClient.setupWithURLScheme(
+        settings.BRAINTREE_TOKENIZATION_KEY,
+        'com.onova.app.payments'
+      );
+    } else {
+      BTClient.setup(settings.BRAINTREE_TOKENIZATION_KEY);
+    }
   }
 
   componentWillUnmount() {
@@ -184,6 +187,7 @@ class CheckoutContainer extends Component<Props, State> {
             item: self.state.item,
             order,
           },
+          key: `orderThread-${self.state.item._id}`,
         });
         this.props.navigation.dispatch(navigateToCheckout);
       })
@@ -221,9 +225,10 @@ class CheckoutContainer extends Component<Props, State> {
   };
 
   createOrder(item: Product): Promise<Order> {
+    const { token } = this.props.userData;
     return new Promise((resolve, reject) => {
       api
-        .post('/api/orders', { product: item.uuid })
+        .post('/api/orders', { product: item.uuid }, { token })
         .then(res => {
           resolve(res.data);
         })

@@ -39,12 +39,12 @@ export type UserData = {
   username: string,
   followersCount: number,
   followingCount: number,
-  paymentInfo: {
+  paymentInfo?: {
     last_four: string,
     exp_month: string,
     exp_year: string,
   },
-  shippingAddress: ShippingAddress,
+  shippingAddress?: ShippingAddress,
 };
 
 export type PaymentInfo =

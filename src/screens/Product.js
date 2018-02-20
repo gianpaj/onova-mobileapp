@@ -23,7 +23,6 @@ import {
   Right,
 } from 'native-base';
 import { Button } from 'react-native-elements';
-// $FlowFixMe
 import LottieView from 'lottie-react-native';
 import { NavigationActions } from 'react-navigation';
 import type { NavigationScreenProp } from 'react-navigation';
@@ -230,9 +229,10 @@ export class ProductContainer extends React.Component<Props, State> {
         } else {
           const navigateToCheckout = NavigationActions.navigate({
             routeName: 'checkout',
-            params: this.state.item,
+            params: item,
+            key: `checkout-${item.uuid}`,
           });
-          return this.props.navigation.dispatch(navigateToCheckout);
+          this.props.navigation.dispatch(navigateToCheckout);
         }
       })
       .catch(err => {

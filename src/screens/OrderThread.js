@@ -301,7 +301,7 @@ class OrderThreadContainer extends Component<Props, State> {
   }
 
   componentWillUnmount() {
-    this.sb.disconnect(() => console.debug('SendBird disconnected'));
+    // this.sb.disconnect(() => console.debug('SendBird disconnected'));
     this.sb.removeChannelHandler('ChatView');
     this.sb.removeConnectionHandler('ChatView');
   }

@@ -170,7 +170,7 @@ class OrdersListContainer extends Component<Props, State> {
     });
   }
 
-  fetchChannelList = () => {
+  fetchChannelList = (): Promise<any> => {
     return new Promise((resolve, reject) => {
       const listQuery = this.sb.GroupChannel.createMyGroupChannelListQuery();
       listQuery.includeEmpty = true;
@@ -184,7 +184,7 @@ class OrdersListContainer extends Component<Props, State> {
   };
 
   componentWillUnmount() {
-    // this.sb.disconnect(() => console.debug('SendBird disconnected'));
+    this.sb.disconnect(() => console.debug('SendBird disconnected'));
     this.sb.removeChannelHandler('ConnectionHandlerInList');
   }
 

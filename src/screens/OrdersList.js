@@ -223,14 +223,19 @@ class OrdersListContainer extends Component<Props, State> {
     console.log(item);
     this.fetchOrder(item.orderId)
       .then((order: Order) => {
-        return this.fetchProduct(order.product.uuid).then((item: Product) => {
-          const navigateToOrderThread = NavigationActions.navigate({
-            routeName: 'orderThread',
-            params: { item, order },
-            key: `orderThread-${order.id}`,
-          });
-          this.props.navigation.dispatch(navigateToOrderThread);
+        const interlocutorId = item.members.find(
+          m => m.userId !== this.props.userData._id
+        ).userId;
+        const navigateToOrderThread = NavigationActions.navigate({
+          routeName: 'orderThread',
+          params: {
+            productId: order.product.uuid,
+            orderId: order.id,
+            userId: interlocutorId,
+          },
+          key: `orderThread-${order.id}`,
         });
+        this.props.navigation.dispatch(navigateToOrderThread);
       })
       .catch(e => console.error(e));
   };
@@ -247,7 +252,6 @@ class OrdersListContainer extends Component<Props, State> {
   }
 
   _renderItem = ({ item }) => {
-    console.log(item);
     const { lastMessage } = item;
 
     const interlocutor = item.members.find(

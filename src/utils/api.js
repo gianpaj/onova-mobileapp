@@ -150,8 +150,11 @@ async function handleResponse(path, response) {
     if (status >= 400) {
       // const error = new Error({status: status, message: message});
 
-      // throw error;
-      throw { status, message: response.data.message };
+      let error = { status, message: response.data.message };
+      if (Object.keys(response.data).length > 1) {
+        error = { ...error, data: response.data };
+      }
+      throw error;
     }
 
     return {

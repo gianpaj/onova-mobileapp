@@ -8,13 +8,16 @@ import type {
 } from './navigationReducer';
 
 export type Product = {
-  description: string,
+  categoryIds: Array<number>,
+  // comments: Array<MongoId>, // optional
   currency: string,
-  location: string,
+  description: string,
   photoURIs: Array<string>,
   price: string,
-  seller: any,
+  seller: UserData,
   status: string,
+  tags?: Array<string>,
+  typeIds?: Array<number>,
   uuid: string,
 };
 

@@ -23,16 +23,13 @@ import {
   Right,
   Title,
 } from 'native-base';
-// import Icon from 'react-native-vector-icons/MaterialIcons';
 // import { FormInput, FormLabel } from 'react-native-elements';
 import { NavigationActions } from 'react-navigation';
 import type { NavigationScreenProp } from 'react-navigation';
 // import { CardView, LiteCreditCardInput } from 'react-native-credit-card-input';
 import BTClient from 'react-native-braintree-xplat';
-// import { Toast } from 'antd-mobile';
 import axios from 'axios';
 import type { CancelTokenSource } from 'axios';
-// import update from 'immutability-helper';
 
 import { Accordion, HR } from '../components';
 
@@ -60,28 +57,30 @@ type Props = {
 
 type State = {
   emailAddress: string,
-  pending: boolean,
+  isLoading: boolean,
+  item: Product | {},
+  order: Order | {},
   password: string,
+  paymentInfo: PaymentInfo,
+  pending: boolean,
+  shippingAddress: ShippingAddress | {},
   username: string,
   usernameError: boolean,
-  shippingAddress: ShippingAddress | {},
-  paymentInfo: PaymentInfo,
-  item: Product | {},
-  isLoading: boolean,
 };
 
 class CheckoutContainer extends Component<Props, State> {
   cancelToken: CancelTokenSource;
   state = {
     emailAddress: '',
-    pending: false,
+    isLoading: false,
+    item: {},
+    order: {},
     password: '',
     paymentInfo: {},
+    pending: false,
     shippingAddress: {},
     username: '',
     usernameError: false,
-    isLoading: false,
-    item: {},
   };
 
   componentWillMount() {
@@ -110,9 +109,12 @@ class CheckoutContainer extends Component<Props, State> {
       };
     }
 
+    this.createOrder(item.uuid)
+      .then((order: Order) => {
     this.setState({
       item,
       isLoading: false,
+          order,
     });
 
     if (Platform.OS === 'ios') {
@@ -123,6 +125,24 @@ class CheckoutContainer extends Component<Props, State> {
     } else {
       BTClient.setup(settings.BRAINTREE_TOKENIZATION_KEY);
     }
+      })
+      .catch(err => {
+        if (err.message == 'Duplicate order' && err.data.orderId) {
+          // $FlowFixMe
+          return this.props.navigation.dispatch({
+            key: `orderThread-${item.uuid}`,
+            type: 'ReplaceCurrentScreen',
+            routeName: 'orderThread',
+            params: {
+              productId: item.uuid,
+              orderId: err.data.orderId,
+              userId: item.seller.id,
+            },
+          });
+        } else {
+          console.error(err);
+        }
+      });
   }
 
   componentWillUnmount() {
@@ -172,20 +192,19 @@ class CheckoutContainer extends Component<Props, State> {
     BTClient.showPayPalViewController()
       // BTClient.showPaymentViewController(options)
       .then(nonce => {
-        //payment succeeded, pass nonce to server
+        // @TODO: payment succeeded, pass nonce to server
         console.warn(nonce);
-
-        return this.createOrder(self.state.item);
       })
-      .then(order => {
+      .then(() => {
+        const { order, item } = self.state;
         console.log(order);
         const navigateToCheckout = NavigationActions.navigate({
           routeName: 'orderThread',
           params: {
-            item: self.state.item,
+            item: item,
             order,
           },
-          key: `orderThread-${self.state.item._id}`,
+          key: `orderThread-${item._id}`,
         });
         this.props.navigation.dispatch(navigateToCheckout);
       })
@@ -222,11 +241,20 @@ class CheckoutContainer extends Component<Props, State> {
     //   });
   };
 
-  createOrder(item: Product): Promise<Order> {
+  createOrder(uuid: string): Promise<Order> {
     const { token } = this.props.userData;
     return new Promise((resolve, reject) => {
       api
-        .post('/api/orders', { product: item.uuid }, { token })
+        .post('/api/orders', { product: uuid }, { token })
+        .then(res => {
+          resolve(res.data);
+        })
+        .catch(err => {
+          reject(err);
+        });
+    });
+  }
+
         .then(res => {
           resolve(res.data);
         })
@@ -266,12 +294,7 @@ class CheckoutContainer extends Component<Props, State> {
 
   render() {
     // const { userData } = this.props;
-    const {
-      pending,
-      shippingAddress,
-      item,
-      isLoading,
-    } = this.state;
+    const { pending, shippingAddress, item, isLoading } = this.state;
 
     return (
       <Container>

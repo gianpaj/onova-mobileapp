@@ -174,7 +174,6 @@ class OrderThreadContainer extends Component<Props, State> {
 
     console.log(params);
 
-    let userId = '';
     let orderId = '';
     let productId = '';
     // for development
@@ -183,19 +182,17 @@ class OrderThreadContainer extends Component<Props, State> {
       // productId = '';
 
       this.getTempUserId('firstperson').then(userId => {
-        this.initialise(userId, orderId, productId);
+        this.initialise(orderId, productId, userId);
       });
-    } else if (params && params.item.seller) {
+    } else {
       // coming from Checkout or OrdersList
+      const { orderId, productId, userId } = params;
       // @TODO: check show is the seller/buyer!
-      userId = params.item.seller._id;
-      orderId = params.order.id;
-      productId = params.item.uuid;
-      this.initialise(userId, orderId, productId);
+      this.initialise(orderId, productId, userId);
     }
   }
 
-  initialise(userId: string, orderId: string, productId: string) {
+  initialise(orderId: string, productId: string, userId: string) {
     const Promises = [];
     Promises.push(this._getInterlucutorUserData(userId));
     Promises.push(this.fetchProduct(productId));

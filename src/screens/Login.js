@@ -56,10 +56,6 @@ class LoginScreen extends React.Component<Props, State> {
     this.props.dispatch(login({ emailAddress, password }));
   }
 
-  onSignup() {
-    if (this.props.navigation) this.props.navigation.dispatch(goToSignup());
-  }
-
   // googleSignin() {
   //   this.props.dispatch(loginWithGoogle());
   // }
@@ -190,7 +186,7 @@ class LoginScreen extends React.Component<Props, State> {
             <Button
               buttonStyle={styles.PDarkButton}
               raised
-              onPress={() => this.onSignup()}
+              onPress={() => this.props.dispatch(goToSignup())}
               title="Sign up"
               testID="SignupButton"
             />

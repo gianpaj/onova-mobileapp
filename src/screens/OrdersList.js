@@ -271,6 +271,7 @@ class OrdersListContainer extends Component<Props, State> {
               </Text>
             </View>
             <Text numberOfLines={2} rkType="primary3 mediumLine">
+              {lastMessage._sender.nickname !== interlocutor ? 'You: ' : ''}
               {lastMessage.message}
             </Text>
           </View>

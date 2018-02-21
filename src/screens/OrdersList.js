@@ -65,7 +65,6 @@ class OrdersListContainer extends Component<Props, State> {
     this.connectToSendBird()
       .then(() => this.getOrdersAndChats())
       .then(ordersAndChats => {
-        console.log(ordersAndChats);
         this.setState({
           channelList: ordersAndChats,
           isLoading: false,
@@ -118,7 +117,7 @@ class OrdersListContainer extends Component<Props, State> {
     });
   }
 
-  fetchOrders = (): Promise<Array<Order>> => {
+  fetchOrders(): Promise<Array<Order>> {
     const { token } = this.props.userData;
     return new Promise((resolve, reject) => {
       api
@@ -130,7 +129,7 @@ class OrdersListContainer extends Component<Props, State> {
           reject(err);
         });
     });
-  };
+  }
 
   fetchOrder(orderId: string): Promise<Order> {
     const { token } = this.props.userData;
@@ -205,20 +204,6 @@ class OrdersListContainer extends Component<Props, State> {
     }
   }
 
-  fetchProduct(uuid: string): Promise<Product> {
-    return new Promise((resolve, reject) => {
-      return api
-        .get(`/api/products/${uuid}`)
-        .then(res => {
-          console.debug(res.data);
-          resolve(res.data);
-        })
-        .catch(err => {
-          reject(err);
-        });
-    });
-  }
-
   goToOrderThread = (item: any) => {
     console.log(item);
     this.fetchOrder(item.orderId)
@@ -257,6 +242,11 @@ class OrdersListContainer extends Component<Props, State> {
     const interlocutor = item.members.find(
       m => m.userId !== this.props.userData._id
     ).nickname;
+
+    const isMyMessage = lastMessage._sender.nickname !== interlocutor;
+
+    const haveUnreadMsgs = !isMyMessage && item.unreadMessageCount > 0;
+
     return (
       <TouchableHighlight
         underlayColor={colors.grey4}
@@ -277,8 +267,10 @@ class OrdersListContainer extends Component<Props, State> {
                 {this.formatTime(lastMessage.createdAt)}
               </Text>
             </View>
-            <Text numberOfLines={2} rkType="primary3 mediumLine">
-              {lastMessage._sender.nickname !== interlocutor ? 'You: ' : ''}
+            <Text
+              numberOfLines={1}
+              style={haveUnreadMsgs ? { fontWeight: 'bold' } : {}}>
+              {isMyMessage ? 'You: ' : ''}
               {lastMessage.message}
             </Text>
           </View>

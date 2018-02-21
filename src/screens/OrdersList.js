@@ -79,9 +79,12 @@ class OrdersListContainer extends Component<Props, State> {
 
   getOrdersAndChats(): Promise<Array<any>> {
     return new Promise((resolve, reject) => {
-      this.getChannels()
-        .then(channels => {
-          return this.fetchOrders().then(orders => {
+      this.fetchOrders()
+        .then(orders => {
+          if (orders.length === 0) {
+            return resolve([]);
+          }
+          return this.getChannels().then(channels => {
             // orders in which the other person (seller or buyer) is the person i am chatting with
             return channels.filter(c => {
               return orders.find((o: Order) => o.id == c.orderId);
@@ -303,15 +306,11 @@ class OrdersListContainer extends Component<Props, State> {
     this.setState({ isRefreshing: true });
     this.getOrdersAndChats()
       .then(ordersAndChats => {
-        this.setState({
-          channelList: ordersAndChats,
-        });
+        this.setState({ channelList: ordersAndChats });
       })
       .catch(err => {
         console.error(err);
-        this.setState({
-          hasError: true,
-        });
+        this.setState({ hasError: true });
       })
       .then(() => this.setState({ isRefreshing: false }));
   };

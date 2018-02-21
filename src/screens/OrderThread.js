@@ -46,6 +46,8 @@ import colors from '../config/colors';
 import settings from '../config/settings';
 import * as api from '../utils/api';
 
+const MARK_AS_READ_AFTER_MS = 300;
+
 if (Platform.OS == 'ios') {
   KeyboardManager.setEnable(false);
 
@@ -275,6 +277,11 @@ class OrderThreadContainer extends Component<Props, State> {
       this.setState(prevState => ({
         messages: GiftedChat.append(prevState.messages, giftedMsg),
       }));
+
+      setTimeout(() => {
+        // $FlowFixMe
+        this.state.channel.markAsRead();
+      }, MARK_AS_READ_AFTER_MS);
     };
 
     // ChannelHandler.onTypingStatusUpdated = channel => {
@@ -377,6 +384,13 @@ class OrderThreadContainer extends Component<Props, State> {
             if (err) return console.error(err);
             console.log(res);
           });
+
+          setTimeout(() => {
+            if (this.state.channel) {
+              // $FlowFixMe
+              this.state.channel.markAsRead();
+            }
+          }, MARK_AS_READ_AFTER_MS);
         });
         this.setState(prevState => ({
           // $FlowFixMe

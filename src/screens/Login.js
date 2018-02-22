@@ -173,6 +173,8 @@ class LoginScreen extends React.Component<Props, State> {
                 )
               }
               buttonStyle={styles.PrimaryButton}
+              disabledStyle={styles.DisabledButton}
+              disabledTextStyle={styles.DisabledButtonText}
               raised
               disabled={!emailAddress || !password || loadingLogin}
               onPress={() => this.onLogin()}
@@ -224,6 +226,8 @@ class LoginScreen extends React.Component<Props, State> {
               disabled={
                 !isEmail(this.state.emailReset) || this.state.loadingReset
               }
+              disabledStyle={styles.DisabledButton}
+              disabledTextStyle={styles.DisabledButtonText}
               onPress={() => this.onResetPassword()}
               title="Email instructions"
             />
@@ -270,6 +274,12 @@ const styles = StyleSheet.create({
     padding: 15,
     alignSelf: 'center',
     backgroundColor: colors.secondary,
+  },
+  DisabledButton: {
+    backgroundColor: colors.grey5,
+  },
+  DisabledButtonText: {
+    color: colors.grey3,
   },
   // GoogleButton: {
   //   backgroundColor: colors.white,

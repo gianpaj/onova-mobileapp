@@ -167,6 +167,8 @@ class SignupScreen extends React.Component<Props, State> {
                 this.state.username.length < 3 ||
                 this.props.loading
               }
+              disabledStyle={styles.DisabledButton}
+              disabledTextStyle={styles.DisabledButtonText}
               onPress={() => this.onSignup()}
               title="Create account"
               accessibilityLabel="Create account"
@@ -211,6 +213,12 @@ const styles = StyleSheet.create({
   },
   SignupButton: {
     backgroundColor: colors.pDark,
+  },
+  DisabledButton: {
+    backgroundColor: colors.grey5,
+  },
+  DisabledButtonText: {
+    color: colors.grey3,
   },
   hr: {
     alignSelf: 'center',

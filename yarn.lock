@@ -5983,6 +5983,10 @@ react-native-menu@^0.23.0:
     prop-types "^15.5.10"
     react-timer-mixin "^0.13.3"
 
+react-native-micro-animated-button@^0.0.16:
+  version "0.0.16"
+  resolved "https://registry.yarnpkg.com/react-native-micro-animated-button/-/react-native-micro-animated-button-0.0.16.tgz#98556cbd55e165b0e80e83fc6231deec6fe2518e"
+
 react-native-parsed-text@^0.0.19:
   version "0.0.19"
   resolved "https://registry.yarnpkg.com/react-native-parsed-text/-/react-native-parsed-text-0.0.19.tgz#1aacca6f9ee82f939f60ef985df90c97bd55c45a"
@@ -6033,7 +6037,15 @@ react-native-touch-visualizer@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/react-native-touch-visualizer/-/react-native-touch-visualizer-0.1.0.tgz#b796def661e131583b33474f8c915b34686ab5f4"
 
-react-native-vector-icons@^4.4.2, react-native-vector-icons@~4.4.2:
+react-native-vector-icons@^4.5.0:
+  version "4.5.0"
+  resolved "https://registry.yarnpkg.com/react-native-vector-icons/-/react-native-vector-icons-4.5.0.tgz#6b95619e64f62f05f579f74a01fe5640df95158b"
+  dependencies:
+    lodash "^4.0.0"
+    prop-types "^15.5.10"
+    yargs "^8.0.2"
+
+react-native-vector-icons@~4.4.2:
   version "4.4.2"
   resolved "https://registry.yarnpkg.com/react-native-vector-icons/-/react-native-vector-icons-4.4.2.tgz#090f42ee0396c4cc4eae0ddaa518028ba8df40c7"
   dependencies:

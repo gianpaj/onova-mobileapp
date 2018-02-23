@@ -4,7 +4,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 // prettier-ignore
 import {
+  Animated,
   Modal,
+  Platform,
   StyleSheet,
   Text,
   View
@@ -14,8 +16,9 @@ import { Button, FormInput } from 'react-native-elements';
 import { Button as NBButton, Content } from 'native-base';
 import type { NavigationScreenProp } from 'react-navigation';
 import isEmail from 'validator/lib/isEmail';
+// $FlowFixMe
+import AnimButton from 'react-native-micro-animated-button';
 
-import { SpinningIcon } from '../components';
 import { login, goToSignup } from '../actions/actionCreator';
 import type { Dispatch, ReduxState } from '../types';
 
@@ -25,7 +28,6 @@ import colors from '../config/colors';
 
 type Props = {
   dispatch: Dispatch,
-  loadingGoogleLogin: boolean,
   loadingLogin: boolean,
   navigation?: NavigationScreenProp<*>,
 };
@@ -36,10 +38,17 @@ type State = {
   loadingReset: boolean,
   modalVisible: boolean,
   password: string,
+  disabled: boolean,
 };
 
 class LoginScreen extends React.Component<Props, State> {
   PwdInput: ?FormInput;
+  loginBtn;
+  animatedValue = new Animated.Value(0);
+  backgroundColor = this.animatedValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: [colors.grey5, colors.primary],
+  });
 
   state = {
     emailAddress: 'gianpa+test2@gmail.com',
@@ -49,6 +58,7 @@ class LoginScreen extends React.Component<Props, State> {
     modalVisible: false,
     emailReset: '',
     loadingReset: false,
+    disabled: true,
   };
 
   onLogin() {
@@ -110,8 +120,41 @@ class LoginScreen extends React.Component<Props, State> {
     inputStyle: styles.input,
   };
 
+  componentWillUpdate(nextProps, nextState) {
+    const { loadingLogin } = nextProps;
+    const {
+      emailAddress: emailAddressNext,
+      password: passwordNext,
+      disabled: disabledNext,
+    } = nextState;
+    const { emailAddress, password, disabled } = this.state;
+
+    if (!loadingLogin && this.loginBtn) {
+      this.loginBtn.reset();
+    }
+
+    if (
+      emailAddressNext !== emailAddress ||
+      passwordNext !== password ||
+      disabledNext !== disabled
+    ) {
+      if (!emailAddressNext || !passwordNext || loadingLogin) {
+        this.setState({ disabled: true });
+        Animated.timing(this.animatedValue, {
+          toValue: 0,
+          duration: 300,
+        }).start();
+      } else {
+        this.setState({ disabled: false });
+        Animated.timing(this.animatedValue, {
+          toValue: 1,
+          duration: 300,
+        }).start();
+      }
+    }
+  }
+
   render() {
-    const { loadingLogin } = this.props;
     const { emailAddress, password } = this.state;
 
     return (
@@ -161,24 +204,19 @@ class LoginScreen extends React.Component<Props, State> {
             Forgot Password?
           </Text>
           <View style={{ marginTop: 15 }}>
-            <Button
-              iconRight={{}}
-              iconComponent={() =>
-                loadingLogin && (
-                  <SpinningIcon
-                    styleContainer={{ position: 'absolute', left: '63%' }}
-                    size={24}
-                    color={colors.primary}
-                  />
-                )
-              }
-              buttonStyle={styles.PrimaryButton}
-              disabledStyle={styles.DisabledButton}
-              disabledTextStyle={styles.DisabledButtonText}
-              raised
-              disabled={!emailAddress || !password || loadingLogin}
+            <AnimButton
+              ref={r => (this.loginBtn = r)}
+              disabled={this.state.disabled}
+              foregroundColor="#ffffff"
+              label="Log in"
+              // eslint-disable-next-line
+              style={[styles.LoginButton, {
+                  backgroundColor: this.backgroundColor,
+                },
+              ]}
+              maxWidth={346}
+              labelStyle={{ fontSize: 16 }}
               onPress={() => this.onLogin()}
-              title="Log in"
               testID="LoginButton"
             />
             <Text style={styles.hr}>
@@ -248,7 +286,6 @@ class LoginScreen extends React.Component<Props, State> {
 
 const mapStateToProps: any = (state: ReduxState) => ({
   loadingLogin: state.LoginReducer.loading,
-  loadingGoogleLogin: state.LoginReducer.loadingGoogleLogin,
 });
 
 export const Login = connect(mapStateToProps)(LoginScreen);
@@ -261,6 +298,23 @@ const styles = StyleSheet.create({
   input: {
     color: colors.black,
     width: '100%',
+  },
+  LoginButton: {
+    alignSelf: 'center',
+    borderWidth: 0,
+    borderRadius: 0,
+    ...Platform.select({
+      ios: {
+        shadowColor: 'rgba(0,0,0, .4)',
+        shadowOffset: { height: 1, width: 1 },
+        shadowOpacity: 1,
+        shadowRadius: 1,
+      },
+      android: {
+        backgroundColor: '#fff',
+        elevation: 2,
+      },
+    }),
   },
   PrimaryButton: {
     backgroundColor: colors.primary,

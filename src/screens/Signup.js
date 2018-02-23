@@ -4,18 +4,21 @@ import React from 'react';
 import { connect } from 'react-redux';
 // prettier-ignore
 import {
+  Animated,
   Linking,
+  Platform,
   StyleSheet,
   Text,
   View,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
-import { Button, FormInput } from 'react-native-elements';
+import { FormInput } from 'react-native-elements';
+// $FlowFixMe
+import AnimButton from 'react-native-micro-animated-button';
 import { Content } from 'native-base';
 import type { NavigationScreenProp } from 'react-navigation';
 import isEmail from 'validator/lib/isEmail';
 
-import { SpinningIcon } from '../components';
 import { signup, goback } from '../actions/actionCreator';
 import type { Dispatch, ReduxState } from '../types';
 import { validPassword } from '../utils/validators';
@@ -34,11 +37,18 @@ type State = {
   password: string,
   loading: false,
   usernameError: boolean,
+  disabled: boolean,
 };
 
 class SignupScreen extends React.Component<Props, State> {
   EmailInput: ?FormInput;
+  signupBtn;
   PwdInput: ?FormInput;
+  animatedValue = new Animated.Value(0);
+  backgroundColor = this.animatedValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: [colors.grey4, colors.primary],
+  });
 
   state = {
     username: 'testaccount',
@@ -49,6 +59,7 @@ class SignupScreen extends React.Component<Props, State> {
     // password: '',
     loading: false,
     usernameError: false,
+    disabled: true,
   };
 
   onSignup() {
@@ -86,6 +97,47 @@ class SignupScreen extends React.Component<Props, State> {
     Linking.openURL('https://onova.co').catch(err =>
       console.error('An error occurred', err)
     );
+  }
+
+  componentWillUpdate(nextProps, nextState) {
+    const { loading } = nextProps;
+    const {
+      emailAddress: emailAddressNext,
+      password: passwordNext,
+      disabled: disabledNext,
+      username: usernameNext,
+    } = nextState;
+    const { emailAddress, password, disabled, username } = this.state;
+
+    if (!loading && this.signupBtn) {
+      this.signupBtn.reset();
+    }
+
+    if (
+      emailAddressNext !== emailAddress ||
+      passwordNext !== password ||
+      usernameNext !== username ||
+      disabledNext !== disabled
+    ) {
+      if (
+        !isEmail(emailAddressNext) ||
+        !validPassword(passwordNext) ||
+        usernameNext.length < 3 ||
+        loading
+      ) {
+        this.setState({ disabled: true });
+        Animated.timing(this.animatedValue, {
+          toValue: 0,
+          duration: 300,
+        }).start();
+      } else {
+        this.setState({ disabled: false });
+        Animated.timing(this.animatedValue, {
+          toValue: 1,
+          duration: 300,
+        }).start();
+      }
+    }
   }
 
   _inputProps = {
@@ -148,29 +200,20 @@ class SignupScreen extends React.Component<Props, State> {
             {...this._inputProps}
           />
           <View style={styles.mt15}>
-            <Button
-              buttonStyle={styles.SignupButton}
-              raised
-              iconRight={{}}
-              iconComponent={() =>
-                this.props.loading && (
-                  <SpinningIcon
-                    styleContainer={{ position: 'absolute', left: '73%' }}
-                    size={24}
-                    color={colors.primary}
-                  />
-                )
-              }
-              disabled={
-                !isEmail(this.state.emailAddress) ||
-                !validPassword(this.state.password) ||
-                this.state.username.length < 3 ||
-                this.props.loading
-              }
-              disabledStyle={styles.DisabledButton}
-              disabledTextStyle={styles.DisabledButtonText}
+            <AnimButton
+              ref={r => (this.signupBtn = r)}
+              disabled={this.state.disabled}
+              // eslint-disable-next-line
+              style={[styles.SignupButton, {
+                  backgroundColor: this.backgroundColor,
+                  elevation: this.animatedValue, // android
+                  shadowOpacity: this.animatedValue, // ios
+                },
+              ]}
+              {...buttonProps}
               onPress={() => this.onSignup()}
-              title="Create account"
+              testID="SignupButton"
+              label="Create account"
               accessibilityLabel="Create account"
             />
             <Text style={[styles.hr, styles.mt15]}>
@@ -202,6 +245,32 @@ const mapStateToProps: any = (state: ReduxState) => ({
 
 export const Signup = connect(mapStateToProps)(SignupScreen);
 
+const buttonProps = {
+  foregroundColor: colors.white,
+  labelStyle: { fontSize: 16 },
+  maxWidth: Platform.select({
+    ios: 346,
+    android: 383,
+  }),
+};
+
+const raised = {
+  alignSelf: 'center',
+  borderWidth: 0,
+  borderRadius: 0,
+  ...Platform.select({
+    ios: {
+      shadowColor: 'rgba(0,0,0, .4)',
+      shadowOffset: { height: 1, width: 1 },
+      // shadowOpacity: 1,
+      shadowRadius: 1,
+    },
+    android: {
+      // elevation: 2,
+    },
+  }),
+};
+
 const styles = StyleSheet.create({
   header: {
     marginTop: 40,
@@ -212,13 +281,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   SignupButton: {
-    backgroundColor: colors.pDark,
-  },
-  DisabledButton: {
-    backgroundColor: colors.grey5,
-  },
-  DisabledButtonText: {
-    color: colors.grey3,
+    ...raised,
   },
   hr: {
     alignSelf: 'center',

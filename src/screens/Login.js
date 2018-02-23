@@ -47,7 +47,7 @@ class LoginScreen extends React.Component<Props, State> {
   animatedValue = new Animated.Value(0);
   backgroundColor = this.animatedValue.interpolate({
     inputRange: [0, 1],
-    outputRange: [colors.grey5, colors.primary],
+    outputRange: [colors.grey4, colors.primary],
   });
 
   state = {
@@ -207,28 +207,29 @@ class LoginScreen extends React.Component<Props, State> {
             <AnimButton
               ref={r => (this.loginBtn = r)}
               disabled={this.state.disabled}
-              foregroundColor="#ffffff"
-              label="Log in"
               // eslint-disable-next-line
               style={[styles.LoginButton, {
                   backgroundColor: this.backgroundColor,
+                  elevation: this.animatedValue, // android
+                  shadowOpacity: this.animatedValue, // ios
                 },
               ]}
-              maxWidth={346}
-              labelStyle={{ fontSize: 16 }}
+              {...buttonProps}
               onPress={() => this.onLogin()}
+              label="Log in"
               testID="LoginButton"
             />
             <Text style={styles.hr}>
               <Text style={styles.hrLine}>────────</Text> or{' '}
               <Text style={styles.hrLine}>────────</Text>
             </Text>
-            <Button
-              buttonStyle={styles.PDarkButton}
-              raised
+            <AnimButton
+              style={styles.PDarkButton}
               onPress={() => this.props.dispatch(goToSignup())}
-              title="Sign up"
+              {...buttonProps}
+              label="Sign up"
               testID="SignupButton"
+              static
             />
             {/* <Footer></Footer> */}
           </View>
@@ -236,7 +237,7 @@ class LoginScreen extends React.Component<Props, State> {
         <Modal
           animationType="slide"
           visible={this.state.modalVisible}
-          onRequestClose={this._onModalDismiss}>
+          onRequestClose={() => this.setModalVisible(!this.state.modalVisible)}>
           <View style={{ marginTop: 22 }}>
             <View style={{ margin: 20 }}>
               <Text style={{ fontWeight: 'bold' }}>Trouble logging in?</Text>
@@ -290,6 +291,43 @@ const mapStateToProps: any = (state: ReduxState) => ({
 
 export const Login = connect(mapStateToProps)(LoginScreen);
 
+const buttonProps = {
+  foregroundColor: colors.white,
+  labelStyle: { fontSize: 16 },
+  maxWidth: Platform.select({
+    ios: 346,
+    android: 383,
+  }),
+};
+
+const raised = {
+  alignSelf: 'center',
+  borderWidth: 0,
+  borderRadius: 0,
+  ...Platform.select({
+    ios: {
+      shadowColor: 'rgba(0,0,0, .4)',
+      shadowOffset: { height: 1, width: 1 },
+      // shadowOpacity: 1,
+      shadowRadius: 1,
+    },
+    android: {
+      // elevation: 2,
+    },
+  }),
+};
+
+const raisedActive = {
+  ...Platform.select({
+    ios: {
+      shadowOpacity: 1,
+    },
+    android: {
+      elevation: 2,
+    },
+  }),
+};
+
 const styles = StyleSheet.create({
   header: {
     marginTop: 40,
@@ -300,27 +338,18 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   LoginButton: {
-    alignSelf: 'center',
-    borderWidth: 0,
-    borderRadius: 0,
-    ...Platform.select({
-      ios: {
-        shadowColor: 'rgba(0,0,0, .4)',
-        shadowOffset: { height: 1, width: 1 },
-        shadowOpacity: 1,
-        shadowRadius: 1,
-      },
-      android: {
-        backgroundColor: '#fff',
-        elevation: 2,
-      },
-    }),
+    ...raised,
   },
   PrimaryButton: {
     backgroundColor: colors.primary,
+    ...raised,
+    ...raisedActive,
+    alignSelf: 'auto',
   },
   PDarkButton: {
     backgroundColor: colors.pDark,
+    ...raised,
+    ...raisedActive,
   },
   SecondaryButtonNB: {
     borderRadius: 0,
@@ -349,18 +378,4 @@ const styles = StyleSheet.create({
   hrLine: {
     color: colors.grey4,
   },
-  // raised: {
-  //   ...Platform.select({
-  //     ios: {
-  //       shadowColor: 'rgba(0,0,0, .4)',
-  //       shadowOffset: { height: 1, width: 1 },
-  //       shadowOpacity: 1,
-  //       shadowRadius: 1,
-  //     },
-  //     android: {
-  //       backgroundColor: '#fff',
-  //       elevation: 2,
-  //     },
-  //   }),
-  // },
 });

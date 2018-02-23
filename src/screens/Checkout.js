@@ -24,7 +24,6 @@ import {
   Title,
 } from 'native-base';
 // import { FormInput, FormLabel } from 'react-native-elements';
-import { NavigationActions } from 'react-navigation';
 import type { NavigationScreenProp } from 'react-navigation';
 // import { CardView, LiteCreditCardInput } from 'react-native-credit-card-input';
 import BTClient from 'react-native-braintree-xplat';
@@ -111,34 +110,47 @@ class CheckoutContainer extends Component<Props, State> {
 
     this.createOrder(item.uuid)
       .then((order: Order) => {
-    this.setState({
-      item,
-      isLoading: false,
+        this.setState({
+          item,
+          isLoading: false,
           order,
-    });
+        });
 
-    if (Platform.OS === 'ios') {
-      BTClient.setupWithURLScheme(
-        settings.BRAINTREE_TOKENIZATION_KEY,
-        'com.onova.app.payments'
-      );
-    } else {
-      BTClient.setup(settings.BRAINTREE_TOKENIZATION_KEY);
-    }
+        if (Platform.OS === 'ios') {
+          BTClient.setupWithURLScheme(
+            settings.BRAINTREE_TOKENIZATION_KEY,
+            'com.onova.app.payments'
+          );
+        } else {
+          BTClient.setup(settings.BRAINTREE_TOKENIZATION_KEY);
+        }
       })
       .catch(err => {
-        if (err.message == 'Duplicate order' && err.data.orderId) {
+        console.log(err);
+        if (
+          err.message == 'Duplicate order' &&
+          err.data.order &&
+          // @TODO: set to 'purchased' once payment is completed
+          err.data.order.status == 'pending'
+        ) {
           // $FlowFixMe
-          return this.props.navigation.dispatch({
-            key: `orderThread-${item.uuid}`,
-            type: 'ReplaceCurrentScreen',
-            routeName: 'orderThread',
-            params: {
-              productId: item.uuid,
-              orderId: err.data.orderId,
-              userId: item.seller.id,
-            },
+          return this.goToOrderThread(err.data.order.id, item);
+        }
+        // @TODO: set to 'pending' once payment is completed
+        if (err.data.order.status == '@TODO') {
+          this.setState({
+            item,
+            isLoading: false,
+            order: err.data.order,
           });
+          if (Platform.OS === 'ios') {
+            BTClient.setupWithURLScheme(
+              settings.BRAINTREE_TOKENIZATION_KEY,
+              'com.onova.app.payments'
+            );
+          } else {
+            BTClient.setup(settings.BRAINTREE_TOKENIZATION_KEY);
+          }
         } else {
           console.error(err);
         }
@@ -158,6 +170,16 @@ class CheckoutContainer extends Component<Props, State> {
   }
 
   onCheckout = () => {
+    const { item, order } = this.state;
+    // @TODO: temp
+    const SKIP_PURCHASE = true;
+    if (SKIP_PURCHASE && item) {
+      console.log(order);
+      console.warn('purchase skipped');
+      // $FlowFixMe
+      return this.goToOrderThread(order.id, item);
+    }
+
     const self = this;
     const { userData } = this.props;
     const { emailAddress, paymentInfo, shippingAddress, username } = this.state;
@@ -198,15 +220,8 @@ class CheckoutContainer extends Component<Props, State> {
       .then(() => {
         const { order, item } = self.state;
         console.log(order);
-        const navigateToCheckout = NavigationActions.navigate({
-          routeName: 'orderThread',
-          params: {
-            item: item,
-            order,
-          },
-          key: `orderThread-${item._id}`,
-        });
-        this.props.navigation.dispatch(navigateToCheckout);
+        // $FlowFixMe
+        this.goToOrderThread(order.id, item);
       })
       .catch(err => {
         if (err == 'USER_CANCELLATION' || err == null) {
@@ -241,6 +256,20 @@ class CheckoutContainer extends Component<Props, State> {
     //   });
   };
 
+  goToOrderThread(orderId: string, item: Product) {
+    // $FlowFixMe
+    this.props.navigation.dispatch({
+      key: `orderThread-${item.uuid}`,
+      type: 'ReplaceCurrentScreen',
+      routeName: 'orderThread',
+      params: {
+        productId: item.uuid,
+        orderId: orderId,
+        userId: item.seller.id,
+      },
+    });
+  }
+
   createOrder(uuid: string): Promise<Order> {
     const { token } = this.props.userData;
     return new Promise((resolve, reject) => {
@@ -255,14 +284,24 @@ class CheckoutContainer extends Component<Props, State> {
     });
   }
 
-        .then(res => {
-          resolve(res.data);
-        })
-        .catch(err => {
-          reject(err);
-        });
-    });
-  }
+  // cancelOrder(): Promise<any> {
+  //   const { token } = this.props.userData;
+  //   return new Promise((resolve, reject) => {
+  //     api
+  //       .put(
+  //         `/api/orders/${this.state.order.id}`,
+  //         { status: 'cancelled' },
+  //         { token }
+  //       )
+  //       .then(res => {
+  //         console.debug('order cancelled');
+  //         resolve(res.data);
+  //       })
+  //       .catch(err => {
+  //         reject(err);
+  //       });
+  //   });
+  // }
 
   onCCChange = form => {
     this.setState({
@@ -292,6 +331,12 @@ class CheckoutContainer extends Component<Props, State> {
     }
   }
 
+  onCancel = () => {
+    this.props.navigation.goBack();
+    // this.cancelOrder().then(co => {
+    // });
+  };
+
   render() {
     // const { userData } = this.props;
     const { pending, shippingAddress, item, isLoading } = this.state;
@@ -300,10 +345,7 @@ class CheckoutContainer extends Component<Props, State> {
       <Container>
         <Header>
           <Left>
-            <NBButton
-              transparent
-              dark
-              onPress={() => this.props.navigation.goBack()}>
+            <NBButton transparent dark onPress={() => this.onCancel()}>
               <NBIcon ios="ios-arrow-back" android="md-arrow-back" />
             </NBButton>
           </Left>

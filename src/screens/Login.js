@@ -81,11 +81,6 @@ class LoginScreen extends React.Component<Props, State> {
     });
   }
 
-  // Required on Android
-  _onModalDismiss() {
-    console.log('modal dismissed');
-  }
-
   onResetPassword() {
     if (!isEmail(this.state.emailReset)) {
       return;
@@ -120,6 +115,9 @@ class LoginScreen extends React.Component<Props, State> {
     inputStyle: styles.input,
   };
 
+  /**
+   * trigger the background color animation of the LoginButton
+   */
   componentWillUpdate(nextProps, nextState) {
     const { loadingLogin } = nextProps;
     const {
@@ -129,6 +127,7 @@ class LoginScreen extends React.Component<Props, State> {
     } = nextState;
     const { emailAddress, password, disabled } = this.state;
 
+    // if we are waiting for the login API call to return
     if (!loadingLogin && this.loginBtn) {
       this.loginBtn.reset();
     }
@@ -138,24 +137,18 @@ class LoginScreen extends React.Component<Props, State> {
       passwordNext !== password ||
       disabledNext !== disabled
     ) {
-      if (!emailAddressNext || !passwordNext || loadingLogin) {
-        this.setState({ disabled: true });
+      // if the email or password are empty
+      const areFieldEmpty = !emailAddressNext || !passwordNext;
+      this.setState({ disabled: areFieldEmpty });
         Animated.timing(this.animatedValue, {
-          toValue: 0,
-          duration: 300,
-        }).start();
-      } else {
-        this.setState({ disabled: false });
-        Animated.timing(this.animatedValue, {
-          toValue: 1,
+        toValue: areFieldEmpty ? 0 : 1,
           duration: 300,
         }).start();
       }
     }
-  }
 
   render() {
-    const { emailAddress, password } = this.state;
+    const { emailAddress, password, disabled } = this.state;
 
     return (
       <Content>
@@ -206,7 +199,7 @@ class LoginScreen extends React.Component<Props, State> {
           <View style={{ marginTop: 15 }}>
             <AnimButton
               ref={r => (this.loginBtn = r)}
-              disabled={this.state.disabled}
+              disabled={disabled}
               // eslint-disable-next-line
               style={[styles.LoginButton, {
                   backgroundColor: this.backgroundColor,

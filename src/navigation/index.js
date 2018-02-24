@@ -18,8 +18,6 @@ type Props = {
   userData?: UserData,
 };
 
-const addListener = createReduxBoundAddListener('root');
-
 class AppNavigation extends Component<Props, void> {
   componentDidMount() {
     BackHandler.addEventListener('hardwareBackPress', this.onBackPress);
@@ -62,7 +60,11 @@ class AppNavigation extends Component<Props, void> {
         : navigationState.stateForLoggedOut;
     return (
       <NavigationStack
-        navigation={addNavigationHelpers({ dispatch, state, addListener })}
+        navigation={addNavigationHelpers({
+          dispatch,
+          state,
+          addListener: createReduxBoundAddListener('root'),
+        })}
       />
     );
   }

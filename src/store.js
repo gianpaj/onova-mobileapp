@@ -15,10 +15,11 @@ const config1 = {
   // blacklist: ['counterString'],
 };
 
-const reactNavigation = createReactNavigationReduxMiddleware(
-  'root',
-  state => state.nav
-);
+const reactNavigation = createReactNavigationReduxMiddleware('root', state => {
+  return state.LoginReducer.isLoggedIn == true
+    ? state.NavigationReducer.stateForLoggedIn
+    : state.NavigationReducer.stateForLoggedOut;
+});
 
 // We are only persisting the loginReducer
 const LoginReducer = persistReducer(config1, loginReducer);

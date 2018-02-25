@@ -9,7 +9,8 @@ import type {
 
 export type Product = {
   categoryIds: Array<number>,
-  // comments: Array<MongoId>, // optional
+  comments?: Array<Comment>,
+  createdAt: string,
   currency: string,
   description: string,
   photoURIs: Array<string>,
@@ -19,6 +20,12 @@ export type Product = {
   tags?: Array<string>,
   typeIds?: Array<number>,
   uuid: string,
+};
+
+export type Comment = {
+  text: string,
+  createdAt: Date,
+  user: UserData,
 };
 
 export type LoginData = {

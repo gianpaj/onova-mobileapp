@@ -24,18 +24,11 @@ import {
 import { NavigationActions } from 'react-navigation';
 import SendBird from 'sendbird';
 import type { NavigationScreenProp } from 'react-navigation';
-// $FlowFixMe
-import {
-  format,
-  differenceInHours,
-  distanceInWordsToNow,
-  isYesterday,
-} from 'date-fns';
 
 import type { UserData, ReduxState, Order, Product } from '../types';
 import colors from '../config/colors';
 import * as api from '../utils/api';
-import { Avatar } from '../components/index';
+import { Avatar } from '../components';
 
 type Props = {
   navigation: NavigationScreenProp<*>,
@@ -225,17 +218,6 @@ class OrdersListContainer extends Component<Props, State> {
       .catch(e => console.error(e));
   };
 
-  formatTime(createdAt: Date): string {
-    if (differenceInHours(new Date(), createdAt) < 24) {
-      return format(createdAt, 'HH:mm');
-    }
-    if (isYesterday(createdAt)) {
-      return 'Yesterday';
-    } else {
-      return format(createdAt, 'D MMM');
-    }
-  }
-
   _renderItem = ({ item }) => {
     const { lastMessage } = item;
 
@@ -264,7 +246,7 @@ class OrdersListContainer extends Component<Props, State> {
               {/* displayName */}
               <Text style={st.name}>{interlocutor}</Text>
               <Text style={st.datetime}>
-                {this.formatTime(lastMessage.createdAt)}
+                {ui.formatTime(lastMessage.createdAt)}
               </Text>
             </View>
             <Text

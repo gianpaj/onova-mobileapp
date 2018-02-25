@@ -2,6 +2,13 @@
 
 import { Alert } from 'react-native';
 import { Toast } from 'native-base';
+// $FlowFixMe
+import {
+  format,
+  differenceInHours,
+  distanceInWordsToNow,
+  isYesterday,
+} from 'date-fns';
 
 /**
  * Show a Toast/Alert message from Native Base
@@ -37,4 +44,20 @@ export function showConfirmAlert(
     { text: 'No', onPress: onDismiss, style: 'cancel' },
     { text: 'Yes', onPress: onContinue },
   ]);
+}
+
+/**
+ * formatTime
+ *
+ * @param {Date} createdAt
+ */
+export function formatTime(createdAt: Date): string {
+  if (differenceInHours(new Date(), createdAt) < 24) {
+    return format(createdAt, 'HH:mm');
+  }
+  if (isYesterday(createdAt)) {
+    return 'Yesterday';
+  } else {
+    return format(createdAt, 'D MMM');
+  }
 }

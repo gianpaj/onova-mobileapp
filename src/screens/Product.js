@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import {
   ActivityIndicator,
   Animated,
+  FlatList,
   StyleSheet,
   Text,
   View,

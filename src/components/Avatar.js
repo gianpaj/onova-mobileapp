@@ -190,7 +190,7 @@ const styles = StyleSheet.create({
     fontSize: 20
   },
   verySmallAvatarPlaceHolderText: {
-    fontSize: 30
+    fontSize: 23
   },
   smallAvatarPlaceHolderText: {
     fontSize: 40,

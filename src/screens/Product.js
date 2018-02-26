@@ -28,8 +28,6 @@ import {
 import { Button } from 'react-native-elements';
 import LottieView from 'lottie-react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { NavigationActions } from 'react-navigation';
-import type { NavigationScreenProp } from 'react-navigation';
 import { TextareaItem } from 'antd-mobile';
 import update from 'immutability-helper';
 
@@ -39,6 +37,9 @@ import colors from '../config/colors';
 import settings from '../config/settings';
 import * as api from '../utils/api';
 import * as ui from '../utils/ui';
+
+import type { MapStateToProps } from 'react-redux';
+import type { NavigationScreenProp } from 'react-navigation';
 import type {
   Comment,
   Product as ProductType,
@@ -298,21 +299,6 @@ export class ProductContainer extends React.Component<Props, State> {
     });
   }
 
-  isProductForSale(uuid: string): Promise<boolean> {
-    return new Promise((resolve, reject) => {
-      this._getProduct(uuid)
-        .then(data => {
-          if (!data) return reject();
-          if (data.status == 'forsale') {
-            resolve(true);
-          } else {
-            resolve(false);
-          }
-        })
-        .catch(e => reject(e));
-    });
-  }
-
   isUserVerified(): Promise<boolean> {
     return new Promise((resolve, reject) => {
       api
@@ -344,18 +330,18 @@ export class ProductContainer extends React.Component<Props, State> {
           throw Error('You need to validate your account...');
         }
       })
-      .then(() => this.isProductForSale(item.uuid))
-      .then(isForSale => {
+      .then(() => this._getProduct(item.uuid))
+      .then((product: ProductType) => {
         // @TODO: if product status is 'reserved' say you can try again later...
-        if (!isForSale) {
+        if (product.status !== 'forsale') {
           throw Error('This product is not longer for sale');
         } else {
-          const navigateToCheckout = NavigationActions.navigate({
+          // $FlowFixMe
+          this.props.navigation.navigate({
             routeName: 'checkout',
             params: item,
-            key: `checkout-${item.uuid}`,
+            key: `checkout-${product.uuid}`,
           });
-          this.props.navigation.dispatch(navigateToCheckout);
         }
       })
       .catch(err => {
@@ -727,8 +713,6 @@ const styles = StyleSheet.create({
   //   fontSize: 12,
   // },
 });
-
-import type { MapStateToProps } from 'react-redux';
 
 const mapStateToProps: MapStateToProps<*, *, *> = (state: ReduxState) => ({
   userData: state.LoginReducer.data,

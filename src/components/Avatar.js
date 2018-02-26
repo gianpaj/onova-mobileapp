@@ -149,7 +149,11 @@ export default class Avatar extends PureComponent<Props, State> {
   render() {
     return (
       <TouchableWithoutFeedback
-        onPress={() => this.props.interactive && this.handleInteractivePress()}>
+        onPress={() =>
+          this.props.onPress
+            ? this.props.onPress()
+            : this.props.interactive && this.handleInteractivePress()
+        }>
         {this.renderAvatarImage()}
       </TouchableWithoutFeedback>
     );

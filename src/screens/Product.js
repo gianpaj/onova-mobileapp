@@ -228,6 +228,7 @@ export class ProductContainer extends React.Component<Props, State> {
           id: '5a78d09d2d314a702698f955',
           username: 'firstperson',
         },
+        location: 'Kiev, Ukraine',
         comments: [
           {
             _id: 0,
@@ -521,23 +522,41 @@ export class ProductContainer extends React.Component<Props, State> {
           {Object.keys(item).length !== 0 && (
             <View>
               <View style={styles.topSection}>
-                {/* <Image
-                  style={styles.avatar}
-                  source={{ uri: item.avatarUrl }}
-                /> */}
                 <View style={styles.avatar}>
-                  <TouchableHighlight
-                    style={styles.flex}
-                    onPress={this.goToProfileOfSeller}>
-                    <Text style={styles.username}>{item.seller.username}</Text>
-                  </TouchableHighlight>
-                  <Text style={styles.location}>{item.location}</Text>
+                  <View style={styles.row}>
+                    <TouchableHighlight onPress={this.goToProfileOfSeller}>
+                      <Avatar
+                        size={'verySmall'}
+                        // $FlowFixMe
+                        uri={item.seller.profilePic}
+                        onPress={this.goToProfileOfSeller}
+                        placeholderText={
+                          // $FlowFixMe
+                          item.seller.displayName
+                            ? item.seller.displayName
+                            : item.seller.username
+                        }
+                      />
+                    </TouchableHighlight>
+                    <View style={{ marginLeft: 10, alignSelf: 'center' }}>
+                      <TouchableHighlight onPress={this.goToProfileOfSeller}>
+                        <Text style={styles.username}>
+                          {item.seller.username}
+                        </Text>
+                      </TouchableHighlight>
+                      {/* // $FlowFixMe */}
+                      <Text style={styles.location}>{item.location}</Text>
+                    </View>
+                  </View>
+                  {/* // $FlowFixMe */}
                 </View>
                 <View style={styles.flex} />
                 <Text style={styles.price}>
+                  {/* // $FlowFixMe */}
                   {item.price} {item.currency}
                 </Text>
               </View>
+              {/* // $FlowFixMe */}
               <MediaView source={item.photoURIs} />
               <View style={[styles.padder, styles.bottomSection]}>
                 {/* <NBIcon name="ios-bookmark-outline" style={styles.iconSave} /> */}
@@ -581,6 +600,7 @@ export class ProductContainer extends React.Component<Props, State> {
                 <Text style={styles.timeAgo}>{'X MINUTES AGO'}</Text>
               </View> */}
               <View style={[styles.padder, styles.bottomSectionAfter]}>
+                {/* // $FlowFixMe */}
                 <Text style={styles.description}>{item.description}</Text>
               </View>
               {this.renderComments()}
@@ -664,11 +684,12 @@ const styles = StyleSheet.create({
   location: {
     // height: 20,
     // lineHeight: 20,
-    flex: 1,
+    // flex: 1,
   },
   price: {
     lineHeight: 44,
     marginRight: 15,
+    alignSelf: 'center',
   },
   bottomSection: {
     height: 54,
@@ -707,6 +728,9 @@ const styles = StyleSheet.create({
   separator: {
     height: StyleSheet.hairlineWidth,
     backgroundColor: colors.grey4,
+  },
+  row: {
+    flexDirection: 'row',
   },
   // timeAgo: {
   //   color: colors.grey3,

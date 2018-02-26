@@ -28,6 +28,7 @@ import { Button } from 'react-native-elements';
 import LottieView from 'lottie-react-native';
 import { NavigationActions } from 'react-navigation';
 import type { NavigationScreenProp } from 'react-navigation';
+import update from 'immutability-helper';
 
 import { Avatar, MediaView } from '../components';
 
@@ -128,6 +129,7 @@ export class ProductContainer extends React.Component<Props, State> {
           case BUTTONS.indexOf('Delete'):
             ui.showConfirmAlert('Confirm deletion?', '', () => {
               this.deleteComment(comment);
+              this.forceUpdate();
             });
             // report action
             break;
@@ -144,12 +146,24 @@ export class ProductContainer extends React.Component<Props, State> {
 
   deleteComment(comment: Comment) {
     const { token } = this.props.userData;
-    api
-      .del(`/api/comment/${comment._id}`, { token })
-      .then(() => {
-        // refresh product comments!?
+    // api
+    //   .del(`/api/comment/${comment._id}`, { token })
+    //   .then((comments: Array<Comment>) => {
+    //     console.log(comments);
+    // })
+    // .catch(e => console.error(e));
+    // $FlowFixMe
+    const comments = this.state.item.comments.filter(
+      c => c._id !== comment._id
+    );
+
+    this.setState(
+      update(this.state, {
+        item: {
+          comments: { $set: comments },
+        },
       })
-      .catch(e => console.error(e));
+    );
   }
 
   deleteItem() {
@@ -206,6 +220,7 @@ export class ProductContainer extends React.Component<Props, State> {
         },
         comments: [
           {
+            _id: 0,
             text: 'string',
             createdAt: '2018-02-04T21:46:09.490Z',
             user: {
@@ -216,6 +231,7 @@ export class ProductContainer extends React.Component<Props, State> {
             },
           },
           {
+            _id: 1,
             text: 'string',
             createdAt: '2018-02-05T21:46:09.490Z',
             user: {

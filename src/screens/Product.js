@@ -6,11 +6,11 @@ import {
   ActivityIndicator,
   Animated,
   FlatList,
+  // Keyboard,
   StyleSheet,
   Text,
-  View,
-  TextInput,
   TouchableHighlight,
+  View,
   TouchableOpacity,
   TouchableWithoutFeedback,
 } from 'react-native';
@@ -66,6 +66,7 @@ type State = {
 
 export class ProductContainer extends React.Component<Props, State> {
   anim: ?React$Element<*>;
+  scrollView: Content;
 
   state = {
     addCommentText: '',
@@ -435,22 +436,23 @@ export class ProductContainer extends React.Component<Props, State> {
       text.trim().length < 1 || text.length == settings.MAX_LENGTH_COMMENT;
     return (
       <View style={styles.addCommentContainer}>
-        <TextareaItem
-          autoCorrect
-          style={styles.addCommentInput}
-          autoHeight
-          count={settings.MAX_LENGTH_COMMENT}
-          error={this.state.addCommentError}
-          onChangeText={this.onChangeText}
-          placeholder="Type a comment"
-          value={text}
-        />
+        <View style={styles.addCommentInputContainer}>
+          <TextareaItem
+            autoCorrect
+            style={styles.addCommentInput}
+            autoHeight
+            count={settings.MAX_LENGTH_COMMENT}
+            error={this.state.addCommentError}
+            onChangeText={this.onChangeText}
+            placeholder="Type a comment"
+            value={text}
+          />
+        </View>
         <Send text={text} onSend={() => this.onSendComment(text)}>
           <Ionicons
             // eslint-disable-next-line
             style={{
               marginBottom: 5,
-              marginRight: 10,
               opacity: showActiveOpacity ? 0.7 : 1,
             }}
             name="md-send"
@@ -461,22 +463,8 @@ export class ProductContainer extends React.Component<Props, State> {
     );
   };
 
-  renderSend(props): React$Element<*> {
-    return (
-      <Send {...props}>
-        <View style={st.send}>
-          <Ionicons
-            // eslint-disable-next-line
-            style={{ opacity: showActiveOpacity ? 1 : 0.7 }}
-            name="md-send"
-            size={29}
-          />
-        </View>
-      </Send>
-    );
-  }
-
   onSendComment = (text: string) => {
+    const self = this;
     // is the text empty or longer that the max
     if (text.trim().length < 1 || text.length == settings.MAX_LENGTH_COMMENT)
       return;
@@ -491,6 +479,10 @@ export class ProductContainer extends React.Component<Props, State> {
       update(this.state, { item: { comments: { $push: [comment] } } })
     );
     this.setState({ addCommentText: '' });
+    // Keyboard.dismiss();
+    setTimeout(() => {
+      self.scrollView._root.scrollToEnd({ animated: true });
+    }, 300);
 
     // api
     //   .post(`/api/comment/${this.state.item._id}`)
@@ -534,7 +526,11 @@ export class ProductContainer extends React.Component<Props, State> {
             </NBButton>
           </Right>
         </Header>
-        <Content style={styles.container}>
+        <Content
+          ref={r => {
+            this.scrollView = r;
+          }}
+          style={styles.container}>
           {loading && <ActivityIndicator size="large" />}
           {Object.keys(item).length !== 0 && (
             <View>
@@ -640,24 +636,26 @@ const styles = StyleSheet.create({
     color: colors.grey2,
     marginTop: 5,
   },
-  send: {
-    marginBottom: 5,
-    marginRight: 10,
-  },
   displayName: {
     fontSize: 20,
+  },
+  addCommentInputContainer: {
+    borderWidth: StyleSheet.hairlineWidth,
+    borderRadius: 2,
+    paddingVertical: 5,
+    margin: 10,
+    width: 320,
   },
   addCommentContainer: {
     flexDirection: 'row',
     paddingVertical: 10,
   },
   addCommentInput: {
-    borderWidth: StyleSheet.hairlineWidth,
-    borderRadius: 2,
-    marginBottom: 28,
-    marginRight: 5,
+    marginLeft: -10,
+    marginRight: -2,
+    marginBottom: -4,
+    // paddingBottom: 28,
     flex: 1,
-    width: 320,
     right: 3.3,
   },
   flex: {

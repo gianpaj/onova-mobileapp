@@ -33,7 +33,7 @@ import type { NavigationScreenProp } from 'react-navigation';
 import KeyboardManager from 'react-native-keyboard-manager';
 
 // import { sbCreateOpenChannelListQuery } from '../actions/sendbird';
-import Send from '../components/Send';
+import { Send } from '../components';
 import type {
   Message,
   Order,

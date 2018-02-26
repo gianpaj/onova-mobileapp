@@ -9,6 +9,7 @@ import {
   StyleSheet,
   Text,
   View,
+  TextInput,
   TouchableHighlight,
   TouchableOpacity,
   TouchableWithoutFeedback,
@@ -26,13 +27,16 @@ import {
 } from 'native-base';
 import { Button } from 'react-native-elements';
 import LottieView from 'lottie-react-native';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import { NavigationActions } from 'react-navigation';
 import type { NavigationScreenProp } from 'react-navigation';
+import { TextareaItem } from 'antd-mobile';
 import update from 'immutability-helper';
 
-import { Avatar, MediaView } from '../components';
+import { Avatar, MediaView, Send } from '../components';
 
 import colors from '../config/colors';
+import settings from '../config/settings';
 import * as api from '../utils/api';
 import * as ui from '../utils/ui';
 import type {
@@ -50,6 +54,8 @@ type Props = {
 };
 
 type State = {
+  addCommentText: string,
+  addCommentError: boolean,
   loading: boolean,
   loadingBuy: boolean,
   item: ProductType | {},
@@ -62,6 +68,8 @@ export class ProductContainer extends React.Component<Props, State> {
   anim: ?React$Element<*>;
 
   state = {
+    addCommentText: '',
+    addCommentError: false,
     loading: true,
     loadingBuy: false,
     likeAnimValue: new Animated.Value(0.35),
@@ -222,7 +230,7 @@ export class ProductContainer extends React.Component<Props, State> {
           {
             _id: 0,
             text: 'string',
-            createdAt: '2018-02-04T21:46:09.490Z',
+            createdAt: '2018-02-05T21:46:09.490Z',
             user: {
               accountStatus: 'verified',
               id: '5a78d09d2d314a702698f955',
@@ -233,7 +241,7 @@ export class ProductContainer extends React.Component<Props, State> {
           {
             _id: 1,
             text: 'string',
-            createdAt: '2018-02-05T21:46:09.490Z',
+            createdAt: '2018-02-04T21:46:09.490Z',
             user: {
               accountStatus: 'verified',
               id: '5a78d09e2d314a702698f957',
@@ -405,7 +413,7 @@ export class ProductContainer extends React.Component<Props, State> {
 
   renderComments() {
     return (
-      this.state.item.comments && (
+      this.state.item.comments !== null && (
         <View style={styles.padder}>
           <FlatList
             style={styles.root}
@@ -419,6 +427,91 @@ export class ProductContainer extends React.Component<Props, State> {
       )
     );
   }
+
+  renderAddComment = () => {
+    const { addCommentText: text } = this.state;
+    // is the text not empty and not longer that the max
+    const showActiveOpacity =
+      text.trim().length < 1 || text.length == settings.MAX_LENGTH_COMMENT;
+    return (
+      <View style={styles.addCommentContainer}>
+        <TextareaItem
+          autoCorrect
+          style={styles.addCommentInput}
+          autoHeight
+          count={settings.MAX_LENGTH_COMMENT}
+          error={this.state.addCommentError}
+          onChangeText={this.onChangeText}
+          placeholder="Type a comment"
+          value={text}
+        />
+        <Send text={text} onSend={() => this.onSendComment(text)}>
+          <Ionicons
+            // eslint-disable-next-line
+            style={{
+              marginBottom: 5,
+              marginRight: 10,
+              opacity: showActiveOpacity ? 0.7 : 1,
+            }}
+            name="md-send"
+            size={29}
+          />
+        </Send>
+      </View>
+    );
+  };
+
+  renderSend(props): React$Element<*> {
+    return (
+      <Send {...props}>
+        <View style={st.send}>
+          <Ionicons
+            // eslint-disable-next-line
+            style={{ opacity: showActiveOpacity ? 1 : 0.7 }}
+            name="md-send"
+            size={29}
+          />
+        </View>
+      </Send>
+    );
+  }
+
+  onSendComment = (text: string) => {
+    // is the text empty or longer that the max
+    if (text.trim().length < 1 || text.length == settings.MAX_LENGTH_COMMENT)
+      return;
+
+    const comment: Comment = {
+      _id: '3',
+      text,
+      createdAt: new Date(Date.now()),
+      user: this.props.userData,
+    };
+    this.setState(
+      update(this.state, { item: { comments: { $push: [comment] } } })
+    );
+    this.setState({ addCommentText: '' });
+
+    // api
+    //   .post(`/api/comment/${this.state.item._id}`)
+    //   .then(() => {
+    //     this.setState({ addCommentText: '' });
+    //   })
+    //   .catch(e => {
+    //     this.setState({ addCommentError: true });
+    //     setTimeout(() => {
+    //       this.setState({ addCommentError: false });
+    //     }, 3000);
+    //     console.error(e);
+    //   });
+  };
+
+  onChangeText = (t: string) => {
+    this.setState({
+      addCommentError: t.length == settings.MAX_LENGTH_COMMENT,
+      addCommentText: t,
+    });
+  };
 
   render() {
     const { item, loading } = this.state;
@@ -509,6 +602,7 @@ export class ProductContainer extends React.Component<Props, State> {
                 <Text style={styles.description}>{item.description}</Text>
               </View>
               {this.renderComments()}
+              {this.renderAddComment()}
             </View>
           )}
         </Content>
@@ -523,7 +617,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
   },
   containerComment: {
-    paddingTop: 5,
+    paddingVertical: 5,
     flexDirection: 'row',
     alignItems: 'flex-start',
   },
@@ -546,8 +640,25 @@ const styles = StyleSheet.create({
     color: colors.grey2,
     marginTop: 5,
   },
+  send: {
+    marginBottom: 5,
+    marginRight: 10,
+  },
   displayName: {
     fontSize: 20,
+  },
+  addCommentContainer: {
+    flexDirection: 'row',
+    paddingVertical: 10,
+  },
+  addCommentInput: {
+    borderWidth: StyleSheet.hairlineWidth,
+    borderRadius: 2,
+    marginBottom: 28,
+    marginRight: 5,
+    flex: 1,
+    width: 320,
+    right: 3.3,
   },
   flex: {
     flex: 1,

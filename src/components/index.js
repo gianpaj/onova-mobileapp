@@ -8,6 +8,7 @@ import HR from './HR';
 import ImageGrid from './ImageGrid';
 import MediaView from './MediaView';
 import NotificationsDot from './NotificationsDot';
+import Send from './Send';
 import SpinningIcon from './SpinningIcon';
 
 export {
@@ -19,5 +20,6 @@ export {
   ImageGrid,
   MediaView,
   NotificationsDot,
+  Send,
   SpinningIcon,
 };

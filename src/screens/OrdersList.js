@@ -25,7 +25,7 @@ import { NavigationActions } from 'react-navigation';
 import SendBird from 'sendbird';
 import type { NavigationScreenProp } from 'react-navigation';
 
-import type { UserData, ReduxState, Order, Product } from '../types';
+import type { UserData, ReduxState, Order } from '../types';
 import colors from '../config/colors';
 import * as api from '../utils/api';
 import { Avatar } from '../components';

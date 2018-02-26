@@ -23,6 +23,7 @@ export type Product = {
 };
 
 export type Comment = {
+  _id: string,
   text: string,
   createdAt: Date,
   user: UserData,

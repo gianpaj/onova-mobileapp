@@ -73,7 +73,10 @@ import com.android.build.OutputFile
  */
 
 project.ext.react = [
-    entryFile: "index.js"
+    entryFile: "index.js",
+
+    // // whether to bundle JS and assets in debug mode
+    // bundleInDebug: true,
 ]
 
 apply from: "../../node_modules/react-native/react.gradle"
@@ -93,6 +96,22 @@ def enableSeparateBuildPerCPUArchitecture = false
  */
 def enableProguardInReleaseBuilds = false
 
+def getPassword(String account, String keyChain) {
+    def stdout = new ByteArrayOutputStream()
+    def stderr = new ByteArrayOutputStream()
+    exec {
+        commandLine 'security', '-q', 'find-generic-password', '-a', account, '-s', keyChain, '-w'
+        standardOutput = stdout
+        errorOutput = stderr
+        ignoreExitValue true
+    }
+    // noinspection GroovyAssignabilityCheck
+    stdout.toString().trim()
+}
+
+def releasekeypass = getPassword("android_onova_keypass", "android_onova_keypass")
+def releasekeyalias = getPassword("android_onova_keypass", "android_onova_keyalias")
+
 android {
     compileSdkVersion 26
     buildToolsVersion "26.0.1"
@@ -111,6 +130,16 @@ android {
         // testBuildType System.getProperty('testBuildType', 'debug') // this will later be used to control the test apk build type
         // testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+    signingConfigs {
+      release {
+        if (project.hasProperty('MYAPP_RELEASE_STORE_FILE')) {
+          storeFile "${System.properties['user.home']}${File.separator}${MYAPP_RELEASE_STORE_FILE}" as File
+          storePassword releasekeypass
+          keyAlias MYAPP_RELEASE_KEY_ALIAS
+          keyPassword releasekeyalias
+        }
+      }
+    }
     splits {
         abi {
             reset()
@@ -123,6 +152,7 @@ android {
         release {
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+            signingConfig signingConfigs.release
         }
     }
     // applicationVariants are e.g. debug, release
@@ -147,6 +177,10 @@ dependencies {
     compile project(':react-native-image-crop-picker')
     compile project(':react-native-fast-image')
     compile project(':react-native-vector-icons')
+    compile project(':react-native-push-notification')
+    compile ('com.google.android.gms:play-services-gcm:8.1.0') {
+        force = true;
+    }
     compile fileTree(dir: "libs", include: ["*.jar"])
     compile "com.android.support:appcompat-v7:26.0.1"
     compile "com.facebook.react:react-native:+"  // From node_modules

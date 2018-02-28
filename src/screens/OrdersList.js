@@ -28,6 +28,7 @@ import type { NavigationScreenProp } from 'react-navigation';
 import type { UserData, ReduxState, Order } from '../types';
 import colors from '../config/colors';
 import * as api from '../utils/api';
+import * as ui from '../utils/ui';
 import { Avatar } from '../components';
 
 type Props = {
@@ -179,7 +180,6 @@ class OrdersListContainer extends Component<Props, State> {
   };
 
   componentWillUnmount() {
-    this.sb.disconnect(() => console.debug('SendBird disconnected'));
     this.sb.removeChannelHandler('ConnectionHandlerInList');
   }
 

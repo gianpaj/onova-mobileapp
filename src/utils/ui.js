@@ -2,11 +2,10 @@
 
 import { Alert } from 'react-native';
 import { Toast } from 'native-base';
-// $FlowFixMe
+// prettier-ignore
 import {
   format,
   differenceInHours,
-  distanceInWordsToNow,
   isYesterday,
 } from 'date-fns';
 

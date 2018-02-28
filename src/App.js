@@ -11,13 +11,12 @@ import {
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/lib/integration/react';
 import { Root } from 'native-base';
-
-// import Notifications from 'react-native-push-notification';
+import KeyboardManager from 'react-native-keyboard-manager';
+import SendBird from 'sendbird';
 import * as firebase from 'firebase';
 
 import configureStore from './store';
 import AppNavigation from './navigation';
-import KeyboardManager from 'react-native-keyboard-manager';
 
 if (Platform.OS == 'ios') {
   KeyboardManager.setToolbarPreviousNextButtonEnable(true);
@@ -31,6 +30,7 @@ type State = {
 };
 
 export default class App extends React.Component<*, State> {
+  sb;
   state = {
     appState: AppState.currentState,
   };
@@ -52,25 +52,25 @@ export default class App extends React.Component<*, State> {
   }
 
   _handleAppStateChange = (nextAppState: any) => {
+    this.sb = SendBird.getInstance();
     if (
       this.state.appState.match(/inactive|background/) &&
       nextAppState === 'active'
     ) {
-      console.log('appstate - foreground');
-      if (sb) {
-        sb.setForegroundState();
+      if (this.sb) {
+        console.debug('appstate - foreground');
+        this.sb.setForegroundState();
       }
     } else {
-      console.log('appstate - background');
-      if (sb) {
-        sb.setBackgroundState();
+      if (this.sb) {
+        console.debug('appstate - background');
+        this.sb.setBackgroundState();
       }
     }
   };
 
   componentDidMount() {
     AppState.addEventListener('change', this._handleAppStateChange);
-
   }
 
   componentWillUnmount() {

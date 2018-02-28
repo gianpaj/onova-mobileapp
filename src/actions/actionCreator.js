@@ -3,9 +3,11 @@
 
 // import * as firebase from 'firebase';
 // import { GoogleSignin, User as GoogleUser } from 'react-native-google-signin';
-
+import { Platform } from 'react-native';
 import SendBird from 'sendbird';
 import { Toast } from 'antd-mobile';
+// $FlowFixMe
+import Notifications from 'react-native-push-notification';
 
 import {
   incrementCounter,
@@ -33,6 +35,7 @@ import type {
 } from '../types';
 import settings from '../config/settings';
 import * as api from '../utils/api';
+import { registerPushNotifications } from '../utils/push';
 import * as ui from '../utils/ui';
 
 const incrementAction = () => ({
@@ -63,7 +66,7 @@ const login = (data: LoginData) => (dispatch: Dispatch) => (
         dispatch({ type: LOGIN_SUCCESS, payload: userData });
         // @TODO:1 send analytics login event
         initializeSendBird(userData)
-          .then(() => {})
+          .then(() => registerPushNotifications())
           .catch(err => {
             console.warn(err);
             dispatch({ type: LOGIN_FAIL });
@@ -81,8 +84,7 @@ const login = (data: LoginData) => (dispatch: Dispatch) => (
 
 const initializeSendBird = (userData: UserData): Promise<any> => {
   return new Promise((resolve, reject) => {
-    // $FlowFixMe
-    sb = new SendBird({ appId: settings.SENDBIRD_APP_ID });
+    const sb = new SendBird({ appId: settings.SENDBIRD_APP_ID });
     sb.connect(userData._id, (user, err) => {
       if (err) return reject(err);
 
@@ -146,6 +148,12 @@ const signup = (data: SignupData) => (dispatch: Dispatch) => (
           ...res.data,
           ...{ token: res.token, provider: 'email' },
         };
+        initializeSendBird(userData)
+          .then(() => registerPushNotifications())
+          .catch(err => {
+            console.warn(err);
+            dispatch({ type: LOGIN_FAIL });
+          });
         dispatch({ type: SIGNUP_SUCCESS, payload: userData });
       } else {
         console.warn(res);
@@ -193,11 +201,19 @@ const getUserData = (userId: string, options?: any = {}) => (
 );
 
 const logout = () => (dispatch: Dispatch, getState: GetState) => {
-  // $FlowFixMe
-  sb.disconnect();
+  const sb = SendBird.getInstance();
+  sb.disconnect(() => console.debug('SendBird: disconnected'));
+  if (Platform.OS === 'ios') {
+    Notifications.setApplicationIconBadgeNumber(0);
+  }
+  sb.unregisterPushTokenAllForCurrentUser(() =>
+    console.debug('SendBird: unregisterPushToken ')
+  );
+  return dispatch({ type: LOGOUT });
+
   // const provider = getState().LoginReducer.data.provider;
   // if (provider == 'email') {
-  return dispatch({ type: LOGOUT });
+  //   return dispatch({ type: LOGOUT });
   // } else if (data.provider == 'google') {
   //   return GoogleSignin.signOut()
   //     .then(() => firebase.auth().signOut())

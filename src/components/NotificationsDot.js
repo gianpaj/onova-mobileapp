@@ -41,6 +41,12 @@ class NotificationsDot extends React.Component<Props, void> {
             focused ? (isiOS ? colors.active : colors.grey1) : colors.grey1
           }
         />
+        {/* https://docs.nativebase.io/Components.html#footer-tabs-badge-headref */}
+        {/* <Button active badge vertical>
+          <Badge ><Text>51</Text></Badge>
+          <Icon active name="navigate" />
+          <Text>Navigate</Text>
+        </Button> */}
       </View>
     );
   }

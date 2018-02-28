@@ -10,6 +10,7 @@ import { initializeSendBird } from '../actions/actionCreator';
 import NavigationStack from './navigationStack';
 import type { Dispatch, UserData, ReduxState } from '../types';
 import type { NavigationState } from '../types/navigationReducer';
+import { registerPushNotifications } from '../utils/push';
 
 type Props = {
   dispatch: Dispatch,
@@ -28,7 +29,8 @@ class AppNavigation extends Component<Props, void> {
     if (isLoggedIn && userData) {
       initializeSendBird(userData)
         .then(() => {
-          console.debug('sendbird initialized');
+          console.debug('SendBird: initialized');
+          registerPushNotifications();
           // dispatch({ type: LOGIN_SUCCESS, payload: userData });
         })
         .catch(err => {

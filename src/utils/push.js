@@ -33,7 +33,6 @@ export function registerPushNotifications() {
   //     }
   //   }
   // }
-  console.log(sb.getPendingGCMToken());
   Notifications.configure({
     onRegister: (token: any) => {
       console.warn(sb);

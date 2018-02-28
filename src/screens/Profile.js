@@ -221,6 +221,7 @@ class ProfileScreen extends React.Component<Props, State> {
       .put(`/api/users/${userData._id}`, formData, {
         suppressRedBox: true,
         timeout: 30000,
+        token: userData.token,
       })
       .then(res => {
         this.setState({ editing: false });

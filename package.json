@@ -1,5 +1,5 @@
 {
-  "name": "myRN",
+  "name": "onova",
   "version": "0.0.1",
   "private": true,
   "repository": {
@@ -91,8 +91,8 @@
     "runner-config": "e2e/config.json",
     "configurations": {
       "ios.sim.debug": {
-        "binaryPath": "ios/build/Build/Products/Debug-iphonesimulator/myRN.app",
-        "build": "xcodebuild -project ios/myRN.xcodeproj -scheme myRN -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build",
+        "binaryPath": "ios/build/Build/Products/Debug-iphonesimulator/onova.app",
+        "build": "xcodebuild -project ios/onova.xcodeproj -scheme onova -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build",
         "type": "ios.simulator",
         "name": "iPhone 6"
       },

@@ -117,7 +117,7 @@ android {
     buildToolsVersion "26.0.1"
 
     defaultConfig {
-        applicationId "com.myrn"
+        applicationId "com.onova.app"
         minSdkVersion 16
         targetSdkVersion 22
         versionCode 1

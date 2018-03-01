@@ -1,0 +1,55 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+default_platform(:android)
+
+platform :android do
+  # desc "Runs all the tests"
+  # lane :test do
+  #   gradle(task: "test")
+  # end
+
+  desc "Release build"
+  lane :beta do
+    gradle(
+      task: 'assemble',
+      build_type: 'Release'
+    )
+  end
+
+  desc "Deploy a new version to the Google Play"
+  lane :deploy do
+    # @TODO: increase version number plugin: https://github.com/SiarheiFedartsou/fastlane-plugin-versioning
+
+    # gradle(task: "clean assembleRelease")
+    gradle(
+      task: 'assemble',
+      build_type: 'Release'
+    )
+
+    sentry_create_release(
+      auth_token: '***REMOVED***',
+      org_slug: 'onova',
+      project_slug: 'mobile',
+      # version: '...', # release version to create
+      app_identifier: 'com.onova.app',
+      finalize: true # Whether to finalize the release. If not provided or false, the release can be finalized using the sentry_finalize_release action
+    )
+
+    # upload_to_play_store
+
+    slack(
+      message: "The Onova Android App successfully released 🎉",
+      username: 'fastlane',
+      use_webhook_configured_username_and_icon: 'false'
+    )
+  end
+end

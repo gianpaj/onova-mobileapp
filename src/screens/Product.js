@@ -545,7 +545,9 @@ export class ProductContainer extends React.Component<Props, State> {
                         </Text>
                       </TouchableHighlight>
                       {/* // $FlowFixMe */}
-                      <Text style={styles.location}>{item.location}</Text>
+                      {item.location && (
+                        <Text style={styles.location}>{item.location}</Text>
+                      )}
                     </View>
                   </View>
                   {/* // $FlowFixMe */}

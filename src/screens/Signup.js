@@ -15,7 +15,7 @@ import Icon from 'react-native-vector-icons/Entypo';
 import { FormInput } from 'react-native-elements';
 // $FlowFixMe
 import AnimButton from 'react-native-micro-animated-button';
-import { Content } from 'native-base';
+import { Container, Content } from 'native-base';
 import type { NavigationScreenProp } from 'react-navigation';
 import isEmail from 'validator/lib/isEmail';
 
@@ -150,9 +150,9 @@ class SignupScreen extends React.Component<Props, State> {
 
   render() {
     return (
-      <Content>
-        <View style={styles.header}>
-          <View style={{ alignItems: 'center' }}>
+      <Container>
+        <Content>
+          <View style={styles.header}>
             <Icon name="flash" style={{ fontSize: 104 }} />
             <Text>Onova.co</Text>
             <View>
@@ -161,80 +161,80 @@ class SignupScreen extends React.Component<Props, State> {
               </Text>
             </View>
           </View>
-        </View>
-        <View testID="signup-form">
-          <FormInput
-            placeholder="Username"
-            returnKeyType="next"
-            onSubmitEditing={() => this.EmailInput && this.EmailInput.focus()}
-            value={this.state.username}
-            onChangeText={t => this.onUserChange(t)}
-            accessibilityLabel="username"
-            {...this._inputProps}
-          />
-          <FormInput
-            ref={c => {
-              this.EmailInput = c;
-            }}
-            placeholder="Email"
-            keyboardType="email-address"
-            returnKeyType="next"
-            onSubmitEditing={() => this.PwdInput && this.PwdInput.focus()}
-            value={this.state.emailAddress}
-            testID="EmailField"
-            onChangeText={text => this.setState({ emailAddress: text })}
-            accessibilityLabel="email address"
-            {...this._inputProps}
-          />
-          <FormInput
-            ref={c => {
-              this.PwdInput = c;
-            }}
-            secureTextEntry
-            placeholder="Password (minimum 8 characters)"
-            returnKeyType="go"
-            onSubmitEditing={() => this.onSignup()}
-            value={this.state.password}
-            onChangeText={text => this.setState({ password: text })}
-            accessibilityLabel="password"
-            {...this._inputProps}
-          />
-          <View style={styles.mt15}>
-            <AnimButton
-              ref={r => (this.signupBtn = r)}
-              disabled={this.state.disabled}
-              // eslint-disable-next-line
-              style={[styles.SignupButton, {
-                  backgroundColor: this.backgroundColor,
-                  elevation: this.animatedValue, // android
-                  shadowOpacity: this.animatedValue, // ios
-                },
-              ]}
-              {...buttonProps}
-              onPress={() => this.onSignup()}
-              testID="SignupButton"
-              label="Create account"
-              accessibilityLabel="Create account"
+          <View testID="signup-form">
+            <FormInput
+              placeholder="Username"
+              returnKeyType="next"
+              onSubmitEditing={() => this.EmailInput && this.EmailInput.focus()}
+              value={this.state.username}
+              onChangeText={t => this.onUserChange(t)}
+              accessibilityLabel="username"
+              {...this._inputProps}
             />
-            <Text style={[styles.hr, styles.mt15]}>
-              Already have an account?&nbsp;
-              <Text
-                style={styles.linkText}
-                onPress={() => this.props.navigation.dispatch(goback())}>
-                Log in
+            <FormInput
+              ref={c => {
+                this.EmailInput = c;
+              }}
+              placeholder="Email"
+              keyboardType="email-address"
+              returnKeyType="next"
+              onSubmitEditing={() => this.PwdInput && this.PwdInput.focus()}
+              value={this.state.emailAddress}
+              testID="EmailField"
+              onChangeText={text => this.setState({ emailAddress: text })}
+              accessibilityLabel="email address"
+              {...this._inputProps}
+            />
+            <FormInput
+              ref={c => {
+                this.PwdInput = c;
+              }}
+              secureTextEntry
+              placeholder="Password (minimum 8 characters)"
+              returnKeyType="go"
+              onSubmitEditing={() => this.onSignup()}
+              value={this.state.password}
+              onChangeText={text => this.setState({ password: text })}
+              accessibilityLabel="password"
+              {...this._inputProps}
+            />
+            <View style={styles.mt15}>
+              <AnimButton
+                ref={r => (this.signupBtn = r)}
+                disabled={this.state.disabled}
+                // eslint-disable-next-line
+                style={[styles.SignupButton, {
+                    backgroundColor: this.backgroundColor,
+                    elevation: this.animatedValue, // android
+                    shadowOpacity: this.animatedValue, // ios
+                  },
+                ]}
+                {...buttonProps}
+                onPress={() => this.onSignup()}
+                testID="SignupButton"
+                label="Create account"
+                accessibilityLabel="Create account"
+              />
+              <Text style={[styles.hr, styles.mt15]}>
+                Already have an account?&nbsp;
+                <Text
+                  style={styles.linkText}
+                  onPress={() => this.props.navigation.dispatch(goback())}>
+                  Log in
+                </Text>
               </Text>
-            </Text>
-            <Text style={[styles.hr, styles.mt15, { color: colors.grey1 }]}>
-              By creating an account you agree to the&nbsp;
-              <Text
-                style={[styles.linkText, styles.termsLink]}
-                onPress={this.openTermPolicy}>
-                Terms and Policy
+              <Text style={[styles.hr, styles.mt15, { color: colors.grey1 }]}>
+                By creating an account you agree to the&nbsp;
+                <Text
+                  style={[styles.linkText, styles.termsLink]}
+                  onPress={this.openTermPolicy}>
+                  Terms and Policy
+                </Text>
               </Text>
-            </Text>
+            </View>
           </View>
-        </View>
-      </Content>
+        </Content>
+      </Container>
     );
   }
 }
@@ -273,8 +273,9 @@ const raised = {
 
 const styles = StyleSheet.create({
   header: {
-    marginTop: 40,
+    alignItems: 'center',
     height: 180,
+    marginTop: 40,
   },
   input: {
     color: colors.black,

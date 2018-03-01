@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
 import { Button, FormInput } from 'react-native-elements';
-import { Button as NBButton, Content } from 'native-base';
+import { Button as NBButton, Container, Content } from 'native-base';
 import type { NavigationScreenProp } from 'react-navigation';
 import isEmail from 'validator/lib/isEmail';
 // $FlowFixMe
@@ -151,7 +151,8 @@ class LoginScreen extends React.Component<Props, State> {
     const { emailAddress, password, disabled } = this.state;
 
     return (
-      <Content>
+      <Container>
+        <Content testID="login-form">
         <View style={styles.header}>
           <View style={{ alignItems: 'center' }}>
             <Icon name="flash" style={{ fontSize: 104 }} />
@@ -163,7 +164,6 @@ class LoginScreen extends React.Component<Props, State> {
             </View>
           </View>
         </View>
-        <View testID="login-form">
           <FormInput
             placeholder="Email"
             keyboardType="email-address"
@@ -226,7 +226,7 @@ class LoginScreen extends React.Component<Props, State> {
             />
             {/* <Footer></Footer> */}
           </View>
-        </View>
+        </Content>
         <Modal
           animationType="slide"
           visible={this.state.modalVisible}
@@ -273,7 +273,7 @@ class LoginScreen extends React.Component<Props, State> {
             </NBButton>
           </View>
         </Modal>
-      </Content>
+      </Container>
     );
   }
 }

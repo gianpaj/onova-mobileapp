@@ -236,8 +236,11 @@ const handleErrorWithAlert = (data: any, err: any) => {
   } else if (err.status == 401) {
     // auth error
     errorType = 'warning';
-  } else if (err.message.includes('timeout')) {
-    err.message = 'Onova servers might be taking a nap. Please retry';
+  } else if (
+    err.message.includes('timeout') ||
+    err.message == 'Network Error'
+  ) {
+    err.message = 'Connectivity issue. Please check your internetz';
     errorType = 'danger';
   } else if (err.message == 'operation_canceled') {
     return {

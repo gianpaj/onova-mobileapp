@@ -35,7 +35,7 @@ export function registerPushNotifications() {
   // }
   Notifications.configure({
     onRegister: (token: any) => {
-      console.warn(sb);
+      console.log(sb);
       if (sb) {
         if (Platform.OS === 'ios') {
           sb.registerAPNSPushTokenForCurrentUser(

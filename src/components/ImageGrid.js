@@ -45,10 +45,6 @@ type State = {
 const { width, height } = Dimensions.get('window');
 
 export class ImageGridComponent extends React.Component<Props, State> {
-  constructor(props: any) {
-    super(props);
-  }
-
   state = {
     error: false,
     items: [],
@@ -66,7 +62,6 @@ export class ImageGridComponent extends React.Component<Props, State> {
 
   fetchItems = () => {
     // ?skip=${this.state.skip}
-    // setTimeout(() => {
     return api
       .get(this.props.apiURL)
       .then(res => {
@@ -80,7 +75,6 @@ export class ImageGridComponent extends React.Component<Props, State> {
           error: true,
         });
       });
-    // }, 2000);
   };
 
   onLayout = () => {
@@ -95,7 +89,6 @@ export class ImageGridComponent extends React.Component<Props, State> {
   };
 
   onItemPress(item: any) {
-    console.debug(item);
     const navigateToProduct = NavigationActions.navigate({
       routeName: 'product',
       key: `product-${item.uuid}`,

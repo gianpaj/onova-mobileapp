@@ -66,7 +66,8 @@ class OrdersListContainer extends Component<Props, State> {
       })
       .catch(err => {
         this.setState({ hasError: true });
-        console.error(err);
+        console.debug(err);
+        ui.showToast(err.message);
       });
   }
 
@@ -116,12 +117,8 @@ class OrdersListContainer extends Component<Props, State> {
     return new Promise((resolve, reject) => {
       api
         .get('/api/orders/', { token })
-        .then(res => {
-          resolve(res.data);
-        })
-        .catch(err => {
-          reject(err);
-        });
+        .then(res => resolve(res.data))
+        .catch(err => reject(err));
     });
   }
 
@@ -131,12 +128,8 @@ class OrdersListContainer extends Component<Props, State> {
     return new Promise((resolve, reject) => {
       api
         .get(`/api/orders/${orderId}`, { token })
-        .then(res => {
-          resolve(res.data);
-        })
-        .catch(err => {
-          reject(err);
-        });
+        .then(res => resolve(res.data))
+        .catch(err => reject(err));
     });
   }
 
@@ -215,7 +208,10 @@ class OrdersListContainer extends Component<Props, State> {
         });
         this.props.navigation.dispatch(navigateToOrderThread);
       })
-      .catch(e => console.error(e));
+      .catch(e => {
+        ui.showToast(e.message);
+        console.debug(e);
+      });
   };
 
   _renderItem = ({ item }) => {
@@ -283,11 +279,9 @@ class OrdersListContainer extends Component<Props, State> {
   refreshChannelList = () => {
     this.setState({ isRefreshing: true });
     this.getOrdersAndChats()
-      .then(ordersAndChats => {
-        this.setState({ channelList: ordersAndChats });
-      })
+      .then(channelList => this.setState({ channelList }))
       .catch(err => {
-        console.error(err);
+        console.debug(err);
         this.setState({ hasError: true });
       })
       .then(() => this.setState({ isRefreshing: false }));

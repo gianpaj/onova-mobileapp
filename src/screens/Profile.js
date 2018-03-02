@@ -106,7 +106,7 @@ class ProfileScreen extends React.Component<Props, State> {
           });
         })
         .catch(err => {
-          console.error(err);
+          console.debug(err);
         });
       const { token } = this.props.userData;
       api

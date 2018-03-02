@@ -11,6 +11,7 @@ import NavigationStack from './navigationStack';
 import type { Dispatch, UserData, ReduxState } from '../types';
 import type { NavigationState } from '../types/navigationReducer';
 import { registerPushNotifications } from '../utils/push';
+import * as ui from '../utils/ui';
 
 type Props = {
   dispatch: Dispatch,
@@ -34,7 +35,8 @@ class AppNavigation extends Component<Props, void> {
           // dispatch({ type: LOGIN_SUCCESS, payload: userData });
         })
         .catch(err => {
-          console.warn(err);
+          console.debug(err);
+          ui.showToast(err.message);
           // dispatch({ type: LOGIN_FAIL });
         });
     }

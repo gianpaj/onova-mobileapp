@@ -96,7 +96,7 @@ export class AddProductScreen extends React.Component<Props, State> {
   componentDidMount() {
     const { params } = this.props.navigation.state;
 
-    if (params && params.focused) {
+    if (params && params.focused == true) {
       this.takePicture();
     }
   }

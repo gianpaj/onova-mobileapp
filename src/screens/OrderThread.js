@@ -81,7 +81,7 @@ type State = {
   messages: Array<Message> | null,
   interlocutor: UserData | null,
   product: Product | {},
-  product: Order | {},
+  order: Order | {},
 };
 
 const tempMessages = [
@@ -107,6 +107,32 @@ class OrderThreadContainer extends Component<Props, State> {
     product: {},
     order: {},
   };
+
+  componentWillMount() {
+    const { params } = this.props.navigation.state;
+
+    console.log(params);
+
+    // for development
+    if (!params) {
+      const orderId = '5a90077ff298522a0eddde0a';
+      const productId = '';
+
+      this.getTempUserId('firstperson').then(userId => {
+        this.initialise(orderId, productId, userId);
+      });
+    } else {
+      // coming from Checkout or OrdersList
+      const { orderId, productId, userId } = params;
+      // @TODO: check show is the seller/buyer!
+      this.initialise(orderId, productId, userId);
+    }
+  }
+
+  componentWillUnmount() {
+    this.sb.removeChannelHandler('ChatView');
+    this.sb.removeConnectionHandler('ChatView');
+  }
 
   _getInterlucutorUserData(userId: string): Promise<null | any> {
     return new Promise((resolve, reject) => {
@@ -167,29 +193,6 @@ class OrderThreadContainer extends Component<Props, State> {
         })
         .catch(err => reject(err));
     });
-  }
-
-  componentWillMount() {
-    const { params } = this.props.navigation.state;
-
-    console.log(params);
-
-    let orderId = '';
-    let productId = '';
-    // for development
-    if (!params) {
-      orderId = '5aaa54475331ae236613f2ad';
-      // productId = '';
-
-      this.getTempUserId('firstperson').then(userId => {
-        this.initialise(orderId, productId, userId);
-      });
-    } else {
-      // coming from Checkout or OrdersList
-      const { orderId, productId, userId } = params;
-      // @TODO: check show is the seller/buyer!
-      this.initialise(orderId, productId, userId);
-    }
   }
 
   initialise(orderId: string, productId: string, userId: string) {
@@ -304,11 +307,6 @@ class OrderThreadContainer extends Component<Props, State> {
     };
   }
 
-  componentWillUnmount() {
-    this.sb.removeChannelHandler('ChatView');
-    this.sb.removeConnectionHandler('ChatView');
-  }
-
   onSend = (messages: Array<Message>) => {
     const { userData } = this.props;
 
@@ -325,6 +323,10 @@ class OrderThreadContainer extends Component<Props, State> {
                 'Message blocked by profanity filter',
                 'If you think this is an error please email us at hello@onova.co'
               );
+            }
+            if (err.code == 800200 || err.code == 800180) {
+              // this.setState({ text });
+              return Alert.alert('Connectivity issue', err.message);
             }
             return console.error(err);
           }

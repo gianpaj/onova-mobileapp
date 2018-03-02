@@ -44,7 +44,7 @@ type State = {
 class LoginScreen extends React.Component<Props, State> {
   PwdInput: ?FormInput;
   loginBtn;
-  animatedValue = new Animated.Value(0);
+  animatedValue = new Animated.Value(1);
   backgroundColor = this.animatedValue.interpolate({
     inputRange: [0, 1],
     outputRange: [colors.grey4, colors.primary],
@@ -58,7 +58,7 @@ class LoginScreen extends React.Component<Props, State> {
     modalVisible: false,
     emailReset: '',
     loadingReset: false,
-    disabled: true,
+    disabled: false,
   };
 
   onLogin() {
@@ -140,12 +140,12 @@ class LoginScreen extends React.Component<Props, State> {
       // if the email or password are empty
       const areFieldEmpty = !emailAddressNext || !passwordNext;
       this.setState({ disabled: areFieldEmpty });
-        Animated.timing(this.animatedValue, {
+      Animated.timing(this.animatedValue, {
         toValue: areFieldEmpty ? 0 : 1,
-          duration: 300,
-        }).start();
-      }
+        duration: 300,
+      }).start();
     }
+  }
 
   render() {
     const { emailAddress, password, disabled } = this.state;
@@ -153,17 +153,17 @@ class LoginScreen extends React.Component<Props, State> {
     return (
       <Container>
         <Content testID="login-form">
-        <View style={styles.header}>
-          <View style={{ alignItems: 'center' }}>
-            <Icon name="flash" style={{ fontSize: 104 }} />
-            <Text>Onova.co</Text>
-            <View>
-              <Text style={{ color: colors.black }}>
-                Buy and sell clothes from your phone
-              </Text>
+          <View style={styles.header}>
+            <View style={{ alignItems: 'center' }}>
+              <Icon name="flash" style={{ fontSize: 104 }} />
+              <Text>Onova.co</Text>
+              <View>
+                <Text style={{ color: colors.black }}>
+                  Buy and sell clothes from your phone
+                </Text>
+              </View>
             </View>
           </View>
-        </View>
           <FormInput
             placeholder="Email"
             keyboardType="email-address"

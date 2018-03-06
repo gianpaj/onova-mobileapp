@@ -53,20 +53,19 @@ export default class App extends React.Component<*, State> {
 
   _handleAppStateChange = (nextAppState: any) => {
     this.sb = SendBird.getInstance();
-    if (
-      this.state.appState.match(/inactive|background/) &&
-      nextAppState === 'active'
-    ) {
-      if (this.sb) {
+    if (this.sb) {
+      if (
+        this.state.appState.match(/inactive|background/) &&
+        nextAppState === 'active'
+      ) {
         console.debug('appstate - foreground');
         this.sb.setForegroundState();
-      }
-    } else {
-      if (this.sb) {
+      } else {
         console.debug('appstate - background');
         this.sb.setBackgroundState();
       }
     }
+    this.setState({ appState: nextAppState });
   };
 
   componentDidMount() {

@@ -314,7 +314,7 @@ class OrderThreadContainer extends Component<Props, State> {
       const text = messages[0].text;
       this.state.channel.sendUserMessage(
         text,
-        '',
+        this.state.order.id,
         (msg: SendBirdMessage, err) => {
           if (err) {
             // profanity filter

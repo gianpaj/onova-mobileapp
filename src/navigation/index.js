@@ -5,6 +5,8 @@ import { BackHandler } from 'react-native';
 import { connect } from 'react-redux';
 import { addNavigationHelpers, NavigationActions } from 'react-navigation';
 import { createReduxBoundAddListener } from 'react-navigation-redux-helpers';
+// $FlowFixMe
+import FCM, { FCMEvent } from 'react-native-fcm';
 
 import { initializeSendBird } from '../actions/actionCreator';
 import NavigationStack from './navigationStack';
@@ -21,6 +23,8 @@ type Props = {
 };
 
 class AppNavigation extends Component<Props, void> {
+  notificationListener;
+
   componentDidMount() {
     BackHandler.addEventListener('hardwareBackPress', this.onBackPress);
     const { isLoggedIn, userData } = this.props;
@@ -31,7 +35,7 @@ class AppNavigation extends Component<Props, void> {
       initializeSendBird(userData)
         .then(() => {
           console.debug('SendBird: initialized');
-          registerPushNotifications();
+          return registerPushNotifications();
           // dispatch({ type: LOGIN_SUCCESS, payload: userData });
         })
         .catch(err => {
@@ -44,6 +48,7 @@ class AppNavigation extends Component<Props, void> {
 
   componentWillUnmount() {
     BackHandler.removeEventListener('hardwareBackPress', this.onBackPress);
+    this.notificationListener.remove();
   }
 
   onBackPress = () => {

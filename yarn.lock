@@ -5916,6 +5916,10 @@ react-native-fast-image@^2.2.4:
   dependencies:
     prop-types "^15.5.10"
 
+react-native-fcm@^14.0.1:
+  version "14.0.1"
+  resolved "https://registry.yarnpkg.com/react-native-fcm/-/react-native-fcm-14.0.1.tgz#833e6a38a1b2fd1a9b7b69be35e007f7361fe474"
+
 react-native-fetch-blob@0.10.8:
   version "0.10.8"
   resolved "https://registry.yarnpkg.com/react-native-fetch-blob/-/react-native-fetch-blob-0.10.8.tgz#4fc256abae0cb5f10e7c41f28c11b3ff330d72a9"
@@ -5992,10 +5996,6 @@ react-native-parsed-text@^0.0.19:
   resolved "https://registry.yarnpkg.com/react-native-parsed-text/-/react-native-parsed-text-0.0.19.tgz#1aacca6f9ee82f939f60ef985df90c97bd55c45a"
   dependencies:
     prop-types "^15.5.10"
-
-react-native-push-notification@^3.0.2:
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/react-native-push-notification/-/react-native-push-notification-3.0.2.tgz#3fa7d654cfd915436597b0dd5ba8b0f898c4b0f5"
 
 react-native-safe-area-view@^0.6.0:
   version "0.6.0"

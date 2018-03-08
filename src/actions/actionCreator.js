@@ -1,4 +1,3 @@
-/*global sb*/
 // @flow
 
 // import * as firebase from 'firebase';
@@ -6,8 +5,6 @@
 import { Platform } from 'react-native';
 import SendBird from 'sendbird';
 import { Toast } from 'antd-mobile';
-// $FlowFixMe
-import Notifications from 'react-native-push-notification';
 
 import {
   incrementCounter,
@@ -35,7 +32,7 @@ import type {
 } from '../types';
 import settings from '../config/settings';
 import * as api from '../utils/api';
-import { registerPushNotifications } from '../utils/push';
+import { registerPushNotifications, setBadgeNumber } from '../utils/push';
 import * as ui from '../utils/ui';
 
 const incrementAction = () => ({
@@ -204,7 +201,7 @@ const logout = () => (dispatch: Dispatch, getState: GetState) => {
   const sb = SendBird.getInstance();
   sb.disconnect(() => console.debug('SendBird: disconnected'));
   if (Platform.OS === 'ios') {
-    Notifications.setApplicationIconBadgeNumber(0);
+    setBadgeNumber(0);
   }
   sb.unregisterPushTokenAllForCurrentUser(() =>
     console.debug('SendBird: unregisterPushToken ')

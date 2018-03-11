@@ -38,11 +38,21 @@ class AppNavigation extends Component<Props, void> {
           return registerPushNotifications();
           // dispatch({ type: LOGIN_SUCCESS, payload: userData });
         })
+        // .then(() => {
+
+        // })
         .catch(err => {
           console.debug(err);
           ui.showToast(err.message);
           // dispatch({ type: LOGIN_FAIL });
         });
+
+      this.notificationListener = FCM.on(FCMEvent.Notification, async (notif) => {
+        if (notif.sendbird) {
+          // navigate to orderThread
+        }
+        console.log(notif);
+      });
     }
   }
 

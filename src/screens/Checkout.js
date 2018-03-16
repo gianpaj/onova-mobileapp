@@ -130,7 +130,7 @@ class CheckoutContainer extends Component<Props, State> {
         if (
           err.message == 'Duplicate order' &&
           err.data.order &&
-          // @TODO: set to 'purchased' once payment is completed
+          // @TODO: set to 'paid' once payment is completed
           err.data.order.status == 'pending'
         ) {
           // $FlowFixMe
@@ -172,10 +172,10 @@ class CheckoutContainer extends Component<Props, State> {
   onCheckout = () => {
     const { item, order } = this.state;
     // @TODO: temp
-    const SKIP_PURCHASE = true;
-    if (SKIP_PURCHASE && item) {
+    const SKIP_PAY = true;
+    if (SKIP_PAY && item) {
       console.log(order);
-      console.warn('purchase skipped');
+      console.warn('payment skipped');
       // $FlowFixMe
       return this.goToOrderThread(order.id, item);
     }

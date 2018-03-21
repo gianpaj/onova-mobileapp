@@ -3,5 +3,9 @@
   "javascript.validate.enable": false,
   "flow.useNPMPackagedFlow": true,
   "eslint.enable": true,
-  "flow.enabled": true
+  "flow.enabled": true,
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/coverage": true
+  }
 }

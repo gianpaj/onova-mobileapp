@@ -26,14 +26,14 @@ import {
 // import { FormInput, FormLabel } from 'react-native-elements';
 import type { NavigationScreenProp } from 'react-navigation';
 // import { CardView, LiteCreditCardInput } from 'react-native-credit-card-input';
-import BTClient from 'react-native-braintree-xplat';
+// import BTClient from 'react-native-braintree-xplat';
 import axios from 'axios';
 import type { CancelTokenSource } from 'axios';
 
 import { Accordion, HR } from '../components';
 
 import colors from '../config/colors';
-import settings from '../config/settings';
+// import settings from '../config/settings';
 import { validShippingAddress } from '../utils/validators';
 import * as api from '../utils/api';
 // import * as ui from '../utils/ui';
@@ -116,14 +116,14 @@ class CheckoutContainer extends Component<Props, State> {
           order,
         });
 
-        if (Platform.OS === 'ios') {
-          BTClient.setupWithURLScheme(
-            settings.BRAINTREE_TOKENIZATION_KEY,
-            'com.onova.app.payments'
-          );
-        } else {
-          BTClient.setup(settings.BRAINTREE_TOKENIZATION_KEY);
-        }
+        // if (Platform.OS === 'ios') {
+        //   BTClient.setupWithURLScheme(
+        //     settings.BRAINTREE_TOKENIZATION_KEY,
+        //     'com.onova.app.payments'
+        //   );
+        // } else {
+        //   BTClient.setup(settings.BRAINTREE_TOKENIZATION_KEY);
+        // }
       })
       .catch(err => {
         console.log(err);
@@ -143,14 +143,14 @@ class CheckoutContainer extends Component<Props, State> {
             isLoading: false,
             order: err.data.order,
           });
-          if (Platform.OS === 'ios') {
-            BTClient.setupWithURLScheme(
-              settings.BRAINTREE_TOKENIZATION_KEY,
-              'com.onova.app.payments'
-            );
-          } else {
-            BTClient.setup(settings.BRAINTREE_TOKENIZATION_KEY);
-          }
+          // if (Platform.OS === 'ios') {
+          //   BTClient.setupWithURLScheme(
+          //     settings.BRAINTREE_TOKENIZATION_KEY,
+          //     'com.onova.app.payments'
+          //   );
+          // } else {
+          //   BTClient.setup(settings.BRAINTREE_TOKENIZATION_KEY);
+          // }
         } else {
           console.error(err);
         }
@@ -211,24 +211,24 @@ class CheckoutContainer extends Component<Props, State> {
 
     // Toast.loading('Loading...', 3);
 
-    BTClient.showPayPalViewController()
-      // BTClient.showPaymentViewController(options)
-      .then(nonce => {
-        // @TODO: payment succeeded, pass nonce to server
-        console.warn(nonce);
-      })
-      .then(() => {
-        const { order, item } = self.state;
-        console.log(order);
+    // BTClient.showPayPalViewController()
+    //   // BTClient.showPaymentViewController(options)
+    //   .then(nonce => {
+    //     // @TODO: payment succeeded, pass nonce to server
+    //     console.warn(nonce);
+    //   })
+    //   .then(() => {
+    //     const { order, item } = self.state;
+    //     console.log(order);
         // $FlowFixMe
         this.goToOrderThread(order.id, item);
-      })
-      .catch(err => {
-        if (err == 'USER_CANCELLATION' || err == null) {
-          return;
-        }
-        console.error(err);
-      });
+    //   })
+    //   .catch(err => {
+    //     if (err == 'USER_CANCELLATION' || err == null) {
+    //       return;
+    //     }
+    //     console.error(err);
+    //   });
 
     // api
     //   .put(`/api/users/${userData._id}`, data)

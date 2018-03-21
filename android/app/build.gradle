@@ -172,7 +172,6 @@ android {
 
 dependencies {
     compile project(':lottie-react-native')
-    compile project(':react-native-braintree-xplat')
     compile project(':react-native-fetch-blob')
     compile project(':react-native-image-crop-picker')
     compile project(':react-native-fast-image')

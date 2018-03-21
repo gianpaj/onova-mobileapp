@@ -8,9 +8,8 @@
  */
 
 #import "AppDelegate.h"
-#import "RCTBraintree.h"
-// record Touch indicators / Tap gestures
-#import "TouchVisualizer.h"
+// used to  record Touch indicators / Tap gestures
+// #import "TouchVisualizer.h"
 // react-native-push-notification
 #import <React/RCTPushNotificationManager.h>
 #import <React/RCTBundleURLProvider.h>
@@ -30,26 +29,17 @@
                                                    launchOptions:launchOptions];
   rootView.backgroundColor = [[UIColor alloc] initWithRed:1.0f green:1.0f blue:1.0f alpha:1];
 
-  // self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+  self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
   // https://github.com/zachgibson/react-native-touch-visualizer
-  self.window = [[TouchVisualizer alloc] initWithFrame:[UIScreen mainScreen].bounds];
+  // self.window = [[TouchVisualizer alloc] initWithFrame:[UIScreen mainScreen].bounds];
   UIViewController *rootViewController = [UIViewController new];
   rootViewController.view = rootView;
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
 
-  [BTAppSwitch setReturnURLScheme:@"com.onova.app.payments"];
   return YES;
 }
-- (BOOL)application:(UIApplication *)application
-            openURL:(NSURL *)url
-            options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options {
-    if ([url.scheme localizedCaseInsensitiveCompare:@"com.onova.app.payments"] == NSOrderedSame) {
-        return [BTAppSwitch handleOpenURL:url options:options];
-    }
-    return NO;
-}
-
+// START - PushNotificationIOS
 // Required to register for notifications
 - (void)application:(UIApplication *)application didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings {
 [RCTPushNotificationManager didRegisterUserNotificationSettings:notificationSettings];
@@ -71,5 +61,6 @@
 - (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification {
 [RCTPushNotificationManager didReceiveLocalNotification:notification];
 }
+// END - PushNotificationIOS
 
 @end

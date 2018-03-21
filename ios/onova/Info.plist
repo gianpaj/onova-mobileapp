@@ -20,21 +20,26 @@
 	<string>1.0</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
-	<key>CFBundleURLTypes</key>
-	<array>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>com.googleusercontent.apps.530398476253-s5dfiv2ilfn1nbrhk5otj8k2mnne101l</string>
-			</array>
-		</dict>
-	</array>
 	<key>CFBundleVersion</key>
 	<string>1</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>UILaunchStoryboardName</key>
+	<string>LaunchScreen</string>
+	<key>UIRequiredDeviceCapabilities</key>
+	<array>
+		<string>armv7</string>
+	</array>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+	<key>UIViewControllerBasedStatusBarAppearance</key>
+	<false/>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string/>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSExceptionDomains</key>
@@ -46,16 +51,6 @@
 			</dict>
 		</dict>
 	</dict>
-	<key>NSCameraUsageDescription</key>
-	<string>Onova would like to use your camera</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>Onova would like to your microphone (for videos)</string>
-	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>Onova would like to save photos to your photo gallery</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Onova would like access to your photo gallery to add a product listing</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Entypo.ttf</string>
@@ -69,35 +64,6 @@
 		<string>Octicons.ttf</string>
 		<string>SimpleLineIcons.ttf</string>
 		<string>Zocial.ttf</string>
-		<string>Roboto_medium.ttf</string>
-		<string>Roboto.ttf</string>
-		<string>rubicon-icon-font.ttf</string>
 	</array>
-	<key>UILaunchStoryboardName</key>
-	<string>LaunchScreen</string>
-	<key>UIRequiredDeviceCapabilities</key>
-	<array>
-		<string>armv7</string>
-	</array>
-	<key>UISupportedInterfaceOrientations</key>
-	<array>
-		<string>UIInterfaceOrientationPortrait</string>
-	</array>
-	<key>UIViewControllerBasedStatusBarAppearance</key>
-	<false/>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
-	<key>NSAppTransportSecurity</key>
-	<!--See http://ste.vn/2015/06/10/configuring-app-transport-security-ios-9-osx-10-11/ -->
-	<dict>
-		<key>NSExceptionDomains</key>
-		<dict>
-			<key>localhost</key>
-			<dict>
-				<key>NSExceptionAllowsInsecureHTTPLoads</key>
-				<true/>
-			</dict>
-		</dict>
-	</dict>
 </dict>
 </plist>

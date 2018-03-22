@@ -26,7 +26,7 @@ import {
   Right,
 } from 'native-base';
 import { Button } from 'react-native-elements';
-import LottieView from 'lottie-react-native';
+// import LottieView from 'lottie-react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { TextareaItem } from 'antd-mobile';
 import update from 'immutability-helper';
@@ -60,7 +60,7 @@ type State = {
   loading: boolean,
   loadingBuy: boolean,
   item: ProductType | {},
-  likeAnimValue: number,
+  // likeAnimValue: number,
 };
 
 // const isIOS = Platform.OS === 'ios';
@@ -74,7 +74,7 @@ export class ProductContainer extends React.Component<Props, State> {
     addCommentError: false,
     loading: true,
     loadingBuy: false,
-    likeAnimValue: new Animated.Value(0.35),
+    // likeAnimValue: new Animated.Value(0.35),
     item: {},
   };
 
@@ -361,12 +361,12 @@ export class ProductContainer extends React.Component<Props, State> {
     return this.state.item.seller._id == this.props.userData._id;
   }
 
-  onPressLike = () => {
-    Animated.timing(this.state.likeAnimValue, {
-      toValue: 0.7,
-      duration: 800,
-    }).start();
-  };
+  // onPressLike = () => {
+  //   Animated.timing(this.state.likeAnimValue, {
+  //     toValue: 0.7,
+  //     duration: 800,
+  //   }).start();
+  // };
 
   renderSingleComment = ({ item: c }: { item: Comment }) => (
     <View style={styles.containerComment}>
@@ -562,7 +562,7 @@ export class ProductContainer extends React.Component<Props, State> {
               <MediaView source={item.photoURIs} />
               <View style={[styles.padder, styles.bottomSection]}>
                 {/* <NBIcon name="ios-bookmark-outline" style={styles.iconSave} /> */}
-                <TouchableOpacity
+                {/* <TouchableOpacity
                   onPress={() => this.onPressLike()}
                   underlayColor="transparent"
                   // disabled={this.state.midAnimation}
@@ -575,7 +575,7 @@ export class ProductContainer extends React.Component<Props, State> {
                     source={require('../assets/animations/favorite_black.json')}
                     progress={this.state.likeAnimValue}
                   />
-                </TouchableOpacity>
+                </TouchableOpacity> */}
                 <NBIcon
                   name="ios-text-outline"
                   style={styles.iconCommmentAndShare}

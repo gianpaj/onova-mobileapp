@@ -1,5 +1,5 @@
-// flow-typed signature: 2ec149f998c0e60bacc18810504a8499
-// flow-typed version: 061d4cda47/react-navigation_v1.x.x/flow_>=v0.60.x
+// flow-typed signature: bd2c69866f7180eb05f435316ca832a4
+// flow-typed version: 6475dcc6d1/react-navigation_v1.x.x/flow_>=v0.60.x
 
 // @flow
 
@@ -581,7 +581,7 @@ declare module 'react-navigation' {
 
   declare export type NavigationContainerProps<S: {}, O: {}> = $Shape<{
     uriPrefix?: string | RegExp,
-    onNavigationStateChange?: (
+    onNavigationStateChange?: ?(
       NavigationState,
       NavigationState,
       NavigationAction
@@ -752,11 +752,11 @@ declare module 'react-navigation' {
     SET_PARAMS: 'Navigation/SET_PARAMS',
     URI: 'Navigation/URI',
     back: {
-      (payload: { key?: ?string }): NavigationBackAction,
+      (payload?: { key?: ?string }): NavigationBackAction,
       toString: () => string,
     },
     init: {
-      (payload: { params?: NavigationParams }): NavigationInitAction,
+      (payload?: { params?: NavigationParams }): NavigationInitAction,
       toString: () => string,
     },
     navigate: {
@@ -832,6 +832,8 @@ declare module 'react-navigation' {
   declare type _TabNavigatorConfig = {|
     ...NavigationTabRouterConfig,
     ..._TabViewConfig,
+    lazy?: boolean,
+    removeClippedSubviews?: boolean,
     containerOptions?: void,
   |};
   declare export function TabNavigator(
@@ -947,12 +949,14 @@ declare module 'react-navigation' {
       vertical?: _SafeAreaViewForceInsetValue,
       horizontal?: _SafeAreaViewForceInsetValue,
     },
-    children: React$Node,
+    children?: React$Node,
     style?: AnimatedViewStyleProp,
   };
   declare export var SafeAreaView: React$ComponentType<_SafeAreaViewProps>;
 
-  declare export var Header: React$ComponentType<HeaderProps>;
+  declare export class Header<P: HeaderProps, S> extends React$Component<P, S> {
+    static HEIGHT: number
+  }
 
   declare type _HeaderTitleProps = {
     children: React$Node,
@@ -1097,7 +1101,7 @@ declare module 'react-navigation' {
   declare export var TabBarBottom: React$ComponentType<_TabBarBottomProps>;
 
   declare type _NavigationInjectedProps = {
-    navigation: NavigationScreenProp<NavigationState>,
+    navigation: NavigationScreenProp<NavigationStateRoute>,
   };
   declare export function withNavigation<T: {}>(
     Component: React$ComponentType<T & _NavigationInjectedProps>

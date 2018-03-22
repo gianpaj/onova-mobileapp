@@ -5,10 +5,8 @@ import { BackHandler } from 'react-native';
 import { connect } from 'react-redux';
 import { addNavigationHelpers, NavigationActions } from 'react-navigation';
 import { createReduxBoundAddListener } from 'react-navigation-redux-helpers';
-// $FlowFixMe
-import FCM, { FCMEvent } from 'react-native-fcm';
 
-import { initializeSendBird } from '../actions/actionCreator';
+import { initializeSendBird, sendToken } from '../actions/actionCreator';
 import NavigationStack from './navigationStack';
 import type { Dispatch, UserData, ReduxState } from '../types';
 import type { NavigationState } from '../types/navigationReducer';
@@ -38,9 +36,9 @@ class AppNavigation extends Component<Props, void> {
           return registerPushNotifications();
           // dispatch({ type: LOGIN_SUCCESS, payload: userData });
         })
-        // .then(() => {
-
-        // })
+        .then(pushToken => {
+          if (pushToken) return sendToken(pushToken, userData);
+        })
         .catch(err => {
           console.debug(err);
           ui.showToast(err.message);

@@ -64,6 +64,9 @@ const login = (data: LoginData) => (dispatch: Dispatch) => (
         // @TODO:1 send analytics login event
         initializeSendBird(userData)
           .then(() => registerPushNotifications())
+          .then(pushToken => {
+            if (pushToken) return sendToken(pushToken, userData);
+          })
           .catch(err => {
             console.warn(err);
             dispatch({ type: LOGIN_FAIL });
@@ -147,6 +150,9 @@ const signup = (data: SignupData) => (dispatch: Dispatch) => (
         };
         initializeSendBird(userData)
           .then(() => registerPushNotifications())
+          .then(pushToken => {
+            if (pushToken) return sendToken(pushToken, userData);
+          })
           .catch(err => {
             console.warn(err);
             dispatch({ type: LOGIN_FAIL });
@@ -218,6 +224,23 @@ const logout = () => (dispatch: Dispatch, getState: GetState) => {
   // }
 };
 
+function sendToken(pushToken: string, userData: UserData): Promise<any> {
+  const data = {
+    platform: Platform.OS,
+    pushToken,
+  };
+
+  return api
+    .put(`/api/users/${userData._id}`, data, { token: userData.token })
+    .then(() => {
+      console.debug('pushToken and platform sent');
+      console.debug(data);
+    })
+    .catch(err => {
+      console.error(err);
+    });
+}
+
 const goToSignup = () => ({
   type: SIGNUP,
 });
@@ -259,6 +282,7 @@ export {
   login,
   // loginWithGoogle,
   signup,
+  sendToken,
   getPersonalUserData,
   getUserData,
   logout,

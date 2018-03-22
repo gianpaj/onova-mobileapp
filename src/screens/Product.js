@@ -263,7 +263,6 @@ export class ProductContainer extends React.Component<Props, State> {
       console.debug(params);
       this._getProduct(uuid)
         .then(data => {
-          console.log(data);
           this.setState({
             item: data,
             loading: false,

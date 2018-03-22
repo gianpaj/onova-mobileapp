@@ -1,4 +1,4 @@
-package com.onova;
+package com.onova.app;
 
 import com.facebook.react.ReactActivity;
 

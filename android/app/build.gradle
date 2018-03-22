@@ -75,8 +75,8 @@ import com.android.build.OutputFile
 project.ext.react = [
     entryFile: "index.js",
 
-    // // whether to bundle JS and assets in debug mode
-    // bundleInDebug: true,
+    // whether to bundle JS and assets in debug mode
+    bundleInDebug: true,
 ]
 
 apply from: "../../node_modules/react-native/react.gradle"
@@ -117,7 +117,7 @@ android {
     buildToolsVersion "23.0.1"
 
     defaultConfig {
-        applicationId "com.onova"
+        applicationId "com.onova.app"
         minSdkVersion 16
         targetSdkVersion 22
         versionCode 1
@@ -127,6 +127,7 @@ android {
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
+    }
     signingConfigs {
       release {
         if (project.hasProperty('MYAPP_RELEASE_STORE_FILE')) {

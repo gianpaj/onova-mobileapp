@@ -1,4 +1,4 @@
-package com.onova;
+package com.onova.app;
 
 import android.app.Application;
 

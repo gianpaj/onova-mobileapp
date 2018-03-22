@@ -122,6 +122,8 @@ android {
         targetSdkVersion 22
         versionCode 1
         versionName "1.0"
+        // for react-native-image-crop-picker
+        vectorDrawables.useSupportLibrary = true
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
@@ -166,6 +168,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-image-crop-picker')
     compile project(':react-native-vector-icons')
     compile project(':react-native-fetch-blob')
     compile fileTree(dir: "libs", include: ["*.jar"])

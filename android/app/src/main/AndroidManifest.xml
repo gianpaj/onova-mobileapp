@@ -6,6 +6,10 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
 
+    <!-- for react-native-firebase -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.VIBRATE" />
+
     <!-- for react-native-image-crop-picker -->
     <uses-permission android:name="android.permission.CAMERA"/>
 
@@ -15,18 +19,45 @@
       android:icon="@mipmap/ic_launcher"
       android:allowBackup="false"
       android:theme="@style/AppTheme">
+
+      <!-- 'singleTop' for react-native-firebase -->
       <activity
         android:name=".MainActivity"
         android:label="@string/app_name"
+        android:launchMode="singleTop"
         android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
         android:windowSoftInputMode="adjustResize">
         <intent-filter>
             <action android:name="android.intent.action.MAIN" />
+            <action android:name="android.intent.action.DOWNLOAD_COMPLETE"/>
             <category android:name="android.intent.category.LAUNCHER" />
-     <action android:name="android.intent.action.DOWNLOAD_COMPLETE"/>
         </intent-filter>
       </activity>
       <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
+
+      <service
+        android:name="io.invertase.firebase.messaging.MessagingService"
+        android:enabled="true"
+        android:exported="true">
+          <intent-filter>
+            <action android:name="com.google.firebase.MESSAGING_EVENT" />
+          </intent-filter>
+      </service>
+      <service android:name="io.invertase.firebase.messaging.InstanceIdService" android:exported="false">
+        <intent-filter>
+          <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+        </intent-filter>
+      </service>
+
+      <receiver android:name="io.invertase.firebase.messaging.RNFirebaseLocalMessagingPublisher"/>
+        <receiver android:enabled="true" android:exported="true" android:name="io.invertase.firebase.messaging.RNFirebaseSystemBootEventReceiver">
+          <intent-filter>
+            <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            <action android:name="android.intent.action.QUICKBOOT_POWERON"/>
+            <action android:name="com.htc.intent.action.QUICKBOOT_POWERON"/>
+            <category android:name="android.intent.category.DEFAULT" />
+          </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

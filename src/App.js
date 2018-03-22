@@ -23,7 +23,6 @@ if (Platform.OS == 'ios') {
 }
 
 const { store, persistor } = configureStore();
-let sb = null;
 
 type State = {
   appState: AppState,
@@ -49,10 +48,10 @@ export default class App extends React.Component<*, State> {
     if (!firebase.apps.length) {
       firebase.initializeApp(firebaseConfig);
     }
+    this.sb = SendBird.getInstance();
   }
 
   _handleAppStateChange = (nextAppState: any) => {
-    this.sb = SendBird.getInstance();
     if (this.sb) {
       if (
         this.state.appState.match(/inactive|background/) &&

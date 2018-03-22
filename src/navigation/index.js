@@ -44,13 +44,6 @@ class AppNavigation extends Component<Props, void> {
           ui.showToast(err.message);
           // dispatch({ type: LOGIN_FAIL });
         });
-
-      this.notificationListener = FCM.on(FCMEvent.Notification, async (notif) => {
-        if (notif.sendbird) {
-          // navigate to orderThread
-        }
-        console.log(notif);
-      });
     }
   }
 

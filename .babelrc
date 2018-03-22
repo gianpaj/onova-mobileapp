@@ -5,5 +5,12 @@
     "react-native-dotenv"
   ],
   "retainLines": true,
-  "plugins": [["import", { "libraryName": "antd-mobile" }]]
+  "plugins": [["import", { "libraryName": "antd-mobile" }]],
+  "env": {
+    "development": {
+      "plugins": [
+        "transform-react-jsx-source"
+      ]
+    }
+  }
 }

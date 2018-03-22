@@ -203,7 +203,7 @@ class SettingsContainer extends Component<Props, State> {
     Toast.loading('Loading...', 3);
 
     api
-      .put(`/api/users/${userData._id}`, data)
+      .put(`/api/users/${userData._id}`, data, { token: userData.token })
       .then(res => {
         console.log(res);
         // if we changed the email

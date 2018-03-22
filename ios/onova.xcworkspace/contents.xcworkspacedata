@@ -4,11 +4,4 @@
    <FileRef
       location = "container:onova.xcodeproj">
    </FileRef>
-   <Group
-      location = "group:../node_modules/react-native-keyboard-manager/ios/IQKeyboardManager/Resources"
-      name = "Resources">
-      <FileRef
-         location = "group:IQKeyboardManager.bundle">
-      </FileRef>
-   </Group>
 </Workspace>

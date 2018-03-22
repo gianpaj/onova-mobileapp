@@ -94,7 +94,7 @@ def enableSeparateBuildPerCPUArchitecture = false
 /**
  * Run Proguard to shrink the Java bytecode in release builds.
  */
-def enableProguardInReleaseBuilds = false
+def enableProguardInReleaseBuilds = true
 
 def getPassword(String account, String keyChain) {
     def stdout = new ByteArrayOutputStream()

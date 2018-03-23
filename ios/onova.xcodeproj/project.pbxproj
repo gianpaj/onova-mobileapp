@@ -5,6 +5,7 @@
 	};
 	objectVersion = 46;
 	objects = {
+
 /* Begin PBXBuildFile section */
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
@@ -39,6 +40,7 @@
 		2DCD954D1E0B4F2C00145EB5 /* onovaTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* onovaTests.m */; };
 		39C3FEB1FEFF44199DAB04D1 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 299AC55FF7A04359883EC5D9 /* Zocial.ttf */; };
 		553D6F5C2C1D45898286F9E3 /* libRNFetchBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D6C20BBC464E47428C2C14E6 /* libRNFetchBlob.a */; };
+		583A86B020651D2300CD0839 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 583A868520651D2300CD0839 /* GoogleService-Info.plist */; };
 		58AE5D272063A20F00E667FB /* QBImagePicker.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 58AE5CFA2063A15900E667FB /* QBImagePicker.framework */; };
 		58AE5D282063A20F00E667FB /* QBImagePicker.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 58AE5CFA2063A15900E667FB /* QBImagePicker.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		58AE5D292063A20F00E667FB /* RSKImageCropper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 58AE5D242063A15900E667FB /* RSKImageCropper.framework */; };
@@ -49,6 +51,7 @@
 		7F821038917A411A82D57987 /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 848DE9E2DB9845B7A172B56C /* Foundation.ttf */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 		8EDCC1EF5AFF46EFB0333D77 /* libReactNativeKeyboardManager.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EAB568BA1EF74A38A22F5871 /* libReactNativeKeyboardManager.a */; };
+		91A6D101FF61C0BA111A7143 /* libPods-onovaTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DE523DF3E03C5206BAF7DAD7 /* libPods-onovaTests.a */; };
 		ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */; };
 		B330F9D240DD40C38BED70C0 /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7CB0259F711044F4AAB22A12 /* MaterialCommunityIcons.ttf */; };
 		B79E004833924F90BD5554C7 /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5B73A29169B642028400CFD7 /* Entypo.ttf */; };
@@ -56,6 +59,7 @@
 		EA65C34566614C2D8C6511A7 /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2A388203FB3F4BB9865F3D68 /* Ionicons.ttf */; };
 		EEE4F4CDA1CA483D9FAF4D45 /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4B671CC29E6749BBA59A6E08 /* FontAwesome.ttf */; };
 		FB1835F3A57B4BB3BD583D02 /* libRNFirebase.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 18ED0DAB8E4F44FFB4DC1191 /* libRNFirebase.a */; };
+		FED8F982B9048C9B559F4776 /* libPods-onova.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FFD5A5DB273C2EFE309DEC9A /* libPods-onova.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -325,6 +329,13 @@
 			remoteGlobalIDString = 3400A8081CEB54A6008A0BC7;
 			remoteInfo = imageCropPicker;
 		};
+		58F4004920651301009350F8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 58B314A65FC446919EE1EBD2 /* RNFirebase.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 134814201AA4EA6300B7C361;
+			remoteInfo = RNFirebase;
+		};
 		5E9157321DD0AC6500FF2AA8 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */;
@@ -397,6 +408,8 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = onova/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = onova/main.m; sourceTree = "<group>"; };
 		146833FF1AC3E56700842450 /* React.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = React.xcodeproj; path = "../node_modules/react-native/React/React.xcodeproj"; sourceTree = "<group>"; };
+		18ED0DAB8E4F44FFB4DC1191 /* libRNFirebase.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNFirebase.a; sourceTree = "<group>"; };
+		1A2D9091EC6919F75E84F44A /* Pods-onovaTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-onovaTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-onovaTests/Pods-onovaTests.release.xcconfig"; sourceTree = "<group>"; };
 		1D9A5ABD23F04BFC864FE550 /* imageCropPicker.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = imageCropPicker.xcodeproj; path = "../node_modules/react-native-image-crop-picker/ios/imageCropPicker.xcodeproj"; sourceTree = "<group>"; };
 		299AC55FF7A04359883EC5D9 /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
 		29C0F2E094224574B207FD65 /* ReactNativeKeyboardManager.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = ReactNativeKeyboardManager.xcodeproj; path = "../node_modules/react-native-keyboard-manager/ios/ReactNativeKeyboardManager.xcodeproj"; sourceTree = "<group>"; };
@@ -407,10 +420,13 @@
 		3E951B2DC89242E2BBC9A504 /* RNFetchBlob.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNFetchBlob.xcodeproj; path = "../node_modules/react-native-fetch-blob/ios/RNFetchBlob.xcodeproj"; sourceTree = "<group>"; };
 		4B671CC29E6749BBA59A6E08 /* FontAwesome.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
 		56BF097EC6A145498E8CE378 /* EvilIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = EvilIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
+		583A868520651D2300CD0839 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "onova/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		58AE5CFA2063A15900E667FB /* QBImagePicker.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QBImagePicker.framework; path = "../node_modules/react-native-image-crop-picker/ios/ImageCropPickerSDK/QBImagePicker.framework"; sourceTree = "<group>"; };
 		58AE5D242063A15900E667FB /* RSKImageCropper.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RSKImageCropper.framework; path = "../node_modules/react-native-image-crop-picker/ios/ImageCropPickerSDK/RSKImageCropper.framework"; sourceTree = "<group>"; };
+		58B314A65FC446919EE1EBD2 /* RNFirebase.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNFirebase.xcodeproj; path = "../node_modules/react-native-firebase/ios/RNFirebase.xcodeproj"; sourceTree = "<group>"; };
 		5B73A29169B642028400CFD7 /* Entypo.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Entypo.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Entypo.ttf"; sourceTree = "<group>"; };
 		5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
+		777BD0D75233923E7036E698 /* Pods-onovaTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-onovaTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-onovaTests/Pods-onovaTests.debug.xcconfig"; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		7CB0259F711044F4AAB22A12 /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialCommunityIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf"; sourceTree = "<group>"; };
 		7D19BFBDD480405FADB5C389 /* MaterialIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
@@ -420,13 +436,15 @@
 		97DA1204FB894D2281F485CC /* libRNVectorIcons.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNVectorIcons.a; sourceTree = "<group>"; };
 		9DC778F0A52C4F149660D8DA /* Feather.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Feather.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Feather.ttf"; sourceTree = "<group>"; };
 		ADBDB91F1DFEBF0600ED6528 /* RCTBlob.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTBlob.xcodeproj; path = "../node_modules/react-native/Libraries/Blob/RCTBlob.xcodeproj"; sourceTree = "<group>"; };
+		B0905B89EB0F8CE6E29B0F91 /* Pods-onova.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-onova.release.xcconfig"; path = "Pods/Target Support Files/Pods-onova/Pods-onova.release.xcconfig"; sourceTree = "<group>"; };
 		C45E1D1DFF9C4BEAB6ED4D7B /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
 		C625240C27E84EAFB13C2CFF /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SimpleLineIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; };
+		CA2F9A1BB61FDFDD457D9077 /* Pods-onova.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-onova.debug.xcconfig"; path = "Pods/Target Support Files/Pods-onova/Pods-onova.debug.xcconfig"; sourceTree = "<group>"; };
 		D0E076735EAB4BCA928CE553 /* libimageCropPicker.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libimageCropPicker.a; sourceTree = "<group>"; };
 		D6C20BBC464E47428C2C14E6 /* libRNFetchBlob.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNFetchBlob.a; sourceTree = "<group>"; };
+		DE523DF3E03C5206BAF7DAD7 /* libPods-onovaTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-onovaTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		EAB568BA1EF74A38A22F5871 /* libReactNativeKeyboardManager.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libReactNativeKeyboardManager.a; sourceTree = "<group>"; };
-		58B314A65FC446919EE1EBD2 /* RNFirebase.xcodeproj */ = {isa = PBXFileReference; name = "RNFirebase.xcodeproj"; path = "../node_modules/react-native-firebase/ios/RNFirebase.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
-		18ED0DAB8E4F44FFB4DC1191 /* libRNFirebase.a */ = {isa = PBXFileReference; name = "libRNFirebase.a"; path = "libRNFirebase.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		FFD5A5DB273C2EFE309DEC9A /* libPods-onova.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-onova.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -435,6 +453,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				140ED2AC1D01E1AD002B40FF /* libReact.a in Frameworks */,
+				91A6D101FF61C0BA111A7143 /* libPods-onovaTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -462,6 +481,7 @@
 				58AE5D292063A20F00E667FB /* RSKImageCropper.framework in Frameworks */,
 				58AE5D272063A20F00E667FB /* QBImagePicker.framework in Frameworks */,
 				FB1835F3A57B4BB3BD583D02 /* libRNFirebase.a in Frameworks */,
+				FED8F982B9048C9B559F4776 /* libPods-onova.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -572,6 +592,7 @@
 		13B07FAE1A68108700A75B9A /* onova */ = {
 			isa = PBXGroup;
 			children = (
+				583A868520651D2300CD0839 /* GoogleService-Info.plist */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -612,6 +633,8 @@
 				58AE5CFA2063A15900E667FB /* QBImagePicker.framework */,
 				58AE5D242063A15900E667FB /* RSKImageCropper.framework */,
 				2D16E6891FA4F8E400B85C8A /* libReact.a */,
+				FFD5A5DB273C2EFE309DEC9A /* libPods-onova.a */,
+				DE523DF3E03C5206BAF7DAD7 /* libPods-onovaTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -641,6 +664,7 @@
 				EAB568BA1EF74A38A22F5871 /* libReactNativeKeyboardManager.a */,
 				97DA1204FB894D2281F485CC /* libRNVectorIcons.a */,
 				D0E076735EAB4BCA928CE553 /* libimageCropPicker.a */,
+				18ED0DAB8E4F44FFB4DC1191 /* libRNFirebase.a */,
 			);
 			name = "Recovered References";
 			sourceTree = "<group>";
@@ -673,6 +697,14 @@
 			isa = PBXGroup;
 			children = (
 				58AE5CE72063A04000E667FB /* libimageCropPicker.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		58F4004620651301009350F8 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				58F4004A20651301009350F8 /* libRNFirebase.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -738,6 +770,7 @@
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				58A64A992062F89D0097ADA2 /* Recovered References */,
 				426451AAF9F041A998EBCD3D /* Resources */,
+				F9BB9F6D398F8ECCA6A3ABFF /* Pods */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -764,6 +797,17 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		F9BB9F6D398F8ECCA6A3ABFF /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				CA2F9A1BB61FDFDD457D9077 /* Pods-onova.debug.xcconfig */,
+				B0905B89EB0F8CE6E29B0F91 /* Pods-onova.release.xcconfig */,
+				777BD0D75233923E7036E698 /* Pods-onovaTests.debug.xcconfig */,
+				1A2D9091EC6919F75E84F44A /* Pods-onovaTests.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -771,9 +815,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "onovaTests" */;
 			buildPhases = (
+				3A190C600EA624FF6A26ED93 /* [CP] Check Pods Manifest.lock */,
 				00E356EA1AD99517003FC87E /* Sources */,
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
+				8578EFD040480F69D6E3AF14 /* [CP] Embed Pods Frameworks */,
+				61A48494ACE7F5CCB8BD3AF5 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -789,11 +836,14 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "onova" */;
 			buildPhases = (
+				E7CA851EAE7C6B3F14FFC5C5 /* [CP] Check Pods Manifest.lock */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				58AE5D2B2063A20F00E667FB /* Embed Frameworks */,
+				30F2BED82B184ECB14838449 /* [CP] Embed Pods Frameworks */,
+				E09242BCA7B62CD34AB0BDB1 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -939,6 +989,10 @@
 				{
 					ProductGroup = 58A64ACF2062F89E0097ADA2 /* Products */;
 					ProjectRef = 3E951B2DC89242E2BBC9A504 /* RNFetchBlob.xcodeproj */;
+				},
+				{
+					ProductGroup = 58F4004620651301009350F8 /* Products */;
+					ProjectRef = 58B314A65FC446919EE1EBD2 /* RNFirebase.xcodeproj */;
 				},
 				{
 					ProductGroup = 58A64B0E2062FA0B0097ADA2 /* Products */;
@@ -1208,6 +1262,13 @@
 			remoteRef = 58AE5CE62063A04000E667FB /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		58F4004A20651301009350F8 /* libRNFirebase.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNFirebase.a;
+			remoteRef = 58F4004920651301009350F8 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -1270,6 +1331,7 @@
 				07D950F0F78B4EB69EB241DB /* Octicons.ttf in Resources */,
 				CC0AE98988094DC2A0514DBD /* SimpleLineIcons.ttf in Resources */,
 				39C3FEB1FEFF44199DAB04D1 /* Zocial.ttf in Resources */,
+				583A86B020651D2300CD0839 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1318,6 +1380,102 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
+		};
+		30F2BED82B184ECB14838449 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-onova/Pods-onova-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		3A190C600EA624FF6A26ED93 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-onovaTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		61A48494ACE7F5CCB8BD3AF5 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-onovaTests/Pods-onovaTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		8578EFD040480F69D6E3AF14 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-onovaTests/Pods-onovaTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E09242BCA7B62CD34AB0BDB1 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-onova/Pods-onova-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E7CA851EAE7C6B3F14FFC5C5 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-onova-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1386,6 +1544,7 @@
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 777BD0D75233923E7036E698 /* Pods-onovaTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				DEVELOPMENT_TEAM = 6TYG6TV7WQ;
@@ -1423,6 +1582,7 @@
 		};
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1A2D9091EC6919F75E84F44A /* Pods-onovaTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
@@ -1457,6 +1617,7 @@
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = CA2F9A1BB61FDFDD457D9077 /* Pods-onova.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CURRENT_PROJECT_VERSION = 1;
@@ -1484,6 +1645,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B0905B89EB0F8CE6E29B0F91 /* Pods-onova.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CURRENT_PROJECT_VERSION = 1;

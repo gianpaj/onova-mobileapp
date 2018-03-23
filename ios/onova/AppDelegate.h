@@ -9,7 +9,11 @@
 
 #import <UIKit/UIKit.h>
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate>
+// for react-native-firebase w/ messaging
+@import UserNotifications;
+
+// for react-native-firebase w/ messaging
+@interface AppDelegate : UIResponder <UIApplicationDelegate,UNUserNotificationCenterDelegate>
 
 @property (nonatomic, strong) UIWindow *window;
 

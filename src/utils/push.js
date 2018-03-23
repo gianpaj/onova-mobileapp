@@ -45,7 +45,6 @@ export function registerPushNotifications(): Promise<string | null> {
     firebase.messaging().onMessage(message => {
       // prevent infite look
       if (!message.local_notification) {
-        console.log('Got onMessage');
         console.log(message);
         firebase.messaging().createLocalNotification({
           title: message.title,

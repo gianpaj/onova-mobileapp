@@ -119,7 +119,7 @@ export class ProductContainer extends React.Component<Props, State> {
   showActionSheetForComment = (comment: Comment) => {
     let BUTTONS;
     // if its my comment
-    if (comment.user.id == this.props.userData._id) {
+    if (comment.user._id == this.props.userData._id) {
       BUTTONS = ['Delete', 'Cancel'];
     } else {
       BUTTONS = ['Report', 'Cancel'];
@@ -140,7 +140,7 @@ export class ProductContainer extends React.Component<Props, State> {
           case BUTTONS.indexOf('Delete'):
             ui.showConfirmAlert('Confirm deletion?', '', () => {
               this.deleteComment(comment);
-              this.forceUpdate();
+              // this.forceUpdate();
             });
             // report action
             break;
@@ -156,17 +156,20 @@ export class ProductContainer extends React.Component<Props, State> {
   };
 
   deleteComment(comment: Comment) {
+    const { uuid } = this.props.navigation.state.params;
     const { token } = this.props.userData;
-    // api
-    //   .del(`/api/comment/${comment._id}`, { token })
-    //   .then((comments: Array<Comment>) => {
-    //     console.log(comments);
-    // })
-    // .catch(e => console.error(e));
-    // $FlowFixMe
-    const comments = this.state.comments.filter(c => c._id !== comment._id);
+    api
+      .del(`/api/products/${uuid}/comment/${comment._id}`, { token })
+      .then(({ data }) => {
+        // $FlowFixMe
+        const comments = this.state.comments.filter(c => c._id !== comment._id);
 
-    this.setState({ comments });
+        if (data.length !== comments.length) {
+          return console.error('reload comments');
+        }
+        this.setState({ comments });
+      })
+      .catch(e => console.error(e));
   }
 
   deleteItem() {

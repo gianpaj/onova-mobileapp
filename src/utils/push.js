@@ -12,8 +12,8 @@ export function registerPushNotifications(): Promise<string | null> {
         .messaging()
         .requestPermissions()
         .then(status => {
-          console.log(status);
-          console.log(status.granted);
+          // $FlowFixMe
+          console.log('push perminssions granted:', status.granted);
         });
     }
 
@@ -23,7 +23,7 @@ export function registerPushNotifications(): Promise<string | null> {
       .getInitialNotification()
       .then(notif => {
         console.log('getInitialNotification');
-        console.log(notif);
+        if (notif) navigate(notif);
       });
 
     firebase
@@ -53,6 +53,10 @@ export function registerPushNotifications(): Promise<string | null> {
           priority: 'high', // show the notification expanded whtn
           show_in_foreground: true,
         });
+      } else {
+        if (message.opened_from_tray) {
+          navigate(message);
+        }
       }
     });
   });
@@ -69,7 +73,6 @@ function registerSendBirdToken(token: string): Promise<string | null> {
             return reject();
           }
           console.log('registerAPNSPushTokenForCurrentUser');
-          console.log(result);
           // Notifications.setApplicationIconBadgeNumber(number);
           resolve(token);
         });
@@ -93,8 +96,6 @@ function registerSendBirdToken(token: string): Promise<string | null> {
  * Sets the badge number on the app icon.
  *
  * Works in certain Android phones. We use it only for iOS.
- *
- * @param {*} num
  */
 export function setBadgeNumber(num: number): void {
   firebase.messaging().setBadgeNumber(num);

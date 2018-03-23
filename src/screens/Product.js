@@ -29,7 +29,6 @@ import { Button } from 'react-native-elements';
 // import LottieView from 'lottie-react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { TextareaItem } from 'antd-mobile';
-import update from 'immutability-helper';
 
 import { Avatar, MediaView, Send } from '../components';
 
@@ -57,6 +56,7 @@ type Props = {
 type State = {
   addCommentText: string,
   addCommentError: boolean,
+  comments: Array<Comment>,
   loading: boolean,
   loadingBuy: boolean,
   item: ProductType | {},
@@ -72,6 +72,7 @@ export class ProductContainer extends React.Component<Props, State> {
   state = {
     addCommentText: '',
     addCommentError: false,
+    comments: [],
     loading: true,
     loadingBuy: false,
     // likeAnimValue: new Animated.Value(0.35),
@@ -163,17 +164,9 @@ export class ProductContainer extends React.Component<Props, State> {
     // })
     // .catch(e => console.error(e));
     // $FlowFixMe
-    const comments = this.state.item.comments.filter(
-      c => c._id !== comment._id
-    );
+    const comments = this.state.comments.filter(c => c._id !== comment._id);
 
-    this.setState(
-      update(this.state, {
-        item: {
-          comments: { $set: comments },
-        },
-      })
-    );
+    this.setState({ comments });
   }
 
   deleteItem() {
@@ -271,6 +264,16 @@ export class ProductContainer extends React.Component<Props, State> {
         .catch(e => {
           console.error(e);
         });
+      this._getComments(uuid)
+        .then(({ comments }) => {
+          this.setState({
+            comments,
+            loading: false,
+          });
+        })
+        .catch(e => {
+          console.error(e);
+        });
     }
   }
 
@@ -278,6 +281,16 @@ export class ProductContainer extends React.Component<Props, State> {
     return new Promise((resolve, reject) => {
       api
         .get(`/api/products/${uuid}`)
+        .then(res => resolve(res.data))
+        .catch(e => reject(e));
+    });
+  }
+
+  _getComments(uuid: string): Promise<ProductType> {
+    return new Promise((resolve, reject) => {
+      const { token } = this.props.userData;
+      api
+        .get(`/api/products/${uuid}/comment`, { token })
         .then(res => resolve(res.data))
         .catch(e => reject(e));
     });
@@ -394,17 +407,17 @@ export class ProductContainer extends React.Component<Props, State> {
     </View>
   );
 
-  _keyExtractor = item => item.createdAt;
+  _keyExtractor = item => item._id;
 
   renderSeparator = () => <View style={styles.separator} />;
 
   renderComments() {
     return (
-      this.state.item.comments !== null && (
+      this.state.comments !== null && (
         <View style={styles.padder}>
           <FlatList
             style={styles.root}
-            data={this.state.item.comments}
+            data={this.state.comments}
             extraData={this.state}
             ItemSeparatorComponent={this.renderSeparator}
             keyExtractor={this._keyExtractor}
@@ -450,38 +463,43 @@ export class ProductContainer extends React.Component<Props, State> {
   };
 
   onSendComment = (text: string) => {
-    const self = this;
     // is the text empty or longer that the max
     if (text.trim().length < 1 || text.length == settings.MAX_LENGTH_COMMENT)
       return;
 
-    const comment: Comment = {
-      _id: '3',
-      text,
-      createdAt: new Date(Date.now()),
-      user: this.props.userData,
-    };
-    this.setState(
-      update(this.state, { item: { comments: { $push: [comment] } } })
-    );
-    this.setState({ addCommentText: '' });
-    // Keyboard.dismiss();
-    setTimeout(() => {
-      self.scrollView._root.scrollToEnd({ animated: true });
-    }, 300);
+    const self = this;
+    const { token } = this.props.userData;
 
-    // api
-    //   .post(`/api/comment/${this.state.item._id}`)
-    //   .then(() => {
-    //     this.setState({ addCommentText: '' });
-    //   })
-    //   .catch(e => {
-    //     this.setState({ addCommentError: true });
-    //     setTimeout(() => {
-    //       this.setState({ addCommentError: false });
-    //     }, 3000);
-    //     console.error(e);
-    //   });
+    api
+      .post(
+        `/api/products/${this.state.item.uuid}/comment`,
+        { text },
+        { token }
+      )
+      .then(({ data }) => {
+        let { comment, uuid }: { comment: Comment, uuid: string } = data;
+
+        comment = {
+          ...comment,
+          user: this.props.userData,
+        };
+
+        this.setState({
+          addCommentText: '',
+          comments: [...this.state.comments, comment],
+        });
+        // Keyboard.dismiss();
+        setTimeout(() => {
+          self.scrollView._root.scrollToEnd({ animated: true });
+        }, 300);
+      })
+      .catch(e => {
+        this.setState({ addCommentError: true });
+        console.error(e);
+        setTimeout(() => {
+          this.setState({ addCommentError: false });
+        }, 3000);
+      });
   };
 
   onChangeText = (t: string) => {

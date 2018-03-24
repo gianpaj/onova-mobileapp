@@ -1,39 +1,50 @@
 # Onova mobile app
 
+- Apple Store
+- Play Store
+
 > Created using React Native CLI (`react-native`), not Create React Native App (CRNA) or Expo client.
 
 Follow [these instructions](https://facebook.github.io/react-native/docs/getting-started.html) to install the React Native requirements.
 
 ## Getting started
 
+1. Start the development server (server.data).
+2. Update the `.env` to the IP address of where the server.data is running (e.g. you laptop's)
+3. Install `npm -g flow-typed`. It's automatically executed after running `yarn`.
+
 ```bash
 yarn
 react-native run-ios
 # or
+yarn run start-emulator # only tested in Gian's laptop
 react-native run-android
 ```
 
 ## Run E2E test on iOS 🍎
 
+_todo_
+
+<!-- 
 Start the emulator and the React Native packager
 
     react-native run-ios
 
 Run Detox tests on iOS 🍎
 
-    yarn test-e2e
+    yarn test-e2e -->
 
 ## Build production builds
 
 ### Android 🤖
 
-Currently compiling to support `Android 8.0 (SDK 26)` - default from current React Native
+Currently compiling to support `Android 6.0 (SDK 23)` - default from React Native v0.54
 
 #### Setup 🔨🤖
 
 1. Install [fastlane](https://docs.fastlane.tools/getting-started/android/setup/)
 2. Install Android SDK/Android Studio
-3. (optional) Clone the [repo](https://bitbucket.org/onova/private.stuff) holding the Android certificate for the release build (needs auth)
+3. (optional) Clone the [repo](https://bitbucket.org/onova/private.stuff) containg the Android certificate for the release build (you need to have access)
 
     ```bash
     cd onova
@@ -69,6 +80,14 @@ _todo_
 
 _todo_
 
+## Tools
+
+### Check the size of the JavaScript bundle
+
+Using [react-native-bundle-visualizer](https://github.com/IjzerenHein/react-native-bundle-visualizer)
+
+    yarn run react-native-bundle-visualizer
+
 ## Troubleshooting 🔫
 
 1. Issue with packager / Metro bundler
@@ -77,4 +96,8 @@ _todo_
     error: bundling failed: ambiguous resolution: module `.../onova/mobileapp/index.js` tries to require `react-native`, but there are several files providing this module. You can delete or fix them:
     ```
 
-    yarn start --reset-cache
+        yarn start --reset-cache
+    
+2. iOS is just being a b*tch
+
+        yarn run nuke-ios

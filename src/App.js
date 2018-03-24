@@ -29,6 +29,7 @@ type State = {
 };
 
 export default class App extends React.Component<*, State> {
+  // $FlowFixMe
   sb;
   state = {
     appState: AppState.currentState,

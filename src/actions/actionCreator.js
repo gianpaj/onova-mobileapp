@@ -210,7 +210,7 @@ const logout = () => (dispatch: Dispatch, getState: GetState) => {
     setBadgeNumber(0);
   }
   sb.unregisterPushTokenAllForCurrentUser(() =>
-    console.debug('SendBird: unregisterPushToken ')
+    console.debug('SendBird: unregisterPushToken')
   );
   return dispatch({ type: LOGOUT });
 

@@ -51,12 +51,11 @@ export function showConfirmAlert(
  * @param {Date} createdAt
  */
 export function formatTime(createdAt: Date): string {
+  if (isYesterday(createdAt)) {
+    return '1d';
+  }
   if (differenceInHours(new Date(), createdAt) < 24) {
     return format(createdAt, 'HH:mm');
   }
-  if (isYesterday(createdAt)) {
-    return 'Yesterday';
-  } else {
-    return format(createdAt, 'D MMM');
-  }
+  return format(createdAt, 'D MMM');
 }

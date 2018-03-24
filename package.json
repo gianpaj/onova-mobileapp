@@ -76,7 +76,8 @@
     "prettier": "^1.10.2",
     "react-native-bundle-visualizer": "^1.2.0",
     "react-native-touch-visualizer": "^0.1.0",
-    "react-test-renderer": "^16.3.0-alpha.1"
+    "react-test-renderer": "^16.3.0-alpha.1",
+    "redux-logger": "^3.0.6"
   },
   "jest": {
     "setupTestFrameworkScriptFile": "./e2e/init.js",

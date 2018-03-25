@@ -4,7 +4,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import {
   ActivityIndicator,
-  Animated,
+  // Animated,
+  Dimensions,
   FlatList,
   // Keyboard,
   StyleSheet,
@@ -29,6 +30,7 @@ import { Button } from 'react-native-elements';
 // import LottieView from 'lottie-react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { TextareaItem } from 'antd-mobile';
+import MentionsTextInput from 'react-native-mentions';
 
 import { Avatar, MediaView, Send } from '../components';
 
@@ -54,29 +56,36 @@ type Props = {
 };
 
 type State = {
-  addCommentText: string,
   addCommentError: boolean,
   comments: Array<Comment>,
   loading: boolean,
   loadingBuy: boolean,
   item: ProductType | {},
   // likeAnimValue: number,
+  usersToMention: Array<UserData>,
+  keyword: string,
+  text: string,
 };
+
+const { width } = Dimensions.get('window');
 
 // const isIOS = Platform.OS === 'ios';
 
 export class ProductContainer extends React.Component<Props, State> {
   anim: ?React$Element<*>;
   scrollView: Content;
+  reqTimer = 0;
 
   state = {
-    addCommentText: '',
     addCommentError: false,
     comments: [],
     loading: true,
     loadingBuy: false,
     // likeAnimValue: new Animated.Value(0.35),
     item: {},
+    usersToMention: [],
+    keyword: '',
+    text: '',
   };
 
   showActionSheetForProduct = () => {
@@ -431,8 +440,85 @@ export class ProductContainer extends React.Component<Props, State> {
     );
   }
 
+  renderSuggestionsRow({ item }: { item: UserData }, hidePanel: () => void) {
+    return (
+      <TouchableOpacity
+        onPress={() => this.onSuggestionTap(item.username, hidePanel)}>
+        <View style={styles.suggestionsRowContainer}>
+          <View style={styles.userIconBox}>
+            <Text style={styles.usernameInitials}>
+              {!!item.displayName &&
+                item.displayName.substring(0, 2).toUpperCase()}
+            </Text>
+          </View>
+          <View style={styles.userDetailsBox}>
+            <Text style={styles.displayNameText}>{item.displayName}</Text>
+            <Text style={styles.usernameText}>@{item.username}</Text>
+          </View>
+        </View>
+      </TouchableOpacity>
+    );
+  }
+
+  onSuggestionTap = (username: string, hidePanel: () => void) => {
+    hidePanel();
+    const comment = this.state.text.slice(0, -this.state.keyword.length);
+    this.setState({
+      usersToMention: [],
+      text: comment + '@' + username,
+    });
+  };
+
+  callback(keyword: string) {
+    if (this.reqTimer) {
+      clearTimeout(this.reqTimer);
+    }
+
+    this.reqTimer = setTimeout(() => {
+      this.getUserSuggestions(keyword)
+        .then(data => {
+          this.setState({
+            keyword: keyword,
+            usersToMention: [...data],
+          });
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }, 200);
+  }
+
+  getUserSuggestions(displayName = ''): Promise<Array<any>> {
+    return Promise.resolve([
+      {
+        accountStatus: 'verified',
+        id: '5a78d09e2d314a702698f957',
+        username: 'john',
+        displayName: 'John displayName',
+      },
+      {
+        accountStatus: 'verified',
+        id: '5a78d09d2d314a702698f955',
+        username: 'maria',
+        displayName: 'Maria Maria',
+      },
+    ]);
+    // return fetch(`http://localhost:8080/?username=${displayName.slice(1)}`, {
+    //   method: 'GET',
+    //   headers: {
+    //     'Content-type': 'application/json',
+    //   },
+    // }).then(res => {
+    //   console.log(res);
+    //   if (!res.ok) {
+    //     throw new Error('Went wrong');
+    //   }
+    //   return res.json();
+    // });
+  }
+
   renderAddComment = () => {
-    const { addCommentText: text } = this.state;
+    const { text } = this.state;
     // is the text not empty and not longer that the max
     const showActiveOpacity =
       text.trim().length < 1 || text.length == settings.MAX_LENGTH_COMMENT;
@@ -488,7 +574,7 @@ export class ProductContainer extends React.Component<Props, State> {
         };
 
         this.setState({
-          addCommentText: '',
+          text: '',
           comments: [...this.state.comments, comment],
         });
         // Keyboard.dismiss();
@@ -508,7 +594,7 @@ export class ProductContainer extends React.Component<Props, State> {
   onChangeText = (t: string) => {
     this.setState({
       addCommentError: t.length == settings.MAX_LENGTH_COMMENT,
-      addCommentText: t,
+      text: t,
     });
   };
 
@@ -726,12 +812,12 @@ const styles = StyleSheet.create({
     // marginLeft: 20,
     marginTop: 12,
   },
-  likeButton: {
-    height: 150,
-    margin: -47,
-    marginLeft: -65,
-    width: 150,
-  },
+  // likeButton: {
+  //   height: 150,
+  //   margin: -47,
+  //   marginLeft: -65,
+  //   width: 150,
+  // },
   buyButton: {
     backgroundColor: colors.grey1,
     marginTop: 9,

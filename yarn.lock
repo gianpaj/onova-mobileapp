@@ -6282,6 +6282,10 @@ react-native-lightbox@^0.7.0:
   dependencies:
     prop-types "^15.5.10"
 
+react-native-mentions@^1.1.4:
+  version "1.1.4"
+  resolved "https://registry.yarnpkg.com/react-native-mentions/-/react-native-mentions-1.1.4.tgz#dc50ef2f096a2ebf8819a44794f6b3046bc69308"
+
 react-native-menu@^0.23.0:
   version "0.23.0"
   resolved "https://registry.yarnpkg.com/react-native-menu/-/react-native-menu-0.23.0.tgz#3c023239aed95d419275df50c199982ad7eb062b"

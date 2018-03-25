@@ -1,7 +1,8 @@
 // @flow
 
 import axios, { CancelTokenSource } from 'axios';
-import { API_URL, ENV } from 'react-native-dotenv';
+import { ENV } from 'react-native-dotenv';
+import { API_URL } from './ui';
 
 console.warn(`Running in ${ENV} environment`);
 console.warn(`API_URL: ${API_URL}`);

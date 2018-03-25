@@ -11,7 +11,7 @@
     "flow-start": "flow start",
     "flow-stop": "flow stop",
     "flow": "flow",
-    "postinstall": "rm -f ./node_modules/react-native/local-cli/core/__fixtures__/files/package.json",
+    "postinstall": "rm -f ./node_modules/react-native/local-cli/core/__fixtures__/files/package.json && flow-typed install",
     "start-emulator": "cd $ANDROID_HOME/tools && ./emulator -avd Nexus_5X_API_25_7.1.1_",
     "nuke-ios": "watchman watch-del-all && rm -rf $TMPDIR/react-* && rm -rf ios/build/ModuleCache && rm -rf ~/Library/Developer/Xcode/DerivedData/*",
     "start": "node node_modules/react-native/local-cli/cli.js start",

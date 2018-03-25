@@ -59,3 +59,18 @@ export function formatTime(createdAt: Date): string {
   }
   return format(createdAt, 'D MMM');
 }
+
+export const isProd =
+  JSON.parse(JSON.stringify(process.env)).NODE_ENV == 'prod';
+
+console.debug('isProd', isProd);
+
+let API_URL_;
+
+API_URL_ = 'http://localhost:4040';
+
+if (isProd) {
+  API_URL_ = 'https://onova-183307.appspot.com';
+}
+
+export const API_URL = API_URL_;

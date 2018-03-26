@@ -1,7 +1,9 @@
 # Onova mobile app
 
-- Apple Store
-- Play Store
+- Android app: 
+<!-- [link](https://play.google.com/store/apps/details?id=com.onova.app) -->
+- iOS app: 
+<!-- [link](https://itunes.apple.com/us/app/?mt=8) -->
 
 > Created using React Native CLI (`react-native`), not Create React Native App (CRNA) or Expo client.
 
@@ -38,14 +40,14 @@ Run Detox tests on iOS 🍎
 
 ### Android 🤖
 
-Currently compiling to support `Android 6.0 (SDK 23)` - default from React Native v0.54
+Currently supporting `Android 6.0 (SDK 23)` – default with React Native v0.54
 
 #### Setup 🔨🤖
 
 1. Install [fastlane](https://docs.fastlane.tools/getting-started/android/setup/)
 2. Install Android SDK/Android Studio
-3. (optional) Clone the [repo](https://bitbucket.org/onova/private.stuff) containg the Android certificate for the release build (you need to have access)
-
+3. (_optional_) Clone the [repo](https://bitbucket.org/onova/private.stuff) containg the Android certificate for the release build (you need to have access)
+  
     ```bash
     cd onova
     git clone git@bitbucket.org:onova/private.stuff.git
@@ -56,7 +58,9 @@ Currently compiling to support `Android 6.0 (SDK 23)` - default from React Nativ
     drwxr-xr-x    6 gianfranco  staff   204B 28 Feb 12:13 private.stuff
     ```
 
-    The `private.stuff` folder needs to be at the same level as the mobileapp.
+    The `private.stuff` folder needs to be at the same level as the `mobileapp`.
+    
+4. Now you're ready to make a prod build.
 
 #### Build Android 🤖
 
@@ -66,7 +70,7 @@ Currently compiling to support `Android 6.0 (SDK 23)` - default from React Nativ
 
 - Deploy a new version to the Google Play
 
-  This also sends the source code to Sentry.io and sends a msg on Slack the #bots-dev-onova channel once finished 🎉
+  Build and sends the source code to Sentry.io and sends a msg on Slack the #bots-dev-onova channel once finished 🎉
 
       fastlane deploy
 

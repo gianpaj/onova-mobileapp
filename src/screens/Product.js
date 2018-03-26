@@ -30,6 +30,7 @@ import { Button } from 'react-native-elements';
 // import LottieView from 'lottie-react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 // import { TextareaItem } from 'antd-mobile';
+import ParsedText from 'react-native-parsed-text';
 import MentionsTextInput from 'react-native-mentions';
 
 import { Avatar, MediaView, Send } from '../components';
@@ -60,7 +61,7 @@ type State = {
   comments: Array<Comment>,
   loading: boolean,
   loadingBuy: boolean,
-  item: ProductType | {},
+  item: ?ProductType,
   // likeAnimValue: number,
   usersToMention: Array<UserData>,
   keyword: string,
@@ -84,7 +85,7 @@ export class ProductContainer extends React.Component<Props, State> {
     loading: true,
     loadingBuy: false,
     // likeAnimValue: new Animated.Value(0.35),
-    item: {},
+    item: null,
     usersToMention: [],
     keyword: '',
     text: '',
@@ -168,7 +169,15 @@ export class ProductContainer extends React.Component<Props, State> {
   };
 
   deleteComment(comment: Comment) {
-    const { uuid } = this.props.navigation.state.params;
+    const { params }: { params: ProductType } = this.props.navigation.state;
+    let uuid: string;
+
+    // for development
+    if (!params) {
+      uuid = 'SJWwox8LLG';
+    } else {
+      uuid = params.uuid;
+    }
     const { token } = this.props.userData;
     api
       .del(`/api/products/${uuid}/comment/${comment._id}`, { token })
@@ -383,11 +392,44 @@ export class ProductContainer extends React.Component<Props, State> {
             <Text style={styles.displayName}>{c.user.displayName}</Text>
             <Text style={styles.time}>{ui.formatTime(c.createdAt)}</Text>
           </View>
-          <Text style={styles.commentText}>{c.text}</Text>
+          <ParsedText
+            parse={[
+              {
+                pattern: /\[(@[a-zA-Zа-яА-Я0-9\_\.]+):([^\]]+)\]/i,
+                style: styles.mention,
+                onPress: this.handleNamePress,
+                renderText: this.renderText,
+              },
+            ]}
+            childrenProps={{ allowFontScaling: false }}
+            style={styles.commentText}>
+            {c.text}
+          </ParsedText>
         </View>
       </TouchableWithoutFeedback>
     </View>
   );
+
+  handleNamePress = (matchingString: string) => {
+    const pattern = /\[(@[^:]+):([^\]]+)\]/i;
+    // input: [@michel:5455345]
+    // output: ["[@michel:5455345]", "@michel", "5455345"]
+    const matches = matchingString.match(pattern);
+    if (!matches) return console.error('error');
+    api
+      .get(`/api/users/${matches[2]}`)
+      .then((user: UserData) => {
+        this.goToProfile(user);
+      })
+      .catch(err => {
+        console.debug(err);
+        ui.showToast('User not found', 'warning');
+      });
+  };
+
+  renderText(string: string, matches: Array<string>) {
+    return matches[1];
+  }
 
   _keyExtractor = item => item._id;
 
@@ -415,10 +457,12 @@ export class ProductContainer extends React.Component<Props, State> {
     this.setState({ visibleHeight: height - e.endCoordinates.height });
   };
 
-  renderSuggestionsRow({ item }: { item: UserData }, hidePanel: () => void) {
+  renderSuggestionsRow(
+    { item: user }: { item: UserData },
+    hidePanel: () => void
+  ) {
     return (
-      <TouchableOpacity
-        onPress={() => this.onSuggestionTap(item.username, hidePanel)}>
+      <TouchableOpacity onPress={() => this.onSuggestionTap(user, hidePanel)}>
         <View
           style={[
             styles.row,
@@ -431,24 +475,24 @@ export class ProductContainer extends React.Component<Props, State> {
             // style={styles.avatarContainer}
             size={'verySmall'}
             withBorder
-            uri={item.profilePic}
-            placeholderText={item.username}
+            uri={user.profilePic || ''}
+            placeholderText={user.username}
           />
           <View style={styles.userDetailsBox}>
-            <Text style={styles.displayNameText}>{item.displayName}</Text>
-            <Text style={styles.suggestionUsernameText}>@{item.username}</Text>
+            <Text style={styles.displayNameText}>{user.displayName}</Text>
+            <Text style={styles.suggestionUsernameText}>@{user.username}</Text>
           </View>
         </View>
       </TouchableOpacity>
     );
   }
 
-  onSuggestionTap = (username: string, hidePanel: () => void) => {
+  onSuggestionTap = (user: UserData, hidePanel: () => void) => {
     hidePanel();
     const comment = this.state.text.slice(0, -this.state.keyword.length);
     this.setState({
       usersToMention: [],
-      text: comment + '@' + username + ' ',
+      text: comment + '@' + user.username + ' ',
     });
   };
 
@@ -478,50 +522,51 @@ export class ProductContainer extends React.Component<Props, State> {
   getUserSuggestions(username: string = ''): Promise<Array<any>> {
     const data = [
       {
+        _id: '5a78d09e2d314a702698f957',
         accountStatus: 'verified',
-        id: '5a78d09e2d314a702698f957',
-        username: 'john',
-        displayName: 'John John',
+        username: 'anotherperson',
+        displayName: 'Zzzsd fadf',
+        profilePic:
+          'https://storage.googleapis.com/staging.onova-183307.appspot.com/users/5a78d09e2d314a702698f957-1521722787711.jpg',
       },
       {
+        _id: '5a78d09d2d314a702698f955',
         accountStatus: 'verified',
-        id: '5a78d09d2d314a702698f955',
         username: 'maria',
-        displayName: 'Maria Maria',
       },
       {
+        _id: '5a78d09e2d314a702698f959',
         accountStatus: 'verified',
-        id: '5a78d09e2d314a702698f959',
         username: 'barry',
         displayName: 'barry barry',
       },
       {
+        _id: '5a78d09d2d314a702698f956',
         accountStatus: 'verified',
-        id: '5a78d09d2d314a702698f956',
         username: 'doc',
         displayName: 'doc doc',
       },
       {
+        _id: '5a78d09e2d314a702698f958',
         accountStatus: 'verified',
-        id: '5a78d09e2d314a702698f958',
         username: 'joseph',
         displayName: 'joseph joseph',
       },
       {
+        _id: '5a78d09d2d314a702698f959',
         accountStatus: 'verified',
-        id: '5a78d09d2d314a702698f959',
         username: 'jaysus',
         displayName: 'jaysus jaysus',
       },
       {
+        _id: '5a78d09e2d314a702698f962',
         accountStatus: 'verified',
-        id: '5a78d09e2d314a702698f962',
         username: 'xavier',
         displayName: 'xavier xavier',
       },
       {
+        _id: '5a78d09d2d314a702698f961',
         accountStatus: 'verified',
-        id: '5a78d09d2d314a702698f961',
         username: 'zorro',
         displayName: 'zorro zorro',
       },
@@ -607,9 +652,10 @@ export class ProductContainer extends React.Component<Props, State> {
               paddingHorizontal: 3,
             }}
             horizontal={false}
-            keyExtractor={item => item.id}
+            keyExtractor={item => item._id}
             MaxVisibleRowCount={7} // this is required if horizontal={false}
             onChangeText={this.onChangeText}
+            placeholder="Add a comment"
             renderSuggestionsRow={this.renderSuggestionsRow.bind(this)}
             suggestionRowHeight={45}
             suggestionsData={this.state.usersToMention} // array of objects
@@ -637,9 +683,11 @@ export class ProductContainer extends React.Component<Props, State> {
   };
 
   onSendComment = (text: string) => {
+    text = text.trim();
+    // Remove Multiple New Lines
+    text = text.replace(/[\r\n]+/g, '\n');
     // is the text empty or longer that the max
-    if (text.trim().length < 1 || text.length == settings.MAX_LENGTH_COMMENT)
-      return;
+    if (text.length < 1 || text.length == settings.MAX_LENGTH_COMMENT) return;
 
     const self = this;
     const { token } = this.props.userData;
@@ -710,7 +758,7 @@ export class ProductContainer extends React.Component<Props, State> {
           }}
           style={styles.container}>
           {loading && <ActivityIndicator size="large" />}
-          {Object.keys(item).length !== 0 && (
+          {item && (
             <View>
               <View style={styles.topSection}>
                 <View style={styles.avatar}>
@@ -934,6 +982,10 @@ const styles = StyleSheet.create({
   suggestionUsernameText: {
     fontSize: 12,
     color: colors.grey2,
+  },
+  mention: {
+    color: colors.pDark,
+    fontWeight: 'bold',
   },
 });
 

@@ -411,20 +411,17 @@ export class ProductContainer extends React.Component<Props, State> {
   );
 
   handleNamePress = (matchingString: string) => {
-    const pattern = /\[(@[^:]+):([^\]]+)\]/i;
+    const pattern = /\[(@[a-zA-Zа-яА-Я0-9\_\.]+):([^\]]+)\]/i;
     // input: [@michel:5455345]
     // output: ["[@michel:5455345]", "@michel", "5455345"]
     const matches = matchingString.match(pattern);
     if (!matches) return console.error('error');
-    api
-      .get(`/api/users/${matches[2]}`)
-      .then((user: UserData) => {
-        this.goToProfile(user);
-      })
-      .catch(err => {
-        console.debug(err);
-        ui.showToast('User not found', 'warning');
-      });
+
+    if (matches[2] == 'null') {
+      return ui.showToast('User not found', 'warning');
+    }
+    // $FlowFixMe
+    this.goToProfile({ username: matches[2].replace('@', '') });
   };
 
   renderText(string: string, matches: Array<string>) {

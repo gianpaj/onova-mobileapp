@@ -7,7 +7,7 @@ import {
   // Animated,
   Dimensions,
   FlatList,
-  // Keyboard,
+  Keyboard,
   StyleSheet,
   Text,
   TouchableHighlight,
@@ -29,7 +29,7 @@ import {
 import { Button } from 'react-native-elements';
 // import LottieView from 'lottie-react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { TextareaItem } from 'antd-mobile';
+// import { TextareaItem } from 'antd-mobile';
 import MentionsTextInput from 'react-native-mentions';
 
 import { Avatar, MediaView, Send } from '../components';
@@ -65,9 +65,10 @@ type State = {
   usersToMention: Array<UserData>,
   keyword: string,
   text: string,
+  visibleHeight: number,
 };
 
-const { width } = Dimensions.get('window');
+const { height, width } = Dimensions.get('window');
 
 // const isIOS = Platform.OS === 'ios';
 
@@ -75,6 +76,7 @@ export class ProductContainer extends React.Component<Props, State> {
   anim: ?React$Element<*>;
   scrollView: Content;
   reqTimer = 0;
+  keyboardDidShowListener: any; // EmitterSubscription
 
   state = {
     addCommentError: false,
@@ -86,6 +88,7 @@ export class ProductContainer extends React.Component<Props, State> {
     usersToMention: [],
     keyword: '',
     text: '',
+    visibleHeight: 0,
   };
 
   showActionSheetForProduct = () => {
@@ -211,82 +214,49 @@ export class ProductContainer extends React.Component<Props, State> {
   //   });
   // }
 
+  componentWillUnmount() {
+    this.keyboardDidShowListener.remove();
+    // this.keyboardDidHideListener.remove();
+  }
+
   componentWillMount() {
+    this.keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      this._keyboardDidShow
+    );
+    this.setState({ visibleHeight: height });
+    // this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this._keyboardDidHide);
+
     const { params }: { params: ProductType } = this.props.navigation.state;
     let uuid;
 
     // for development
     if (!params) {
-      // uuid = 'SJewilLU8z';
-      const item = {
-        categoryIds: [1, 2],
-        currency: 'UAH',
-        description: 'product for development',
-        photoURIs: [
-          'https://storage.googleapis.com/staging.onova-183307.appspot.com/products/ByaLDsOvG-1.jpg',
-        ],
-        price: '1.99',
-        status: 'forsale',
-        createdAt: '2018-02-05T21:46:09.490Z',
-        seller: {
-          accountStatus: 'verified',
-          id: '5a78d09d2d314a702698f955',
-          username: 'firstperson',
-        },
-        location: 'Kiev, Ukraine',
-        comments: [
-          {
-            _id: 0,
-            text: 'string',
-            createdAt: '2018-02-05T21:46:09.490Z',
-            user: {
-              accountStatus: 'verified',
-              id: '5a78d09d2d314a702698f955',
-              username: 'firstperson',
-              displayName: 'Maria Maria',
-            },
-          },
-          {
-            _id: 1,
-            text: 'string',
-            createdAt: '2018-02-04T21:46:09.490Z',
-            user: {
-              accountStatus: 'verified',
-              id: '5a78d09e2d314a702698f957',
-              username: 'firstperson',
-              displayName: 'firstperson displayName',
-            },
-          },
-        ],
-      };
-      this.setState({
-        item,
-        loading: false,
-      });
+      uuid = 'SJWwox8LLG';
     } else {
       uuid = params.uuid;
-      console.debug(params);
-      this._getProduct(uuid)
-        .then(data => {
-          this.setState({
-            item: data,
-            loading: false,
-          });
-        })
-        .catch(e => {
-          console.error(e);
-        });
-      this._getComments(uuid)
-        .then(({ comments }) => {
-          this.setState({
-            comments,
-            loading: false,
-          });
-        })
-        .catch(e => {
-          console.error(e);
-        });
     }
+    console.debug('product uuid:', uuid);
+    this._getProduct(uuid)
+      .then(data => {
+        this.setState({
+          item: data,
+          loading: false,
+        });
+      })
+      .catch(e => {
+        console.error(e);
+      });
+    this._getComments(uuid)
+      .then(({ comments }) => {
+        this.setState({
+          comments,
+          loading: false,
+        });
+      })
+      .catch(e => {
+        console.error(e);
+      });
   }
 
   _getProduct(uuid: string): Promise<ProductType> {
@@ -440,20 +410,33 @@ export class ProductContainer extends React.Component<Props, State> {
     );
   }
 
+  _keyboardDidShow = e => {
+    console.log(height - e.endCoordinates.height);
+    this.setState({ visibleHeight: height - e.endCoordinates.height });
+  };
+
   renderSuggestionsRow({ item }: { item: UserData }, hidePanel: () => void) {
     return (
       <TouchableOpacity
         onPress={() => this.onSuggestionTap(item.username, hidePanel)}>
-        <View style={styles.suggestionsRowContainer}>
-          <View style={styles.userIconBox}>
-            <Text style={styles.usernameInitials}>
-              {!!item.displayName &&
-                item.displayName.substring(0, 2).toUpperCase()}
-            </Text>
-          </View>
+        <View
+          style={[
+            styles.row,
+            {
+              borderColor: colors.convertHex(colors.grey2, 10),
+              borderWidth: StyleSheet.hairlineWidth,
+            },
+          ]}>
+          <Avatar
+            // style={styles.avatarContainer}
+            size={'verySmall'}
+            withBorder
+            uri={item.profilePic}
+            placeholderText={item.username}
+          />
           <View style={styles.userDetailsBox}>
             <Text style={styles.displayNameText}>{item.displayName}</Text>
-            <Text style={styles.usernameText}>@{item.username}</Text>
+            <Text style={styles.suggestionUsernameText}>@{item.username}</Text>
           </View>
         </View>
       </TouchableOpacity>
@@ -465,7 +448,7 @@ export class ProductContainer extends React.Component<Props, State> {
     const comment = this.state.text.slice(0, -this.state.keyword.length);
     this.setState({
       usersToMention: [],
-      text: comment + '@' + username,
+      text: comment + '@' + username + ' ',
     });
   };
 
@@ -474,9 +457,13 @@ export class ProductContainer extends React.Component<Props, State> {
       clearTimeout(this.reqTimer);
     }
 
+    // TODO: don't autosuggest until you type 1 character
+    // TODO: don't autosuggest if you type multiple @ signs
+    // if (keyword == '@') return;
     this.reqTimer = setTimeout(() => {
       this.getUserSuggestions(keyword)
         .then(data => {
+          // TODO: don't autosuggest already mentioned usernames
           this.setState({
             keyword: keyword,
             usersToMention: [...data],
@@ -488,13 +475,13 @@ export class ProductContainer extends React.Component<Props, State> {
     }, 200);
   }
 
-  getUserSuggestions(displayName = ''): Promise<Array<any>> {
-    return Promise.resolve([
+  getUserSuggestions(username: string = ''): Promise<Array<any>> {
+    const data = [
       {
         accountStatus: 'verified',
         id: '5a78d09e2d314a702698f957',
         username: 'john',
-        displayName: 'John displayName',
+        displayName: 'John John',
       },
       {
         accountStatus: 'verified',
@@ -502,8 +489,50 @@ export class ProductContainer extends React.Component<Props, State> {
         username: 'maria',
         displayName: 'Maria Maria',
       },
-    ]);
-    // return fetch(`http://localhost:8080/?username=${displayName.slice(1)}`, {
+      {
+        accountStatus: 'verified',
+        id: '5a78d09e2d314a702698f959',
+        username: 'barry',
+        displayName: 'barry barry',
+      },
+      {
+        accountStatus: 'verified',
+        id: '5a78d09d2d314a702698f956',
+        username: 'doc',
+        displayName: 'doc doc',
+      },
+      {
+        accountStatus: 'verified',
+        id: '5a78d09e2d314a702698f958',
+        username: 'joseph',
+        displayName: 'joseph joseph',
+      },
+      {
+        accountStatus: 'verified',
+        id: '5a78d09d2d314a702698f959',
+        username: 'jaysus',
+        displayName: 'jaysus jaysus',
+      },
+      {
+        accountStatus: 'verified',
+        id: '5a78d09e2d314a702698f962',
+        username: 'xavier',
+        displayName: 'xavier xavier',
+      },
+      {
+        accountStatus: 'verified',
+        id: '5a78d09d2d314a702698f961',
+        username: 'zorro',
+        displayName: 'zorro zorro',
+      },
+    ];
+
+    return Promise.resolve(
+      data
+      // data.filter(user => this.fuzzysearch(username, user.username))
+    );
+
+    // return api.get(`http://localhost:8080/?username=${displayName.slice(1)}`, {
     //   method: 'GET',
     //   headers: {
     //     'Content-type': 'application/json',
@@ -517,6 +546,27 @@ export class ProductContainer extends React.Component<Props, State> {
     // });
   }
 
+  fuzzysearch(needle: string, haystack: string): Boolean {
+    var hlen = haystack.length;
+    var nlen = needle.length;
+    if (nlen > hlen) {
+      return false;
+    }
+    if (nlen === hlen) {
+      return needle === haystack;
+    }
+    outer: for (var i = 0, j = 0; i < nlen; i++) {
+      var nch = needle.charCodeAt(i);
+      while (j < hlen) {
+        if (haystack.charCodeAt(j++) === nch) {
+          continue outer;
+        }
+      }
+      return false;
+    }
+    return true;
+  }
+
   renderAddComment = () => {
     const { text } = this.state;
     // is the text not empty and not longer that the max
@@ -525,14 +575,49 @@ export class ProductContainer extends React.Component<Props, State> {
     return (
       <View style={styles.addCommentContainer}>
         <View style={styles.addCommentInputContainer}>
-          <TextareaItem
-            autoCorrect
-            style={styles.addCommentInput}
-            autoHeight
-            count={settings.MAX_LENGTH_COMMENT}
-            error={this.state.addCommentError}
+          <MentionsTextInput
+            autoCorrect={false}
+            keyboardType="email-address"
+            loadingComponent={() => (
+              <View
+                // eslint-disable-next-line
+                style={{
+                  flex: 1,
+                  width,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <ActivityIndicator />
+              </View>
+            )}
+            // eslint-disable-next-line
+            suggestionsPanelStyle={{
+              // borderWidth: 1,
+              backgroundColor: colors.grey5,
+              borderColor: colors.grey5,
+              borderRadius: 3,
+              bottom: 40,
+              left: -12,
+              position: 'absolute',
+              right: -47,
+            }}
+            // eslint-disable-next-line
+            textInputStyle={{
+              fontSize: 15,
+              paddingHorizontal: 3,
+            }}
+            horizontal={false}
+            keyExtractor={item => item.id}
+            MaxVisibleRowCount={7} // this is required if horizontal={false}
             onChangeText={this.onChangeText}
-            placeholder="Type a comment"
+            renderSuggestionsRow={this.renderSuggestionsRow.bind(this)}
+            suggestionRowHeight={45}
+            suggestionsData={this.state.usersToMention} // array of objects
+            textInputMaxHeight={80}
+            textInputMinHeight={30}
+            trigger={'@'}
+            triggerCallback={this.callback.bind(this)}
+            triggerLocation={'anywhere'}
             value={text}
           />
         </View>
@@ -764,14 +849,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingVertical: 10,
   },
-  addCommentInput: {
-    marginLeft: -10,
-    marginRight: -2,
-    marginBottom: -4,
-    // paddingBottom: 28,
-    flex: 1,
-    right: 3.3,
-  },
   flex: {
     flex: 1,
   },
@@ -844,6 +921,20 @@ const styles = StyleSheet.create({
   //   color: colors.grey3,
   //   fontSize: 12,
   // },
+  userDetailsBox: {
+    flex: 1,
+    justifyContent: 'center',
+    paddingLeft: 10,
+    paddingRight: 15,
+  },
+  displayNameText: {
+    fontSize: 13,
+    fontWeight: '500',
+  },
+  suggestionUsernameText: {
+    fontSize: 12,
+    color: colors.grey2,
+  },
 });
 
 const mapStateToProps: MapStateToProps<*, *, *> = (state: ReduxState) => ({

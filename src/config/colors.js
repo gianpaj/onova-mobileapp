@@ -23,4 +23,17 @@ export default {
   black: '#000000',
   white: '#ffffff',
   red: '#ff0000',
+  convertHex,
 };
+
+/**
+ * convert HEX to RGBA and add alpha from opacity (0 - 100)
+ */
+function convertHex(hex: string, opacity: number): string {
+  hex = hex.replace('#', '');
+  const r = parseInt(hex.substring(0, 2), 16);
+  const g = parseInt(hex.substring(2, 4), 16);
+  const b = parseInt(hex.substring(4, 6), 16);
+
+  return 'rgba(' + r + ',' + g + ',' + b + ',' + opacity / 100 + ')';
+}

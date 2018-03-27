@@ -454,10 +454,10 @@ export class ProductContainer extends React.Component<Props, State> {
     this.setState({ visibleHeight: height - e.endCoordinates.height });
   };
 
-  renderSuggestionsRow(
+  renderSuggestionsRow = (
     { item: user }: { item: UserData },
     hidePanel: () => void
-  ) {
+  ) => {
     return (
       <TouchableOpacity onPress={() => this.onSuggestionTap(user, hidePanel)}>
         <View
@@ -482,7 +482,7 @@ export class ProductContainer extends React.Component<Props, State> {
         </View>
       </TouchableOpacity>
     );
-  }
+  };
 
   onSuggestionTap = (user: UserData, hidePanel: () => void) => {
     hidePanel();
@@ -517,100 +517,21 @@ export class ProductContainer extends React.Component<Props, State> {
   }
 
   getUserSuggestions(username: string = ''): Promise<Array<any>> {
-    const data = [
-      {
-        _id: '5a78d09e2d314a702698f957',
-        accountStatus: 'verified',
-        username: 'anotherperson',
-        displayName: 'Zzzsd fadf',
-        profilePic:
-          'https://storage.googleapis.com/staging.onova-183307.appspot.com/users/5a78d09e2d314a702698f957-1521722787711.jpg',
-      },
-      {
-        _id: '5a78d09d2d314a702698f955',
-        accountStatus: 'verified',
-        username: 'maria',
-      },
-      {
-        _id: '5a78d09e2d314a702698f959',
-        accountStatus: 'verified',
-        username: 'barry',
-        displayName: 'barry barry',
-      },
-      {
-        _id: '5a78d09d2d314a702698f956',
-        accountStatus: 'verified',
-        username: 'doc',
-        displayName: 'doc doc',
-      },
-      {
-        _id: '5a78d09e2d314a702698f958',
-        accountStatus: 'verified',
-        username: 'joseph',
-        displayName: 'joseph joseph',
-      },
-      {
-        _id: '5a78d09d2d314a702698f959',
-        accountStatus: 'verified',
-        username: 'jaysus',
-        displayName: 'jaysus jaysus',
-      },
-      {
-        _id: '5a78d09e2d314a702698f962',
-        accountStatus: 'verified',
-        username: 'xavier',
-        displayName: 'xavier xavier',
-      },
-      {
-        _id: '5a78d09d2d314a702698f961',
-        accountStatus: 'verified',
-        username: 'zorro',
-        displayName: 'zorro zorro',
-      },
-    ];
+    if (username == '@') return Promise.resolve([]);
 
-    return Promise.resolve(
-      data
-      // data.filter(user => this.fuzzysearch(username, user.username))
-    );
-
-    // return api.get(`http://localhost:8080/?username=${displayName.slice(1)}`, {
-    //   method: 'GET',
-    //   headers: {
-    //     'Content-type': 'application/json',
-    //   },
-    // }).then(res => {
-    //   console.log(res);
-    //   if (!res.ok) {
-    //     throw new Error('Went wrong');
-    //   }
-    //   return res.json();
-    // });
-  }
-
-  fuzzysearch(needle: string, haystack: string): Boolean {
-    var hlen = haystack.length;
-    var nlen = needle.length;
-    if (nlen > hlen) {
-      return false;
-    }
-    if (nlen === hlen) {
-      return needle === haystack;
-    }
-    outer: for (var i = 0, j = 0; i < nlen; i++) {
-      var nch = needle.charCodeAt(i);
-      while (j < hlen) {
-        if (haystack.charCodeAt(j++) === nch) {
-          continue outer;
-        }
-      }
-      return false;
-    }
-    return true;
+    return api
+      .get(`api/users?u=${username.replace('@', '')}`)
+      .then(res => {
+        // if (!res.ok) {
+        //   throw new Error('Went wrong');
+        // }
+        return res;
+      })
+      .catch(e => console.error(e));
   }
 
   renderAddComment = () => {
-    const { text } = this.state;
+    const { text, keyword } = this.state;
     // is the text not empty and not longer that the max
     const showActiveOpacity =
       text.trim().length < 1 || text.length == settings.MAX_LENGTH_COMMENT;
@@ -620,18 +541,20 @@ export class ProductContainer extends React.Component<Props, State> {
           <MentionsTextInput
             autoCorrect={false}
             keyboardType="email-address"
-            loadingComponent={() => (
-              <View
-                // eslint-disable-next-line
+            loadingComponent={() =>
+              keyword !== '@' && (
+                <View
+                  // eslint-disable-next-line
                 style={{
-                  flex: 1,
-                  width,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}>
-                <ActivityIndicator />
-              </View>
-            )}
+                    flex: 1,
+                    width,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}>
+                  <ActivityIndicator />
+                </View>
+              )
+            }
             // eslint-disable-next-line
             suggestionsPanelStyle={{
               // borderWidth: 1,
@@ -639,6 +562,8 @@ export class ProductContainer extends React.Component<Props, State> {
               borderColor: colors.grey5,
               borderRadius: 3,
               bottom: 40,
+              // hack to hide empty suggestionsPanel for zero chars query
+              top: keyword == '@' ? 1100 : 'auto',
               left: -12,
               position: 'absolute',
               right: -47,
@@ -653,7 +578,7 @@ export class ProductContainer extends React.Component<Props, State> {
             MaxVisibleRowCount={7} // this is required if horizontal={false}
             onChangeText={this.onChangeText}
             placeholder="Add a comment"
-            renderSuggestionsRow={this.renderSuggestionsRow.bind(this)}
+            renderSuggestionsRow={this.renderSuggestionsRow}
             suggestionRowHeight={45}
             suggestionsData={this.state.usersToMention} // array of objects
             textInputMaxHeight={80}

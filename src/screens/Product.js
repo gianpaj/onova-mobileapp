@@ -7,7 +7,6 @@ import {
   // Animated,
   Dimensions,
   FlatList,
-  Keyboard,
   StyleSheet,
   Text,
   TouchableHighlight,
@@ -66,7 +65,6 @@ type State = {
   usersToMention: Array<UserData>,
   keyword: string,
   text: string,
-  visibleHeight: number,
 };
 
 const { height, width } = Dimensions.get('window');
@@ -77,7 +75,6 @@ export class ProductContainer extends React.Component<Props, State> {
   anim: ?React$Element<*>;
   scrollView: Content;
   reqTimer = 0;
-  keyboardDidShowListener: any; // EmitterSubscription
 
   state = {
     addCommentError: false,
@@ -89,7 +86,6 @@ export class ProductContainer extends React.Component<Props, State> {
     usersToMention: [],
     keyword: '',
     text: '',
-    visibleHeight: 0,
   };
 
   showActionSheetForProduct = () => {
@@ -223,19 +219,7 @@ export class ProductContainer extends React.Component<Props, State> {
   //   });
   // }
 
-  componentWillUnmount() {
-    this.keyboardDidShowListener.remove();
-    // this.keyboardDidHideListener.remove();
-  }
-
   componentWillMount() {
-    this.keyboardDidShowListener = Keyboard.addListener(
-      'keyboardDidShow',
-      this._keyboardDidShow
-    );
-    this.setState({ visibleHeight: height });
-    // this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this._keyboardDidHide);
-
     const { params }: { params: ProductType } = this.props.navigation.state;
     let uuid;
 
@@ -449,11 +433,6 @@ export class ProductContainer extends React.Component<Props, State> {
     );
   }
 
-  _keyboardDidShow = e => {
-    console.log(height - e.endCoordinates.height);
-    this.setState({ visibleHeight: height - e.endCoordinates.height });
-  };
-
   renderSuggestionsRow = (
     { item: user }: { item: UserData },
     hidePanel: () => void
@@ -531,7 +510,7 @@ export class ProductContainer extends React.Component<Props, State> {
   }
 
   renderAddComment = () => {
-    const { text, keyword } = this.state;
+    const { text, keyword, usersToMention } = this.state;
     // is the text not empty and not longer that the max
     const showActiveOpacity =
       text.trim().length < 1 || text.length == settings.MAX_LENGTH_COMMENT;
@@ -562,8 +541,8 @@ export class ProductContainer extends React.Component<Props, State> {
               borderColor: colors.grey5,
               borderRadius: 3,
               bottom: 40,
-              // hack to hide empty suggestionsPanel for zero chars query
-              top: keyword == '@' ? 1100 : 'auto',
+              // hack to hide empty suggestionsPanel for zero chars query or no results
+              top: keyword == '@' || usersToMention.length == 0 ? 1100 : 'auto',
               left: -12,
               position: 'absolute',
               right: -47,

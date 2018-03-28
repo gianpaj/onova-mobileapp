@@ -138,9 +138,9 @@ class OrderThreadContainer extends Component<Props, State> {
     return new Promise((resolve, reject) => {
       api
         .get(`/api/users/${userId}`)
-        .then(res => {
-          console.debug(res);
-          this.setState({ interlocutor: res });
+        .then(interlocutor => {
+          console.debug(interlocutor);
+          this.setState({ interlocutor });
           resolve();
         })
         .catch(err => {
@@ -153,9 +153,8 @@ class OrderThreadContainer extends Component<Props, State> {
     return new Promise((resolve, reject) => {
       return api
         .get(`/api/products/${uuid}`)
-        .then(res => {
-          const data = res.data;
-          console.debug(res.data);
+        .then(({ data }) => {
+          console.debug(data);
           this.setState({ product: data });
           resolve();
         })
@@ -170,9 +169,8 @@ class OrderThreadContainer extends Component<Props, State> {
     return new Promise((resolve, reject) => {
       return api
         .get(`/api/orders/${uuid}`, { token })
-        .then(res => {
-          const data = res.data;
-          console.debug(res.data);
+        .then(({ data }) => {
+          console.debug(data);
           this.setState({ order: data });
           resolve();
         })
@@ -196,15 +194,18 @@ class OrderThreadContainer extends Component<Props, State> {
   }
 
   initialise(orderId: string, productId: string, userId: string) {
-    const Promises = [];
-    Promises.push(this._getInterlucutorUserData(userId));
-    Promises.push(this.fetchProduct(productId));
-    Promises.push(this.fetchOrder(orderId));
-    Promises.push(this.connectToSendBird(orderId));
-
-    Promise.all(Promises)
+    this._getInterlucutorUserData(userId)
       .then(() => {
-        this.setState({ hasRendered: true, isLoading: false });
+        const Promises = [];
+        Promises.push(this.fetchProduct(productId));
+        Promises.push(this.fetchOrder(orderId));
+        Promises.push(this.connectToSendBird(orderId));
+
+        Promise.all(Promises)
+          .then(() => {
+            this.setState({ hasRendered: true, isLoading: false });
+          })
+          .catch(err => console.error(err));
       })
       .catch(err => console.error(err));
   }

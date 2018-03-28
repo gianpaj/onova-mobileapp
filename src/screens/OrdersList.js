@@ -219,9 +219,9 @@ class OrdersListContainer extends Component<Props, State> {
 
     const interlocutor = item.members.find(
       m => m.userId !== this.props.userData._id
-    ).nickname;
+    );
 
-    const isMyMessage = lastMessage._sender.nickname !== interlocutor;
+    const isMyMessage = lastMessage._sender.nickname !== interlocutor.nickname;
 
     const haveUnreadMsgs = !isMyMessage && item.unreadMessageCount > 0;
 
@@ -235,12 +235,12 @@ class OrdersListContainer extends Component<Props, State> {
             size={'verySmall'}
             withBorder
             uri={''}
-            placeholderText={interlocutor}
+            placeholderText={interlocutor.nickname}
           />
           <View style={[st.flex1, st.content]}>
             <View style={st.contentHeader}>
               {/* displayName */}
-              <Text style={st.name}>{interlocutor}</Text>
+              <Text style={st.name}>{interlocutor.nickname}</Text>
               <Text style={st.datetime}>
                 {ui.formatTime(lastMessage.createdAt)}
               </Text>

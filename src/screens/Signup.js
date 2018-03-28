@@ -205,8 +205,8 @@ class SignupScreen extends React.Component<Props, State> {
                 // eslint-disable-next-line
                 style={[styles.SignupButton, {
                     backgroundColor: this.backgroundColor,
-                    elevation: this.animatedValue, // android
-                    shadowOpacity: this.animatedValue, // ios
+                    // elevation: this.animatedValue, // android
+                    // shadowOpacity: this.animatedValue, // ios
                   },
                 ]}
                 {...buttonProps}

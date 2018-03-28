@@ -6294,9 +6294,9 @@ react-native-menu@^0.23.0:
     prop-types "^15.5.10"
     react-timer-mixin "^0.13.3"
 
-react-native-micro-animated-button@^0.0.16:
-  version "0.0.16"
-  resolved "https://registry.yarnpkg.com/react-native-micro-animated-button/-/react-native-micro-animated-button-0.0.16.tgz#98556cbd55e165b0e80e83fc6231deec6fe2518e"
+react-native-micro-animated-button@^0.0.21:
+  version "0.0.21"
+  resolved "https://registry.yarnpkg.com/react-native-micro-animated-button/-/react-native-micro-animated-button-0.0.21.tgz#8e525c3fba99f2cb7a145b8775ff0ac0a47a1ef0"
 
 react-native-parsed-text@^0.0.19:
   version "0.0.19"

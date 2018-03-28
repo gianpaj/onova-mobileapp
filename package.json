@@ -43,7 +43,7 @@
     "react-native-image-crop-picker": "^0.20.0",
     "react-native-keyboard-manager": "^4.0.13-7",
     "react-native-mentions": "^1.1.4",
-    "react-native-micro-animated-button": "^0.0.16",
+    "react-native-micro-animated-button": "^0.0.21",
     "react-native-parsed-text": "^0.0.20",
     "react-native-simple-radio-button": "^2.7.1",
     "react-native-swiper": "^1.5.13",

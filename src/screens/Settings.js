@@ -45,7 +45,8 @@ import * as ui from '../utils/ui';
 if (!Object.is) {
   Object.is = function(x, y) {
     // SameValue algorithm
-    if (x === y) { // Steps 1-5, 7-10
+    if (x === y) {
+      // Steps 1-5, 7-10
       // Steps 6.b-6.e: +0 != -0
       return x !== 0 || 1 / x === 1 / y;
     } else {
@@ -72,11 +73,12 @@ type Props = {
 type State = {
   emailAddress: string,
   pending: boolean,
+  isLoading: boolean,
   password: string,
   username: string,
   usernameError: boolean,
-  shippingAddress: ShippingAddress | {},
-  paymentInfo: PaymentInfo,
+  shippingAddress: ?ShippingAddress,
+  paymentInfo: ?PaymentInfo,
 };
 
 class SettingsContainer extends Component<Props, State> {
@@ -84,9 +86,10 @@ class SettingsContainer extends Component<Props, State> {
   state = {
     emailAddress: '',
     pending: false,
+    isLoading: true,
     password: '',
-    paymentInfo: {},
-    shippingAddress: {},
+    paymentInfo: null,
+    shippingAddress: null,
     username: '',
     usernameError: false,
   };
@@ -123,6 +126,8 @@ class SettingsContainer extends Component<Props, State> {
     if (this.hasStateDifferedFromProps(nextProps.userData, 'emailAddress')) {
       this.setState({ emailAddress });
     }
+
+    this.setState({ isLoading: false });
   }
 
   hasStateDifferedFromProps(nextProps: any, key: string): boolean {
@@ -152,9 +157,10 @@ class SettingsContainer extends Component<Props, State> {
 
     return (
       !pending &&
-      ((validShippingAddress(shippingAddress) &&
-        !Object.is(shippingAddress, userData.shippingAddress)) ||
-        paymentInfo.valid ||
+      ((shippingAddress &&
+        (validShippingAddress(shippingAddress) &&
+          !Object.is(shippingAddress, userData.shippingAddress))) ||
+        (paymentInfo && paymentInfo.valid) ||
         validPassword(password) ||
         (isEmail(emailAddress) && emailAddress !== userData.emailAddress) ||
         (username !== '' && username !== userData.username))
@@ -284,12 +290,15 @@ class SettingsContainer extends Component<Props, State> {
     const { userData } = this.props;
     const {
       pending,
+      isLoading,
       password,
       emailAddress,
       shippingAddress,
       username,
       usernameError,
     } = this.state;
+
+    if (isLoading) return null;
 
     return (
       <Container>

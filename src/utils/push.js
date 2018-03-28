@@ -30,7 +30,6 @@ export function registerPushNotifications(): Promise<string | null> {
       .messaging()
       .getToken()
       .then(token => {
-        // TODO: send fcm token in your server
         return registerSendBirdToken(token);
       })
       .then(token => resolve(token))

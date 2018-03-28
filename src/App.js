@@ -29,8 +29,6 @@ type State = {
 };
 
 export default class App extends React.Component<*, State> {
-  // $FlowFixMe
-  sb;
   state = {
     appState: AppState.currentState,
   };
@@ -49,20 +47,20 @@ export default class App extends React.Component<*, State> {
     if (!firebase.apps.length) {
       firebase.initializeApp(firebaseConfig);
     }
-    this.sb = SendBird.getInstance();
   }
 
   _handleAppStateChange = (nextAppState: any) => {
-    if (this.sb) {
+    const sb = SendBird.getInstance();
+    if (sb) {
       if (
         this.state.appState.match(/inactive|background/) &&
         nextAppState === 'active'
       ) {
         console.debug('appstate - foreground');
-        this.sb.setForegroundState();
+        sb.setForegroundState();
       } else {
         console.debug('appstate - background');
-        this.sb.setBackgroundState();
+        sb.setBackgroundState();
       }
     }
     this.setState({ appState: nextAppState });

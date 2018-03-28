@@ -47,7 +47,7 @@
     "react-native-parsed-text": "^0.0.20",
     "react-native-simple-radio-button": "^2.7.1",
     "react-native-swiper": "^1.5.13",
-    "react-native-tab-view": "^0.0.74",
+    "react-native-tab-view": "^0.0.75",
     "react-native-vector-icons": "^4.5.0",
     "react-navigation": "1.5.8",
     "react-navigation-redux-helpers": "^1.0.1",

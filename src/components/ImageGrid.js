@@ -1,6 +1,8 @@
 // @flow
 
 import React from 'react';
+import { connect } from 'react-redux';
+
 import {
   ActivityIndicator,
   Dimensions,
@@ -44,7 +46,7 @@ type State = {
 
 const { width, height } = Dimensions.get('window');
 
-export class ImageGridComponent extends React.Component<Props, State> {
+class ImageGridComponent extends React.Component<Props, State> {
   state = {
     error: false,
     items: [],
@@ -61,12 +63,13 @@ export class ImageGridComponent extends React.Component<Props, State> {
   }
 
   fetchItems = () => {
-    // ?skip=${this.state.skip}
+    const { token } = this.props.userData;
+
     return api
-      .get(this.props.apiURL)
-      .then(res => {
+      .get(this.props.apiURL, { token })
+      .then(({ data }) => {
         this.setState({
-          items: res.data,
+          items: data,
           loading: false,
         });
       })
@@ -182,7 +185,11 @@ export class ImageGridComponent extends React.Component<Props, State> {
   }
 }
 
-export default ImageGridComponent;
+const mapStateToProps = (state: any) => ({
+  userData: state.LoginReducer.data,
+});
+
+export default connect(mapStateToProps)(ImageGridComponent);
 
 const MARGIN = 1;
 

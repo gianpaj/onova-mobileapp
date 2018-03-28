@@ -89,7 +89,7 @@ class Comments extends React.Component<Props, State> {
       const { token } = this.props.userData;
       api
         .get(`/api/products/${uuid}/comment`, { token })
-        .then(res => resolve(res.data))
+        .then(({ data }) => resolve(data))
         .catch(e => reject(e));
     });
   }

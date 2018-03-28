@@ -128,7 +128,7 @@ class OrdersListContainer extends Component<Props, State> {
     return new Promise((resolve, reject) => {
       api
         .get(`/api/orders/${orderId}`, { token })
-        .then(res => resolve(res.data))
+        .then(({ data }) => resolve(data))
         .catch(err => reject(err));
     });
   }

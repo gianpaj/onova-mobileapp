@@ -159,7 +159,7 @@ export class ProductContainer extends React.Component<Props, State> {
     return new Promise((resolve, reject) => {
       api
         .get(`/api/products/${uuid}`)
-        .then(res => resolve(res.data))
+        .then(({ data }) => resolve(data))
         .catch(e => reject(e));
     });
   }
@@ -187,10 +187,9 @@ export class ProductContainer extends React.Component<Props, State> {
         .then((res: UserData) => {
           console.debug(res);
           if (res.accountStatus == 'verified') {
-            resolve(true);
-          } else if (res.accountStatus !== 'verified') {
-            resolve(false);
+            return resolve(true);
           }
+          resolve(false);
         })
         .catch(err => {
           reject(err);

@@ -4,6 +4,7 @@ import Accordion from './Accordion';
 import Avatar from './Avatar';
 // import ChatActions from './ChatActions';
 import EditableText from './EditableText';
+import Comments from './Comments';
 import HR from './HR';
 import ImageGrid from './ImageGrid';
 import MediaView from './MediaView';
@@ -16,6 +17,7 @@ export {
   Avatar,
   // ChatActions,
   EditableText,
+  Comments,
   HR,
   ImageGrid,
   MediaView,

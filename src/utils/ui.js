@@ -1,6 +1,6 @@
 // @flow
 
-import { Alert } from 'react-native';
+import { Alert, Platform } from 'react-native';
 import { Toast } from 'native-base';
 // prettier-ignore
 import {
@@ -65,9 +65,11 @@ export const isProd =
 
 console.debug('isProd', isProd);
 
-let API_URL_;
+let API_URL_ = 'http://localhost:4040';
 
-API_URL_ = 'http://localhost:4040';
+if (Platform.OS == 'android') {
+  API_URL_ = 'http://192.168.1.3:4040';
+}
 
 if (isProd) {
   API_URL_ = 'https://onova-183307.appspot.com';

@@ -171,7 +171,7 @@ export class ProductContainer extends React.Component<Props, State> {
     }
   };
 
-  goToProfile(user: UserData) {
+  goToProfile = (user: UserData) => {
     // $FlowFixMe
     this.props.navigation.navigate({
       routeName: 'profile',
@@ -279,20 +279,18 @@ export class ProductContainer extends React.Component<Props, State> {
               <View style={styles.topSection}>
                 <View style={styles.avatar}>
                   <View style={styles.row}>
-                    <TouchableHighlight onPress={this.goToProfileOfSeller}>
-                      <Avatar
-                        size={'verySmall'}
+                    <Avatar
+                      size={'verySmall'}
+                      // $FlowFixMe
+                      uri={item.seller.profilePic}
+                      onPress={this.goToProfileOfSeller}
+                      placeholderText={
                         // $FlowFixMe
-                        uri={item.seller.profilePic}
-                        onPress={this.goToProfileOfSeller}
-                        placeholderText={
-                          // $FlowFixMe
-                          item.seller.displayName
-                            ? item.seller.displayName
-                            : item.seller.username
-                        }
-                      />
-                    </TouchableHighlight>
+                        item.seller.displayName
+                          ? item.seller.displayName
+                          : item.seller.username
+                      }
+                    />
                     <View style={{ marginLeft: 10, alignSelf: 'center' }}>
                       <TouchableHighlight onPress={this.goToProfileOfSeller}>
                         <Text style={styles.username}>
@@ -364,6 +362,7 @@ export class ProductContainer extends React.Component<Props, State> {
                 uuid={item.uuid}
                 userData={this.props.userData}
                 scrollView={this.scrollView}
+                goToProfile={this.goToProfile}
               />
             </View>
           )}

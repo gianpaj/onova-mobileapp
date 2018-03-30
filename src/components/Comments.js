@@ -26,11 +26,10 @@ import settings from '../config/settings';
 import * as api from '../utils/api';
 import * as ui from '../utils/ui';
 
-import type { NavigationScreenProp } from 'react-navigation';
 import type { Comment, Product as ProductType, UserData } from '../types';
 
 type Props = {
-  navigation?: NavigationScreenProp<*>,
+  goToProfile: (user: UserData) => void,
   uuid: string,
   userData: UserData,
   scrollView: Content,
@@ -158,18 +157,13 @@ class Comments extends React.Component<Props, State> {
 
   renderSingleComment = ({ item: c }: { item: Comment }) => (
     <View style={styles.containerComment}>
-      <TouchableOpacity
-        // style={{ paddingVertical: 5 }}
-        onPress={() =>
-          this.props.navigate('user', { id: c.user._id })
-        }>
-        <Avatar
-          size={'verySmall'}
-          // withBorder
-          uri={c.user.profilePic}
-          placeholderText={c.user.displayName}
-        />
-      </TouchableOpacity>
+      <Avatar
+        onPress={() => this.props.goToProfile({ username: c.user.username })}
+        size={'verySmall'}
+        // withBorder
+        uri={c.user.profilePic}
+        placeholderText={c.user.displayName}
+      />
       <TouchableWithoutFeedback
         onLongPress={() => this.showActionSheetForComment(c)}>
         <View style={styles.content}>
@@ -206,7 +200,7 @@ class Comments extends React.Component<Props, State> {
       return ui.showToast('User not found', 'warning');
     }
     // $FlowFixMe
-    this.goToProfile({ username: matches[2].replace('@', '') });
+    this.props.goToProfile({ username: matches[2].replace('@', '') });
   };
 
   _keyExtractor = item => item._id;

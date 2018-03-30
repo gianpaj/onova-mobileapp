@@ -111,10 +111,22 @@ export type SendBirdMessage = {
 
 export type Order = {
   id: string,
-  buyer: string,
+  buyer: {
+    _id: string,
+    accountStatus: string,
+    id: string,
+    profilePic: string,
+    username: string,
+  },
   priceOfItem: number,
   product: string | Product,
-  seller: string,
+  seller: {
+    _id: string,
+    accountStatus: string,
+    id: string,
+    profilePic: string,
+    username: string,
+  },
   status: string,
   transationFee?: number,
   // lastMessage: Message,

@@ -79,9 +79,14 @@ class OrdersListContainer extends Component<Props, State> {
             return resolve([]);
           }
           return this.getChannels().then(channels => {
-            // orders in which the other person (seller or buyer) is the person i am chatting with
-            return channels.filter(c => {
+            // match by orderId from API and SendBird metadata
+            const ch = channels.filter(c => {
               return orders.find((o: Order) => o.id == c.orderId);
+            });
+            // add order order and channel objects
+            return ch.map(c => {
+              c.order = orders.find((o: Order) => o.id == c.orderId);
+              return c;
             });
           });
         })
@@ -215,11 +220,15 @@ class OrdersListContainer extends Component<Props, State> {
   };
 
   _renderItem = ({ item }) => {
-    const { lastMessage } = item;
+    const { lastMessage, order }: { lastMessage: any, order: Order } = item;
+    const { _id: myUserId } = this.props.userData;
 
-    const interlocutor = item.members.find(
-      m => m.userId !== this.props.userData._id
-    );
+    let interlocutor = item.members.find(m => m.userId !== myUserId);
+
+    interlocutor.profilePic = order.seller.profilePic;
+    if (order.buyer._id !== myUserId) {
+      interlocutor.profilePic = order.buyer.profilePic;
+    }
 
     const isMyMessage = lastMessage._sender.nickname !== interlocutor.nickname;
 
@@ -234,7 +243,7 @@ class OrdersListContainer extends Component<Props, State> {
             // style={styles.avatarContainer}
             size={'verySmall'}
             withBorder
-            uri={''}
+            uri={interlocutor.profilePic}
             placeholderText={interlocutor.nickname}
           />
           <View style={[st.flex1, st.content]}>

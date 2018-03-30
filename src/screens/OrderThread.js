@@ -27,7 +27,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { NavigationActions } from 'react-navigation';
 import SendBird from 'sendbird';
-import { GiftedChat, SystemMessage } from 'react-native-gifted-chat';
+import { GiftedChat, Bubble, SystemMessage } from 'react-native-gifted-chat';
 import type { NavigationScreenProp } from 'react-navigation';
 // import moment from 'moment';
 import KeyboardManager from 'react-native-keyboard-manager';
@@ -292,6 +292,7 @@ class OrderThreadContainer extends Component<Props, State> {
   }
 
   createGiftedMessage(msg: SendBirdMessage, user: UserData | any): Message {
+    // $FlowFixMe
     return {
       _id: msg.messageId,
       createdAt: new Date(msg.createdAt),
@@ -303,6 +304,8 @@ class OrderThreadContainer extends Component<Props, State> {
         // $FlowFixMe
         avatar: user.avatar || user.profilePic,
       },
+      sent: msg.sent ? msg.sent : false,
+      received: msg.received ? msg.received : false,
     };
   }
 
@@ -423,14 +426,13 @@ class OrderThreadContainer extends Component<Props, State> {
         });
 
         if (messages && messages.length) {
-          this.setState(prevState => ({
+          return this.setState(prevState => ({
             messages: GiftedChat.append(prevState.messages, newMessages),
           }));
-        } else {
-          this.setState({
-            messages: newMessages,
-          });
         }
+        this.setState({
+          messages: newMessages,
+        });
       });
     }
   }
@@ -512,6 +514,27 @@ class OrderThreadContainer extends Component<Props, State> {
     this.props.navigation.dispatch(navigateToProfile);
   };
 
+  renderBubble = props => {
+    return (
+      <Bubble
+        {...props}
+        textStyle={{
+          right: {
+            color: colors.black,
+          },
+        }}
+        wrapperStyle={{
+          left: {
+            backgroundColor: colors.sLight,
+          },
+          right: {
+            backgroundColor: colors.pLight,
+          },
+        }}
+      />
+    );
+  };
+
   render() {
     const { navigation, userData } = this.props;
     const { messages, isLoading, interlocutor, product, order } = this.state;
@@ -582,6 +605,7 @@ class OrderThreadContainer extends Component<Props, State> {
                 // renderLoading={() => ()}
                 renderSend={this.renderSend}
                 renderSystemMessage={this.renderSystemMessage}
+                renderBubble={this.renderBubble}
                 // renderActions={this.renderActions}
                 // renderComposer={this.renderComposer}
                 // keyboardShouldPersistTaps="handled"

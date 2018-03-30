@@ -3,6 +3,7 @@ package com.onova.app;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.instabug.reactlibrary.RNInstabugReactnativePackage;
 import com.reactnative.ivpusic.imagepicker.PickerPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.RNFetchBlob.RNFetchBlobPackage;
@@ -28,6 +29,9 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+                new RNInstabugReactnativePackage.Builder("***REMOVED***",MainApplication.this)
+              .setInvocationEvent("none")
+              .build(),
             new PickerPackage(),
             new VectorIconsPackage(),
             new RNFetchBlobPackage(),

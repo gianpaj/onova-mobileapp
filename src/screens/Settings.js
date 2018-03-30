@@ -31,6 +31,7 @@ import { Toast } from 'antd-mobile';
 import axios from 'axios';
 import isEmail from 'validator/lib/isEmail';
 import update from 'immutability-helper';
+import Instabug from 'instabug-reactnative';
 
 import { Accordion, HR } from '../components';
 
@@ -102,6 +103,11 @@ class SettingsContainer extends Component<Props, State> {
         cancelToken: this.cancelToken.token,
       })
     );
+    Instabug.startWithToken(
+      settings.INSTABUG_TOKEN,
+      Instabug.invocationEvent.none
+    );
+    Instabug.setPromptOptionsEnabled(false, true, true);
   }
 
   componentWillUnmount() {
@@ -467,6 +473,10 @@ class SettingsContainer extends Component<Props, State> {
             </TouchableOpacity>
             <Text style={styles.centerText}>__version__</Text>
           </View>
+          <HR full />
+          <NBButton light full onPress={() => Instabug.invoke()}>
+            <Text>Report a problem or suggest an improvement</Text>
+          </NBButton>
         </Content>
       </Container>
     );

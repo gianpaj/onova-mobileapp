@@ -4,6 +4,7 @@
 import { PushNotificationIOS, Platform } from 'react-native';
 import firebase from 'react-native-firebase';
 import SendBird from 'sendbird';
+import Instabug from 'instabug-reactnative';
 
 export function registerPushNotifications(): Promise<string | null> {
   return new Promise((resolve, reject) => {
@@ -14,6 +15,9 @@ export function registerPushNotifications(): Promise<string | null> {
         .then(status => {
           // $FlowFixMe
           console.log('push perminssions granted:', status.granted);
+        })
+        .then(() => {
+          Instabug.setPushNotificationsEnabled(true);
         });
     }
 
@@ -23,7 +27,13 @@ export function registerPushNotifications(): Promise<string | null> {
       .getInitialNotification()
       .then(notif => {
         console.log('getInitialNotification');
-        if (notif) navigate(notif);
+        if (notif) {
+          if (Instabug.isInstabugNotification(notif)) {
+            console.log('isInstabugNotification');
+          } else {
+            navigate(notif);
+          }
+        }
       });
 
     firebase

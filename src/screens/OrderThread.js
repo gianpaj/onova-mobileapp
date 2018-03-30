@@ -270,7 +270,7 @@ class OrderThreadContainer extends Component<Props, State> {
       const user = {
         _id: int._id,
         name: int.username,
-        avatar: int.profilePic == null ? int.profilePic : null,
+        avatar: !int.profilePic ? null : int.profilePic,
       };
 
       const giftedMsg = this.createGiftedMessage(msg, user);
@@ -301,9 +301,7 @@ class OrderThreadContainer extends Component<Props, State> {
         // $FlowFixMe
         name: user.username || user.name,
         // $FlowFixMe
-        avatar: user.profilePic,
-        // avatar: user.profilePic !== null ? user.profilePic : null,
-        // avatar: user.profilePic || msg.sender.profileUrl,
+        avatar: user.avatar || user.profilePic,
       },
     };
   }
@@ -326,23 +324,10 @@ class OrderThreadContainer extends Component<Props, State> {
               );
             }
             if (err.code == 800200 || err.code == 800180) {
-              // this.setState({ text });
               return Alert.alert('Connectivity issue', err.message);
             }
             return console.error(err);
           }
-
-          // const mymsg = {
-          //   _id: msg.messageId,
-          //   createdAt: new Date(msg.createdAt),
-          //   text: msg.message,
-          //   user: {
-          //     _id: userData._id,
-          //     name: userData.username,
-          //     // or msg.sender.profileUrl ?
-          //     avatar: userData.profilePic,
-          //   },
-          // };
 
           this.setState(prevState => ({
             messages: GiftedChat.append(
@@ -401,7 +386,7 @@ class OrderThreadContainer extends Component<Props, State> {
   }
 
   getRoomMessages(refresh: boolean) {
-    const { messageQuery, messages, interlocutor } = this.state;
+    const { messageQuery, messages, interlocutor: int } = this.state;
     const { userData } = this.props;
 
     // // $FlowFixMe
@@ -420,20 +405,17 @@ class OrderThreadContainer extends Component<Props, State> {
     }
 
     if (messageQuery) {
-      if (!messageQuery.hasMore) {
-        console.warn('no hasMore');
-        return;
-      }
+      if (!messageQuery.hasMore) return void console.warn('no hasMore');
+      if (!int) return void console.error('no interlocutor');
+      const otherUser = {
+        _id: int._id,
+        name: int.username,
+        avatar: int.profilePic,
+      };
 
       const reverse = true;
       messageQuery.load(50, reverse, (msgs, err) => {
         if (err) return console.error(err);
-        if (!interlocutor) return console.error('no interlocutor');
-
-        const otherUser = {
-          _id: interlocutor._id,
-          name: interlocutor.username,
-        };
 
         const newMessages = msgs.map(m => {
           const user = m.sender.userId == userData._id ? userData : otherUser;
@@ -441,20 +423,14 @@ class OrderThreadContainer extends Component<Props, State> {
         });
 
         if (messages && messages.length) {
-          // const newMessageList = [...messages, newMessages];
           this.setState(prevState => ({
             messages: GiftedChat.append(prevState.messages, newMessages),
           }));
         } else {
           this.setState({
-            // lastMessage: lastNewMsg,
             messages: newMessages,
           });
         }
-        // const lastNewMsg = messages[messages.length - 1];
-        // this.setState({
-        //   messages: newMessageList,
-        // });
       });
     }
   }

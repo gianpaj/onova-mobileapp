@@ -158,6 +158,7 @@ class Comments extends React.Component<Props, State> {
   renderSingleComment = ({ item: c }: { item: Comment }) => (
     <View style={styles.containerComment}>
       <Avatar
+        // $FlowFixMe
         onPress={() => this.props.goToProfile({ username: c.user.username })}
         size={'verySmall'}
         // withBorder
@@ -168,7 +169,12 @@ class Comments extends React.Component<Props, State> {
         onLongPress={() => this.showActionSheetForComment(c)}>
         <View style={styles.content}>
           <View style={styles.commentHeader}>
-            <Text style={styles.displayName}>{c.user.displayName}</Text>
+            <TouchableOpacity
+              onPress={() =>
+                this.props.goToProfile({ username: c.user.username })
+              }>
+              <Text style={styles.displayName}>{c.user.displayName}</Text>
+            </TouchableOpacity>
             <Text style={styles.time}>{ui.formatTime(c.createdAt)}</Text>
           </View>
           <ParsedText

@@ -80,8 +80,8 @@ type State = {
   messageQuery: any,
   messages: Array<Message> | null,
   interlocutor: UserData | null,
-  product: Product | {},
-  order: Order | {},
+  product?: Product,
+  order?: Order,
 };
 
 const tempMessages = [
@@ -104,8 +104,6 @@ class OrderThreadContainer extends Component<Props, State> {
     messageQuery: null,
     messages: null,
     interlocutor: null,
-    product: {},
-    order: {},
   };
 
   componentWillMount() {
@@ -539,6 +537,8 @@ class OrderThreadContainer extends Component<Props, State> {
     const { navigation, userData } = this.props;
     const { messages, isLoading, interlocutor, product, order } = this.state;
 
+    if (!product || !order) return null;
+
     return (
       <Container style={st.flex1}>
         <Header>
@@ -595,7 +595,6 @@ class OrderThreadContainer extends Component<Props, State> {
                   _id: userData._id,
                   name: userData.username,
                   avatar: userData.profilePic,
-                  // avatar:
                   //   userData.profilePic !== null ? userData.profilePic : null,
                 }}
                 // locale=""

@@ -42,7 +42,6 @@
 		77E1528BBCD995B69C047368 /* libPods-onovaTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FF61DD4CB4874CF7630C73A /* libPods-onovaTests.a */; };
 		7F821038917A411A82D57987 /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 848DE9E2DB9845B7A172B56C /* Foundation.ttf */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
-		8EDCC1EF5AFF46EFB0333D77 /* libReactNativeKeyboardManager.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EAB568BA1EF74A38A22F5871 /* libReactNativeKeyboardManager.a */; };
 		ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */; };
 		B330F9D240DD40C38BED70C0 /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7CB0259F711044F4AAB22A12 /* MaterialCommunityIcons.ttf */; };
 		B79E004833924F90BD5554C7 /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5B73A29169B642028400CFD7 /* Entypo.ttf */; };
@@ -294,13 +293,6 @@
 			remoteGlobalIDString = 9936F32F1F5F2E5B0010BF04;
 			remoteInfo = "privatedata-tvOS";
 		};
-		58A64AD42062F89F0097ADA2 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 29C0F2E094224574B207FD65 /* ReactNativeKeyboardManager.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = A51183591EFAC02F0077C68F;
-			remoteInfo = ReactNativeKeyboardManager;
-		};
 		58A64AD72062F89F0097ADA2 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 3E951B2DC89242E2BBC9A504 /* RNFetchBlob.xcodeproj */;
@@ -419,7 +411,6 @@
 		18ED0DAB8E4F44FFB4DC1191 /* libRNFirebase.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNFirebase.a; sourceTree = "<group>"; };
 		1D9A5ABD23F04BFC864FE550 /* imageCropPicker.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = imageCropPicker.xcodeproj; path = "../node_modules/react-native-image-crop-picker/ios/imageCropPicker.xcodeproj"; sourceTree = "<group>"; };
 		299AC55FF7A04359883EC5D9 /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
-		29C0F2E094224574B207FD65 /* ReactNativeKeyboardManager.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = ReactNativeKeyboardManager.xcodeproj; path = "../node_modules/react-native-keyboard-manager/ios/ReactNativeKeyboardManager.xcodeproj"; sourceTree = "<group>"; };
 		2A388203FB3F4BB9865F3D68 /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
 		2D16E6891FA4F8E400B85C8A /* libReact.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libReact.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		3E951B2DC89242E2BBC9A504 /* RNFetchBlob.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNFetchBlob.xcodeproj; path = "../node_modules/react-native-fetch-blob/ios/RNFetchBlob.xcodeproj"; sourceTree = "<group>"; };
@@ -452,7 +443,6 @@
 		D4C1B5650C05C9B3E7FBE292 /* Instabug.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Instabug.framework; path = "../node_modules/instabug-reactnative/ios/Instabug.framework"; sourceTree = "<group>"; };
 		D6C20BBC464E47428C2C14E6 /* libRNFetchBlob.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNFetchBlob.a; sourceTree = "<group>"; };
 		E568FDCCE74CACDB8BC9EF5D /* libPods-onova.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-onova.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		EAB568BA1EF74A38A22F5871 /* libReactNativeKeyboardManager.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libReactNativeKeyboardManager.a; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -483,7 +473,6 @@
 				00C302EA1ABCBA2D00DB3ED1 /* libRCTVibration.a in Frameworks */,
 				139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */,
 				553D6F5C2C1D45898286F9E3 /* libRNFetchBlob.a in Frameworks */,
-				8EDCC1EF5AFF46EFB0333D77 /* libReactNativeKeyboardManager.a in Frameworks */,
 				075D424A0D4B45E297659209 /* libRNVectorIcons.a in Frameworks */,
 				2A8EE06CA44E48BCBFB8560D /* libimageCropPicker.a in Frameworks */,
 				58AE5D292063A20F00E667FB /* RSKImageCropper.framework in Frameworks */,
@@ -672,7 +661,6 @@
 			isa = PBXGroup;
 			children = (
 				D6C20BBC464E47428C2C14E6 /* libRNFetchBlob.a */,
-				EAB568BA1EF74A38A22F5871 /* libReactNativeKeyboardManager.a */,
 				97DA1204FB894D2281F485CC /* libRNVectorIcons.a */,
 				D0E076735EAB4BCA928CE553 /* libimageCropPicker.a */,
 				18ED0DAB8E4F44FFB4DC1191 /* libRNFirebase.a */,
@@ -685,14 +673,6 @@
 			isa = PBXGroup;
 			children = (
 				58A64AD82062F89F0097ADA2 /* libRNFetchBlob.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		58A64AD12062F89E0097ADA2 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				58A64AD52062F89F0097ADA2 /* libReactNativeKeyboardManager.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -755,7 +735,6 @@
 				00C302DF1ABCB9EE00DB3ED1 /* RCTVibration.xcodeproj */,
 				139FDEE61B06529A00C62182 /* RCTWebSocket.xcodeproj */,
 				3E951B2DC89242E2BBC9A504 /* RNFetchBlob.xcodeproj */,
-				29C0F2E094224574B207FD65 /* ReactNativeKeyboardManager.xcodeproj */,
 				7F345FA779014C4F919C1EE8 /* RNVectorIcons.xcodeproj */,
 				1D9A5ABD23F04BFC864FE550 /* imageCropPicker.xcodeproj */,
 				58B314A65FC446919EE1EBD2 /* RNFirebase.xcodeproj */,
@@ -950,10 +929,6 @@
 				{
 					ProductGroup = 146834001AC3E56700842450 /* Products */;
 					ProjectRef = 146833FF1AC3E56700842450 /* React.xcodeproj */;
-				},
-				{
-					ProductGroup = 58A64AD12062F89E0097ADA2 /* Products */;
-					ProjectRef = 29C0F2E094224574B207FD65 /* ReactNativeKeyboardManager.xcodeproj */;
 				},
 				{
 					ProductGroup = 58A64ACF2062F89E0097ADA2 /* Products */;
@@ -1210,13 +1185,6 @@
 			fileType = archive.ar;
 			path = "libprivatedata-tvOS.a";
 			remoteRef = 58A64ACD2062F89E0097ADA2 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		58A64AD52062F89F0097ADA2 /* libReactNativeKeyboardManager.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libReactNativeKeyboardManager.a;
-			remoteRef = 58A64AD42062F89F0097ADA2 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		58A64AD82062F89F0097ADA2 /* libRNFetchBlob.a */ = {
@@ -1496,7 +1464,6 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-fetch-blob/ios/**",
-					"$(SRCROOT)/../node_modules/react-native-keyboard-manager/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
 					"$(SRCROOT)/../node_modules/react-native-image-crop-picker/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
@@ -1529,7 +1496,6 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-fetch-blob/ios/**",
-					"$(SRCROOT)/../node_modules/react-native-keyboard-manager/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
 					"$(SRCROOT)/../node_modules/react-native-image-crop-picker/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
@@ -1571,7 +1537,6 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-fetch-blob/ios/**",
-					"$(SRCROOT)/../node_modules/react-native-keyboard-manager/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
 					"$(SRCROOT)/../node_modules/react-native-image-crop-picker/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
@@ -1609,7 +1574,6 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-fetch-blob/ios/**",
-					"$(SRCROOT)/../node_modules/react-native-keyboard-manager/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
 					"$(SRCROOT)/../node_modules/react-native-image-crop-picker/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",

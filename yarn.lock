@@ -6272,6 +6272,10 @@ react-native-invertible-scroll-view@^1.1.0:
     react-clone-referenced-element "^1.0.1"
     react-native-scrollable-mixin "^1.0.1"
 
+react-native-keyboard-accessory@^0.0.8:
+  version "0.0.8"
+  resolved "https://registry.yarnpkg.com/react-native-keyboard-accessory/-/react-native-keyboard-accessory-0.0.8.tgz#c8c50f0d61f68b6dcf2bc2bb45efb3805b610a6e"
+
 "react-native-keyboard-aware-scroll-view@https://github.com/GeekyAnts/react-native-keyboard-aware-scroll-view":
   version "0.2.9"
   resolved "https://github.com/GeekyAnts/react-native-keyboard-aware-scroll-view#f4805f254d6cc8e3329f5fb224944401f66655db"
@@ -6279,10 +6283,6 @@ react-native-invertible-scroll-view@^1.1.0:
     create-react-class "^15.6.0"
     prop-types "^15.5.10"
     react-timer-mixin "^0.13.3"
-
-react-native-keyboard-manager@^4.0.13-7:
-  version "4.0.13-7"
-  resolved "https://registry.yarnpkg.com/react-native-keyboard-manager/-/react-native-keyboard-manager-4.0.13-7.tgz#f73661c7a6d28d0aaf51eb9fe6557727b30018b2"
 
 react-native-lightbox@^0.7.0:
   version "0.7.0"

@@ -1,26 +1,21 @@
 // @flow
 
 import React from 'react';
+// prettier-ignore
 import {
   ActivityIndicator,
   AppState,
-  Platform,
   StyleSheet,
   View,
 } from 'react-native';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/lib/integration/react';
 import { Root } from 'native-base';
-import KeyboardManager from 'react-native-keyboard-manager';
 import SendBird from 'sendbird';
 import * as firebase from 'firebase';
 
 import configureStore from './store';
 import AppNavigation from './navigation';
-
-if (Platform.OS == 'ios') {
-  KeyboardManager.setToolbarPreviousNextButtonEnable(true);
-}
 
 const { store, persistor } = configureStore();
 

@@ -32,6 +32,7 @@ import axios from 'axios';
 import isEmail from 'validator/lib/isEmail';
 import update from 'immutability-helper';
 import Instabug from 'instabug-reactnative';
+import { KeyboardAccessoryNavigation } from 'react-native-keyboard-accessory';
 
 import { Accordion, HR } from '../components';
 
@@ -80,6 +81,9 @@ type State = {
   usernameError: boolean,
   shippingAddress: ?ShippingAddress,
   paymentInfo: ?PaymentInfo,
+  nextFocusDisabled: boolean,
+  previousFocusDisabled: boolean,
+  activeInputRef: any,
 };
 
 class SettingsContainer extends Component<Props, State> {
@@ -93,6 +97,9 @@ class SettingsContainer extends Component<Props, State> {
     shippingAddress: null,
     username: '',
     usernameError: false,
+    nextFocusDisabled: false,
+    previousFocusDisabled: false,
+    activeInputRef: null,
   };
 
   componentWillMount() {
@@ -292,6 +299,26 @@ class SettingsContainer extends Component<Props, State> {
     }
   }
 
+  handleFocus(ref) {
+    this.setState({
+      nextFocusDisabled: ref === 3,
+      previousFocusDisabled: ref === 1,
+      activeInputRef: ref,
+    });
+  }
+
+  changeInputFocus(direction = 1) {
+    if (
+      (this.state.nextFocusDisabled && direction === 1) ||
+      (this.state.previousFocusDisabled && direction === -1)
+    ) {
+      return;
+    }
+
+    const focusingRef = this.state.activeInputRef + direction;
+    this.refs[`${focusingRef}`].focus();
+  }
+
   render() {
     const { userData } = this.props;
     const {
@@ -326,7 +353,7 @@ class SettingsContainer extends Component<Props, State> {
             <NBButton
               transparent
               disabled={!this.hasUnsavedChanges()}
-              style={{ backgroundColor: 'transparent' }}
+              style={{ backgroundColor: colors.transparent }}
               onPress={this.onSave}>
               <Icon
                 name="check"
@@ -422,6 +449,7 @@ class SettingsContainer extends Component<Props, State> {
           <View style={styles.padder}>
             <FormLabel labelStyle={styles.label}>Username:</FormLabel>
             <FormInput
+              ref="1"
               autoCorrect={false}
               containerStyle={styles.inputContainer}
               editable={!pending}
@@ -431,10 +459,12 @@ class SettingsContainer extends Component<Props, State> {
               value={username}
               clearButtonMode="while-editing"
               shake={usernameError}
+              onFocus={this.handleFocus.bind(this, 1)}
             />
             <FormLabel>Private information</FormLabel>
             <FormLabel labelStyle={styles.label}>Email:</FormLabel>
             <FormInput
+              ref="2"
               autoCorrect={false}
               containerStyle={styles.inputContainer}
               editable={!pending}
@@ -443,9 +473,11 @@ class SettingsContainer extends Component<Props, State> {
               placeholder="Edit your email address (Requires re-verification)"
               value={emailAddress}
               clearButtonMode="while-editing"
+              onFocus={this.handleFocus.bind(this, 2)}
             />
             <FormLabel labelStyle={styles.label}>Password:</FormLabel>
             <FormInput
+              ref="3"
               autoCorrect={false}
               containerStyle={styles.inputContainer}
               editable={!pending}
@@ -455,6 +487,7 @@ class SettingsContainer extends Component<Props, State> {
               placeholder="******"
               value={password}
               clearButtonMode="while-editing"
+              onFocus={this.handleFocus.bind(this, 3)}
             />
           </View>
           {/* Notifications switch */}
@@ -478,6 +511,12 @@ class SettingsContainer extends Component<Props, State> {
             <Text>Report a problem or suggest an improvement</Text>
           </NBButton>
         </Content>
+        <KeyboardAccessoryNavigation
+          nextDisabled={this.state.nextFocusDisabled}
+          previousDisabled={this.state.previousFocusDisabled}
+          onNext={this.changeInputFocus.bind(this, 1)}
+          onPrevious={this.changeInputFocus.bind(this, -1)}
+        />
       </Container>
     );
   }

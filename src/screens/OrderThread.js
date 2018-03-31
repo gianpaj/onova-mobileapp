@@ -2,12 +2,10 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-
 // prettier-ignore
 import {
   ActivityIndicator,
   Alert,
-  Platform,
   StyleSheet,
   Text,
   View,
@@ -29,8 +27,6 @@ import { NavigationActions } from 'react-navigation';
 import SendBird from 'sendbird';
 import { GiftedChat, Bubble, SystemMessage } from 'react-native-gifted-chat';
 import type { NavigationScreenProp } from 'react-navigation';
-// import moment from 'moment';
-import KeyboardManager from 'react-native-keyboard-manager';
 
 // import { sbCreateOpenChannelListQuery } from '../actions/sendbird';
 import { Send } from '../components';
@@ -47,13 +43,6 @@ import settings from '../config/settings';
 import * as api from '../utils/api';
 
 const MARK_AS_READ_AFTER_MS = 300;
-
-if (Platform.OS == 'ios') {
-  KeyboardManager.setEnable(false);
-
-  // ? Fixed problem with setEnableAutoToolbar:false https://github.com/douglasjunior/react-native-keyboard-manager/commit/e43ee9a9b75711235bc06e70be5a47f8c560944b
-  KeyboardManager.setEnableAutoToolbar(false);
-}
 
 type Channel = {
   createPreviousMessageListQuery: () => void,
@@ -435,22 +424,6 @@ class OrderThreadContainer extends Component<Props, State> {
     }
   }
 
-  /*
-  renderComposer(props: any) {
-    return (
-      <Composer
-        {...props}
-        textInputProps={{
-          returnKeyType: 'send',
-          multiline: false,
-          onSubmitEditing: event => {
-            props.onSend({ text: event.nativeEvent.text.trim() }, true);
-          },
-        }}
-      />
-    );
-  }*/
-
   renderSend(props): React$Element<*> {
     const showActiveOpacity = props.text.trim().length > 0;
     return (
@@ -606,7 +579,6 @@ class OrderThreadContainer extends Component<Props, State> {
                 renderSystemMessage={this.renderSystemMessage}
                 renderBubble={this.renderBubble}
                 // renderActions={this.renderActions}
-                // renderComposer={this.renderComposer}
                 // keyboardShouldPersistTaps="handled"
                 maxInputLength={settings.MAX_CHAT_INPUT_LENGTH}
                 // renderInputToolbar={this.renderInputToolbar}

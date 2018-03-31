@@ -40,9 +40,11 @@
 	<key>NSCameraUsageDescription</key>
 	<string>Onova is requesting access to your camera to add pictures to be able to sell your item</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string>Onova is requestion access to your location to help you quickly calculate the shipping fees, as well as to list an item</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Onova is requesting access to your photo library to add pictures to be able to sell your item</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Onova is requesting access to your microphone to record a video in order to report a bug</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Entypo.ttf</string>
@@ -73,7 +75,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>Onova is requesting access to your microphone to record a video in order to report a bug</string>
 </dict>
 </plist>

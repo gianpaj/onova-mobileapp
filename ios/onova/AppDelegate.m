@@ -9,8 +9,9 @@
 
 #import "AppDelegate.h"
 
-// for react-native-firebase w/ messaging
+// for react-native-firebase w/ messaging + remote notifications
 #import <Firebase.h>
+#import "RNFirebaseNotifications.h"
 #import "RNFirebaseMessaging.h"
 
 #import <React/RCTBundleURLProvider.h>
@@ -22,9 +23,9 @@
 {
   NSURL *jsCodeLocation;
 
-  // for react-native-firebase w/ messaging
+  // for react-native-firebase
   [FIRApp configure];
-  [[UNUserNotificationCenter currentNotificationCenter] setDelegate:self];
+  [RNFirebaseNotifications configure];
 
   jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:nil];
 
@@ -42,29 +43,19 @@
   return YES;
 }
 
--(void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification {
-  [RNFirebaseMessaging didReceiveLocalNotification:notification];
+- (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification {
+  [[RNFirebaseNotifications instance] didReceiveLocalNotification:notification];
 }
 
-- (void)application:(UIApplication *)application didReceiveRemoteNotification:(nonnull NSDictionary *)userInfo {
-  [RNFirebaseMessaging didReceiveRemoteNotification:userInfo];
-}
+// remote notifications
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(nonnull NSDictionary *)userInfo
-fetchCompletionHandler:(nonnull void (^)(UIBackgroundFetchResult))completionHandler{
-  [RNFirebaseMessaging didReceiveRemoteNotification:userInfo fetchCompletionHandler:completionHandler];
+                                                       fetchCompletionHandler:(nonnull void (^)(UIBackgroundFetchResult))completionHandler{
+  [[RNFirebaseNotifications instance] didReceiveRemoteNotification:userInfo fetchCompletionHandler:completionHandler];
 }
 
-- (void)userNotificationCenter:(UNUserNotificationCenter *)center
-       willPresentNotification:(UNNotification *)notification
-         withCompletionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler {
-  [RNFirebaseMessaging willPresentNotification:notification withCompletionHandler:completionHandler];
-}
-
-- (void)userNotificationCenter:(UNUserNotificationCenter *)center
-didReceiveNotificationResponse:(UNNotificationResponse *)response
-         withCompletionHandler:(void (^)(void))completionHandler {
-  [RNFirebaseMessaging didReceiveNotificationResponse:response withCompletionHandler:completionHandler];
+- (void)application:(UIApplication *)application didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings {
+  [[RNFirebaseMessaging instance] didRegisterUserNotificationSettings:notificationSettings];
 }
 
 @end

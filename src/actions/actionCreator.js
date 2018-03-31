@@ -207,7 +207,9 @@ const logout = () => (dispatch: Dispatch, getState: GetState) => {
   const sb = SendBird.getInstance();
   sb.disconnect(() => console.debug('SendBird: disconnected'));
   if (Platform.OS === 'ios') {
-    setBadgeNumber(0);
+    setBadgeNumber(0).then(() => {
+      console.debug('push badge reset to 0');
+    });
   }
   sb.unregisterPushTokenAllForCurrentUser(() =>
     console.debug('SendBird: unregisterPushToken')

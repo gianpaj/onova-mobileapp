@@ -1,73 +1,111 @@
 // @flow
 
-// eslint-disable-next-line
-import { PushNotificationIOS, Platform } from 'react-native';
+import { Platform } from 'react-native';
 import firebase from 'react-native-firebase';
+import type { Notification, NotificationOpen } from 'react-native-firebase';
 import SendBird from 'sendbird';
+// eslint-disable-next-line
 import Instabug from 'instabug-reactnative';
+
+let onMessageSubscription, onNotificationOpenedSubscription;
 
 export function registerPushNotifications(): Promise<string | null> {
   return new Promise((resolve, reject) => {
-    if (Platform.OS === 'ios') {
-      firebase
-        .messaging()
-        .requestPermissions()
-        .then(status => {
-          // $FlowFixMe
-          console.log('push perminssions granted:', status.granted);
-        })
-        .then(() => {
+    firebase
+      .messaging()
+      .hasPermission()
+      .then(enabled => {
+        if (enabled) {
+          console.log('push permissions granted');
           Instabug.setPushNotificationsEnabled(true);
-        });
-    }
-
-    // application has been opened from a notification
-    firebase
-      .messaging()
-      .getInitialNotification()
-      .then(notif => {
-        console.log('getInitialNotification');
-        if (notif) {
-          if (Instabug.isInstabugNotification(notif)) {
-            console.log('isInstabugNotification');
-          } else {
-            navigate(notif);
-          }
+          // user has permissions
+        } else {
+          // user doesn't have permission
+          return firebase
+            .messaging()
+            .requestPermission()
+            .then(() => {
+              console.log('push permissions granted');
+              Instabug.setPushNotificationsEnabled(true);
+            })
+            .catch(err => {
+              console.debug('user rejected push permissions', err);
+              // TODO: handle
+            });
         }
-      });
-
-    firebase
-      .messaging()
-      .getToken()
-      .then(token => {
-        return registerSendBirdToken(token);
       })
-      .then(token => resolve(token))
-      .catch(() => reject());
-
-    firebase.messaging().onTokenRefresh(token => {
-      console.log('onTokenRefresh');
-      console.log(token);
-      registerSendBirdToken(token);
-    });
-
-    firebase.messaging().onMessage(message => {
-      // prevent infite look
-      if (!message.local_notification) {
-        console.log(message);
-        firebase.messaging().createLocalNotification({
-          title: message.title,
-          body: message.body,
-          local_notification: true,
-          priority: 'high', // show the notification expanded whtn
-          show_in_foreground: true,
-        });
-      } else {
-        if (message.opened_from_tray) {
-          navigate(message);
+      .then(() => {
+        // application has been opened from a notification
+        return firebase
+          .notifications()
+          .getInitialNotification()
+          .then((notificationOpen: NotificationOpen) => {
+            console.log('getInitialNotification');
+            if (notificationOpen) {
+              if (
+                Platform.OS == 'ios' &&
+                Instabug.isInstabugNotification(notificationOpen)
+              ) {
+                console.log('isInstabugNotification');
+              } else {
+                // App was opened by a notification (from background)
+                // Get the action triggered by the notification being opened
+                const action = notificationOpen.action;
+                console.log(action);
+                navigate(notificationOpen);
+              }
+            }
+          });
+      })
+      .then(() => {
+        if (onNotificationOpenedSubscription == null) {
+          return firebase
+            .notifications()
+            .onNotificationOpened((notificationOpen: NotificationOpen) => {
+              // Get the action triggered by the notification being opened
+              const action = notificationOpen.action;
+              // Get information about the notification that was opened
+              const notification: Notification = notificationOpen.notification;
+              console.log(action);
+              navigate(notification);
+            });
         }
-      }
-    });
+      })
+      .then(() => {
+        return firebase.messaging().onTokenRefresh((token: string) => {
+          console.log('onTokenRefresh');
+          console.log(token);
+          registerSendBirdToken(token);
+        });
+      })
+      .then(() => {
+        // only subscribe for messages on one place to fix "no completion handler" error is iOS
+        if (onMessageSubscription == null) {
+          onMessageSubscription = firebase
+            .notifications()
+            .onNotification((msg: Notification) => {
+              console.log(msg);
+              const notification = new firebase.notifications.Notification()
+                .setTitle(msg.title)
+                .setBody(msg.body)
+                .setData(msg.data)
+                .android.setChannelId('channelId');
+              // You've received a notification that hasn't been displayed by the OS
+              // To display it whilst the app is in the foreground, simply call the following
+              firebase.notifications().displayNotification(notification);
+            });
+        }
+      })
+      .then(() => {
+        firebase
+          .messaging()
+          .getToken()
+          .then(token => {
+            return registerSendBirdToken(token);
+          })
+          .then(token => resolve(token))
+          .catch(() => reject());
+      });
   });
 }
 
@@ -101,11 +139,25 @@ function registerSendBirdToken(token: string): Promise<string | null> {
   });
 }
 
+function navigate(notif) {
+  console.log(notif);
+  firebase
+    .notifications()
+    .removeDeliveredNotification(notif.notificationId);
+  if (notif.data.triggeredType) {
+    console.log('should navigate to:', notif.data.triggeredType);
+    console.log(notif.data.triggeredBy);
+  }
+}
+
+// TODO: on log out
+// sb.unregisterPushTokenAllForCurrentUser();
+
 /**
  * Sets the badge number on the app icon.
  *
  * Works in certain Android phones. We use it only for iOS.
  */
-export function setBadgeNumber(num: number): void {
-  firebase.messaging().setBadgeNumber(num);
+export function setBadgeNumber(num: number): Promise<void> {
+  return firebase.notifications().setBadge(num);
 }

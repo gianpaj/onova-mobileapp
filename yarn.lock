@@ -6230,9 +6230,9 @@ react-native-fetch-blob@0.10.8:
     base-64 "0.1.0"
     glob "7.0.6"
 
-react-native-firebase@^3.3.1:
-  version "3.3.1"
-  resolved "https://registry.yarnpkg.com/react-native-firebase/-/react-native-firebase-3.3.1.tgz#b93cbb9b11f4f8a23a0d608567573b43a8c2de70"
+react-native-firebase@^4.0.0-rc.3:
+  version "4.0.0-rc.3"
+  resolved "https://registry.yarnpkg.com/react-native-firebase/-/react-native-firebase-4.0.0-rc.3.tgz#11e280f16ee5a1dffff9778753e65fbff4907ff1"
   dependencies:
     opencollective "^1.0.3"
     postinstall-build "^5.0.1"

@@ -16,8 +16,8 @@ export function registerPushNotifications(): Promise<string | null> {
       .hasPermission()
       .then(enabled => {
         if (enabled) {
-          console.log('push permissions granted');
           Instabug.setPushNotificationsEnabled(true);
+          console.debug('push permissions granted');
           // user has permissions
         } else {
           // user doesn't have permission
@@ -25,8 +25,8 @@ export function registerPushNotifications(): Promise<string | null> {
             .messaging()
             .requestPermission()
             .then(() => {
-              console.log('push permissions granted');
               Instabug.setPushNotificationsEnabled(true);
+              console.debug('push permissions requested and granted');
             })
             .catch(err => {
               console.debug('user rejected push permissions', err);
@@ -113,6 +113,8 @@ function registerSendBirdToken(token: string): Promise<string | null> {
   return new Promise((resolve, reject) => {
     const sb = SendBird.getInstance();
     if (sb) {
+      sb.unregisterGCMPushTokenAllForCurrentUser(() => console.log());
+      sb.unregisterAPNSPushTokenAllForCurrentUser(() => console.log());
       if (Platform.OS === 'ios') {
         sb.registerAPNSPushTokenForCurrentUser(token, (result, err) => {
           if (err) {
@@ -141,9 +143,7 @@ function registerSendBirdToken(token: string): Promise<string | null> {
 
 function navigate(notif) {
   console.log(notif);
-  firebase
-    .notifications()
-    .removeDeliveredNotification(notif.notificationId);
+  firebase.notifications().removeDeliveredNotification(notif.notificationId);
   if (notif.data.triggeredType) {
     console.log('should navigate to:', notif.data.triggeredType);
     console.log(notif.data.triggeredBy);

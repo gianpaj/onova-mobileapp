@@ -64,15 +64,3 @@ export const isProd =
   JSON.parse(JSON.stringify(process.env)).NODE_ENV == 'prod';
 
 console.debug('isProd', isProd);
-
-let API_URL_ = 'http://localhost:4040';
-
-if (Platform.OS == 'android') {
-  API_URL_ = 'http://192.168.1.3:4040';
-}
-
-if (isProd) {
-  API_URL_ = 'https://onova-183307.appspot.com';
-}
-
-export const API_URL = API_URL_;

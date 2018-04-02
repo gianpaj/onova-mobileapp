@@ -2,7 +2,13 @@
 
 import axios, { CancelTokenSource } from 'axios';
 import { ENV } from 'react-native-dotenv';
-import { API_URL } from './ui';
+import { isProd } from './ui';
+
+let API_URL = 'http://10.10.242.98:4040';
+
+if (isProd) {
+  API_URL = 'https://onova-183307.appspot.com';
+}
 
 console.warn(`Running in ${ENV} environment`);
 console.warn(`API_URL: ${API_URL}`);

@@ -48,12 +48,12 @@ export function registerPushNotifications(): Promise<string | null> {
               ) {
                 console.log('isInstabugNotification');
               } else {
-                // App was opened by a notification (from background)
-                // Get the action triggered by the notification being opened
-                const action = notificationOpen.action;
-                console.log(action);
-                navigate(notificationOpen);
               }
+              // App was opened by a notification (from background)
+              // Get the action triggered by the notification being opened
+              const action = notificationOpen.action;
+              console.log(action);
+              navigate(notificationOpen);
             }
           });
       })
@@ -62,11 +62,11 @@ export function registerPushNotifications(): Promise<string | null> {
           return firebase
             .notifications()
             .onNotificationOpened((notificationOpen: NotificationOpen) => {
-              // Get the action triggered by the notification being opened
-              const action = notificationOpen.action;
+              // TODO: Get the action triggered by the notification being opened
+              // const action = notificationOpen.action;
+              // console.log(action);
               // Get information about the notification that was opened
               const notification: Notification = notificationOpen.notification;
-              console.log(action);
               navigate(notification);
             });
         }
@@ -113,28 +113,31 @@ function registerSendBirdToken(token: string): Promise<string | null> {
   return new Promise((resolve, reject) => {
     const sb = SendBird.getInstance();
     if (sb) {
-      sb.unregisterGCMPushTokenAllForCurrentUser(() => console.log());
-      sb.unregisterAPNSPushTokenAllForCurrentUser(() => console.log());
-      if (Platform.OS === 'ios') {
-        sb.registerAPNSPushTokenForCurrentUser(token, (result, err) => {
-          if (err) {
-            console.error(err);
-            return reject();
+      // TODO: Promisify
+      sb.unregisterGCMPushTokenAllForCurrentUser(() => {
+        sb.unregisterAPNSPushTokenAllForCurrentUser(() => {
+          if (Platform.OS === 'ios') {
+            sb.registerAPNSPushTokenForCurrentUser(token, (result, err) => {
+              if (err) {
+                console.error(err);
+                return reject();
+              }
+              console.log('registerAPNSPushTokenForCurrentUser');
+              // Notifications.setApplicationIconBadgeNumber(number);
+              resolve(token);
+            });
+          } else {
+            sb.registerGCMPushTokenForCurrentUser(token, (result, err) => {
+              if (err) {
+                console.error(err);
+                return reject();
+              }
+              console.log('registerGCMPushTokenForCurrentUser');
+              resolve(token);
+            });
           }
-          console.log('registerAPNSPushTokenForCurrentUser');
-          // Notifications.setApplicationIconBadgeNumber(number);
-          resolve(token);
         });
-      } else {
-        sb.registerGCMPushTokenForCurrentUser(token, (result, err) => {
-          if (err) {
-            console.error(err);
-            return reject();
-          }
-          console.log('registerGCMPushTokenForCurrentUser');
-          resolve(token);
-        });
-      }
+      });
     } else {
       reject();
     }

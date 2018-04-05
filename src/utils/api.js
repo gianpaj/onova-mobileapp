@@ -7,7 +7,7 @@ import { isProd } from './ui';
 let API_URL = 'http://10.10.242.98:4040';
 
 if (isProd) {
-  API_URL = 'https://onova-183307.appspot.com';
+  API_URL = 'https://onova.co';
 }
 
 console.warn(`Running in ${ENV} environment`);

@@ -172,8 +172,8 @@ const getPersonalUserData = (userId: string, options?: any = {}) => (
   dispatch: Dispatch,
   getState: GetState
 ) => {
+  const { token } = getState().LoginReducer;
   Toast.loading('Loading...', 30);
-  const token = getState().LoginReducer.token;
   dispatch({ type: GETUSER_PENDING });
   return api
     .get(`/api/users/${userId}/personal`, { ...options, token })
@@ -203,17 +203,19 @@ const getUserData = (userId: string, options?: any = {}) => (
     .then(() => Toast.hide())
 );
 
-const logout = () => (dispatch: Dispatch, getState: GetState) => {
+const logout = () => (dispatch: Dispatch) => {
   const sb = SendBird.getInstance();
-  sb.disconnect(() => console.debug('SendBird: disconnected'));
-  if (Platform.OS === 'ios') {
-    setBadgeNumber(0).then(() => {
-      console.debug('push badge reset to 0');
-    });
+  if (sb) {
+    sb.disconnect(() => console.debug('SendBird: disconnected'));
+    if (Platform.OS === 'ios') {
+      setBadgeNumber(0).then(() => {
+        console.debug('push badge reset to 0');
+      });
+    }
+    sb.unregisterPushTokenAllForCurrentUser(() =>
+      console.debug('SendBird: unregisterPushToken')
+    );
   }
-  sb.unregisterPushTokenAllForCurrentUser(() =>
-    console.debug('SendBird: unregisterPushToken')
-  );
   return dispatch({ type: LOGOUT });
 
   // const provider = getState().LoginReducer.data.provider;

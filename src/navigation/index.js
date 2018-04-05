@@ -6,12 +6,17 @@ import { connect } from 'react-redux';
 import { addNavigationHelpers, NavigationActions } from 'react-navigation';
 import { createReduxBoundAddListener } from 'react-navigation-redux-helpers';
 
-import { initializeSendBird, sendToken } from '../actions/actionCreator';
+import {
+  initializeSendBird,
+  sendToken,
+  logout,
+} from '../actions/actionCreator';
 import NavigationStack from './navigationStack';
 import type { Dispatch, UserData, ReduxState } from '../types';
 import type { NavigationState } from '../types/navigationReducer';
 import { registerPushNotifications } from '../utils/push';
 import * as ui from '../utils/ui';
+import * as api from '../utils/api';
 
 type Props = {
   dispatch: Dispatch,
@@ -25,24 +30,29 @@ class AppNavigation extends Component<Props, void> {
 
   componentDidMount() {
     BackHandler.addEventListener('hardwareBackPress', this.onBackPress);
-    const { isLoggedIn, userData } = this.props;
+    const { isLoggedIn, userData, dispatch } = this.props;
     // @TODO: use redux with
     // this.setState({ rehydrated: true });
 
     if (isLoggedIn && userData) {
-      initializeSendBird(userData)
+      // retry to login to verify user is still valid
+      const { token } = userData;
+      return api
+        .get(`/api/users/${userData._id}/personal`, { token })
         .then(() => {
-          console.debug('SendBird: initialized');
-          return registerPushNotifications();
-          // dispatch({ type: LOGIN_SUCCESS, payload: userData });
-        })
-        .then(pushToken => {
-          if (pushToken) return sendToken(pushToken, userData);
+          initializeSendBird(userData)
+            .then(() => {
+              console.debug('SendBird: initialized');
+              return registerPushNotifications();
+            })
+            .then(pushToken => {
+              if (pushToken) return sendToken(pushToken, userData);
+            });
         })
         .catch(err => {
           console.debug(err);
-          ui.showToast(err.message);
-          // dispatch({ type: LOGIN_FAIL });
+          dispatch(logout());
+          ui.showToast(err.message, 'danger');
         });
     }
   }
@@ -53,8 +63,8 @@ class AppNavigation extends Component<Props, void> {
   }
 
   onBackPress = () => {
-    const { dispatch, navigationState } = this.props;
-    console.log(navigationState.stateForLoggedIn);
+    const { dispatch } = this.props;
+    // console.log(navigationState.stateForLoggedIn);
     // if (navigationState.stateForLoggedIn.index === 0) {
     //   return false;
     // }

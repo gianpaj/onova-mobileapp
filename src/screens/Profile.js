@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 
 // prettier-ignore
 import {
+  Dimensions,
   Image,
   StyleSheet,
   Text,
@@ -20,6 +21,7 @@ import {
 } from 'native-base';
 import { NavigationActions } from 'react-navigation';
 import type { NavigationScreenProp } from 'react-navigation';
+import { Button } from 'react-native-elements';
 import { NoticeBar, Toast } from 'antd-mobile';
 
 import {
@@ -68,6 +70,8 @@ const defaultState = {
 
 // @TODO: if Product is mine Delete, Edit
 const BUTTONS = ['Report', 'Cancel'];
+
+const { height } = Dimensions.get('window');
 
 class ProfileScreen extends React.Component<Props, State> {
   state = { ...defaultState };
@@ -470,6 +474,19 @@ class ProfileScreen extends React.Component<Props, State> {
           <ImageGrid
             apiURL={`/api/products?userid=${_id}`}
             navigation={this.props.navigation}
+            emptyState={
+              <View style={styles.emptyContainer}>
+                <Text>You did not add any items yet</Text>
+                <Button
+                  raised
+                  rounded
+                  backgroundColor={colors.pDark}
+                  containerViewStyle={styles.searchButton}
+                  onPress={() => props.navigation.navigate('addProduct')}
+                  title="Sell something now"
+                />
+              </View>
+            }
           />
         )}
       </Container>
@@ -540,6 +557,17 @@ const styles = StyleSheet.create({
     color: colors.grey2,
     textAlign: 'center',
     width: '34.5%',
+  },
+  emptyContainer: {
+    alignItems: 'center',
+    flex: 1,
+    height: height - 250,
+    justifyContent: 'center',
+    padding: 20,
+  },
+  searchButton: {
+    backgroundColor: colors.transparent,
+    marginTop: 20,
   },
 });
 

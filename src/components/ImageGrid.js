@@ -24,7 +24,7 @@ import { Button } from 'react-native-elements';
 import type { NavigationScreenProp } from 'react-navigation';
 
 import * as api from '../utils/api';
-import colors from '../config/colors'
+import colors from '../config/colors';
 import type { UserData } from '../types';
 
 // $FlowFixMe
@@ -37,6 +37,7 @@ type Props = {
   apiURL: string,
   navigation?: NavigationScreenProp<*>,
   userData: UserData,
+  emptyState: React.Component,
 };
 
 type State = {
@@ -167,6 +168,9 @@ class ImageGridComponent extends React.Component<Props, State> {
         </View>
       );
     }
+
+    if (this.props.emptyState) return this.props.emptyState;
+
     return (
       <View style={styles.emptyContainer}>
         <Text style={styles.boldText}>There are no items to browse</Text>

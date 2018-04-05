@@ -25,17 +25,17 @@ const tabBarConfiguration = {
       let iconName;
       switch (routeName) {
         case 'Home':
-          iconName = isiOS ? `ios-home${focused ? '' : '-outline'}` : 'md-home';
+          // iconName = isiOS ? `ios-home${focused ? '' : ''}` : 'md-home';
+          iconName = isiOS ? 'ios-home' : 'md-home';
           break;
         case 'New':
-          iconName = isiOS
-            ? `ios-add-circle${focused ? '' : '-outline'}`
-            : 'md-add-circle';
+          // ? `ios-add-circle${focused ? '' : ''}`
+          iconName = isiOS ? 'ios-add-circle' : 'md-add-circle';
           break;
         case 'OrdersList':
           iconName = 'md-basket';
           // iconName = isiOS
-          // ? `ios-add-circle${focused ? '' : '-outline'}`
+          // ? `ios-add-circle${focused ? '' : ''}`
           // : 'md-add-circle';
           break;
         // Profile uses <NotificationsDot> as its tabBarIcon

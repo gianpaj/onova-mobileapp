@@ -33,7 +33,8 @@ class NotificationsDot extends React.Component<Props, void> {
       <View style={st.iconContainer}>
         {userData.notifications && <View style={st.dot} />}
         <Ionicons
-          name={isiOS ? `ios-person${focused ? '' : '-outline'}` : 'md-person'}
+          // name={isiOS ? `ios-person${focused ? '' : '-outline'}` : 'md-person'}
+          name={isiOS ? 'ios-person' : 'md-person'}
           size={28}
           // eslint-disable-next-line
           style={{ marginBottom: -3 }}

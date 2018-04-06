@@ -74,9 +74,6 @@ import com.android.build.OutputFile
 
 project.ext.react = [
     entryFile: "index.js",
-
-    // whether to bundle JS and assets in debug mode
-    bundleInDebug: true,
 ]
 
 apply from: "../../node_modules/react-native/react.gradle"
@@ -142,7 +139,7 @@ android {
         abi {
             reset()
             enable enableSeparateBuildPerCPUArchitecture
-            universalApk false  // If true, also generate a universal APK
+            universalApk false // If true, also generate a universal APK (for Amazon AppStore)
             include "armeabi-v7a", "x86"
         }
     }

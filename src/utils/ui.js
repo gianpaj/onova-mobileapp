@@ -1,6 +1,6 @@
 // @flow
 
-import { Alert, Platform } from 'react-native';
+import { Alert } from 'react-native';
 import { Toast } from 'native-base';
 // prettier-ignore
 import {
@@ -61,6 +61,6 @@ export function formatTime(createdAt: Date): string {
 }
 
 export const isProd =
-  JSON.parse(JSON.stringify(process.env)).NODE_ENV == 'prod';
+  JSON.parse(JSON.stringify(process.env)).NODE_ENV == 'prod' || !__DEV__;
 
 console.debug('isProd', isProd);

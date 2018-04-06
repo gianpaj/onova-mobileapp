@@ -1,9 +1,7 @@
 # Onova mobile app
 
-- Android app: 
-<!-- [link](https://play.google.com/store/apps/details?id=com.onova.app) -->
-- iOS app: 
-<!-- [link](https://itunes.apple.com/us/app/?mt=8) -->
+- Android app: <!-- [link](https://play.google.com/store/apps/details?id=com.onova.app) -->
+- iOS app: <!-- [link](https://itunes.apple.com/us/app/?mt=8) -->
 
 > Created using React Native CLI (`react-native`), not Create React Native App (CRNA) or Expo client.
 
@@ -27,7 +25,7 @@ react-native run-android
 
 _todo_
 
-<!-- 
+<!--
 Start the emulator and the React Native packager
 
     react-native run-ios
@@ -47,7 +45,7 @@ Currently supporting `Android 6.0 (SDK 23)` – default with React Native v0.54
 1. Install [fastlane](https://docs.fastlane.tools/getting-started/android/setup/)
 2. Install Android SDK/Android Studio
 3. (_optional_) Clone the [repo](https://bitbucket.org/onova/private.stuff) containg the Android certificate for the release build (you need to have access)
-  
+
     ```bash
     cd onova
     git clone git@bitbucket.org:onova/private.stuff.git
@@ -59,7 +57,7 @@ Currently supporting `Android 6.0 (SDK 23)` – default with React Native v0.54
     ```
 
     The `private.stuff` folder needs to be at the same level as the `mobileapp`.
-    
+
 4. Now you're ready to make a prod build.
 
 #### Build Android 🤖
@@ -101,7 +99,7 @@ Using [react-native-bundle-visualizer](https://github.com/IjzerenHein/react-nati
     ```
 
         yarn start --reset-cache
-    
+
 2. iOS is just being a b*tch
 
         yarn run nuke-ios

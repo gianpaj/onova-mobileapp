@@ -4,7 +4,7 @@ import axios, { CancelTokenSource } from 'axios';
 import { ENV } from 'react-native-dotenv';
 import { isProd } from './ui';
 
-let API_URL = 'http://10.10.242.98:4040';
+let API_URL = 'http://localhost:4040';
 
 if (isProd) {
   API_URL = 'https://onova.co';

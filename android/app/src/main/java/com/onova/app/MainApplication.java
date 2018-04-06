@@ -8,7 +8,6 @@ import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
-import com.RNFetchBlob.RNFetchBlobPackage;
 import com.reactnative.ivpusic.imagepicker.PickerPackage;
 import io.invertase.firebase.RNFirebasePackage;
 import io.invertase.firebase.messaging.RNFirebaseMessagingPackage;
@@ -32,11 +31,10 @@ public class MainApplication extends Application implements ReactApplication {
                 new RNInstabugReactnativePackage.Builder("***REMOVED***",MainApplication.this)
               .setInvocationEvent("none")
               .build(),
-            new RNFetchBlobPackage(),
+            new PickerPackage(),
+            new RNFirebasePackage(),
             new RNFirebaseMessagingPackage(),
             new RNFirebaseNotificationsPackage()
-            new PickerPackage(),
-            new RNFirebasePackage()
       );
     }
 

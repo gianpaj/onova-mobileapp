@@ -38,7 +38,7 @@ Run Detox tests on iOS 🍎
 
 ### Android 🤖
 
-Currently supporting `Android 6.0 (SDK 23)` – default with React Native v0.54
+Currently supporting `Android 8.0 (SDK 27)` – for react-native-firebase
 
 #### Setup 🔨🤖
 

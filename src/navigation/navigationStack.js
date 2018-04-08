@@ -10,6 +10,7 @@ import {
   Product,
   Profile,
   Settings,
+  Search,
   Signup,
 } from '../screens';
 import { TabsStack } from './navigationTabs';
@@ -28,6 +29,7 @@ export const StackNav = StackNavigator(
     tabs: { screen: TabsStack },
     addProduct: { screen: AddProduct },
     settings: { screen: Settings },
+    search: { screen: Search },
     profile: { screen: Profile },
     ordersList: { screen: OrdersList },
     orderThread: { screen: OrderThread },

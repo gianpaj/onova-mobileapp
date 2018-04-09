@@ -2,20 +2,14 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import {
-  ActivityIndicator,
-  StyleSheet,
-  Platform,
-  Text,
-  View,
-} from 'react-native';
-import {
-  Button as NBButton,
-  Content,
-  Icon as NBIcon,
-  Input,
-  Item,
-} from 'native-base';
+import { StyleSheet, Text, View } from 'react-native';
+import { Button as NBButton } from 'native-base';
+import { SearchBar } from 'react-native-elements';
+import RadioForm, {
+  RadioButton,
+  RadioButtonInput,
+  RadioButtonLabel,
+} from 'react-native-simple-radio-button';
 
 import type { NavigationScreenProp } from 'react-navigation';
 
@@ -23,6 +17,18 @@ import colors from '../config/colors';
 import * as api from '../utils/api';
 
 import type { UserData, Dispatch, ReduxState } from '../types';
+
+const category_radio_grp_1 = [
+  { label: 'Clothes', value: 0 },
+  { label: 'Shoes', value: 1 },
+  { label: 'Other', value: 2 },
+];
+
+const category_radio_grp_2 = [
+  { label: 'Man', value: 0 },
+  { label: 'Woman', value: 1 },
+  { label: 'Other', value: 2 },
+];
 
 type Props = {
   dispatch: Dispatch,
@@ -33,63 +39,142 @@ type Props = {
 type State = {
   isLoading: boolean,
   text: string,
+  grp_1: number,
+  grp_2: number,
 };
 
 class SearchProductsTabContainer extends Component<Props, State> {
   state = {
     isLoading: false,
     text: '',
+    grp_1: -1,
+    grp_2: -1,
   };
 
   onSearch = () => {
-    if (this.state.text.length !== 0) {
-      console.warn(this.state.text);
-    }
+    const { text, grp_1, grp_2 } = this.state;
+    if (!this.isSearchEnabled()) return;
+
+    this.setState({ isLoading: true });
+    // TODO: check verify tags/items exists
+    this.setState({ isLoading: false });
+
+    this.props.navigation.navigate('searchProductsResults', {
+      tag: text,
+      grp_1,
+      grp_2,
+    });
   };
 
   onChangeText = (text: string) => {
-    this.setState({ text });
+    this.setState({ text: text.trim() });
   };
 
-  isSearchEnabled() {
-    return this.state.text.length == 0;
+  isSearchEnabled(): boolean {
+    return (
+      (this.state.text.length > 2 || this.state.grp_1 !== -1) &&
+      this.state.isLoading == false
+    );
   }
 
   render() {
-    const { text } = this.state;
+    const { isLoading } = this.state;
 
     return (
       <View style={styles.flex1}>
-        <View style={{ flexDirection: 'row', paddingHorizontal: 10 }}>
-          <Item style={{ flex: 1 }}>
-            <NBIcon active name="ios-search" />
-            <Input
-              // autoFocus
-              onChangeText={this.onChangeText}
-              onSubmitEditing={this.onSearch}
-              maxLength={50}
-              clearButtonMode="while-editing" // iOS
-              returnKeyType="search"
-              // enablesReturnKeyAutomatically // iOS
-            />
-          </Item>
+        <View>
+          <SearchBar
+            autoCapitalize="none"
+            autoCorrect={false}
+            containerStyle={{
+              backgroundColor: colors.transparent,
+            }}
+            clearButtonMode="while-editing" // iOS
+            // enablesReturnKeyAutomatically // iOS
+            icon={{ type: 'feather', name: 'hash' }}
+            lightTheme
+            maxLength={50}
+            onChangeText={this.onChangeText}
+            onSubmitEditing={this.onSearch}
+            placeholder="hashtag"
+            showLoadingIcon={isLoading}
+            inputStyle={{
+              backgroundColor: colors.grey4,
+              color: colors.black,
+            }}
+            returnKeyType="search"
+            value={this.state.text}
+          />
+          <View style={styles.grps}>
+            <RadioForm animation formHorizontal>
+              {category_radio_grp_1.map((option, i) => (
+                <RadioButton labelHorizontal={false} key={i}>
+                  <RadioButtonLabel
+                    labelHorizontal
+                    obj={option}
+                    index={i}
+                    onPress={grp_1 => !isLoading && this.setState({ grp_1 })}
+                    labelStyle={styles.radioButtonLabel}
+                  />
+                  <RadioButtonInput
+                    obj={option}
+                    index={i}
+                    isSelected={this.state.grp_1 == i}
+                    onPress={grp_1 => !isLoading && this.setState({ grp_1 })}
+                    borderWidth={2}
+                    buttonInnerColor={colors.black}
+                    buttonOuterColor={colors.black}
+                    buttonSize={19}
+                    buttonOuterSize={35}
+                    buttonWrapStyle={styles.radioButtonInput}
+                  />
+                </RadioButton>
+              ))}
+            </RadioForm>
+          </View>
+          <View style={styles.grps}>
+            <RadioForm animation formHorizontal>
+              {category_radio_grp_2.map((option, i) => (
+                <RadioButton labelHorizontal={false} key={i}>
+                  <RadioButtonLabel
+                    labelHorizontal
+                    obj={option}
+                    index={i}
+                    onPress={grp_2 => !isLoading && this.setState({ grp_2 })}
+                    labelStyle={styles.radioButtonLabel}
+                  />
+                  <RadioButtonInput
+                    obj={option}
+                    index={i}
+                    isSelected={this.state.grp_2 == i}
+                    onPress={grp_2 => !isLoading && this.setState({ grp_2 })}
+                    borderWidth={2}
+                    buttonInnerColor={colors.black}
+                    buttonOuterColor={colors.black}
+                    buttonSize={19}
+                    buttonOuterSize={35}
+                    buttonWrapStyle={styles.radioButtonInput}
+                  />
+                </RadioButton>
+              ))}
+            </RadioForm>
+          </View>
+        </View>
+        <View style={styles.padder}>
           <NBButton
-            disabled={this.isSearchEnabled()}
-            transparent
+            block
+            disabled={!this.isSearchEnabled()}
             onPress={this.onSearch}>
             <Text
+              // eslint-disable-next-line
               style={{
-                color: this.isSearchEnabled() ? colors.grey4 : colors.black,
+                fontSize: 16,
+                color: this.isSearchEnabled() ? colors.black : colors.grey2,
               }}>
               Search
             </Text>
           </NBButton>
         </View>
-        <Content style={{ backgroundColor: colors.white }}>
-          <View style={styles.padder}>
-            <Text>asd</Text>
-          </View>
-        </Content>
       </View>
     );
   }
@@ -101,6 +186,17 @@ const styles = StyleSheet.create({
   },
   padder: {
     padding: 10,
+  },
+  grps: {
+    alignItems: 'center',
+    left: -7,
+    justifyContent: 'center',
+    width: '100%',
+  },
+  radioButtonLabel: {
+    marginBottom: 10,
+    paddingLeft: '5%',
+    paddingRight: '5%',
   },
 });
 

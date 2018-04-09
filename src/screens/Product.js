@@ -27,7 +27,6 @@ import { Button } from 'react-native-elements';
 import { Avatar, MediaView, Comments } from '../components';
 
 import colors from '../config/colors';
-import settings from '../config/settings';
 import * as api from '../utils/api';
 import * as ui from '../utils/ui';
 
@@ -178,7 +177,7 @@ export class ProductContainer extends React.Component<Props, State> {
       params: user,
       key: `profile-${user.username}`,
     });
-  }
+  };
 
   isUserVerified(): Promise<boolean> {
     return new Promise((resolve, reject) => {

@@ -10,6 +10,7 @@ import { Product } from '../screens/Product';
 import { Profile } from '../screens/Profile';
 import { Settings } from '../screens/Settings';
 import { Search } from '../screens/Search';
+import { SearchProductsResults } from '../screens/SearchProductsResults';
 import { Signup } from '../screens/Signup';
 
 export {
@@ -23,5 +24,6 @@ export {
   Profile,
   Settings,
   Search,
+  SearchProductsResults,
   Signup,
 };

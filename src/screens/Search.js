@@ -48,7 +48,7 @@ class SearchContainer extends Component<Props, State> {
   );
 
   _renderScene = SceneMap({
-    tags: SearchProductsTab,
+    tags: () => <SearchProductsTab navigation={this.props.navigation} />,
     sellers: SearchSellersTab,
   });
 

@@ -7,6 +7,7 @@ import EditableText from './EditableText';
 import Comments from './Comments';
 import HR from './HR';
 import ImageGrid from './ImageGrid';
+import ImageGridSearch from './ImageGridSearch';
 import MediaView from './MediaView';
 import NotificationsDot from './NotificationsDot';
 import Send from './Send';
@@ -20,6 +21,7 @@ export {
   Comments,
   HR,
   ImageGrid,
+  ImageGridSearch,
   MediaView,
   NotificationsDot,
   Send,

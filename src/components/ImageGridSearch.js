@@ -7,17 +7,18 @@ import {
   ActivityIndicator,
   Dimensions,
   FlatList,
+  Image,
   RefreshControl,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
-import {
-  CachedImage,
-  ImageCacheProvider,
-  // ImageCacheManager,
-} from 'react-native-cached-image';
+// import {
+//   CachedImage,
+//   ImageCacheProvider,
+//   // ImageCacheManager,
+// } from 'react-native-cached-image';
 import { NavigationActions } from 'react-navigation';
 import { Button } from 'react-native-elements';
 
@@ -34,7 +35,7 @@ const TTL = 4 * 60 * 60; // cache images for 4 hours
 // @TODO: define type of Item
 
 type Props = {
-  apiURL: string,
+  terms: any,
   navigation?: NavigationScreenProp<*>,
   userData: UserData,
   emptyState?: React.Component,
@@ -63,29 +64,37 @@ class ImageGridComponent extends React.Component<Props, State> {
   };
 
   componentDidMount() {
+    const { terms } = this.props;
     // const defaultImageCacheManager = ImageCacheManager();
     // defaultImageCacheManager.clearCache();
-    this.fetchItems();
+    // if (terms.tag) {
+    console.warn(terms);
+    this.fetchItems(terms);
+    // }
   }
 
-  fetchItems = () => {
+  fetchItems({ tag, grp_1, grp_2 }): Promise<any> {
     const { token } = this.props.userData;
-
     return api
-      .get(this.props.apiURL, { token })
+      .get(`/api/search/?tag=${tag}&categoryIds=${grp_1}`, { token })
       .then(({ data }) => {
         this.setState({
           items: data,
           loading: false,
         });
       })
-      .catch(() => {
+      .catch(e => {
+        // if the hashtag is incorrect format (e.g #111)
+        if (e.message.indexOf('fails to match the required pattern')) {
+          return this.setState({
+            loading: false,
+          });
+        }
         this.setState({
           error: true,
         });
       });
-  };
-
+  }
   onLayout = () => {
     this.setState({
       itemHeight: width / 3,
@@ -115,14 +124,15 @@ class ImageGridComponent extends React.Component<Props, State> {
         <TouchableOpacity
           style={{ flex: 1 }}
           onPress={() => this.onItemPress(item)}>
-          <ImageCacheProvider
+          {/* <ImageCacheProvider
             numberOfConcurrentPreloads={3}
             ttl={TTL} // num of seconds to cache the image url for
             defaultSource={loading}
             // urlsToPreload={this.state.images}
           >
             <CachedImage style={styles.image} source={{ uri }} />
-          </ImageCacheProvider>
+          </ImageCacheProvider> */}
+          <Image style={styles.image} source={{ uri }} />
         </TouchableOpacity>
       </View>
     );
@@ -173,18 +183,19 @@ class ImageGridComponent extends React.Component<Props, State> {
 
     return (
       <View style={styles.emptyContainer}>
-        <Text style={styles.boldText}>There are no items to browse</Text>
+        <Text>icon_here</Text>
+        <Text style={styles.boldText}>We did not find anything like that</Text>
         <Text style={styles.centerText}>
-          The more sellers you follow, the more items you'll see in your feed
+          Try searching for some other things you like
         </Text>
-        <Button
+        {/* <Button
           raised
           rounded
           backgroundColor={colors.pDark}
           containerViewStyle={styles.searchButton}
           onPress={() => alert('code me like those french girls 🎨')}
           title="Search"
-        />
+        /> */}
       </View>
     );
   };

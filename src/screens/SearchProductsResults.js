@@ -60,7 +60,6 @@ class SearchProductsResultsContainer extends Component<Props, State> {
     } else {
       terms = params;
     }
-    console.debug('terms:', terms);
     this.setState({ terms });
   }
 

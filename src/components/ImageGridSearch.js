@@ -42,11 +42,11 @@ type Props = {
 };
 
 type State = {
-  error: boolean,
-  items: Array<any>,
-  itemHeight: number,
-  loading: boolean,
   // loadingMore: boolean,
+  hasError: boolean,
+  itemHeight: number,
+  items: Array<any>,
+  loading: boolean,
   refreshing: boolean,
   skip: number,
 };
@@ -55,9 +55,9 @@ const { width, height } = Dimensions.get('window');
 
 class ImageGridComponent extends React.Component<Props, State> {
   state = {
-    error: false,
-    items: [],
+    hasError: false,
     itemHeight: 0,
+    items: [],
     loading: true,
     refreshing: false,
     skip: 0,
@@ -89,14 +89,16 @@ class ImageGridComponent extends React.Component<Props, State> {
         });
       })
       .catch(e => {
+        console.debug(e);
         // if the hashtag is incorrect format (e.g #111)
-        if (e.message.indexOf('fails to match the required pattern')) {
+        if (e.message.indexOf('fails to match the required pattern') > -1) {
           return this.setState({
             loading: false,
           });
         }
         this.setState({
-          error: true,
+          hasError: true,
+          loading: false,
         });
       });
   }
@@ -144,14 +146,14 @@ class ImageGridComponent extends React.Component<Props, State> {
   };
 
   render() {
-    const { error, loading, items } = this.state;
+    const { loading, items } = this.state;
 
     return (
       <View style={styles.container}>
-        {!error && loading ? (
+        {loading ? (
           this.renderLoading()
         ) : (
-          // if not loading
+          // if not loading or no error
           <FlatList
             onLayout={this.onLayout}
             style={styles.list}
@@ -159,7 +161,6 @@ class ImageGridComponent extends React.Component<Props, State> {
               styles.columnWrapper,
               { height: this.state.itemHeight },
             ]}
-            refreshControl={this.renderRefreshControl()}
             data={items}
             renderItem={this.renderItem}
             numColumns={3}
@@ -174,9 +175,7 @@ class ImageGridComponent extends React.Component<Props, State> {
   }
 
   renderEmptyState = () => {
-    if (this.state.items.length > 1) return null;
-
-    if (this.state.error) {
+    if (this.state.hasError) {
       return (
         <View style={[styles.container, { height: height - 150 }]}>
           <Text style={styles.centerText}>Error fetching listing</Text>
@@ -207,18 +206,9 @@ class ImageGridComponent extends React.Component<Props, State> {
 
   renderLoading() {
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, { height: height - 150 }]}>
         <ActivityIndicator size="large" />
       </View>
-    );
-  }
-
-  renderRefreshControl() {
-    return (
-      <RefreshControl
-        refreshing={this.state.refreshing}
-        onRefresh={this.fetchItems}
-      />
     );
   }
 }

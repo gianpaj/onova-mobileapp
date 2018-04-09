@@ -317,7 +317,7 @@ class OrdersListContainer extends Component<Props, State> {
             <FlatList
               style={st.root}
               data={channelList}
-              extraData={this.state} // make sure will re-render when the state.selected changes
+              extraData={this.state} // make sure will re-render when the state.selected changes (if we want have real time updates of the last message of each thread)
               refreshControl={
                 <RefreshControl
                   refreshing={this.state.isRefreshing}

@@ -3,7 +3,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import {
-  ActivityIndicator,
   StyleSheet,
   FlatList,
   Platform,
@@ -11,7 +10,6 @@ import {
   TouchableHighlight,
   View,
 } from 'react-native';
-import { Content } from 'native-base';
 import { SearchBar } from 'react-native-elements';
 
 import { Avatar } from '../components';
@@ -52,26 +50,20 @@ class SearchSellersTabContainer extends Component<Props, State> {
 
     this.setState({ isLoading: true });
 
-    // TODO: check if there are results
-    this.fetchData(this.state.text)
+    const { token } = this.props.userData;
+    api
+      .get(`/api/users/?u=${this.state.text}`, { token })
       .then(data => {
-        this.setState({ data, showingResults: true });
+        this.setState({ data });
       })
       .catch(err => {
-        this.setState({ hasError: true, showingResults: false });
+        this.setState({ hasError: true });
         console.debug(err);
       })
       .then(() => {
-        this.setState({ isLoading: false });
+        this.setState({ isLoading: false, showingResults: true });
       });
   };
-
-  fetchData(text): Promise<any> {
-    const { token } = this.props.userData;
-    return api.get(`/api/users/?u=${text}`, { token }).then(res => {
-      return res;
-    });
-  }
 
   onChangeText = (text: string) => {
     if (text.trim().length == 0) this.clearResults();
@@ -94,6 +86,7 @@ class SearchSellersTabContainer extends Component<Props, State> {
   renderEmptyState = () => {
     if (!this.state.showingResults) return null;
 
+    // TODO: center empty state in RN 0.56 - https://github.com/facebook/react-native/pull/18206
     return (
       <View style={styles.container}>
         <Text>
@@ -139,40 +132,38 @@ class SearchSellersTabContainer extends Component<Props, State> {
 
     return (
       <View style={styles.flex1}>
-        <SearchBar
-          autoCapitalize="none"
-          autoCorrect={false}
-          containerStyle={{
-            backgroundColor: colors.transparent,
-          }}
-          onClearText={this.clearResults}
-          clearButtonMode="while-editing" // iOS
-          // enablesReturnKeyAutomatically // iOS
-          icon={{ type: 'feather', name: 'at-sign' }}
-          lightTheme
-          maxLength={50}
-          onChangeText={this.onChangeText}
-          onSubmitEditing={this.onSearch}
-          placeholder="username"
-          showLoadingIcon={isLoading}
-          inputStyle={{
-            backgroundColor: colors.grey4,
-            color: colors.black,
-          }}
-          returnKeyType="search"
-          value={this.state.text}
+        <FlatList
+          data={this.state.data}
+          ItemSeparatorComponent={this._renderSeparator}
+          ListHeaderComponent={
+            <SearchBar
+              autoCapitalize="none"
+              autoCorrect={false}
+              containerStyle={{
+                backgroundColor: colors.transparent,
+              }}
+              onClearText={this.clearResults}
+              clearButtonMode="while-editing" // iOS
+              // enablesReturnKeyAutomatically // iOS
+              icon={{ type: 'feather', name: 'at-sign' }}
+              lightTheme
+              maxLength={30}
+              onChangeText={this.onChangeText}
+              onSubmitEditing={this.onSearch}
+              placeholder="username"
+              showLoadingIcon={isLoading}
+              inputStyle={{
+                backgroundColor: colors.grey4,
+                color: colors.black,
+              }}
+              returnKeyType="search"
+              value={this.state.text}
+            />
+          }
+          keyExtractor={this._keyExtractor}
+          ListEmptyComponent={this.renderEmptyState}
+          renderItem={this._renderItem}
         />
-        <Content style={{ backgroundColor: colors.white }}>
-          <FlatList
-            style={styles.root}
-            data={this.state.data}
-            extraData={this.state} // make sure will re-render when the state.selected changes
-            ItemSeparatorComponent={this._renderSeparator}
-            keyExtractor={this._keyExtractor}
-            ListEmptyComponent={this.renderEmptyState}
-            renderItem={this._renderItem}
-          />
-        </Content>
       </View>
     );
   }
@@ -180,7 +171,7 @@ class SearchSellersTabContainer extends Component<Props, State> {
 
 const styles = StyleSheet.create({
   container: {
-    alignItems: 'stretch',
+    alignItems: 'center',
     flex: 1,
     justifyContent: 'center',
   },

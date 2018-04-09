@@ -220,7 +220,6 @@ class Comments extends React.Component<Props, State> {
           <FlatList
             style={styles.root}
             data={this.state.comments}
-            extraData={this.state}
             ItemSeparatorComponent={this.renderSeparator}
             keyExtractor={this._keyExtractor}
             renderItem={this.renderSingleComment}

@@ -278,7 +278,7 @@ class OrdersListContainer extends Component<Props, State> {
     if (this.state.channelList.length > 0) return null;
     return (
       <View style={[st.container]}>
-        <Text style={st.text}>
+        <Text>
           {this.state.hasError ? 'Error fetching orders' : 'No orders found'}
         </Text>
       </View>

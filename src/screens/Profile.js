@@ -457,6 +457,7 @@ class ProfileScreen extends React.Component<Props, State> {
               <View {...padder}>
                 {this.isMe() ? (
                   <EditableText
+                    autoCorrect
                     text={bio}
                     onChangeText={t => this.setState({ bio: t })}
                     placeholder="Edit your profile description"

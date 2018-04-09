@@ -14,7 +14,6 @@ import RadioForm, {
 import type { NavigationScreenProp } from 'react-navigation';
 
 import colors from '../config/colors';
-import * as api from '../utils/api';
 
 import type { UserData, Dispatch, ReduxState } from '../types';
 

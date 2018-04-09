@@ -22,6 +22,18 @@ import type { NavigationScreenProp } from 'react-navigation';
 
 import type { UserData, Dispatch, ReduxState } from '../types';
 
+const category_radio_grp_1 = [
+  { label: 'Clothes', value: 0 },
+  { label: 'Shoes', value: 1 },
+  { label: 'Other', value: 2 },
+];
+
+const category_radio_grp_2 = [
+  { label: 'Man', value: 0 },
+  { label: 'Woman', value: 1 },
+  { label: 'Other', value: 2 },
+];
+
 type Props = {
   dispatch: Dispatch,
   navigation: NavigationScreenProp<*>,
@@ -52,6 +64,16 @@ class SearchProductsResultsContainer extends Component<Props, State> {
     this.setState({ terms });
   }
 
+  getCategoryLabel(num: number): string {
+    // $FlowFixMe
+    return category_radio_grp_1.find(g => g.value == num).label;
+  }
+
+  getTypeLabel(num: number): string {
+    // $FlowFixMe
+    return category_radio_grp_2.find(g => g.value == num).label;
+  }
+
   render() {
     if (!this.state.terms) return null;
     const { terms } = this.state;
@@ -70,7 +92,14 @@ class SearchProductsResultsContainer extends Component<Props, State> {
           <Body>
             {terms.tag && terms.grp_1 == -1 && terms.grp_2 == -1 ? (
               <Title>#{terms.tag}</Title>
+            ) : // searching for category (clothes, shoes or other)
+            terms.tag == '' && terms.grp_1 !== -1 && terms.grp_2 == -1 ? (
+              <Title>{this.getCategoryLabel(terms.grp_1)}</Title>
+            ) : // searching for type (man, woman or other)
+            terms.tag == '' && terms.grp_1 == -1 && terms.grp_2 !== -1 ? (
+              <Title>{this.getTypeLabel(terms.grp_2)}</Title>
             ) : (
+              // else, a combination
               <Title>Results</Title>
             )}
           </Body>

@@ -72,10 +72,30 @@ class SearchProductsTabContainer extends Component<Props, State> {
 
   isSearchEnabled(): boolean {
     return (
-      (this.state.text.length > 2 || this.state.grp_1 !== -1) &&
+      (this.state.text.length > 2 ||
+        this.state.grp_1 !== -1 ||
+        this.state.grp_2 !== -1) &&
       this.state.isLoading == false
     );
   }
+
+  setCategories = (grp_1: number) => {
+    if (!this.state.isLoading) {
+      if (this.state.grp_1 == grp_1) {
+        return this.setState({ grp_1: -1 });
+      }
+      this.setState({ grp_1 });
+    }
+  };
+
+  setTypes = (grp_2: number) => {
+    if (!this.state.isLoading) {
+      if (this.state.grp_2 == grp_2) {
+        return this.setState({ grp_2: -1 });
+      }
+      this.setState({ grp_2 });
+    }
+  };
 
   render() {
     const { isLoading } = this.state;
@@ -113,14 +133,14 @@ class SearchProductsTabContainer extends Component<Props, State> {
                     labelHorizontal
                     obj={option}
                     index={i}
-                    onPress={grp_1 => !isLoading && this.setState({ grp_1 })}
+                    onPress={this.setCategories}
                     labelStyle={styles.radioButtonLabel}
                   />
                   <RadioButtonInput
                     obj={option}
                     index={i}
                     isSelected={this.state.grp_1 == i}
-                    onPress={grp_1 => !isLoading && this.setState({ grp_1 })}
+                    onPress={this.setCategories}
                     borderWidth={2}
                     buttonInnerColor={colors.black}
                     buttonOuterColor={colors.black}
@@ -140,14 +160,14 @@ class SearchProductsTabContainer extends Component<Props, State> {
                     labelHorizontal
                     obj={option}
                     index={i}
-                    onPress={grp_2 => !isLoading && this.setState({ grp_2 })}
+                    onPress={this.setTypes}
                     labelStyle={styles.radioButtonLabel}
                   />
                   <RadioButtonInput
                     obj={option}
                     index={i}
                     isSelected={this.state.grp_2 == i}
-                    onPress={grp_2 => !isLoading && this.setState({ grp_2 })}
+                    onPress={this.setTypes}
                     borderWidth={2}
                     buttonInnerColor={colors.black}
                     buttonOuterColor={colors.black}

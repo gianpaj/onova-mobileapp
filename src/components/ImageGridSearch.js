@@ -75,8 +75,13 @@ class ImageGridComponent extends React.Component<Props, State> {
 
   fetchItems({ tag, grp_1, grp_2 }): Promise<any> {
     const { token } = this.props.userData;
+    const tagQuery = tag == '' ? '' : `tag=${tag}`;
+    const categoryQuery = grp_1 == -1 ? '' : `&categoryIds=${grp_1}`;
+    const typeQuery = grp_2 == -1 ? '' : `&typeIds=${grp_2}`;
     return api
-      .get(`/api/search/?tag=${tag}&categoryIds=${grp_1}`, { token })
+      .get(`/api/search/?${tagQuery}${categoryQuery}${typeQuery}`, {
+        token,
+      })
       .then(({ data }) => {
         this.setState({
           items: data,

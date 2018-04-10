@@ -19,7 +19,7 @@ export function showToast(message: string, type: string = '') {
   Toast.show({
     text: message,
     type: type,
-    duration: 2000,
+    duration: 10000,
     position: 'top',
     textStyle: { textAlign: 'center' },
   });

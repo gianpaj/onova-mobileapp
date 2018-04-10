@@ -26,6 +26,15 @@ import * as api from '../utils/api';
 import * as ui from '../utils/ui';
 import colors from '../config/colors';
 
+let defaultState = {};
+
+if (__DEV__) {
+  defaultState = {
+    emailAddress: 'gianpa+test2@gmail.com',
+    password: 'express2',
+  };
+}
+
 type Props = {
   dispatch: Dispatch,
   loadingLogin: boolean,
@@ -51,14 +60,13 @@ class LoginScreen extends React.Component<Props, State> {
   });
 
   state = {
-    emailAddress: 'gianpa+test2@gmail.com',
-    password: 'express2',
-    // emailAddress: '',
-    // password: '',
+    emailAddress: '',
+    password: '',
     modalVisible: false,
     emailReset: '',
     loadingReset: false,
     disabled: false,
+    ...defaultState,
   };
 
   onLogin() {

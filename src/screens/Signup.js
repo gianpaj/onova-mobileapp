@@ -51,12 +51,12 @@ class SignupScreen extends React.Component<Props, State> {
   });
 
   state = {
-    username: 'testaccount',
-    emailAddress: 'gianpa+test2@gmail.com',
-    password: 'express2',
-    // username: '',
-    // email: '',
-    // password: '',
+    // username: 'testaccount',
+    // emailAddress: 'gianpa+test2@gmail.com',
+    // password: 'express2',
+    username: '',
+    email: '',
+    password: '',
     loading: false,
     usernameError: false,
     disabled: true,

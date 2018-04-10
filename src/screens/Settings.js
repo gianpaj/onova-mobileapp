@@ -511,12 +511,14 @@ class SettingsContainer extends Component<Props, State> {
             <Text>Report a problem or suggest an improvement</Text>
           </NBButton> */}
         </Content>
-        <KeyboardAccessoryNavigation
-          nextDisabled={this.state.nextFocusDisabled}
-          previousDisabled={this.state.previousFocusDisabled}
-          onNext={this.changeInputFocus.bind(this, 1)}
-          onPrevious={this.changeInputFocus.bind(this, -1)}
-        />
+        {Platform.OS == 'ios' && (
+          <KeyboardAccessoryNavigation
+            nextDisabled={this.state.nextFocusDisabled}
+            previousDisabled={this.state.previousFocusDisabled}
+            onNext={this.changeInputFocus.bind(this, 1)}
+            onPrevious={this.changeInputFocus.bind(this, -1)}
+          />
+        )}
       </Container>
     );
   }

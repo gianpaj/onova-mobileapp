@@ -66,7 +66,7 @@ class AppNavigation extends Component<Props, void> {
   onBackPress = () => {
     const { dispatch, navigationState } = this.props;
     // FIXME: hack. For the hardware back button to go back to Login screen from the Signup page
-    if (navigationState.stateForLoggedIn.routes[0].routeName == 'login') {
+    if (navigationState.stateForLoggedOut.routes[0].routeName == 'login') {
       dispatch(goback());
       return true;
     }

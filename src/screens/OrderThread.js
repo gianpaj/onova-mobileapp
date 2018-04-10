@@ -546,7 +546,9 @@ class OrderThreadContainer extends Component<Props, State> {
           ) : (
             <View style={st.flex1}>
               <CardItem header>
-                <Text numberOfLines={1} style={{ width: '50%', top: -1.5 }}>
+                <Text
+                  numberOfLines={1} // android
+                  style={{ width: '50%', top: -1.5 }}>
                   description: {product.description}
                 </Text>
                 <View style={st.row}>

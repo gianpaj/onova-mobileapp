@@ -36,8 +36,10 @@ type State = {
   emailAddress: string,
   password: string,
   loading: false,
-  usernameError: boolean,
   disabled: boolean,
+  hasFocusUser: boolean,
+  hasFocusEmail: boolean,
+  hasFocusPass: boolean,
 };
 
 class SignupScreen extends React.Component<Props, State> {
@@ -55,11 +57,13 @@ class SignupScreen extends React.Component<Props, State> {
     // emailAddress: 'gianpa+test2@gmail.com',
     // password: 'express2',
     username: '',
-    email: '',
+    emailAddress: '',
     password: '',
     loading: false,
-    usernameError: false,
     disabled: true,
+    hasFocusUser: false,
+    hasFocusEmail: false,
+    hasFocusPass: false,
   };
 
   onSignup() {
@@ -82,15 +86,9 @@ class SignupScreen extends React.Component<Props, State> {
   }
 
   onUserChange = (u: string) => {
-    if (!settings.USERNAME_REGEX.test(u)) {
-      this.setState({ usernameError: true });
-    } else {
+    if (settings.USERNAME_REGEX.test(u)) {
       return this.setState({ username: u });
     }
-
-    setTimeout(() => {
-      this.setState({ usernameError: false });
-    }, 100);
   };
 
   openTermPolicy() {
@@ -148,7 +146,18 @@ class SignupScreen extends React.Component<Props, State> {
     inputStyle: styles.input,
   };
 
+  _onBlurUser = () => this.setState({ hasFocusUser: false });
+  _onFocusUser = () => this.setState({ hasFocusUser: true });
+
+  _onBlurEmail = () => this.setState({ hasFocusEmail: false });
+  _onFocusEmail = () => this.setState({ hasFocusEmail: true });
+
+  _onBlurPass = () => this.setState({ hasFocusPass: false });
+  _onFocusPass = () => this.setState({ hasFocusPass: true });
+
   render() {
+    const { hasFocusUser, hasFocusEmail, hasFocusPass } = this.state;
+
     return (
       <Container>
         <Content>
@@ -165,10 +174,15 @@ class SignupScreen extends React.Component<Props, State> {
             <FormInput
               placeholder="Username"
               returnKeyType="next"
+              onBlur={this._onBlurUser}
+              onFocus={this._onFocusUser}
               onSubmitEditing={() => this.EmailInput && this.EmailInput.focus()}
               value={this.state.username}
               onChangeText={t => this.onUserChange(t)}
               accessibilityLabel="username"
+              underlineColorAndroid={
+                hasFocusUser ? colors.primary : colors.grey2
+              }
               {...this._inputProps}
             />
             <FormInput
@@ -178,11 +192,16 @@ class SignupScreen extends React.Component<Props, State> {
               placeholder="Email"
               keyboardType="email-address"
               returnKeyType="next"
+              onBlur={this._onBlurEmail}
+              onFocus={this._onFocusEmail}
               onSubmitEditing={() => this.PwdInput && this.PwdInput.focus()}
               value={this.state.emailAddress}
               testID="EmailField"
-              onChangeText={text => this.setState({ emailAddress: text })}
+              onChangeText={emailAddress => this.setState({ emailAddress })}
               accessibilityLabel="email address"
+              underlineColorAndroid={
+                hasFocusEmail ? colors.primary : colors.grey2
+              }
               {...this._inputProps}
             />
             <FormInput
@@ -192,10 +211,15 @@ class SignupScreen extends React.Component<Props, State> {
               secureTextEntry
               placeholder="Password (minimum 8 characters)"
               returnKeyType="go"
+              onBlur={this._onBlurPass}
+              onFocus={this._onFocusPass}
               onSubmitEditing={() => this.onSignup()}
               value={this.state.password}
-              onChangeText={text => this.setState({ password: text })}
+              onChangeText={password => this.setState({ password })}
               accessibilityLabel="password"
+              underlineColorAndroid={
+                hasFocusPass ? colors.primary : colors.grey2
+              }
               {...this._inputProps}
             />
             <View style={styles.mt15}>

@@ -255,7 +255,7 @@ class OrdersListContainer extends Component<Props, State> {
               </Text>
             </View>
             <Text
-              numberOfLines={1}
+              numberOfLines={1} // android
               style={haveUnreadMsgs ? { fontWeight: 'bold' } : {}}>
               {isMyMessage ? 'You: ' : ''}
               {lastMessage.message}

@@ -118,7 +118,11 @@ class SearchSellersTabContainer extends Component<Props, State> {
                 {user.displayName || user.username}
               </Text>
             </View>
-            <Text numberOfLines={1}>{user.username}</Text>
+            <Text
+              numberOfLines={1} // android
+            >
+              {user.username}
+            </Text>
           </View>
         </View>
       </TouchableHighlight>

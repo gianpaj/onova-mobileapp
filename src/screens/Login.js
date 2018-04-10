@@ -48,6 +48,9 @@ type State = {
   modalVisible: boolean,
   password: string,
   disabled: boolean,
+  hasFocusEmail: boolean,
+  hasFocusPass: boolean,
+  hasFocusEmailReset: boolean,
 };
 
 class LoginScreen extends React.Component<Props, State> {
@@ -66,13 +69,16 @@ class LoginScreen extends React.Component<Props, State> {
     emailReset: '',
     loadingReset: false,
     disabled: false,
+    hasFocusEmail: false,
+    hasFocusPass: false,
+    hasFocusEmailReset: false,
     ...defaultState,
   };
 
-  onLogin() {
+  onLogin = () => {
     const { emailAddress, password } = this.state;
     this.props.dispatch(login({ emailAddress, password }));
-  }
+  };
 
   // googleSignin() {
   //   this.props.dispatch(loginWithGoogle());
@@ -155,8 +161,24 @@ class LoginScreen extends React.Component<Props, State> {
     }
   }
 
+  _onBlurEmail = () => this.setState({ hasFocusEmail: false });
+  _onFocusEmail = () => this.setState({ hasFocusEmail: true });
+
+  _onBlurPass = () => this.setState({ hasFocusPass: false });
+  _onFocusPass = () => this.setState({ hasFocusPass: true });
+
+  _onBlurEmailReset = () => this.setState({ hasFocusEmailReset: false });
+  _onFocusEmailReset = () => this.setState({ hasFocusEmailReset: true });
+
   render() {
-    const { emailAddress, password, disabled } = this.state;
+    const {
+      emailAddress,
+      password,
+      disabled,
+      hasFocusEmail,
+      hasFocusPass,
+      hasFocusEmailReset,
+    } = this.state;
 
     return (
       <Container>
@@ -176,12 +198,17 @@ class LoginScreen extends React.Component<Props, State> {
             placeholder="Email"
             keyboardType="email-address"
             returnKeyType="next"
+            onBlur={this._onBlurEmail}
+            onFocus={this._onFocusEmail}
             onSubmitEditing={() =>
               this.PwdInput ? this.PwdInput.focus() : undefined
             }
             value={emailAddress}
             testID="EmailField"
             onChangeText={text => this.setState({ emailAddress: text })}
+            underlineColorAndroid={
+              hasFocusEmail ? colors.primary : colors.grey2
+            }
             {...this._inputProps}
           />
           <FormInput
@@ -191,10 +218,13 @@ class LoginScreen extends React.Component<Props, State> {
             secureTextEntry
             placeholder="Password"
             returnKeyType="go"
-            onSubmitEditing={() => this.onLogin()}
+            onBlur={this._onBlurPass}
+            onFocus={this._onFocusPass}
+            onSubmitEditing={this.onLogin}
             value={password}
             testID="PasswordField"
             onChangeText={text => this.setState({ password: text })}
+            underlineColorAndroid={hasFocusPass ? colors.primary : colors.grey2}
             {...this._inputProps}
           />
           <Text
@@ -252,11 +282,16 @@ class LoginScreen extends React.Component<Props, State> {
               autoCapitalize="none"
               autoCorrect={false}
               autoFocus
+              onBlur={this._onBlurEmailReset}
+              onFocus={this._onFocusEmailReset}
               clearButtonMode="while-editing"
               keyboardType="email-address"
               returnKeyType="go"
               value={this.state.emailReset}
               onChangeText={text => this.setState({ emailReset: text })}
+              underlineColorAndroid={
+                hasFocusEmailReset ? colors.primary : colors.grey2
+              }
             />
 
             <Button

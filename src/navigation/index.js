@@ -10,6 +10,7 @@ import {
   initializeSendBird,
   sendToken,
   logout,
+  goback,
 } from '../actions/actionCreator';
 import NavigationStack from './navigationStack';
 import type { Dispatch, UserData, ReduxState } from '../types';
@@ -63,11 +64,12 @@ class AppNavigation extends Component<Props, void> {
   }
 
   onBackPress = () => {
-    const { dispatch } = this.props;
-    // console.log(navigationState.stateForLoggedIn);
-    // if (navigationState.stateForLoggedIn.index === 0) {
-    //   return false;
-    // }
+    const { dispatch, navigationState } = this.props;
+    // FIXME: hack. For the hardware back button to go back to Login screen from the Signup page
+    if (navigationState.stateForLoggedIn.routes[0].routeName == 'login') {
+      dispatch(goback());
+      return true;
+    }
     dispatch(NavigationActions.back());
     return true;
   };

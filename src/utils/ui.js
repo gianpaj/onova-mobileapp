@@ -14,14 +14,21 @@ import {
  *
  * @param message
  * @param type ['warning', 'success', 'danger', '']
+ * @param buttonText text for the button to dismiss the Toast
  */
-export function showToast(message: string, type: string = '') {
+export function showToast(
+  message: string,
+  type: string = '',
+  buttonText: ?string
+) {
+  if (!buttonText && type == 'success') buttonText = 'ok';
   Toast.show({
     text: message,
     type: type,
     duration: 10000,
     position: 'top',
     textStyle: { textAlign: 'center' },
+    buttonText,
   });
 }
 

@@ -179,7 +179,7 @@ dependencies {
     implementation "com.google.android.gms:play-services-base:12.0.0"
     implementation "com.google.firebase:firebase-core:12.0.0"
     // // react-native-firebase w/ messaging
-    // implementation "com.google.firebase:firebase-messaging:12.0.0"
+    implementation "com.google.firebase:firebase-messaging:12.0.0"
     // implementation 'me.leolin:ShortcutBadger:1.1.21@aar' // <-- Add this line if you wish to use badge on Android
     implementation project(':react-native-image-crop-picker')
 }

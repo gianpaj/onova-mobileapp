@@ -88,6 +88,7 @@ type State = {
 
 class SettingsContainer extends Component<Props, State> {
   cancelToken;
+  inputs = [];
   state = {
     emailAddress: '',
     pending: false,
@@ -301,8 +302,8 @@ class SettingsContainer extends Component<Props, State> {
 
   handleFocus(ref) {
     this.setState({
-      nextFocusDisabled: ref === 3,
-      previousFocusDisabled: ref === 1,
+      nextFocusDisabled: ref === 7,
+      previousFocusDisabled: ref === 0,
       activeInputRef: ref,
     });
   }
@@ -316,7 +317,7 @@ class SettingsContainer extends Component<Props, State> {
     }
 
     const focusingRef = this.state.activeInputRef + direction;
-    this.refs[`${focusingRef}`].focus();
+    this.inputs[focusingRef] && this.inputs[focusingRef].focus();
   }
 
   render() {
@@ -371,8 +372,12 @@ class SettingsContainer extends Component<Props, State> {
                 {
                   content: [
                     {
+                      ref: el => {
+                        this.inputs[0] = el;
+                      },
                       placeholder: 'Address line 1',
                       value: shippingAddress.line1,
+                      onFocus: this.handleFocus.bind(this, 0),
                       onChangeValue: t =>
                         this.setState(
                           update(this.state, {
@@ -381,8 +386,12 @@ class SettingsContainer extends Component<Props, State> {
                         ),
                     },
                     {
+                      ref: el => {
+                        this.inputs[1] = el;
+                      },
                       placeholder: 'Address line 2',
                       value: shippingAddress.line2,
+                      onFocus: this.handleFocus.bind(this, 1),
                       onChangeValue: t =>
                         this.setState(
                           update(this.state, {
@@ -391,8 +400,12 @@ class SettingsContainer extends Component<Props, State> {
                         ),
                     },
                     {
+                      ref: el => {
+                        this.inputs[2] = el;
+                      },
                       placeholder: 'City',
                       value: shippingAddress.city,
+                      onFocus: this.handleFocus.bind(this, 2),
                       onChangeValue: t =>
                         this.setState(
                           update(this.state, {
@@ -401,8 +414,12 @@ class SettingsContainer extends Component<Props, State> {
                         ),
                     },
                     {
+                      ref: el => {
+                        this.inputs[3] = el;
+                      },
                       placeholder: 'State',
                       value: shippingAddress.state,
+                      onFocus: this.handleFocus.bind(this, 3),
                       onChangeValue: t =>
                         this.setState(
                           update(this.state, {
@@ -449,7 +466,9 @@ class SettingsContainer extends Component<Props, State> {
           <View style={styles.padder}>
             <FormLabel labelStyle={styles.label}>Username:</FormLabel>
             <FormInput
-              ref="1"
+              ref={el => {
+                this.inputs[5] = el;
+              }}
               autoCorrect={false}
               containerStyle={styles.inputContainer}
               editable={!pending}
@@ -459,12 +478,15 @@ class SettingsContainer extends Component<Props, State> {
               value={username}
               clearButtonMode="while-editing"
               shake={usernameError}
-              onFocus={this.handleFocus.bind(this, 1)}
+              onFocus={this.handleFocus.bind(this, 5)}
+              onSubmitEditing={this.changeInputFocus.bind(this, 1)}
             />
             <FormLabel>Private information</FormLabel>
             <FormLabel labelStyle={styles.label}>Email:</FormLabel>
             <FormInput
-              ref="2"
+              ref={el => {
+                this.inputs[6] = el;
+              }}
               autoCorrect={false}
               containerStyle={styles.inputContainer}
               editable={!pending}
@@ -473,11 +495,14 @@ class SettingsContainer extends Component<Props, State> {
               placeholder="Edit your email address (Requires re-verification)"
               value={emailAddress}
               clearButtonMode="while-editing"
-              onFocus={this.handleFocus.bind(this, 2)}
+              onFocus={this.handleFocus.bind(this, 6)}
+              onSubmitEditing={this.changeInputFocus.bind(this, 1)}
             />
             <FormLabel labelStyle={styles.label}>Password:</FormLabel>
             <FormInput
-              ref="3"
+              ref={el => {
+                this.inputs[7] = el;
+              }}
               autoCorrect={false}
               containerStyle={styles.inputContainer}
               editable={!pending}
@@ -487,7 +512,7 @@ class SettingsContainer extends Component<Props, State> {
               placeholder="******"
               value={password}
               clearButtonMode="while-editing"
-              onFocus={this.handleFocus.bind(this, 3)}
+              onFocus={this.handleFocus.bind(this, 7)}
             />
           </View>
           {/* Notifications switch */}
@@ -506,7 +531,7 @@ class SettingsContainer extends Component<Props, State> {
             </TouchableOpacity>
             <Text style={styles.centerText}>__version__</Text>
           </View>
-          <HR full />
+          {/* <HR full /> */}
           {/* <NBButton light full onPress={() => Instabug.invoke()}>
             <Text>Report a problem or suggest an improvement</Text>
           </NBButton> */}

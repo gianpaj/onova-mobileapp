@@ -62,6 +62,7 @@ export default class Accordion extends PureComponent<Props, void> {
               key={i}
               ref={el => {
                 c.input = el;
+                c.ref(el);
               }}
               autoCorrect={false}
               blurOnSubmit={false}
@@ -69,6 +70,7 @@ export default class Accordion extends PureComponent<Props, void> {
               containerStyle={styles.inputContainer}
               inputStyle={styles.input}
               onChangeText={t => c.onChangeValue(t)}
+              onFocus={t => c.onFocus(t)}
               placeholder={c.placeholder}
               onSubmitEditing={() =>
                 section.content[i + 1] && section.content[i + 1].input.focus()

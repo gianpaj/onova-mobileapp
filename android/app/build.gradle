@@ -120,7 +120,6 @@ android {
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
-        multiDexEnabled true
         // for react-native-image-crop-picker
         vectorDrawables.useSupportLibrary = true
         ndk {
@@ -165,15 +164,11 @@ android {
             }
         }
     }
-
-    packagingOptions {
-        exclude 'META-INF/rxjava.properties'
-    }
 }
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
-    implementation "com.android.support:appcompat-v7:27.0.2"
+    implementation "com.android.support:appcompat-v7:23.0.1"
     implementation "com.facebook.react:react-native:+"  // From node_modules
 
 
@@ -183,10 +178,9 @@ dependencies {
     // Firebase dependencies
     implementation "com.google.android.gms:play-services-base:12.0.0"
     implementation "com.google.firebase:firebase-core:12.0.0"
-    // react-native-firebase v4 w/ messaging
-    implementation "com.google.firebase:firebase-messaging:12.0.0"
-    // // for to use badge on Android
-    // implementation 'me.leolin:ShortcutBadger:1.1.21@aar'
+    // // react-native-firebase w/ messaging
+    // implementation "com.google.firebase:firebase-messaging:12.0.0"
+    // implementation 'me.leolin:ShortcutBadger:1.1.21@aar' // <-- Add this line if you wish to use badge on Android
     implementation project(':react-native-image-crop-picker')
 }
 
@@ -203,4 +197,5 @@ project.ext.vectoricons = [
 
 apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
 
+// for react-native-firebase
 apply plugin: 'com.google.gms.google-services'

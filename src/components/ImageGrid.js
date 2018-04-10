@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import {
   ActivityIndicator,
   Dimensions,
+  Image,
   FlatList,
   RefreshControl,
   StyleSheet,
@@ -13,11 +14,11 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {
-  CachedImage,
-  ImageCacheProvider,
-  // ImageCacheManager,
-} from 'react-native-cached-image';
+// import {
+//   CachedImage,
+//   ImageCacheProvider,
+//   ImageCacheManager,
+// } from 'react-native-cached-image';
 import { NavigationActions } from 'react-navigation';
 import { Button } from 'react-native-elements';
 
@@ -28,8 +29,8 @@ import colors from '../config/colors';
 import type { UserData } from '../types';
 
 // $FlowFixMe
-const loading = require('../assets/images/loading.jpg');
-const TTL = 4 * 60 * 60; // cache images for 4 hours
+// const loading = require('../assets/images/loading.jpg');
+// const TTL = 4 * 60 * 60; // cache images for 4 hours
 
 // @TODO: define type of Item
 
@@ -115,14 +116,15 @@ class ImageGridComponent extends React.Component<Props, State> {
         <TouchableOpacity
           style={{ flex: 1 }}
           onPress={() => this.onItemPress(item)}>
-          <ImageCacheProvider
+          {/* <ImageCacheProvider
             numberOfConcurrentPreloads={3}
             ttl={TTL} // num of seconds to cache the image url for
             defaultSource={loading}
             // urlsToPreload={this.state.images}
           >
             <CachedImage style={styles.image} source={{ uri }} />
-          </ImageCacheProvider>
+          </ImageCacheProvider> */}
+          <Image style={styles.image} source={{ uri }} />
         </TouchableOpacity>
       </View>
     );

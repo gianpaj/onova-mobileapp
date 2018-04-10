@@ -3,7 +3,6 @@
 buildscript {
     repositories {
         jcenter()
-        // for react-native-firebase v4
         google()
     }
     dependencies {
@@ -26,11 +25,11 @@ allprojects {
             url "$rootDir/../node_modules/react-native/android"
         }
 
-        // for react-native-image-crop-picker
-        // jitpack repo is necessary to fetch ucrop dependency
+        // for react-native-image-crop-picker - jitpack repo is necessary to fetch ucrop dependency
         maven { url "https://jitpack.io" }
 
-        // for react-native-firebase
-        maven { url 'https://maven.google.com' }
+        maven {
+            url 'https://maven.google.com'
+        }
     }
 }

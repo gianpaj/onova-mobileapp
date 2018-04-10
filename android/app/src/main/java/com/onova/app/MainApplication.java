@@ -4,12 +4,11 @@ import android.app.Application;
 
 import com.facebook.react.ReactApplication;
 import com.instabug.reactlibrary.RNInstabugReactnativePackage;
-import com.reactnative.ivpusic.imagepicker.PickerPackage;
-import com.oblador.vectoricons.VectorIconsPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
+import com.reactnative.ivpusic.imagepicker.PickerPackage;
 import io.invertase.firebase.RNFirebasePackage;
 import io.invertase.firebase.messaging.RNFirebaseMessagingPackage;
 import io.invertase.firebase.notifications.RNFirebaseNotificationsPackage;
@@ -33,7 +32,6 @@ public class MainApplication extends Application implements ReactApplication {
               .setInvocationEvent("none")
               .build(),
             new PickerPackage(),
-            new VectorIconsPackage(),
             new RNFirebasePackage(),
             new RNFirebaseMessagingPackage(),
             new RNFirebaseNotificationsPackage()

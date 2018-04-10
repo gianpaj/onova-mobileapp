@@ -38,7 +38,7 @@ Run Detox tests on iOS 🍎
 
 ### Android 🤖
 
-Currently supporting `Android 6.0 (SDK 23)` – default with React Native v0.54
+Currently supporting `Android 8.0 (SDK 27)` – for react-native-firebase
 
 #### Setup 🔨🤖
 
@@ -88,7 +88,7 @@ _todo_
 
 Using [react-native-bundle-visualizer](https://github.com/IjzerenHein/react-native-bundle-visualizer)
 
-    yarn run react-native-bundle-visualizer
+    yarn react-native-bundle-visualizer
 
 ## Troubleshooting 🔫
 
@@ -102,4 +102,4 @@ Using [react-native-bundle-visualizer](https://github.com/IjzerenHein/react-nati
 
 2. iOS is just being a b*tch
 
-        yarn run nuke-ios
+        yarn nuke-ios

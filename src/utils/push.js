@@ -5,7 +5,7 @@ import firebase from 'react-native-firebase';
 import type { Notification, NotificationOpen } from 'react-native-firebase';
 import SendBird from 'sendbird';
 // eslint-disable-next-line
-import Instabug from 'instabug-reactnative';
+// import Instabug from 'instabug-reactnative';
 
 let onMessageSubscription, onNotificationOpenedSubscription;
 
@@ -16,7 +16,7 @@ export function registerPushNotifications(): Promise<string | null> {
       .hasPermission()
       .then(enabled => {
         if (enabled) {
-          Instabug.setPushNotificationsEnabled(true);
+          // Instabug.setPushNotificationsEnabled(true);
           console.debug('push permissions granted');
           // user has permissions
         } else {
@@ -25,7 +25,7 @@ export function registerPushNotifications(): Promise<string | null> {
             .messaging()
             .requestPermission()
             .then(() => {
-              Instabug.setPushNotificationsEnabled(true);
+              // Instabug.setPushNotificationsEnabled(true);
               console.debug('push permissions requested and granted');
             })
             .catch(err => {
@@ -42,13 +42,13 @@ export function registerPushNotifications(): Promise<string | null> {
           .then((notificationOpen: NotificationOpen) => {
             console.log('getInitialNotification');
             if (notificationOpen) {
-              if (
-                Platform.OS == 'ios' &&
-                Instabug.isInstabugNotification(notificationOpen)
-              ) {
-                console.log('isInstabugNotification');
-              } else {
-              }
+              // if (
+              //   Platform.OS == 'ios' &&
+              //   Instabug.isInstabugNotification(notificationOpen)
+              // ) {
+              //   console.log('isInstabugNotification');
+              // } else {
+              // }
               // App was opened by a notification (from background)
               // Get the action triggered by the notification being opened
               const action = notificationOpen.action;

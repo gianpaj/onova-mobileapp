@@ -2,10 +2,10 @@
     package="com.onova.app">
 
   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-  <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
 
-  <!-- for react-native-image-crop-picker -->
-  <uses-permission android:name="android.permission.CAMERA"/>
+    <!-- for react-native-image-crop-picker -->
+    <uses-permission android:name="android.permission.CAMERA"/>
 
     <!-- for react-native-firebase v4 w/ messaging -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />

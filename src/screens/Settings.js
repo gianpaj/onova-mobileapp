@@ -31,7 +31,7 @@ import { Toast } from 'antd-mobile';
 import axios from 'axios';
 import isEmail from 'validator/lib/isEmail';
 import update from 'immutability-helper';
-import Instabug from 'instabug-reactnative';
+// import Instabug from 'instabug-reactnative';
 import { KeyboardAccessoryNavigation } from 'react-native-keyboard-accessory';
 
 import { Accordion, HR } from '../components';
@@ -110,11 +110,11 @@ class SettingsContainer extends Component<Props, State> {
         cancelToken: this.cancelToken.token,
       })
     );
-    Instabug.startWithToken(
-      settings.INSTABUG_TOKEN,
-      Instabug.invocationEvent.none
-    );
-    Instabug.setPromptOptionsEnabled(false, true, true);
+    // Instabug.startWithToken(
+    //   settings.INSTABUG_TOKEN,
+    //   Instabug.invocationEvent.none
+    // );
+    // Instabug.setPromptOptionsEnabled(false, true, true);
   }
 
   componentWillUnmount() {
@@ -507,9 +507,9 @@ class SettingsContainer extends Component<Props, State> {
             <Text style={styles.centerText}>__version__</Text>
           </View>
           <HR full />
-          <NBButton light full onPress={() => Instabug.invoke()}>
+          {/* <NBButton light full onPress={() => Instabug.invoke()}>
             <Text>Report a problem or suggest an improvement</Text>
-          </NBButton>
+          </NBButton> */}
         </Content>
         <KeyboardAccessoryNavigation
           nextDisabled={this.state.nextFocusDisabled}

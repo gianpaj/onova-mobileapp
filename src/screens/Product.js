@@ -42,7 +42,6 @@ type Props = {
 };
 
 type State = {
-  addCommentError: boolean,
   loading: boolean,
   loadingBuy: boolean,
   item: ?ProductType,
@@ -57,7 +56,6 @@ export class ProductContainer extends React.Component<Props, State> {
   reqTimer = 0;
 
   state = {
-    addCommentError: false,
     loading: true,
     loadingBuy: false,
     // likeAnimValue: new Animated.Value(0.35),

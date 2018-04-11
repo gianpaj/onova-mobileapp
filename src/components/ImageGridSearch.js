@@ -68,7 +68,7 @@ class ImageGridComponent extends React.Component<Props, State> {
     // const defaultImageCacheManager = ImageCacheManager();
     // defaultImageCacheManager.clearCache();
     // if (terms.tag) {
-    console.warn(terms);
+    // console.warn(terms);
     this.fetchItems(terms);
     // }
   }

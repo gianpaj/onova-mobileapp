@@ -34,6 +34,12 @@ if (__DEV__) {
     password: 'express2',
   };
 }
+if (__DEV__ && Platform.OS == 'ios') {
+  defaultState = {
+    emailAddress: 'gianpa+test3@gmail.com',
+    password: '***REMOVED***',
+  };
+}
 
 type Props = {
   dispatch: Dispatch,

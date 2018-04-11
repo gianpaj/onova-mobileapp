@@ -36,7 +36,7 @@ type Props = {
 };
 
 type State = {
-  addCommentError: boolean,
+  // addCommentError: boolean,
   comments: Array<Comment>,
   loading: boolean,
   // likeAnimValue: number,
@@ -52,7 +52,6 @@ class Comments extends React.Component<Props, State> {
   reqTimer = 0;
 
   state = {
-    addCommentError: false,
     comments: [],
     loading: true,
     // likeAnimValue: new Animated.Value(0.35),
@@ -412,18 +411,25 @@ class Comments extends React.Component<Props, State> {
         }, 300);
       })
       .catch(e => {
-        this.setState({ addCommentError: true });
-        console.error(e);
-        setTimeout(() => {
-          this.setState({ addCommentError: false });
-        }, 3000);
+        // this.setState({ addCommentError: true });
+        if (e.message && e.message.indexOf('verify your account') > -1) {
+          ui.showToast(
+            'Please verify your account before writing a comment',
+            'warning'
+          );
+        } else {
+          console.error(e);
+        }
+        // setTimeout(() => {
+        //   this.setState({ addCommentError: false });
+        // }, 3000);
       });
   };
 
-  onChangeText = (t: string) => {
+  onChangeText = (text: string) => {
     this.setState({
-      addCommentError: t.length == settings.MAX_LENGTH_COMMENT,
-      text: t,
+      // addCommentError: text.length == settings.MAX_LENGTH_COMMENT,
+      text,
     });
   };
 

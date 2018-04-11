@@ -158,7 +158,7 @@ class Comments extends React.Component<Props, State> {
     <View style={styles.containerComment}>
       <Avatar
         // $FlowFixMe
-        onPress={() => this.props.goToProfile({ username: c.user.username })}
+        onPress={() => this.props.goToProfile(c.user)}
         size={'verySmall'}
         // withBorder
         uri={c.user.profilePic}
@@ -168,10 +168,7 @@ class Comments extends React.Component<Props, State> {
         onLongPress={() => this.showActionSheetForComment(c)}>
         <View style={styles.content}>
           <View style={styles.commentHeader}>
-            <TouchableOpacity
-              onPress={() =>
-                this.props.goToProfile({ username: c.user.username })
-              }>
+            <TouchableOpacity onPress={() => this.props.goToProfile(c.user)}>
               <Text style={styles.displayName}>{c.user.displayName}</Text>
             </TouchableOpacity>
             <Text style={styles.time}>{ui.formatTime(c.createdAt)}</Text>
@@ -204,8 +201,12 @@ class Comments extends React.Component<Props, State> {
     if (matches[2] == 'null') {
       return ui.showToast('User not found', 'warning');
     }
+    console.log(matches);
     // $FlowFixMe
-    this.props.goToProfile({ username: matches[2].replace('@', '') });
+    this.props.goToProfile({
+      username: matches[1].replace('@', ''),
+      _id: matches[2],
+    });
   };
 
   _keyExtractor = item => item._id;

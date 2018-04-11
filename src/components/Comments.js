@@ -162,14 +162,14 @@ class Comments extends React.Component<Props, State> {
         size={'verySmall'}
         // withBorder
         uri={c.user.profilePic}
-        placeholderText={c.user.displayName}
+        placeholderText={c.user.username}
       />
       <TouchableWithoutFeedback
         onLongPress={() => this.showActionSheetForComment(c)}>
         <View style={styles.content}>
           <View style={styles.commentHeader}>
             <TouchableOpacity onPress={() => this.props.goToProfile(c.user)}>
-              <Text style={styles.displayName}>{c.user.displayName}</Text>
+              <Text style={styles.displayName}>{c.user.username}</Text>
             </TouchableOpacity>
             <Text style={styles.time}>{ui.formatTime(c.createdAt)}</Text>
           </View>

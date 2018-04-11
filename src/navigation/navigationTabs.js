@@ -49,9 +49,9 @@ const tabBarConfiguration = {
           name={iconName}
           size={28}
           // eslint-disable-next-line
-          style={{ marginBottom: -3 }}
+          style={isiOS ? { marginBottom: -3 } : {}}
           color={
-            focused ? (isiOS ? colors.active : colors.grey1) : colors.grey1
+            focused ? (isiOS ? colors.active : colors.pDark) : colors.grey1
           }
         />
       );
@@ -60,15 +60,18 @@ const tabBarConfiguration = {
   tabBarOptions: {
     showIcon: true,
     // tint color is passed to text and icons (if enabled) on the tab bar
-    activeTintColor: isiOS ? colors.active : colors.grey1,
-    inactiveTintColor: colors.grey1,
+    activeTintColor: isiOS ? colors.active : colors.pDark,
     // background color is for the tab component
-    activeBackgroundColor: isiOS ? undefined : colors.primary,
+    activeBackgroundColor: isiOS ? undefined : colors.pDark,
+    inactiveTintColor: colors.grey1,
     inactiveBackgroundColor: colors.white,
     style: {
       backgroundColor: isiOS ? undefined : colors.grey3,
     },
-    labelStyle: { fontSize: 12 },
+    indicatorStyle: {
+      backgroundColor: colors.pDark,
+    },
+    labelStyle: isiOS ? {} : { fontSize: 12 },
   },
   // needed to open the Camera the first time opening the 'AddProduct' screen
   // i.e componentWillMount() of AddProduct

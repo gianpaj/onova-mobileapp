@@ -39,7 +39,7 @@ class NotificationsDot extends React.Component<Props, void> {
           // eslint-disable-next-line
           style={{ marginBottom: -3 }}
           color={
-            focused ? (isiOS ? colors.active : colors.grey1) : colors.grey1
+            focused ? (isiOS ? colors.active : colors.primary) : colors.grey1
           }
         />
         {/* https://docs.nativebase.io/Components.html#footer-tabs-badge-headref */}

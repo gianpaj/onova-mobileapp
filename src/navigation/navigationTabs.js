@@ -8,6 +8,8 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Home, AddProduct, OrdersList, Profile, Search } from '../screens';
 import colors from '../config/colors';
 
+import TabBarComponent from './TabBarComponent';
+
 const isiOS = Platform.OS === 'ios';
 
 const routeConfiguration = {
@@ -51,7 +53,7 @@ const tabBarConfiguration = {
           // eslint-disable-next-line
           style={isiOS ? { marginBottom: -3 } : {}}
           color={
-            focused ? (isiOS ? colors.active : colors.pDark) : colors.grey1
+            focused ? (isiOS ? colors.active : colors.primary) : colors.grey1
           }
         />
       );
@@ -60,16 +62,16 @@ const tabBarConfiguration = {
   tabBarOptions: {
     showIcon: true,
     // tint color is passed to text and icons (if enabled) on the tab bar
-    activeTintColor: isiOS ? colors.active : colors.pDark,
+    activeTintColor: isiOS ? colors.active : colors.primary,
     // background color is for the tab component
-    activeBackgroundColor: isiOS ? undefined : colors.pDark,
+    activeBackgroundColor: isiOS ? undefined : colors.grey5,
     inactiveTintColor: colors.grey1,
     inactiveBackgroundColor: colors.white,
     style: {
       backgroundColor: isiOS ? undefined : colors.grey3,
     },
     indicatorStyle: {
-      backgroundColor: colors.pDark,
+      backgroundColor: colors.primary,
     },
     labelStyle: isiOS ? {} : { fontSize: 12 },
   },
@@ -78,6 +80,7 @@ const tabBarConfiguration = {
   tabBarPosition: 'bottom',
   animationEnabled: false,
   swipeEnabled: false,
+  tabBarComponent: TabBarComponent,
 };
 
 export const TabsStack = TabNavigator(routeConfiguration, tabBarConfiguration);

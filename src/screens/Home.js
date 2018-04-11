@@ -5,7 +5,7 @@ import React, { PureComponent } from 'react';
 // prettier-ignore
 import {
   Dimensions,
-  Platform,
+  // Platform,
   StyleSheet,
   Text,
 } from 'react-native';
@@ -13,8 +13,8 @@ import {
   Body,
   Left,
   Right,
-  Button,
-  Icon,
+  // Button,
+  // Icon,
   Container,
   Header,
 } from 'native-base';

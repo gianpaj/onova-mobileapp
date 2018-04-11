@@ -27,7 +27,7 @@ type State = {
   routes: Array<any>,
 };
 
-class SearchContainer extends Component<Props, State> {
+export class Search extends Component<Props, State> {
   state = {
     index: 0,
     routes: [
@@ -84,5 +84,3 @@ const styles = StyleSheet.create({
     backgroundColor: colors.pDark,
   },
 });
-
-export const Search = SearchContainer;

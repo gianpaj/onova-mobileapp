@@ -119,7 +119,7 @@ class SearchProductsTabContainer extends Component<Props, State> {
             showLoadingIcon={isLoading}
             inputStyle={{
               backgroundColor: colors.grey4,
-              color: colors.black,
+              color: this.isSearchEnabled() ? colors.black : colors.grey2,
             }}
             returnKeyType="search"
             value={this.state.text}

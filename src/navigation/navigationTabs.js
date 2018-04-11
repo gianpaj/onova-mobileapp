@@ -14,7 +14,7 @@ const routeConfiguration = {
   Home: { screen: Home },
   Search: { screen: Search },
   New: { screen: AddProduct },
-  OrdersList: { screen: OrdersList },
+  Orders: { screen: OrdersList },
   Profile: { screen: Profile },
 };
 
@@ -36,7 +36,7 @@ const tabBarConfiguration = {
           // ? `ios-add-circle${focused ? '' : ''}`
           iconName = isiOS ? 'ios-add-circle' : 'md-add-circle';
           break;
-        case 'OrdersList':
+        case 'Orders':
           iconName = 'md-basket';
           // iconName = isiOS
           // ? `ios-add-circle${focused ? '' : ''}`
@@ -68,6 +68,7 @@ const tabBarConfiguration = {
     style: {
       backgroundColor: isiOS ? undefined : colors.grey3,
     },
+    labelStyle: { fontSize: 12 },
   },
   // needed to open the Camera the first time opening the 'AddProduct' screen
   // i.e componentWillMount() of AddProduct

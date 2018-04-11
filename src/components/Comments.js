@@ -6,6 +6,7 @@ import {
   // Animated,
   Dimensions,
   FlatList,
+  Platform,
   StyleSheet,
   Text,
   View,
@@ -45,6 +46,7 @@ type State = {
   text: string,
 };
 
+const isiOS = Platform.OS == 'ios';
 const { height, width } = Dimensions.get('window');
 
 class Comments extends React.Component<Props, State> {
@@ -238,26 +240,24 @@ class Comments extends React.Component<Props, State> {
     hidePanel: () => void
   ) => {
     return (
-      <TouchableOpacity onPress={() => this.onSuggestionTap(user, hidePanel)}>
-        <View
-          style={[
-            styles.row,
-            {
-              borderColor: colors.convertHex(colors.grey2, 10),
-              borderWidth: StyleSheet.hairlineWidth,
-            },
-          ]}>
-          <Avatar
-            // style={styles.avatarContainer}
-            size={'verySmall'}
-            withBorder
-            uri={user.profilePic || ''}
-            placeholderText={user.username}
-          />
-          <View style={styles.userDetailsBox}>
-            <Text style={styles.displayNameText}>{user.displayName}</Text>
-            <Text style={styles.suggestionUsernameText}>@{user.username}</Text>
-          </View>
+      <TouchableOpacity
+        style={[
+          styles.row,
+          {
+            borderColor: colors.convertHex(colors.grey2, 10),
+            borderWidth: StyleSheet.hairlineWidth,
+          },
+        ]}
+        onPress={() => this.onSuggestionTap(user, hidePanel)}>
+        <Avatar
+          style={{ marginTop: 2 }}
+          size={'verySmall'}
+          withBorder
+          uri={user.profilePic || ''}
+          placeholderText={user.username}
+        />
+        <View style={styles.userDetailsBox}>
+          <Text style={styles.suggestionUsernameText}>@{user.username}</Text>
         </View>
       </TouchableOpacity>
     );
@@ -314,9 +314,15 @@ class Comments extends React.Component<Props, State> {
     // is the text not empty and not longer that the max
     const showActiveOpacity =
       text.trim().length < 1 || text.length == settings.MAX_LENGTH_COMMENT;
+
+    const shouldHideSuggestions = keyword == '@' || usersToMention.length == 0;
     return (
       <View style={styles.addCommentContainer}>
-        <View style={styles.addCommentInputContainer}>
+        <View
+          style={[
+            styles.addCommentInputContainer,
+            // { height: shouldHideSuggestions ? 40 : 200 },
+          ]}>
           <MentionsTextInput
             autoCorrect={false}
             keyboardType="email-address"
@@ -336,15 +342,15 @@ class Comments extends React.Component<Props, State> {
             }
             // eslint-disable-next-line
             suggestionsPanelStyle={{
-              // borderWidth: 1,
               backgroundColor: colors.grey5,
-              borderColor: colors.grey5,
               borderRadius: 3,
-              bottom: 40,
+              bottom: isiOS ? 40 : 0,
               // hack to hide empty suggestionsPanel for zero chars query or no results
-              top: keyword == '@' || usersToMention.length == 0 ? 1100 : 'auto',
-              left: -12,
-              position: 'absolute',
+              top: isiOS
+                ? shouldHideSuggestions ? 1100 : 'auto'
+                : shouldHideSuggestions ? 1100 : 0,
+              left: isiOS ? -12 : 0,
+              position: isiOS ? 'absolute' : 'relative',
               right: -47,
             }}
             // eslint-disable-next-line
@@ -361,11 +367,12 @@ class Comments extends React.Component<Props, State> {
             suggestionRowHeight={45}
             suggestionsData={this.state.usersToMention} // array of objects
             textInputMaxHeight={80}
-            textInputMinHeight={30}
+            textInputMinHeight={isiOS ? 30 : 50}
             trigger={'@'}
             triggerCallback={this.callback.bind(this)}
             triggerLocation={'anywhere'}
             value={text}
+            underlineColorAndroid="transparent"
           />
         </View>
         <Send text={text} onSend={() => this.onSendComment(text)}>
@@ -475,13 +482,18 @@ const styles = StyleSheet.create({
   addCommentInputContainer: {
     borderWidth: StyleSheet.hairlineWidth,
     borderRadius: 2,
-    paddingVertical: 5,
+    paddingVertical: Platform.select({
+      ios: 5,
+    }),
     margin: 10,
-    width: 320,
+    width: width - 49,
   },
   addCommentContainer: {
     flexDirection: 'row',
-    paddingVertical: 10,
+    paddingVertical: Platform.select({
+      ios: 10,
+    }),
+    // height: 200,
   },
   padder: {
     paddingHorizontal: 10,

@@ -47,7 +47,7 @@ type State = {
 export default class Avatar extends PureComponent<Props, State> {
   static defaultProps = {
     interactive: false,
-    overlayColor: colors.white,
+    overlayColor: 'transparent',
     resizeMode: 'cover',
     size: 'default',
     withBorder: false,
@@ -162,7 +162,7 @@ export default class Avatar extends PureComponent<Props, State> {
 
 const styles = StyleSheet.create({
   avatar: {
-    backgroundColor: colors.grey3,
+    // backgroundColor: colors.grey3,
   },
   /* eslint-disable */
   miniAvatar: {

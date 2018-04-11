@@ -169,6 +169,7 @@ export class ProductContainer extends React.Component<Props, State> {
   };
 
   goToProfile = (user: UserData) => {
+    if (!user._id) return;
     // $FlowFixMe
     this.props.navigation.navigate({
       routeName: 'profile',

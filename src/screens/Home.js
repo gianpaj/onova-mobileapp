@@ -99,7 +99,8 @@ export class Home extends PureComponent<Props, State> {
               ØNOVA
             </Text>
           </Body>
-          <Right>
+          <Right />
+          {/* <Right>
             <Button transparent>
               <Icon
                 style={{ color: colors.black }}
@@ -109,7 +110,7 @@ export class Home extends PureComponent<Props, State> {
                 }
               />
             </Button>
-          </Right>
+          </Right> */}
         </Header>
         <TabViewAnimated
           testID="Tabs"

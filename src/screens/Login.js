@@ -2,18 +2,26 @@
 
 import React from 'react';
 import { connect } from 'react-redux';
-// prettier-ignore
 import {
   Animated,
   Modal,
   Platform,
   StyleSheet,
   Text,
-  View
+  View,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
-import { Button, FormInput } from 'react-native-elements';
-import { Button as NBButton, Container, Content } from 'native-base';
+import { FormInput } from 'react-native-elements';
+import {
+  Button as NBButton,
+  Container,
+  Content,
+  Header,
+  Right,
+  Left,
+  Body,
+  Icon as NBIcon,
+} from 'native-base';
 import type { NavigationScreenProp } from 'react-navigation';
 import isEmail from 'validator/lib/isEmail';
 // $FlowFixMe
@@ -62,7 +70,7 @@ type State = {
 class LoginScreen extends React.Component<Props, State> {
   PwdInput: ?FormInput;
   loginBtn;
-  animatedValue = new Animated.Value(1);
+  animatedValue = new Animated.Value(__DEV__ ? 1 : 0);
   backgroundColor = this.animatedValue.interpolate({
     inputRange: [0, 1],
     outputRange: [colors.grey4, colors.primary],
@@ -101,7 +109,7 @@ class LoginScreen extends React.Component<Props, State> {
     });
   }
 
-  onResetPassword() {
+  onResetPassword = () => {
     if (!isEmail(this.state.emailReset)) {
       return;
     }
@@ -124,7 +132,7 @@ class LoginScreen extends React.Component<Props, State> {
         // }
         this.setState({ loadingReset: false });
       });
-  }
+  };
 
   _inputProps = {
     autoCapitalize: 'none',
@@ -275,9 +283,24 @@ class LoginScreen extends React.Component<Props, State> {
           animationType="slide"
           visible={this.state.modalVisible}
           onRequestClose={() => this.setModalVisible(!this.state.modalVisible)}>
-          <View style={{ marginTop: 22 }}>
+          <View>
+            <Header noShadow style={{ backgroundColor: colors.transparent }}>
+              <Left />
+              <Body />
+              <Right>
+                <NBButton
+                  transparent
+                  onPress={() => {
+                    this.setModalVisible(!this.state.modalVisible);
+                  }}>
+                  <NBIcon name="close" style={{ color: colors.black }} />
+                </NBButton>
+              </Right>
+            </Header>
             <View style={{ margin: 20 }}>
-              <Text style={{ fontWeight: 'bold' }}>Trouble logging in?</Text>
+              <Text style={{ color: colors.black, fontWeight: 'bold' }}>
+                Trouble logging in?
+              </Text>
               <Text>Enter your email address to reset your password</Text>
             </View>
 
@@ -300,26 +323,23 @@ class LoginScreen extends React.Component<Props, State> {
               }
             />
 
-            <Button
-              buttonStyle={styles.PrimaryButton}
-              raised
-              loading={this.state.loadingReset}
+            <AnimButton
               disabled={
                 !isEmail(this.state.emailReset) || this.state.loadingReset
               }
-              disabledStyle={styles.DisabledButton}
-              disabledTextStyle={styles.DisabledButtonText}
-              onPress={() => this.onResetPassword()}
-              title="Email instructions"
+              foregroundColor={colors.white}
+              // eslint-disable-next-line
+              style={[styles.LoginButton, {
+                  backgroundColor:
+                    isEmail(this.state.emailReset) || this.state.loadingReset
+                      ? colors.primary
+                      : colors.grey4,
+                },
+              ]}
+              onPress={this.onResetPassword}
+              label="Email instructions"
+              testID="LoginButton"
             />
-            <NBButton
-              small
-              style={styles.SecondaryButtonNB}
-              onPress={() => {
-                this.setModalVisible(!this.state.modalVisible);
-              }}>
-              <Text>Back To Login</Text>
-            </NBButton>
           </View>
         </Modal>
       </Container>

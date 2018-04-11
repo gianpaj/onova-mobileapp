@@ -24,14 +24,13 @@ import {
 } from 'native-base';
 import type { NavigationScreenProp } from 'react-navigation';
 import isEmail from 'validator/lib/isEmail';
-// $FlowFixMe
+import { Toast } from 'antd-mobile';
 import AnimButton from 'react-native-micro-animated-button';
 
 import { login, goToSignup } from '../actions/actionCreator';
 import type { Dispatch, ReduxState } from '../types';
 
 import * as api from '../utils/api';
-import * as ui from '../utils/ui';
 import colors from '../config/colors';
 
 let defaultState = {};
@@ -121,17 +120,18 @@ class LoginScreen extends React.Component<Props, State> {
       })
       .then((res: any) => {
         if (res.message) {
-          ui.showToast(res.message);
+          Toast.success(res.message, 5);
         }
         console.log(res);
         this.setState({ loadingReset: false });
       })
       .catch((err: api.APIError) => {
         // if (err.status = 400) {
-        ui.showToast(err.message);
+        Toast.success(err.message, 5);
         // }
         this.setState({ loadingReset: false });
-      });
+      })
+      .then(() => this.setModalVisible(false));
   };
 
   _inputProps = {
@@ -282,7 +282,7 @@ class LoginScreen extends React.Component<Props, State> {
         <Modal
           animationType="slide"
           visible={this.state.modalVisible}
-          onRequestClose={() => this.setModalVisible(!this.state.modalVisible)}>
+          onRequestClose={() => this.setModalVisible(false)}>
           <View>
             <Header noShadow style={{ backgroundColor: colors.transparent }}>
               <Left />
@@ -290,9 +290,7 @@ class LoginScreen extends React.Component<Props, State> {
               <Right>
                 <NBButton
                   transparent
-                  onPress={() => {
-                    this.setModalVisible(!this.state.modalVisible);
-                  }}>
+                  onPress={() => this.setModalVisible(false)}>
                   <NBIcon name="close" style={{ color: colors.black }} />
                 </NBButton>
               </Right>

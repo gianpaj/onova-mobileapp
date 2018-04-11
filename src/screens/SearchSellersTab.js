@@ -10,7 +10,7 @@ import {
   TouchableHighlight,
   View,
 } from 'react-native';
-import { SearchBar } from 'react-native-elements';
+import { SearchBar, Icon } from 'react-native-elements';
 
 import { Avatar } from '../components';
 
@@ -124,6 +124,7 @@ class SearchSellersTabContainer extends Component<Props, State> {
               {user.username}
             </Text>
           </View>
+          <Icon size={28} name="chevron-right" color={colors.grey4} />
         </View>
       </TouchableHighlight>
     );
@@ -158,7 +159,7 @@ class SearchSellersTabContainer extends Component<Props, State> {
               showLoadingIcon={isLoading}
               inputStyle={{
                 backgroundColor: colors.grey4,
-                color: colors.black,
+                color: this.isSearchEnabled() ? colors.black : colors.grey2,
               }}
               returnKeyType="search"
               value={this.state.text}

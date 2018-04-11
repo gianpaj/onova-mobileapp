@@ -2,15 +2,7 @@
 
 import React from 'react';
 import { connect } from 'react-redux';
-import {
-  // Dimensions,
-  // Image,
-  // PixelRatio,
-  StyleSheet,
-  Text,
-  // TouchableOpacity,
-  View,
-} from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {
   Body,
@@ -33,15 +25,16 @@ import {
   ImagePicker as AntImagePicker,
   WingBlank,
 } from 'antd-mobile';
-import type { NavigationScreenProp } from 'react-navigation';
 
-import { HR } from '../components';
+import { HR, TagInput } from '../components';
 
 import colors from '../config/colors';
 import settings from '../config/settings';
 import * as api from '../utils/api';
 import * as ui from '../utils/ui';
 import type { UserData, ReduxState } from '../types';
+
+import type { NavigationScreenProp } from 'react-navigation';
 
 const category_radio_grp_1 = [
   { label: 'Clothes', value: 0 },
@@ -65,7 +58,8 @@ type State = {
   description: string,
   images: any,
   price: string,
-  tags: string,
+  tags: Array<string>,
+  tagsText: string,
   grp_1: number,
   grp_2: number,
   pending: boolean,
@@ -86,7 +80,8 @@ export class AddProductScreen extends React.Component<Props, State> {
   state = {
     description: '',
     price: '',
-    tags: '',
+    tags: [],
+    tagsText: '',
     grp_1: -1,
     grp_2: -1,
     images: [],
@@ -94,11 +89,10 @@ export class AddProductScreen extends React.Component<Props, State> {
   };
 
   componentDidMount() {
-    const { params } = this.props.navigation.state;
-
-    if (params && params.focused == true) {
-      this.takePicture();
-    }
+    // const { params } = this.props.navigation.state;
+    // if (params && params.focused == true) {
+    this.takePicture();
+    // }
   }
 
   takePicture() {
@@ -151,7 +145,8 @@ export class AddProductScreen extends React.Component<Props, State> {
   addItem = () => {
     const { description, images, price, grp_1, grp_2, tags } = this.state;
 
-    this.setState({ pending: true });
+    this.setState({ pending: true, tagsText: '' });
+
     const formData = new FormData();
     images.forEach((image, i) => {
       // $FlowFixMe
@@ -165,7 +160,7 @@ export class AddProductScreen extends React.Component<Props, State> {
     formData.append('price', price);
     formData.append('categoryIds', grp_1.toString());
     formData.append('typeIds', grp_2.toString());
-    formData.append('tags', tags);
+    if (tags.length) formData.append('tags', JSON.stringify(tags));
 
     // const config = {
     //   onUploadProgress: function(progressEvent) {
@@ -177,11 +172,11 @@ export class AddProductScreen extends React.Component<Props, State> {
     api
       .post('/api/products', formData, { token })
       .then(res => {
-        console.log(res);
+        console.debug(res);
         this.closeModal();
       })
       .catch(err => {
-        console.log(err);
+        console.debug(err);
         ui.showToast(err.message, 'warning');
       })
       // final
@@ -196,9 +191,31 @@ export class AddProductScreen extends React.Component<Props, State> {
   changeTags(tags: string) {
     const pattern = /^(\b[a-z][a-z0-9,]*)$/i;
     if ((pattern.test(tags) || tags == '') && tags.indexOf(',,') == -1) {
-      this.setState({ tags });
+      // this.setState({ tags });
     }
   }
+
+  changeTagsTest = (tagsText: string) => {
+    // +1 for the comma
+    if (tagsText.length > settings.MAX_LENGTH_PER_TAG + 1) return;
+    this.setState({ tagsText: tagsText.trim() });
+
+    // TODO: don't allow tags longer than 30 chars but allow to type ',' ' ' after
+    const lastTyped = tagsText.charAt(tagsText.length - 1);
+    const parseWhen = [',', ' ', ';', '\n'];
+
+    // TODO: allow to trype a 3 letter tag and then press SPACE
+    if (
+      parseWhen.indexOf(lastTyped) > -1 &&
+      tagsText.trim().length > settings.MIN_LENGTH_PER_TAG
+    ) {
+      return this.setState({
+        tags: [...this.state.tags, this.state.tagsText],
+        tagsText: '',
+      });
+    }
+    this.setState({ tagsText: tagsText.replace(/,|;| | \n/gi, '') });
+  };
 
   /**
    * numbers only, one dot and 2 decimal points
@@ -218,8 +235,8 @@ export class AddProductScreen extends React.Component<Props, State> {
       this.state.images.length > 0 &&
       !this.state.pending &&
       this.state.price !== '' &&
-      this.state.description.length > 7 &&
-      this.state.tags.length > 2 &&
+      this.state.description.trim().length >= settings.MIN_LENGTH_DESCRIPTION &&
+      this.state.tags.length >= settings.MIN_TAGS &&
       this.state.grp_1 > -1 &&
       this.state.grp_2 > -1
     );
@@ -251,141 +268,150 @@ export class AddProductScreen extends React.Component<Props, State> {
   render() {
     const { images } = this.state;
     return (
-      <Container>
-        <Header>
-          <Left>
-            <NBButton transparent onPress={() => this.closeModal()}>
-              <Icon name="close" size={28} />
-            </NBButton>
-          </Left>
-          <Body>
-            <Text>Add Item</Text>
-          </Body>
-          <Right>
-            <NBButton
-              transparent
-              disabled={!this.addEnabled()}
-              // eslint-disable-next-line
+      images.length > 0 && (
+        <Container>
+          <Header>
+            <Left>
+              <NBButton transparent onPress={() => this.closeModal()}>
+                <Icon name="close" size={28} />
+              </NBButton>
+            </Left>
+            <Body>
+              <Text>Add Item</Text>
+            </Body>
+            <Right>
+              <NBButton
+                transparent
+                disabled={!this.addEnabled()}
+                // eslint-disable-next-line
               style={{ backgroundColor: 'transparent' }}
-              onPress={this.addItem}>
-              <Icon
-                name="check"
-                style={!this.addEnabled() && { color: colors.grey3 }}
-                size={28}
-              />
-            </NBButton>
-          </Right>
-        </Header>
-        <Content>
-          <View style={{ flex: 1, flexDirection: 'row' }}>
-            <WingBlank>
-              <AntImagePicker
-                files={images}
-                onChange={images => this.setState({ images })}
-                onImageClick={i => this.selectPhotoTapped(i)}
-                onAddImageClick={() => this.selectPhotoTapped(images.length)}
-                selectable={images.length < 6}
-              />
-            </WingBlank>
-          </View>
-          <FormLabel labelStyle={styles.label}>Price:</FormLabel>
-          <FormInput
-            autoCorrect={false}
-            clearButtonMode="while-editing"
-            containerStyle={styles.inputContainer}
-            editable={!this.state.pending}
-            inputStyle={styles.input}
-            keyboardType="numeric"
-            maxLength={8} // 10000.99
-            onChangeText={t => this.changePrice(t)}
-            placeholder="123 UAH"
-            value={this.state.price}
-          />
-          <FormLabel labelStyle={styles.label}>Description:</FormLabel>
-          <TextareaItem
-            editable={!this.state.pending}
-            style={styles.inputContainerNew}
-            rows={3}
-            count={settings.MAX_LENGTH_DESCRIPTION}
-            onChangeText={t => this.setState({ description: t })}
-            placeholder="Please provide details such as brand, size, condition about the item"
-            value={this.state.description}
-          />
-          <FormLabel labelStyle={styles.label}>#tags:</FormLabel>
-          <FormInput
-            autoCapitalize="none"
-            containerStyle={styles.inputContainer}
-            editable={!this.state.pending}
-            inputStyle={styles.input}
-            onChangeText={t => this.changeTags(t)}
-            placeholder="winter,adidas,hat"
-            value={this.state.tags}
-          />
-          <View style={styles.grps}>
-            <RadioForm animation formHorizontal>
-              {category_radio_grp_1.map((option, i) => (
-                <RadioButton labelHorizontal={false} key={i}>
-                  <RadioButtonLabel
-                    labelHorizontal
-                    obj={option}
-                    index={i}
-                    onPress={grp_1 =>
-                      !this.state.pending && this.setState({ grp_1 })
-                    }
-                    labelStyle={styles.radioButtonLabel}
-                  />
-                  <RadioButtonInput
-                    obj={option}
-                    index={i}
-                    isSelected={this.state.grp_1 == i}
-                    onPress={grp_1 =>
-                      !this.state.pending && this.setState({ grp_1 })
-                    }
-                    borderWidth={2}
-                    buttonInnerColor={colors.black}
-                    buttonOuterColor={colors.black}
-                    buttonSize={19}
-                    buttonOuterSize={35}
-                    buttonWrapStyle={styles.radioButtonInput}
-                  />
-                </RadioButton>
-              ))}
-            </RadioForm>
-          </View>
-          <HR />
-          <View style={styles.grps}>
-            <RadioForm animation formHorizontal>
-              {category_radio_grp_2.map((option, i) => (
-                <RadioButton labelHorizontal={false} key={i}>
-                  <RadioButtonLabel
-                    labelHorizontal
-                    obj={option}
-                    index={i}
-                    onPress={grp_2 =>
-                      !this.state.pending && this.setState({ grp_2 })
-                    }
-                    labelStyle={styles.radioButtonLabel}
-                  />
-                  <RadioButtonInput
-                    obj={option}
-                    index={i}
-                    isSelected={this.state.grp_2 == i}
-                    onPress={grp_2 =>
-                      !this.state.pending && this.setState({ grp_2 })
-                    }
-                    borderWidth={2}
-                    buttonInnerColor={colors.black}
-                    buttonOuterColor={colors.black}
-                    buttonSize={19}
-                    buttonOuterSize={35}
-                    buttonWrapStyle={styles.radioButtonInput}
-                  />
-                </RadioButton>
-              ))}
-            </RadioForm>
-          </View>
-        </Content>
-      </Container>
+                onPress={this.addItem}>
+                <Icon
+                  name="check"
+                  style={!this.addEnabled() && { color: colors.grey3 }}
+                  size={28}
+                />
+              </NBButton>
+            </Right>
+          </Header>
+          <Content>
+            <View style={{ flex: 1, flexDirection: 'row' }}>
+              <WingBlank>
+                <AntImagePicker
+                  files={images}
+                  onChange={images => this.setState({ images })}
+                  onImageClick={i => this.selectPhotoTapped(i)}
+                  onAddImageClick={() => this.selectPhotoTapped(images.length)}
+                  selectable={images.length < 6}
+                />
+              </WingBlank>
+            </View>
+            <FormLabel labelStyle={styles.label}>Price:</FormLabel>
+            <FormInput
+              autoCorrect={false}
+              clearButtonMode="while-editing"
+              containerStyle={styles.inputContainer}
+              editable={!this.state.pending}
+              inputStyle={styles.input}
+              keyboardType="numeric"
+              maxLength={8} // 10000.99
+              onChangeText={t => this.changePrice(t)}
+              placeholder="123 UAH"
+              value={this.state.price}
+            />
+            <FormLabel labelStyle={styles.label}>Description:</FormLabel>
+            <TextareaItem
+              editable={!this.state.pending}
+              style={styles.inputContainerNew}
+              rows={3}
+              count={settings.MAX_LENGTH_DESCRIPTION}
+              onChangeText={t => this.setState({ description: t })}
+              placeholder="Please provide details such as brand, size, condition about the item"
+              value={this.state.description}
+              error={
+                this.state.description.trim().length <
+                settings.MIN_LENGTH_DESCRIPTION
+              }
+            />
+            <FormLabel labelStyle={styles.label}>#tags:</FormLabel>
+            <TagInput
+              inputDefaultWidth={160}
+              editable={!this.state.pending}
+              labelExtractor={tag => tag}
+              onChange={tags => this.setState({ tags })}
+              onChangeText={this.changeTagsTest}
+              placeholder="winter, adidas, hat"
+              tagColor={colors.primary}
+              tagTextColor="white"
+              text={this.state.tagsText}
+              value={this.state.tags}
+            />
+            <View style={styles.grps}>
+              <RadioForm animation formHorizontal>
+                {category_radio_grp_1.map((option, i) => (
+                  <RadioButton labelHorizontal={false} key={i}>
+                    <RadioButtonLabel
+                      labelHorizontal
+                      obj={option}
+                      index={i}
+                      onPress={grp_1 =>
+                        !this.state.pending && this.setState({ grp_1 })
+                      }
+                      labelStyle={styles.radioButtonLabel}
+                    />
+                    <RadioButtonInput
+                      obj={option}
+                      index={i}
+                      isSelected={this.state.grp_1 == i}
+                      onPress={grp_1 =>
+                        !this.state.pending && this.setState({ grp_1 })
+                      }
+                      borderWidth={2}
+                      buttonInnerColor={colors.black}
+                      buttonOuterColor={colors.black}
+                      buttonSize={19}
+                      buttonOuterSize={35}
+                      buttonWrapStyle={styles.radioButtonInput}
+                    />
+                  </RadioButton>
+                ))}
+              </RadioForm>
+            </View>
+            <HR />
+            <View style={styles.grps}>
+              <RadioForm animation formHorizontal>
+                {category_radio_grp_2.map((option, i) => (
+                  <RadioButton labelHorizontal={false} key={i}>
+                    <RadioButtonLabel
+                      labelHorizontal
+                      obj={option}
+                      index={i}
+                      onPress={grp_2 =>
+                        !this.state.pending && this.setState({ grp_2 })
+                      }
+                      labelStyle={styles.radioButtonLabel}
+                    />
+                    <RadioButtonInput
+                      obj={option}
+                      index={i}
+                      isSelected={this.state.grp_2 == i}
+                      onPress={grp_2 =>
+                        !this.state.pending && this.setState({ grp_2 })
+                      }
+                      borderWidth={2}
+                      buttonInnerColor={colors.black}
+                      buttonOuterColor={colors.black}
+                      buttonSize={19}
+                      buttonOuterSize={35}
+                      buttonWrapStyle={styles.radioButtonInput}
+                    />
+                  </RadioButton>
+                ))}
+              </RadioForm>
+            </View>
+          </Content>
+        </Container>
+      )
     );
   }
 }

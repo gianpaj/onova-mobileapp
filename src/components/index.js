@@ -12,6 +12,7 @@ import MediaView from './MediaView';
 import NotificationsDot from './NotificationsDot';
 import Send from './Send';
 import SpinningIcon from './SpinningIcon';
+import TagInput from './TagInput';
 
 export {
   Accordion,
@@ -26,4 +27,5 @@ export {
   NotificationsDot,
   Send,
   SpinningIcon,
+  TagInput,
 };

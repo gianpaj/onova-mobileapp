@@ -282,12 +282,7 @@ export class ProductContainer extends React.Component<Props, State> {
                       // $FlowFixMe
                       uri={item.seller.profilePic}
                       onPress={this.goToProfileOfSeller}
-                      placeholderText={
-                        // $FlowFixMe
-                        item.seller.displayName
-                          ? item.seller.displayName
-                          : item.seller.username
-                      }
+                      placeholderText={item.seller.username}
                     />
                     <View style={{ marginLeft: 10, alignSelf: 'center' }}>
                       <TouchableHighlight onPress={this.goToProfileOfSeller}>

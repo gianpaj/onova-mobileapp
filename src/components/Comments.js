@@ -515,10 +515,6 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     paddingRight: 15,
   },
-  displayNameText: {
-    fontSize: 13,
-    fontWeight: '500',
-  },
   suggestionUsernameText: {
     fontSize: 12,
     color: colors.grey2,

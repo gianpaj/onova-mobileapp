@@ -22,6 +22,7 @@ import {
   Right,
 } from 'native-base';
 import { Button } from 'react-native-elements';
+import ParsedText from 'react-native-parsed-text';
 // import LottieView from 'lottie-react-native';
 
 import { Avatar, MediaView, Comments } from '../components';
@@ -245,8 +246,29 @@ export class ProductContainer extends React.Component<Props, State> {
   //   }).start();
   // };
 
+  handleHashtagPress = (matchingString: string) => {
+    // $FlowFixMe
+    this.props.navigation.navigate({
+      routeName: 'searchProductsResults',
+      key: 'searchProductsResults',
+      params: {
+        tag: matchingString.replace('#', ''),
+        grp_1: -1,
+        grp_2: -1,
+      },
+    });
+  };
+
   render() {
     const { item, loading } = this.state;
+
+    // join array of tags and add the `#` char for rendering
+    let tags;
+    if (item && item.tags)
+      tags = item.tags
+        .map(tag => `#${tag}`)
+        .join(' ')
+        .toString();
 
     return (
       <Container>
@@ -298,7 +320,7 @@ export class ProductContainer extends React.Component<Props, State> {
                   </View>
                   {/* // $FlowFixMe */}
                 </View>
-                <View style={styles.flex} />
+                <View style={styles.flex1} />
                 <Text style={styles.price}>
                   {/* // $FlowFixMe */}
                   {item.price} {item.currency}
@@ -306,9 +328,10 @@ export class ProductContainer extends React.Component<Props, State> {
               </View>
               {/* // $FlowFixMe */}
               <MediaView source={item.photoURIs} />
-              <View style={[styles.padder, styles.bottomSection]}>
-                {/* <NBIcon name="ios-bookmark-outline" style={styles.iconSave} /> */}
-                {/* <TouchableOpacity
+              {!this.isMyProduct() && (
+                <View style={[styles.padder, styles.bottomSection]}>
+                  {/* <NBIcon name="ios-bookmark-outline" style={styles.iconSave} /> */}
+                  {/* <TouchableOpacity
                   onPress={() => this.onPressLike()}
                   underlayColor="transparent"
                   // disabled={this.state.midAnimation}
@@ -322,18 +345,17 @@ export class ProductContainer extends React.Component<Props, State> {
                     progress={this.state.likeAnimValue}
                   />
                 </TouchableOpacity> */}
-                {/* <NBIcon
+                  {/* <NBIcon
                   name="ios-text-outline"
                   style={styles.iconCommmentAndShare}
                 /> */}
-                {/* <NBIcon
+                  {/* <NBIcon
                   name="ios-share-outline"
                   style={styles.iconCommmentAndShare}
                   onPress={() => this.showShareActionSheet()}
                 /> */}
 
-                <View style={styles.flex} />
-                {!this.isMyProduct() && (
+                  <View style={styles.flex1} />
                   <Button
                     // disabled
                     // loading
@@ -342,14 +364,28 @@ export class ProductContainer extends React.Component<Props, State> {
                     title="Buy"
                     loading={this.state.loadingBuy}
                   />
-                )}
-              </View>
+                </View>
+              )}
               {/* <View style={styles.bottomSectionAfter}>
                 <Text style={styles.timeAgo}>{'X MINUTES AGO'}</Text>
               </View> */}
               <View style={[styles.padder, styles.bottomSectionAfter]}>
                 {/* // $FlowFixMe */}
                 <Text style={styles.description}>{item.description}</Text>
+                {/* <Text style={styles.description}>{item.tags}</Text> */}
+                {item.tags && (
+                  <ParsedText
+                    parse={[
+                      {
+                        pattern: /#(\w+)/,
+                        style: styles.hashtag,
+                        onPress: this.handleHashtagPress,
+                      },
+                    ]}
+                    childrenProps={{ allowFontScaling: false }}>
+                    {tags}
+                  </ParsedText>
+                )}
               </View>
               <Comments
                 uuid={item.uuid}
@@ -370,7 +406,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.white,
   },
-  flex: {
+  flex1: {
     flex: 1,
   },
   topSection: {
@@ -438,6 +474,10 @@ const styles = StyleSheet.create({
   //   color: colors.grey3,
   //   fontSize: 12,
   // },
+  hashtag: {
+    color: colors.pDark,
+    fontWeight: 'bold',
+  },
 });
 
 const mapStateToProps: MapStateToProps<*, *, *> = (state: ReduxState) => ({

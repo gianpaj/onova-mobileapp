@@ -54,9 +54,9 @@ class SearchProductsTabContainer extends Component<Props, State> {
     const { text, grp_1, grp_2 } = this.state;
     if (!this.isSearchEnabled()) return;
 
-    this.setState({ isLoading: true });
+    // this.setState({ isLoading: true });
     // TODO: check verify tags/items exists
-    this.setState({ isLoading: false });
+    // this.setState({ isLoading: false });
 
     this.props.navigation.navigate('searchProductsResults', {
       tag: text,

@@ -10,7 +10,7 @@ export const call = (phoneNumber: string): void => {
         : Linking.openURL(`tel:${phoneNumber}`);
     })
     .catch(err => {
-      console.error(err);
+      console.log(err);
       Alert.alert('Something went wrong during the redirection 😯…');
     });
 };

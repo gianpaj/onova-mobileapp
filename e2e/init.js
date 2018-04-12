@@ -1,16 +1,16 @@
-import detox from 'detox';
-import packageFile from '../package.json';
-const detoxConfig = packageFile.detox;
+// import detox from 'detox';
+// import packageFile from '../package.json';
+// const detoxConfig = packageFile.detox;
 
-jasmine.DEFAULT_TIMEOUT_INTERVAL = 120000;
+// jasmine.DEFAULT_TIMEOUT_INTERVAL = 120000;
 
-beforeAll(async () => {
-  await detox.init(detoxConfig);
-});
+// beforeAll(async () => {
+//   await detox.init(detoxConfig);
+// });
 
-afterAll(async () => {
-  await detox.cleanup();
-});
+// afterAll(async () => {
+//   await detox.cleanup();
+// });
 
 // beforeEach(async () => {
 //   await device.reloadReactNative();

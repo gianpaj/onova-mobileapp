@@ -85,6 +85,10 @@
   },
   "jest": {
     "setupTestFrameworkScriptFile": "./e2e/init.js",
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "App.js"
+    ],
     "preset": "react-native",
     "transformIgnorePatterns": [
       "node_modules/(?!(jest-)?react-native|react-native-vector-icons|react-navigation|native-base-shoutem-theme|redux-persist)"

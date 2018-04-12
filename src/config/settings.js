@@ -9,7 +9,7 @@ export default {
   MAX_LENGTH_PER_TAG: 30,
   MIN_TAGS: 0,
   // MAX_TAGS: 30,
-  USERNAME_REGEX: /^[a-zA-Z0-9\_\.]*$/,
+  USERNAME_REGEX: /^[a-zA-Z0-9\_\.]+$/,
   HASHTAG_REGEX: /^[a-zA-Z0-9]+$/,
   SENDBIRD_APP_ID: '***REMOVED***',
   INSTABUG_TOKEN: '***REMOVED***',

@@ -86,7 +86,7 @@ class SignupScreen extends React.Component<Props, State> {
   }
 
   onUserChange = (u: string) => {
-    if (settings.USERNAME_REGEX.test(u)) {
+    if (settings.USERNAME_REGEX.test(u) || u.length == 0) {
       return this.setState({ username: u });
     }
   };

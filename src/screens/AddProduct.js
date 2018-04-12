@@ -346,11 +346,11 @@ export class AddProductScreen extends React.Component<Props, State> {
               labelExtractor={tag => tag}
               onChange={tags => this.setState({ tags })}
               onChangeText={this.changeTagsTest}
-              placeholder="winter, adidas, hat"
               tagColor={colors.primary}
               tagTextColor="white"
               text={this.state.tagsText}
               value={this.state.tags}
+              inputProps={{ placeholder: 'winter, adidas, hat' }}
             />
             <View style={styles.grps}>
               <RadioForm animation formHorizontal>

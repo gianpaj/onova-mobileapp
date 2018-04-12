@@ -93,10 +93,6 @@ type OptionalProps = {
    */
   maxHeight: number,
   /**
-   * The placeholder text for the input field
-   */
-  placeholder: string,
-  /**
    * Callback that gets passed the new component height when it changes
    */
   onHeightChange?: (height: number) => void,
@@ -128,7 +124,6 @@ class TagInput<T> extends React.PureComponent<Props<T>, State> {
     // $FlowFixMe(>=0.49.0): https://github.com/facebook/react-native/pull/16437
     inputProps: PropTypes.shape(TextInput.propTypes),
     maxHeight: PropTypes.number,
-    placeholder: PropTypes.string,
     onHeightChange: PropTypes.func,
     // $FlowFixMe: identify EdgeInsetsPropType, PointPropType as React PropType
     scrollViewProps: PropTypes.shape(ScrollView.propTypes),
@@ -150,7 +145,6 @@ class TagInput<T> extends React.PureComponent<Props<T>, State> {
     inputDefaultWidth: 90,
     inputColor: '#777777',
     maxHeight: 75,
-    placeholder: 'Start typing',
   };
 
   static inputWidth(
@@ -306,9 +300,7 @@ class TagInput<T> extends React.PureComponent<Props<T>, State> {
                   onChangeText={this.props.onChangeText}
                   autoCapitalize="none"
                   autoCorrect={false}
-                  placeholder={
-                    this.props.value.length == 0 ? this.props.placeholder : ''
-                  }
+                  placeholder="Start typing"
                   returnKeyType="done"
                   keyboardType="default"
                   editable={this.props.editable}

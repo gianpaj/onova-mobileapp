@@ -196,25 +196,31 @@ export class AddProductScreen extends React.Component<Props, State> {
   }
 
   changeTagsTest = (tagsText: string) => {
-    // +1 for the comma
-    if (tagsText.length > settings.MAX_LENGTH_PER_TAG + 1) return;
-    this.setState({ tagsText: tagsText.trim() });
+    const textWithoutSeparators = tagsText.replace(/,|;| | \n/gi, '');
+    // if the tag is longer the maximum
+    // OR if it doesn't match the regex
+    if (
+      textWithoutSeparators.length > settings.MAX_LENGTH_PER_TAG ||
+      (textWithoutSeparators.length > 1 &&
+        !settings.HASHTAG_REGEX.test(textWithoutSeparators))
+    )
+      return;
 
-    // TODO: don't allow tags longer than 30 chars but allow to type ',' ' ' after
     const lastTyped = tagsText.charAt(tagsText.length - 1);
     const parseWhen = [',', ' ', ';', '\n'];
 
-    // TODO: allow to trype a 3 letter tag and then press SPACE
+    // if a separator was typed at the end of the tag
+    // AND the tag has the minimum length
     if (
       parseWhen.indexOf(lastTyped) > -1 &&
-      tagsText.trim().length > settings.MIN_LENGTH_PER_TAG
+      textWithoutSeparators.length >= settings.MIN_LENGTH_PER_TAG
     ) {
       return this.setState({
         tags: [...this.state.tags, this.state.tagsText],
         tagsText: '',
       });
     }
-    this.setState({ tagsText: tagsText.replace(/,|;| | \n/gi, '') });
+    this.setState({ tagsText: textWithoutSeparators });
   };
 
   /**

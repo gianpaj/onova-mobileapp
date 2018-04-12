@@ -178,7 +178,7 @@ class Comments extends React.Component<Props, State> {
           <ParsedText
             parse={[
               {
-                pattern: /\[(@[a-zA-Zа-яА-Я0-9\_\.]+):([^\]]+)\]/i,
+                pattern: /\[(@[a-zA-Z0-9\_\.]+):([^\]]+)\]/i,
                 style: styles.mention,
                 onPress: this.handleNamePress,
                 renderText: this.renderText,
@@ -194,7 +194,7 @@ class Comments extends React.Component<Props, State> {
   );
 
   handleNamePress = (matchingString: string) => {
-    const pattern = /\[(@[a-zA-Zа-яА-Я0-9\_\.]+):([^\]]+)\]/i;
+    const pattern = /\[(@[a-zA-Z0-9\_\.]+):([^\]]+)\]/i;
     // input: [@michel:5455345]
     // output: ["[@michel:5455345]", "@michel", "5455345"]
     const matches = matchingString.match(pattern);

@@ -20,9 +20,8 @@ class NotificationsDot extends React.Component<Props, void> {
     // fix error when logging out
     if (!nextProps.userData) {
       return false;
-    } else {
-      return true;
     }
+    return true;
   }
 
   render() {

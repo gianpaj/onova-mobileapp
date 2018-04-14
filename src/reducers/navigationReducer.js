@@ -33,14 +33,6 @@ const initialState = { stateForLoggedOut, stateForLoggedIn };
 const navigationReducer = (state: any = initialState, action: Action) => {
   switch (action.type) {
     case '@@redux/INIT':
-      return {
-        ...state,
-        stateForLoggedIn: NavigationStack.router.getStateForAction(
-          ActionForLoggedIn,
-          stateForLoggedOut
-        ),
-      };
-
     case LOGIN_SUCCESS:
     case SIGNUP_SUCCESS:
       return {

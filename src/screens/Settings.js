@@ -268,13 +268,13 @@ class SettingsContainer extends Component<Props, State> {
   onUserChange = (u: string) => {
     if (!settings.USERNAME_REGEX.test(u)) {
       this.setState({ usernameError: true });
-    } else {
-      return this.setState({ username: u });
+
+      setTimeout(() => {
+        this.setState({ usernameError: false });
+      }, 100);
     }
 
-    setTimeout(() => {
-      this.setState({ usernameError: false });
-    }, 100);
+    return this.setState({ username: u });
   };
 
   onSignout = () => {
@@ -295,9 +295,8 @@ class SettingsContainer extends Component<Props, State> {
     // fix error when logging out
     if (!nextProps.userData) {
       return false;
-    } else {
-      return true;
     }
+    return true;
   }
 
   handleFocus(ref) {

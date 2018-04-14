@@ -449,9 +449,8 @@ class OrderThreadContainer extends Component<Props, State> {
     // fix error when logging out
     if (!nextProps.userData) {
       return false;
-    } else {
-      return true;
     }
+    return true;
   }
   /*
   renderActions(props: any) {

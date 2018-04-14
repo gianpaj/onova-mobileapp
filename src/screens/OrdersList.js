@@ -190,9 +190,8 @@ class OrdersListContainer extends Component<Props, State> {
     // fix error when logging out
     if (!nextProps.userData) {
       return false;
-    } else {
-      return true;
     }
+    return true;
   }
 
   goToOrderThread = (item: any) => {

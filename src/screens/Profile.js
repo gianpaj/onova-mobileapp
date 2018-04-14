@@ -262,13 +262,10 @@ class ProfileScreen extends React.Component<Props, State> {
         cancelButtonIndex: BUTTONS.indexOf('Cancel'),
       },
       buttonIndex => {
-        switch (buttonIndex) {
-          case BUTTONS.indexOf('Report'):
-            // report action
-            break;
-          default:
-            console.debug('Cancel');
-            break;
+        if (buttonIndex == BUTTONS.indexOf('Report')) {
+          // report action
+        } else {
+          console.debug('Cancel');
         }
       }
     );
@@ -296,9 +293,8 @@ class ProfileScreen extends React.Component<Props, State> {
     // fix error when logging out
     if (!nextProps.userData) {
       return false;
-    } else {
-      return true;
     }
+    return true;
   }
 
   shouldShowNoticeBar() {

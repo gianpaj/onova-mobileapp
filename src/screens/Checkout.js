@@ -220,8 +220,8 @@ class CheckoutContainer extends Component<Props, State> {
     //   .then(() => {
     //     const { order, item } = self.state;
     //     console.log(order);
-        // $FlowFixMe
-        this.goToOrderThread(order.id, item);
+    // $FlowFixMe
+    this.goToOrderThread(order.id, item);
     //   })
     //   .catch(err => {
     //     if (err == 'USER_CANCELLATION' || err == null) {
@@ -326,9 +326,8 @@ class CheckoutContainer extends Component<Props, State> {
     // fix error when logging out
     if (!nextProps.userData) {
       return false;
-    } else {
-      return true;
     }
+    return true;
   }
 
   onCancel = () => {

@@ -22,7 +22,7 @@ import MentionsTextInput from 'react-native-mentions';
 
 import { Avatar, Send } from '../components';
 
-import colors from '../config/colors';
+import colors, { convertHex } from '../config/colors';
 import settings from '../config/settings';
 import * as api from '../utils/api';
 import * as ui from '../utils/ui';
@@ -244,7 +244,7 @@ class Comments extends React.Component<Props, State> {
         style={[
           styles.row,
           {
-            borderColor: colors.convertHex(colors.grey2, 10),
+            borderColor: convertHex(colors.grey2, 10),
             borderWidth: StyleSheet.hairlineWidth,
           },
         ]}

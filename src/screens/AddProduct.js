@@ -237,13 +237,21 @@ export class AddProductScreen extends React.Component<Props, State> {
     // const pricePattern = /^\d+(\.\d{2})?$/;
     // const tagsPattern = /^(\b[a-z][a-z0-9]*)$/i;
 
+    // return true if all of these are true
     return (
+      // If images are added
       this.state.images.length > 0 &&
+      // If the item is uploading is not pending
       !this.state.pending &&
+      // If the price is not empty
       this.state.price !== '' &&
+      // if the description doesn't exceed the maximum length
       this.state.description.trim().length >= settings.MIN_LENGTH_DESCRIPTION &&
+      // if there's the minimum required of tags
       this.state.tags.length >= settings.MIN_TAGS &&
+      // if there's a clothing category selected
       this.state.grp_1 > -1 &&
+      // if there's a clothing type selected
       this.state.grp_2 > -1
     );
   }

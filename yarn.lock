@@ -6215,9 +6215,9 @@ react-native-invertible-scroll-view@^1.1.0:
     react-clone-referenced-element "^1.0.1"
     react-native-scrollable-mixin "^1.0.1"
 
-react-native-keyboard-accessory@^0.0.8:
-  version "0.0.8"
-  resolved "https://registry.yarnpkg.com/react-native-keyboard-accessory/-/react-native-keyboard-accessory-0.0.8.tgz#c8c50f0d61f68b6dcf2bc2bb45efb3805b610a6e"
+react-native-keyboard-accessory@^0.0.9:
+  version "0.0.9"
+  resolved "https://registry.yarnpkg.com/react-native-keyboard-accessory/-/react-native-keyboard-accessory-0.0.9.tgz#f3765c9c66ab3b75c5c2d6c455a94a4d6c9657b6"
 
 "react-native-keyboard-aware-scroll-view@https://github.com/GeekyAnts/react-native-keyboard-aware-scroll-view":
   version "0.2.9"

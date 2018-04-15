@@ -5,12 +5,13 @@ import { connect } from 'react-redux';
 
 import {
   ActivityIndicator,
-  StyleSheet,
   FlatList,
-  View,
-  Text,
-  TouchableHighlight,
+  Image,
   RefreshControl,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 // prettier-ignore
 import {
@@ -23,6 +24,8 @@ import {
 } from 'native-base';
 import { NavigationActions } from 'react-navigation';
 import SendBird from 'sendbird';
+import { AnimatedCircularProgress } from 'react-native-circular-progress';
+
 import type { NavigationScreenProp } from 'react-navigation';
 
 import type { UserData, ReduxState, Order } from '../types';
@@ -144,6 +147,7 @@ class OrdersListContainer extends Component<Props, State> {
       // Maybe from a deeplink, opening app from background?
       setTimeout(() => {
         this.sb = SendBird.getInstance();
+        if (!this.sb) return reject(new Error('no SendBird instance'));
         this.sb.connect(this.props.userData._id, (user, err) => {
           if (err) return reject(err);
 
@@ -218,32 +222,64 @@ class OrdersListContainer extends Component<Props, State> {
       });
   };
 
-  _renderItem = ({ item }) => {
-    const { lastMessage, order }: { lastMessage: any, order: Order } = item;
-    const { _id: myUserId } = this.props.userData;
-
+  getInterlocutor = (item): any => {
     let interlocutor = item.members.find(m => m.userId !== myUserId);
+    const { order }: { order: Order } = item;
+    const { _id: myUserId } = this.props.userData;
 
     interlocutor.profilePic = order.seller.profilePic;
     if (order.buyer._id !== myUserId) {
       interlocutor.profilePic = order.buyer.profilePic;
     }
+    return interlocutor;
+  };
+
+  _renderOrderCircle = ({ item }) => {
+    const { status, product } = item.order;
+    let perc = 0;
+    // if (status == 'confirmed') perc = 0;
+    if (status == 'shipped') perc = 33.33;
+    if (status == 'delivered') perc = 66.66;
+    if (status == 'completed') perc = 100;
+    return (
+      <TouchableOpacity
+        style={st.orderCircle}
+        onPress={() => this.goToOrderThread(item)}>
+        <AnimatedCircularProgress
+          backgroundColor={colors.pDark}
+          fill={perc}
+          rotation={0}
+          size={60}
+          tintColor={colors.secondary}
+          width={2}>
+          {() => (
+            <Image
+              style={st.itemImage}
+              source={{ uri: product.photoURIs[0] }}
+            />
+          )}
+        </AnimatedCircularProgress>
+      </TouchableOpacity>
+    );
+  };
+
+  _renderOrderRow = ({ item }) => {
+    const { lastMessage }: { lastMessage: any } = item;
+    const interlocutor = this.getInterlocutor(item);
 
     const isMyMessage = lastMessage._sender.nickname !== interlocutor.nickname;
 
     const haveUnreadMsgs = !isMyMessage && item.unreadMessageCount > 0;
 
     return (
-      <TouchableHighlight
-        underlayColor={colors.grey4}
-        onPress={() => this.goToOrderThread(item)}>
+      <TouchableOpacity onPress={() => this.goToOrderThread(item)}>
         <View style={st.itemContainer}>
           <Avatar
-            // style={styles.avatarContainer}
-            size={'verySmall'}
-            withBorder
-            uri={interlocutor.profilePic}
+            onPress={() => this.goToOrderThread(item)}
             placeholderText={interlocutor.nickname}
+            size={'verySmall'}
+            uri={interlocutor.profilePic}
+            withBorder
           />
           <View style={[st.flex1, st.content]}>
             <View style={st.contentHeader}>
@@ -255,13 +291,14 @@ class OrdersListContainer extends Component<Props, State> {
             </View>
             <Text
               numberOfLines={1} // android
+              // eslint-disable-next-line
               style={haveUnreadMsgs ? { fontWeight: 'bold' } : {}}>
               {isMyMessage ? 'You: ' : ''}
               {lastMessage.message}
             </Text>
           </View>
         </View>
-      </TouchableHighlight>
+      </TouchableOpacity>
     );
   };
 
@@ -269,9 +306,8 @@ class OrdersListContainer extends Component<Props, State> {
     return item.url;
   }
 
-  _renderSeparator() {
-    return <View style={st.separator} />;
-  }
+  _renderSeparator = () => <View style={st.separator} />;
+  _renderSeparatorHorizontal = () => <View style={st.separatorHorizontal} />;
 
   renderEmptyState = () => {
     if (this.state.channelList.length > 0) return null;
@@ -313,21 +349,31 @@ class OrdersListContainer extends Component<Props, State> {
               <ActivityIndicator size="large" />
             </View>
           ) : (
-            <FlatList
-              style={st.root}
-              data={channelList}
-              extraData={this.state} // make sure will re-render when the state.selected changes (if we want have real time updates of the last message of each thread)
-              refreshControl={
-                <RefreshControl
-                  refreshing={this.state.isRefreshing}
-                  onRefresh={this.refreshChannelList}
-                />
-              }
-              ItemSeparatorComponent={this._renderSeparator}
-              keyExtractor={this._keyExtractor}
-              ListEmptyComponent={this.renderEmptyState}
-              renderItem={this._renderItem}
-            />
+            <View>
+              <FlatList
+                style={{ height: 60 + 8 + 8 }}
+                data={channelList}
+                keyExtractor={this._keyExtractor}
+                horizontal
+                ItemSeparatorComponent={this._renderSeparatorHorizontal}
+                renderItem={this._renderOrderCircle}
+              />
+              <FlatList
+                data={channelList}
+                extraData={this.state} // make sure will re-render when the state.selected changes (if we want have real time updates of the last message of each thread)
+                ItemSeparatorComponent={this._renderSeparator}
+                keyExtractor={this._keyExtractor}
+                ListEmptyComponent={this.renderEmptyState}
+                refreshControl={
+                  <RefreshControl
+                    refreshing={this.state.isRefreshing}
+                    onRefresh={this.refreshChannelList}
+                  />
+                }
+                renderItem={this._renderOrderRow}
+                style={st.root}
+              />
+            </View>
           )}
         </View>
       </Container>
@@ -343,6 +389,7 @@ const st = StyleSheet.create({
   },
   root: {
     backgroundColor: colors.bgDefault,
+    height: '100%',
   },
   flex1: {
     flex: 1,
@@ -368,9 +415,23 @@ const st = StyleSheet.create({
     justifyContent: 'space-between',
     marginBottom: 6,
   },
+  orderCircle: {
+    marginHorizontal: 10,
+    marginVertical: 4,
+  },
+  itemImage: {
+    borderRadius: 50,
+    borderWidth: 2,
+    borderColor: colors.white,
+    height: '100%',
+    width: '100%',
+  },
   separator: {
     height: StyleSheet.hairlineWidth,
     backgroundColor: colors.grey5,
+  },
+  separatorHorizontal: {
+    width: 1,
   },
 });
 

@@ -8,7 +8,7 @@ import {
   Platform,
   StyleSheet,
   Text,
-  TouchableOpacity,
+  TouchableHighlight,
   View,
 } from 'react-native';
 import {
@@ -49,13 +49,15 @@ type State = {
   imageHeight: number,
   rateNumber: number,
   text: string,
+  isDisabled: boolean,
 };
 
 export class AddReviewContainer extends Component<Props, State> {
   state = {
     imageHeight: 0,
-    rateNumber: 1,
+    rateNumber: 0,
     text: '',
+    isDisabled: false,
   };
 
   // for development
@@ -79,7 +81,7 @@ export class AddReviewContainer extends Component<Props, State> {
         id: '5a78d09d2d314a702698f955',
         profilePic:
           'https://storage.googleapis.com/staging.onova-183307.appspot.com/users/5a78d09e2d314a702698f957-1521722787711.jpg',
-        username: 'seller',
+        username: 'firstperson',
       },
       product: {
         categoryIds: [1, 2],
@@ -103,12 +105,24 @@ export class AddReviewContainer extends Component<Props, State> {
     });
   }
 
-  onChangeText = (text: string) => this.setState({ text });
+  onChangeText = (text: string) => {
+    if (text.length > 0 && text.trim().length < settings.MIN_LENGTH_REVIEW) {
+      this.setState({ isDisabled: true });
+    } else {
+      this.setState({ isDisabled: false });
+    }
+    this.setState({ text });
+  };
 
   onRate = async (rateNumber: number) => {
     const { text } = this.state;
     const { order } = this.props;
     const { token } = this.props.userData;
+
+    if (text.length > 0 && text.trim().length < settings.MIN_LENGTH_REVIEW) {
+      return;
+    }
+
     this.setState({ rateNumber });
     console.log(rateNumber);
     const body = {
@@ -132,10 +146,23 @@ export class AddReviewContainer extends Component<Props, State> {
     }
   };
 
+  goToProfile = (user: UserData) => {
+    if (!user._id) return;
+    // $FlowFixMe
+    this.props.navigation.navigate({
+      routeName: 'profile',
+      params: user,
+      key: `profile-${user.username}`,
+    });
+  };
+
   render() {
     const { order, userData } = this.props;
+    const { text, isDisabled } = this.state;
 
     const iAmTheSeller = userData._id.toString() == order.seller._id.toString();
+
+    const targetUser = iAmTheSeller ? order.buyer : order.seller;
 
     return (
       <Container>
@@ -155,16 +182,14 @@ export class AddReviewContainer extends Component<Props, State> {
         </Header>
         <Content>
           <View style={{ width: '100%', flexDirection: 'row' }}>
-            <TouchableOpacity onPress={() => alert('yo')}>
-              <Image
-                resizeMode="contain"
-                style={[
-                  styles.item,
-                  { width: width / 4, height: this.state.imageHeight },
-                ]}
-                source={{ uri: order.product.photoURIs[0] }}
-              />
-            </TouchableOpacity>
+            <Image
+              resizeMode="contain"
+              style={[
+                styles.item,
+                { width: width / 4, height: this.state.imageHeight },
+              ]}
+              source={{ uri: order.product.photoURIs[0] }}
+            />
             <Text
               style={{
                 alignSelf: 'center',
@@ -181,25 +206,28 @@ export class AddReviewContainer extends Component<Props, State> {
               style={{ alignSelf: 'center' }}
               size={'medium'}
               withBorder
-              uri={
-                iAmTheSeller ? order.buyer.profilePic : order.seller.profilePic
-              }
-              placeholderText={
-                iAmTheSeller ? order.buyer.username : order.seller.username
-              }
+              uri={targetUser.profilePic}
+              placeholderText={targetUser.username}
+              onPress={() => this.goToProfile(targetUser)}
             />
+            <TouchableHighlight onPress={() => this.goToProfile(targetUser)}>
+              <Text style={{ marginBottom: 20, textAlign: 'center' }}>
+                @{targetUser.username}
+              </Text>
+            </TouchableHighlight>
             <TextareaItem
-              // editable={!this.state.pending}
+              autoFocus
+              // editable={!this.state.isPending}
               style={styles.textInputContainer}
               rows={3}
               count={settings.MAX_LENGTH_REVIEW}
               onChangeText={this.onChangeText}
               placeholder="Please review your experience (optional)"
-              value={this.state.text}
-              // error={
-              //   this.state.text.trim().length <
-              //   settings.MIN_LENGTH_REVIEW
-              // }
+              value={text}
+              error={
+                text.length > 0 &&
+                text.trim().length < settings.MIN_LENGTH_REVIEW
+              }
             />
           </View>
         </Content>
@@ -209,13 +237,13 @@ export class AddReviewContainer extends Component<Props, State> {
             buttonStyle={{ paddingHorizontal: 5 }}
             // eslint-disable-next-line
             containerStyle={{ alignSelf: 'center' }}
-            disabled={false}
+            disabled={isDisabled}
             emptyStar={
               Platform.OS == 'ios' ? 'ios-star-outline' : 'md-star-outline'
             }
-            emptyStarColor={colors.yellow}
+            emptyStarColor={isDisabled ? colors.grey4 : colors.yellow}
             fullStar={Platform.OS == 'ios' ? 'ios-star' : 'md-star'}
-            fullStarColor={colors.yellow}
+            fullStarColor={isDisabled ? colors.grey4 : colors.yellow}
             iconSet="Ionicons"
             maxStars={5}
             rating={this.state.rateNumber}
@@ -237,6 +265,5 @@ export const AddReview = connect(mapStateToProps)(AddReviewContainer);
 const styles = StyleSheet.create({
   textInputContainer: {
     borderWidth: StyleSheet.hairlineWidth,
-    marginTop: 20,
   },
 });

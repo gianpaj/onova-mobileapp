@@ -10,6 +10,7 @@ import RadioForm, {
   RadioButtonInput,
   RadioButtonLabel,
 } from 'react-native-simple-radio-button';
+import { withNavigation } from 'react-navigation';
 
 import type { NavigationScreenProp } from 'react-navigation';
 
@@ -223,6 +224,6 @@ const mapStateToProps: any = (state: ReduxState) => ({
   userData: state.LoginReducer.data,
 });
 
-export const SearchProductsTab = connect(mapStateToProps)(
-  SearchProductsTabContainer
+export const SearchProductsTab = withNavigation(
+  connect(mapStateToProps)(SearchProductsTabContainer)
 );

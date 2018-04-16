@@ -39,7 +39,6 @@ import type { Order, UserData, ReduxState } from '../types';
 const { width } = Dimensions.get('window');
 
 type Props = {
-  dispatch: Dispatch,
   navigation: NavigationScreenProp<*>,
   order: Order,
   userData: UserData,

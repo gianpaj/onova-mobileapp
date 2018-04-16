@@ -3,14 +3,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import {
-  StyleSheet,
   FlatList,
-  Platform,
+  StyleSheet,
   Text,
   TouchableHighlight,
   View,
 } from 'react-native';
 import { SearchBar, Icon } from 'react-native-elements';
+import { withNavigation } from 'react-navigation';
 
 import { Avatar } from '../components';
 
@@ -211,6 +211,6 @@ const mapStateToProps: any = (state: ReduxState) => ({
   userData: state.LoginReducer.data,
 });
 
-export const SearchSellersTab = connect(mapStateToProps)(
-  SearchSellersTabContainer
+export const SearchSellersTab = withNavigation(
+  connect(mapStateToProps)(SearchSellersTabContainer)
 );

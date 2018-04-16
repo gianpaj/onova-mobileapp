@@ -40,16 +40,16 @@ export class Search extends Component<Props, State> {
 
   _renderHeader = props => (
     <TabBar
-      labelStyle={styles.label}
       indicatorStyle={styles.indicator}
+      labelStyle={styles.label}
       style={styles.tabbar}
       {...props}
     />
   );
 
   _renderScene = SceneMap({
-    tags: () => <SearchProductsTab navigation={this.props.navigation} />,
-    sellers: () => <SearchSellersTab navigation={this.props.navigation} />,
+    tags: SearchProductsTab,
+    sellers: SearchSellersTab,
   });
 
   render() {

@@ -91,13 +91,8 @@ export class AddProductScreen extends React.Component<Props, State> {
   componentDidMount() {
     // const { params } = this.props.navigation.state;
     // if (params && params.focused == true) {
-    this.takePicture();
-    // }
-  }
-
-  takePicture() {
     if (this.state.images.length == 0) {
-      this.selectPhotoTapped(0);
+      // this.selectPhotoTapped(0);
     }
   }
 
@@ -279,10 +274,12 @@ export class AddProductScreen extends React.Component<Props, State> {
     );
   }*/
 
+  onChangeDescription = (t: string) => this.setState({ description: t });
+
   render() {
     const { images } = this.state;
     return (
-      images.length > 0 && (
+      true && (
         <Container>
           <Header>
             <Left>
@@ -297,8 +294,7 @@ export class AddProductScreen extends React.Component<Props, State> {
               <NBButton
                 transparent
                 disabled={!this.addEnabled()}
-                // eslint-disable-next-line
-              style={{ backgroundColor: 'transparent' }}
+                style={{ backgroundColor: colors.transparent }}
                 onPress={this.addItem}>
                 <Icon
                   name="check"
@@ -339,7 +335,7 @@ export class AddProductScreen extends React.Component<Props, State> {
               style={styles.inputContainerNew}
               rows={3}
               count={settings.MAX_LENGTH_DESCRIPTION}
-              onChangeText={t => this.setState({ description: t })}
+              onChangeText={this.onChangeDescription}
               placeholder="Please provide details such as brand, size, condition about the item"
               value={this.state.description}
               error={
@@ -454,13 +450,10 @@ const styles = StyleSheet.create({
   inputContainer: {
     marginVertical: 10,
   },
-  // eslint-disable-next-line
   inputContainerNew: {
-    backgroundColor: 'transparent',
+    backgroundColor: colors.transparent,
     marginTop: 10,
     marginBottom: 28,
-    marginRight: 12,
-    right: 3.3,
   },
   grps: {
     alignItems: 'center',

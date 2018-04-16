@@ -530,8 +530,7 @@ class OrderThreadContainer extends Component<Props, State> {
           <Right>
             <NBButton
               transparent
-              // eslint-disable-next-line
-              style={{ backgroundColor: 'transparent' }}
+              style={{ backgroundColor: colors.transparent }}
               onPress={this.goToProfile}>
               <FontAwesome name="user-circle" size={28} />
             </NBButton>

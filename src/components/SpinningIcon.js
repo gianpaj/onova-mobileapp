@@ -3,6 +3,7 @@
 import React, { PureComponent } from 'react';
 import { Animated, Easing } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { colors } from '../../node_modules/react-native-elements/src/index';
 
 type Props = {
   color: string,
@@ -38,7 +39,7 @@ export default class SpinningIcon extends PureComponent<Props, void> {
     return (
       <Animated.View
         style={[
-          { backgroundColor: 'transparent', transform: [{ rotate }] },
+          { backgroundColor: colors.transparent, transform: [{ rotate }] },
           styleContainer,
         ]}>
         <Icon color={color} name="loading" size={size} {...this.props} />

@@ -129,6 +129,8 @@ export type Order = {
   },
   status: string,
   transationFee?: number,
+  reviewedByBuyer: boolean,
+  reviewedBySeller: boolean,
   // lastMessage: Message,
   // unreadMessageCount: number,
 };

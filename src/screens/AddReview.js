@@ -50,6 +50,7 @@ type State = {
   rateNumber: number,
   text: string,
   isDisabled: boolean,
+  isLoading: boolean,
 };
 
 export class AddReviewContainer extends Component<Props, State> {
@@ -58,6 +59,7 @@ export class AddReviewContainer extends Component<Props, State> {
     rateNumber: 0,
     text: '',
     isDisabled: false,
+    isLoading: true,
   };
 
   // for development
@@ -97,8 +99,33 @@ export class AddReviewContainer extends Component<Props, State> {
     },
   };
 
-  componentWillMount() {
+  async componentWillMount() {
     // TODO: check if we have already reviewed this order
+
+    const { token, _id } = this.props.userData;
+    try {
+      const { data }: { data: Order } = await api.get(
+        `/api/orders/${this.props.order.id}`,
+        {
+          token,
+        }
+      );
+      const iAmTheSeller = _id.toString() == data.seller._id.toString();
+      const iAmTheBuyer = _id.toString() == data.buyer._id.toString();
+      if (
+        (data.reviewedBySeller && iAmTheSeller) ||
+        (data.reviewedByBuyer && iAmTheBuyer)
+      ) {
+        throw new Error('You have already left a review');
+      }
+    } catch (err) {
+      // console.error(err);
+      this.props.navigation.goBack();
+      Toast.fail(err.message, 5);
+      return;
+    }
+
+    this.setState({ isLoading: false });
 
     Image.getSize(this.props.order.product.photoURIs[0], (w, h) => {
       this.setState({ imageHeight: Math.floor(h * (width / 4 / w)) });
@@ -124,7 +151,6 @@ export class AddReviewContainer extends Component<Props, State> {
     }
 
     this.setState({ rateNumber });
-    console.log(rateNumber);
     const body = {
       orderId: order.id,
       rateNumber,
@@ -159,7 +185,8 @@ export class AddReviewContainer extends Component<Props, State> {
 
   render() {
     const { order, userData } = this.props;
-    const { text, isDisabled } = this.state;
+    const { text, isDisabled, isLoading } = this.state;
+    if (isLoading) return null;
 
     const iAmTheSeller = userData._id.toString() == order.seller._id.toString();
 

@@ -2,22 +2,8 @@
 import colors from '../config/colors';
 
 import React, { PureComponent } from 'react';
-// prettier-ignore
-import {
-  Dimensions,
-  // Platform,
-  StyleSheet,
-  Text,
-} from 'react-native';
-import {
-  Body,
-  Left,
-  Right,
-  // Button,
-  // Icon,
-  Container,
-  Header,
-} from 'native-base';
+import { Button, Dimensions, StyleSheet, Text } from 'react-native';
+import { Body, Left, Right, Container, Header } from 'native-base';
 import type { NavigationScreenProp } from 'react-navigation';
 import { TabViewAnimated, TabBar, SceneMap } from 'react-native-tab-view';
 import type { Route, NavigationState } from 'react-native-tab-view/types';

@@ -12,6 +12,7 @@ export default {
   pDark: '#001970',
   secondary: '#ffb74d',
   sLight: '#ffe97d',
+  yellow: 'yellow',
   sDark: '#c88719',
   grey1: '#43484d',
   grey2: '#5e6977',

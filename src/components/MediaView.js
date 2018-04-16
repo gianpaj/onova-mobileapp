@@ -46,7 +46,7 @@ export default class MediaView extends React.Component<Props, State> {
                 key={i}
                 source={{ uri: image }}
                 style={{ width, height: this.state.imageHeight }}
-                resizeMode={'contain'}
+                resizeMode="contain"
               />
             ))}
           </Swiper>

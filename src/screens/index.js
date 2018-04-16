@@ -1,6 +1,7 @@
 // @flow
 
 import { AddProduct } from '../screens/AddProduct';
+import { AddReview } from '../screens/AddReview';
 import { Checkout } from '../screens/Checkout';
 import { Home } from '../screens/Home';
 import { Login } from '../screens/Login';
@@ -15,6 +16,7 @@ import { Signup } from '../screens/Signup';
 
 export {
   AddProduct,
+  AddReview,
   Checkout,
   Home,
   Login,

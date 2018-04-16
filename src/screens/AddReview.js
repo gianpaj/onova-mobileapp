@@ -151,12 +151,12 @@ export class AddReviewContainer extends Component<Props, State> {
     }
 
     this.setState({ rateNumber });
-    const body = {
+    let body = {
       orderId: order.id,
       rateNumber,
       lang: 'en',
     };
-    if (text) body.text = text;
+    if (text) body = { ...body, text: text };
     try {
       const { data } = await api.post(
         `/api/users/${this.props.userData._id}/reviews`,
@@ -219,18 +219,16 @@ export class AddReviewContainer extends Component<Props, State> {
               source={{ uri: order.product.photoURIs[0] }}
             />
             <Text
-              style={{
-                alignSelf: 'center',
-                flex: 1,
-                fontSize: 24,
-                marginRight: this.state.imageHeight,
-                textAlign: 'center',
-              }}>
+              style={[
+                styles.orderStatus,
+                { marginRight: this.state.imageHeight },
+              ]}>
               {order.status == 'completed' && 'collected'}
             </Text>
           </View>
           <View style={{ flex: 1, marginTop: 30 }}>
             <Avatar
+              // eslint-disable-next-line
               style={{ alignSelf: 'center' }}
               size={'medium'}
               withBorder
@@ -291,6 +289,12 @@ const mapStateToProps: any = (state: ReduxState) => ({
 export const AddReview = connect(mapStateToProps)(AddReviewContainer);
 
 const styles = StyleSheet.create({
+  orderStatus: {
+    alignSelf: 'center',
+    flex: 1,
+    fontSize: 24,
+    textAlign: 'center',
+  },
   textInputContainer: {
     borderWidth: StyleSheet.hairlineWidth,
   },

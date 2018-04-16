@@ -4,11 +4,12 @@ import colors from '../config/colors';
 import React, { PureComponent } from 'react';
 import { Button, Dimensions, StyleSheet, Text } from 'react-native';
 import { Body, Left, Right, Container, Header } from 'native-base';
-import type { NavigationScreenProp } from 'react-navigation';
 import { TabViewAnimated, TabBar, SceneMap } from 'react-native-tab-view';
-import type { Route, NavigationState } from 'react-native-tab-view/types';
 
 import { ImageGrid } from '../components';
+
+import type { NavigationScreenProp } from 'react-navigation';
+import type { Route, NavigationState } from 'react-native-tab-view/types';
 
 const initialLayout = {
   height: 0,

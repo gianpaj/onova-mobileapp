@@ -3,6 +3,7 @@ import { StackNavigator } from 'react-navigation';
 
 import {
   AddProduct,
+  AddReview,
   Checkout,
   Login,
   OrdersList,
@@ -29,6 +30,7 @@ export const StackNav = StackNavigator(
     },
     tabs: { screen: TabsStack },
     addProduct: { screen: AddProduct },
+    addReview: { screen: AddReview },
     settings: { screen: Settings },
     search: { screen: Search },
     searchProductsResults: { screen: SearchProductsResults },

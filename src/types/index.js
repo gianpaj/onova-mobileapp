@@ -135,6 +135,17 @@ export type Order = {
   // unreadMessageCount: number,
 };
 
+export type Review = {
+  id: string,
+  order: string,
+  fromUser: string,
+  targetUser: string,
+  text: string,
+  rateNumber: number,
+  lang: string,
+  createdAt: Date,
+};
+
 export type ReduxState = {
   LoginReducer: LoginState,
   NavigationReducer: NavigationState,

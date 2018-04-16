@@ -23,7 +23,7 @@ import {
   Right,
   Title,
 } from 'native-base';
-import { TextareaItem } from 'antd-mobile';
+import { TextareaItem, Toast } from 'antd-mobile';
 import StarRating from 'react-native-star-rating';
 
 import { Avatar } from '../components/index';
@@ -139,7 +139,8 @@ export class AddReviewContainer extends Component<Props, State> {
           token,
         }
       );
-      console.warn(data);
+      console.debug(data);
+      Toast.success('Thanks for the review', 5);
       this.props.navigation.goBack();
     } catch (err) {
       console.error(err);

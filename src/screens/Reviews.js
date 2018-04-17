@@ -13,7 +13,7 @@ import {
   TouchableHighlight,
   View,
 } from 'react-native';
-import { Body, Container, Header, Title } from 'native-base';
+import { Body, Container, Header, Title, ListItem, Right } from 'native-base';
 import { TabViewAnimated, TabBar, SceneMap } from 'react-native-tab-view';
 import { withNavigation } from 'react-navigation';
 import StarRating from 'react-native-star-rating';
@@ -61,11 +61,11 @@ class ReviewsTabContainer extends Component<R_Prop, R_State> {
 
   async getReviewsAndSetState(): Promise<any> {
     const { token } = this.props.userData;
-    let { userId } = this.props.navigation.state.params;
-
     // for development
-    if (!userId) {
-      userId = '5a78d09d2d314a702698f955';
+    let userId = '5a78d09d2d314a702698f955';
+
+    if (this.props.navigation.state.params) {
+      userId = this.props.navigation.state.params.userId;
     }
 
     const res = await api.get(
@@ -137,22 +137,24 @@ class ReviewsTabContainer extends Component<R_Prop, R_State> {
       <TouchableHighlight
         underlayColor={colors.grey4}
         onPress={() => this.goToProfile(reviewer)}>
-        <View style={styles.itemContainer}>
+        <ListItem style={{ marginLeft: 0 }}>
           <Image
-            style={{ width: width / 4, height: this.state.imageHeight }}
+            style={[
+              styles.itemImage,
+              {
+                width: width / 4,
+                height: this.state.imageHeight,
+              },
+            ]}
             source={{ uri: order.product.photoURIs[0] }}
           />
-          <View style={[styles.flex1, styles.content]}>
+          {/* <View style={[styles.flex1, styles.content]}> */}
+          <Body>
             <View style={styles.contentRow}>
               <Text
                 numberOfLines={1} // android
               >
                 {order.priceOfItem} {order.currency}
-              </Text>
-              <Text
-                numberOfLines={1} // android
-              >
-                {ui.formatTime(review.createdAt)}
               </Text>
             </View>
             <View style={styles.contentRow}>
@@ -185,8 +187,15 @@ class ReviewsTabContainer extends Component<R_Prop, R_State> {
             >
               {review.text}
             </Text>
-          </View>
-        </View>
+          </Body>
+          <Right style={{ height: '100%' }}>
+            <Text
+              numberOfLines={1} // android
+            >
+              {ui.formatTime(review.createdAt)}
+            </Text>
+          </Right>
+        </ListItem>
       </TouchableHighlight>
     );
   };
@@ -299,14 +308,10 @@ const styles = StyleSheet.create({
     backgroundColor: colors.grey5,
   },
 
-  itemContainer: {
-    paddingLeft: 19,
-    paddingRight: 16,
-    paddingVertical: 12,
-    flexDirection: 'row',
-  },
-  content: {
-    marginLeft: 16,
+  itemImage: {
+    marginHorizontal: 19,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: colors.grey4,
   },
   contentRow: {
     flexDirection: 'row',

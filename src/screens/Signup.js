@@ -19,7 +19,7 @@ import { Container, Content } from 'native-base';
 import type { NavigationScreenProp } from 'react-navigation';
 import isEmail from 'validator/lib/isEmail';
 
-import { signup, goback } from '../actions/actionCreator';
+import { signup, goToLogin } from '../actions/actionCreator';
 import type { Dispatch, ReduxState } from '../types';
 import { validPassword } from '../utils/validators';
 import colors from '../config/colors';
@@ -243,7 +243,7 @@ class SignupScreen extends React.Component<Props, State> {
                 Already have an account?&nbsp;
                 <Text
                   style={styles.linkText}
-                  onPress={() => this.props.navigation.dispatch(goback())}>
+                  onPress={() => this.props.navigation.dispatch(goToLogin())}>
                   Log in
                 </Text>
               </Text>

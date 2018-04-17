@@ -6,13 +6,13 @@ import {
   LOGIN_SUCCESS,
   SIGNUP_SUCCESS,
   LOGOUT,
-  SIGNUP,
+  LOGIN,
   BACK,
 } from '../actions/actionTypes';
 import type { Action } from '../types/navigationReducer';
 
 const ActionForLoggedOut = NavigationStack.router.getActionForPathAndParams(
-  'login'
+  'signup'
 );
 
 const ActionForLoggedIn = NavigationActions.reset({
@@ -50,13 +50,13 @@ const navigationReducer = (state: any = initialState, action: Action) => {
         ),
       };
 
-    case SIGNUP:
+    case LOGIN:
       return {
         ...state,
         stateForLoggedOut: NavigationStack.router.getStateForAction(
           NavigationActions.navigate({
-            routeName: 'signup',
-            key: 'signup',
+            routeName: 'login',
+            key: 'login',
           }),
           state.stateForLoggedOut
         ),

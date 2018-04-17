@@ -11,7 +11,6 @@ import {
   LOGIN_PENDING,
   LOGIN_FAIL,
   LOGIN_SUCCESS,
-  // GOOGLE_LOGIN_PENDING,
   SIGNUP_PENDING,
   SIGNUP_SUCCESS,
   SIGNUP_FAIL,
@@ -19,7 +18,7 @@ import {
   GETUSER_PENDING,
   GETUSER_SUCCESS,
   GETUSER_FAIL,
-  SIGNUP,
+  LOGIN,
   BACK,
 } from './actionTypes';
 import type {
@@ -29,7 +28,6 @@ import type {
   GetState,
   UserData,
 } from '../types';
-import settings from '../config/settings';
 import * as api from '../utils/api';
 import { registerPushNotifications, setBadgeNumber } from '../utils/push';
 import * as ui from '../utils/ui';
@@ -252,8 +250,8 @@ function sendToken(pushToken: string, userData: UserData): Promise<any> {
     });
 }
 
-const goToSignup = () => ({
-  type: SIGNUP,
+const goToLogin = () => ({
+  type: LOGIN,
 });
 
 const goback = () => ({
@@ -297,6 +295,6 @@ export {
   getPersonalUserData,
   getUserData,
   logout,
-  goToSignup,
+  goToLogin,
   goback,
 };

@@ -27,7 +27,7 @@ import isEmail from 'validator/lib/isEmail';
 import { Toast } from 'antd-mobile';
 import AnimButton from 'react-native-micro-animated-button';
 
-import { login, goToSignup } from '../actions/actionCreator';
+import { login, goback } from '../actions/actionCreator';
 import type { Dispatch, ReduxState } from '../types';
 
 import * as api from '../utils/api';
@@ -269,7 +269,7 @@ class LoginScreen extends React.Component<Props, State> {
             </Text>
             <AnimButton
               style={styles.PDarkButton}
-              onPress={() => this.props.dispatch(goToSignup())}
+              onPress={() => this.props.dispatch(goback())}
               {...buttonProps}
               label="Sign up"
               testID="SignupButton"

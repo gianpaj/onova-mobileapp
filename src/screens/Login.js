@@ -191,7 +191,6 @@ class LoginScreen extends React.Component<Props, State> {
       disabled,
       hasFocusEmail,
       hasFocusPass,
-      hasFocusEmailReset,
     } = this.state;
 
     return (
@@ -279,68 +278,76 @@ class LoginScreen extends React.Component<Props, State> {
             {/* <Footer></Footer> */}
           </View>
         </Content>
-        <Modal
-          animationType="slide"
-          visible={this.state.modalVisible}
-          onRequestClose={() => this.setModalVisible(false)}>
-          <View>
-            <Header noShadow style={{ backgroundColor: colors.transparent }}>
-              <Left />
-              <Body />
-              <Right>
-                <NBButton
-                  transparent
-                  onPress={() => this.setModalVisible(false)}>
-                  <NBIcon name="close" style={{ color: colors.black }} />
-                </NBButton>
-              </Right>
-            </Header>
-            <View style={{ margin: 20 }}>
-              <Text style={{ color: colors.black, fontWeight: 'bold' }}>
-                Trouble logging in?
-              </Text>
-              <Text>Enter your email address to reset your password</Text>
-            </View>
-
-            <FormInput
-              inputStyle={styles.input}
-              containerStyle={{ margin: 10 }}
-              placeholder="Email"
-              autoCapitalize="none"
-              autoCorrect={false}
-              autoFocus
-              onBlur={this._onBlurEmailReset}
-              onFocus={this._onFocusEmailReset}
-              clearButtonMode="while-editing"
-              keyboardType="email-address"
-              returnKeyType="go"
-              value={this.state.emailReset}
-              onChangeText={text => this.setState({ emailReset: text })}
-              underlineColorAndroid={
-                hasFocusEmailReset ? colors.primary : colors.grey2
-              }
-            />
-
-            <AnimButton
-              disabled={
-                !isEmail(this.state.emailReset) || this.state.loadingReset
-              }
-              foregroundColor={colors.white}
-              // eslint-disable-next-line
-              style={[styles.LoginButton, {
-                  backgroundColor:
-                    isEmail(this.state.emailReset) || this.state.loadingReset
-                      ? colors.primary
-                      : colors.grey4,
-                },
-              ]}
-              onPress={this.onResetPassword}
-              label="Email instructions"
-              testID="LoginButton"
-            />
-          </View>
-        </Modal>
+        {this.renderPasswordResetModal()}
       </Container>
+    );
+  }
+
+  renderPasswordResetModal() {
+    const { hasFocusEmailReset } = this.state;
+
+    return (
+      <Modal
+        animationType="slide"
+        visible={this.state.modalVisible}
+        onRequestClose={() => this.setModalVisible(false)}>
+        <View>
+          <Header noShadow style={{ backgroundColor: colors.transparent }}>
+            <Left />
+            <Body />
+            <Right>
+              <NBButton transparent onPress={() => this.setModalVisible(false)}>
+                <NBIcon name="close" style={{ color: colors.black }} />
+              </NBButton>
+            </Right>
+          </Header>
+          <View style={{ margin: 20 }}>
+            <Text style={{ color: colors.black, fontWeight: 'bold' }}>
+              Trouble logging in?
+            </Text>
+            <Text>Enter your email address to reset your password</Text>
+          </View>
+
+          <FormInput
+            inputStyle={styles.input}
+            containerStyle={{ margin: 10 }}
+            placeholder="Email"
+            autoCapitalize="none"
+            autoCorrect={false}
+            autoFocus
+            onBlur={this._onBlurEmailReset}
+            onFocus={this._onFocusEmailReset}
+            clearButtonMode="while-editing"
+            keyboardType="email-address"
+            returnKeyType="go"
+            value={this.state.emailReset}
+            onChangeText={text => this.setState({ emailReset: text })}
+            underlineColorAndroid={
+              hasFocusEmailReset ? colors.primary : colors.grey2
+            }
+          />
+
+          <AnimButton
+            disabled={
+              !isEmail(this.state.emailReset) || this.state.loadingReset
+            }
+            // eslint-disable-next-line
+            foregroundColor={colors.white}
+            style={[
+              styles.LoginButton,
+              {
+                backgroundColor:
+                  isEmail(this.state.emailReset) || this.state.loadingReset
+                    ? colors.primary
+                    : colors.grey4,
+              },
+            ]}
+            onPress={this.onResetPassword}
+            label="Email instructions"
+            testID="ResetButton"
+          />
+        </View>
+      </Modal>
     );
   }
 }

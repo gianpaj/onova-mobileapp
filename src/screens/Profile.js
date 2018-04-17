@@ -2,12 +2,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-// prettier-ignore
 import {
   Dimensions,
   Image,
   StyleSheet,
+  Platform,
   Text,
+  TouchableOpacity,
   View,
 } from 'react-native';
 import {
@@ -23,6 +24,7 @@ import { NavigationActions } from 'react-navigation';
 import type { NavigationScreenProp } from 'react-navigation';
 import { Button } from 'react-native-elements';
 import { NoticeBar, Toast } from 'antd-mobile';
+import StarRating from 'react-native-star-rating';
 
 import {
   Avatar,
@@ -48,24 +50,28 @@ type State = {
   _id: string,
   bio: string,
   displayName: string,
-  username: string,
   editing: boolean,
-  isFollowing: boolean,
   followersCount: number,
-  profilePic: string | Image,
+  isFollowing: boolean,
   isLoading: boolean,
+  profilePic: string | Image,
+  rateAvg: number,
+  reviewsCount: number,
+  username: string,
 };
 
 const defaultState = {
   _id: '',
   bio: '',
   displayName: '',
-  username: '',
   editing: false,
-  isFollowing: false,
-  profilePic: '',
-  isLoading: false,
   followersCount: -1,
+  isFollowing: false,
+  isLoading: false,
+  profilePic: '',
+  rateAvg: -1,
+  reviewsCount: -1,
+  username: '',
 };
 
 // @TODO: if Product is mine Delete, Edit
@@ -99,6 +105,8 @@ class ProfileScreen extends React.Component<Props, State> {
             profilePic,
             username,
             followersCount,
+            ratingsTotal,
+            reviewsCount,
           } = res;
           this.setState({
             _id,
@@ -107,6 +115,9 @@ class ProfileScreen extends React.Component<Props, State> {
             profilePic,
             username,
             followersCount,
+            rateAvg:
+              ratingsTotal == 0 ? ratingsTotal : ratingsTotal / reviewsCount,
+            reviewsCount,
           });
         })
         .catch(err => {
@@ -150,9 +161,17 @@ class ProfileScreen extends React.Component<Props, State> {
       profilePic,
       username,
       followersCount,
+      ratingsTotal,
+      reviewsCount,
     } = nextProps.userData;
 
-    this.setState({ _id, username, followersCount });
+    this.setState({
+      _id,
+      username,
+      followersCount,
+      rateAvg: ratingsTotal == 0 ? ratingsTotal : ratingsTotal / reviewsCount,
+      reviewsCount,
+    });
 
     if (this.hasStateDifferedFromProps(nextProps.userData, 'bio')) {
       this.setState({ bio });
@@ -301,20 +320,41 @@ class ProfileScreen extends React.Component<Props, State> {
     return this.props.userData.accountStatus == 'notverified';
   }
 
-  renderUserNumbers() {
+  goToReviews() {
+    this.props.navigation.navigate('reviews', { userId: this.state._id });
+  }
+
+  renderUserNumbers = () => {
     return (
       <View style={styles.userNumbers}>
-        <View style={styles.alignCenter}>
-          <Text>9999</Text>
-          <Text>stars</Text>
-        </View>
+        <TouchableOpacity
+          onPress={() => this.goToReviews()}
+          style={styles.alignCenter}>
+          <StarRating
+            // eslint-disable-next-line
+            buttonStyle={{ paddingHorizontal: 0 }}
+            // eslint-disable-next-line
+            containerStyle={{ alignSelf: 'center' }}
+            disabled
+            emptyStar={
+              Platform.OS == 'ios' ? 'ios-star-outline' : 'md-star-outline'
+            }
+            emptyStarColor={colors.yellow}
+            fullStar={Platform.OS == 'ios' ? 'ios-star' : 'md-star'}
+            fullStarColor={colors.yellow}
+            iconSet="Ionicons"
+            rating={this.state.rateAvg}
+            starSize={25}
+          />
+          <Text>{this.state.reviewsCount}</Text>
+        </TouchableOpacity>
         <View style={styles.alignCenter}>
           <Text>{this.state.followersCount}</Text>
           <Text>followers</Text>
         </View>
       </View>
     );
-  }
+  };
 
   onFollowOrUnfollow() {
     const token = this.props.userData.token;
@@ -341,15 +381,14 @@ class ProfileScreen extends React.Component<Props, State> {
       isLoading,
     } = this.state;
 
+    const { navigation } = this.props;
+
     return (
       <Container>
         <Header>
           <Left style={styles.flex1}>
             {this.ifNavigatedFromProduct() ? (
-              <NBButton
-                transparent
-                dark
-                onPress={() => this.props.navigation.goBack()}>
+              <NBButton transparent dark onPress={() => navigation.goBack()}>
                 <NBIcon ios="ios-arrow-back" android="md-arrow-back" />
               </NBButton>
             ) : (
@@ -479,7 +518,7 @@ class ProfileScreen extends React.Component<Props, State> {
                   rounded
                   backgroundColor={colors.pDark}
                   containerViewStyle={styles.searchButton}
-                  onPress={() => props.navigation.navigate('addProduct')}
+                  onPress={() => navigation.navigate('addProduct')}
                   title="Sell something now"
                 />
               </View>

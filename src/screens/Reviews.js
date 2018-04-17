@@ -54,18 +54,22 @@ class ReviewsTabContainer extends Component<R_Prop, R_State> {
   async componentWillMount() {
     try {
       await this.getReviewsAndSetState();
-      // console.warn(data);
     } catch (err) {
-      return void console.error(err);
+      console.error(err);
     }
   }
 
   async getReviewsAndSetState(): Promise<any> {
     const { token } = this.props.userData;
+    let { userId } = this.props.navigation.state.params;
+
+    // for development
+    if (!userId) {
+      userId = '5a78d09d2d314a702698f955';
+    }
 
     const res = await api.get(
-      `/api/users/${this.props.userData._id}/reviews?as=${this.props.as}`,
-      // `/api/users/5a78d09d2d314a702698f955/reviews?as=${this.props.as}`,
+      `/api/users/${userId}/reviews?as=${this.props.as}`,
       {
         token,
       }

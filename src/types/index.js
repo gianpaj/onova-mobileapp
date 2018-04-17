@@ -41,21 +41,27 @@ export type SignupData = LoginData & {
 export type UserData = {
   _id: string,
   accountStatus: string,
+  // billingAddress: ?any;
   bio?: string,
   displayName?: string,
   emailAddress: string,
-  provider: string,
-  profilePic?: string,
-  token: string,
-  username: string,
   followersCount: number,
   followingCount: number,
+  // mobileNumber: ?string;
+  // password: string;
   paymentInfo?: {
     last_four: string,
     exp_month: string,
     exp_year: string,
   },
+  platform: ?string,
+  profilePic?: string,
+  pushToken: ?string,
+  ratingsTotal: number,
+  reviewsCount: number,
   shippingAddress?: ShippingAddress,
+  token: string,
+  username: string,
 };
 
 export type PaymentInfo =

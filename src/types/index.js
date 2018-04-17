@@ -137,7 +137,7 @@ export type Order = {
 
 export type Review = {
   id: string,
-  order: string,
+  order: Order,
   fromUser: string,
   targetUser: string,
   text: string,

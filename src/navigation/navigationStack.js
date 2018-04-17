@@ -20,11 +20,11 @@ import { TabsStack } from './navigationTabs';
 
 export const StackNav = StackNavigator(
   {
-    login: { screen: Login },
     signup: {
       screen: Signup,
       navigationOptions: { gesturesEnabled: false },
     },
+    login: { screen: Login },
     product: {
       screen: Product,
       navigationOptions: { gesturesEnabled: false },

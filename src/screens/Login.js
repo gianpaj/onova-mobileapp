@@ -251,11 +251,11 @@ class LoginScreen extends React.Component<Props, State> {
             <AnimButton
               ref={r => (this.loginBtn = r)}
               disabled={disabled}
-              // eslint-disable-next-line
-              style={[styles.LoginButton, {
+              noRadius
+              style={[
+                styles.LoginButton,
+                {
                   backgroundColor: this.backgroundColor,
-                  // elevation: this.animatedValue, // android
-                  // shadowOpacity: this.animatedValue, // ios
                 },
               ]}
               {...buttonProps}
@@ -274,8 +274,8 @@ class LoginScreen extends React.Component<Props, State> {
               label="Sign up"
               testID="SignupButton"
               static
+              noRadius
             />
-            {/* <Footer></Footer> */}
           </View>
         </Content>
         {this.renderPasswordResetModal()}
@@ -309,29 +309,28 @@ class LoginScreen extends React.Component<Props, State> {
           </View>
 
           <FormInput
-            inputStyle={styles.input}
-            containerStyle={{ margin: 10 }}
-            placeholder="Email"
             autoCapitalize="none"
             autoCorrect={false}
             autoFocus
-            onBlur={this._onBlurEmailReset}
-            onFocus={this._onFocusEmailReset}
             clearButtonMode="while-editing"
+            containerStyle={{ margin: 10 }}
+            inputStyle={styles.input}
             keyboardType="email-address"
-            returnKeyType="go"
-            value={this.state.emailReset}
+            onBlur={this._onBlurEmailReset}
             onChangeText={text => this.setState({ emailReset: text })}
+            onFocus={this._onFocusEmailReset}
+            placeholder="Email"
+            returnKeyType="go"
             underlineColorAndroid={
               hasFocusEmailReset ? colors.primary : colors.grey2
             }
+            value={this.state.emailReset}
           />
 
           <AnimButton
             disabled={
               !isEmail(this.state.emailReset) || this.state.loadingReset
             }
-            // eslint-disable-next-line
             foregroundColor={colors.white}
             style={[
               styles.LoginButton,
@@ -345,6 +344,7 @@ class LoginScreen extends React.Component<Props, State> {
             onPress={this.onResetPassword}
             label="Email instructions"
             testID="ResetButton"
+            noRadius
           />
         </View>
       </Modal>
@@ -369,28 +369,11 @@ const buttonProps = {
 
 const raised = {
   alignSelf: 'center',
-  borderWidth: 0,
-  borderRadius: 0,
   ...Platform.select({
     ios: {
       shadowColor: 'rgba(0,0,0, .4)',
       shadowOffset: { height: 1, width: 1 },
-      // shadowOpacity: 1,
       shadowRadius: 1,
-    },
-    android: {
-      // elevation: 2,
-    },
-  }),
-};
-
-const raisedActive = {
-  ...Platform.select({
-    ios: {
-      shadowOpacity: 1,
-    },
-    android: {
-      elevation: 2,
     },
   }),
 };
@@ -407,37 +390,10 @@ const styles = StyleSheet.create({
   LoginButton: {
     ...raised,
   },
-  PrimaryButton: {
-    backgroundColor: colors.primary,
-    ...raised,
-    ...raisedActive,
-    alignSelf: 'auto',
-  },
   PDarkButton: {
     backgroundColor: colors.pDark,
     ...raised,
-    ...raisedActive,
   },
-  SecondaryButtonNB: {
-    borderRadius: 0,
-    marginTop: 10,
-    padding: 15,
-    alignSelf: 'center',
-    backgroundColor: colors.secondary,
-  },
-  DisabledButton: {
-    backgroundColor: colors.grey5,
-  },
-  DisabledButtonText: {
-    color: colors.grey3,
-  },
-  // GoogleButton: {
-  //   backgroundColor: colors.white,
-  //   padding: 8,
-  //   marginTop: 10,
-  //   borderRadius: 0,
-  //   alignSelf: 'center',
-  // },
   hr: {
     alignSelf: 'center',
     margin: 10,

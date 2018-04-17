@@ -13,7 +13,6 @@ export default {
   // MAX_TAGS: 30,
   USERNAME_REGEX: /^[a-zA-Z0-9\_\.]+$/,
   HASHTAG_REGEX: /^[a-zA-Z0-9]+$/,
-  SENDBIRD_APP_ID: '***REMOVED***',
   INSTABUG_TOKEN: '***REMOVED***',
   // BRAINTREE_TOKENIZATION_KEY: 'sandbox_45rbtwk4_wpk6jkwxv5kpqp58',
 };

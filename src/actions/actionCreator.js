@@ -1,10 +1,9 @@
 // @flow
 
-// import * as firebase from 'firebase';
-// import { GoogleSignin, User as GoogleUser } from 'react-native-google-signin';
 import { Platform } from 'react-native';
-import SendBird from 'sendbird';
 import { Toast } from 'antd-mobile';
+import { ChatManager, TokenProvider } from '@pusher/chatkit/react-native';
+import { PUSHER_INSTANCE, PUSHER_TOKEN_PROVIDER } from 'react-native-dotenv';
 
 import {
   incrementCounter,
@@ -62,15 +61,15 @@ const login = (data: LoginData) => (dispatch: Dispatch) => (
         // FIXME: fix use `userData` key in payload
         dispatch({ type: LOGIN_SUCCESS, payload: userData });
         // TODO: send analytics login event
-        initializeSendBird(userData)
-          .then(() => registerPushNotifications())
-          .then(pushToken => {
-            if (pushToken) return sendToken(pushToken, userData);
-          })
-          .catch(err => {
-            console.warn(err);
-            dispatch({ type: LOGIN_FAIL });
-          });
+        // initializePusher(userData)
+        //   .then(() => registerPushNotifications())
+        //   .then(pushToken => {
+        //     if (pushToken) return sendToken(pushToken, userData);
+        //   })
+        //   .catch(err => {
+        //     console.warn(err);
+        //     dispatch({ type: LOGIN_FAIL });
+        //   });
       } else {
         console.debug(res);
         dispatch({ type: LOGIN_FAIL });
@@ -82,17 +81,25 @@ const login = (data: LoginData) => (dispatch: Dispatch) => (
   // }, 5000)
 );
 
-const initializeSendBird = (userData: UserData): Promise<any> => {
+const initializePusher = (userData: UserData): Promise<any> => {
   return new Promise((resolve, reject) => {
-    const sb = new SendBird({ appId: settings.SENDBIRD_APP_ID });
-    sb.connect(userData._id, (user, err) => {
-      if (err) return reject(err);
-
-      sb.updateCurrentUserInfo(userData.username, '', (res, err) => {
-        if (err) return reject(err);
-        resolve(res);
-      });
+    const chatManager = new ChatManager({
+      instanceLocator: PUSHER_INSTANCE,
+      userId: userData._id, // user needs to already exist
+      tokenProvider: new TokenProvider({
+        url: PUSHER_TOKEN_PROVIDER,
+        userId: userData._id,
+      }),
     });
+    chatManager
+      .connect()
+      .then(currentUser => {
+        console.dir(currentUser);
+        resolve();
+      })
+      .catch(err => {
+        reject(err);
+      });
   });
 };
 
@@ -148,7 +155,7 @@ const signup = (data: SignupData) => (dispatch: Dispatch) => (
           ...res.data,
           ...{ token: res.token, provider: 'email' },
         };
-        initializeSendBird(userData)
+        initializePusher(userData)
           .then(() => registerPushNotifications())
           .then(pushToken => {
             if (pushToken) return sendToken(pushToken, userData);
@@ -282,7 +289,7 @@ const handleErrorWithAlert = (data: any, err: any) => {
 export {
   incrementAction,
   decrementAction,
-  initializeSendBird,
+  initializePusher,
   login,
   // loginWithGoogle,
   signup,

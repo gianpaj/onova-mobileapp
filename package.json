@@ -23,6 +23,7 @@
     "test:lint": "eslint src --quiet"
   },
   "dependencies": {
+    "@pusher/chatkit": "^0.7.9",
     "antd-mobile": "^2.1.8",
     "axios": "^0.17.1",
     "date-fns": "^1.29.0",

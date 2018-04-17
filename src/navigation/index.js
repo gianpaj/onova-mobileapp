@@ -7,7 +7,7 @@ import { addNavigationHelpers, NavigationActions } from 'react-navigation';
 import { createReduxBoundAddListener } from 'react-navigation-redux-helpers';
 
 import {
-  initializeSendBird,
+  initializePusher,
   sendToken,
   logout,
 } from '../actions/actionCreator';
@@ -40,7 +40,7 @@ class AppNavigation extends Component<Props, void> {
       return api
         .get(`/api/users/${userData._id}/personal`, { token })
         .then(() => {
-          initializeSendBird(userData)
+          initializePusher(userData)
             .then(() => {
               console.debug('SendBird: initialized');
               return registerPushNotifications();

@@ -11,7 +11,6 @@ import {
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/lib/integration/react';
 import { Root } from 'native-base';
-import SendBird from 'sendbird';
 import * as firebase from 'firebase';
 
 import configureStore from './store';

@@ -211,7 +211,7 @@ export class ProductContainer extends React.Component<Props, State> {
       })
       .then(() => this._getProduct(item.uuid))
       .then((product: ProductType) => {
-        // @TODO: if product status is 'reserved' say you can try again later...
+        // TODO: if product status is 'reserved' say you can try again later...
         if (product.status !== 'forsale') {
           throw Error('This product is not longer for sale');
         } else {
@@ -224,7 +224,7 @@ export class ProductContainer extends React.Component<Props, State> {
         }
       })
       .catch(err => {
-        // @TODO: show toast with err
+        // TODO: show toast with err
         console.warn(err.message);
       })
       .then(() => {

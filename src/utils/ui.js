@@ -67,8 +67,3 @@ export function formatTime(createdAt: Date): string {
   }
   return format(createdAt, 'D MMM');
 }
-
-export const isProd =
-  JSON.parse(JSON.stringify(process.env)).NODE_ENV == 'prod' || !__DEV__;
-
-console.debug('isProd', isProd);

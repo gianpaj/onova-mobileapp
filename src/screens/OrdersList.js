@@ -143,7 +143,7 @@ class OrdersListContainer extends Component<Props, State> {
 
   connectToSendBird(): Promise<null | any> {
     return new Promise((resolve, reject) => {
-      // @TODO: remove this if don't get a warning when quickly opening a chat thread.
+      // TODO: remove this if don't get a warning when quickly opening a chat thread.
       // Maybe from a deeplink, opening app from background?
       setTimeout(() => {
         this.sb = SendBird.getInstance();

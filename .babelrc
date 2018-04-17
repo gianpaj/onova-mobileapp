@@ -1,8 +1,8 @@
 {
   "presets": [
     "react-native",
-    "flow",
-    "react-native-dotenv"
+    "react-native-dotenv",
+    "flow"
   ],
   "retainLines": true,
   "plugins": [["import", { "libraryName": "antd-mobile" }]],

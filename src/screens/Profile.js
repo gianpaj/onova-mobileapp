@@ -74,7 +74,7 @@ const defaultState = {
   username: '',
 };
 
-// @TODO: if Product is mine Delete, Edit
+// TODO: if Product is mine Delete, Edit
 const BUTTONS = ['Report', 'Cancel'];
 
 const { height } = Dimensions.get('window');

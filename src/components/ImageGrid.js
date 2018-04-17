@@ -32,7 +32,7 @@ import type { UserData } from '../types';
 // const loading = require('../assets/images/loading.jpg');
 // const TTL = 4 * 60 * 60; // cache images for 4 hours
 
-// @TODO: define type of Item
+// TODO: define type of Item
 
 type Props = {
   apiURL: string,

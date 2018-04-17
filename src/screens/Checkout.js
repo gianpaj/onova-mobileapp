@@ -130,14 +130,14 @@ class CheckoutContainer extends Component<Props, State> {
         if (
           err.message == 'Duplicate order' &&
           err.data.order &&
-          // @TODO: set to 'paid' once payment is completed
+          // TODO: set to 'paid' once payment is completed
           err.data.order.status == 'pending'
         ) {
           // $FlowFixMe
           return this.goToOrderThread(err.data.order.id, item);
         }
-        // @TODO: set to 'pending' once payment is completed
-        if (err.data.order.status == '@TODO') {
+        // TODO: set to 'pending' once payment is completed
+        if (err.data.order.status == 'TODO') {
           this.setState({
             item,
             isLoading: false,
@@ -161,7 +161,7 @@ class CheckoutContainer extends Component<Props, State> {
     // trigger Axios to reject the request
     this.cancelToken.cancel('operation_canceled');
 
-    //@TODO: unreserve product and cancel order
+    //TODO: unreserve product and cancel order
   }
 
   componentWillReceiveProps(nextProps) {
@@ -171,7 +171,7 @@ class CheckoutContainer extends Component<Props, State> {
 
   onCheckout = () => {
     const { item, order } = this.state;
-    // @TODO: temp
+    // TODO: temp
     const SKIP_PAY = true;
     if (SKIP_PAY && item) {
       console.log(order);
@@ -214,7 +214,7 @@ class CheckoutContainer extends Component<Props, State> {
     // BTClient.showPayPalViewController()
     //   // BTClient.showPaymentViewController(options)
     //   .then(nonce => {
-    //     // @TODO: payment succeeded, pass nonce to server
+    //     // TODO: payment succeeded, pass nonce to server
     //     console.warn(nonce);
     //   })
     //   .then(() => {

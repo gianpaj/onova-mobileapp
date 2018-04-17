@@ -1,14 +1,7 @@
 // @flow
 
 import axios, { CancelTokenSource } from 'axios';
-import { ENV } from 'react-native-dotenv';
-import { isProd } from './ui';
-
-let API_URL = 'http://192.168.1.4:4040';
-
-if (isProd) {
-  API_URL = 'https://onova.co';
-}
+import { ENV, API_URL } from 'react-native-dotenv';
 
 console.warn(`Running in ${ENV} environment`);
 console.warn(`API_URL: ${API_URL}`);

@@ -31,7 +31,7 @@ class AppNavigation extends Component<Props, void> {
   componentDidMount() {
     BackHandler.addEventListener('hardwareBackPress', this.onBackPress);
     const { isLoggedIn, userData, dispatch } = this.props;
-    // @TODO: use redux with
+    // TODO: use redux with
     // this.setState({ rehydrated: true });
 
     if (isLoggedIn && userData) {

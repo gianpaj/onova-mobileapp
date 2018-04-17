@@ -102,7 +102,7 @@ class OrderThreadContainer extends Component<Props, State> {
     } else {
       // coming from Checkout or OrdersList
       const { orderId, productId, userId } = params;
-      // @TODO: check show is the seller/buyer!
+      // TODO: check show is the seller/buyer!
       this.initialise(orderId, productId, userId);
     }
   }
@@ -195,7 +195,7 @@ class OrderThreadContainer extends Component<Props, State> {
    */
   connectToSendBird(orderId: string): Promise<null | any> {
     return new Promise((resolve, reject) => {
-      // @TODO: remove this if don't get a warning when quickly opening a chat thread.
+      // TODO: remove this if don't get a warning when quickly opening a chat thread.
       // Maybe from a deeplink, opening app from background?
       setTimeout(() => {
         this.sb = SendBird.getInstance();

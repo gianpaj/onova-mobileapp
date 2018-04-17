@@ -1,5 +1,5 @@
-// flow-typed signature: fe5cc2badd1ad48ff1721bdd55e5de0b
-// flow-typed version: 8a23000dd1/react-navigation_v1.x.x/flow_>=v0.60.x
+// flow-typed signature: 15f8e87fd14a42df1c793230780edf48
+// flow-typed version: c19ef42683/react-navigation_v1.x.x/flow_>=v0.60.x
 
 // @flow
 
@@ -116,27 +116,27 @@ declare module 'react-navigation' {
   |};
 
   declare export type NavigationReplaceAction = {|
-    +type: 'Navigation/REPLACE',
-    +key: string,
-    +routeName: string,
-    +params?: NavigationParams,
-    +action?: NavigationNavigateAction,
+    type: 'Navigation/REPLACE',
+    key: string,
+    routeName: string,
+    params?: NavigationParams,
+    action?: NavigationNavigateAction,
   |};
   declare export type NavigationPopAction = {|
-    +type: 'Navigation/POP',
-    +n?: number,
-    +immediate?: boolean,
+    type: 'Navigation/POP',
+    n?: number,
+    immediate?: boolean,
   |};
   declare export type NavigationPopToTopAction = {|
-    +type: 'Navigation/POP_TO_TOP',
-    +immediate?: boolean,
+    type: 'Navigation/POP_TO_TOP',
+    immediate?: boolean,
   |};
   declare export type NavigationPushAction = {|
-    +type: 'Navigation/PUSH',
-    +routeName: string,
-    +params?: NavigationParams,
-    +action?: NavigationNavigateAction,
-    +key?: string,
+    type: 'Navigation/PUSH',
+    routeName: string,
+    params?: NavigationParams,
+    action?: NavigationNavigateAction,
+    key?: string,
   |};
 
   declare export type NavigationAction =

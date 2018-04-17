@@ -266,10 +266,17 @@ class OrdersListContainer extends Component<Props, State> {
   _renderOrderRow = ({ item }) => {
     const { lastMessage }: { lastMessage: any } = item;
     const interlocutor = this.getInterlocutor(item);
+    const haveUnreadMsgs = item.unreadMessageCount > 0;
+    let from;
 
-    const isMyMessage = lastMessage._sender.nickname !== interlocutor.nickname;
+    if (lastMessage.messageType == 'user') {
+      const isMyMessage = lastMessage._sender.nickname == interlocutor.nickname;
 
-    const haveUnreadMsgs = !isMyMessage && item.unreadMessageCount > 0;
+      from = isMyMessage ? 'You: ' : '';
+    } else {
+      // admin messages
+      from = `${lastMessage.messageType}: `;
+    }
 
     return (
       <TouchableOpacity onPress={() => this.goToOrderThread(item)}>
@@ -293,7 +300,7 @@ class OrdersListContainer extends Component<Props, State> {
               numberOfLines={1} // android
               // eslint-disable-next-line
               style={haveUnreadMsgs ? { fontWeight: 'bold' } : {}}>
-              {isMyMessage ? 'You: ' : ''}
+              {from}
               {lastMessage.message}
             </Text>
           </View>

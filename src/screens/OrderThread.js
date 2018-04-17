@@ -73,15 +73,6 @@ type State = {
   order?: Order,
 };
 
-const tempMessages = [
-  {
-    _id: 3,
-    text: 'You are officially rocking GiftedChat.',
-    createdAt: new Date(Date.UTC(2016, 7, 30, 17, 20, 0)),
-    system: true,
-  },
-];
-
 class OrderThreadContainer extends Component<Props, State> {
   sb;
 
@@ -296,6 +287,15 @@ class OrderThreadContainer extends Component<Props, State> {
     };
   }
 
+  createGiftedSystemMessage(msg: SendBirdMessage) {
+    return {
+      _id: msg.messageId,
+      createdAt: new Date(msg.createdAt),
+      text: msg.message,
+      system: true,
+    };
+  }
+
   onSend = (messages: Array<Message>) => {
     const { userData } = this.props;
 
@@ -375,7 +375,7 @@ class OrderThreadContainer extends Component<Props, State> {
     );
   }
 
-  getRoomMessages(refresh: boolean) {
+  getRoomMessages(refresh: boolean): void {
     const { messageQuery, messages, interlocutor: int } = this.state;
     const { userData } = this.props;
 
@@ -408,8 +408,11 @@ class OrderThreadContainer extends Component<Props, State> {
         if (err) return console.error(err);
 
         const newMessages = msgs.map(m => {
-          const user = m.sender.userId == userData._id ? userData : otherUser;
-          return this.createGiftedMessage(m, user);
+          if (m.sender) {
+            const user = m.sender.userId == userData._id ? userData : otherUser;
+            return this.createGiftedMessage(m, user);
+          }
+          return this.createGiftedSystemMessage(m);
         });
 
         if (messages && messages.length) {
@@ -610,11 +613,11 @@ const st = StyleSheet.create({
   },
   systemContainer: {
     backgroundColor: colors.primary,
-    borderRadius: 25,
+    borderRadius: 5,
     borderColor: colors.active,
     marginVertical: 15,
-    marginHorizontal: 105,
-    paddingVertical: 5,
+    marginHorizontal: 65,
+    padding: 5,
   },
   systemText: {
     color: colors.white,

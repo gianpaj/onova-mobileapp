@@ -5,7 +5,7 @@ import { Platform } from 'react-native';
 import { TabNavigator } from 'react-navigation';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-import { Home, AddProduct, OrdersList, Profile, Search } from '../screens';
+import { Home, AddProduct, ChatRooms, Profile, Search } from '../screens';
 import colors from '../config/colors';
 
 import TabBarComponent from './TabBarComponent';
@@ -16,7 +16,7 @@ const routeConfiguration = {
   Home: { screen: Home },
   Search: { screen: Search },
   New: { screen: AddProduct },
-  Orders: { screen: OrdersList },
+  ChatRooms: { screen: ChatRooms },
   Profile: { screen: Profile },
 };
 
@@ -38,7 +38,7 @@ const tabBarConfiguration = {
           // ? `ios-add-circle${focused ? '' : ''}`
           iconName = isiOS ? 'ios-add-circle' : 'md-add-circle';
           break;
-        case 'Orders':
+        case 'ChatRooms':
           iconName = 'md-basket';
           // iconName = isiOS
           // ? `ios-add-circle${focused ? '' : ''}`

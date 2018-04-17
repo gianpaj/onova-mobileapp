@@ -73,7 +73,7 @@ type State = {
   order?: Order,
 };
 
-class OrderThreadContainer extends Component<Props, State> {
+class ChatContainer extends Component<Props, State> {
   sb;
 
   state = {
@@ -100,7 +100,7 @@ class OrderThreadContainer extends Component<Props, State> {
         this.initialise(orderId, productId, userId);
       });
     } else {
-      // coming from Checkout or OrdersList
+      // coming from Checkout or ChatRooms
       const { orderId, productId, userId } = params;
       // TODO: check show is the seller/buyer!
       this.initialise(orderId, productId, userId);
@@ -630,4 +630,4 @@ const mapStateToProps: any = (state: ReduxState) => ({
   userData: state.LoginReducer.data,
 });
 
-export const OrderThread = connect(mapStateToProps)(OrderThreadContainer);
+export const Chat = connect(mapStateToProps)(ChatContainer);

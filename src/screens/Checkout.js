@@ -134,7 +134,7 @@ class CheckoutContainer extends Component<Props, State> {
           err.data.order.status == 'pending'
         ) {
           // $FlowFixMe
-          return this.goToOrderThread(err.data.order.id, item);
+          return this.goToChat(err.data.order.id, item);
         }
         // TODO: set to 'pending' once payment is completed
         if (err.data.order.status == 'TODO') {
@@ -177,7 +177,7 @@ class CheckoutContainer extends Component<Props, State> {
       console.log(order);
       console.warn('payment skipped');
       // $FlowFixMe
-      return this.goToOrderThread(order.id, item);
+      return this.goToChat(order.id, item);
     }
 
     // const self = this;
@@ -221,7 +221,7 @@ class CheckoutContainer extends Component<Props, State> {
     //     const { order, item } = self.state;
     //     console.log(order);
     // $FlowFixMe
-    this.goToOrderThread(order.id, item);
+    this.goToChat(order.id, item);
     //   })
     //   .catch(err => {
     //     if (err == 'USER_CANCELLATION' || err == null) {
@@ -256,7 +256,7 @@ class CheckoutContainer extends Component<Props, State> {
     //   });
   };
 
-  goToOrderThread(orderId: string, item: Product) {
+  goToChat(orderId: string, item: Product) {
     // $FlowFixMe
     this.props.navigation.dispatch({
       key: `orderThread-${item.uuid}`,

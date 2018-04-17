@@ -5,8 +5,8 @@ import { AddReview } from '../screens/AddReview';
 import { Checkout } from '../screens/Checkout';
 import { Home } from '../screens/Home';
 import { Login } from '../screens/Login';
-import { OrdersList } from '../screens/OrdersList';
-import { OrderThread } from '../screens/OrderThread';
+import { ChatRooms } from '../screens/ChatRooms';
+import { Chat } from '../screens/Chat';
 import { Product } from '../screens/Product';
 import { Profile } from '../screens/Profile';
 import { Reviews } from '../screens/Reviews';
@@ -21,8 +21,8 @@ export {
   Checkout,
   Home,
   Login,
-  OrdersList,
-  OrderThread,
+  ChatRooms,
+  Chat,
   Product,
   Profile,
   Reviews,

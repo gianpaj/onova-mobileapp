@@ -47,7 +47,7 @@ type State = {
   channelList: Array<any>,
 };
 
-class OrdersListContainer extends Component<Props, State> {
+class ChatContainer extends Component<Props, State> {
   sb;
 
   state = {
@@ -198,14 +198,14 @@ class OrdersListContainer extends Component<Props, State> {
     return true;
   }
 
-  goToOrderThread = (item: any) => {
+  goToChat = (item: any) => {
     console.log(item);
     this.fetchOrder(item.orderId)
       .then((order: Order) => {
         const interlocutorId = item.members.find(
           m => m.userId !== this.props.userData._id
         ).userId;
-        const navigateToOrderThread = NavigationActions.navigate({
+        const navigateToChat = NavigationActions.navigate({
           routeName: 'orderThread',
           params: {
             productId: order.product.uuid,
@@ -214,7 +214,7 @@ class OrdersListContainer extends Component<Props, State> {
           },
           key: `orderThread-${order.id}`,
         });
-        this.props.navigation.dispatch(navigateToOrderThread);
+        this.props.navigation.dispatch(navigateToChat);
       })
       .catch(e => {
         ui.showToast(e.message);
@@ -244,7 +244,7 @@ class OrdersListContainer extends Component<Props, State> {
     return (
       <TouchableOpacity
         style={st.orderCircle}
-        onPress={() => this.goToOrderThread(item)}>
+        onPress={() => this.goToChat(item)}>
         <AnimatedCircularProgress
           backgroundColor={colors.pDark}
           fill={perc}
@@ -279,10 +279,10 @@ class OrdersListContainer extends Component<Props, State> {
     }
 
     return (
-      <TouchableOpacity onPress={() => this.goToOrderThread(item)}>
+      <TouchableOpacity onPress={() => this.goToChat(item)}>
         <View style={st.itemContainer}>
           <Avatar
-            onPress={() => this.goToOrderThread(item)}
+            onPress={() => this.goToChat(item)}
             placeholderText={interlocutor.nickname}
             size={'verySmall'}
             uri={interlocutor.profilePic}
@@ -446,4 +446,4 @@ const mapStateToProps: any = (state: ReduxState) => ({
   userData: state.LoginReducer.data,
 });
 
-export const OrdersList = connect(mapStateToProps)(OrdersListContainer);
+export const ChatRooms = connect(mapStateToProps)(ChatContainer);

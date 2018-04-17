@@ -47,7 +47,7 @@ type State = {
 };
 
 const isiOS = Platform.OS == 'ios';
-const { height, width } = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 
 class Comments extends React.Component<Props, State> {
   anim: ?React$Element<*>;
@@ -347,8 +347,12 @@ class Comments extends React.Component<Props, State> {
               bottom: isiOS ? 40 : 0,
               // hack to hide empty suggestionsPanel for zero chars query or no results
               top: isiOS
-                ? shouldHideSuggestions ? 1100 : 'auto'
-                : shouldHideSuggestions ? 1100 : 0,
+                ? shouldHideSuggestions
+                  ? 1100
+                  : 'auto'
+                : shouldHideSuggestions
+                  ? 1100
+                  : 0,
               left: isiOS ? -12 : 0,
               position: isiOS ? 'absolute' : 'relative',
               right: -47,

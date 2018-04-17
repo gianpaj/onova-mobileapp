@@ -8,7 +8,6 @@ import {
   Dimensions,
   FlatList,
   Image,
-  RefreshControl,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -20,7 +19,6 @@ import {
 //   // ImageCacheManager,
 // } from 'react-native-cached-image';
 import { NavigationActions } from 'react-navigation';
-import { Button } from 'react-native-elements';
 
 import type { NavigationScreenProp } from 'react-navigation';
 
@@ -28,17 +26,11 @@ import * as api from '../utils/api';
 import colors from '../config/colors';
 import type { UserData } from '../types';
 
-// $FlowFixMe
-const loading = require('../assets/images/loading.jpg');
-const TTL = 4 * 60 * 60; // cache images for 4 hours
-
-// @TODO: define type of Item
-
 type Props = {
   terms: any,
   navigation?: NavigationScreenProp<*>,
   userData: UserData,
-  emptyState?: React.Component,
+  emptyState?: React.Component<*>,
 };
 
 type State = {

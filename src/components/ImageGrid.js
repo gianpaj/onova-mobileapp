@@ -38,7 +38,7 @@ type Props = {
   apiURL: string,
   navigation?: NavigationScreenProp<*>,
   userData: UserData,
-  emptyState?: React.Component,
+  emptyState?: React.Component<*>,
 };
 
 type State = {

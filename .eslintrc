@@ -1,8 +1,5 @@
 {
   "parser": "babel-eslint",
-  "ecmaFeatures": {
-    "jsx": true
-  },
   "extends": [
     "plugin:flowtype/recommended",
     "plugin:react/recommended",

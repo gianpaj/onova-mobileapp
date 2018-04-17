@@ -509,7 +509,7 @@ class ProfileScreen extends React.Component<Props, State> {
         {_id !== '' && (
           <ImageGrid
             apiURL={`/api/products?userid=${_id}`}
-            navigation={this.props.navigation}
+            navigation={navigation}
             emptyState={
               <View style={styles.emptyContainer}>
                 <Text>You did not add any items yet</Text>

@@ -10,7 +10,6 @@ import {
   initializeSendBird,
   sendToken,
   logout,
-  goback,
 } from '../actions/actionCreator';
 import NavigationStack from './navigationStack';
 import type { Dispatch, UserData, ReduxState } from '../types';

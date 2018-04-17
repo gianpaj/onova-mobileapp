@@ -1,4 +1,4 @@
-// flow-typed signature: 8b370a0056d8813e61ec5a6d1aa3e42a
+// flow-typed signature: db457ae2942aa1f4a7dbbb00e0359264
 // flow-typed version: <<STUB>>/react-test-renderer_v^16.3.0-alpha.1/flow_v0.65.0
 
 /**
@@ -42,6 +42,22 @@ declare module 'react-test-renderer/shallow' {
   declare module.exports: any;
 }
 
+declare module 'react-test-renderer/umd/react-test-renderer-shallow.development' {
+  declare module.exports: any;
+}
+
+declare module 'react-test-renderer/umd/react-test-renderer-shallow.production.min' {
+  declare module.exports: any;
+}
+
+declare module 'react-test-renderer/umd/react-test-renderer.development' {
+  declare module.exports: any;
+}
+
+declare module 'react-test-renderer/umd/react-test-renderer.production.min' {
+  declare module.exports: any;
+}
+
 // Filename aliases
 declare module 'react-test-renderer/cjs/react-test-renderer-shallow.development.js' {
   declare module.exports: $Exports<'react-test-renderer/cjs/react-test-renderer-shallow.development'>;
@@ -63,4 +79,16 @@ declare module 'react-test-renderer/index.js' {
 }
 declare module 'react-test-renderer/shallow.js' {
   declare module.exports: $Exports<'react-test-renderer/shallow'>;
+}
+declare module 'react-test-renderer/umd/react-test-renderer-shallow.development.js' {
+  declare module.exports: $Exports<'react-test-renderer/umd/react-test-renderer-shallow.development'>;
+}
+declare module 'react-test-renderer/umd/react-test-renderer-shallow.production.min.js' {
+  declare module.exports: $Exports<'react-test-renderer/umd/react-test-renderer-shallow.production.min'>;
+}
+declare module 'react-test-renderer/umd/react-test-renderer.development.js' {
+  declare module.exports: $Exports<'react-test-renderer/umd/react-test-renderer.development'>;
+}
+declare module 'react-test-renderer/umd/react-test-renderer.production.min.js' {
+  declare module.exports: $Exports<'react-test-renderer/umd/react-test-renderer.production.min'>;
 }

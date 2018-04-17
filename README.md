@@ -1,7 +1,9 @@
+<!-- @prettier -->
+
 # Onova mobile app
 
-- Android app: <!-- [link](https://play.google.com/store/apps/details?id=com.onova.app) -->
-- iOS app: <!-- [link](https://itunes.apple.com/us/app/?mt=8) -->
+* Android app: <!-- [link](https://play.google.com/store/apps/details?id=com.onova.app) -->
+* iOS app: <!-- [link](https://itunes.apple.com/us/app/?mt=8) -->
 
 > Created using React Native CLI (`react-native`), not Create React Native App (CRNA) or Expo client.
 
@@ -9,9 +11,9 @@ Follow [these instructions](https://facebook.github.io/react-native/docs/getting
 
 ## Getting started
 
-1. Start the development server (server.data).
-2. Update the `.env` to the IP address of where the server.data is running (e.g. you laptop's)
-3. Install `npm -g flow-typed`. It's automatically executed after running `yarn`.
+1.  Start the development server (server.data).
+2.  Update the `.env` to the IP address of where the server.data is running (e.g. you laptop's)
+3.  Install `npm -g flow-typed`. It's automatically executed after running `yarn`.
 
 ```bash
 yarn
@@ -42,9 +44,9 @@ Currently supporting `Android 8.0 (SDK 27)` – for react-native-firebase
 
 #### Setup 🔨🤖
 
-1. Install [fastlane](https://docs.fastlane.tools/getting-started/android/setup/)
-2. Install Android SDK/Android Studio
-3. (_optional_) Clone the [repo](https://bitbucket.org/onova/private.stuff) containg the Android certificate for the release build (you need to have access)
+1.  Install [fastlane](https://docs.fastlane.tools/getting-started/android/setup/)
+2.  Install Android SDK/Android Studio
+3.  (_optional_) Clone the [repo](https://bitbucket.org/onova/private.stuff) containg the Android certificate for the release build (you need to have access)
 
     ```bash
     cd onova
@@ -58,15 +60,15 @@ Currently supporting `Android 8.0 (SDK 27)` – for react-native-firebase
 
     The `private.stuff` folder needs to be at the same level as the `mobileapp`.
 
-4. Now you're ready to make a prod build.
+4.  Now you're ready to make a prod build.
 
 #### Build Android 🤖
 
-- Simple release build
+* Simple release build
 
       fastlane beta
 
-- Deploy a new version to the Google Play
+* Deploy a new version to the Google Play
 
   Build and sends the source code to Sentry.io and sends a msg on Slack the #bots-dev-onova channel once finished 🎉
 
@@ -92,7 +94,7 @@ Using [react-native-bundle-visualizer](https://github.com/IjzerenHein/react-nati
 
 ## Troubleshooting 🔫
 
-1. Issue with packager / Metro bundler
+1.  Issue with packager / Metro bundler
 
     ```
     error: bundling failed: ambiguous resolution: module `.../onova/mobileapp/index.js` tries to require `react-native`, but there are several files providing this module. You can delete or fix them:
@@ -100,6 +102,6 @@ Using [react-native-bundle-visualizer](https://github.com/IjzerenHein/react-nati
 
         yarn start --reset-cache
 
-2. iOS is just being a b*tch
+2.  iOS is just being a b\*tch
 
         yarn nuke-ios

@@ -83,36 +83,63 @@ export type ShippingAddress = {
   postcode: string,
 };
 
-export type Message = {
-  _id: string,
-  text: string,
-  createdAt: Date,
-  user?: {
-    _id: string,
-    name: string,
-    avatar: string,
-  },
-  system?: boolean,
-  sent?: boolean,
-  received?: boolean,
-  image?: File,
+// export type Message = {
+//   _id: string,
+//   text: string,
+//   createdAt: Date,
+//   user?: {
+//     _id: string,
+//     name: string,
+//     avatar: string,
+//   },
+//   system?: boolean,
+//   sent?: boolean,
+//   received?: boolean,
+//   image?: File,
+// };
+
+// export type SendBirdMessage = {
+//   messageId: string,
+//   message: string,
+//   messageType: string,
+//   data: string,
+//   customType: string,
+//   createdAt: number,
+//   updatedAt: number,
+//   sender: any,
+//   sent?: boolean,
+//   received?: boolean,
+
+//   isUserMessage(): boolean,
+//   isFileMessage(): boolean,
+//   isAdminMessage(): boolean,
+// };
+
+export type PusherUser = {
+  avatarURL: string,
+  createRoom: () => {},
+  fetchMessages: any => {},
+  id: number,
+  joinRoom: () => {},
+  name: string,
+  readCursor: any => any,
+  rooms: Array<Room>,
+  roomSubscriptions: any,
+  sendMessage: () => {},
+  users: Array<any>,
 };
 
-export type SendBirdMessage = {
-  messageId: string,
-  message: string,
-  messageType: string,
-  data: string,
-  customType: string,
-  createdAt: number,
-  updatedAt: number,
-  sender: any,
-  sent?: boolean,
-  received?: boolean,
-
-  isUserMessage(): boolean,
-  isFileMessage(): boolean,
-  isAdminMessage(): boolean,
+export type Room = {
+  createdAt: string,
+  id: number,
+  isPrivate: boolean,
+  name: string,
+  updatedAt: string,
+  users: Array<string>,
+  lastMessage: *,
+  isPartnerOnline: *,
+  partner: PusherUser,
+  order: any,
 };
 
 export type Order = {

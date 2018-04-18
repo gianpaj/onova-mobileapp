@@ -16,7 +16,7 @@ const routeConfiguration = {
   Home: { screen: Home },
   Search: { screen: Search },
   New: { screen: AddProduct },
-  ChatRooms: { screen: ChatRooms },
+  Orders: { screen: ChatRooms },
   Profile: { screen: Profile },
 };
 
@@ -38,7 +38,7 @@ const tabBarConfiguration = {
           // ? `ios-add-circle${focused ? '' : ''}`
           iconName = isiOS ? 'ios-add-circle' : 'md-add-circle';
           break;
-        case 'ChatRooms':
+        case 'Orders':
           iconName = 'md-basket';
           // iconName = isiOS
           // ? `ios-add-circle${focused ? '' : ''}`

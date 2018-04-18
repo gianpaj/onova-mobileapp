@@ -23,12 +23,14 @@ import {
   Title,
 } from 'native-base';
 import { NavigationActions } from 'react-navigation';
-import SendBird from 'sendbird';
+import { ChatManager, TokenProvider } from '@pusher/chatkit/react-native';
+import { PUSHER_INSTANCE, PUSHER_TOKEN_PROVIDER } from 'react-native-dotenv';
+
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 
 import type { NavigationScreenProp } from 'react-navigation';
 
-import type { UserData, ReduxState, Order } from '../types';
+import type { UserData, ReduxState, Order, PusherUser, Room } from '../types';
 import colors from '../config/colors';
 import * as api from '../utils/api';
 import * as ui from '../utils/ui';
@@ -48,8 +50,6 @@ type State = {
 };
 
 class ChatContainer extends Component<Props, State> {
-  sb;
-
   state = {
     hasError: false,
     isRefreshing: false,
@@ -59,9 +59,10 @@ class ChatContainer extends Component<Props, State> {
   };
 
   componentWillMount() {
-    this.connectToSendBird()
-      .then(() => this.getOrdersAndChats())
+    this.connectToPusher()
+      .then(u => this.getOrdersAndChats(u))
       .then(ordersAndChats => {
+        console.log(ordersAndChats);
         this.setState({
           channelList: ordersAndChats,
           isLoading: false,
@@ -74,24 +75,45 @@ class ChatContainer extends Component<Props, State> {
       });
   }
 
-  getOrdersAndChats(): Promise<Array<any>> {
+  getOrdersAndChats(currentUser: PusherUser): Promise<Array<any>> {
     return new Promise((resolve, reject) => {
       this.fetchOrders()
         .then(orders => {
           if (orders.length === 0) {
             return resolve([]);
           }
-          return this.getChannels().then(channels => {
-            // match by orderId from API and SendBird metadata
-            const ch = channels.filter(c => {
-              return orders.find((o: Order) => o.id == c.orderId);
-            });
-            // add order order and channel objects
-            return ch.map(c => {
-              c.order = orders.find((o: Order) => o.id == c.orderId);
-              return c;
-            });
+          const { userData } = this.props;
+          // filter chat rooms by matching order `id`(s) from API and Pusher roomId(s)
+          const rooms = currentUser.rooms.filter(r => {
+            return orders.find((o: Order) => o.id == r.name);
           });
+          // add order order and channel objects
+          rooms.map(r => {
+            r.order = orders.find((o: Order) => o.id == r.name);
+            return r;
+          });
+          return Promise.all(
+            rooms.map(async room => {
+              const msgs = await currentUser.fetchMessages({
+                roomId: room.id,
+                direction: 'older',
+                limit: 1,
+              });
+              const partner = currentUser.users.filter(
+                u => u.id !== userData._id
+              )[0];
+              const cursor = await currentUser.readCursor({
+                roomId: room.id,
+              });
+              // TODO: set haveUnreadMsgs
+              if (cursor) console.log(cursor.position);
+              const isPartnerOnline = partner.presence.state == 'online';
+              room.lastMessage = msgs[0];
+              room.isPartnerOnline = isPartnerOnline;
+              room.partner = partner;
+              return room;
+            })
+          );
         })
         .then(ordersAndChats => resolve(ordersAndChats))
         .catch(e => reject(e));
@@ -141,32 +163,32 @@ class ChatContainer extends Component<Props, State> {
     });
   }
 
-  connectToSendBird(): Promise<null | any> {
+  connectToPusher = (): Promise<Error | PusherUser> => {
+    const { userData } = this.props;
     return new Promise((resolve, reject) => {
-      // TODO: remove this if don't get a warning when quickly opening a chat thread.
-      // Maybe from a deeplink, opening app from background?
-      setTimeout(() => {
-        this.sb = SendBird.getInstance();
-        if (!this.sb) return reject(new Error('no SendBird instance'));
-        this.sb.connect(this.props.userData._id, (user, err) => {
-          if (err) return reject(err);
-
-          console.debug(user);
-
-          const ConnectionHandler = new this.sb.ConnectionHandler();
-          ConnectionHandler.onReconnectSucceeded = () => {
-            this.getOrdersAndChats();
-          };
-          this.sb.addConnectionHandler(
-            'ConnectionHandlerInList',
-            ConnectionHandler
-          );
-
-          resolve();
-        });
-      }, 200);
+      const chatManager = new ChatManager({
+        instanceLocator: PUSHER_INSTANCE,
+        // userId: '5a78d09d2d314a702698f955', // user needs that already exists
+        userId: userData._id, // user needs that already exists
+        tokenProvider: new TokenProvider({
+          url: PUSHER_TOKEN_PROVIDER,
+          // userId: '5a78d09d2d314a702698f955',
+          userId: userData._id,
+        }),
+        logger: {
+          error: console.log,
+          warn: console.log,
+          info: () => {},
+          debug: () => {},
+          verbose: () => {},
+        },
+      });
+      chatManager
+        .connect()
+        .then(currentUser => resolve(currentUser))
+        .catch(err => reject(err));
     });
-  }
+  };
 
   fetchChannelList = (): Promise<any> => {
     return new Promise((resolve, reject) => {
@@ -198,19 +220,16 @@ class ChatContainer extends Component<Props, State> {
     return true;
   }
 
-  goToChat = (item: any) => {
-    console.log(item);
-    this.fetchOrder(item.orderId)
+  goToChat = item => {
+    const { order } = item;
+    this.fetchOrder(order.id)
       .then((order: Order) => {
-        const interlocutorId = item.members.find(
-          m => m.userId !== this.props.userData._id
-        ).userId;
         const navigateToChat = NavigationActions.navigate({
           routeName: 'orderThread',
           params: {
             productId: order.product.uuid,
             orderId: order.id,
-            userId: interlocutorId,
+            userId: item.partner.id,
           },
           key: `orderThread-${order.id}`,
         });
@@ -220,18 +239,6 @@ class ChatContainer extends Component<Props, State> {
         ui.showToast(e.message);
         console.debug(e);
       });
-  };
-
-  getInterlocutor = (item): any => {
-    let interlocutor = item.members.find(m => m.userId !== myUserId);
-    const { order }: { order: Order } = item;
-    const { _id: myUserId } = this.props.userData;
-
-    interlocutor.profilePic = order.seller.profilePic;
-    if (order.buyer._id !== myUserId) {
-      interlocutor.profilePic = order.buyer.profilePic;
-    }
-    return interlocutor;
   };
 
   _renderOrderCircle = ({ item }) => {
@@ -263,35 +270,34 @@ class ChatContainer extends Component<Props, State> {
     );
   };
 
-  _renderOrderRow = ({ item }) => {
+  _renderOrderRow = ({ item }: { item: Room }) => {
     const { lastMessage }: { lastMessage: any } = item;
-    const interlocutor = this.getInterlocutor(item);
-    const haveUnreadMsgs = item.unreadMessageCount > 0;
+    const { _id: myUserId } = this.props.userData;
     let from;
 
-    if (lastMessage.messageType == 'user') {
-      const isMyMessage = lastMessage._sender.nickname == interlocutor.nickname;
+    // if (lastMessage.messageType == 'user') {
+    const isMyMessage = lastMessage.senderId == myUserId;
 
-      from = isMyMessage ? 'You: ' : '';
-    } else {
-      // admin messages
-      from = `${lastMessage.messageType}: `;
-    }
+    from = isMyMessage ? 'You: ' : '';
+    // } else {
+    //   // admin messages
+    //   from = `${lastMessage.messageType}: `;
+    // }
 
     return (
       <TouchableOpacity onPress={() => this.goToChat(item)}>
         <View style={st.itemContainer}>
           <Avatar
             onPress={() => this.goToChat(item)}
-            placeholderText={interlocutor.nickname}
-            size={'verySmall'}
-            uri={interlocutor.profilePic}
+            placeholderText={item.partner.name}
+            size="verySmall"
+            uri={item.partner.avatarURL}
             withBorder
           />
+
           <View style={[st.flex1, st.content]}>
             <View style={st.contentHeader}>
-              {/* displayName */}
-              <Text style={st.name}>{interlocutor.nickname}</Text>
+              <Text style={st.name}>{item.partner.name}</Text>
               <Text style={st.datetime}>
                 {ui.formatTime(lastMessage.createdAt)}
               </Text>
@@ -299,19 +305,19 @@ class ChatContainer extends Component<Props, State> {
             <Text
               numberOfLines={1} // android
               // eslint-disable-next-line
-              style={haveUnreadMsgs ? { fontWeight: 'bold' } : {}}>
+              // style={item.haveUnreadMsgs ? { fontWeight: 'bold' } : {}}
+            >
               {from}
-              {lastMessage.message}
+              {lastMessage.text}
             </Text>
+            <Text>{item.isPartnerOnline ? 'online' : 'offline'}</Text>
           </View>
         </View>
       </TouchableOpacity>
     );
   };
 
-  _keyExtractor(item): string {
-    return item.url;
-  }
+  _keyExtractor = (item): number => item.id.toString();
 
   _renderSeparator = () => <View style={st.separator} />;
   _renderSeparatorHorizontal = () => <View style={st.separatorHorizontal} />;
@@ -321,7 +327,7 @@ class ChatContainer extends Component<Props, State> {
     return (
       <View style={[st.container]}>
         <Text>
-          {this.state.hasError ? 'Error fetching orders' : 'No orders found'}
+          {this.state.hasError ? 'Error fetching chats' : 'No chats found'}
         </Text>
       </View>
     );
@@ -367,7 +373,6 @@ class ChatContainer extends Component<Props, State> {
               />
               <FlatList
                 data={channelList}
-                extraData={this.state} // make sure will re-render when the state.selected changes (if we want have real time updates of the last message of each thread)
                 ItemSeparatorComponent={this._renderSeparator}
                 keyExtractor={this._keyExtractor}
                 ListEmptyComponent={this.renderEmptyState}

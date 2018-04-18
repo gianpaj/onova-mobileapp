@@ -92,7 +92,7 @@ const initializePusher = (userData: UserData): Promise<any> => {
     chatManager
       .connect()
       .then(currentUser => {
-        console.dir(currentUser);
+        console.debug(currentUser);
         resolve();
       })
       .catch(err => {

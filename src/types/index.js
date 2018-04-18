@@ -117,7 +117,8 @@ export type ShippingAddress = {
 
 export type PusherUser = {
   avatarURL: string,
-  createRoom: () => {},
+  // eslint-disable-next-line
+  createRoom: (name: string, private: boolean, addUserIds: Array<strings>) => Promise<any>,
   fetchMessages: any => {},
   id: number,
   joinRoom: () => {},

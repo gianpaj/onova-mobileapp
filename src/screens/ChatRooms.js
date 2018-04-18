@@ -13,15 +13,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-// prettier-ignore
-import {
-  Body,
-  Container,
-  Header,
-  Left,
-  Right,
-  Title,
-} from 'native-base';
+import { Body, Container, Header, Left, Right, Title } from 'native-base';
 import { NavigationActions } from 'react-navigation';
 import { ChatManager, TokenProvider } from '@pusher/chatkit/react-native';
 import { PUSHER_INSTANCE, PUSHER_TOKEN_PROVIDER } from 'react-native-dotenv';
@@ -50,6 +42,7 @@ type State = {
 };
 
 class ChatContainer extends Component<Props, State> {
+  currentUser: PusherUser;
   state = {
     hasError: false,
     isRefreshing: false,
@@ -60,7 +53,8 @@ class ChatContainer extends Component<Props, State> {
 
   componentWillMount() {
     this.connectToPusher()
-      .then(u => this.getOrdersAndChats(u))
+      .then(u => (this.currentUser = u))
+      .then(() => this.getOrdersAndChats())
       .then(ordersAndChats => {
         console.log(ordersAndChats);
         this.setState({
@@ -75,7 +69,8 @@ class ChatContainer extends Component<Props, State> {
       });
   }
 
-  getOrdersAndChats(currentUser: PusherUser): Promise<Array<any>> {
+  getOrdersAndChats(): Promise<Array<any>> {
+    console.log('getOrdersAndChats');
     return new Promise((resolve, reject) => {
       this.fetchOrders()
         .then(orders => {
@@ -84,25 +79,30 @@ class ChatContainer extends Component<Props, State> {
           }
           const { userData } = this.props;
           // filter chat rooms by matching order `id`(s) from API and Pusher roomId(s)
-          const rooms = currentUser.rooms.filter(r => {
-            return orders.find((o: Order) => o.id == r.name);
+          let rooms = this.currentUser.rooms.filter(r => {
+            return orders.find(
+              (o: Order) => `${o.buyer._id}-${o.seller._id}` == r.name
+            );
           });
           // add order order and channel objects
-          rooms.map(r => {
-            r.order = orders.find((o: Order) => o.id == r.name);
+          rooms = rooms.map(r => {
+            r.order = orders.find(
+              (o: Order) => `${o.buyer._id}-${o.seller._id}` == r.name
+            );
             return r;
           });
+
           return Promise.all(
             rooms.map(async room => {
-              const msgs = await currentUser.fetchMessages({
+              const msgs = await this.currentUser.fetchMessages({
                 roomId: room.id,
                 direction: 'older',
                 limit: 1,
               });
-              const partner = currentUser.users.filter(
+              const partner = this.currentUser.users.filter(
                 u => u.id !== userData._id
               )[0];
-              const cursor = await currentUser.readCursor({
+              const cursor = await this.currentUser.readCursor({
                 roomId: room.id,
               });
               // TODO: set haveUnreadMsgs
@@ -164,16 +164,15 @@ class ChatContainer extends Component<Props, State> {
   }
 
   connectToPusher = (): Promise<Error | PusherUser> => {
+    console.log('connectToPusher');
     const { userData } = this.props;
     return new Promise((resolve, reject) => {
       const chatManager = new ChatManager({
         instanceLocator: PUSHER_INSTANCE,
-        // userId: '5a78d09d2d314a702698f955', // user needs that already exists
-        userId: userData._id, // user needs that already exists
+        userId: userData._id,
         tokenProvider: new TokenProvider({
           url: PUSHER_TOKEN_PROVIDER,
-          // userId: '5a78d09d2d314a702698f955',
-          userId: userData._id,
+          headers: { token: userData.token },
         }),
         logger: {
           error: console.log,
@@ -190,22 +189,9 @@ class ChatContainer extends Component<Props, State> {
     });
   };
 
-  fetchChannelList = (): Promise<any> => {
-    return new Promise((resolve, reject) => {
-      const listQuery = this.sb.GroupChannel.createMyGroupChannelListQuery();
-      listQuery.includeEmpty = true;
-      listQuery.limit = 20; // pagination limit could be set up to 100
-      listQuery.next((channelList, err) => {
-        if (err) return reject(err);
-
-        resolve(channelList);
-      });
-    });
-  };
-
-  componentWillUnmount() {
-    this.sb.removeChannelHandler('ConnectionHandlerInList');
-  }
+  // componentWillUnmount() {
+  //   this.sb.removeChannelHandler('ConnectionHandlerInList');
+  // }
 
   componentWillReceiveProps(nextProps) {
     // fix error when logging out
@@ -241,9 +227,12 @@ class ChatContainer extends Component<Props, State> {
       });
   };
 
-  _renderOrderCircle = ({ item }) => {
+  _renderOrderCircle = ({ item }: { item: Room }) => {
+    if (!item.lastMessage) return null;
+
     const { status, product } = item.order;
     let perc = 0;
+
     // if (status == 'confirmed') perc = 0;
     if (status == 'shipped') perc = 33.33;
     if (status == 'delivered') perc = 66.66;
@@ -274,6 +263,8 @@ class ChatContainer extends Component<Props, State> {
     const { lastMessage }: { lastMessage: any } = item;
     const { _id: myUserId } = this.props.userData;
     let from;
+
+    if (!lastMessage) return null;
 
     // if (lastMessage.messageType == 'user') {
     const isMyMessage = lastMessage.senderId == myUserId;

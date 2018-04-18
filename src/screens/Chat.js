@@ -107,10 +107,10 @@ class ChatContainer extends Component<Props, State> {
     }
   }
 
-  componentWillUnmount() {
-    this.sb.removeChannelHandler('ChatView');
-    this.sb.removeConnectionHandler('ChatView');
-  }
+  // componentWillUnmount() {
+  //   this.sb.removeChannelHandler('ChatView');
+  //   this.sb.removeConnectionHandler('ChatView');
+  // }
 
   _getInterlucutorUserData(userId: string): Promise<null | any> {
     return new Promise((resolve, reject) => {

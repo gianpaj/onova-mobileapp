@@ -1,5 +1,5 @@
 // @flow
-import type { Dispatch as ReduxDispatch, Store as ReduxStore } from 'redux';
+import type { Store as ReduxStore } from 'redux';
 // import type { Reducers } from '../reducers';
 import type { Action as LoginAction, LoginState } from './loginReducer';
 import type {
@@ -187,5 +187,10 @@ export type ReduxState = {
 export type ReduxAction = LoginAction | NavigationAction;
 export type Store = ReduxStore<ReduxState, ReduxAction>;
 
-export type Dispatch = ReduxDispatch<ReduxAction>;
+type PromiseAction = Promise<ReduxAction>;
+
+type ThunkAction = (dispatch: Dispatch, getState: GetState) => any;
+export type Dispatch = (
+  action: ReduxAction | ThunkAction | PromiseAction
+) => any;
 export type GetState = () => ReduxState;

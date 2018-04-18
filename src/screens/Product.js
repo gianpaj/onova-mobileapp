@@ -7,7 +7,7 @@ import {
   // Animated,
   StyleSheet,
   Text,
-  TouchableHighlight,
+  TouchableOpacity,
   View,
 } from 'react-native';
 import {
@@ -301,32 +301,27 @@ export class ProductContainer extends React.Component<Props, State> {
                   <View style={styles.row}>
                     <Avatar
                       size={'verySmall'}
-                      // $FlowFixMe
                       uri={item.seller.profilePic}
                       onPress={this.goToProfileOfSeller}
                       placeholderText={item.seller.username}
                     />
                     <View style={{ marginLeft: 10, alignSelf: 'center' }}>
-                      <TouchableHighlight onPress={this.goToProfileOfSeller}>
+                      <TouchableOpacity onPress={this.goToProfileOfSeller}>
                         <Text style={styles.username}>
                           {item.seller.username}
                         </Text>
-                      </TouchableHighlight>
-                      {/* // $FlowFixMe */}
+                      </TouchableOpacity>
                       {item.location && (
                         <Text style={styles.location}>{item.location}</Text>
                       )}
                     </View>
                   </View>
-                  {/* // $FlowFixMe */}
                 </View>
                 <View style={styles.flex1} />
                 <Text style={styles.price}>
-                  {/* // $FlowFixMe */}
                   {item.price} {item.currency}
                 </Text>
               </View>
-              {/* // $FlowFixMe */}
               <MediaView source={item.photoURIs} />
               {!this.isMyProduct() && (
                 <View style={[styles.padder, styles.bottomSection]}>
@@ -334,8 +329,7 @@ export class ProductContainer extends React.Component<Props, State> {
                   {/* <TouchableOpacity
                   onPress={() => this.onPressLike()}
                   underlayColor="transparent"
-                  // disabled={this.state.midAnimation}
-                  style={styles.likeButton}>
+                  // disabled={this.state.midAnimation}>
                   <LottieView
                     ref={c => {
                       this.anim = c;
@@ -358,7 +352,6 @@ export class ProductContainer extends React.Component<Props, State> {
                   <View style={styles.flex1} />
                   <Button
                     // disabled
-                    // loading
                     buttonStyle={styles.buyButton}
                     onPress={() => this.onPressBuy()}
                     title="Buy"
@@ -372,7 +365,6 @@ export class ProductContainer extends React.Component<Props, State> {
               <View style={[styles.padder, styles.bottomSectionAfter]}>
                 {/* // $FlowFixMe */}
                 <Text style={styles.description}>{item.description}</Text>
-                {/* <Text style={styles.description}>{item.tags}</Text> */}
                 {item.tags && (
                   <ParsedText
                     parse={[
@@ -445,12 +437,6 @@ const styles = StyleSheet.create({
   // iconCommmentAndShare: {
   //   // marginLeft: 20,
   //   marginTop: 12,
-  // },
-  // likeButton: {
-  //   height: 150,
-  //   margin: -47,
-  //   marginLeft: -65,
-  //   width: 150,
   // },
   buyButton: {
     backgroundColor: colors.grey1,

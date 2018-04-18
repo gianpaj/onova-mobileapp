@@ -7,7 +7,7 @@ import {
   Image,
   Platform,
   StyleSheet,
-  TouchableWithoutFeedback,
+  TouchableOpacity,
   View,
 } from 'react-native';
 // import { CachedImage } from 'react-native-cached-image';
@@ -148,14 +148,14 @@ export default class Avatar extends PureComponent<Props, State> {
 
   render() {
     return (
-      <TouchableWithoutFeedback
+      <TouchableOpacity
         onPress={() =>
           this.props.onPress
             ? this.props.onPress()
             : this.props.interactive && this.handleInteractivePress()
         }>
         {this.renderAvatarImage()}
-      </TouchableWithoutFeedback>
+      </TouchableOpacity>
     );
   }
 }

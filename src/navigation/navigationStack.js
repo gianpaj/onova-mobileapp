@@ -38,7 +38,7 @@ export const StackNav = StackNavigator(
     searchProductsResults: { screen: SearchProductsResults },
     profile: { screen: Profile },
     chatRooms: { screen: ChatRooms },
-    orderThread: { screen: Chat },
+    chat: { screen: Chat },
     checkout: { screen: Checkout },
   },
   {

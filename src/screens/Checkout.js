@@ -259,9 +259,9 @@ class CheckoutContainer extends Component<Props, State> {
   goToChat(orderId: string, item: Product) {
     // $FlowFixMe
     this.props.navigation.dispatch({
-      key: `orderThread-${item.uuid}`,
+      key: `chat-${item.uuid}`,
       type: 'ReplaceCurrentScreen',
-      routeName: 'orderThread',
+      routeName: 'chat',
       params: {
         productId: item.uuid,
         orderId: orderId,

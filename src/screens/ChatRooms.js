@@ -38,7 +38,7 @@ type State = {
   isRefreshing: boolean,
   isLoading: boolean,
   listQuery: any,
-  channelList: Array<any>,
+  ordersAndChats: Array<any>,
 };
 
 class ChatContainer extends Component<Props, State> {
@@ -48,7 +48,7 @@ class ChatContainer extends Component<Props, State> {
     isRefreshing: false,
     isLoading: true,
     listQuery: null,
-    channelList: [],
+    ordersAndChats: [],
   };
 
   componentWillMount() {
@@ -58,7 +58,7 @@ class ChatContainer extends Component<Props, State> {
       .then(ordersAndChats => {
         console.log(ordersAndChats);
         this.setState({
-          channelList: ordersAndChats,
+          ordersAndChats: ordersAndChats,
           isLoading: false,
         });
       })
@@ -77,8 +77,6 @@ class ChatContainer extends Component<Props, State> {
           if (orders.length === 0) {
             return resolve([]);
           }
-          console.log(orders);
-          console.log(this.currentUser);
           // this.currentUser
           //   .createRoom({
           //     name: `${buyer._id}-${seller._id}`,
@@ -136,7 +134,7 @@ class ChatContainer extends Component<Props, State> {
 
   getChannels(): Promise<Array<any>> {
     return new Promise((resolve, reject) => {
-      return this.fetchChannelList()
+      return this.fetchordersAndChats()
         .then(channels => {
           let channelsWithMeta = [];
 
@@ -225,13 +223,14 @@ class ChatContainer extends Component<Props, State> {
     this.fetchOrder(order.id)
       .then((order: Order) => {
         const navigateToChat = NavigationActions.navigate({
-          routeName: 'orderThread',
+          routeName: 'chat',
           params: {
             productId: order.product.uuid,
             orderId: order.id,
             userId: item.partner.id,
+            roomId: item.id,
           },
-          key: `orderThread-${order.id}`,
+          key: `chat-${order.id}`,
         });
         this.props.navigation.dispatch(navigateToChat);
       })
@@ -328,7 +327,7 @@ class ChatContainer extends Component<Props, State> {
   _renderSeparatorHorizontal = () => <View style={st.separatorHorizontal} />;
 
   renderEmptyState = () => {
-    if (this.state.channelList.length > 0) return null;
+    if (this.state.ordersAndChats.length > 0) return null;
     return (
       <View style={[st.container]}>
         <Text>
@@ -338,10 +337,10 @@ class ChatContainer extends Component<Props, State> {
     );
   };
 
-  refreshChannelList = () => {
+  refreshOrdersAndChats = () => {
     this.setState({ isRefreshing: true });
     this.getOrdersAndChats()
-      .then(channelList => this.setState({ channelList }))
+      .then(ordersAndChats => this.setState({ ordersAndChats }))
       .catch(err => {
         console.debug(err);
         this.setState({ hasError: true });
@@ -350,7 +349,7 @@ class ChatContainer extends Component<Props, State> {
   };
 
   render() {
-    const { hasError, channelList, isLoading } = this.state;
+    const { hasError, ordersAndChats, isLoading } = this.state;
 
     return (
       <Container>
@@ -370,21 +369,21 @@ class ChatContainer extends Component<Props, State> {
             <View>
               <FlatList
                 style={{ height: 60 + 8 + 8 }}
-                data={channelList}
+                data={ordersAndChats}
                 keyExtractor={this._keyExtractor}
                 horizontal
                 ItemSeparatorComponent={this._renderSeparatorHorizontal}
                 renderItem={this._renderOrderCircle}
               />
               <FlatList
-                data={channelList}
+                data={ordersAndChats}
                 ItemSeparatorComponent={this._renderSeparator}
                 keyExtractor={this._keyExtractor}
                 ListEmptyComponent={this.renderEmptyState}
                 refreshControl={
                   <RefreshControl
                     refreshing={this.state.isRefreshing}
-                    onRefresh={this.refreshChannelList}
+                    onRefresh={this.refreshOrdersAndChats}
                   />
                 }
                 renderItem={this._renderOrderRow}

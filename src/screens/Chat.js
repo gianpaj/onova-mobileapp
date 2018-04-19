@@ -24,8 +24,10 @@ import {
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { NavigationActions } from 'react-navigation';
-import SendBird from 'sendbird';
 import { GiftedChat, Bubble, SystemMessage } from 'react-native-gifted-chat';
+import { ChatManager, TokenProvider } from '@pusher/chatkit/react-native';
+import { PUSHER_INSTANCE, PUSHER_TOKEN_PROVIDER } from 'react-native-dotenv';
+
 import type { NavigationScreenProp } from 'react-navigation';
 
 // import { sbCreateOpenChannelListQuery } from '../actions/sendbird';
@@ -67,23 +69,26 @@ type State = {
   isTyping: boolean,
   lastMessage?: Message,
   messageQuery: any,
-  messages: Array<Message> | null,
-  interlocutor: UserData | null,
+  messages?: Array<Message>,
+  interlocutor?: UserData,
   product?: Product,
   order?: Order,
+  roomId: string,
 };
 
 class ChatContainer extends Component<Props, State> {
+  currentUser: PusherUser;
   sb;
 
   state = {
     channel: null,
     hasRendered: false,
+    interlocutor: null,
     isLoading: false,
     isTyping: false,
     messageQuery: null,
     messages: null,
-    interlocutor: null,
+    roomId: '',
   };
 
   componentWillMount() {
@@ -93,17 +98,18 @@ class ChatContainer extends Component<Props, State> {
 
     // for development
     if (!params) {
-      const orderId = '5a90077ff298522a0eddde0a';
+      const orderId = '5ad67c508b10227b456bfc05';
       const productId = '';
+      const roomId = 6671774;
 
       this.getTempUserId('firstperson').then(userId => {
-        this.initialise(orderId, productId, userId);
+        this.initialise(orderId, productId, userId, roomId);
       });
     } else {
       // coming from Checkout or ChatRooms
-      const { orderId, productId, userId } = params;
+      const { orderId, productId, userId, roomId } = params;
       // TODO: check show is the seller/buyer!
-      this.initialise(orderId, productId, userId);
+      this.initialise(orderId, productId, userId, roomId);
     }
   }
 
@@ -147,9 +153,12 @@ class ChatContainer extends Component<Props, State> {
     return new Promise((resolve, reject) => {
       return api
         .get(`/api/orders/${uuid}`, { token })
-        .then(({ data }) => {
-          console.debug(data);
-          this.setState({ order: data });
+        .then(({ data: order }) => {
+          console.debug(order);
+          this.setState({
+            order,
+            roomId: `${order.buyer._id}-${order.seller._id}`,
+          });
           resolve();
         })
         .catch(err => {
@@ -171,13 +180,54 @@ class ChatContainer extends Component<Props, State> {
     });
   }
 
-  initialise(orderId: string, productId: string, userId: string) {
+  initialise(
+    orderId: string,
+    productId: string,
+    userId: string,
+    roomId: number
+  ) {
     this._getInterlucutorUserData(userId)
       .then(() => {
         const Promises = [];
         Promises.push(this.fetchProduct(productId));
         Promises.push(this.fetchOrder(orderId));
-        Promises.push(this.connectToSendBird(orderId));
+        Promises.push(
+          this.connectToPusher()
+            .then(() =>
+              this.currentUser.fetchMessages({
+                roomId: roomId,
+                direction: 'older',
+                limit: 100,
+              })
+            )
+            .then(msgs => {
+              console.log(msgs);
+              const { userData } = this.props;
+              const { interlocutor: int } = this.state;
+              const otherUser = {
+                _id: int._id,
+                name: int.username,
+                avatar: int.profilePic,
+              };
+              const newMessages = msgs.map(m => {
+                // if (m.sender) {
+                const user = m.senderId == userData._id ? userData : otherUser;
+                return this.createGiftedMessage(m, user);
+                // }
+                // return this.createGiftedSystemMessage(m);
+              });
+
+              // if (messages && messages.length) {
+              //   return this.setState(prevState => ({
+              //     messages: GiftedChat.append(prevState.messages, newMessages),
+              //   }));
+              // }
+              console.log(newMessages);
+              this.setState({
+                messages: newMessages,
+              });
+            })
+        );
 
         Promise.all(Promises)
           .then(() => {
@@ -187,6 +237,35 @@ class ChatContainer extends Component<Props, State> {
       })
       .catch(err => console.error(err));
   }
+
+  connectToPusher = (): Promise<Error | PusherUser> => {
+    console.log('connectToPusher');
+    const { userData } = this.props;
+    return new Promise((resolve, reject) => {
+      const chatManager = new ChatManager({
+        instanceLocator: PUSHER_INSTANCE,
+        userId: userData._id,
+        tokenProvider: new TokenProvider({
+          url: PUSHER_TOKEN_PROVIDER,
+          headers: { token: userData.token },
+        }),
+        logger: {
+          error: console.log,
+          warn: console.log,
+          info: () => {},
+          debug: () => {},
+          verbose: () => {},
+        },
+      });
+      chatManager
+        .connect()
+        .then(currentUser => {
+          this.currentUser = currentUser;
+          resolve(currentUser);
+        })
+        .catch(err => reject(err));
+    });
+  };
 
   /**
    * Connect to SendBird and set the orderId as metadata
@@ -272,9 +351,9 @@ class ChatContainer extends Component<Props, State> {
   createGiftedMessage(msg: SendBirdMessage, user: UserData | any): Message {
     // $FlowFixMe
     return {
-      _id: msg.messageId,
-      createdAt: new Date(msg.createdAt),
-      text: msg.message,
+      _id: msg.id,
+      createdAt: msg.createdAt,
+      text: msg.text,
       user: {
         _id: user._id,
         // $FlowFixMe
@@ -289,7 +368,7 @@ class ChatContainer extends Component<Props, State> {
 
   createGiftedSystemMessage(msg: SendBirdMessage) {
     return {
-      _id: msg.messageId,
+      _id: msg.id,
       createdAt: new Date(msg.createdAt),
       text: msg.message,
       system: true,

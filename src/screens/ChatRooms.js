@@ -117,6 +117,7 @@ class ChatContainer extends Component<Props, State> {
               const cursor = await this.currentUser.readCursor({
                 roomId: room.id,
               });
+
               // TODO: set haveUnreadMsgs
               if (cursor) console.log(cursor.position);
               const isPartnerOnline = partner.presence.state == 'online';
@@ -184,7 +185,11 @@ class ChatContainer extends Component<Props, State> {
         userId: userData._id,
         tokenProvider: new TokenProvider({
           url: PUSHER_TOKEN_PROVIDER,
-          headers: { token: userData.token },
+          headers: {
+            token: userData.token,
+            avatarURL: userData.profilePic,
+            username: userData.username,
+          },
         }),
         logger: {
           error: console.log,
@@ -225,7 +230,7 @@ class ChatContainer extends Component<Props, State> {
         const navigateToChat = NavigationActions.navigate({
           routeName: 'chat',
           params: {
-            productId: order.product.uuid,
+            productUuid: order.product.uuid,
             orderId: order.id,
             userId: item.partner.id,
             roomId: item.id,

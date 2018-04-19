@@ -98,22 +98,19 @@ export type ShippingAddress = {
 //   image?: File,
 // };
 
-// export type SendBirdMessage = {
-//   messageId: string,
-//   message: string,
-//   messageType: string,
-//   data: string,
-//   customType: string,
-//   createdAt: number,
-//   updatedAt: number,
-//   sender: any,
-//   sent?: boolean,
-//   received?: boolean,
+export type PusherMessage = {
+  id: number,
+  text: string,
+  attachment?: any,
+  createdAt: number,
+  updatedAt: number,
+  senderId: number,
+  sender: number,
+  room: number,
+  sent?: boolean,
+  received?: boolean,
 
-//   isUserMessage(): boolean,
-//   isFileMessage(): boolean,
-//   isAdminMessage(): boolean,
-// };
+};
 
 export type PusherUser = {
   avatarURL: string,

@@ -263,9 +263,10 @@ class CheckoutContainer extends Component<Props, State> {
       type: 'ReplaceCurrentScreen',
       routeName: 'chat',
       params: {
-        productId: item.uuid,
+        productUuid: item.uuid,
         orderId: orderId,
         userId: item.seller.id,
+        roomId: itemId,
       },
     });
   }

@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 // prettier-ignore
 import {
   ActivityIndicator,
-  Alert,
+  Platform,
   StyleSheet,
   Text,
   View,
@@ -30,15 +30,16 @@ import { PUSHER_INSTANCE, PUSHER_TOKEN_PROVIDER } from 'react-native-dotenv';
 
 import type { NavigationScreenProp } from 'react-navigation';
 
-// import { sbCreateOpenChannelListQuery } from '../actions/sendbird';
 import { Send } from '../components';
 import type {
   Message,
   Order,
   Product,
   ReduxState,
-  SendBirdMessage,
+  PusherMessage,
+  PusherUser,
   UserData,
+  // eslint-disable-next-line
 } from '../types';
 import colors from '../config/colors';
 import settings from '../config/settings';
@@ -46,34 +47,20 @@ import * as api from '../utils/api';
 
 const MARK_AS_READ_AFTER_MS = 300;
 
-type Channel = {
-  createPreviousMessageListQuery: () => void,
-  refresh: () => void,
-  sendUserMessage: (
-    message: string,
-    data: string,
-    (msg: any, err: any) => void
-  ) => void,
-  url: string,
-};
-
 type Props = {
   navigation: NavigationScreenProp<*>,
   userData: UserData,
 };
 
 type State = {
-  channel: Channel | null,
   hasRendered: boolean,
+  interlocutor?: UserData,
   isLoading: boolean,
   isTyping: boolean,
-  lastMessage?: Message,
-  messageQuery: any,
   messages?: Array<Message>,
-  interlocutor?: UserData,
-  product?: Product,
   order?: Order,
-  roomId: string,
+  product?: Product,
+  roomId: number,
 };
 
 class ChatContainer extends Component<Props, State> {
@@ -81,42 +68,38 @@ class ChatContainer extends Component<Props, State> {
   sb;
 
   state = {
-    channel: null,
     hasRendered: false,
     interlocutor: null,
-    isLoading: false,
+    isLoading: true,
     isTyping: false,
-    messageQuery: null,
-    messages: null,
-    roomId: '',
+    messages: [],
+    roomId: -1,
   };
 
   componentWillMount() {
     const { params } = this.props.navigation.state;
 
-    console.log(params);
-
     // for development
     if (!params) {
       const orderId = '5ad67c508b10227b456bfc05';
-      const productId = '';
-      const roomId = 6671774;
+      const product_uuid = 'ryq8-tjUM';
+      const roomId = 6703904;
 
       this.getTempUserId('firstperson').then(userId => {
-        this.initialise(orderId, productId, userId, roomId);
+        this.initialise(orderId, product_uuid, userId, roomId);
       });
     } else {
+      console.log(params);
       // coming from Checkout or ChatRooms
-      const { orderId, productId, userId, roomId } = params;
+      const { orderId, productUuid, userId, roomId } = params;
       // TODO: check show is the seller/buyer!
-      this.initialise(orderId, productId, userId, roomId);
+      this.initialise(orderId, productUuid, userId, roomId);
     }
   }
 
-  // componentWillUnmount() {
-  //   this.sb.removeChannelHandler('ChatView');
-  //   this.sb.removeConnectionHandler('ChatView');
-  // }
+  componentWillUnmount() {
+    this.currentUser.roomSubscriptions[this.state.roomId].cancel();
+  }
 
   _getInterlucutorUserData(userId: string): Promise<null | any> {
     return new Promise((resolve, reject) => {
@@ -157,7 +140,7 @@ class ChatContainer extends Component<Props, State> {
           console.debug(order);
           this.setState({
             order,
-            roomId: `${order.buyer._id}-${order.seller._id}`,
+            // roomName: `${order.buyer._id}-${order.seller._id}`,
           });
           resolve();
         })
@@ -172,7 +155,6 @@ class ChatContainer extends Component<Props, State> {
       api
         .get('/api/users/')
         .then((res: Array<UserData>) => {
-          console.debug(res);
           const user = res.filter(u => u.username == username);
           resolve(user[0]._id);
         })
@@ -182,51 +164,38 @@ class ChatContainer extends Component<Props, State> {
 
   initialise(
     orderId: string,
-    productId: string,
+    productUuid: string,
     userId: string,
     roomId: number
   ) {
+    const Promises = [];
+    Promises.push(this.fetchProduct(productUuid));
+    Promises.push(this.fetchOrder(orderId));
     this._getInterlucutorUserData(userId)
       .then(() => {
-        const Promises = [];
-        Promises.push(this.fetchProduct(productId));
-        Promises.push(this.fetchOrder(orderId));
         Promises.push(
           this.connectToPusher()
+            .then(() => this.currentUser.joinRoom({ roomId }))
+            .then(() => this.setState({ isLoading: true }))
+            .then(() => {
+              const o = this.state.order;
+              this.currentUser.updateRoom({
+                roomId,
+                name: `${o.buyer._id}-${o.seller._id}`,
+                // private: true,
+              });
+              return this.setState({ roomId });
+            })
             .then(() =>
-              this.currentUser.fetchMessages({
-                roomId: roomId,
-                direction: 'older',
-                limit: 100,
+              this.currentUser.subscribeToRoom({
+                roomId,
+                hooks: {
+                  onNewReadCursor: cursor => console.log(cursor),
+                  onNewMessage: this.newMessage,
+                },
+                messageLimit: 100,
               })
             )
-            .then(msgs => {
-              console.log(msgs);
-              const { userData } = this.props;
-              const { interlocutor: int } = this.state;
-              const otherUser = {
-                _id: int._id,
-                name: int.username,
-                avatar: int.profilePic,
-              };
-              const newMessages = msgs.map(m => {
-                // if (m.sender) {
-                const user = m.senderId == userData._id ? userData : otherUser;
-                return this.createGiftedMessage(m, user);
-                // }
-                // return this.createGiftedSystemMessage(m);
-              });
-
-              // if (messages && messages.length) {
-              //   return this.setState(prevState => ({
-              //     messages: GiftedChat.append(prevState.messages, newMessages),
-              //   }));
-              // }
-              console.log(newMessages);
-              this.setState({
-                messages: newMessages,
-              });
-            })
         );
 
         Promise.all(Promises)
@@ -238,6 +207,33 @@ class ChatContainer extends Component<Props, State> {
       .catch(err => console.error(err));
   }
 
+  newMessage = (m: PusherMessage) => {
+    //   // if (m.sender) {
+    const newMsg = this.createGiftedMessage(m);
+    // console.log(newMsg);
+    // }
+
+    // TODO: Update cursor if the message was read
+
+    if (this.state.messages && this.state.messages.length) {
+      return this.setState(prevState => {
+        return {
+          messages: [newMsg, ...prevState.messages],
+        };
+      });
+    }
+    return this.setState({ messages: [newMsg] });
+  };
+
+  getPartner(): any {
+    const { interlocutor: int } = this.state;
+    return {
+      _id: int._id,
+      name: int.username,
+      avatar: int.profilePic,
+    };
+  }
+
   connectToPusher = (): Promise<Error | PusherUser> => {
     console.log('connectToPusher');
     const { userData } = this.props;
@@ -247,7 +243,11 @@ class ChatContainer extends Component<Props, State> {
         userId: userData._id,
         tokenProvider: new TokenProvider({
           url: PUSHER_TOKEN_PROVIDER,
-          headers: { token: userData.token },
+          headers: {
+            token: userData.token,
+            avatarURL: userData.profilePic,
+            username: userData.username,
+          },
         }),
         logger: {
           error: console.log,
@@ -267,92 +267,16 @@ class ChatContainer extends Component<Props, State> {
     });
   };
 
-  /**
-   * Connect to SendBird and set the orderId as metadata
-   *
-   * @param {*} orderId metadata for channel
-   */
-  connectToSendBird(orderId: string): Promise<null | any> {
-    return new Promise((resolve, reject) => {
-      // TODO: remove this if don't get a warning when quickly opening a chat thread.
-      // Maybe from a deeplink, opening app from background?
-      setTimeout(() => {
-        this.sb = SendBird.getInstance();
-        if (!this.state.hasRendered) {
-          this.sb.connect(this.props.userData._id, (user, err) => {
-            if (err) return reject(err);
-
-            console.debug(user);
-
-            this.createRoomAndGetMessages(this.state.interlocutor._id, orderId);
-
-            this.sb.addChannelHandler('ChatView', this.createChannelHandler());
-
-            const ConnectionHandler = new this.sb.ConnectionHandler();
-            ConnectionHandler.onReconnectSucceeded = () => {
-              this.getRoomMessages(true);
-              // $FlowFixMe
-              this.state.channel.refresh(() => {
-                this.getRoomMessages(false);
-              });
-            };
-            this.sb.addConnectionHandler('ChatView', ConnectionHandler);
-
-            this.getRoomMessages(false);
-            resolve();
-          });
-        } else {
-          console.warn('sendbird not initiated OR hasRendered is true');
-        }
-      }, 500);
-    });
-  }
-
-  createChannelHandler(): any {
-    const { interlocutor: int, channel } = this.state;
-
-    const ChannelHandler = new this.sb.ChannelHandler();
-
-    // fat-arrow necessary to pass `this` context
-    ChannelHandler.onMessageReceived = (
-      receivedChannel: Channel,
-      msg: SendBirdMessage
-    ): void => {
-      if (channel && receivedChannel.url !== channel.url) {
-        console.log('Channel urls do not match');
-      }
-
-      if (!int) return console.error('err');
-
-      const user = {
-        _id: int._id,
-        name: int.username,
-        avatar: !int.profilePic ? null : int.profilePic,
-      };
-
-      const giftedMsg = this.createGiftedMessage(msg, user);
-
-      this.setState(prevState => ({
-        messages: GiftedChat.append(prevState.messages, giftedMsg),
-      }));
-
-      setTimeout(() => {
-        // $FlowFixMe
-        this.state.channel.markAsRead();
-      }, MARK_AS_READ_AFTER_MS);
-    };
-
-    // ChannelHandler.onTypingStatusUpdated = channel => {
-    //   console.log(channel);
-    // };
-    return ChannelHandler;
-  }
-
-  createGiftedMessage(msg: SendBirdMessage, user: UserData | any): Message {
+  createGiftedMessage(msg: PusherMessage): Message {
+    const { userData } = this.props;
+    const otherUser = this.getPartner();
+    // if (m.sender) {
+    const user = msg.senderId == userData._id ? userData : otherUser;
+    // }
     // $FlowFixMe
     return {
       _id: msg.id,
-      createdAt: msg.createdAt,
+      createdAt: new Date(msg.createdAt),
       text: msg.text,
       user: {
         _id: user._id,
@@ -366,7 +290,7 @@ class ChatContainer extends Component<Props, State> {
     };
   }
 
-  createGiftedSystemMessage(msg: SendBirdMessage) {
+  createGiftedSystemMessage(msg: PusherMessage) {
     return {
       _id: msg.id,
       createdAt: new Date(msg.createdAt),
@@ -376,37 +300,19 @@ class ChatContainer extends Component<Props, State> {
   }
 
   onSend = (messages: Array<Message>) => {
-    const { userData } = this.props;
+    const text = messages[0].text;
 
-    if (this.state.channel) {
-      const text = messages[0].text;
-      this.state.channel.sendUserMessage(
+    this.currentUser
+      .sendMessage({
         text,
-        this.state.order.id,
-        (msg: SendBirdMessage, err) => {
-          if (err) {
-            // profanity filter
-            if (err.code == 900060) {
-              return Alert.alert(
-                'Message blocked by profanity filter',
-                'If you think this is an error please email us at hello@onova.co'
-              );
-            }
-            if (err.code == 800200 || err.code == 800180) {
-              return Alert.alert('Connectivity issue', err.message);
-            }
-            return console.error(err);
-          }
-
-          this.setState(prevState => ({
-            messages: GiftedChat.append(
-              prevState.messages,
-              this.createGiftedMessage(msg, userData)
-            ),
-          }));
-        }
-      );
-    }
+        roomId: this.state.roomId,
+      })
+      .then(id => {
+        console.log('Message sent:', id);
+      })
+      .catch(err => {
+        console.error(err);
+      });
   };
 
   renderSystemMessage(props): React$Element<*> {
@@ -452,58 +358,6 @@ class ChatContainer extends Component<Props, State> {
         this.getRoomMessages(false);
       }
     );
-  }
-
-  getRoomMessages(refresh: boolean): void {
-    const { messageQuery, messages, interlocutor: int } = this.state;
-    const { userData } = this.props;
-
-    // // $FlowFixMe
-    // this.state.channel.getMetaData(['orderId'], (res, err) => {
-    //   if (err) return console.error(err);
-    //   console.log(res);
-    // });
-
-    if (refresh) {
-      console.debug('refreshing messages');
-      this.setState({
-        // $FlowFixMe
-        messageQuery: this.state.channel.createPreviousMessageListQuery(),
-        messages: null,
-      });
-    }
-
-    if (messageQuery) {
-      if (!messageQuery.hasMore) return void console.warn('no hasMore');
-      if (!int) return void console.error('no interlocutor');
-      const otherUser = {
-        _id: int._id,
-        name: int.username,
-        avatar: int.profilePic,
-      };
-
-      const reverse = true;
-      messageQuery.load(50, reverse, (msgs, err) => {
-        if (err) return console.error(err);
-
-        const newMessages = msgs.map(m => {
-          if (m.sender) {
-            const user = m.sender.userId == userData._id ? userData : otherUser;
-            return this.createGiftedMessage(m, user);
-          }
-          return this.createGiftedSystemMessage(m);
-        });
-
-        if (messages && messages.length) {
-          return this.setState(prevState => ({
-            messages: GiftedChat.append(prevState.messages, newMessages),
-          }));
-        }
-        this.setState({
-          messages: newMessages,
-        });
-      });
-    }
   }
 
   renderSend(props): React$Element<*> {
@@ -619,7 +473,7 @@ class ChatContainer extends Component<Props, State> {
           </Right>
         </Header>
         <View style={st.flex1}>
-          {!messages || isLoading ? (
+          {isLoading ? (
             <View style={st.container}>
               <ActivityIndicator size="large" />
             </View>
@@ -636,7 +490,9 @@ class ChatContainer extends Component<Props, State> {
                   <NBButton
                     transparent
                     style={{ height: 20 }}
-                    onPress={() => alert('code me like those french girls 🎨')}>
+                    onPress={() =>
+                      Platform('code me like those french girls 🎨')
+                    }>
                     <NBIcon name="ios-information-circle-outline" />
                   </NBButton>
                 </View>

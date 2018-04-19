@@ -77,18 +77,6 @@ class ChatContainer extends Component<Props, State> {
           if (orders.length === 0) {
             return resolve([]);
           }
-          // this.currentUser
-          //   .createRoom({
-          //     name: `${buyer._id}-${seller._id}`,
-          //     private: true,
-          //     addUserIds: [buyer._id, seller._id],
-          //   })
-          //   .then(room => {
-          //     console.log(`Created room called ${room.name}`);
-          //   })
-          //   .catch(err => {
-          //     console.log(`Error creating room ${err}`);
-          //   });
           const { userData } = this.props;
           // filter chat rooms by matching order `id`(s) from API and Pusher roomId(s)
           let ordersAndRooms = this.currentUser.rooms.filter(r => {
@@ -129,28 +117,6 @@ class ChatContainer extends Component<Props, State> {
           );
         })
         .then(ordersAndChats => resolve(ordersAndChats))
-        .catch(e => reject(e));
-    });
-  }
-
-  getChannels(): Promise<Array<any>> {
-    return new Promise((resolve, reject) => {
-      return this.fetchordersAndChats()
-        .then(channels => {
-          let channelsWithMeta = [];
-
-          var todo = channels.length;
-          if (!todo) return resolve([]);
-
-          channels.forEach(c => {
-            c.getMetaData(['orderId'], (res, err) => {
-              if (err) return reject(err);
-              c.orderId = res.orderId;
-              channelsWithMeta.push(c);
-              if (--todo === 0) resolve(channelsWithMeta);
-            });
-          });
-        })
         .catch(e => reject(e));
     });
   }
@@ -206,9 +172,9 @@ class ChatContainer extends Component<Props, State> {
     });
   };
 
-  // componentWillUnmount() {
-  //   this.sb.removeChannelHandler('ConnectionHandlerInList');
-  // }
+  componentWillUnmount() {
+    this.currentUser.roomSubscriptions[this.state.roomId].cancel();
+  }
 
   componentWillReceiveProps(nextProps) {
     // fix error when logging out
@@ -372,14 +338,16 @@ class ChatContainer extends Component<Props, State> {
             </View>
           ) : (
             <View>
-              <FlatList
-                style={{ height: 60 + 8 + 8 }}
-                data={ordersAndChats}
-                keyExtractor={this._keyExtractor}
-                horizontal
-                ItemSeparatorComponent={this._renderSeparatorHorizontal}
-                renderItem={this._renderOrderCircle}
-              />
+              {ordersAndChats.length > 0 && (
+                <FlatList
+                  style={{ height: 60 + 8 + 8 }}
+                  data={ordersAndChats}
+                  keyExtractor={this._keyExtractor}
+                  horizontal
+                  ItemSeparatorComponent={this._renderSeparatorHorizontal}
+                  renderItem={this._renderOrderCircle}
+                />
+              )}
               <FlatList
                 data={ordersAndChats}
                 ItemSeparatorComponent={this._renderSeparator}

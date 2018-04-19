@@ -129,19 +129,19 @@ class CheckoutContainer extends Component<Props, State> {
         console.log(err);
         if (
           err.message == 'Duplicate order' &&
-          err.data.order &&
+          err.data.data &&
           // TODO: set to 'paid' once payment is completed
-          err.data.order.status == 'pending'
+          err.data.data.status == 'pending'
         ) {
           // $FlowFixMe
-          return this.goToChat(err.data.order.id, item);
+          return this.goToChat(err.data.data.id, item);
         }
         // TODO: set to 'pending' once payment is completed
-        if (err.data.order.status == 'TODO') {
+        if (err.data.data.status == 'TODO') {
           this.setState({
             item,
             isLoading: false,
-            order: err.data.order,
+            order: err.data.data,
           });
           // if (Platform.OS === 'ios') {
           //   BTClient.setupWithURLScheme(
@@ -263,10 +263,10 @@ class CheckoutContainer extends Component<Props, State> {
       type: 'ReplaceCurrentScreen',
       routeName: 'chat',
       params: {
-        productUuid: item.uuid,
         orderId: orderId,
+        productUuid: item.uuid,
+        roomId: -1,
         userId: item.seller.id,
-        createRoom: true,
       },
     });
   }

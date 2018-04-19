@@ -72,52 +72,60 @@ class ChatContainer extends Component<Props, State> {
   getOrdersAndChats(): Promise<Array<any>> {
     console.log('getOrdersAndChats');
     return new Promise((resolve, reject) => {
-      this.fetchOrders()
-        .then(orders => {
-          if (orders.length === 0) {
-            return resolve([]);
-          }
-          const { userData } = this.props;
-          // filter chat rooms by matching order `id`(s) from API and Pusher roomId(s)
-          let ordersAndRooms = this.currentUser.rooms.filter(r => {
-            return orders.find(
-              (o: Order) => `${o.buyer._id}-${o.seller._id}` == r.name
-            );
-          });
-          // add order and room objects
-          ordersAndRooms = ordersAndRooms.map(r => {
-            r.order = orders.find(
-              (o: Order) => `${o.buyer._id}-${o.seller._id}` == r.name
-            );
-            return r;
-          });
+      this.fetchOrders().then(orders => {
+        if (orders.length === 0) {
+          return resolve([]);
+        }
+        const { userData } = this.props;
+        this.currentUser
+          .getJoinableRooms()
+          .then((rooms: Array<any>) => {
+            const allRooms = [...rooms, ...this.currentUser.rooms];
+            console.warn(allRooms);
+            return allRooms;
+          })
+          .then(allRooms => {
+            // filter chat rooms by matching order `id`(s) from API and Pusher roomId(s)
+            let ordersAndRooms = allRooms.filter(r => {
+              return orders.find(
+                (o: Order) => `${o.buyer._id}-${o.seller._id}` == r.name
+              );
+            });
+            // add order and room objects
+            ordersAndRooms = ordersAndRooms.map(r => {
+              r.order = orders.find(
+                (o: Order) => `${o.buyer._id}-${o.seller._id}` == r.name
+              );
+              return r;
+            });
 
-          return Promise.all(
-            ordersAndRooms.map(async room => {
-              const msgs = await this.currentUser.fetchMessages({
-                roomId: room.id,
-                direction: 'older',
-                limit: 1,
-              });
-              const partner = this.currentUser.users.filter(
-                u => u.id !== userData._id
-              )[0];
-              const cursor = await this.currentUser.readCursor({
-                roomId: room.id,
-              });
+            return Promise.all(
+              ordersAndRooms.map(async room => {
+                const msgs = await this.currentUser.fetchMessages({
+                  roomId: room.id,
+                  direction: 'older',
+                  limit: 1,
+                });
+                const partner = this.currentUser.users.filter(
+                  u => u.id !== userData._id
+                )[0];
+                const cursor = await this.currentUser.readCursor({
+                  roomId: room.id,
+                });
 
-              // TODO: set haveUnreadMsgs
-              if (cursor) console.log(cursor.position);
-              const isPartnerOnline = partner.presence.state == 'online';
-              room.lastMessage = msgs[0];
-              room.isPartnerOnline = isPartnerOnline;
-              room.partner = partner;
-              return room;
-            })
-          );
-        })
-        .then(ordersAndChats => resolve(ordersAndChats))
-        .catch(e => reject(e));
+                // TODO: set haveUnreadMsgs
+                if (cursor) console.log(cursor.position);
+                const isPartnerOnline = partner.presence.state == 'online';
+                room.lastMessage = msgs[0];
+                room.isPartnerOnline = isPartnerOnline;
+                room.partner = partner;
+                return room;
+              })
+            );
+          })
+          .then(ordersAndChats => resolve(ordersAndChats))
+          .catch(e => reject(e));
+      });
     });
   }
 

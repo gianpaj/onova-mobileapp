@@ -54,7 +54,7 @@ type Props = {
 
 type State = {
   hasRendered: boolean,
-  interlocutor?: UserData,
+  partner?: UserData,
   isLoading: boolean,
   isTyping: boolean,
   messages?: Array<Message>,
@@ -69,7 +69,7 @@ class ChatContainer extends Component<Props, State> {
 
   state = {
     hasRendered: false,
-    interlocutor: null,
+    partner: null,
     isLoading: true,
     isTyping: false,
     messages: [],
@@ -89,43 +89,27 @@ class ChatContainer extends Component<Props, State> {
       return this.getTempUserId('firstperson').then(userId => {
         this.initialise(orderId, product_uuid, userId, roomId);
       });
-    // coming from Checkout
-    if (params.createRoom) {
-      // TODO: check if room doesn't not exist already
-      const { orderId, productUuid, userId } = params;
-      this.currentUser
-        .createRoom({
-          name: 'temp-name',
-          private: true,
-          addUserIds: [userId, userData._id],
-        })
-        .then(room => {
-          console.debug(`Created room called`, room);
-          this.initialise(orderId, productUuid, userId, room.id);
-        })
-        .catch(err => {
-          console.log('Error creating room', err);
-        });
-    } else {
-      console.log(params);
-      // coming else from ChatRooms
-      const { orderId, productUuid, userId, roomId } = params;
-      // TODO: check show is the seller/buyer!
-      this.initialise(orderId, productUuid, userId, roomId);
     }
+    console.log(params);
+    // coming from Checkout
+    // OR
+    // coming from ChatRooms
+    const { orderId, productUuid, userId, roomId } = params;
+    // TODO: check show is the seller/buyer!
+    this.initialise(orderId, productUuid, userId, roomId);
   }
 
   componentWillUnmount() {
     this.currentUser.roomSubscriptions[this.state.roomId].cancel();
   }
 
-  _getInterlucutorUserData(userId: string): Promise<null | any> {
+  _getPartner(userId: string): Promise<null | any> {
     return new Promise((resolve, reject) => {
       api
         .get(`/api/users/${userId}`)
-        .then(interlocutor => {
-          console.debug(interlocutor);
-          this.setState({ interlocutor });
+        .then(partner => {
+          console.debug(partner);
+          this.setState({ partner });
           resolve();
         })
         .catch(err => {
@@ -188,7 +172,7 @@ class ChatContainer extends Component<Props, State> {
     const Promises = [];
     Promises.push(this.fetchProduct(productUuid));
     Promises.push(this.fetchOrder(orderId));
-    this._getInterlucutorUserData(userId)
+    this._getPartner(userId)
       .then(() => {
         Promises.push(
           this.connectToPusher()
@@ -243,11 +227,11 @@ class ChatContainer extends Component<Props, State> {
   };
 
   getPartner(): any {
-    const { interlocutor: int } = this.state;
+    const { partner } = this.state;
     return {
-      _id: int._id,
-      name: int.username,
-      avatar: int.profilePic,
+      _id: partner._id,
+      name: partner.username,
+      avatar: partner.profilePic,
     };
   }
 
@@ -389,14 +373,14 @@ class ChatContainer extends Component<Props, State> {
   */
 
   goToProfile = () => {
-    const { interlocutor } = this.state;
+    const { partner } = this.state;
 
-    if (!interlocutor) return;
+    if (!partner) return;
 
     const navigateToProfile = NavigationActions.navigate({
       routeName: 'profile',
-      params: interlocutor,
-      key: `profile-${interlocutor.username}`,
+      params: partner,
+      key: `profile-${partner.username}`,
     });
 
     this.props.navigation.dispatch(navigateToProfile);
@@ -425,7 +409,7 @@ class ChatContainer extends Component<Props, State> {
 
   render() {
     const { navigation, userData } = this.props;
-    const { messages, isLoading, interlocutor, product, order } = this.state;
+    const { messages, isLoading, partner, product, order } = this.state;
 
     if (!product || !order) return null;
 
@@ -439,10 +423,8 @@ class ChatContainer extends Component<Props, State> {
           </Left>
           <Body>
             {!isLoading &&
-              interlocutor && (
-                <Title onPress={this.goToProfile}>
-                  @{interlocutor.username}
-                </Title>
+              partner && (
+                <Title onPress={this.goToProfile}>@{partner.username}</Title>
               )}
           </Body>
           <Right>

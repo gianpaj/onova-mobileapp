@@ -78,6 +78,7 @@ class ChatContainer extends Component<Props, State> {
 
   componentWillMount() {
     const { params } = this.props.navigation.state;
+    const { userData } = this.props;
 
     // for development
     if (!params) {
@@ -85,12 +86,29 @@ class ChatContainer extends Component<Props, State> {
       const product_uuid = 'ryq8-tjUM';
       const roomId = 6703904;
 
-      this.getTempUserId('firstperson').then(userId => {
+      return this.getTempUserId('firstperson').then(userId => {
         this.initialise(orderId, product_uuid, userId, roomId);
       });
+    // coming from Checkout
+    if (params.createRoom) {
+      // TODO: check if room doesn't not exist already
+      const { orderId, productUuid, userId } = params;
+      this.currentUser
+        .createRoom({
+          name: 'temp-name',
+          private: true,
+          addUserIds: [userId, userData._id],
+        })
+        .then(room => {
+          console.debug(`Created room called`, room);
+          this.initialise(orderId, productUuid, userId, room.id);
+        })
+        .catch(err => {
+          console.log('Error creating room', err);
+        });
     } else {
       console.log(params);
-      // coming from Checkout or ChatRooms
+      // coming else from ChatRooms
       const { orderId, productUuid, userId, roomId } = params;
       // TODO: check show is the seller/buyer!
       this.initialise(orderId, productUuid, userId, roomId);
@@ -140,7 +158,6 @@ class ChatContainer extends Component<Props, State> {
           console.debug(order);
           this.setState({
             order,
-            // roomName: `${order.buyer._id}-${order.seller._id}`,
           });
           resolve();
         })
@@ -322,41 +339,6 @@ class ChatContainer extends Component<Props, State> {
         containerStyle={st.systemContainer}
         textStyle={st.systemText}
       />
-    );
-  }
-
-  createRoomAndGetMessages(otherUser: string, orderId: string) {
-    const name = 'order for item X';
-    this.sb.GroupChannel.createChannelWithUserIds(
-      [otherUser],
-      true, // isDistinct
-      name,
-      null, // coverUrl
-      '',
-      (createdChannel, err) => {
-        if (err) return console.error(err);
-
-        this.setState({ channel: createdChannel }, () => {
-          console.debug('Room created', createdChannel);
-          // $FlowFixMe
-          this.state.channel.updateMetaData({ orderId }, (res, err) => {
-            if (err) return console.error(err);
-            console.log(res);
-          });
-
-          setTimeout(() => {
-            if (this.state.channel) {
-              // $FlowFixMe
-              this.state.channel.markAsRead();
-            }
-          }, MARK_AS_READ_AFTER_MS);
-        });
-        this.setState(prevState => ({
-          // $FlowFixMe
-          messageQuery: prevState.channel.createPreviousMessageListQuery(),
-        }));
-        this.getRoomMessages(false);
-      }
     );
   }
 

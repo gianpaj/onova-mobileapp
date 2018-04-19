@@ -266,7 +266,7 @@ class CheckoutContainer extends Component<Props, State> {
         productUuid: item.uuid,
         orderId: orderId,
         userId: item.seller.id,
-        roomId: itemId,
+        createRoom: true,
       },
     });
   }

@@ -21,7 +21,7 @@ import { PUSHER_INSTANCE, PUSHER_TOKEN_PROVIDER } from 'react-native-dotenv';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 
 import type { NavigationScreenProp } from 'react-navigation';
-
+// eslint-disable-next-line
 import type { UserData, ReduxState, Order, PusherUser, Room } from '../types';
 import colors from '../config/colors';
 import * as api from '../utils/api';
@@ -77,15 +77,29 @@ class ChatContainer extends Component<Props, State> {
           if (orders.length === 0) {
             return resolve([]);
           }
+          console.log(orders);
+          console.log(this.currentUser);
+          // this.currentUser
+          //   .createRoom({
+          //     name: `${buyer._id}-${seller._id}`,
+          //     private: true,
+          //     addUserIds: [buyer._id, seller._id],
+          //   })
+          //   .then(room => {
+          //     console.log(`Created room called ${room.name}`);
+          //   })
+          //   .catch(err => {
+          //     console.log(`Error creating room ${err}`);
+          //   });
           const { userData } = this.props;
           // filter chat rooms by matching order `id`(s) from API and Pusher roomId(s)
-          let rooms = this.currentUser.rooms.filter(r => {
+          let ordersAndRooms = this.currentUser.rooms.filter(r => {
             return orders.find(
               (o: Order) => `${o.buyer._id}-${o.seller._id}` == r.name
             );
           });
-          // add order order and channel objects
-          rooms = rooms.map(r => {
+          // add order and room objects
+          ordersAndRooms = ordersAndRooms.map(r => {
             r.order = orders.find(
               (o: Order) => `${o.buyer._id}-${o.seller._id}` == r.name
             );
@@ -93,7 +107,7 @@ class ChatContainer extends Component<Props, State> {
           });
 
           return Promise.all(
-            rooms.map(async room => {
+            ordersAndRooms.map(async room => {
               const msgs = await this.currentUser.fetchMessages({
                 roomId: room.id,
                 direction: 'older',
@@ -343,7 +357,7 @@ class ChatContainer extends Component<Props, State> {
         <Header>
           <Left />
           <Body>
-            <Title>Orders</Title>
+            <Title>Chats and Orders</Title>
           </Body>
           <Right />
         </Header>

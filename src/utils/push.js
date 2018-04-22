@@ -75,7 +75,7 @@ export function registerPushNotifications(): Promise<string | null> {
         return firebase.messaging().onTokenRefresh((token: string) => {
           console.log('onTokenRefresh');
           console.log(token);
-          registerSendBirdToken(token);
+          registerPushToken(token);
         });
       })
       .then(() => {
@@ -101,7 +101,7 @@ export function registerPushNotifications(): Promise<string | null> {
           .messaging()
           .getToken()
           .then(token => {
-            return registerSendBirdToken(token);
+            return registerPushToken(token);
           })
           .then(token => resolve(token))
           .catch(() => reject());
@@ -109,38 +109,14 @@ export function registerPushNotifications(): Promise<string | null> {
   });
 }
 
-function registerSendBirdToken(token: string): Promise<string | null> {
+function registerPushToken(token: string): Promise<string | null> {
   return new Promise((resolve, reject) => {
-    const sb = SendBird.getInstance();
-    if (sb) {
-      // TODO: Promisify
-      sb.unregisterGCMPushTokenAllForCurrentUser(() => {
-        sb.unregisterAPNSPushTokenAllForCurrentUser(() => {
-          if (Platform.OS === 'ios') {
-            sb.registerAPNSPushTokenForCurrentUser(token, (result, err) => {
-              if (err) {
-                console.error(err);
-                return reject();
-              }
-              console.log('registerAPNSPushTokenForCurrentUser');
-              // Notifications.setApplicationIconBadgeNumber(number);
-              resolve(token);
-            });
-          } else {
-            sb.registerGCMPushTokenForCurrentUser(token, (result, err) => {
-              if (err) {
-                console.error(err);
-                return reject();
-              }
-              console.log('registerGCMPushTokenForCurrentUser');
-              resolve(token);
-            });
-          }
-        });
-      });
-    } else {
-      reject();
-    }
+    // if (err) {
+    //   console.error(err);
+    //   return reject();
+    // }
+    // Notifications.setApplicationIconBadgeNumber(number);
+    resolve(token);
   });
 }
 

@@ -26,7 +26,6 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { NavigationActions } from 'react-navigation';
 import { GiftedChat, Bubble, SystemMessage } from 'react-native-gifted-chat';
 import { ChatManager, TokenProvider } from '@pusher/chatkit/react-native';
-import { PUSHER_INSTANCE, PUSHER_TOKEN_PROVIDER } from 'react-native-dotenv';
 
 import type { NavigationScreenProp } from 'react-navigation';
 
@@ -46,6 +45,7 @@ import settings from '../config/settings';
 import * as api from '../utils/api';
 
 const MARK_AS_READ_AFTER_MS = 300;
+let config;
 
 type Props = {
   navigation: NavigationScreenProp<*>,
@@ -75,6 +75,15 @@ class ChatContainer extends Component<Props, State> {
     messages: [],
     roomId: -1,
   };
+
+  constructor() {
+    super();
+    if (process.env.NODE_ENV == 'dev') {
+      config = require('../../config-dev.json');
+    } else {
+      config = require('../../config-prod.json');
+    }
+  }
 
   componentWillMount() {
     const { params } = this.props.navigation.state;
@@ -162,16 +171,6 @@ class ChatContainer extends Component<Props, State> {
     });
   }
 
-  /**
-   * the room name is generated alphatically between the userIds.
-   *
-   * this is to create a unique ID between the two users for both way purchases.
-   */
-  getRoomName(o: Order): string {
-    const ids = [o.buyer._id, o.seller._id];
-    return ids.sort((a, b) => a > b).join('-');
-  }
-
   initialise(
     orderId: string,
     productUuid: string,
@@ -207,7 +206,7 @@ class ChatContainer extends Component<Props, State> {
             .then((rooms: Array<any>) => {
               const allRooms = [...rooms, ...this.currentUser.rooms];
               console.log(allRooms);
-              return allRooms.filter(r => r.name == this.getRoomName(o));
+              return allRooms.filter(r => r.name == getRoomName(o));
             })
             .then(rooms => {
               console.log(rooms);
@@ -226,7 +225,7 @@ class ChatContainer extends Component<Props, State> {
               }
               return this.currentUser
                 .createRoom({
-                  name: this.getRoomName(o),
+                  name: getRoomName(o),
                   private: true,
                   addUserIds: [userId, userData._id],
                 })
@@ -544,6 +543,16 @@ class ChatContainer extends Component<Props, State> {
       </Container>
     );
   }
+}
+
+/**
+ * the room name is generated alphatically between the userIds.
+ *
+ * this is to create a unique ID between the two users for both way purchases.
+ */
+export function getRoomName(o: Order): string {
+  const ids = [o.buyer._id, o.seller._id];
+  return ids.sort((a, b) => a > b).join('-');
 }
 
 const st = StyleSheet.create({

@@ -16,7 +16,6 @@ import {
 import { Body, Container, Header, Left, Right, Title } from 'native-base';
 import { NavigationActions } from 'react-navigation';
 import { ChatManager, TokenProvider } from '@pusher/chatkit/react-native';
-import { PUSHER_INSTANCE, PUSHER_TOKEN_PROVIDER } from 'react-native-dotenv';
 
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 
@@ -27,6 +26,9 @@ import colors from '../config/colors';
 import * as api from '../utils/api';
 import * as ui from '../utils/ui';
 import { Avatar } from '../components';
+import { getRoomName } from './Chat';
+
+let config;
 
 type Props = {
   navigation: NavigationScreenProp<*>,
@@ -50,6 +52,15 @@ class ChatContainer extends Component<Props, State> {
     listQuery: null,
     ordersAndChats: [],
   };
+
+  constructor() {
+    super();
+    if (process.env.NODE_ENV == 'dev') {
+      config = require('../../config-dev.json');
+    } else {
+      config = require('../../config-prod.json');
+    }
+  }
 
   componentWillMount() {
     this.connectToPusher()
@@ -81,21 +92,17 @@ class ChatContainer extends Component<Props, State> {
           .getJoinableRooms()
           .then((rooms: Array<any>) => {
             const allRooms = [...rooms, ...this.currentUser.rooms];
-            console.warn(allRooms);
+            console.log(allRooms);
             return allRooms;
           })
           .then(allRooms => {
             // filter chat rooms by matching order `id`(s) from API and Pusher roomId(s)
             let ordersAndRooms = allRooms.filter(r => {
-              return orders.find(
-                (o: Order) => `${o.buyer._id}-${o.seller._id}` == r.name
-              );
+              return orders.find((o: Order) => getRoomName(o) == r.name);
             });
             // add order and room objects
             ordersAndRooms = ordersAndRooms.map(r => {
-              r.order = orders.find(
-                (o: Order) => `${o.buyer._id}-${o.seller._id}` == r.name
-              );
+              r.order = orders.find((o: Order) => getRoomName(o) == r.name);
               return r;
             });
 
@@ -155,10 +162,10 @@ class ChatContainer extends Component<Props, State> {
     const { userData } = this.props;
     return new Promise((resolve, reject) => {
       const chatManager = new ChatManager({
-        instanceLocator: PUSHER_INSTANCE,
+        instanceLocator: config.PUSHER_INSTANCE,
         userId: userData._id,
         tokenProvider: new TokenProvider({
-          url: PUSHER_TOKEN_PROVIDER,
+          url: config.PUSHER_TOKEN_PROVIDER,
           headers: {
             token: userData.token,
             avatarURL: userData.profilePic,

@@ -1,12 +1,14 @@
 // @flow
 
 import axios, { CancelTokenSource } from 'axios';
-import { ENV, API_URL } from 'react-native-dotenv';
+let config;
+if (process.env.NODE_ENV == 'dev') {
+  config = require('../../config-dev.json');
+} else {
+  config = require('../../config-prod.json');
+}
 
-console.warn(`Running in ${ENV} environment`);
-console.warn(`API_URL: ${API_URL}`);
-
-axios.defaults.baseURL = API_URL;
+axios.defaults.baseURL = config.API_URL;
 const TIMEOUT = 4000;
 
 type Options = {

@@ -3,7 +3,6 @@
 import { Platform } from 'react-native';
 import { Toast } from 'antd-mobile';
 import { ChatManager, TokenProvider } from '@pusher/chatkit/react-native';
-import { PUSHER_INSTANCE, PUSHER_TOKEN_PROVIDER } from 'react-native-dotenv';
 
 import {
   incrementCounter,
@@ -59,15 +58,14 @@ const login = (data: LoginData) => (dispatch: Dispatch) => (
         // FIXME: use `userData` key in payload
         dispatch({ type: LOGIN_SUCCESS, payload: userData });
         // TODO: send analytics login event
-        // initializePusher(userData)
-        //   .then(() => registerPushNotifications())
-        //   .then(pushToken => {
-        //     if (pushToken) return sendToken(pushToken, userData);
-        //   })
-        //   .catch(err => {
-        //     console.warn(err);
-        //     dispatch({ type: LOGIN_FAIL });
-        //   });
+        registerPushNotifications()
+          .then(pushToken => {
+            if (pushToken) return sendToken(pushToken, userData);
+          })
+          .catch(err => {
+            console.warn(err);
+            dispatch({ type: LOGIN_FAIL });
+          });
       } else {
         console.debug(res);
         dispatch({ type: LOGIN_FAIL });
@@ -81,23 +79,23 @@ const login = (data: LoginData) => (dispatch: Dispatch) => (
 
 const initializePusher = (userData: UserData): Promise<any> => {
   return new Promise((resolve, reject) => {
-    const chatManager = new ChatManager({
+    try {
+      new ChatManager({
       instanceLocator: PUSHER_INSTANCE,
       userId: userData._id, // user needs to already exist
       tokenProvider: new TokenProvider({
         url: PUSHER_TOKEN_PROVIDER,
-        userId: userData._id,
+          headers: {
+            token: userData.token,
+            avatarURL: userData.profilePic,
+            username: userData.username,
+          },
       }),
     });
-    chatManager
-      .connect()
-      .then(currentUser => {
-        console.debug(currentUser);
         resolve();
-      })
-      .catch(err => {
-        reject(err);
-      });
+    } catch (error) {
+      reject(error);
+    }
   });
 };
 
@@ -153,8 +151,7 @@ const signup = (data: SignupData) => (dispatch: Dispatch) => (
           ...res.data,
           ...{ token: res.token, provider: 'email' },
         };
-        initializePusher(userData)
-          .then(() => registerPushNotifications())
+        registerPushNotifications()
           .then(pushToken => {
             if (pushToken) return sendToken(pushToken, userData);
           })

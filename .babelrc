@@ -1,11 +1,13 @@
 {
   "presets": [
     "react-native",
-    "react-native-dotenv",
     "flow"
   ],
   "retainLines": true,
-  "plugins": [["import", { "libraryName": "antd-mobile" }]],
+  "plugins": [
+    ["import", { "libraryName": "antd-mobile" }],
+    "transform-inline-environment-variables"
+  ],
   "env": {
     "development": {
       "plugins": [

@@ -38,13 +38,13 @@ let defaultState = {};
 if (__DEV__) {
   if (Platform.OS == 'ios') {
     defaultState = {
-      emailAddress: 'gianpa+test3@gmail.com',
+      emailAddress: 'gianpa+test4@gmail.com',
       password: '***REMOVED***',
     };
   } else {
     defaultState = {
-      emailAddress: 'gianpa+test2@gmail.com',
-      password: 'express2',
+      emailAddress: 'gianpa@gmail.com',
+      password: '***REMOVED***',
     };
   }
 }

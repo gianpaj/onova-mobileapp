@@ -60,3 +60,4 @@ ios/Pods/*
 
 .env
 .env.prod
+config-*.json

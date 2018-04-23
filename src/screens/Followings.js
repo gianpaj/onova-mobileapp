@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import {
   Dimensions,
   FlatList,
-  Platform,
   RefreshControl,
   StyleSheet,
   Text,
@@ -13,13 +12,14 @@ import {
   View,
 } from 'react-native';
 import {
-  Button as NBButton,
   Body,
+  Button,
   Container,
   Header,
-  Title,
-  ListItem,
+  Icon,
+  Left,
   Right,
+  Title,
 } from 'native-base';
 import { withNavigation } from 'react-navigation';
 
@@ -46,10 +46,15 @@ type Props = {
 type State = {
   data: Array<UserData>,
   isRefreshing: boolean,
+  itemHeight: number,
 };
 
 class FollowingsContainer extends Component<Props, State> {
-  state = {};
+  state = {
+    isRefreshing: false,
+    data: [],
+    itemHeight: -1,
+  };
 
   async componentWillMount() {
     try {
@@ -68,12 +73,9 @@ class FollowingsContainer extends Component<Props, State> {
       userId = this.props.navigation.state.params.userId;
     }
 
-    const res = await api.get(
-      `/api/users/${userId}/reviews?as=${this.props.as}`,
-      {
-        token,
-      }
-    );
+    const res = await api.get(`/api/users/${userId}/followers`, {
+      token,
+    });
     // get the first image size and then setState `data` for the FlatList
     if (res.data && res.data.length) {
       return this.setState({ data: res.data });
@@ -90,14 +92,15 @@ class FollowingsContainer extends Component<Props, State> {
     });
   };
 
-  onFollowOrUnfollow(_id: string) {
+  onFollowOrUnfollow(_id: string, amIAFollower: boolean) {
     const token = this.props.userData.token;
-    const followOrUnfollow = !this.state.isFollowing ? 'follow' : 'unfollow';
+    const followOrUnfollow = amIAFollower ? 'unfollow' : 'follow';
     api
       .post(`/api/users/${_id}/${followOrUnfollow}`, {}, { token })
       .then(() => {
-        console.warn('followed', _id);
+        console.debug(followOrUnfollow, _id);
         // this.setState({ isFollowing: followOrUnfollow == 'follow' });
+        this.refreshFollowings();
       })
       .catch(err => {
         console.error(err);
@@ -105,55 +108,31 @@ class FollowingsContainer extends Component<Props, State> {
   }
 
   _renderItem = ({ item: user }: { item: UserData }) => {
-    const isFollowing = false;
-
     return (
       <TouchableHighlight
+        style={{ width: initialLayout.width / 3 }}
         underlayColor={colors.grey4}
         onPress={() => this.goToProfile(user)}>
-        <ListItem style={{ marginLeft: 0 }}>
+        <View style={{ alignItems: 'center' }}>
           <Avatar
             // style={styles.avatarContainer}
             size={'small'}
             withBorder
+            withButton
             uri={user.profilePic}
             placeholderText={user.username}
+            buttonActiveState={user.amIAFollower}
+            onButtonPress={() =>
+              this.onFollowOrUnfollow(user._id, user.amIAFollower)
+            }
           />
-          <Body>
-            <View style={styles.contentRow}>
-              <Text
-                style={styles.name}
-                numberOfLines={1} // android
-              >
-                @{user.username}
-              </Text>
-            </View>
-            <Text
-              style={styles.reviewText}
-              numberOfLines={3} // android
-            >
-              {user.displayName}
-            </Text>
-          </Body>
-          <Right style={{ height: '100%' }}>
-            <NBButton
-              transparent
-              bordered
-              small
-              full
-              style={styles.editOrFollowButton}
-              onPress={() => this.onFollowOrUnfollow(user._id)}>
-              <Text style={styles.editOrFollowButtonText}>
-                {isFollowing ? 'Unfollow' : 'Follow'}
-              </Text>
-            </NBButton>
-          </Right>
-        </ListItem>
+          <Text numberOfLines={1} /* android */>@{user.username}</Text>
+        </View>
       </TouchableHighlight>
     );
   };
 
-  _keyExtractor = (item): string => item._id;
+  _keyExtractor = (item): string => item.dateCreated;
 
   _renderSeparator = () => <View style={styles.separator} />;
 
@@ -163,18 +142,37 @@ class FollowingsContainer extends Component<Props, State> {
     // TODO: center empty state in RN 0.56 - https://github.com/facebook/react-native/pull/18206
     return (
       <View style={styles.container}>
-        <Text>{this.state.hasError ? 'Error' : 'There are no reviews'}</Text>
+        <Text>There are no followers</Text>
       </View>
     );
+  };
+
+  refreshFollowings = () => {
+    this.setState({ isRefreshing: true });
+    this.getFollowersAndSetState()
+      .catch(err => {
+        console.debug(err);
+        // this.setState({ hasError: true });
+      })
+      .then(() => this.setState({ isRefreshing: false }));
   };
 
   render() {
     return (
       <Container>
         <Header>
+          <Left>
+            <Button
+              transparent
+              dark
+              onPress={() => this.props.navigation.goBack()}>
+              <Icon ios="ios-arrow-back" android="md-arrow-back" />
+            </Button>
+          </Left>
           <Body>
             <Title>Following</Title>
           </Body>
+          <Right />
         </Header>
         <FlatList
           data={this.state.data}
@@ -182,17 +180,34 @@ class FollowingsContainer extends Component<Props, State> {
           keyExtractor={this._keyExtractor}
           ListEmptyComponent={this.renderEmptyState}
           renderItem={this._renderItem}
-          // refreshControl={
-          //   <RefreshControl
-          //     refreshing={this.state.isRefreshing}
-          //     onRefresh={this.refreshReviews}
-          //   />
-          // }
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.isRefreshing}
+              onRefresh={this.refreshFollowings}
+            />
+          }
           style={styles.root}
+          numColumns={3}
+          getItemLayout={this.getItemLayout}
+          onLayout={this.onLayout}
+          showsVerticalScrollIndicator={false}
+          columnWrapperStyle={[
+            styles.columnWrapper,
+            { height: this.state.itemHeight },
+          ]}
         />
       </Container>
     );
   }
+
+  onLayout = () => {
+    this.setState({ itemHeight: initialLayout.width / 3 });
+  };
+
+  getItemLayout = (data: any, index: number) => {
+    const { itemHeight } = this.state;
+    return { length: itemHeight, offset: itemHeight * index, index };
+  };
 }
 
 const mapStateToProps: any = (state: ReduxState) => ({
@@ -205,6 +220,8 @@ const Followings2 = withNavigation(
 
 export const Followings = connect(mapStateToProps)(Followings2);
 
+const MARGIN = 1;
+
 const styles = StyleSheet.create({
   root: {
     backgroundColor: colors.bgDefault,
@@ -214,20 +231,10 @@ const styles = StyleSheet.create({
     height: StyleSheet.hairlineWidth,
     backgroundColor: colors.grey5,
   },
-
-  contentRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 6,
-  },
-  name: {
-    color: colors.grey1,
-    fontWeight: '800',
-    width: '55%',
-  },
-  reviewText: {
+  columnWrapper: {
     flex: 1,
-    textAlignVertical: 'bottom', // android
-    paddingBottom: 5,
+    flexDirection: 'row',
+    marginHorizontal: -MARGIN * 2,
+    marginBottom: -MARGIN * 2,
   },
 });

@@ -7,9 +7,11 @@ import {
   Image,
   Platform,
   StyleSheet,
+  TouchableOpacity,
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 // import { CachedImage } from 'react-native-cached-image';
 import ImagePicker from 'react-native-image-crop-picker';
 import { GiftedAvatar } from 'react-native-gifted-chat';
@@ -38,6 +40,9 @@ type Props = {
   style?: Image.style,
   uri: string | Image,
   withBorder: boolean,
+  withButton?: boolean, // to show an button to follow or not
+  onButtonPress?: () => void,
+  buttonActiveState?: boolean, // to show an button to follow or to unfollow
 };
 
 type State = {
@@ -109,7 +114,7 @@ export default class Avatar extends PureComponent<Props, State> {
 
   renderAvatarImage = () => {
     const { placeholderText, uri } = this.props;
-    let name;
+    let name, Avatar;
 
     const allStyles = [
       !isiOS && { overlayColor: this.props.overlayColor },
@@ -126,25 +131,58 @@ export default class Avatar extends PureComponent<Props, State> {
         name = placeholderText.slice(1);
       }
 
-      return (
-        <View>
-          <GiftedAvatar
-            avatarStyle={allStyles}
-            user={{ name }}
-            textStyle={styles[`${this.props.size}AvatarPlaceHolderText`]}
-          />
-        </View>
+      Avatar = (
+        <GiftedAvatar
+          avatarStyle={allStyles}
+          user={{ name }}
+          textStyle={styles[`${this.props.size}AvatarPlaceHolderText`]}
+        />
+      );
+    } else {
+      Avatar = (
+        <Image
+          defaultSource={this.getPlaceholder()}
+          resizeMode={this.props.resizeMode}
+          source={this.getAppropriateSource()}
+          style={allStyles}
+        />
+        // <CachedImage source={this.getAppropriateSource()} />
       );
     }
 
+    if (!this.props.withButton) {
+      return <View> {Avatar}</View>;
+    }
+
     return (
-      <Image
-        defaultSource={this.getPlaceholder()}
-        resizeMode={this.props.resizeMode}
-        source={this.getAppropriateSource()}
-        style={allStyles}
-      />
-      // <CachedImage source={this.getAppropriateSource()} />
+      <View>
+        {Avatar}
+        <TouchableOpacity
+          onPress={this.props.onButtonPress}
+          style={{
+            borderRadius: 25,
+            height: 20,
+            width: 20,
+            top: -10,
+            alignSelf: 'flex-end',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
+          <Ionicons
+            style={
+              {
+                // margin: -15
+              }
+            }
+            size={18}
+            name={
+              this.props.buttonActiveState
+                ? 'ios-checkmark-circle'
+                : 'ios-add-circle'
+            }
+          />
+        </TouchableOpacity>
+      </View>
     );
   };
 

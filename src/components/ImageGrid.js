@@ -150,7 +150,7 @@ class ImageGridComponent extends React.Component<Props, State> {
             data={items}
             renderItem={this.renderItem}
             numColumns={3}
-            keyExtractor={el => el.uuid}
+            keyExtractor={this._keyExtractor}
             getItemLayout={this.getItemLayout}
             showsVerticalScrollIndicator={false}
             ListEmptyComponent={this.renderEmptyState}
@@ -159,6 +159,8 @@ class ImageGridComponent extends React.Component<Props, State> {
       </View>
     );
   }
+
+  _keyExtractor = (item): string => item.uuid;
 
   renderEmptyState = () => {
     if (this.state.items.length > 1) return null;

@@ -26,8 +26,6 @@ import type { NavigationScreenProp } from 'react-navigation';
 
 import type { UserData, Dispatch, ReduxState, Review } from '../types';
 
-const { width } = Dimensions.get('window');
-
 const initialLayout = {
   height: 0,
   width: Dimensions.get('window').width,
@@ -80,7 +78,7 @@ class ReviewsTabContainer extends Component<R_Prop, R_State> {
       Image.getSize(data[0].order.product.photoURIs[0], (w, h) => {
         this.setState(
           {
-            imageHeight: Math.floor(h * (width / 4 / w)),
+            imageHeight: Math.floor(h * (initialLayout.width / 4 / w)),
             data,
           },
           () => {
@@ -142,13 +140,12 @@ class ReviewsTabContainer extends Component<R_Prop, R_State> {
             style={[
               styles.itemImage,
               {
-                width: width / 4,
+                width: initialLayout.width / 4,
                 height: this.state.imageHeight,
               },
             ]}
             source={{ uri: order.product.photoURIs[0] }}
           />
-          {/* <View style={[styles.flex1, styles.content]}> */}
           <Body>
             <View style={styles.contentRow}>
               <Text

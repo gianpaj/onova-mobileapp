@@ -369,9 +369,8 @@ class ProfileScreen extends React.Component<Props, State> {
       });
   }
 
-  render() {
+  renderProfileTop() {
     const {
-      _id,
       bio,
       displayName,
       editing,
@@ -380,6 +379,93 @@ class ProfileScreen extends React.Component<Props, State> {
       username,
       isLoading,
     } = this.state;
+    return (
+      <View style={styles.profileTop}>
+        <View>
+          <View style={styles.row}>
+            <Avatar
+              style={styles.avatarContainer}
+              size={'default'}
+              withBorder
+              onChange={p => this.setState({ profilePic: p })}
+              interactive={editing}
+              uri={profilePic}
+              placeholderText={username}
+            />
+            <View style={styles.flex1}>
+              {this.isMe() ? (
+                <View style={styles.profileRight}>
+                  <EditableText
+                    text={displayName}
+                    onChangeText={t => this.setState({ displayName: t })}
+                    placeholder="Edit your shop name"
+                    placeholderColor={colors.grey3}
+                    isTextEditable={editing}
+                    style={styles.displayName}
+                    shouldAutoFocus
+                    loading={isLoading}
+                  />
+                  {this.renderUserNumbers()}
+                  <NBButton
+                    transparent
+                    bordered
+                    small
+                    full
+                    style={
+                      editing
+                        ? [styles.editOrFollowButton, styles.saveButton]
+                        : styles.editOrFollowButton
+                    }
+                    onPress={() => {
+                      editing
+                        ? this.onSave()
+                        : this.setState({ editing: !editing });
+                    }}>
+                    <Text style={styles.editOrFollowButtonText}>
+                      {editing ? 'Save' : 'Edit Profile'}
+                    </Text>
+                  </NBButton>
+                </View>
+              ) : (
+                <View style={styles.profileRight}>
+                  {displayName !== '' && <Text>{displayName}</Text>}
+                  {this.renderUserNumbers()}
+                  <NBButton
+                    transparent
+                    bordered
+                    small
+                    full
+                    style={styles.editOrFollowButton}
+                    onPress={() => this.onFollowOrUnfollow()}>
+                    <Text style={styles.editOrFollowButtonText}>
+                      {isFollowing ? 'Unfollow' : 'Follow'}
+                    </Text>
+                  </NBButton>
+                </View>
+              )}
+            </View>
+          </View>
+          <View {...padder}>
+            {this.isMe() ? (
+              <EditableText
+                autoCorrect
+                text={bio}
+                onChangeText={t => this.setState({ bio: t })}
+                placeholder="Edit your profile description"
+                placeholderColor={colors.grey3}
+                isTextEditable={editing}
+              />
+            ) : (
+              bio !== '' && <Text>{bio}</Text>
+            )}
+          </View>
+        </View>
+      </View>
+    );
+  }
+
+  render() {
+    const { _id, username } = this.state;
 
     const { navigation } = this.props;
 
@@ -424,87 +510,7 @@ class ProfileScreen extends React.Component<Props, State> {
               Please verify you email to start buying or selling.
             </NoticeBar>
           )}
-          <View style={styles.profileTop}>
-            <View>
-              <View style={styles.row}>
-                <Avatar
-                  style={styles.avatarContainer}
-                  size={'default'}
-                  withBorder
-                  onChange={p => this.setState({ profilePic: p })}
-                  interactive={editing}
-                  uri={profilePic}
-                  placeholderText={username}
-                />
-                <View style={styles.flex1}>
-                  {this.isMe() ? (
-                    <View style={styles.profileRight}>
-                      <EditableText
-                        text={displayName}
-                        onChangeText={t => this.setState({ displayName: t })}
-                        placeholder="Edit your shop name"
-                        placeholderColor={colors.grey3}
-                        isTextEditable={editing}
-                        style={styles.displayName}
-                        shouldAutoFocus
-                        loading={isLoading}
-                      />
-                      {this.renderUserNumbers()}
-                      <NBButton
-                        transparent
-                        bordered
-                        small
-                        full
-                        style={
-                          editing
-                            ? [styles.editOrFollowButton, styles.saveButton]
-                            : styles.editOrFollowButton
-                        }
-                        onPress={() => {
-                          editing
-                            ? this.onSave()
-                            : this.setState({ editing: !editing });
-                        }}>
-                        <Text style={styles.editOrFollowButtonText}>
-                          {editing ? 'Save' : 'Edit Profile'}
-                        </Text>
-                      </NBButton>
-                    </View>
-                  ) : (
-                    <View style={styles.profileRight}>
-                      {displayName !== '' && <Text>{displayName}</Text>}
-                      {this.renderUserNumbers()}
-                      <NBButton
-                        transparent
-                        bordered
-                        small
-                        full
-                        style={styles.editOrFollowButton}
-                        onPress={() => this.onFollowOrUnfollow()}>
-                        <Text style={styles.editOrFollowButtonText}>
-                          {isFollowing ? 'Unfollow' : 'Follow'}
-                        </Text>
-                      </NBButton>
-                    </View>
-                  )}
-                </View>
-              </View>
-              <View {...padder}>
-                {this.isMe() ? (
-                  <EditableText
-                    autoCorrect
-                    text={bio}
-                    onChangeText={t => this.setState({ bio: t })}
-                    placeholder="Edit your profile description"
-                    placeholderColor={colors.grey3}
-                    isTextEditable={editing}
-                  />
-                ) : (
-                  bio !== '' && <Text>{bio}</Text>
-                )}
-              </View>
-            </View>
-          </View>
+          {this.renderProfileTop()}
         </View>
         {_id !== '' && (
           <ImageGrid

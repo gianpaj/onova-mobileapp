@@ -111,17 +111,25 @@ export default class Avatar extends PureComponent<Props, State> {
     const { placeholderText, uri } = this.props;
     let name;
 
+    const allStyles = [
+      !isiOS && { overlayColor: this.props.overlayColor },
+      styles.avatar,
+      styles[`${this.props.size}Avatar`],
+      this.props.withBorder ? styles.border : {},
+      this.props.interactive ? styles.borderInteractive : {},
+      this.props.style,
+    ];
+
     if (!uri && placeholderText !== undefined) {
+      name = placeholderText;
       if (placeholderText[0] == '@') {
         name = placeholderText.slice(1);
-      } else {
-        name = placeholderText;
       }
 
       return (
         <View>
           <GiftedAvatar
-            avatarStyle={styles[`${this.props.size}Avatar`]}
+            avatarStyle={allStyles}
             user={{ name }}
             textStyle={styles[`${this.props.size}AvatarPlaceHolderText`]}
           />
@@ -131,16 +139,10 @@ export default class Avatar extends PureComponent<Props, State> {
 
     return (
       <Image
-        style={[
-          !isiOS && { overlayColor: this.props.overlayColor },
-          styles.avatar,
-          styles[`${this.props.size}Avatar`],
-          this.props.withBorder ? styles.border : {},
-          this.props.style,
-        ]}
         defaultSource={this.getPlaceholder()}
         resizeMode={this.props.resizeMode}
         source={this.getAppropriateSource()}
+        style={allStyles}
       />
       // <CachedImage source={this.getAppropriateSource()} />
     );
@@ -209,6 +211,10 @@ const styles = StyleSheet.create({
   border: {
     borderColor: colors.grey5,
     borderWidth: 2,
+  },
+  borderInteractive: {
+    borderColor: colors.grey2,
+    borderWidth: 4,
   },
   // container: {
   //   flex: 1,

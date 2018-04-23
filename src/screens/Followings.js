@@ -93,7 +93,7 @@ class FollowingsContainer extends Component<Props, State> {
   };
 
   onFollowOrUnfollow(_id: string, amIAFollower: boolean) {
-    const token = this.props.userData.token;
+    const { token } = this.props.userData;
     const followOrUnfollow = amIAFollower ? 'unfollow' : 'follow';
     api
       .post(`/api/users/${_id}/${followOrUnfollow}`, {}, { token })
@@ -108,6 +108,9 @@ class FollowingsContainer extends Component<Props, State> {
   }
 
   _renderItem = ({ item: user }: { item: UserData }) => {
+    const { _id } = this.props.userData;
+
+    const shouldShowButton = user._id !== _id;
     return (
       <TouchableHighlight
         style={{ width: initialLayout.width / 3 }}
@@ -115,10 +118,9 @@ class FollowingsContainer extends Component<Props, State> {
         onPress={() => this.goToProfile(user)}>
         <View style={{ alignItems: 'center' }}>
           <Avatar
-            // style={styles.avatarContainer}
             size={'small'}
             withBorder
-            withButton
+            withButton={shouldShowButton}
             uri={user.profilePic}
             placeholderText={user.username}
             buttonActiveState={user.amIAFollower}
@@ -126,7 +128,12 @@ class FollowingsContainer extends Component<Props, State> {
               this.onFollowOrUnfollow(user._id, user.amIAFollower)
             }
           />
-          <Text numberOfLines={1} /* android */>@{user.username}</Text>
+          <Text
+            style={[shouldShowButton ? { marginTop: -10 } : { marginTop: 10 }]}
+            numberOfLines={1} /* android */
+          >
+            @{user.username}
+          </Text>
         </View>
       </TouchableHighlight>
     );

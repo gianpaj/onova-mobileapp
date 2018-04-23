@@ -159,15 +159,7 @@ export default class Avatar extends PureComponent<Props, State> {
         {Avatar}
         <TouchableOpacity
           onPress={this.props.onButtonPress}
-          style={{
-            borderRadius: 25,
-            height: 20,
-            width: 20,
-            top: -10,
-            alignSelf: 'flex-end',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}>
+          style={styles.button}>
           <Ionicons
             style={
               {
@@ -203,6 +195,15 @@ export default class Avatar extends PureComponent<Props, State> {
 const styles = StyleSheet.create({
   avatar: {
     // backgroundColor: colors.grey3,
+  },
+  button: {
+    alignItems: 'center',
+    alignSelf: 'flex-end',
+    borderRadius: 25,
+    height: 20,
+    justifyContent: 'center',
+    top: -10,
+    width: 20,
   },
   /* eslint-disable */
   miniAvatar: {

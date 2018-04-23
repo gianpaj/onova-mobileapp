@@ -365,7 +365,7 @@ class ProfileScreen extends React.Component<Props, State> {
   };
 
   onFollowOrUnfollow() {
-    const token = this.props.userData.token;
+    const { token } = this.props.userData;
     const followOrUnfollow = !this.state.isFollowing ? 'follow' : 'unfollow';
     api
       .post(`/api/users/${this.state._id}/${followOrUnfollow}`, {}, { token })

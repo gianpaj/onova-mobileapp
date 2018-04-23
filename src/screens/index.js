@@ -9,6 +9,7 @@ import { OrdersList } from '../screens/OrdersList';
 import { OrderThread } from '../screens/OrderThread';
 import { Product } from '../screens/Product';
 import { Profile } from '../screens/Profile';
+import { Followings } from '../screens/Followings';
 import { Reviews } from '../screens/Reviews';
 import { Settings } from '../screens/Settings';
 import { Search } from '../screens/Search';
@@ -25,6 +26,7 @@ export {
   OrderThread,
   Product,
   Profile,
+  Followings,
   Reviews,
   Settings,
   Search,

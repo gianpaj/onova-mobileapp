@@ -324,6 +324,10 @@ class ProfileScreen extends React.Component<Props, State> {
     this.props.navigation.navigate('reviews', { userId: this.state._id });
   }
 
+  goToFollowing() {
+    this.props.navigation.navigate('followings', { userId: this.state._id });
+  }
+
   renderUserNumbers = () => {
     return (
       <View style={styles.userNumbers}>
@@ -348,10 +352,14 @@ class ProfileScreen extends React.Component<Props, State> {
           />
           <Text>{this.state.reviewsCount}</Text>
         </TouchableOpacity>
-        <View style={styles.alignCenter}>
-          <Text>{this.state.followersCount}</Text>
-          <Text>followers</Text>
-        </View>
+        <TouchableOpacity
+          onPress={() => this.goToFollowing()}
+          style={styles.alignCenter}>
+          <View>
+            <Text>{this.state.followersCount}</Text>
+            <Text>followers</Text>
+          </View>
+        </TouchableOpacity>
       </View>
     );
   };

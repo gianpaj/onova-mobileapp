@@ -17,7 +17,7 @@ const ActionForLoggedOut = NavigationStack.router.getActionForPathAndParams(
 
 const ActionForLoggedIn = NavigationActions.reset({
   index: 0,
-  actions: [NavigationActions.navigate({ routeName: 'tabs' })],
+  actions: [NavigationActions.navigate({ routeName: 'profile' })],
 });
 
 const stateForLoggedOut = NavigationStack.router.getStateForAction(

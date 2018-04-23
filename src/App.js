@@ -44,13 +44,33 @@ export default class App extends React.Component<*, State> {
 
     if (process.env.NODE_ENV == 'dev') {
       console.warn(`Running in ${process.env.NODE_ENV} environment`);
-      }
     }
-
-
-  componentWillUnmount() {
-    AppState.removeEventListener('change', this._handleAppStateChange);
   }
+
+  // _handleAppStateChange = (nextAppState: any) => {
+  //   const sb = SendBird.getInstance();
+  //   if (sb) {
+  //     if (
+  //       this.state.appState.match(/inactive|background/) &&
+  //       nextAppState === 'active'
+  //     ) {
+  //       console.debug('appstate - foreground');
+  //       sb.setForegroundState();
+  //     } else {
+  //       console.debug('appstate - background');
+  //       sb.setBackgroundState();
+  //     }
+  //   }
+  //   this.setState({ appState: nextAppState });
+  // };
+
+  // componentDidMount() {
+  //   AppState.addEventListener('change', this._handleAppStateChange);
+  // }
+
+  // componentWillUnmount() {
+  //   AppState.removeEventListener('change', this._handleAppStateChange);
+  // }
 
   _renderLoading = () => (
     <View style={styles.container}>

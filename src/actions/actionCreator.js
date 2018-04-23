@@ -81,18 +81,18 @@ const initializePusher = (userData: UserData): Promise<any> => {
   return new Promise((resolve, reject) => {
     try {
       new ChatManager({
-      instanceLocator: PUSHER_INSTANCE,
-      userId: userData._id, // user needs to already exist
-      tokenProvider: new TokenProvider({
-        url: PUSHER_TOKEN_PROVIDER,
+        instanceLocator: PUSHER_INSTANCE,
+        userId: userData._id, // user needs to already exist
+        tokenProvider: new TokenProvider({
+          url: PUSHER_TOKEN_PROVIDER,
           headers: {
             token: userData.token,
             avatarURL: userData.profilePic,
             username: userData.username,
           },
-      }),
-    });
-        resolve();
+        }),
+      });
+      resolve();
     } catch (error) {
       reject(error);
     }
@@ -206,18 +206,18 @@ const getUserData = (userId: string, options?: any = {}) => (
 );
 
 const logout = () => (dispatch: Dispatch) => {
-  const sb = SendBird.getInstance();
-  if (sb) {
-    sb.disconnect(() => console.debug('SendBird: disconnected'));
-    if (Platform.OS === 'ios') {
-      setBadgeNumber(0).then(() => {
-        console.debug('push badge reset to 0');
-      });
-    }
-    sb.unregisterPushTokenAllForCurrentUser(() =>
-      console.debug('SendBird: unregisterPushToken')
-    );
-  }
+  // const sb = SendBird.getInstance();
+  // if (sb) {
+  //   sb.disconnect(() => console.debug('SendBird: disconnected'));
+  //   if (Platform.OS === 'ios') {
+  //     setBadgeNumber(0).then(() => {
+  //       console.debug('push badge reset to 0');
+  //     });
+  //   }
+  //   sb.unregisterPushTokenAllForCurrentUser(() =>
+  //     console.debug('SendBird: unregisterPushToken')
+  //   );
+  // }
   return dispatch({ type: LOGOUT });
 
   // const provider = getState().LoginReducer.data.provider;

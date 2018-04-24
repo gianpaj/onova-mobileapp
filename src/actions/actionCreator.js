@@ -284,7 +284,7 @@ const handleErrorWithAlert = (data: any, err: any) => {
 export {
   incrementAction,
   decrementAction,
-  initializePusher,
+  // initializePusher,
   login,
   // loginWithGoogle,
   signup,

@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { addNavigationHelpers, NavigationActions } from 'react-navigation';
 import { createReduxBoundAddListener } from 'react-navigation-redux-helpers';
 
-import { initializePusher, sendToken, logout } from '../actions/actionCreator';
+import { sendToken, logout } from '../actions/actionCreator';
 import NavigationStack from './navigationStack';
 import type { Dispatch, UserData, ReduxState } from '../types';
 import type { NavigationState } from '../types/navigationReducer';
@@ -35,15 +35,10 @@ class AppNavigation extends Component<Props, void> {
       const { token } = userData;
       return api
         .get(`/api/users/${userData._id}/personal`, { token })
-        .then(() => {
-          initializePusher(userData)
-            .then(() => {
-              console.debug('Push notifications: initialized');
-              return registerPushNotifications();
-            })
-            .then(pushToken => {
-              if (pushToken) return sendToken(pushToken, userData);
-            });
+        .then(() => registerPushNotifications())
+        .then(pushToken => {
+          console.debug('Push notifications: initialized');
+          if (pushToken) return sendToken(pushToken, userData);
         })
         .catch(err => {
           console.debug(err);

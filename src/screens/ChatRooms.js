@@ -65,11 +65,11 @@ class ChatContainer extends Component<Props, State> {
   componentWillMount() {
     this.connectToPusher()
       .then(u => (this.currentUser = u))
-      .then(() => this.getOrdersAndChats())
+      .then(() => this.getChatsAndTheirOrders())
       .then(ordersAndChats => {
         console.log(ordersAndChats);
         this.setState({
-          ordersAndChats: ordersAndChats,
+          ordersAndChats,
           isLoading: false,
         });
       })
@@ -80,35 +80,40 @@ class ChatContainer extends Component<Props, State> {
       });
   }
 
-  getOrdersAndChats(): Promise<Array<any>> {
-    console.log('getOrdersAndChats');
+  getChatsAndTheirOrders(): Promise<Array<any>> {
+    console.log('getChatsAndTheirOrders');
     return new Promise((resolve, reject) => {
-      this.fetchOrders().then(orders => {
-        if (orders.length === 0) {
-          return resolve([]);
-        }
-        const { userData } = this.props;
-        this.currentUser
-          .getJoinableRooms()
-          .then((rooms: Array<any>) => {
-            const allRooms = [...rooms, ...this.currentUser.rooms];
+      let orders;
+      this.fetchOrders()
+        .then(o => {
+          if (o.length === 0) {
+            return resolve([]);
+          }
+          orders = o;
+          return this.currentUser.getJoinableRooms();
+        })
             console.log(allRooms);
-            return allRooms;
-          })
-          .then(allRooms => {
-            // filter chat rooms by matching order `id`(s) from API and Pusher roomId(s)
             let ordersAndRooms = allRooms.filter(r => {
               return orders.find((o: Order) => getRoomName(o) == r.name);
             });
-            // add order and room objects
-            ordersAndRooms = ordersAndRooms.map(r => {
-              r.order = orders.find((o: Order) => getRoomName(o) == r.name);
-              return r;
+        .then((rooms: Array<any>) => {
+          const allRooms = [...rooms, ...this.currentUser.rooms];
+          return allRooms;
+        })
+        .then(allRooms => {
+          const { userData } = this.props;
+          // filter chat rooms by checking if there is
+          // at least one room name == order generated name
             });
 
             return Promise.all(
               ordersAndRooms.map(async room => {
                 const msgs = await this.currentUser.fetchMessages({
+          // add order and room objects
+          roomsAndTheirOrders = roomsAndTheirOrders.map(r => {
+            r.orders = orders.filter((o: Order) => getRoomName(o) == r.name);
+            return r;
+          });
                   roomId: room.id,
                   direction: 'older',
                   limit: 1,
@@ -141,7 +146,7 @@ class ChatContainer extends Component<Props, State> {
     return new Promise((resolve, reject) => {
       api
         .get('/api/orders/', { token })
-        .then(res => resolve(res.data))
+        .then(({ data }) => resolve(data))
         .catch(err => reject(err));
     });
   }
@@ -259,11 +264,14 @@ class ChatContainer extends Component<Props, State> {
   };
 
   _renderOrderRow = ({ item }: { item: Room }) => {
-    const { lastMessage }: { lastMessage: any } = item;
+    let { lastMessage }: { lastMessage: any } = item;
     const { _id: myUserId } = this.props.userData;
     let from;
 
-    if (!lastMessage) return null;
+    // if no messages (very first order step)
+    if (!lastMessage) {
+      lastMessage = { senderId: -1, createdAt: item.createdAt };
+    }
 
     // if (lastMessage.messageType == 'user') {
     const isMyMessage = lastMessage.senderId == myUserId;
@@ -300,7 +308,9 @@ class ChatContainer extends Component<Props, State> {
               {from}
               {lastMessage.text}
             </Text>
-            <Text>{item.isPartnerOnline ? 'online' : 'offline'}</Text>
+            {lastMessage.senderId !== -1 && (
+              <Text>{item.isPartnerOnline ? 'online' : 'offline'}</Text>
+            )}
           </View>
         </View>
       </TouchableOpacity>
@@ -325,7 +335,7 @@ class ChatContainer extends Component<Props, State> {
 
   refreshOrdersAndChats = () => {
     this.setState({ isRefreshing: true });
-    this.getOrdersAndChats()
+    this.getChatsAndTheirOrders()
       .then(ordersAndChats => this.setState({ ordersAndChats }))
       .catch(err => {
         console.debug(err);
@@ -336,6 +346,8 @@ class ChatContainer extends Component<Props, State> {
 
   render() {
     const { hasError, ordersAndChats, isLoading } = this.state;
+
+    const allOrders = ordersAndChats.reduce((a, b) => a.concat(b.orders), []);
 
     return (
       <Container>

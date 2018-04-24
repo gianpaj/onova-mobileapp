@@ -291,10 +291,10 @@ class ChatContainer extends Component<Props, State> {
     const { userData } = this.props;
     return new Promise((resolve, reject) => {
       const chatManager = new ChatManager({
-        instanceLocator: PUSHER_INSTANCE,
+        instanceLocator: config.PUSHER_INSTANCE,
         userId: userData._id,
         tokenProvider: new TokenProvider({
-          url: PUSHER_TOKEN_PROVIDER,
+          url: config.PUSHER_TOKEN_PROVIDER,
           headers: {
             token: userData.token,
             avatarURL: userData.profilePic,

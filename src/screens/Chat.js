@@ -90,21 +90,21 @@ class ChatContainer extends Component<Props, State> {
 
     // for development
     if (!params) {
-      const orderId = '5ad67c508b10227b456bfc05';
+      // const orderId = '5ad67c508b10227b456bfc05';
       const product_uuid = 'ryq8-tjUM';
       const roomId = 6703904;
 
       return this.getTempUserId('firstperson').then(userId => {
-        this.initialise(orderId, product_uuid, userId, roomId);
+        this.initialise(product_uuid, userId, roomId);
       });
     }
     console.log(params);
     // coming from Checkout
     // OR
     // coming from ChatRooms
-    const { orderId, productUuid, userId, roomId } = params;
+    const { productUuid, userId, roomId } = params;
     // TODO: check show is the seller/buyer!
-    this.initialise(orderId, productUuid, userId, roomId);
+    this.initialise(productUuid, userId, roomId);
   }
 
   componentWillUnmount() {
@@ -171,16 +171,11 @@ class ChatContainer extends Component<Props, State> {
     });
   }
 
-  initialise(
-    orderId: string,
-    productUuid: string,
-    userId: string,
-    roomId: number
-  ) {
+  initialise(productUuid: string, userId: string, roomId: number) {
     const { userData } = this.props;
     let o;
     this.fetchProduct(productUuid)
-      .then(() => this.fetchOrder(orderId))
+      // .then(() => this.fetchOrder(orderId))
       .then(() => (o = this.state.order))
       .then(() => this._getPartner(userId))
       .then(() => this.connectToPusher())
@@ -193,7 +188,7 @@ class ChatContainer extends Component<Props, State> {
               console.log(`Joined room with ID: ${room.id}`);
             })
             .catch(err => {
-              console.log(`Error joining room ${someRoomID}: ${err}`);
+              console.log(`Error joining room ${roomId}: ${err}`);
             });
         } else {
           // coming from checkout
@@ -460,9 +455,9 @@ class ChatContainer extends Component<Props, State> {
 
   render() {
     const { navigation, userData } = this.props;
-    const { messages, isLoading, partner, product, order } = this.state;
+    const { messages, isLoading, partner, product } = this.state;
 
-    if (!product || !order) return null;
+    if (!product) return null;
 
     return (
       <Container style={st.flex1}>
@@ -552,7 +547,7 @@ class ChatContainer extends Component<Props, State> {
  */
 export function getRoomName(o: Order): string {
   const ids = [o.buyer._id, o.seller._id];
-  return ids.sort((a, b) => a > b).join('-');
+  return ids.sort().join('-');
 }
 
 const st = StyleSheet.create({

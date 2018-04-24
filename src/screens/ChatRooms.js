@@ -92,52 +92,56 @@ class ChatContainer extends Component<Props, State> {
           orders = o;
           return this.currentUser.getJoinableRooms();
         })
-            console.log(allRooms);
-            let ordersAndRooms = allRooms.filter(r => {
-              return orders.find((o: Order) => getRoomName(o) == r.name);
-            });
         .then((rooms: Array<any>) => {
-          const allRooms = [...rooms, ...this.currentUser.rooms];
-          return allRooms;
+          return [...rooms, ...this.currentUser.rooms];
         })
         .then(allRooms => {
           const { userData } = this.props;
           // filter chat rooms by checking if there is
           // at least one room name == order generated name
-            });
-
-            return Promise.all(
-              ordersAndRooms.map(async room => {
-                const msgs = await this.currentUser.fetchMessages({
+          let roomsAndTheirOrders = allRooms.filter(r => {
+            const o = orders.filter((o: Order) => getRoomName(o) == r.name);
+            if (o) return true;
+            return false;
+          });
           // add order and room objects
           roomsAndTheirOrders = roomsAndTheirOrders.map(r => {
             r.orders = orders.filter((o: Order) => getRoomName(o) == r.name);
             return r;
           });
+
+          return Promise.all(
+            roomsAndTheirOrders.map(async room => {
+              let msgs;
+              try {
+                msgs = await this.currentUser.fetchMessages({
                   roomId: room.id,
                   direction: 'older',
                   limit: 1,
                 });
-                const partner = this.currentUser.users.filter(
-                  u => u.id !== userData._id
-                )[0];
-                const cursor = await this.currentUser.readCursor({
-                  roomId: room.id,
-                });
+              } catch (err) {
+                throw new Error(err);
+              }
+              // console.warn(room.users.map(u => u.name));
+              const partner = room.users.filter(u => u.id !== userData._id)[0];
+              // const cursor = await this.currentUser.readCursor({
+              //   roomId: room.id,
+              // });
 
-                // TODO: set haveUnreadMsgs
-                if (cursor) console.log(cursor.position);
-                const isPartnerOnline = partner.presence.state == 'online';
-                room.lastMessage = msgs[0];
-                room.isPartnerOnline = isPartnerOnline;
-                room.partner = partner;
-                return room;
-              })
-            );
-          })
-          .then(ordersAndChats => resolve(ordersAndChats))
-          .catch(e => reject(e));
-      });
+              // // TODO: set haveUnreadMsgs
+              // if (cursor) console.log(cursor.position);
+              const isPartnerOnline = partner.presence.state == 'online';
+              return {
+                ...room,
+                lastMessage: msgs[0],
+                isPartnerOnline,
+                partner,
+              };
+            })
+          );
+        })
+        .then(ordersAndChats => resolve(ordersAndChats))
+        .catch(e => reject(e));
     });
   }
 
@@ -210,18 +214,17 @@ class ChatContainer extends Component<Props, State> {
   }
 
   goToChat = item => {
-    const { order } = item;
-    this.fetchOrder(order.id)
+    const { orders } = item;
+    this.fetchOrder(orders[0].id)
       .then((order: Order) => {
         const navigateToChat = NavigationActions.navigate({
           routeName: 'chat',
           params: {
             productUuid: order.product.uuid,
-            orderId: order.id,
             userId: item.partner.id,
             roomId: item.id,
           },
-          key: `chat-${order.id}`,
+          key: `chat-${getRoomName(order)}`,
         });
         this.props.navigation.dispatch(navigateToChat);
       })
@@ -232,9 +235,12 @@ class ChatContainer extends Component<Props, State> {
   };
 
   _renderOrderCircle = ({ item }: { item: Room }) => {
-    if (!item.lastMessage) return null;
+    // if no messages (very first order step)
+    if (!item.lastMessage) {
+      item.lastMessage = { senderId: -1, createdAt: item.createdAt };
+    }
 
-    const { status, product } = item.order;
+    const { status, product } = item;
     let perc = 0;
 
     // if (status == 'confirmed') perc = 0;
@@ -365,10 +371,10 @@ class ChatContainer extends Component<Props, State> {
             </View>
           ) : (
             <View>
-              {ordersAndChats.length > 0 && (
+              {allOrders.length > 0 && (
                 <FlatList
                   style={{ height: 60 + 8 + 8 }}
-                  data={ordersAndChats}
+                  data={allOrders}
                   keyExtractor={this._keyExtractor}
                   horizontal
                   ItemSeparatorComponent={this._renderSeparatorHorizontal}

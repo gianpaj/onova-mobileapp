@@ -18,9 +18,9 @@ import { ReviewsTab } from './ReviewsTab';
 
 import colors from '../config/colors';
 
-import type { NavigationScreenProp } from 'react-navigation';
-
 import type { Dispatch } from '../types';
+
+import type { NavigationScreenProp } from 'react-navigation';
 
 const initialLayout = {
   height: 0,

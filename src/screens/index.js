@@ -9,6 +9,7 @@ import { ChatRooms } from '../screens/ChatRooms';
 import { Chat } from '../screens/Chat';
 import { Product } from '../screens/Product';
 import { Profile } from '../screens/Profile';
+import { Followings } from '../screens/Followings';
 import { Reviews } from '../screens/Reviews';
 import { Settings } from '../screens/Settings';
 import { Search } from '../screens/Search';
@@ -25,6 +26,7 @@ export {
   Chat,
   Product,
   Profile,
+  Followings,
   Reviews,
   Settings,
   Search,

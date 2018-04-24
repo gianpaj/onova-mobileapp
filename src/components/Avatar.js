@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 // import { CachedImage } from 'react-native-cached-image';
 import ImagePicker from 'react-native-image-crop-picker';
 import { GiftedAvatar } from 'react-native-gifted-chat';
@@ -38,6 +39,9 @@ type Props = {
   style?: Image.style,
   uri: string | Image,
   withBorder: boolean,
+  withButton?: boolean, // to show an button to follow or not
+  onButtonPress?: () => void,
+  buttonActiveState?: boolean, // to show an button to follow or to unfollow
 };
 
 type State = {
@@ -109,40 +113,67 @@ export default class Avatar extends PureComponent<Props, State> {
 
   renderAvatarImage = () => {
     const { placeholderText, uri } = this.props;
-    let name;
+    let name, Avatar;
+
+    const allStyles = [
+      !isiOS && { overlayColor: this.props.overlayColor },
+      styles.avatar,
+      styles[`${this.props.size}Avatar`],
+      this.props.withBorder ? styles.border : {},
+      this.props.interactive ? styles.borderInteractive : {},
+      this.props.style,
+    ];
 
     if (!uri && placeholderText !== undefined) {
+      name = placeholderText;
       if (placeholderText[0] == '@') {
         name = placeholderText.slice(1);
-      } else {
-        name = placeholderText;
       }
 
-      return (
-        <View>
-          <GiftedAvatar
-            avatarStyle={styles[`${this.props.size}Avatar`]}
-            user={{ name }}
-            textStyle={styles[`${this.props.size}AvatarPlaceHolderText`]}
-          />
-        </View>
+      Avatar = (
+        <GiftedAvatar
+          avatarStyle={allStyles}
+          user={{ name }}
+          textStyle={styles[`${this.props.size}AvatarPlaceHolderText`]}
+        />
+      );
+    } else {
+      Avatar = (
+        <Image
+          defaultSource={this.getPlaceholder()}
+          resizeMode={this.props.resizeMode}
+          source={this.getAppropriateSource()}
+          style={allStyles}
+        />
+        // <CachedImage source={this.getAppropriateSource()} />
       );
     }
 
+    if (!this.props.withButton) {
+      return <View> {Avatar}</View>;
+    }
+
     return (
-      <Image
-        style={[
-          !isiOS && { overlayColor: this.props.overlayColor },
-          styles.avatar,
-          styles[`${this.props.size}Avatar`],
-          this.props.withBorder ? styles.border : {},
-          this.props.style,
-        ]}
-        defaultSource={this.getPlaceholder()}
-        resizeMode={this.props.resizeMode}
-        source={this.getAppropriateSource()}
-      />
-      // <CachedImage source={this.getAppropriateSource()} />
+      <View>
+        {Avatar}
+        <TouchableOpacity
+          onPress={this.props.onButtonPress}
+          style={styles.button}>
+          <Ionicons
+            style={
+              {
+                // margin: -15
+              }
+            }
+            size={18}
+            name={
+              this.props.buttonActiveState
+                ? 'ios-checkmark-circle'
+                : 'ios-add-circle'
+            }
+          />
+        </TouchableOpacity>
+      </View>
     );
   };
 
@@ -163,6 +194,15 @@ export default class Avatar extends PureComponent<Props, State> {
 const styles = StyleSheet.create({
   avatar: {
     // backgroundColor: colors.grey3,
+  },
+  button: {
+    alignItems: 'center',
+    alignSelf: 'flex-end',
+    borderRadius: 25,
+    height: 20,
+    justifyContent: 'center',
+    top: -10,
+    width: 20,
   },
   /* eslint-disable */
   miniAvatar: {
@@ -209,6 +249,10 @@ const styles = StyleSheet.create({
   border: {
     borderColor: colors.grey5,
     borderWidth: 2,
+  },
+  borderInteractive: {
+    borderColor: colors.grey2,
+    borderWidth: 4,
   },
   // container: {
   //   flex: 1,

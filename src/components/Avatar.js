@@ -55,6 +55,7 @@ export default class Avatar extends PureComponent<Props, State> {
     resizeMode: 'cover',
     size: 'default',
     withBorder: false,
+    withButton: false,
   };
 
   state = {
@@ -149,8 +150,8 @@ export default class Avatar extends PureComponent<Props, State> {
       );
     }
 
-    if (!this.props.withButton) {
-      return <View> {Avatar}</View>;
+    if (this.props.withButton == false) {
+      return <View>{Avatar}</View>;
     }
 
     return (

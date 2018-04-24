@@ -117,7 +117,6 @@ export default class Avatar extends PureComponent<Props, State> {
     let name, Avatar;
 
     const allStyles = [
-      !isiOS && { overlayColor: this.props.overlayColor },
       styles.avatar,
       styles[`${this.props.size}Avatar`],
       this.props.withBorder ? styles.border : {},
@@ -144,7 +143,10 @@ export default class Avatar extends PureComponent<Props, State> {
           defaultSource={this.getPlaceholder()}
           resizeMode={this.props.resizeMode}
           source={this.getAppropriateSource()}
-          style={allStyles}
+          style={[
+            !isiOS && { overlayColor: this.props.overlayColor },
+            allStyles,
+          ]}
         />
         // <CachedImage source={this.getAppropriateSource()} />
       );

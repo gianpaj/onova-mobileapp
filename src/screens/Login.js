@@ -28,17 +28,24 @@ import { Toast } from 'antd-mobile';
 import AnimButton from 'react-native-micro-animated-button';
 
 import { login, goback } from '../actions/actionCreator';
-import type { Dispatch, ReduxState } from '../types';
-
 import * as api from '../utils/api';
 import colors from '../config/colors';
+
+import type { Dispatch, ReduxState } from '../types';
 
 let defaultState = {};
 
 if (__DEV__) {
   if (Platform.OS == 'ios') {
+    if (process.env.NODE_ENV == 'dev') {
+      defaultState = {
+        emailAddress: 'gianpa+test4@gmail.com',
+        password: '***REMOVED***',
+      };
+    }
     defaultState = {
-      emailAddress: 'gianpa+test4@gmail.com',
+      // gianpatestlocal
+      emailAddress: 'gianpa+test@gmail.com',
       password: '***REMOVED***',
     };
   } else {

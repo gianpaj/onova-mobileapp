@@ -217,10 +217,19 @@ export class ProductContainer extends React.Component<Props, State> {
         } else {
           // $FlowFixMe
           this.props.navigation.navigate({
-            routeName: 'checkout',
-            params: item,
-            key: `checkout-${product.uuid}`,
+            key: `chat-${product.uuid}`,
+            routeName: 'chat',
+            params: {
+              productUuid: product.uuid,
+              roomId: -1,
+              userId: product.seller.id,
+            },
           });
+          // this.props.navigation.navigate({
+          //   routeName: 'checkout',
+          //   params: item,
+          //   key: `checkout-${product.uuid}`,
+          // });
         }
       })
       .catch(err => {

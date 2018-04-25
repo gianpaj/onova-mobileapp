@@ -456,7 +456,6 @@ class SettingsContainer extends Component<Props, State> {
             <View style={styles.padder}>
               <Text style={[styles.padder, styles.secureText]}>
                 Your data is secured with a 2048-bit encryption SSL certificate
-                and stored in PayPal
                 {/* for More info please refer to the FAQ */}
               </Text>
             </View>
@@ -528,7 +527,7 @@ class SettingsContainer extends Component<Props, State> {
             <TouchableOpacity onPress={this.onSendEmail}>
               <Text style={styles.centerText}>hello@onova.co</Text>
             </TouchableOpacity>
-            <Text style={styles.centerText}>__version__</Text>
+            {/* <Text style={styles.centerText}>__version__</Text> */}
           </View>
           {/* <HR full /> */}
           {/* <NBButton light full onPress={() => Instabug.invoke()}>

@@ -75,12 +75,16 @@ export type PaymentInfo =
   | {};
 
 export type ShippingAddress = {
-  line1: string,
-  line2: string,
+  firstName: string,
+  lastName: string,
+  fathersName: string,
+  departmentNovaposhta: string,
+  // line1: string,
+  // line2: string,
   city: string,
-  state: string,
-  country: string,
-  postcode: string,
+  // state: string,
+  // country: string,
+  // postcode: string,
 };
 
 // export type Message = {

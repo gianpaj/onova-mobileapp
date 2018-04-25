@@ -22,6 +22,7 @@ import RadioForm, {
 import ImagePicker from 'react-native-image-crop-picker';
 import {
   TextareaItem,
+  Toast,
   ImagePicker as AntImagePicker,
   WingBlank,
 } from 'antd-mobile';
@@ -141,6 +142,7 @@ export class AddProductScreen extends React.Component<Props, State> {
     const { description, images, price, grp_1, grp_2, tags } = this.state;
 
     this.setState({ pending: true, tagsText: '' });
+    Toast.loading('Uploading...', 30);
 
     const formData = new FormData();
     images.forEach((image, i) => {
@@ -177,6 +179,7 @@ export class AddProductScreen extends React.Component<Props, State> {
       // final
       .then(() => {
         this.setState({ pending: false });
+        Toast.hide();
       });
   };
 

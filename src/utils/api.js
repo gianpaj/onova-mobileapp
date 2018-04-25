@@ -2,11 +2,13 @@
 
 import axios, { CancelTokenSource } from 'axios';
 let config;
-if (process.env.NODE_ENV == 'dev') {
-  config = require('../../config-dev.json');
-} else {
+if (process.env.NODE_ENV == 'production') {
   config = require('../../config-prod.json');
+} else {
+  config = require('../../config-dev.json');
 }
+
+console.debug(`connecting to ${config.API_URL}`);
 
 axios.defaults.baseURL = config.API_URL;
 const TIMEOUT = 4000;

@@ -353,7 +353,8 @@ class ChatContainer extends Component<Props, State> {
   render() {
     const { hasError, ordersAndChats, isLoading } = this.state;
 
-    const allOrders = ordersAndChats.reduce((a, b) => a.concat(b.orders), []);
+    // const allOrders = ordersAndChats.reduce((a, b) => a.concat(b.orders), []);
+    const allOrders = [];
 
     return (
       <Container>

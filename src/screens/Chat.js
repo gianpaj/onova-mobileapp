@@ -489,7 +489,7 @@ class ChatContainer extends Component<Props, State> {
             </View>
           ) : (
             <View style={st.flex1}>
-              <CardItem header>
+              {/* <CardItem header>
                 <Text
                   numberOfLines={1} // android
                   style={{ width: '50%', top: -1.5 }}>
@@ -506,7 +506,7 @@ class ChatContainer extends Component<Props, State> {
                     <NBIcon name="ios-information-circle-outline" />
                   </NBButton>
                 </View>
-              </CardItem>
+              </CardItem> */}
               <GiftedChat
                 messages={messages}
                 onSend={m => this.onSend(m)}

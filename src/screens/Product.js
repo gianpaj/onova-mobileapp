@@ -136,7 +136,7 @@ export class ProductContainer extends React.Component<Props, State> {
 
     // for development
     if (!params) {
-      uuid = 'SJWwox8LLG';
+      uuid = 'Hy-RJ66nz';
     } else {
       uuid = params.uuid;
     }
@@ -371,7 +371,13 @@ export class ProductContainer extends React.Component<Props, State> {
               {/* <View style={styles.bottomSectionAfter}>
                 <Text style={styles.timeAgo}>{'X MINUTES AGO'}</Text>
               </View> */}
-              <View style={[styles.padder, styles.bottomSectionAfter]}>
+              <View
+                style={[
+                  styles.padder,
+                  styles.bottomSectionAfter,
+                  // give space to the carousel dots
+                  item.photoURIs.length > 1 && { marginTop: 45 },
+                ]}>
                 {/* // $FlowFixMe */}
                 <Text style={styles.description}>{item.description}</Text>
                 {item.tags && (

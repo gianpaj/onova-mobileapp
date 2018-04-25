@@ -92,7 +92,7 @@ export class AddProductScreen extends React.Component<Props, State> {
     // const { params } = this.props.navigation.state;
     // if (params && params.focused == true) {
     if (this.state.images.length == 0) {
-      // this.selectPhotoTapped(0);
+      this.selectPhotoTapped(0);
     }
   }
 
@@ -165,7 +165,7 @@ export class AddProductScreen extends React.Component<Props, State> {
 
     const { token } = this.props.userData;
     api
-      .post('/api/products', formData, { token })
+      .post('/api/products', formData, { token, timeout: 300000 })
       .then(res => {
         console.debug(res);
         this.closeModal();
@@ -279,7 +279,7 @@ export class AddProductScreen extends React.Component<Props, State> {
   render() {
     const { images } = this.state;
     return (
-      true && (
+      images.length > 0 && (
         <Container>
           <Header>
             <Left>

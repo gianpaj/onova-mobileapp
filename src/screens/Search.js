@@ -1,8 +1,8 @@
 // @flow
 
 import React, { Component } from 'react';
-import { Dimensions, StyleSheet } from 'react-native';
-import { Body, Container, Header, Title } from 'native-base';
+import { Dimensions, StyleSheet, Text } from 'react-native';
+import { Body, Container, Header, Title, Left, Right } from 'native-base';
 import { TabViewAnimated, TabBar, SceneMap } from 'react-native-tab-view';
 
 import { SearchProductsTab } from './SearchProductsTab';
@@ -55,10 +55,17 @@ export class Search extends Component<Props, State> {
   render() {
     return (
       <Container>
-        <Header>
-          <Body>
-            <Title>Search</Title>
+        <Header style={{ backgroundColor: colors.bgDefault }} hasTabs>
+          <Left style={styles.container} />
+          <Body style={styles.container}>
+            <Title
+              style={{
+                color: colors.black,
+              }}>
+              Search
+            </Title>
           </Body>
+          <Right />
         </Header>
         <TabViewAnimated
           navigationState={this.state}
@@ -73,8 +80,13 @@ export class Search extends Component<Props, State> {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    alignItems: 'stretch',
+    flex: 1,
+    justifyContent: 'center',
+  },
   tabbar: {
-    backgroundColor: colors.white,
+    backgroundColor: colors.bgDefault,
   },
   label: {
     color: colors.black,

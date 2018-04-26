@@ -359,7 +359,7 @@ class Comments extends React.Component<Props, State> {
             }}
             // eslint-disable-next-line
             textInputStyle={{
-              fontSize: 15,
+              fontSize: 8,
               paddingHorizontal: 3,
             }}
             horizontal={false}

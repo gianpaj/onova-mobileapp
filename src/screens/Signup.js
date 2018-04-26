@@ -162,8 +162,8 @@ class SignupScreen extends React.Component<Props, State> {
       <Container>
         <Content>
           <View style={styles.header}>
-            <Icon name="flash" style={{ fontSize: 104 }} />
-            <Text>Onova.co</Text>
+            {/* <Icon name="flash" style={{ fontSize: 104 }} /> */}
+            <Text>Onova</Text>
             <View>
               <Text style={{ color: colors.black }}>
                 Buy and sell clothes from your phone
@@ -249,11 +249,11 @@ class SignupScreen extends React.Component<Props, State> {
               </Text>
               <Text style={[styles.hr, styles.mt15, { color: colors.grey1 }]}>
                 By creating an account you agree to the&nbsp;
-                <Text
+                {/* <Text
                   style={[styles.linkText, styles.termsLink]}
-                  onPress={this.openTermPolicy}>
-                  Terms and Policy
-                </Text>
+                  onPress={this.openTermPolicy}> */}
+                Terms and Policy
+                {/* </Text> */}
               </Text>
             </View>
           </View>
@@ -298,8 +298,8 @@ const raised = {
 const styles = StyleSheet.create({
   header: {
     alignItems: 'center',
-    height: 180,
     marginTop: 40,
+    height: 180 / 2,
   },
   input: {
     color: colors.black,

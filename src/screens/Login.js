@@ -206,8 +206,8 @@ class LoginScreen extends React.Component<Props, State> {
         <Content testID="login-form">
           <View style={styles.header}>
             <View style={{ alignItems: 'center' }}>
-              <Icon name="flash" style={{ fontSize: 104 }} />
-              <Text>Onova.co</Text>
+              {/* <Icon name="flash" style={{ fontSize: 104 }} /> */}
+              <Text>Onova</Text>
               <View>
                 <Text style={{ color: colors.black }}>
                   Buy and sell clothes from your phone
@@ -389,7 +389,7 @@ const raised = {
 const styles = StyleSheet.create({
   header: {
     marginTop: 40,
-    height: 180,
+    height: 180 / 2,
   },
   input: {
     color: colors.black,

@@ -331,7 +331,7 @@ class ProfileScreen extends React.Component<Props, State> {
   renderUserNumbers = () => {
     return (
       <View style={styles.userNumbers}>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           onPress={() => this.goToReviews()}
           style={styles.alignCenter}>
           <StarRating
@@ -351,12 +351,14 @@ class ProfileScreen extends React.Component<Props, State> {
             starSize={25}
           />
           <Text>{this.state.reviewsCount}</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         <TouchableOpacity
           onPress={() => this.goToFollowing()}
           style={styles.alignCenter}>
           <View>
-            <Text>{this.state.followersCount}</Text>
+            <Text style={{ textAlign: 'center' }}>
+              {this.state.followersCount}
+            </Text>
             <Text>followers</Text>
           </View>
         </TouchableOpacity>
@@ -390,7 +392,7 @@ class ProfileScreen extends React.Component<Props, State> {
     return (
       <View style={styles.profileTop}>
         <View>
-          <View style={styles.row}>
+          <View style={[styles.row, { marginTop: 20 }]}>
             <Avatar
               style={styles.avatarContainer}
               size={'default'}
@@ -453,7 +455,7 @@ class ProfileScreen extends React.Component<Props, State> {
               )}
             </View>
           </View>
-          <View {...padder}>
+          <View style={{ paddingVertical: 30, paddingHorizontal: 10 }}>
             {this.isMe() ? (
               <EditableText
                 autoCorrect
@@ -479,7 +481,7 @@ class ProfileScreen extends React.Component<Props, State> {
 
     return (
       <Container>
-        <Header>
+        <Header style={{ backgroundColor: colors.bgDefault }}>
           <Left style={styles.flex1}>
             {this.ifNavigatedFromProduct() && (
               <NBButton transparent dark onPress={() => navigation.goBack()}>

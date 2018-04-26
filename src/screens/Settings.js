@@ -365,7 +365,7 @@ class SettingsContainer extends Component<Props, State> {
         </Header>
         <Content style={{ backgroundColor: colors.white }}>
           <View style={styles.padder}>
-            <Accordion
+            {/* <Accordion
               headerText="Shipping Address:"
               values={[
                 {
@@ -452,7 +452,7 @@ class SettingsContainer extends Component<Props, State> {
               <View style={{ paddingLeft: 10 }}>
                 <LiteCreditCardInput onChange={this.onCCChange} />
               </View>
-            </FlipCard>
+            </FlipCard> */}
             <View style={styles.padder}>
               <Text style={[styles.padder, styles.secureText]}>
                 Your data is secured with a 2048-bit encryption SSL certificate

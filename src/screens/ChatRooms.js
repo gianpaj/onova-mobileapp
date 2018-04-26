@@ -358,10 +358,10 @@ class ChatContainer extends Component<Props, State> {
 
     return (
       <Container>
-        <Header>
-          <Left />
-          <Body>
-            <Title>Chats and Orders</Title>
+        <Header style={{ backgroundColor: colors.bgDefault }}>
+          <Left style={st.container} />
+          <Body style={st.container}>
+            <Title style={{ color: colors.black }}>Chats</Title>
           </Body>
           <Right />
         </Header>

@@ -79,7 +79,7 @@ export class Home extends PureComponent<Props, State> {
     return (
       <Container testID="Home">
         {/* <View style={styles.statusBarUnderlay} /> */}
-        <Header hasTabs>
+        <Header style={{ backgroundColor: colors.bgDefault }} hasTabs>
           <Left style={styles.container} />
           <Body style={styles.container}>
             <Text style={{ alignSelf: 'center', fontWeight: 'bold' }}>

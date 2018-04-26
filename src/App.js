@@ -44,6 +44,8 @@ export default class App extends React.Component<*, State> {
 
     if (process.env.NODE_ENV == 'dev') {
       console.warn(`Running in ${process.env.NODE_ENV} environment`);
+    } else {
+      console.debug(`Running in ${process.env.NODE_ENV} environment`);
     }
   }
 

@@ -60,6 +60,7 @@ const tabBarConfiguration = {
     },
   }),
   tabBarOptions: {
+    showLabel: false,
     showIcon: true,
     // tint color is passed to text and icons (if enabled) on the tab bar
     activeTintColor: isiOS ? colors.active : colors.primary,

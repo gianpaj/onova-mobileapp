@@ -281,7 +281,7 @@ export class ProductContainer extends React.Component<Props, State> {
 
     return (
       <Container>
-        <Header>
+        <Header style={{ backgroundColor: colors.bgDefault }}>
           <Left>
             <NBButton
               transparent
@@ -363,7 +363,7 @@ export class ProductContainer extends React.Component<Props, State> {
                     // disabled
                     buttonStyle={styles.buyButton}
                     onPress={() => this.onPressBuy()}
-                    title="Buy"
+                    title="Chat"
                     loading={this.state.loadingBuy}
                   />
                 </View>
@@ -454,19 +454,22 @@ const styles = StyleSheet.create({
   //   marginTop: 12,
   // },
   buyButton: {
-    backgroundColor: colors.grey1,
+    backgroundColor: colors.red,
     marginTop: 9,
     paddingBottom: 8,
     paddingRight: 12,
     paddingTop: 8,
   },
   bottomSectionAfter: {
-    marginTop: 9,
-    marginBottom: 20,
+    marginTop: 29,
+    marginBottom: 40,
     // marginLeft: 15,
   },
   padder: {
     paddingHorizontal: 10,
+  },
+  description: {
+    fontSize: 18,
   },
   row: {
     flexDirection: 'row',

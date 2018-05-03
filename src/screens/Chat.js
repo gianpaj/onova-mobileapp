@@ -407,16 +407,16 @@ class ChatContainer extends Component<Props, State> {
   renderSend(props): React$Element<*> {
     const showActiveOpacity = props.text.trim().length > 0;
     return (
-      <Send {...props}>
-        <View style={st.send}>
+      <View style={st.send}>
+        <Send {...props}>
           <Ionicons
             // eslint-disable-next-line
             style={{ opacity: showActiveOpacity ? 1 : 0.7 }}
             name="md-send"
             size={29}
           />
-        </View>
-      </Send>
+        </Send>
+      </View>
     );
   }
 
@@ -602,6 +602,8 @@ const st = StyleSheet.create({
   send: {
     marginBottom: 5,
     marginRight: 10,
+    justifyContent: 'center',
+    height: '100%',
   },
   systemContainer: {
     backgroundColor: colors.primary,

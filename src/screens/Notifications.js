@@ -42,12 +42,14 @@ type Props = {
 type State = {
   data: Array<Notification>,
   isRefreshing: boolean,
+  lastId: string,
 };
 
 export class NotificationsContainer extends Component<Props, State> {
   state = {
     data: [],
     isRefreshing: false,
+    lastId: '',
   };
 
   async componentWillMount() {
@@ -61,11 +63,10 @@ export class NotificationsContainer extends Component<Props, State> {
   async getNotificationsAndSetState(): Promise<any> {
     const { token } = this.props.userData;
 
-    const res = await api.get(`/api/users/notifications`, {
-      token,
-    });
+    const res = await api.get('/api/users/notifications', { token });
 
-    this.setState({ data: res.data });
+    const lastNotif = res.data[res.data.length - 1];
+    this.setState({ data: res.data, lastId: lastNotif._id });
   }
 
   _keyExtractor = (item): string => item._id;
@@ -73,12 +74,41 @@ export class NotificationsContainer extends Component<Props, State> {
   _renderSeparator = () => <View style={styles.separator} />;
 
   renderEmptyState = () => {
-    if (!this.state.showingResults) return null;
-
     // TODO: center empty state in RN 0.56 - https://github.com/facebook/react-native/pull/18206
     return (
       <View style={styles.container}>
         <Text>You do not have any notifications</Text>
+      </View>
+    );
+  };
+
+  loadMore = async () => {
+    this.setState({ isRefreshing: true });
+    const { token } = this.props.userData;
+    const res = await api.get(
+      `/api/users/notifications?lastId=${this.state.lastId}`,
+      {
+        token,
+      }
+    );
+    this.setState({ isRefreshing: false });
+    if (res.data.length == 0) return;
+
+    const lastNotif = res.data[res.data.length - 1];
+
+    this.setState({
+      data: [...this.state.data, ...res.data],
+      lastId: lastNotif._id,
+    });
+  };
+
+  renderFooter = () => {
+    // TODO: center empty state in RN 0.56 - https://github.com/facebook/react-native/pull/18206
+    return (
+      <View style={styles.container}>
+        <Button full light onPress={this.loadMore}>
+          <Text>Load more</Text>
+        </Button>
       </View>
     );
   };
@@ -158,6 +188,7 @@ export class NotificationsContainer extends Component<Props, State> {
           ItemSeparatorComponent={this._renderSeparator}
           keyExtractor={this._keyExtractor}
           ListEmptyComponent={this.renderEmptyState}
+          ListFooterComponent={this.renderFooter}
           renderItem={this._renderItem}
           refreshControl={
             <RefreshControl
@@ -194,11 +225,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.grey5,
   },
 
-  itemImage: {
-    marginHorizontal: 19,
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor: colors.grey4,
-  },
   contentRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',

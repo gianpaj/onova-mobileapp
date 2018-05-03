@@ -32,6 +32,7 @@ type Props = {
   userData: UserData,
   as: string,
 };
+
 type State = {
   data: Array<Review>,
   imageHeight: number,

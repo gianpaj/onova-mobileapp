@@ -305,7 +305,7 @@ class ProfileScreen extends React.Component<Props, State> {
   };
 
   openNotifications = () => {
-    alert('code me like those french girls 🎨');
+    this.props.navigation.navigate('notifications');
   };
 
   shouldComponentUpdate(nextProps) {
@@ -483,9 +483,17 @@ class ProfileScreen extends React.Component<Props, State> {
       <Container>
         <Header style={{ backgroundColor: colors.bgDefault }}>
           <Left style={styles.flex1}>
-            {this.ifNavigatedFromProduct() && (
+            {this.ifNavigatedFromProduct() ? (
               <NBButton transparent dark onPress={() => navigation.goBack()}>
                 <NBIcon ios="ios-arrow-back" android="md-arrow-back" />
+              </NBButton>
+            ) : (
+              <NBButton transparent dark onPress={this.openNotifications}>
+                <NBIcon
+                  ios="ios-notifications"
+                  android="md-notifications"
+                  style={styles.icon}
+                />
               </NBButton>
             )}
           </Left>

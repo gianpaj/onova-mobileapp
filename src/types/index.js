@@ -113,7 +113,6 @@ export type PusherMessage = {
   room: number,
   sent?: boolean,
   received?: boolean,
-
 };
 
 export type PusherUser = {
@@ -179,6 +178,17 @@ export type Review = {
   rateNumber: number,
   lang: string,
   createdAt: Date,
+};
+
+type TriggeredType = 'User' | 'Product' | 'Order';
+
+export type Notification = {
+  notifI18n: string,
+  targetUser: string,
+  triggeredBy: string,
+  data: any,
+  triggeredType: TriggeredType,
+  dateCreated: Date,
 };
 
 export type ReduxState = {

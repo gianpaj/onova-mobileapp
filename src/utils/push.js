@@ -3,7 +3,7 @@
 import { Platform } from 'react-native';
 import firebase from 'react-native-firebase';
 import type { Notification, NotificationOpen } from 'react-native-firebase';
-import SendBird from 'sendbird';
+// import SendBird from 'sendbird';
 // eslint-disable-next-line
 // import Instabug from 'instabug-reactnative';
 

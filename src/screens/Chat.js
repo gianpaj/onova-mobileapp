@@ -175,12 +175,32 @@ class ChatContainer extends Component<Props, State> {
     const { userData } = this.props;
     let o;
     this.fetchProduct(productUuid)
-      // .then(() => this.fetchOrder(orderId))
-      .then(() => (o = this.state.order))
+      .then(() =>
+        this.createOrder(productUuid)
+          .then(o => {
+            console.log(o);
+            return o;
+          })
+          .catch(err => {
+            // console.log(err);
+            if (
+              err.message == 'Duplicate order' &&
+              err.data.data &&
+              // TODO: set to 'paid' once payment is completed
+              err.data.data.status == 'pending'
+            ) {
+              console.log(err.data.data);
+              // $FlowFixMe
+              return err.data.data;
+            }
+          })
+      )
+      .then(newo => (o = newo))
       .then(() => this._getPartner(userId))
       .then(() => this.connectToPusher())
       .then(() => {
         console.log(roomId);
+
         if (roomId !== -1) {
           return this.currentUser
             .joinRoom({ roomId })
@@ -188,13 +208,15 @@ class ChatContainer extends Component<Props, State> {
               console.log(`Joined room with ID: ${room.id}`);
             })
             .catch(err => {
-              console.log(`Error joining room ${roomId}: ${err}`);
+              console.log(`Error joining room ${roomId}`);
+              console.log(err);
             });
         } else {
           // coming from checkout
           // check if there's a room created by partner
           // i.e. previous room created by the, now, seller
 
+          console.log(o);
           // joinable rooms are those you're not a member of
           return this.currentUser
             .getJoinableRooms()
@@ -205,7 +227,7 @@ class ChatContainer extends Component<Props, State> {
             })
             .then(rooms => {
               console.log(rooms);
-              if (rooms.length) {
+              if (rooms.length > 0) {
                 const firstRoom = rooms[0].id;
                 return this.currentUser
                   .joinRoom({ roomId: firstRoom })
@@ -226,7 +248,7 @@ class ChatContainer extends Component<Props, State> {
                 })
                 .then(room => {
                   roomId = room.id;
-                  console.debug(`Created room called`, room);
+                  console.debug(`Created room id`, roomId);
                 })
                 .catch(err => {
                   console.log('Error creating room', err);
@@ -252,6 +274,20 @@ class ChatContainer extends Component<Props, State> {
         this.setState({ hasRendered: true, isLoading: false });
       })
       .catch(err => console.error(err));
+  }
+
+  createOrder(uuid: string): Promise<Order> {
+    const { token } = this.props.userData;
+    return new Promise((resolve, reject) => {
+      api
+        .post('/api/orders', { product: uuid }, { token })
+        .then(res => {
+          resolve(res.data);
+        })
+        .catch(err => {
+          reject(err);
+        });
+    });
   }
 
   newMessage = (m: PusherMessage) => {
@@ -546,7 +582,12 @@ class ChatContainer extends Component<Props, State> {
  * this is to create a unique ID between the two users for both way purchases.
  */
 export function getRoomName(o: Order): string {
-  const ids = [o.buyer._id, o.seller._id];
+  let ids;
+  if (o.buyer._id && o.seller._id) {
+    ids = [o.buyer._id, o.seller._id];
+  } else {
+    ids = [o.buyer, o.seller];
+  }
   return ids.sort().join('-');
 }
 

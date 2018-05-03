@@ -140,6 +140,16 @@ class ChatContainer extends Component<Props, State> {
             })
           );
         })
+        .then(ordersAndChats => {
+          if (ordersAndChats[0].lastMessage) {
+            return ordersAndChats.sort(
+              (a, b) =>
+                new Date(b.lastMessage.createdAt) -
+                new Date(a.lastMessage.createdAt)
+            );
+          }
+          return ordersAndChats;
+        })
         .then(ordersAndChats => resolve(ordersAndChats))
         .catch(e => reject(e));
     });

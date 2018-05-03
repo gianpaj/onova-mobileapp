@@ -24,7 +24,7 @@ import { NavigationActions } from 'react-navigation';
 import type { NavigationScreenProp } from 'react-navigation';
 import { Button } from 'react-native-elements';
 import { NoticeBar, Toast } from 'antd-mobile';
-import StarRating from 'react-native-star-rating';
+// import StarRating from 'react-native-star-rating';
 
 import {
   Avatar,
@@ -545,8 +545,6 @@ class ProfileScreen extends React.Component<Props, State> {
     );
   }
 }
-
-const padder = { padding: 10 };
 
 const styles = StyleSheet.create({
   flex1: {

@@ -2,16 +2,7 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import {
-  FlatList,
-  Image,
-  Platform,
-  RefreshControl,
-  StyleSheet,
-  Text,
-  TouchableHighlight,
-  View,
-} from 'react-native';
+import { FlatList, RefreshControl, StyleSheet, Text, View } from 'react-native';
 import {
   Container,
   Header,
@@ -24,12 +15,20 @@ import {
   Right,
 } from 'native-base';
 import { withNavigation } from 'react-navigation';
+import { Icon as IconEL } from 'react-native-elements';
 
+import { Avatar } from '../components';
 import colors from '../config/colors';
 import * as api from '../utils/api';
 import * as ui from '../utils/ui';
 
-import type { UserData, Dispatch, Notification, ReduxState } from '../types';
+import type {
+  UserData,
+  Dispatch,
+  Notification,
+  ReduxState,
+  Product,
+} from '../types';
 
 import type { NavigationScreenProp } from 'react-navigation';
 
@@ -65,8 +64,9 @@ export class NotificationsContainer extends Component<Props, State> {
 
     const res = await api.get('/api/users/notifications', { token });
 
-    const lastNotif = res.data[res.data.length - 1];
-    this.setState({ data: res.data, lastId: lastNotif._id });
+    let lastNotifId = '';
+    if (res.data.length > 0) lastNotifId = res.data[res.data.length - 1]._id;
+    this.setState({ data: res.data, lastId: lastNotifId });
   }
 
   _keyExtractor = (item): string => item._id;
@@ -103,6 +103,8 @@ export class NotificationsContainer extends Component<Props, State> {
   };
 
   renderFooter = () => {
+    if (this.state.lastId == '') return null;
+
     // TODO: center empty state in RN 0.56 - https://github.com/facebook/react-native/pull/18206
     return (
       <View style={styles.container}>
@@ -122,6 +124,15 @@ export class NotificationsContainer extends Component<Props, State> {
     });
   };
 
+  goToProduct = (item: Product) => {
+    // $FlowFixMe
+    this.props.navigation.navigate({
+      routeName: 'product',
+      key: `product-${item.uuid}`,
+      params: item,
+    });
+  };
+
   refreshNotifications = () => {
     this.setState({ isRefreshing: true });
     this.getNotificationsAndSetState()
@@ -134,35 +145,59 @@ export class NotificationsContainer extends Component<Props, State> {
 
   _renderItem = ({ item }: { item: Notification }) => {
     return (
-      <TouchableHighlight
-        underlayColor={colors.grey4}
-        onPress={() => this.goToProfile(item.triggeredBy)}>
-        <ListItem style={{ marginLeft: 0 }}>
-          <Body>
-            {/* <View style={styles.contentRow}>
-              <Text
-                style={styles.name}
-                numberOfLines={1} // android
-              >
-                @{item.data.senderName}
-              </Text>
-            </View> */}
+      // <ListItem style={{ marginLeft: 0, marginRight: -10 }}>
+      <ListItem
+        button
+        underlayColor={colors.red}
+        style={{ marginLeft: 0 }}
+        onPress={() => {
+          if (item.triggeredType == 'User') this.goToProfile(item.sourceUser);
+          if (item.triggeredType == 'Product')
+            this.goToProduct(item.triggeredBy);
+          // if (item.triggeredType == 'Order')
+          //   this.goToChat(item.triggeredBy);
+        }}>
+        {item.sourceUser && (
+          <Avatar
+            size={'small'}
+            withBorder
+            uri={item.sourceUser.profilePic}
+            placeholderText={item.data.senderName}
+            // onButtonPress={() =>
+            //   this.onFollowOrUnfollow(user._id, user.amIAFollower)
+            // }
+          />
+        )}
+        <Body>
+          <View style={styles.contentRow}>
             <Text
-              style={styles.reviewText}
-              numberOfLines={3} // android
-            >
-              {item.notifI18n.replace('${senderName}', item.data.senderName)}
-            </Text>
-          </Body>
-          <Right style={{ height: '100%' }}>
-            <Text
+              style={styles.name}
               numberOfLines={1} // android
             >
-              {ui.formatTime(item.dateCreated)}
+              @{item.data.senderName}
             </Text>
-          </Right>
-        </ListItem>
-      </TouchableHighlight>
+          </View>
+          <Text
+            style={styles.reviewText}
+            numberOfLines={3} // android
+          >
+            {item.notifI18n}
+            {/* for comment notifications */}
+            {item.triggeredType == 'Product' &&
+              item.triggeredBy &&
+              ': ' + item.data.text}
+          </Text>
+        </Body>
+        <Right style={{ height: '100%' }}>
+          <Text
+            numberOfLines={1} // android
+          >
+            {ui.formatTime(item.dateCreated)}
+          </Text>
+          <IconEL size={28} name="chevron-right" color={colors.grey4} />
+        </Right>
+        {/* </TouchableHighlight> */}
+      </ListItem>
     );
   };
 
@@ -216,9 +251,6 @@ const styles = StyleSheet.create({
   root: {
     backgroundColor: colors.bgDefault,
     height: '100%',
-  },
-  flex1: {
-    flex: 1,
   },
   separator: {
     height: StyleSheet.hairlineWidth,

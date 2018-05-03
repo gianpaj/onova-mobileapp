@@ -108,7 +108,10 @@ class ChatContainer extends Component<Props, State> {
   }
 
   componentWillUnmount() {
-    this.currentUser.roomSubscriptions[this.state.roomId].cancel();
+    if (this.currentUser.roomSubscriptions) {
+      console.log(this.currentUser.roomSubscriptions);
+    }
+    // this.currentUser.roomSubscriptions[this.state.roomId].cancel();
   }
 
   _getPartner(userId: string): Promise<null | any> {
@@ -177,20 +180,14 @@ class ChatContainer extends Component<Props, State> {
     this.fetchProduct(productUuid)
       .then(() =>
         this.createOrder(productUuid)
-          .then(o => {
-            console.log(o);
-            return o;
-          })
+          .then(o => o)
           .catch(err => {
-            // console.log(err);
             if (
               err.message == 'Duplicate order' &&
               err.data.data &&
               // TODO: set to 'paid' once payment is completed
               err.data.data.status == 'pending'
             ) {
-              console.log(err.data.data);
-              // $FlowFixMe
               return err.data.data;
             }
           })
@@ -222,7 +219,6 @@ class ChatContainer extends Component<Props, State> {
             .getJoinableRooms()
             .then((rooms: Array<any>) => {
               const allRooms = [...rooms, ...this.currentUser.rooms];
-              console.log(allRooms);
               return allRooms.filter(r => r.name == getRoomName(o));
             })
             .then(rooms => {
@@ -248,7 +244,7 @@ class ChatContainer extends Component<Props, State> {
                 })
                 .then(room => {
                   roomId = room.id;
-                  console.debug(`Created room id`, roomId);
+                  console.debug('Created room id', roomId);
                 })
                 .catch(err => {
                   console.log('Error creating room', err);

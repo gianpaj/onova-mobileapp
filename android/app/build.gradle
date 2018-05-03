@@ -120,6 +120,7 @@ android {
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
+        consumerProguardFiles 'proguard-rules.pro'
         // for react-native-image-crop-picker
         vectorDrawables.useSupportLibrary = true
         ndk {

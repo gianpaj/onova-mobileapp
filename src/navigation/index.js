@@ -31,6 +31,9 @@ class AppNavigation extends Component<Props, void> {
   componentDidMount() {
     BackHandler.addEventListener('hardwareBackPress', this.onBackPress);
     const { isLoggedIn, userData, dispatch } = this.props;
+
+    // FIXME: horrible hack
+    NavigationService.setDispatcher(dispatch);
     // TODO: use redux with
     // this.setState({ rehydrated: true });
 
@@ -76,9 +79,6 @@ class AppNavigation extends Component<Props, void> {
         : navigationState.stateForLoggedOut;
     return (
       <NavigationStack
-        ref={navigatorRef => {
-          NavigationService.setTopLevelNavigator(navigatorRef);
-        }}
         navigation={addNavigationHelpers({
           dispatch,
           state,

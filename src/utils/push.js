@@ -129,30 +129,16 @@ async function navigate(notif) {
   firebase.notifications().removeDeliveredNotification(notif.notificationId);
   if (notif.data && notif.data.triggeredType) {
     const { triggeredType, triggeredBy } = notif.data;
-    console.warn('should navigate to:', triggeredType);
-    console.warn(triggeredBy);
+    console.debug('should navigate to:', triggeredType);
+    console.debug(triggeredBy);
 
     // follow
     if (triggeredType == 'User') {
-      console.warn('navigate to User:', triggeredBy);
-      // const user = await getUser(triggeredBy);
+      const user = await getUser(triggeredBy);
       return NavigationService.navigate(
         'profile',
-        {
-          // params: user,
-          params: {
-            accountStatus: 'verified',
-            emailAddress: 'gianpa+test4@gmail.com',
-            followersCount: 1,
-            followingCount: 1,
-            ratingsTotal: 0,
-            reviewsCount: 0,
-            username: 'gianpatestlocal',
-            _id: '5adb67d6f57c81ac147d5e80',
-          },
-          // key: `profile-${user.username}`,
-        },
-        `profile-gianpatestlocal`
+        user,
+        `profile-${user.username}`
       );
     }
   }

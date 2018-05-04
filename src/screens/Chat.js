@@ -95,7 +95,7 @@ class ChatContainer extends Component<Props, State> {
     console.log(params);
     // coming from Checkout, ChatRooms or Push Notification
     // TODO: check show is the seller/buyer!
-    this.initialise(params.roomId);
+    this.initialise(params.roomId, params.productUuid);
   }
 
   componentWillUnmount() {
@@ -105,6 +105,7 @@ class ChatContainer extends Component<Props, State> {
     // this.currentUser.roomSubscriptions[this.state.roomId].cancel();
   }
 
+  /*
   fetchProduct(uuid: string): Promise<null> {
     return new Promise((resolve, reject) => {
       api
@@ -117,7 +118,9 @@ class ChatContainer extends Component<Props, State> {
         .catch(err => reject(err));
     });
   }
+  */
 
+  /*
   fetchOrder(uuid: string): Promise<Order> {
     const { token } = this.props.userData;
     return new Promise((resolve, reject) => {
@@ -125,9 +128,7 @@ class ChatContainer extends Component<Props, State> {
         .get(`/api/orders/${uuid}`, { token })
         .then(({ data: order }) => {
           console.debug(order);
-          this.setState({
-            order,
-          });
+          this.setState({ order });
           resolve();
         })
         .catch(err => {
@@ -135,6 +136,7 @@ class ChatContainer extends Component<Props, State> {
         });
     });
   }
+  */
 
   getTempUserId(username: string): Promise<string> {
     return new Promise((resolve, reject) => {
@@ -148,35 +150,19 @@ class ChatContainer extends Component<Props, State> {
     });
   }
 
-  initialise(roomId: number) {
+  initialise(roomId: number, productUuid?: string) {
     const { userData } = this.props;
-    let o;
-    this.fetchProduct(productUuid)
-      .then(() =>
-        this.createOrder(productUuid)
-          .then(o => o)
-          .catch(err => {
-            if (
-              err.message == 'Duplicate order' &&
-              err.data.data &&
-              // TODO: set to 'paid' once payment is completed
-              err.data.data.status == 'pending'
-            ) {
-              return err.data.data;
-            }
-          })
-      )
-      .then(newo => (o = newo))
-      .then(() => this._getPartner(userId))
-      .then(() => this.connectToPusher())
+    // let o;
+
+    this.connectToPusher()
       .then(() => {
-        console.log(roomId);
+        console.debug(roomId);
 
         if (roomId !== -1) {
           return this.currentUser
             .joinRoom({ roomId })
             .then(room => {
-              console.log('Joined room ID:', room.id);
+              console.debug('Joined room ID:', room.id);
               return room;
             })
             .then(room =>
@@ -187,64 +173,90 @@ class ChatContainer extends Component<Props, State> {
               console.log('Error joining room ID:', roomId);
               console.log(err);
             });
-        } else {
-          // coming from checkout
-          // check if there's a room created by partner
-          // i.e. previous room created by the, now, seller
+        }
 
-          console.log(o);
-          // joinable rooms are those you're not a member of
-          return this.currentUser
-            .getJoinableRooms()
-            .then((rooms: Array<any>) => {
-              const allRooms = [...rooms, ...this.currentUser.rooms];
-              return allRooms.filter(r => r.name == getRoomName(o));
-            })
-            .then(rooms => {
-              console.log(rooms);
-              if (rooms.length > 0) {
-                const firstRoom = rooms[0].id;
-                return this.currentUser
-                  .joinRoom({ roomId: firstRoom })
-                  .then(room => {
-                    roomId = room.id;
-                    console.log(`Joined room with ID: ${room.id}`);
-                  })
-                  .catch(err => {
-                    console.log(`Error joining room ${firstRoom}`);
-                    console.log(err);
-                  });
-              }
+        // coming from checkout
+        if (!productUuid) throw new Error('');
+
+        return this.createOrder(productUuid)
+          .then(o => o)
+          .catch(({ message, data }) => {
+            if (
+              message == 'Duplicate order' &&
+              data.data &&
+              // TODO: set to 'paid' once payment is completed
+              data.data.status == 'pending'
+            ) {
+              return data.data;
+            }
+          });
+      })
+      .then(o => {
+        console.log(o);
+
+        // joinable rooms are those you're not a member of
+        return this.currentUser
+          .getJoinableRooms()
+          .then((rooms: Array<any>) => {
+            const allRooms = [...rooms, ...this.currentUser.rooms];
+            return allRooms.filter(r => r.name == getRoomName(o));
+          })
+          .then(rooms => {
+            console.log(rooms);
+
+            // check if there's a previouly a room created,
+            // by a partner (seller) or my self
+            if (rooms.length > 0) {
+              const firstRoom = rooms[0].id;
               return this.currentUser
-                .createRoom({
-                  name: getRoomName(o),
-                  private: true,
-                  addUserIds: [userId, userData._id],
-                })
+                .joinRoom({ roomId: firstRoom })
                 .then(room => {
                   roomId = room.id;
-                  console.debug('Created room id', roomId);
+                  console.debug('Joined room ID:', room.id);
+                  return room;
                 })
+                .then(room =>
+                  api.getUser(room.userIds.find(id => id !== userData._id))
+                )
+                .then(partner => this.setState({ partner }))
                 .catch(err => {
-                  console.log('Error creating room', err);
+                  console.log('Error joining room ID:', firstRoom);
+                  console.log(err);
                 });
-            })
-            .catch(err => {
-              console.log(`Error getting joinable rooms: ${err}`);
-            });
-        }
+            }
+
+            // no existing room existed. coming from Checkout
+            return this.currentUser
+              .createRoom({
+                name: getRoomName(o),
+                private: true,
+                addUserIds: [o.seller, userData._id],
+              })
+              .then(room => {
+                roomId = room.id;
+                console.debug('Created room id', roomId);
+              })
+              .then(() => api.getUser(o.seller))
+              .then(partner => this.setState({ partner }))
+              .catch(err => {
+                console.log('Error creating room', err);
+              });
+          })
+          .catch(err => {
+            console.log(`Error getting joinable rooms: ${err}`);
+          });
       })
       .then(() => this.setState({ roomId }))
-      .then(() => {
+      .then(() =>
         this.currentUser.subscribeToRoom({
           roomId,
           hooks: {
-            onNewReadCursor: cursor => console.log(cursor),
+            // onNewReadCursor: cursor => console.log(cursor),
             onNewMessage: this.newMessage,
           },
           messageLimit: 100,
-        });
-      })
+        })
+      )
       .then(() => {
         this.setState({ isLoading: false });
       })
@@ -276,8 +288,8 @@ class ChatContainer extends Component<Props, State> {
     return this.setState({ messages: [newMsg] });
   };
 
-  getPartner(): any {
-    const { partner } = this.state;
+  getPartner(): { _id: string, name: string, avatar: string } {
+    const { partner }: { partner: UserData } = this.state;
     return {
       _id: partner._id,
       name: partner.username,
@@ -442,17 +454,11 @@ class ChatContainer extends Component<Props, State> {
       <Bubble
         {...props}
         textStyle={{
-          right: {
-            color: colors.black,
-          },
+          right: { color: colors.black },
         }}
         wrapperStyle={{
-          left: {
-            backgroundColor: colors.sLight,
-          },
-          right: {
-            backgroundColor: colors.pLight,
-          },
+          left: { backgroundColor: colors.sLight },
+          right: { backgroundColor: colors.pLight },
         }}
       />
     );

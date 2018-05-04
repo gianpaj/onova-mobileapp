@@ -141,7 +141,7 @@ class ChatContainer extends Component<Props, State> {
           );
         })
         .then(ordersAndChats => {
-          if (ordersAndChats[0].lastMessage) {
+          if (ordersAndChats.length > 0 && ordersAndChats[0].lastMessage) {
             return ordersAndChats.sort(
               (a, b) =>
                 new Date(b.lastMessage.createdAt) -

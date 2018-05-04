@@ -209,7 +209,7 @@ function logError(error, endpoint, method) {
   }
 }
 
-export function getUser(userId: string): Promise<ProductType> {
+export function getUser(userId: string): Promise<UserData> {
   return new Promise((resolve, reject) => {
     get(`/api/users/${userId}`)
       .then((res: UserData) => resolve(res))

@@ -65,13 +65,10 @@ class Comments extends React.Component<Props, State> {
   componentWillMount() {
     let { uuid } = this.props;
     // for development
-    if (!uuid) {
-      uuid = 'SJWwox8LLG';
-    }
+    // if (!uuid) {
+    //   uuid = 'SJWwox8LLG';
+    // }
 
-    console.log(uuid);
-
-    console.debug('product uuid:', uuid);
     this._getComments(this.props.uuid)
       .then(({ comments }) => {
         this.setState({

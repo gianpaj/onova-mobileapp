@@ -20,6 +20,21 @@
 	<string>1.0.0</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLIconFile</key>
+			<string></string>
+			<key>CFBundleURLName</key>
+			<string>onova</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>onova</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>1</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
@@ -41,10 +56,10 @@
 	<string>Onova is requesting access to your camera to add pictures to be able to sell your item</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Onova is requestion access to your location to help you quickly calculate the shipping fees, as well as to list an item</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Onova is requesting access to your photo library to add pictures to be able to sell your item</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Onova is requesting access to your microphone to record a video in order to report a bug</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Onova is requesting access to your photo library to add pictures to be able to sell your item</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Entypo.ttf</string>

@@ -46,6 +46,13 @@
       <meta-data
         android:name="com.google.firebase.messaging.default_notification_icon"
         android:resource="@drawable/ic_stat_ic_notification" />
+      <!-- react-navigation deep link -->
+      <intent-filter>
+        <action android:name="android.intent.action.VIEW" />
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
+        <data android:scheme="onova" android:host="onova" />
+      </intent-filter>
     </application>
 
 </manifest>

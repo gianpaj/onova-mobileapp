@@ -30,6 +30,7 @@ export const StackNav = StackNavigator(
     product: {
       screen: Product,
       navigationOptions: { gesturesEnabled: false },
+      path: 'product/:productUUID',
     },
     tabs: { screen: TabsStack },
     addProduct: { screen: AddProduct },
@@ -40,9 +41,15 @@ export const StackNav = StackNavigator(
     followings: { screen: Followings },
     search: { screen: Search },
     searchProductsResults: { screen: SearchProductsResults },
-    profile: { screen: Profile },
+    profile: {
+      screen: Profile,
+      path: 'profile/:id',
+    },
     chatRooms: { screen: ChatRooms },
-    chat: { screen: Chat },
+    chat: {
+      screen: Chat,
+      path: 'chat/:name',
+    },
     checkout: { screen: Checkout },
   },
   {

@@ -4,18 +4,18 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { FlatList, RefreshControl, StyleSheet, Text, View } from 'react-native';
 import {
+  Body,
+  Button,
   Container,
   Header,
-  Left,
-  Button,
   Icon,
-  Title,
-  Body,
+  Left,
   ListItem,
   Right,
+  Title,
 } from 'native-base';
-import { withNavigation } from 'react-navigation';
 import { Icon as IconEL } from 'react-native-elements';
+import { withNavigation } from 'react-navigation';
 
 import { Avatar } from '../components';
 import colors from '../config/colors';
@@ -44,7 +44,7 @@ type State = {
   lastId: string,
 };
 
-export class NotificationsContainer extends Component<Props, State> {
+class NotificationsContainer extends Component<Props, State> {
   state = {
     data: [],
     isRefreshing: false,

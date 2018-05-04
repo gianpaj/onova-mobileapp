@@ -1,7 +1,7 @@
 // @flow
 
 import React, { Component } from 'react';
-import { BackHandler } from 'react-native';
+import { BackHandler, Platform } from 'react-native';
 import { connect } from 'react-redux';
 import { addNavigationHelpers, NavigationActions } from 'react-navigation';
 import { createReduxBoundAddListener } from 'react-navigation-redux-helpers';
@@ -20,6 +20,9 @@ type Props = {
   isLoggedIn: boolean,
   userData?: UserData,
 };
+
+// on Android, the URI prefix typically contains a host in addition to scheme
+const prefix = Platform.OS == 'android' ? 'onova://onova/' : 'onova://';
 
 class AppNavigation extends Component<Props, void> {
   notificationListener;
@@ -72,6 +75,7 @@ class AppNavigation extends Component<Props, void> {
         : navigationState.stateForLoggedOut;
     return (
       <NavigationStack
+        // uriPrefix={prefix}
         navigation={addNavigationHelpers({
           dispatch,
           state,

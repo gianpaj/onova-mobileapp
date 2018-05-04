@@ -223,25 +223,13 @@ class ChatContainer extends Component<Props, State> {
     return true;
   }
 
-  goToChat = item => {
-    const { orders } = item;
-    this.fetchOrder(orders[0].id)
-      .then((order: Order) => {
-        const navigateToChat = NavigationActions.navigate({
-          routeName: 'chat',
-          params: {
-            productUuid: order.product.uuid,
-            userId: item.partner.id,
-            roomId: item.id,
-          },
-          key: `chat-${getRoomName(order)}`,
-        });
-        this.props.navigation.dispatch(navigateToChat);
-      })
-      .catch(e => {
-        ui.showToast(e.message);
-        console.debug(e);
-      });
+  goToChat = (roomId: string) => {
+    const navigateToChat = NavigationActions.navigate({
+      routeName: 'chat',
+      params: { roomId },
+      key: `chat-${roomId}`,
+    });
+    this.props.navigation.dispatch(navigateToChat);
   };
 
   _renderOrderCircle = ({ item }: { item: Room }) => {
@@ -260,7 +248,7 @@ class ChatContainer extends Component<Props, State> {
     return (
       <TouchableOpacity
         style={st.orderCircle}
-        onPress={() => this.goToChat(item)}>
+        onPress={() => this.goToChat(item.id)}>
         <AnimatedCircularProgress
           backgroundColor={colors.pDark}
           fill={perc}
@@ -280,9 +268,9 @@ class ChatContainer extends Component<Props, State> {
   };
 
   _renderOrderRow = ({ item }: { item: Room }) => {
-    let { lastMessage }: { lastMessage: any } = item;
-    const { _id: myUserId } = this.props.userData;
+    let { lastMessage } = item;
     let from;
+    const myUserId = this.props.userData._id;
 
     // if no messages (very first order step)
     if (!lastMessage) {
@@ -299,10 +287,10 @@ class ChatContainer extends Component<Props, State> {
     // }
 
     return (
-      <TouchableOpacity onPress={() => this.goToChat(item)}>
+      <TouchableOpacity onPress={() => this.goToChat(item.id)}>
         <View style={st.itemContainer}>
           <Avatar
-            onPress={() => this.goToChat(item)}
+            onPress={() => this.goToChat(item.id)}
             placeholderText={item.partner.name}
             size="verySmall"
             uri={item.partner.avatarURL}

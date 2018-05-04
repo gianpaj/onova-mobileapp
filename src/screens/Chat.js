@@ -2,18 +2,16 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-// prettier-ignore
 import {
   ActivityIndicator,
-  Platform,
   StyleSheet,
-  Text,
+  // Text,
   View,
 } from 'react-native';
 import {
   Body,
   Button as NBButton,
-  CardItem,
+  // CardItem,
   Container,
   Header,
   Icon as NBIcon,
@@ -53,13 +51,12 @@ type Props = {
 };
 
 type State = {
-  hasRendered: boolean,
-  partner?: UserData,
+  partner: UserData,
   isLoading: boolean,
-  isTyping: boolean,
-  messages?: Array<Message>,
-  order?: Order,
-  product?: Product,
+  // isTyping: boolean,
+  messages: Array<Message>,
+  // order?: Order,
+  // product?: Product,
   roomId: number,
 };
 
@@ -68,10 +65,9 @@ class ChatContainer extends Component<Props, State> {
   sb;
 
   state = {
-    hasRendered: false,
     partner: null,
     isLoading: true,
-    isTyping: false,
+    // isTyping: false,
     messages: [],
     roomId: -1,
   };
@@ -90,21 +86,16 @@ class ChatContainer extends Component<Props, State> {
 
     // for development
     if (!params) {
-      // const orderId = '5ad67c508b10227b456bfc05';
-      const product_uuid = 'ryq8-tjUM';
-      const roomId = 6703904;
+      const roomId = 7359921;
 
-      return this.getTempUserId('firstperson').then(userId => {
-        this.initialise(product_uuid, userId, roomId);
-      });
+      // return this.getTempUserId('firstperson').then(userId => {
+      return this.initialise(roomId);
+      // });
     }
     console.log(params);
-    // coming from Checkout
-    // OR
-    // coming from ChatRooms
-    const { productUuid, userId, roomId } = params;
+    // coming from Checkout, ChatRooms or Push Notification
     // TODO: check show is the seller/buyer!
-    this.initialise(productUuid, userId, roomId);
+    this.initialise(params.roomId);
   }
 
   componentWillUnmount() {
@@ -114,33 +105,16 @@ class ChatContainer extends Component<Props, State> {
     // this.currentUser.roomSubscriptions[this.state.roomId].cancel();
   }
 
-  _getPartner(userId: string): Promise<null | any> {
+  fetchProduct(uuid: string): Promise<null> {
     return new Promise((resolve, reject) => {
       api
-        .get(`/api/users/${userId}`)
-        .then(partner => {
-          console.debug(partner);
-          this.setState({ partner });
-          resolve();
-        })
-        .catch(err => {
-          reject(err);
-        });
-    });
-  }
-
-  fetchProduct(uuid: string): Promise<Product> {
-    return new Promise((resolve, reject) => {
-      return api
         .get(`/api/products/${uuid}`)
         .then(({ data }) => {
           console.debug(data);
           this.setState({ product: data });
           resolve();
         })
-        .catch(err => {
-          reject(err);
-        });
+        .catch(err => reject(err));
     });
   }
 
@@ -174,7 +148,7 @@ class ChatContainer extends Component<Props, State> {
     });
   }
 
-  initialise(productUuid: string, userId: string, roomId: number) {
+  initialise(roomId: number) {
     const { userData } = this.props;
     let o;
     this.fetchProduct(productUuid)
@@ -202,10 +176,15 @@ class ChatContainer extends Component<Props, State> {
           return this.currentUser
             .joinRoom({ roomId })
             .then(room => {
-              console.log(`Joined room with ID: ${room.id}`);
+              console.log('Joined room ID:', room.id);
+              return room;
             })
+            .then(room =>
+              api.getUser(room.userIds.find(id => id !== userData._id))
+            )
+            .then(partner => this.setState({ partner }))
             .catch(err => {
-              console.log(`Error joining room ${roomId}`);
+              console.log('Error joining room ID:', roomId);
               console.log(err);
             });
         } else {
@@ -255,7 +234,7 @@ class ChatContainer extends Component<Props, State> {
             });
         }
       })
-      .then(() => this.setState({ isLoading: true, roomId }))
+      .then(() => this.setState({ roomId }))
       .then(() => {
         this.currentUser.subscribeToRoom({
           roomId,
@@ -267,30 +246,23 @@ class ChatContainer extends Component<Props, State> {
         });
       })
       .then(() => {
-        this.setState({ hasRendered: true, isLoading: false });
+        this.setState({ isLoading: false });
       })
       .catch(err => console.error(err));
   }
 
-  createOrder(uuid: string): Promise<Order> {
+  createOrder(uuid: string): Promise<Order | Error> {
     const { token } = this.props.userData;
     return new Promise((resolve, reject) => {
       api
         .post('/api/orders', { product: uuid }, { token })
-        .then(res => {
-          resolve(res.data);
-        })
-        .catch(err => {
-          reject(err);
-        });
+        .then(res => resolve(res.data))
+        .catch(err => reject(err));
     });
   }
 
   newMessage = (m: PusherMessage) => {
-    //   // if (m.sender) {
     const newMsg = this.createGiftedMessage(m);
-    // console.log(newMsg);
-    // }
 
     // TODO: Update cursor if the message was read
 
@@ -379,7 +351,7 @@ class ChatContainer extends Component<Props, State> {
   }
 
   onSend = (messages: Array<Message>) => {
-    const text = messages[0].text;
+    const { text } = messages[0];
 
     this.currentUser
       .sendMessage({
@@ -432,6 +404,7 @@ class ChatContainer extends Component<Props, State> {
     }
     return true;
   }
+
   /*
   renderActions(props: any) {
     if (Platform.OS === 'ios') {
@@ -487,9 +460,7 @@ class ChatContainer extends Component<Props, State> {
 
   render() {
     const { navigation, userData } = this.props;
-    const { messages, isLoading, partner, product } = this.state;
-
-    if (!product) return null;
+    const { messages, isLoading, partner } = this.state;
 
     return (
       <Container style={st.flex1}>
@@ -533,7 +504,7 @@ class ChatContainer extends Component<Props, State> {
                     transparent
                     style={{ height: 20 }}
                     onPress={() =>
-                      Platform('code me like those french girls 🎨')
+                      alert('code me like those french girls 🎨')
                     }>
                     <NBIcon name="ios-information-circle-outline" />
                   </NBButton>

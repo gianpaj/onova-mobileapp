@@ -27,8 +27,8 @@ import type {
   GetState,
   UserData,
 } from '../types';
+import { registerPushNotifications } from '../utils/push';
 import * as api from '../utils/api';
-import { registerPushNotifications, setBadgeNumber } from '../utils/push';
 import * as ui from '../utils/ui';
 
 const incrementAction = () => ({

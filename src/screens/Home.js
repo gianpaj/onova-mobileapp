@@ -6,6 +6,8 @@ import { Button, Dimensions, StyleSheet, Text } from 'react-native';
 import { Body, Left, Right, Container, Header } from 'native-base';
 import { TabViewAnimated, TabBar, SceneMap } from 'react-native-tab-view';
 
+import NavigationService from '../navigation/NavigationService';
+
 import { ImageGrid } from '../components';
 
 import type { NavigationScreenProp } from 'react-navigation';

@@ -1,11 +1,15 @@
 // @flow
 
-import { Platform } from 'react-native';
+// import { Platform } from 'react-native';
 import firebase from 'react-native-firebase';
 import type { Notification, NotificationOpen } from 'react-native-firebase';
 // import SendBird from 'sendbird';
 // eslint-disable-next-line
 // import Instabug from 'instabug-reactnative';
+
+import NavigationService from '../navigation/NavigationService';
+import * as api from '../utils/api';
+import type { UserData } from '../types';
 
 let onMessageSubscription, onNotificationOpenedSubscription;
 
@@ -120,13 +124,50 @@ function registerPushToken(token: string): Promise<string | null> {
   });
 }
 
-function navigate(notif) {
+async function navigate(notif) {
   console.log(notif);
   firebase.notifications().removeDeliveredNotification(notif.notificationId);
-  if (notif.data.triggeredType) {
-    console.log('should navigate to:', notif.data.triggeredType);
-    console.log(notif.data.triggeredBy);
+  if (notif.data && notif.data.triggeredType) {
+    const { triggeredType, triggeredBy } = notif.data;
+    console.warn('should navigate to:', triggeredType);
+    console.warn(triggeredBy);
+
+    // follow
+    if (triggeredType == 'User') {
+      console.warn('navigate to User:', triggeredBy);
+      // const user = await getUser(triggeredBy);
+      return NavigationService.navigate(
+        'profile',
+        {
+          // params: user,
+          params: {
+            accountStatus: 'verified',
+            emailAddress: 'gianpa+test4@gmail.com',
+            followersCount: 1,
+            followingCount: 1,
+            ratingsTotal: 0,
+            reviewsCount: 0,
+            username: 'gianpatestlocal',
+            _id: '5adb67d6f57c81ac147d5e80',
+          },
+          // key: `profile-${user.username}`,
+        },
+        `profile-gianpatestlocal`
+      );
+    }
   }
+}
+
+function getUser(userId): Promise<UserData> {
+  return api
+    .get(`/api/users/${userId}`)
+    .then((res: UserData) => {
+      console.debug(res);
+      return res;
+    })
+    .catch(err => {
+      return err;
+    });
 }
 
 // TODO: on log out

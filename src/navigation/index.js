@@ -8,6 +8,7 @@ import { createReduxBoundAddListener } from 'react-navigation-redux-helpers';
 
 import { sendToken, logout } from '../actions/actionCreator';
 import NavigationStack from './navigationStack';
+import NavigationService from './NavigationService';
 import type { Dispatch, UserData, ReduxState } from '../types';
 import type { NavigationState } from '../types/navigationReducer';
 import { registerPushNotifications } from '../utils/push';
@@ -75,7 +76,9 @@ class AppNavigation extends Component<Props, void> {
         : navigationState.stateForLoggedOut;
     return (
       <NavigationStack
-        // uriPrefix={prefix}
+        ref={navigatorRef => {
+          NavigationService.setTopLevelNavigator(navigatorRef);
+        }}
         navigation={addNavigationHelpers({
           dispatch,
           state,

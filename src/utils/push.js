@@ -57,7 +57,7 @@ export function registerPushNotifications(): Promise<string | null> {
               // Get the action triggered by the notification being opened
               const action = notificationOpen.action;
               console.log(action);
-              navigate(notificationOpen);
+              navigate(notificationOpen.notification);
             }
           });
       })
@@ -93,6 +93,7 @@ export function registerPushNotifications(): Promise<string | null> {
                 .setTitle(msg.title)
                 .setBody(msg.body)
                 .setData(msg.data)
+                .android.setSmallIcon('ic_stat_ic_notification')
                 .android.setChannelId('channelId');
               // You've received a notification that hasn't been displayed by the OS
               // To display it whilst the app is in the foreground, simply call the following
@@ -151,6 +152,14 @@ async function navigate(notif) {
         'product',
         product,
         `product-${product.uuid}`
+      );
+    }
+    if (triggeredType == 'Room') {
+      console.debug(triggeredBy);
+      return NavigationService.navigate(
+        'chat',
+        { roomId: parseInt(triggeredBy) },
+        `chat-${triggeredBy}`
       );
     }
   }

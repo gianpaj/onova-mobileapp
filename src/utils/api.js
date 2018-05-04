@@ -1,6 +1,9 @@
 // @flow
 
 import axios, { CancelTokenSource } from 'axios';
+
+import type { ProductType, UserData } from '../types';
+
 let config;
 if (process.env.NODE_ENV == 'production') {
   config = require('../../config-prod.json');
@@ -204,6 +207,22 @@ function logError(error, endpoint, method) {
       }"`
     );
   }
+}
+
+export function getUser(userId: string): Promise<ProductType> {
+  return new Promise((resolve, reject) => {
+    get(`/api/users/${userId}`)
+      .then((res: UserData) => resolve(res))
+      .catch(err => reject(err));
+  });
+}
+
+export function getProduct(uuid: string): Promise<ProductType> {
+  return new Promise((resolve, reject) => {
+    get(`/api/products/${uuid}`)
+      .then(({ data }) => resolve(data))
+      .catch(e => reject(e));
+  });
 }
 
 export type APIError = {

@@ -79,7 +79,7 @@ export function registerPushNotifications(): Promise<string | null> {
         return firebase.messaging().onTokenRefresh((token: string) => {
           console.log('onTokenRefresh');
           console.log(token);
-          registerPushToken(token);
+          // registerPushToken(token);
         });
       })
       .then(() => {
@@ -104,15 +104,16 @@ export function registerPushNotifications(): Promise<string | null> {
         firebase
           .messaging()
           .getToken()
-          .then(token => {
-            return registerPushToken(token);
-          })
+          // .then(token => {
+          //   return registerPushToken(token);
+          // })
           .then(token => resolve(token))
           .catch(() => reject());
       });
   });
 }
 
+// FIXME: send pushToken here instead from actionCreator
 function registerPushToken(token: string): Promise<string | null> {
   return new Promise((resolve, reject) => {
     // if (err) {
@@ -128,34 +129,32 @@ async function navigate(notif) {
   console.log(notif);
   firebase.notifications().removeDeliveredNotification(notif.notificationId);
   if (notif.data && notif.data.triggeredType) {
-    const { triggeredType, triggeredBy } = notif.data;
+    const { triggeredType, triggeredBy, productUuid } = notif.data;
     console.debug('should navigate to:', triggeredType);
-    console.debug(triggeredBy);
+
+    // TODO: show Toast error cannot navigate
 
     // follow
     if (triggeredType == 'User') {
-      const user = await getUser(triggeredBy);
+      console.debug(triggeredBy);
+      const user = await api.getUser(triggeredBy);
       return NavigationService.navigate(
         'profile',
         user,
         `profile-${user.username}`
       );
     }
+    if (triggeredType == 'Product') {
+      console.debug(productUuid);
+      const product = await api.getProduct(productUuid);
+      return NavigationService.navigate(
+        'product',
+        product,
+        `product-${product.uuid}`
+      );
+    }
   }
 }
-
-function getUser(userId): Promise<UserData> {
-  return api
-    .get(`/api/users/${userId}`)
-    .then((res: UserData) => {
-      console.debug(res);
-      return res;
-    })
-    .catch(err => {
-      return err;
-    });
-}
-
 // TODO: on log out
 // sb.unregisterPushTokenAllForCurrentUser();
 

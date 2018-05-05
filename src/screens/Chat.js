@@ -99,10 +99,8 @@ class ChatContainer extends Component<Props, State> {
   }
 
   componentWillUnmount() {
-    if (this.currentUser.roomSubscriptions) {
-      console.log(this.currentUser.roomSubscriptions);
-    }
-    // this.currentUser.roomSubscriptions[this.state.roomId].cancel();
+    // no longer receive events from the chat room
+    this.currentUser.roomSubscriptions[this.state.roomId].cancel();
   }
 
   /*
@@ -263,7 +261,6 @@ class ChatContainer extends Component<Props, State> {
         return messages[messages.length - 1];
       })
       .then(lastMsg => {
-        console.log(lastMsg);
         if (!lastMsg) return;
         setTimeout(() => {
           this.currentUser
@@ -279,15 +276,17 @@ class ChatContainer extends Component<Props, State> {
             });
         }, MARK_AS_READ_AFTER_MS);
       })
-      .then(() =>
-        this.currentUser.subscribeToRoom({
-          roomId,
-          hooks: {
-            // onNewReadCursor: cursor => console.log(cursor),
-            onNewMessage: this.newMessage,
-          },
-          messageLimit: 0,
-        })
+      .then(
+        () =>
+          !this.currentUser.roomSubscriptions[roomId] &&
+          this.currentUser.subscribeToRoom({
+            roomId,
+            hooks: {
+              onNewReadCursor: cursor => console.log(cursor),
+              onNewMessage: this.newMessage,
+            },
+            messageLimit: 0,
+          })
       )
       .then(() => {
         this.setState({ isLoading: false });

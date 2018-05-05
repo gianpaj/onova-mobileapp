@@ -205,13 +205,6 @@ class ChatContainer extends Component<Props, State> {
     });
   };
 
-  componentWillUnmount() {
-    if (this.currentUser.roomSubscriptions) {
-      console.log(this.currentUser.roomSubscriptions);
-    }
-    // this.currentUser.roomSubscriptions[this.state.roomId].cancel();
-  }
-
   componentWillReceiveProps(nextProps) {
     // fix error when logging out
     if (!nextProps.userData) return;

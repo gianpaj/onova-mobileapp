@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { StyleSheet, Text, View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {
+  ActionSheet,
   Body,
   Button as NBButton,
   Container,
@@ -48,6 +49,9 @@ const category_radio_grp_2 = [
   { label: 'Woman', value: 1 },
   { label: 'Other', value: 2 },
 ];
+
+const IMAGE_WIDTH = 700;
+const IMAGE_HEIGHT = 700;
 
 type Props = {
   isFocused: boolean,
@@ -99,40 +103,70 @@ export class AddProductScreen extends React.Component<Props, State> {
 
   selectPhotoTapped = (i: number = 0) => {
     if (this.state.pending) return;
-    // console.warn('taking pic');
-    // ImagePicker.openPicker({
-    ImagePicker.openCamera({
-      width: 700,
-      height: 700,
-      cropping: true,
-      // multiple: true // with openPicker()
-      // loadingLabelText: 'Loading image...', // (ios only)
-    })
-      .then(response => {
-        let image = {
-          url: response.path,
-          id: i,
-        };
-
-        this.setState(prevState => {
-          // if we want to replace an existing photo
-          if (prevState.images[i]) {
-            const copy = [...prevState.images];
-            copy[i] = image;
-            return {
-              images: copy,
-            };
-          }
-
-          return {
-            images: [...prevState.images, image],
-          };
-        });
-      })
-      .catch(() => {
-        this.closeModal();
-      });
+    const BUTTONS = ['📷 Camera', '🖼 Gallery', 'Cancel'];
+    ActionSheet.show(
+      {
+        options: BUTTONS,
+        destructiveButtonIndex: 0,
+        cancelButtonIndex: BUTTONS.indexOf('Cancel'),
+      },
+      buttonIndex => {
+        switch (buttonIndex) {
+          case 0:
+            ImagePicker.openCamera({
+              width: IMAGE_WIDTH,
+              height: IMAGE_HEIGHT,
+              cropping: true,
+              // multiple: true // with openPicker()
+              // loadingLabelText: 'Loading image...', // (ios only)
+            })
+              .then(response => this.processPhoto(response, i))
+              .catch(() => {
+                this.closeModal();
+              });
+            break;
+          case 1:
+            ImagePicker.openPicker({
+              width: IMAGE_WIDTH,
+              height: IMAGE_HEIGHT,
+              cropping: true,
+              // multiple: true // with openPicker()
+              // loadingLabelText: 'Loading image...', // (ios only)
+            })
+              .then(response => this.processPhoto(response, i))
+              .catch(() => {
+                this.closeModal();
+              });
+            break;
+          default:
+            this.closeModal();
+            break;
+        }
+      }
+    );
   };
+
+  processPhoto(response: any, i: number) {
+    let image = {
+      url: response.path,
+      id: i,
+    };
+
+    this.setState(prevState => {
+      // if we want to replace an existing photo
+      if (prevState.images[i]) {
+        const copy = [...prevState.images];
+        copy[i] = image;
+        return {
+          images: copy,
+        };
+      }
+
+      return {
+        images: [...prevState.images, image],
+      };
+    });
+  }
 
   closeModal() {
     this.props.navigation.goBack();
@@ -312,7 +346,10 @@ export class AddProductScreen extends React.Component<Props, State> {
               <WingBlank>
                 <AntImagePicker
                   files={images}
-                  onChange={images => this.setState({ images })}
+                  onChange={images => {
+                    if (images.length < 1) this.closeModal();
+                    this.setState({ images });
+                  }}
                   onImageClick={i => this.selectPhotoTapped(i)}
                   onAddImageClick={() => this.selectPhotoTapped(images.length)}
                   selectable={images.length < 6}

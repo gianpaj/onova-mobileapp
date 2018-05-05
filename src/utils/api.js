@@ -5,7 +5,7 @@ import axios, { CancelTokenSource } from 'axios';
 import type { ProductType, UserData } from '../types';
 
 let config;
-if (process.env.NODE_ENV == 'production') {
+if (process.env.NODE_ENV == 'prod') {
   config = require('../../config-prod.json');
 } else {
   config = require('../../config-dev.json');

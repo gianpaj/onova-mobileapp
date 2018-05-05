@@ -23,6 +23,9 @@
 ; Ignore polyfills
 .*/Libraries/polyfills/.*
 
+; Ignore metro
+.*/node_modules/metro/.*
+
 <PROJECT_ROOT>/flow-typed/.*
 
 [include]

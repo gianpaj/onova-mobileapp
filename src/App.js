@@ -42,7 +42,7 @@ export default class App extends React.Component<*, State> {
       firebase.initializeApp(firebaseConfig);
     }
 
-    if (process.env.NODE_ENV == 'production') {
+    if (process.env.NODE_ENV == 'prod') {
       console.debug(`Running in ${process.env.NODE_ENV} environment`);
     } else {
       console.warn(`Running in ${process.env.NODE_ENV} environment`);

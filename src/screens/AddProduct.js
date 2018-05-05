@@ -245,10 +245,12 @@ export class AddProductScreen extends React.Component<Props, State> {
     // AND the tag has the minimum length
     if (
       parseWhen.indexOf(lastTyped) > -1 &&
-      textWithoutSeparators.length >= settings.MIN_LENGTH_PER_TAG
+      textWithoutSeparators.length >= settings.MIN_LENGTH_PER_TAG &&
+      this.state.tags.length < settings.MAX_TAGS
     ) {
+      const newTags = new Set([...this.state.tags, this.state.tagsText]);
       return this.setState({
-        tags: [...this.state.tags, this.state.tagsText],
+        tags: Array.from(newTags),
         tagsText: '',
       });
     }
@@ -387,6 +389,7 @@ export class AddProductScreen extends React.Component<Props, State> {
           />
           <FormLabel labelStyle={styles.label}>#tags:</FormLabel>
           <TagInput
+            inputDefaultWidth={140}
             maxHeight={2000}
             editable={!this.state.pending}
             labelExtractor={tag => tag}
@@ -397,7 +400,7 @@ export class AddProductScreen extends React.Component<Props, State> {
             text={this.state.tagsText}
             value={tags}
             inputProps={{
-              placeholder: tags.length < 1 ? 'winter, adidas, hat' : '',
+              placeholder: tags.length < 1 ? 'adidas, summer' : '',
             }}
           />
           <View style={styles.grps}>

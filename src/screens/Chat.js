@@ -248,13 +248,31 @@ class ChatContainer extends Component<Props, State> {
       })
       .then(() => this.setState({ roomId }))
       .then(() =>
+        this.currentUser
+          .fetchMessages({
+            roomId: roomId,
+            direction: 'older',
+            limit: 100,
+          })
+          .then(messages => {
+            let newMsgs = [];
+            for (let i = 0; i < messages.length; i++) {
+              newMsgs.push(this.createGiftedMessage(messages[i]));
+            }
+            return this.setState({ messages: newMsgs });
+          })
+          .catch(err => {
+            console.log(`Error fetching messages: ${err}`);
+          })
+      )
+      .then(() =>
         this.currentUser.subscribeToRoom({
           roomId,
           hooks: {
             // onNewReadCursor: cursor => console.log(cursor),
             onNewMessage: this.newMessage,
           },
-          messageLimit: 100,
+          messageLimit: 0,
         })
       )
       .then(() => {

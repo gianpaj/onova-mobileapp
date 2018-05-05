@@ -11,6 +11,7 @@ export default {
   MAX_LENGTH_PER_TAG: 30,
   MIN_TAGS: 0,
   MAX_TAGS: 30,
+  MAX_BRAND_TAGS: 1,
   USERNAME_REGEX: /^[a-zA-Z0-9\_\.]+$/,
   HASHTAG_REGEX: /^[a-zA-Z0-9]+$/,
   INSTABUG_TOKEN: '***REMOVED***',

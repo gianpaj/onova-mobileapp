@@ -38,6 +38,8 @@ import type { UserData, ReduxState } from '../types';
 
 import type { NavigationScreenProp } from 'react-navigation';
 
+const brands = require('../assets/brands.json');
+
 const category_radio_grp_1 = [
   { label: 'Clothes', value: 0 },
   { label: 'Shoes', value: 1 },
@@ -68,6 +70,7 @@ type State = {
   grp_1: number,
   grp_2: number,
   pending: boolean,
+  numberOfBrands: number,
 };
 
 export class AddProductScreen extends React.Component<Props, State> {
@@ -91,6 +94,7 @@ export class AddProductScreen extends React.Component<Props, State> {
     grp_2: -1,
     images: [],
     pending: false,
+    numberOfBrands: 0,
   };
 
   componentDidMount() {
@@ -218,14 +222,16 @@ export class AddProductScreen extends React.Component<Props, State> {
   };
 
   /**
-   * min 3 letters, max 30. max 30 tags
+   * triggers only when a tag is deleted
    */
-  changeTags(tags: string) {
-    const pattern = /^(\b[a-z][a-z0-9,]*)$/i;
-    if ((pattern.test(tags) || tags == '') && tags.indexOf(',,') == -1) {
-      // this.setState({ tags });
+  changeTags = (tags: Array<string>) => {
+    // if there no are any brands in the hashtags
+    let found = this.state.tags.some(r => brands.brands.indexOf(r) >= 0);
+    if (!found) {
+      this.setState({ numberOfBrands: 0 });
     }
-  }
+    this.setState({ tags });
+  };
 
   changeTagsTest = (tagsText: string) => {
     const textWithoutSeparators = tagsText.replace(/,|;| | \n/gi, '');
@@ -246,7 +252,8 @@ export class AddProductScreen extends React.Component<Props, State> {
     if (
       parseWhen.indexOf(lastTyped) > -1 &&
       textWithoutSeparators.length >= settings.MIN_LENGTH_PER_TAG &&
-      this.state.tags.length < settings.MAX_TAGS
+      this.state.tags.length < settings.MAX_TAGS &&
+      this.onlyOneBrand(this.state.tagsText) == true
     ) {
       const newTags = new Set([...this.state.tags, this.state.tagsText]);
       return this.setState({
@@ -256,6 +263,21 @@ export class AddProductScreen extends React.Component<Props, State> {
     }
     this.setState({ tagsText: textWithoutSeparators });
   };
+
+  /**
+   * if a brand is typed, allow only one to be added
+   */
+  onlyOneBrand(text: string): boolean {
+    if (brands.brands.indexOf(text) == -1) return true;
+    if (
+      brands.brands.indexOf(text) > -1 &&
+      this.state.numberOfBrands < settings.MAX_BRAND_TAGS
+    ) {
+      this.setState({ numberOfBrands: this.state.numberOfBrands + 1 });
+      return true;
+    }
+    return false;
+  }
 
   /**
    * numbers only, one dot and 2 decimal points
@@ -393,7 +415,7 @@ export class AddProductScreen extends React.Component<Props, State> {
             maxHeight={2000}
             editable={!this.state.pending}
             labelExtractor={tag => tag}
-            onChange={tags => this.setState({ tags })}
+            onChange={this.changeTags}
             onChangeText={this.changeTagsTest}
             tagColor={colors.primary}
             tagTextColor="white"

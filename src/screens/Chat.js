@@ -248,23 +248,37 @@ class ChatContainer extends Component<Props, State> {
       })
       .then(() => this.setState({ roomId }))
       .then(() =>
-        this.currentUser
-          .fetchMessages({
-            roomId: roomId,
-            direction: 'older',
-            limit: 100,
-          })
-          .then(messages => {
-            let newMsgs = [];
-            for (let i = 0; i < messages.length; i++) {
-              newMsgs.push(this.createGiftedMessage(messages[i]));
-            }
-            return this.setState({ messages: newMsgs });
-          })
-          .catch(err => {
-            console.log(`Error fetching messages: ${err}`);
-          })
+        this.currentUser.fetchMessages({
+          roomId,
+          direction: 'newer',
+          limit: 100,
+        })
       )
+      .then(messages => {
+        let newMsgs = [];
+        for (let i = 0; i < messages.length; i++) {
+          newMsgs.push(this.createGiftedMessage(messages[i]));
+        }
+        this.setState({ messages: newMsgs.reverse() });
+        return messages[messages.length - 1];
+      })
+      .then(lastMsg => {
+        console.log(lastMsg);
+        if (!lastMsg) return;
+        setTimeout(() => {
+          this.currentUser
+            .setReadCursor({
+              roomId,
+              position: lastMsg.id,
+            })
+            .then(() => {
+              console.debug('setReadCursor success');
+            })
+            .catch(err => {
+              console.log(`Error setting cursor: ${err}`);
+            });
+        }, MARK_AS_READ_AFTER_MS);
+      })
       .then(() =>
         this.currentUser.subscribeToRoom({
           roomId,
@@ -295,6 +309,20 @@ class ChatContainer extends Component<Props, State> {
     const newMsg = this.createGiftedMessage(m);
 
     // TODO: Update cursor if the message was read
+
+    setTimeout(() => {
+      this.currentUser
+        .setReadCursor({
+          roomId: this.state.roomId,
+          position: m.id,
+        })
+        .then(() => {
+          console.debug('setReadCursor success');
+        })
+        .catch(err => {
+          console.log(`Error setting cursor: ${err}`);
+        });
+    }, MARK_AS_READ_AFTER_MS);
 
     if (this.state.messages && this.state.messages.length) {
       return this.setState(prevState => {
@@ -549,7 +577,6 @@ class ChatContainer extends Component<Props, State> {
                 // timeformat="LT"
                 // dateformat="ll"
                 // onPressAvatar={() => alert('code me like those french girls 🎨')}
-                // renderLoading={() => ()}
                 renderSend={this.renderSend}
                 renderSystemMessage={this.renderSystemMessage}
                 renderBubble={this.renderBubble}

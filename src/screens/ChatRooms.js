@@ -67,7 +67,6 @@ class ChatContainer extends Component<Props, State> {
       .then(u => (this.currentUser = u))
       .then(() => this.getChatsAndTheirOrders())
       .then(ordersAndChats => {
-        console.log(ordersAndChats);
         this.setState({
           ordersAndChats,
           isLoading: false,
@@ -207,7 +206,10 @@ class ChatContainer extends Component<Props, State> {
   };
 
   componentWillUnmount() {
-    this.currentUser.roomSubscriptions[this.state.roomId].cancel();
+    if (this.currentUser.roomSubscriptions) {
+      console.log(this.currentUser.roomSubscriptions);
+    }
+    // this.currentUser.roomSubscriptions[this.state.roomId].cancel();
   }
 
   componentWillReceiveProps(nextProps) {

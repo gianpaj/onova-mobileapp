@@ -314,154 +314,157 @@ export class AddProductScreen extends React.Component<Props, State> {
   onChangeDescription = (t: string) => this.setState({ description: t });
 
   render() {
-    const { images } = this.state;
+    const { images, tags } = this.state;
+
+    if (images.length < 1) return null;
+
     return (
-      images.length > 0 && (
-        <Container>
-          <Header>
-            <Left>
-              <NBButton transparent onPress={() => this.closeModal()}>
-                <Icon name="close" size={28} />
-              </NBButton>
-            </Left>
-            <Body>
-              <Text>Add Item</Text>
-            </Body>
-            <Right>
-              <NBButton
-                transparent
-                disabled={!this.addEnabled()}
-                style={{ backgroundColor: colors.transparent }}
-                onPress={this.addItem}>
-                <Icon
-                  name="check"
-                  style={!this.addEnabled() && { color: colors.grey3 }}
-                  size={28}
-                />
-              </NBButton>
-            </Right>
-          </Header>
-          <Content>
-            <View style={{ flex: 1, flexDirection: 'row' }}>
-              <WingBlank>
-                <AntImagePicker
-                  files={images}
-                  onChange={images => {
-                    if (images.length < 1) this.closeModal();
-                    this.setState({ images });
-                  }}
-                  onImageClick={i => this.selectPhotoTapped(i)}
-                  onAddImageClick={() => this.selectPhotoTapped(images.length)}
-                  selectable={images.length < 6}
-                />
-              </WingBlank>
-            </View>
-            <FormLabel labelStyle={styles.label}>Price:</FormLabel>
-            <FormInput
-              autoCorrect={false}
-              clearButtonMode="while-editing"
-              containerStyle={styles.inputContainer}
-              editable={!this.state.pending}
-              inputStyle={styles.input}
-              keyboardType="numeric"
-              maxLength={8} // 10000.99
-              onChangeText={t => this.changePrice(t)}
-              placeholder="123 UAH"
-              value={this.state.price}
-            />
-            <FormLabel labelStyle={styles.label}>Description:</FormLabel>
-            <TextareaItem
-              editable={!this.state.pending}
-              style={styles.inputContainerNew}
-              rows={3}
-              count={settings.MAX_LENGTH_DESCRIPTION}
-              onChangeText={this.onChangeDescription}
-              placeholder="Please provide details such as brand, size, condition about the item"
-              value={this.state.description}
-              error={
-                this.state.description.trim().length <
-                settings.MIN_LENGTH_DESCRIPTION
-              }
-            />
-            <FormLabel labelStyle={styles.label}>#tags:</FormLabel>
-            <TagInput
-              inputDefaultWidth={160}
-              editable={!this.state.pending}
-              labelExtractor={tag => tag}
-              onChange={tags => this.setState({ tags })}
-              onChangeText={this.changeTagsTest}
-              tagColor={colors.primary}
-              tagTextColor="white"
-              text={this.state.tagsText}
-              value={this.state.tags}
-              inputProps={{ placeholder: 'winter, adidas, hat' }}
-            />
-            <View style={styles.grps}>
-              <RadioForm animation formHorizontal>
-                {category_radio_grp_1.map((option, i) => (
-                  <RadioButton labelHorizontal={false} key={i}>
-                    <RadioButtonLabel
-                      labelHorizontal
-                      obj={option}
-                      index={i}
-                      onPress={grp_1 =>
-                        !this.state.pending && this.setState({ grp_1 })
-                      }
-                      labelStyle={styles.radioButtonLabel}
-                    />
-                    <RadioButtonInput
-                      obj={option}
-                      index={i}
-                      isSelected={this.state.grp_1 == i}
-                      onPress={grp_1 =>
-                        !this.state.pending && this.setState({ grp_1 })
-                      }
-                      borderWidth={2}
-                      buttonInnerColor={colors.black}
-                      buttonOuterColor={colors.black}
-                      buttonSize={19}
-                      buttonOuterSize={35}
-                      buttonWrapStyle={styles.radioButtonInput}
-                    />
-                  </RadioButton>
-                ))}
-              </RadioForm>
-            </View>
-            <HR />
-            <View style={styles.grps}>
-              <RadioForm animation formHorizontal>
-                {category_radio_grp_2.map((option, i) => (
-                  <RadioButton labelHorizontal={false} key={i}>
-                    <RadioButtonLabel
-                      labelHorizontal
-                      obj={option}
-                      index={i}
-                      onPress={grp_2 =>
-                        !this.state.pending && this.setState({ grp_2 })
-                      }
-                      labelStyle={styles.radioButtonLabel}
-                    />
-                    <RadioButtonInput
-                      obj={option}
-                      index={i}
-                      isSelected={this.state.grp_2 == i}
-                      onPress={grp_2 =>
-                        !this.state.pending && this.setState({ grp_2 })
-                      }
-                      borderWidth={2}
-                      buttonInnerColor={colors.black}
-                      buttonOuterColor={colors.black}
-                      buttonSize={19}
-                      buttonOuterSize={35}
-                      buttonWrapStyle={styles.radioButtonInput}
-                    />
-                  </RadioButton>
-                ))}
-              </RadioForm>
-            </View>
-          </Content>
-        </Container>
-      )
+      <Container>
+        <Header>
+          <Left>
+            <NBButton transparent onPress={() => this.closeModal()}>
+              <Icon name="close" size={28} />
+            </NBButton>
+          </Left>
+          <Body>
+            <Text>Add Item</Text>
+          </Body>
+          <Right>
+            <NBButton
+              transparent
+              disabled={!this.addEnabled()}
+              style={{ backgroundColor: colors.transparent }}
+              onPress={this.addItem}>
+              <Icon
+                name="check"
+                style={!this.addEnabled() && { color: colors.grey3 }}
+                size={28}
+              />
+            </NBButton>
+          </Right>
+        </Header>
+        <Content>
+          <View style={{ flex: 1, flexDirection: 'row' }}>
+            <WingBlank>
+              <AntImagePicker
+                files={images}
+                onChange={images => {
+                  if (images.length < 1) this.closeModal();
+                  this.setState({ images });
+                }}
+                onImageClick={i => this.selectPhotoTapped(i)}
+                onAddImageClick={() => this.selectPhotoTapped(images.length)}
+                selectable={images.length < 6}
+              />
+            </WingBlank>
+          </View>
+          <FormLabel labelStyle={styles.label}>Price:</FormLabel>
+          <FormInput
+            autoCorrect={false}
+            clearButtonMode="while-editing"
+            containerStyle={styles.inputContainer}
+            editable={!this.state.pending}
+            inputStyle={styles.input}
+            keyboardType="numeric"
+            maxLength={8} // 10000.99
+            onChangeText={t => this.changePrice(t)}
+            placeholder="123 UAH"
+            value={this.state.price}
+          />
+          <FormLabel labelStyle={styles.label}>Description:</FormLabel>
+          <TextareaItem
+            editable={!this.state.pending}
+            style={styles.inputContainerNew}
+            rows={3}
+            count={settings.MAX_LENGTH_DESCRIPTION}
+            onChangeText={this.onChangeDescription}
+            placeholder="Please provide details such as brand, size, condition about the item"
+            value={this.state.description}
+            error={
+              this.state.description.trim().length <
+              settings.MIN_LENGTH_DESCRIPTION
+            }
+          />
+          <FormLabel labelStyle={styles.label}>#tags:</FormLabel>
+          <TagInput
+            maxHeight={2000}
+            editable={!this.state.pending}
+            labelExtractor={tag => tag}
+            onChange={tags => this.setState({ tags })}
+            onChangeText={this.changeTagsTest}
+            tagColor={colors.primary}
+            tagTextColor="white"
+            text={this.state.tagsText}
+            value={tags}
+            inputProps={{
+              placeholder: tags.length < 1 ? 'winter, adidas, hat' : '',
+            }}
+          />
+          <View style={styles.grps}>
+            <RadioForm animation formHorizontal>
+              {category_radio_grp_1.map((option, i) => (
+                <RadioButton labelHorizontal={false} key={i}>
+                  <RadioButtonLabel
+                    labelHorizontal
+                    obj={option}
+                    index={i}
+                    onPress={grp_1 =>
+                      !this.state.pending && this.setState({ grp_1 })
+                    }
+                    labelStyle={styles.radioButtonLabel}
+                  />
+                  <RadioButtonInput
+                    obj={option}
+                    index={i}
+                    isSelected={this.state.grp_1 == i}
+                    onPress={grp_1 =>
+                      !this.state.pending && this.setState({ grp_1 })
+                    }
+                    borderWidth={2}
+                    buttonInnerColor={colors.black}
+                    buttonOuterColor={colors.black}
+                    buttonSize={19}
+                    buttonOuterSize={35}
+                    buttonWrapStyle={styles.radioButtonInput}
+                  />
+                </RadioButton>
+              ))}
+            </RadioForm>
+          </View>
+          <HR />
+          <View style={styles.grps}>
+            <RadioForm animation formHorizontal>
+              {category_radio_grp_2.map((option, i) => (
+                <RadioButton labelHorizontal={false} key={i}>
+                  <RadioButtonLabel
+                    labelHorizontal
+                    obj={option}
+                    index={i}
+                    onPress={grp_2 =>
+                      !this.state.pending && this.setState({ grp_2 })
+                    }
+                    labelStyle={styles.radioButtonLabel}
+                  />
+                  <RadioButtonInput
+                    obj={option}
+                    index={i}
+                    isSelected={this.state.grp_2 == i}
+                    onPress={grp_2 =>
+                      !this.state.pending && this.setState({ grp_2 })
+                    }
+                    borderWidth={2}
+                    buttonInnerColor={colors.black}
+                    buttonOuterColor={colors.black}
+                    buttonSize={19}
+                    buttonOuterSize={35}
+                    buttonWrapStyle={styles.radioButtonInput}
+                  />
+                </RadioButton>
+              ))}
+            </RadioForm>
+          </View>
+        </Content>
+      </Container>
     );
   }
 }

@@ -5,7 +5,6 @@ import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/es/storage';
 import thunk from 'redux-thunk';
 import { createReactNavigationReduxMiddleware } from 'react-navigation-redux-helpers';
-import { logger } from 'redux-logger';
 
 import NavigationReducer from './reducers/navigationReducer';
 import loginReducer from './reducers/loginReducer';
@@ -44,7 +43,6 @@ function configureStore() {
       window.__REDUX_DEVTOOLS_EXTENSION__(),
     applyMiddleware(
       thunk,
-      logger,
       reactNavigation
       // analytics,
     )

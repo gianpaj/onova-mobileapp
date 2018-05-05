@@ -173,7 +173,7 @@ class FollowingsContainer extends Component<Props, State> {
               style={{
                 color: colors.black,
               }}>
-              Following
+              Followers
             </Title>
           </Body>
           <Right />

@@ -107,7 +107,7 @@ export class AddProductScreen extends React.Component<Props, State> {
 
   selectPhotoTapped = (i: number = 0) => {
     if (this.state.pending) return;
-    const BUTTONS = ['📷 Camera', '🖼 Gallery', 'Cancel'];
+    const BUTTONS = ['Camera', 'Gallery', 'Cancel'];
     ActionSheet.show(
       {
         options: BUTTONS,

@@ -507,7 +507,11 @@ class ProfileScreen extends React.Component<Props, State> {
               </NBButton>
             ) : (
               <NBButton transparent onPress={this.onGoToSettings}>
-                <NBIcon ios="ios-cog" android="md-cog" style={styles.icon} />
+                <NBIcon
+                  ios="ios-settings"
+                  android="md-settings"
+                  style={styles.icon}
+                />
               </NBButton>
             )}
           </Right>
@@ -534,7 +538,7 @@ class ProfileScreen extends React.Component<Props, State> {
                     <Button
                       raised
                       rounded
-                      backgroundColor={colors.pDark}
+                      backgroundColor={colors.black}
                       containerViewStyle={styles.searchButton}
                       onPress={() => navigation.navigate('addProduct')}
                       title="Sell something now"

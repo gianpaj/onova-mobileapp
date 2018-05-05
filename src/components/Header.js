@@ -4,11 +4,7 @@ import React from 'react';
 import { Header } from 'native-base';
 import colors from '../config/colors';
 
-type Props = {
-  full: boolean,
-};
-
-const HeaderContainer = (props: Props): React$Element<any> => (
+const HeaderContainer = (props: any): React$Element<any> => (
   <Header
     androidStatusBarColor={colors.primary}
     style={{ backgroundColor: colors.bgDefault }}

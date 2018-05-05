@@ -5,7 +5,7 @@
  */
 
 export default {
-  primary: '#303f9f',
+  primary: '#000000',
   active: '#2f95dc',
   bgDefault: '#f8f8f8',
   pLight: '#666ad1',

@@ -16,7 +16,6 @@ import {
   Button as NBButton,
   Container,
   Content,
-  Header,
   Icon as NBIcon,
   Left,
   Right,
@@ -34,7 +33,7 @@ import update from 'immutability-helper';
 // import Instabug from 'instabug-reactnative';
 import { KeyboardAccessoryNavigation } from 'react-native-keyboard-accessory';
 
-import { Accordion, HR } from '../components';
+import { Accordion, HR, Header } from '../components';
 
 import { getPersonalUserData, logout } from '../actions/actionCreator';
 
@@ -335,8 +334,8 @@ class SettingsContainer extends Component<Props, State> {
 
     return (
       <Container>
-        <Header>
-          <Left>
+        <Header style={{ backgroundColor: colors.bgDefault }}>
+          <Left style={styles.container}>
             <NBButton
               transparent
               dark
@@ -346,8 +345,8 @@ class SettingsContainer extends Component<Props, State> {
               <NBIcon ios="ios-arrow-back" android="md-arrow-back" />
             </NBButton>
           </Left>
-          <Body>
-            <Title>Settings</Title>
+          <Body style={styles.container}>
+            <Title style={{ color: colors.black }}>Settings</Title>
           </Body>
           <Right>
             <NBButton
@@ -548,6 +547,11 @@ class SettingsContainer extends Component<Props, State> {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    alignItems: 'stretch',
+    flex: 1,
+    justifyContent: 'center',
+  },
   label: {
     color: colors.black,
     fontWeight: '600',

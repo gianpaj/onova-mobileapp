@@ -13,13 +13,11 @@ import {
   Button as NBButton,
   // CardItem,
   Container,
-  Header,
   Icon as NBIcon,
   Left,
   Right,
   Title,
 } from 'native-base';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { NavigationActions } from 'react-navigation';
 import { GiftedChat, Bubble, SystemMessage } from 'react-native-gifted-chat';
@@ -27,7 +25,7 @@ import { ChatManager, TokenProvider } from '@pusher/chatkit/react-native';
 
 import type { NavigationScreenProp } from 'react-navigation';
 
-import { Send } from '../components';
+import { Avatar, Header, Send } from '../components';
 import type {
   Message,
   Order,
@@ -100,7 +98,8 @@ class ChatContainer extends Component<Props, State> {
 
   componentWillUnmount() {
     // no longer receive events from the chat room
-    this.currentUser.roomSubscriptions[this.state.roomId].cancel();
+    if (this.currentUser.roomSubscriptions)
+      this.currentUser.roomSubscriptions[this.state.roomId].cancel();
   }
 
   /*
@@ -515,25 +514,34 @@ class ChatContainer extends Component<Props, State> {
 
     return (
       <Container style={st.flex1}>
-        <Header>
-          <Left>
+        <Header style={{ backgroundColor: colors.bgDefault }}>
+          <Left style={st.containerHeader}>
             <NBButton transparent dark onPress={() => navigation.goBack()}>
               <NBIcon ios="ios-arrow-back" android="md-arrow-back" />
             </NBButton>
           </Left>
-          <Body>
+          <Body style={st.containerHeader}>
             {!isLoading &&
               partner && (
-                <Title onPress={this.goToProfile}>@{partner.username}</Title>
+                <Title
+                  style={{ color: colors.black }}
+                  onPress={this.goToProfile}>
+                  @{partner.username}
+                </Title>
               )}
           </Body>
           <Right>
-            <NBButton
-              transparent
-              style={{ backgroundColor: colors.transparent }}
-              onPress={this.goToProfile}>
-              <FontAwesome name="user-circle" size={28} />
-            </NBButton>
+            {!isLoading &&
+              partner && (
+                <Avatar
+                  style={st.avatarContainer}
+                  size={'default'}
+                  withBorder
+                  uri={partner.profilePic}
+                  placeholderText={partner.username}
+                  onPress={this.goToProfile}
+                />
+              )}
           </Right>
         </Header>
         <View style={st.flex1}>
@@ -583,7 +591,7 @@ class ChatContainer extends Component<Props, State> {
                 // keyboardShouldPersistTaps="handled"
                 maxInputLength={settings.MAX_CHAT_INPUT_LENGTH}
                 // renderInputToolbar={this.renderInputToolbar}
-                showUserAvatar
+                renderAvatar={null}
               />
             </View>
           )}
@@ -613,6 +621,15 @@ const st = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  containerHeader: {
+    alignItems: 'stretch',
+    flex: 1,
+    justifyContent: 'center',
+  },
+  avatarContainer: {
+    height: 40,
+    width: 40,
   },
   flex1: {
     flex: 1,

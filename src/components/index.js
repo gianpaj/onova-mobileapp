@@ -6,6 +6,7 @@ import Avatar from './Avatar';
 import EditableText from './EditableText';
 import Comments from './Comments';
 import HR from './HR';
+import Header from './Header';
 import ImageGrid from './ImageGrid';
 import ImageGridSearch from './ImageGridSearch';
 import MediaView from './MediaView';
@@ -21,6 +22,7 @@ export {
   EditableText,
   Comments,
   HR,
+  Header,
   ImageGrid,
   ImageGridSearch,
   MediaView,

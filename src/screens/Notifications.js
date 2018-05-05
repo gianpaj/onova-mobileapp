@@ -7,7 +7,6 @@ import {
   Body,
   Button,
   Container,
-  Header,
   Icon,
   Left,
   ListItem,
@@ -17,7 +16,7 @@ import {
 import { Icon as IconEL } from 'react-native-elements';
 import { withNavigation } from 'react-navigation';
 
-import { Avatar } from '../components';
+import { Avatar, Header } from '../components';
 import colors from '../config/colors';
 import * as api from '../utils/api';
 import * as ui from '../utils/ui';
@@ -204,8 +203,8 @@ class NotificationsContainer extends Component<Props, State> {
   render() {
     return (
       <Container>
-        <Header>
-          <Left>
+        <Header style={{ backgroundColor: colors.bgDefault }}>
+          <Left style={styles.container}>
             <Button
               transparent
               dark
@@ -213,8 +212,13 @@ class NotificationsContainer extends Component<Props, State> {
               <Icon ios="ios-arrow-back" android="md-arrow-back" />
             </Button>
           </Left>
-          <Body>
-            <Title>Notifications</Title>
+          <Body style={styles.container}>
+            <Title
+              style={{
+                color: colors.black,
+              }}>
+              Notifications
+            </Title>
           </Body>
           <Right />
         </Header>
@@ -248,6 +252,11 @@ export const Notifications = withNavigation(
 );
 
 const styles = StyleSheet.create({
+  container: {
+    alignItems: 'stretch',
+    flex: 1,
+    justifyContent: 'center',
+  },
   root: {
     backgroundColor: colors.bgDefault,
     height: '100%',

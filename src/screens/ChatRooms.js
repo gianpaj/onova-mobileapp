@@ -13,7 +13,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { Body, Container, Header, Left, Right, Title } from 'native-base';
+import { Body, Container, Left, Right, Title } from 'native-base';
 import { NavigationActions } from 'react-navigation';
 import { ChatManager, TokenProvider } from '@pusher/chatkit/react-native';
 
@@ -25,7 +25,7 @@ import type { UserData, ReduxState, Order, PusherUser, Room } from '../types';
 import colors from '../config/colors';
 import * as api from '../utils/api';
 import * as ui from '../utils/ui';
-import { Avatar } from '../components';
+import { Header, Avatar } from '../components';
 import { getRoomName } from './Chat';
 
 let config;
@@ -262,7 +262,7 @@ class ChatContainer extends Component<Props, State> {
     );
   };
 
-  _renderOrderRow = ({ item }: { item: Room }) => {
+  _renderRoomRow = ({ item }: { item: Room }) => {
     let { lastMessage } = item;
     let from;
     const myUserId = this.props.userData._id;
@@ -286,9 +286,9 @@ class ChatContainer extends Component<Props, State> {
         <View style={st.itemContainer}>
           <Avatar
             onPress={() => this.goToChat(item.id)}
-            placeholderText={item.partner.name}
             size="verySmall"
             uri={item.partner.avatarURL}
+            placeholderText={item.partner.name}
             withBorder
           />
 
@@ -386,7 +386,7 @@ class ChatContainer extends Component<Props, State> {
                     onRefresh={this.refreshOrdersAndChats}
                   />
                 }
-                renderItem={this._renderOrderRow}
+                renderItem={this._renderRoomRow}
                 style={st.root}
               />
             </View>

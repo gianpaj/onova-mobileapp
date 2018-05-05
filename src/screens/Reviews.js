@@ -2,19 +2,11 @@
 
 import React, { Component } from 'react';
 import { Dimensions, StyleSheet } from 'react-native';
-import {
-  Body,
-  Container,
-  Header,
-  Title,
-  Right,
-  Left,
-  Button,
-  Icon,
-} from 'native-base';
+import { Body, Container, Title, Right, Left, Button, Icon } from 'native-base';
 import { TabViewAnimated, TabBar, SceneMap } from 'react-native-tab-view';
 
 import { ReviewsTab } from './ReviewsTab';
+import { Header } from '../components';
 
 import colors from '../config/colors';
 

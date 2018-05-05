@@ -10,13 +10,11 @@ import {
   Text,
   View,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/Entypo';
 import { FormInput } from 'react-native-elements';
 import {
   Button as NBButton,
   Container,
   Content,
-  Header,
   Right,
   Left,
   Body,
@@ -27,6 +25,7 @@ import isEmail from 'validator/lib/isEmail';
 import { Toast } from 'antd-mobile';
 import AnimButton from 'react-native-micro-animated-button';
 
+import { Header } from '../components';
 import { login, goback } from '../actions/actionCreator';
 import * as api from '../utils/api';
 import colors from '../config/colors';

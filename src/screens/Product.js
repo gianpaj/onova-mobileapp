@@ -16,7 +16,6 @@ import {
   Button as NBButton,
   Container,
   Content,
-  Header,
   Icon as NBIcon,
   Left,
   Right,
@@ -25,7 +24,7 @@ import { Button } from 'react-native-elements';
 import ParsedText from 'react-native-parsed-text';
 // import LottieView from 'lottie-react-native';
 
-import { Avatar, MediaView, Comments } from '../components';
+import { Avatar, Header, MediaView, Comments } from '../components';
 
 import colors from '../config/colors';
 import * as api from '../utils/api';

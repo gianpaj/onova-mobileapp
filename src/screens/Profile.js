@@ -15,7 +15,6 @@ import {
   ActionSheet,
   Button as NBButton,
   Container,
-  Header,
   Icon as NBIcon,
   Left,
   Right,
@@ -29,6 +28,7 @@ import { NoticeBar, Toast } from 'antd-mobile';
 import {
   Avatar,
   EditableText,
+  Header,
   ImageGrid,
   NotificationsDot,
 } from '../components';

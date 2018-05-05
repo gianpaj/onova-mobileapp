@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { connect } from 'react-redux';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {
   ActionSheet,
@@ -10,9 +10,9 @@ import {
   Button as NBButton,
   Container,
   Content,
-  Header,
   Left,
   Right,
+  Title,
 } from 'native-base';
 import { FormInput, FormLabel } from 'react-native-elements';
 import RadioForm, {
@@ -28,7 +28,7 @@ import {
   WingBlank,
 } from 'antd-mobile';
 
-import { HR, TagInput } from '../components';
+import { Header, HR, TagInput } from '../components';
 
 import colors from '../config/colors';
 import settings from '../config/settings';
@@ -344,14 +344,19 @@ export class AddProductScreen extends React.Component<Props, State> {
 
     return (
       <Container>
-        <Header>
-          <Left>
+        <Header style={{ backgroundColor: colors.bgDefault }}>
+          <Left style={styles.container}>
             <NBButton transparent onPress={() => this.closeModal()}>
               <Icon name="close" size={28} />
             </NBButton>
           </Left>
-          <Body>
-            <Text>Add Item</Text>
+          <Body style={styles.container}>
+            <Title
+              style={{
+                color: colors.black,
+              }}>
+              Add Item
+            </Title>
           </Body>
           <Right>
             <NBButton
@@ -507,6 +512,11 @@ const styles = StyleSheet.create({
   //   width: width / 6,
   //   height: width / 6,
   // },
+  container: {
+    alignItems: 'stretch',
+    flex: 1,
+    justifyContent: 'center',
+  },
   label: {
     fontWeight: '600',
     color: colors.black,

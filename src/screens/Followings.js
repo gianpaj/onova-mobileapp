@@ -11,22 +11,13 @@ import {
   TouchableHighlight,
   View,
 } from 'react-native';
-import {
-  Body,
-  Button,
-  Container,
-  Header,
-  Icon,
-  Left,
-  Right,
-  Title,
-} from 'native-base';
+import { Body, Button, Container, Icon, Left, Right, Title } from 'native-base';
 import { withNavigation } from 'react-navigation';
 
 import colors from '../config/colors';
 import * as api from '../utils/api';
 // import * as ui from '../utils/ui';
-import { Avatar } from '../components';
+import { Avatar, Header } from '../components';
 
 import type { NavigationScreenProp } from 'react-navigation';
 
@@ -127,6 +118,7 @@ class FollowingsContainer extends Component<Props, State> {
             onButtonPress={() =>
               this.onFollowOrUnfollow(user._id, user.amIAFollower)
             }
+            onPress={() => this.goToProfile(user)}
           />
           <Text
             style={[shouldShowButton ? { marginTop: -10 } : { marginTop: 10 }]}
@@ -167,8 +159,8 @@ class FollowingsContainer extends Component<Props, State> {
   render() {
     return (
       <Container>
-        <Header>
-          <Left>
+        <Header style={{ backgroundColor: colors.bgDefault }}>
+          <Left style={styles.container}>
             <Button
               transparent
               dark
@@ -176,8 +168,13 @@ class FollowingsContainer extends Component<Props, State> {
               <Icon ios="ios-arrow-back" android="md-arrow-back" />
             </Button>
           </Left>
-          <Body>
-            <Title>Following</Title>
+          <Body style={styles.container}>
+            <Title
+              style={{
+                color: colors.black,
+              }}>
+              Following
+            </Title>
           </Body>
           <Right />
         </Header>
@@ -230,6 +227,11 @@ export const Followings = connect(mapStateToProps)(Followings2);
 const MARGIN = 1;
 
 const styles = StyleSheet.create({
+  container: {
+    alignItems: 'stretch',
+    flex: 1,
+    justifyContent: 'center',
+  },
   root: {
     backgroundColor: colors.bgDefault,
     height: '100%',

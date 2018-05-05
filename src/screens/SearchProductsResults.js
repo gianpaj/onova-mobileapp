@@ -7,14 +7,13 @@ import {
   Body,
   Button as NBButton,
   Content,
-  Header,
   Left,
   Right,
   Icon as NBIcon,
   Title,
 } from 'native-base';
 
-import { ImageGridSearch } from '../components/index';
+import { Header, ImageGridSearch } from '../components';
 
 import colors from '../config/colors';
 
@@ -79,8 +78,8 @@ class SearchProductsResultsContainer extends Component<Props, State> {
 
     return (
       <View style={styles.flex1}>
-        <Header>
-          <Left>
+        <Header style={{ backgroundColor: colors.bgDefault }}>
+          <Left style={styles.container}>
             <NBButton
               transparent
               dark
@@ -88,18 +87,22 @@ class SearchProductsResultsContainer extends Component<Props, State> {
               <NBIcon ios="ios-arrow-back" android="md-arrow-back" />
             </NBButton>
           </Left>
-          <Body>
+          <Body style={styles.container}>
             {terms.tag && terms.grp_1 == -1 && terms.grp_2 == -1 ? (
-              <Title>#{terms.tag}</Title>
+              <Title style={{ color: colors.black }}>#{terms.tag}</Title>
             ) : // searching for category (clothes, shoes or other)
             terms.tag == '' && terms.grp_1 !== -1 && terms.grp_2 == -1 ? (
-              <Title>{this.getCategoryLabel(terms.grp_1)}</Title>
+              <Title style={{ color: colors.black }}>
+                {this.getCategoryLabel(terms.grp_1)}
+              </Title>
             ) : // searching for type (man, woman or other)
             terms.tag == '' && terms.grp_1 == -1 && terms.grp_2 !== -1 ? (
-              <Title>{this.getTypeLabel(terms.grp_2)}</Title>
+              <Title style={{ color: colors.black }}>
+                {this.getTypeLabel(terms.grp_2)}
+              </Title>
             ) : (
               // else, a combination
-              <Title>Results</Title>
+              <Title style={{ color: colors.black }}>Results</Title>
             )}
           </Body>
           <Right />
@@ -115,6 +118,11 @@ class SearchProductsResultsContainer extends Component<Props, State> {
 const styles = StyleSheet.create({
   flex1: {
     flex: 1,
+  },
+  container: {
+    alignItems: 'stretch',
+    flex: 1,
+    justifyContent: 'center',
   },
 });
 

@@ -15,7 +15,6 @@ import {
   Container,
   Content,
   H1,
-  Header,
   Icon as NBIcon,
   Left,
   Footer,
@@ -30,7 +29,7 @@ import type { NavigationScreenProp } from 'react-navigation';
 import axios from 'axios';
 import type { CancelTokenSource } from 'axios';
 
-import { Accordion, HR } from '../components';
+import { Accordion, Header, HR } from '../components';
 
 import colors from '../config/colors';
 // import settings from '../config/settings';

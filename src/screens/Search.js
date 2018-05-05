@@ -1,12 +1,13 @@
 // @flow
 
 import React, { Component } from 'react';
-import { Dimensions, StyleSheet, Text } from 'react-native';
-import { Body, Container, Header, Title, Left, Right } from 'native-base';
+import { Dimensions, StyleSheet } from 'react-native';
+import { Body, Container, Title, Left, Right } from 'native-base';
 import { TabViewAnimated, TabBar, SceneMap } from 'react-native-tab-view';
 
 import { SearchProductsTab } from './SearchProductsTab';
 import { SearchSellersTab } from './SearchSellersTab';
+import { Header } from '../components';
 
 import colors from '../config/colors';
 
@@ -93,6 +94,6 @@ const styles = StyleSheet.create({
     fontWeight: '400',
   },
   indicator: {
-    backgroundColor: colors.pDark,
+    backgroundColor: colors.black,
   },
 });

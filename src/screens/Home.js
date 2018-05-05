@@ -2,13 +2,11 @@
 import colors from '../config/colors';
 
 import React, { PureComponent } from 'react';
-import { Button, Dimensions, StyleSheet, Text } from 'react-native';
-import { Body, Left, Right, Container, Header } from 'native-base';
+import { Dimensions, StyleSheet } from 'react-native';
+import { Body, Left, Right, Container, Title } from 'native-base';
 import { TabViewAnimated, TabBar, SceneMap } from 'react-native-tab-view';
 
-import NavigationService from '../navigation/NavigationService';
-
-import { ImageGrid } from '../components';
+import { Header, ImageGrid } from '../components';
 
 import type { NavigationScreenProp } from 'react-navigation';
 import type { Route, NavigationState } from 'react-native-tab-view/types';
@@ -81,12 +79,15 @@ export class Home extends PureComponent<Props, State> {
     return (
       <Container testID="Home">
         {/* <View style={styles.statusBarUnderlay} /> */}
-        <Header style={{ backgroundColor: colors.bgDefault }} hasTabs>
+        <Header hasTabs>
           <Left style={styles.container} />
           <Body style={styles.container}>
-            <Text style={{ alignSelf: 'center', fontWeight: 'bold' }}>
-              ØNOVA
-            </Text>
+            <Title
+              style={{
+                color: colors.black,
+              }}>
+              ONOVA
+            </Title>
           </Body>
           <Right />
           {/* <Right>
@@ -122,7 +123,9 @@ const styles = StyleSheet.create({
   //   marginTop: STATUS_BAR_HEIGHT,
   // },
   container: {
+    alignItems: 'stretch',
     flex: 1,
+    justifyContent: 'center',
   },
   indicator: {
     height: 3,

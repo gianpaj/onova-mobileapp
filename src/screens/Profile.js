@@ -528,15 +528,21 @@ class ProfileScreen extends React.Component<Props, State> {
             navigation={navigation}
             emptyState={
               <View style={styles.emptyContainer}>
-                <Text>You did not add any items yet</Text>
-                <Button
-                  raised
-                  rounded
-                  backgroundColor={colors.pDark}
-                  containerViewStyle={styles.searchButton}
-                  onPress={() => navigation.navigate('addProduct')}
-                  title="Sell something now"
-                />
+                {this.isMe() ? (
+                  <View>
+                    <Text>You did not add any items yet</Text>
+                    <Button
+                      raised
+                      rounded
+                      backgroundColor={colors.pDark}
+                      containerViewStyle={styles.searchButton}
+                      onPress={() => navigation.navigate('addProduct')}
+                      title="Sell something now"
+                    />
+                  </View>
+                ) : (
+                  <Text>There no any items yet</Text>
+                )}
               </View>
             }
           />

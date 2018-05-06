@@ -479,7 +479,6 @@ const styles = StyleSheet.create({
   // },
   hashtag: {
     color: colors.pDark,
-    fontWeight: 'bold',
   },
 });
 

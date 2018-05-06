@@ -383,7 +383,7 @@ export class ProductContainer extends React.Component<Props, State> {
                   <ParsedText
                     parse={[
                       {
-                        pattern: /#(\w+)/,
+                        pattern: /#(\S+)/,
                         style: styles.hashtag,
                         onPress: this.handleHashtagPress,
                       },

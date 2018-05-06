@@ -1,14 +1,12 @@
 // @flow
 
 import React from 'react';
-import { View, StyleSheet, Platform } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import type { ReduxState } from '../types';
 import colors from '../config/colors';
-
-const isiOS = Platform.OS === 'ios';
+import { Avatar } from '../components';
 
 type Props = {
   focused: boolean,
@@ -31,16 +29,23 @@ class NotificationsDot extends React.Component<Props, void> {
     return (
       <View style={st.iconContainer}>
         {userData.notifications && <View style={st.dot} />}
-        <Ionicons
+        <Avatar
+          style={st.avatarContainer}
+          size={'default'}
+          withBorder={focused}
+          uri={userData.profilePic}
+          placeholderText={userData.username}
+        />
+        {/* <Ionicons
           // name={isiOS ? `ios-person${focused ? '' : '-outline'}` : 'md-person'}
           name={isiOS ? 'ios-person' : 'md-person'}
           size={28}
           // eslint-disable-next-line
-          style={{ marginBottom: -3 }}
+          // style={{ marginBottom: -3 }}
           color={
-            focused ? (isiOS ? colors.active : colors.primary) : colors.grey1
+            focused ? (isiOS ? colors.active : colors.primary) : colors.grey4
           }
-        />
+        /> */}
         {/* https://docs.nativebase.io/Components.html#footer-tabs-badge-headref */}
         {/* <Button active badge vertical>
           <Badge ><Text>51</Text></Badge>
@@ -69,6 +74,10 @@ const st = StyleSheet.create({
     minWidth: 4,
     position: 'absolute',
     zIndex: 2,
+  },
+  avatarContainer: {
+    height: 25,
+    width: 25,
   },
 });
 

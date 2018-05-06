@@ -291,9 +291,14 @@ export class ProductContainer extends React.Component<Props, State> {
           </Left>
           <Body />
           <Right>
-            <NBButton transparent dark onPress={this.showActionSheetForProduct}>
-              <NBIcon ios="ios-more" android="md-more" />
-            </NBButton>
+            {this.isMyProduct() && (
+              <NBButton
+                transparent
+                dark
+                onPress={this.showActionSheetForProduct}>
+                <NBIcon ios="ios-more" android="md-more" />
+              </NBButton>
+            )}
           </Right>
         </Header>
         <Content

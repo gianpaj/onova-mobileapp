@@ -181,6 +181,9 @@ export default class Avatar extends PureComponent<Props, State> {
   };
 
   render() {
+    if (!this.props.onPress && !this.props.interactive) {
+      return this.renderAvatarImage();
+    }
     return (
       <TouchableOpacity
         onPress={() =>
@@ -250,8 +253,8 @@ const styles = StyleSheet.create({
   },
   /* eslint-enable */
   border: {
-    borderColor: colors.grey5,
-    borderWidth: 2,
+    borderColor: colors.primary,
+    borderWidth: 1,
   },
   borderInteractive: {
     borderColor: colors.grey2,

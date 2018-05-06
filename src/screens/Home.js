@@ -128,7 +128,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   indicator: {
-    height: 3,
     backgroundColor: colors.primary,
   },
   label: {

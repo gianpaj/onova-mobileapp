@@ -119,7 +119,7 @@ class SearchProductsTabContainer extends Component<Props, State> {
             placeholder="hashtag"
             showLoadingIcon={isLoading}
             inputStyle={{
-              backgroundColor: colors.grey4,
+              backgroundColor: colors.white,
               color: this.isSearchEnabled() ? colors.black : colors.grey2,
             }}
             returnKeyType="search"
@@ -189,7 +189,7 @@ class SearchProductsTabContainer extends Component<Props, State> {
               // eslint-disable-next-line
               style={{
                 fontSize: 16,
-                color: this.isSearchEnabled() ? colors.black : colors.grey2,
+                color: this.isSearchEnabled() ? colors.primary : colors.grey1,
               }}>
               Search
             </Text>

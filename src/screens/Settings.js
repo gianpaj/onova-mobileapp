@@ -363,8 +363,8 @@ class SettingsContainer extends Component<Props, State> {
           </Right>
         </Header>
         <Content style={{ backgroundColor: colors.white }}>
-          <View style={styles.padder}>
-            {/* <Accordion
+          {/* <View style={styles.padder}> */}
+          {/* <Accordion
               headerText="Shipping Address:"
               values={[
                 {
@@ -452,14 +452,13 @@ class SettingsContainer extends Component<Props, State> {
                 <LiteCreditCardInput onChange={this.onCCChange} />
               </View>
             </FlipCard> */}
-            <View style={styles.padder}>
-              <Text style={[styles.padder, styles.secureText]}>
-                Your data is secured with a 2048-bit encryption SSL certificate
-                {/* for More info please refer to the FAQ */}
-              </Text>
-            </View>
-          </View>
-          <HR full />
+          {/* <View style={styles.padder}> */}
+          {/* <Text style={[styles.padder, styles.secureText]}> */}
+          {/* Your data is secured with a 2048-bit encryption SSL certificate */}
+          {/* for More info please refer to the FAQ */}
+          {/* </Text> */}
+          {/* </View> */}
+          {/* </View> */}
           <View style={styles.padder}>
             <FormLabel labelStyle={styles.label}>Username:</FormLabel>
             <FormInput
@@ -478,7 +477,6 @@ class SettingsContainer extends Component<Props, State> {
               onFocus={this.handleFocus.bind(this, 5)}
               onSubmitEditing={this.changeInputFocus.bind(this, 1)}
             />
-            <FormLabel>Private information</FormLabel>
             <FormLabel labelStyle={styles.label}>Email:</FormLabel>
             <FormInput
               ref={el => {
@@ -515,13 +513,11 @@ class SettingsContainer extends Component<Props, State> {
           {/* Notifications switch */}
           {/* You only get notifications for messages and status updates in your sales or purchases.
             We won't distract when you get new followers and other non-important matters */}
-          <HR full />
           <View style={[styles.padder, { alignItems: 'center' }]}>
             <NBButton light full onPress={this.onSignout}>
               <Text>Sign out</Text>
             </NBButton>
           </View>
-          <HR full />
           <View style={[styles.padder, { alignItems: 'center' }]}>
             <TouchableOpacity onPress={this.onSendEmail}>
               <Text style={styles.centerText}>hello@onova.co</Text>

@@ -53,7 +53,7 @@ const tabBarConfiguration = {
           // eslint-disable-next-line
           style={isiOS ? { marginBottom: -3 } : {}}
           color={
-            focused ? (isiOS ? colors.active : colors.primary) : colors.grey1
+            focused ? (isiOS ? colors.active : colors.primary) : colors.grey4
           }
         />
       );
@@ -65,7 +65,7 @@ const tabBarConfiguration = {
     // tint color is passed to text and icons (if enabled) on the tab bar
     activeTintColor: isiOS ? colors.active : colors.primary,
     // background color is for the tab component
-    activeBackgroundColor: isiOS ? undefined : colors.grey5,
+    activeBackgroundColor: isiOS ? undefined : colors.white,
     inactiveTintColor: colors.grey1,
     inactiveBackgroundColor: colors.white,
     style: {

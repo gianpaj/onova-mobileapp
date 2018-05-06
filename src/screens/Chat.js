@@ -501,8 +501,12 @@ class ChatContainer extends Component<Props, State> {
           right: { color: colors.black },
         }}
         wrapperStyle={{
-          left: { backgroundColor: colors.sLight },
-          right: { backgroundColor: colors.pLight },
+          left: {
+            backgroundColor: colors.white,
+            borderWidth: StyleSheet.hairlineWidth,
+            borderColor: colors.grey4,
+          },
+          right: { backgroundColor: colors.grey5 },
         }}
       />
     );
@@ -550,7 +554,7 @@ class ChatContainer extends Component<Props, State> {
               <ActivityIndicator size="large" />
             </View>
           ) : (
-            <View style={st.flex1}>
+            <View style={[st.flex1, { backgroundColor: colors.white }]}>
               {/* <CardItem header>
                 <Text
                   numberOfLines={1} // android
@@ -591,7 +595,7 @@ class ChatContainer extends Component<Props, State> {
                 // keyboardShouldPersistTaps="handled"
                 maxInputLength={settings.MAX_CHAT_INPUT_LENGTH}
                 // renderInputToolbar={this.renderInputToolbar}
-                renderAvatar={null}
+                // renderAvatar={null}
               />
             </View>
           )}
@@ -628,8 +632,8 @@ const st = StyleSheet.create({
     justifyContent: 'center',
   },
   avatarContainer: {
-    height: 40,
-    width: 40,
+    height: 25,
+    width: 25,
   },
   flex1: {
     flex: 1,

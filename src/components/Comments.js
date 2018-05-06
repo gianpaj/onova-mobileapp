@@ -168,7 +168,7 @@ class Comments extends React.Component<Props, State> {
         <View style={styles.content}>
           <View style={styles.commentHeader}>
             <TouchableOpacity onPress={() => this.props.goToProfile(c.user)}>
-              <Text style={styles.displayName}>{c.user.username}</Text>
+              <Text style={styles.username}>{c.user.username}</Text>
             </TouchableOpacity>
             <Text style={styles.time}>{ui.formatTime(c.createdAt)}</Text>
           </View>
@@ -356,7 +356,7 @@ class Comments extends React.Component<Props, State> {
             }}
             // eslint-disable-next-line
             textInputStyle={{
-              fontSize: 8,
+              fontSize: 14,
               paddingHorizontal: 3,
             }}
             horizontal={false}
@@ -473,16 +473,14 @@ const styles = StyleSheet.create({
     lineHeight: 16,
   },
   time: {
-    fontSize: 15,
+    fontSize: 12,
     color: colors.grey2,
     marginTop: 5,
   },
-  displayName: {
-    fontSize: 20,
+  username: {
+    fontSize: 14,
   },
   addCommentInputContainer: {
-    borderWidth: StyleSheet.hairlineWidth,
-    borderRadius: 2,
     paddingVertical: Platform.select({
       ios: 5,
     }),
@@ -490,6 +488,9 @@ const styles = StyleSheet.create({
     width: width - 49,
   },
   addCommentContainer: {
+    borderWidth: StyleSheet.hairlineWidth,
+    borderRadius: 10,
+    margin: 4,
     flexDirection: 'row',
     paddingVertical: Platform.select({
       ios: 10,
@@ -504,7 +505,7 @@ const styles = StyleSheet.create({
   },
   separator: {
     height: StyleSheet.hairlineWidth,
-    backgroundColor: colors.grey4,
+    backgroundColor: colors.grey5,
   },
   // timeAgo: {
   //   color: colors.grey3,

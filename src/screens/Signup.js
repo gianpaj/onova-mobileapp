@@ -15,7 +15,7 @@ import Icon from 'react-native-vector-icons/Entypo';
 import { FormInput } from 'react-native-elements';
 // $FlowFixMe
 import AnimButton from 'react-native-micro-animated-button';
-import { Container, Content } from 'native-base';
+import { Container, Content, Title } from 'native-base';
 import type { NavigationScreenProp } from 'react-navigation';
 import isEmail from 'validator/lib/isEmail';
 
@@ -163,12 +163,7 @@ class SignupScreen extends React.Component<Props, State> {
         <Content>
           <View style={styles.header}>
             {/* <Icon name="flash" style={{ fontSize: 104 }} /> */}
-            <Text>Onova</Text>
-            <View>
-              <Text style={{ color: colors.black }}>
-                Buy and sell clothes from your phone
-              </Text>
-            </View>
+            <Title style={{ color: colors.black }}>ONOVA</Title>
           </View>
           <View testID="signup-form">
             <FormInput

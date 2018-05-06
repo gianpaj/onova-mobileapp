@@ -427,9 +427,7 @@ const styles = StyleSheet.create({
     marginLeft: 15,
   },
   avatar: {
-    flex: 1,
-    height: 35,
-    marginTop: 12,
+    alignSelf: 'center',
   },
   username: {
     fontWeight: 'bold',
@@ -440,9 +438,10 @@ const styles = StyleSheet.create({
     // flex: 1,
   },
   price: {
-    lineHeight: 44,
-    marginRight: 15,
     alignSelf: 'center',
+    color: colors.black,
+    fontWeight: 'bold',
+    marginRight: 15,
   },
   bottomSection: {
     height: 54,
@@ -459,15 +458,15 @@ const styles = StyleSheet.create({
   // },
   buyButton: {
     backgroundColor: colors.red,
+    borderRadius: 5,
     marginTop: 9,
     paddingBottom: 8,
-    paddingRight: 12,
+    paddingHorizontal: 22,
     paddingTop: 8,
   },
   bottomSectionAfter: {
-    marginTop: 29,
-    marginBottom: 40,
-    // marginLeft: 15,
+    marginTop: 0,
+    marginBottom: 20,
   },
   padder: {
     paddingHorizontal: 10,

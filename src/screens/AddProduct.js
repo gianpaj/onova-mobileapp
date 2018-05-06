@@ -351,12 +351,7 @@ export class AddProductScreen extends React.Component<Props, State> {
             </NBButton>
           </Left>
           <Body style={styles.container}>
-            <Title
-              style={{
-                color: colors.black,
-              }}>
-              Add Item
-            </Title>
+            <Title style={{ color: colors.black }}>Add Item</Title>
           </Body>
           <Right>
             <NBButton
@@ -366,7 +361,7 @@ export class AddProductScreen extends React.Component<Props, State> {
               onPress={this.addItem}>
               <Icon
                 name="check"
-                style={!this.addEnabled() && { color: colors.grey3 }}
+                style={!this.addEnabled() && { color: colors.grey4 }}
                 size={28}
               />
             </NBButton>

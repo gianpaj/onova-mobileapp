@@ -18,6 +18,7 @@ import {
   Right,
   Left,
   Body,
+  Title,
   Icon as NBIcon,
 } from 'native-base';
 import type { NavigationScreenProp } from 'react-navigation';
@@ -206,12 +207,7 @@ class LoginScreen extends React.Component<Props, State> {
           <View style={styles.header}>
             <View style={{ alignItems: 'center' }}>
               {/* <Icon name="flash" style={{ fontSize: 104 }} /> */}
-              <Text>Onova</Text>
-              <View>
-                <Text style={{ color: colors.black }}>
-                  Buy and sell clothes from your phone
-                </Text>
-              </View>
+              <Title style={{ color: colors.black }}>ONOVA</Title>
             </View>
           </View>
           <FormInput

@@ -6,7 +6,7 @@
 
 export default {
   primary: '#000000',
-  active: '#2f95dc',
+  active: '#008aff',
   bgDefault: '#f8f8f8',
   pLight: '#666ad1',
   pDark: '#001970',
@@ -19,6 +19,7 @@ export default {
   grey3: '#86939e',
   grey4: '#bdc6cf',
   grey5: '#eeeeee',
+  grey6: '#f9f9f9',
   dkGreyBg: '#232323',
   greyOutline: '#cbd2d9',
   black: '#000000',

@@ -13,11 +13,13 @@ import {
 } from 'react-native';
 import {
   ActionSheet,
+  Body,
   Button as NBButton,
   Container,
   Icon as NBIcon,
   Left,
   Right,
+  Title,
 } from 'native-base';
 import { NavigationActions } from 'react-navigation';
 import type { NavigationScreenProp } from 'react-navigation';
@@ -331,10 +333,20 @@ class ProfileScreen extends React.Component<Props, State> {
   renderUserNumbers = () => {
     return (
       <View style={styles.userNumbers}>
-        {/* <TouchableOpacity
+        <TouchableOpacity
           onPress={() => this.goToReviews()}
           style={styles.alignCenter}>
-          <StarRating
+          <Text
+            style={{
+              color: colors.primary,
+              fontSize: 16,
+              fontWeight: 'bold',
+              textAlign: 'center',
+            }}>
+            {this.state.reviewsCount}
+          </Text>
+          <Text>reviews</Text>
+          {/* <StarRating
             // eslint-disable-next-line
             buttonStyle={{ paddingHorizontal: 0 }}
             // eslint-disable-next-line
@@ -349,18 +361,21 @@ class ProfileScreen extends React.Component<Props, State> {
             iconSet="Ionicons"
             rating={this.state.rateAvg}
             starSize={25}
-          />
-          <Text>{this.state.reviewsCount}</Text>
-        </TouchableOpacity> */}
+          /> */}
+        </TouchableOpacity>
         <TouchableOpacity
           onPress={() => this.goToFollowing()}
           style={styles.alignCenter}>
-          <View>
-            <Text style={{ textAlign: 'center' }}>
-              {this.state.followersCount}
-            </Text>
-            <Text>followers</Text>
-          </View>
+          <Text
+            style={{
+              color: colors.primary,
+              fontSize: 16,
+              fontWeight: 'bold',
+              textAlign: 'center',
+            }}>
+            {this.state.followersCount}
+          </Text>
+          <Text>followers</Text>
         </TouchableOpacity>
       </View>
     );
@@ -458,6 +473,7 @@ class ProfileScreen extends React.Component<Props, State> {
           <View style={{ paddingVertical: 30, paddingHorizontal: 10 }}>
             {this.isMe() ? (
               <EditableText
+                style={{ fontSize: 18 }}
                 autoCorrect
                 text={bio}
                 onChangeText={t => this.setState({ bio: t })}
@@ -482,7 +498,7 @@ class ProfileScreen extends React.Component<Props, State> {
     return (
       <Container>
         <Header style={{ backgroundColor: colors.bgDefault }}>
-          <Left style={styles.flex1}>
+          <Left style={styles.container}>
             {this.ifNavigatedFromProduct() ? (
               <NBButton transparent dark onPress={() => navigation.goBack()}>
                 <NBIcon ios="ios-arrow-back" android="md-arrow-back" />
@@ -497,9 +513,9 @@ class ProfileScreen extends React.Component<Props, State> {
               </NBButton>
             )}
           </Left>
-          <View>
-            <Text style={styles.username}>@{username}</Text>
-          </View>
+          <Body style={styles.container}>
+            <Title style={{ color: colors.black }}>@{username}</Title>
+          </Body>
           <Right>
             {this.ifNavigatedFromProduct() ? (
               <NBButton transparent dark onPress={this.showActionSheet}>
@@ -560,23 +576,25 @@ const styles = StyleSheet.create({
   flex1: {
     flex: 1,
   },
+  container: {
+    alignItems: 'stretch',
+    flex: 1,
+    justifyContent: 'center',
+  },
   alignCenter: {
     alignItems: 'center',
   },
   row: {
     flexDirection: 'row',
   },
-  username: {
-    color: colors.grey1,
-    marginVertical: 15,
-  },
   icon: {
     color: colors.grey1,
     fontSize: 27,
   },
   avatarContainer: {
-    height: 125,
-    width: 125,
+    marginTop: 4,
+    height: 115,
+    width: 115,
   },
   profileRight: {
     alignSelf: 'flex-start',

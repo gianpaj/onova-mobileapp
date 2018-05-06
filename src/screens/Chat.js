@@ -25,7 +25,7 @@ import { ChatManager, TokenProvider } from '@pusher/chatkit/react-native';
 
 import type { NavigationScreenProp } from 'react-navigation';
 
-import { Avatar, Header, Send } from '../components';
+import { Header, Send } from '../components';
 import type {
   Message,
   Order,
@@ -534,19 +534,7 @@ class ChatContainer extends Component<Props, State> {
                 </Title>
               )}
           </Body>
-          <Right>
-            {!isLoading &&
-              partner && (
-                <Avatar
-                  style={st.avatarContainer}
-                  size={'default'}
-                  withBorder
-                  uri={partner.profilePic}
-                  placeholderText={partner.username}
-                  onPress={this.goToProfile}
-                />
-              )}
-          </Right>
+          <Right />
         </Header>
         <View style={st.flex1}>
           {isLoading ? (
@@ -630,10 +618,6 @@ const st = StyleSheet.create({
     alignItems: 'stretch',
     flex: 1,
     justifyContent: 'center',
-  },
-  avatarContainer: {
-    height: 25,
-    width: 25,
   },
   flex1: {
     flex: 1,

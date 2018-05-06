@@ -104,7 +104,7 @@ class FollowingsContainer extends Component<Props, State> {
     const shouldShowButton = user._id !== _id;
     return (
       <TouchableHighlight
-        style={{ width: initialLayout.width / 3 }}
+        style={{ width: initialLayout.width / 3, paddingVertical: 20 }}
         underlayColor={colors.grey4}
         onPress={() => this.goToProfile(user)}>
         <View style={{ alignItems: 'center' }}>
@@ -169,12 +169,7 @@ class FollowingsContainer extends Component<Props, State> {
             </Button>
           </Left>
           <Body style={styles.container}>
-            <Title
-              style={{
-                color: colors.black,
-              }}>
-              Followers
-            </Title>
+            <Title style={{ color: colors.black }}>Followers</Title>
           </Body>
           <Right />
         </Header>

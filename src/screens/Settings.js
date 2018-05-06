@@ -356,7 +356,7 @@ class SettingsContainer extends Component<Props, State> {
               onPress={this.onSave}>
               <Icon
                 name="check"
-                style={!this.hasUnsavedChanges() && { color: colors.grey3 }}
+                style={!this.hasUnsavedChanges() && { color: colors.grey4 }}
                 size={28}
               />
             </NBButton>

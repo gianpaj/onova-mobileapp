@@ -57,8 +57,8 @@ export class Reviews extends Component<Props, State> {
   render() {
     return (
       <Container>
-        <Header>
-          <Left>
+        <Header style={{ backgroundColor: colors.white }} hasTabs>
+          <Left style={styles.container}>
             <Button
               transparent
               dark
@@ -66,8 +66,8 @@ export class Reviews extends Component<Props, State> {
               <Icon ios="ios-arrow-back" android="md-arrow-back" />
             </Button>
           </Left>
-          <Body>
-            <Title>Reviews</Title>
+          <Body style={styles.container}>
+            <Title style={{ color: colors.black }}>Reviews</Title>
           </Body>
           <Right />
         </Header>
@@ -84,6 +84,11 @@ export class Reviews extends Component<Props, State> {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    alignItems: 'stretch',
+    flex: 1,
+    justifyContent: 'center',
+  },
   tabbar: {
     backgroundColor: colors.white,
   },
@@ -92,6 +97,6 @@ const styles = StyleSheet.create({
     fontWeight: '400',
   },
   indicator: {
-    backgroundColor: colors.pDark,
+    backgroundColor: colors.primary,
   },
 });

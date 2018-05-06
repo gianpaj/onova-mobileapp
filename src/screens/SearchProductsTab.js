@@ -103,29 +103,36 @@ class SearchProductsTabContainer extends Component<Props, State> {
     return (
       <View style={styles.flex1}>
         <View>
-          <SearchBar
-            autoCapitalize="none"
-            autoCorrect={false}
-            containerStyle={{
-              backgroundColor: colors.transparent,
-            }}
-            clearButtonMode="while-editing" // iOS
-            // enablesReturnKeyAutomatically // iOS
-            icon={{ type: 'feather', name: 'hash' }}
-            lightTheme
-            maxLength={50}
-            onChangeText={this.onChangeText}
-            onSubmitEditing={this.onSearch}
-            placeholder="hashtag"
-            showLoadingIcon={isLoading}
-            inputStyle={{
-              backgroundColor: colors.white,
-              color: this.isSearchEnabled() ? colors.black : colors.grey2,
-            }}
-            returnKeyType="search"
-            value={this.state.text}
-          />
-          <View style={styles.grps}>
+          <View style={{ marginVertical: 30, alignItems: 'center' }}>
+            <SearchBar
+              autoCapitalize="none"
+              autoCorrect={false}
+              containerStyle={{
+                backgroundColor: colors.white,
+                width: 150,
+              }}
+              clearButtonMode="while-editing" // iOS
+              // enablesReturnKeyAutomatically // iOS
+              icon={{ type: 'feather', name: 'hash' }}
+              lightTheme
+              maxLength={50}
+              onChangeText={this.onChangeText}
+              onSubmitEditing={this.onSearch}
+              placeholder="hashtag"
+              showLoadingIcon={isLoading}
+              inputStyle={{
+                backgroundColor: colors.white,
+                color: this.isSearchEnabled() ? colors.black : colors.grey2,
+              }}
+              returnKeyType="search"
+              value={this.state.text}
+            />
+          </View>
+          <View
+            style={[
+              styles.grps,
+              { marginTop: -2, backgroundColor: colors.white },
+            ]}>
             <RadioForm animation formHorizontal>
               {category_radio_grp_1.map((option, i) => (
                 <RadioButton labelHorizontal={false} key={i}>
@@ -183,13 +190,14 @@ class SearchProductsTabContainer extends Component<Props, State> {
         <View style={styles.padder}>
           <NBButton
             block
+            style={{ backgroundColor: colors.primary }}
             disabled={!this.isSearchEnabled()}
             onPress={this.onSearch}>
             <Text
               // eslint-disable-next-line
               style={{
                 fontSize: 16,
-                color: this.isSearchEnabled() ? colors.primary : colors.grey1,
+                color: this.isSearchEnabled() ? colors.white : colors.grey2,
               }}>
               Search
             </Text>

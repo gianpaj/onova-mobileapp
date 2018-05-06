@@ -82,12 +82,7 @@ export class Home extends PureComponent<Props, State> {
         <Header hasTabs>
           <Left style={styles.container} />
           <Body style={styles.container}>
-            <Title
-              style={{
-                color: colors.black,
-              }}>
-              ONOVA
-            </Title>
+            <Title style={{ color: colors.black }}>ONOVA</Title>
           </Body>
           <Right />
           {/* <Right>

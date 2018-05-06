@@ -160,6 +160,7 @@ class NotificationsContainer extends Component<Props, State> {
           <Avatar
             size={'small'}
             withBorder
+            style={{ marginHorizontal: 10 }}
             uri={item.sourceUser.profilePic}
             placeholderText={item.data.senderName}
             // onButtonPress={() =>
@@ -213,12 +214,7 @@ class NotificationsContainer extends Component<Props, State> {
             </Button>
           </Left>
           <Body style={styles.container}>
-            <Title
-              style={{
-                color: colors.black,
-              }}>
-              Notifications
-            </Title>
+            <Title style={{ color: colors.black }}>Notifications</Title>
           </Body>
           <Right />
         </Header>

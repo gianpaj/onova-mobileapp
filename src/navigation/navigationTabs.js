@@ -65,9 +65,9 @@ const tabBarConfiguration = {
     // tint color is passed to text and icons (if enabled) on the tab bar
     activeTintColor: isiOS ? colors.active : colors.primary,
     // background color is for the tab component
-    activeBackgroundColor: isiOS ? undefined : colors.white,
+    activeBackgroundColor: isiOS ? undefined : colors.grey6,
     inactiveTintColor: colors.grey1,
-    inactiveBackgroundColor: colors.white,
+    inactiveBackgroundColor: colors.grey6,
     style: {
       backgroundColor: isiOS ? undefined : colors.grey3,
     },

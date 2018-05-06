@@ -146,6 +146,7 @@ class SearchSellersTabContainer extends Component<Props, State> {
               autoCorrect={false}
               containerStyle={{
                 backgroundColor: colors.transparent,
+                marginBottom: -2,
               }}
               onClearText={this.clearResults}
               clearButtonMode="while-editing" // iOS
@@ -158,7 +159,7 @@ class SearchSellersTabContainer extends Component<Props, State> {
               placeholder="username"
               showLoadingIcon={isLoading}
               inputStyle={{
-                backgroundColor: colors.grey4,
+                backgroundColor: colors.white,
                 color: this.isSearchEnabled() ? colors.black : colors.grey2,
               }}
               returnKeyType="search"

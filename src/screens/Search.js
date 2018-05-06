@@ -55,16 +55,11 @@ export class Search extends Component<Props, State> {
 
   render() {
     return (
-      <Container>
+      <Container style={{ backgroundColor: colors.white }}>
         <Header style={{ backgroundColor: colors.bgDefault }} hasTabs>
           <Left style={styles.container} />
           <Body style={styles.container}>
-            <Title
-              style={{
-                color: colors.black,
-              }}>
-              Search
-            </Title>
+            <Title style={{ color: colors.black }}>Search</Title>
           </Body>
           <Right />
         </Header>

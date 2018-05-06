@@ -156,6 +156,7 @@ export default class Avatar extends PureComponent<Props, State> {
       return <View>{Avatar}</View>;
     }
 
+    const { buttonActiveState } = this.props;
     return (
       <View>
         {Avatar}
@@ -163,17 +164,9 @@ export default class Avatar extends PureComponent<Props, State> {
           onPress={this.props.onButtonPress}
           style={styles.button}>
           <Ionicons
-            style={
-              {
-                // margin: -15
-              }
-            }
+            color={buttonActiveState ? colors.black : colors.active}
             size={18}
-            name={
-              this.props.buttonActiveState
-                ? 'ios-checkmark-circle'
-                : 'ios-add-circle'
-            }
+            name={buttonActiveState ? 'ios-checkmark-circle' : 'ios-add-circle'}
           />
         </TouchableOpacity>
       </View>
@@ -253,7 +246,7 @@ const styles = StyleSheet.create({
   },
   /* eslint-enable */
   border: {
-    borderColor: colors.primary,
+    borderColor: colors.grey5,
     borderWidth: 1,
   },
   borderInteractive: {

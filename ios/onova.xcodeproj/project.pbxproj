@@ -5,7 +5,6 @@
 	};
 	objectVersion = 46;
 	objects = {
-
 /* Begin PBXBuildFile section */
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
@@ -52,6 +51,7 @@
 		EEE4F4CDA1CA483D9FAF4D45 /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4B671CC29E6749BBA59A6E08 /* FontAwesome.ttf */; };
 		F2CA0505603B8FB755A7306D /* InstabugCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A52878804316696AA53C0CA /* InstabugCore.framework */; };
 		FB1835F3A57B4BB3BD583D02 /* libRNFirebase.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 18ED0DAB8E4F44FFB4DC1191 /* libRNFirebase.a */; };
+		34EA06C61E604A0C8AC1102D /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 268945F11D804AEC855D6EAF /* libz.tbd */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -449,6 +449,7 @@
 		D0E076735EAB4BCA928CE553 /* libimageCropPicker.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libimageCropPicker.a; sourceTree = "<group>"; };
 		D4C1B5650C05C9B3E7FBE292 /* Instabug.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Instabug.framework; path = "../node_modules/instabug-reactnative/ios/Instabug.framework"; sourceTree = "<group>"; };
 		E568FDCCE74CACDB8BC9EF5D /* libPods-onova.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-onova.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		268945F11D804AEC855D6EAF /* libz.tbd */ = {isa = PBXFileReference; name = "libz.tbd"; path = "usr/lib/libz.tbd"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = sourcecode.text-based-dylib-definition; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -488,6 +489,7 @@
 				EC9FE4B004114F659DFC3B4A /* libRNInstabug.a in Frameworks */,
 				CD386C546C0CD24E51D44058 /* Instabug.framework in Frameworks */,
 				F2CA0505603B8FB755A7306D /* InstabugCore.framework in Frameworks */,
+				34EA06C61E604A0C8AC1102D /* libz.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -622,6 +624,7 @@
 				0FF61DD4CB4874CF7630C73A /* libPods-onovaTests.a */,
 				D4C1B5650C05C9B3E7FBE292 /* Instabug.framework */,
 				0A52878804316696AA53C0CA /* InstabugCore.framework */,
+				268945F11D804AEC855D6EAF /* libz.tbd */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -793,6 +796,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		6832C1E5F64041DBBF772202 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			path = Application;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -831,6 +842,7 @@
 				2D69F9BE438135BEDB569A46 /* [CP] Copy Pods Resources */,
 				31D43C95BDE2FB5B6E8C1870 /* Embed Instabug Framework */,
 				02A1F421F610BC03742F5626 /* Strip Frameworks */,
+				338AE39650D346C7A00A4060 /* Upload Debug Symbols to Sentry */,
 			);
 			buildRules = (
 			);
@@ -1309,7 +1321,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
+			shellScript = "export SENTRY_PROPERTIES=sentry.properties\nexport NODE_BINARY=node\n../node_modules/@sentry/cli/bin/sentry-cli react-native xcode ../node_modules/react-native/scripts/react-native-xcode.sh";
 		};
 		02A1F421F610BC03742F5626 /* Strip Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1420,6 +1432,20 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-onovaTests/Pods-onovaTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
+		};
+		338AE39650D346C7A00A4060 /* Upload Debug Symbols to Sentry */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			name = "Upload Debug Symbols to Sentry";
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			shellPath = /bin/sh;
+			shellScript = "export SENTRY_PROPERTIES=sentry.properties\n../node_modules/@sentry/cli/bin/sentry-cli upload-dsym";
 		};
 /* End PBXShellScriptBuildPhase section */
 

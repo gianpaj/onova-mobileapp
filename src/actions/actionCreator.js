@@ -3,6 +3,7 @@
 import { Platform } from 'react-native';
 import { Toast } from 'antd-mobile';
 import { ChatManager, TokenProvider } from '@pusher/chatkit/react-native';
+import { Sentry } from 'react-native-sentry';
 
 import {
   incrementCounter,
@@ -64,6 +65,17 @@ const login = (data: LoginData) => (dispatch: Dispatch) => (
             console.warn(err);
             dispatch({ type: LOGIN_FAIL });
           });
+
+        if (process.env.NODE_ENV == 'production') {
+          Sentry.setUserContext({
+            email: userData.emailAddress,
+            userID: userData._id,
+            username: userData.username,
+            extra: {
+              accountStatus: userData.accountStatus,
+            },
+          });
+        }
       } else {
         console.debug(res);
         dispatch({ type: LOGIN_FAIL });

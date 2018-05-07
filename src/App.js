@@ -12,6 +12,7 @@ import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/lib/integration/react';
 import { Root } from 'native-base';
 import * as firebase from 'firebase';
+import { Sentry } from 'react-native-sentry';
 
 import configureStore from './store';
 import AppNavigation from './navigation';
@@ -49,6 +50,14 @@ export default class App extends React.Component<*, State> {
       console.debug(`Running in ${process.env.NODE_ENV} environment`);
     } else {
       console.warn(`Running in ${process.env.NODE_ENV} environment`);
+    }
+
+    if (process.env.NODE_ENV == 'production') {
+      const config = require('../config-prod.json');
+      Sentry.config(config.SENTRY_URL).install();
+      console.debug('SENTRY is enabled');
+    } else {
+      console.debug('SENTRY is not enabled');
     }
   }
 

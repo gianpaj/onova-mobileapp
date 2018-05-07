@@ -9,6 +9,8 @@ target 'onova' do
   pod 'Firebase/Core'
   pod 'Firebase/Messaging'
 
+  pod 'SentryReactNative', :path => '../node_modules/react-native-sentry'
+
   target 'onovaTests' do
     inherit! :search_paths
     # Pods for testing

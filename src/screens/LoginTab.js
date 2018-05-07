@@ -50,8 +50,8 @@ if (__DEV__) {
     };
   } else {
     defaultState = {
-      // emailAddress: 'gianpa+test@gmail.com',
-      // password: 'expressos',
+      // emailAddress: 'gianpa+test2@gmail.com',
+      // password: 'express2',
       emailAddress: 'gianpa@gmail.com',
       password: '***REMOVED***',
     };
@@ -100,6 +100,7 @@ class LoginTabContainer extends React.Component<Props, State> {
 
   onLogin = () => {
     const { emailAddress, password } = this.state;
+    this.loginBtn.load();
     this.props.dispatch(login({ emailAddress, password }));
   };
 
@@ -258,7 +259,7 @@ class LoginTabContainer extends React.Component<Props, State> {
                 },
               ]}
               {...buttonProps}
-              onPress={() => this.onLogin()}
+              onPress={this.onLogin}
               label="Log in"
               labelStyle={{ color: colors.white }}
               testID="LoginButton"

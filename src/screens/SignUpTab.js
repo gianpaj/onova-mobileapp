@@ -66,7 +66,7 @@ class SignUpTabContainer extends Component<Props, State> {
     hasFocusPass: false,
   };
 
-  onSignup() {
+  onSignup = () => {
     const { username, emailAddress, password } = this.state;
     console.debug('onSignup()', username, emailAddress, password);
 
@@ -82,8 +82,10 @@ class SignUpTabContainer extends Component<Props, State> {
     //   });
     // }
 
+    this.signupBtn.load();
+
     this.props.dispatch(signup({ username, emailAddress, password }));
-  }
+  };
 
   onUserChange = (u: string) => {
     if (settings.USERNAME_REGEX.test(u) || u.length == 0) {
@@ -198,7 +200,7 @@ class SignUpTabContainer extends Component<Props, State> {
             returnKeyType="go"
             onBlur={this._onBlurPass}
             onFocus={this._onFocusPass}
-            onSubmitEditing={() => this.onSignup()}
+            onSubmitEditing={this.onSignup}
             value={this.state.password}
             onChangeText={password => this.setState({ password })}
             accessibilityLabel="password"
@@ -218,7 +220,7 @@ class SignUpTabContainer extends Component<Props, State> {
                 },
               ]}
               {...buttonProps}
-              onPress={() => this.onSignup()}
+              onPress={this.onSignup}
               testID="SignupButton"
               label="Create account"
               labelStyle={{ color: colors.white }}

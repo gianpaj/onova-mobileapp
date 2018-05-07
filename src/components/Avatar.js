@@ -35,7 +35,7 @@ type Props = {
   placeholderText?: string,
   placeholderURI?: string,
   resizeMode: Image.resizeMode,
-  size: string, // oneOf(['default', 'mini', 'verySmall', 'small', 'medium']),
+  size: 'default' | 'mini' | 'verySmall' | 'small' | 'medium',
   style?: Image.style,
   uri: string | Image,
   withBorder: boolean,

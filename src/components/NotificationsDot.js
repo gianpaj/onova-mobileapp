@@ -31,7 +31,7 @@ class NotificationsDot extends React.Component<Props, void> {
         {userData.notifications && <View style={st.dot} />}
         <Avatar
           style={st.avatarContainer}
-          size={'default'}
+          size={'verySmall'}
           withBorder={focused}
           uri={userData.profilePic}
           placeholderText={userData.username}

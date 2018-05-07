@@ -152,7 +152,7 @@ class SearchWithHasthagsTabContainer extends Component<Props, State> {
                     buttonInnerColor={colors.black}
                     buttonOuterColor={colors.black}
                     buttonSize={19}
-                    buttonOuterSize={35}
+                    buttonOuterSize={19}
                     buttonWrapStyle={styles.radioButtonInput}
                   />
                 </RadioButton>
@@ -179,7 +179,7 @@ class SearchWithHasthagsTabContainer extends Component<Props, State> {
                     buttonInnerColor={colors.black}
                     buttonOuterColor={colors.black}
                     buttonSize={19}
-                    buttonOuterSize={35}
+                    buttonOuterSize={19}
                     buttonWrapStyle={styles.radioButtonInput}
                   />
                 </RadioButton>
@@ -223,8 +223,13 @@ const styles = StyleSheet.create({
   },
   radioButtonLabel: {
     marginBottom: 10,
-    paddingLeft: '5%',
-    paddingRight: '5%',
+    width: 75,
+    textAlign: 'center',
+    paddingLeft: 0,
+  },
+  radioButtonInput: {
+    width: 75,
+    marginBottom: 15,
   },
 });
 

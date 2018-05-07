@@ -513,7 +513,7 @@ export class AddProductScreen extends React.Component<Props, State> {
                     buttonInnerColor={colors.black}
                     buttonOuterColor={colors.black}
                     buttonSize={19}
-                    buttonOuterSize={35}
+                    buttonOuterSize={19}
                     buttonWrapStyle={styles.radioButtonInput}
                   />
                 </RadioButton>
@@ -545,7 +545,7 @@ export class AddProductScreen extends React.Component<Props, State> {
                     buttonInnerColor={colors.black}
                     buttonOuterColor={colors.black}
                     buttonSize={19}
-                    buttonOuterSize={35}
+                    buttonOuterSize={19}
                     buttonWrapStyle={styles.radioButtonInput}
                   />
                 </RadioButton>

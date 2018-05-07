@@ -5,6 +5,7 @@ import { BackHandler, Platform } from 'react-native';
 import { connect } from 'react-redux';
 import { addNavigationHelpers, NavigationActions } from 'react-navigation';
 import { createReduxBoundAddListener } from 'react-navigation-redux-helpers';
+import { Sentry } from 'react-native-sentry';
 
 import { sendToken, logout } from '../actions/actionCreator';
 import NavigationStack from './navigationStack';
@@ -46,6 +47,18 @@ class AppNavigation extends Component<Props, void> {
         .then(pushToken => {
           console.debug('Push notifications: initialized');
           if (pushToken) return sendToken(pushToken, userData);
+        })
+        .then(() => {
+          if (process.env.NODE_ENV == 'production') {
+            Sentry.setUserContext({
+              email: userData.emailAddress,
+              userID: userData._id,
+              username: userData.username,
+              extra: {
+                accountStatus: userData.accountStatus,
+              },
+            });
+          }
         })
         .catch(err => {
           console.debug(err);

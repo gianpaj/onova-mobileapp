@@ -169,6 +169,16 @@ const signup = (data: SignupData) => (dispatch: Dispatch) => (
             console.warn(err);
             dispatch({ type: LOGIN_FAIL });
           });
+        if (process.env.NODE_ENV == 'production') {
+          Sentry.setUserContext({
+            email: userData.emailAddress,
+            userID: userData._id,
+            username: userData.username,
+            extra: {
+              accountStatus: userData.accountStatus,
+            },
+          });
+        }
         dispatch({ type: SIGNUP_SUCCESS, payload: userData });
       } else {
         console.warn(res);

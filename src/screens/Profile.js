@@ -46,6 +46,7 @@ type Props = {
   dispatch: Dispatch,
   navigation: NavigationScreenProp<*>,
   userData: UserData,
+  fetchLoading: boolean,
 };
 
 type State = {
@@ -131,20 +132,14 @@ class ProfileScreen extends React.Component<Props, State> {
         .then(res => {
           const { following } = res.data;
           if (following == params._id) {
-            this.setState({
-              isFollowing: true,
-            });
+            this.setState({ isFollowing: true });
           }
         })
         .catch(err => {
           console.debug(err);
         });
     } else {
-      this.props.dispatch(
-        getPersonalUserData(userData._id) //, {
-        // cancelToken: this.cancelToken.token,
-        //})
-      );
+      this.props.dispatch(getPersonalUserData(userData._id));
     }
   }
 
@@ -493,7 +488,9 @@ class ProfileScreen extends React.Component<Props, State> {
   render() {
     const { _id, username } = this.state;
 
-    const { navigation } = this.props;
+    const { navigation, fetchLoading } = this.props;
+
+    if (fetchLoading) return null;
 
     return (
       <Container>
@@ -651,6 +648,7 @@ const styles = StyleSheet.create({
 
 const mapStateToProps: any = (state: ReduxState) => ({
   userData: state.LoginReducer.data,
+  fetchLoading: state.LoginReducer.fetchLoading,
 });
 
 export const Profile = connect(mapStateToProps)(ProfileScreen);

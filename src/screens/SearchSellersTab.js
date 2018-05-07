@@ -16,7 +16,6 @@ import { Avatar } from '../components';
 
 import colors from '../config/colors';
 import * as api from '../utils/api';
-import * as ui from '../utils/ui';
 
 import type { NavigationScreenProp } from 'react-navigation';
 

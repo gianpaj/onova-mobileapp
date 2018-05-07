@@ -2,17 +2,11 @@
 import { NavigationActions } from 'react-navigation';
 
 import NavigationStack from '../navigation/navigationStack';
-import {
-  LOGIN_SUCCESS,
-  SIGNUP_SUCCESS,
-  LOGOUT,
-  LOGIN,
-  BACK,
-} from '../actions/actionTypes';
+import { LOGIN_SUCCESS, SIGNUP_SUCCESS, LOGOUT } from '../actions/actionTypes';
 import type { Action } from '../types/navigationReducer';
 
 const ActionForLoggedOut = NavigationStack.router.getActionForPathAndParams(
-  'signup'
+  'signuplogin'
 );
 
 const ActionForLoggedIn = NavigationActions.reset({
@@ -47,26 +41,6 @@ const navigationReducer = (state: any = initialState, action: Action) => {
       return {
         stateForLoggedOut: NavigationStack.router.getStateForAction(
           stateForLoggedOut
-        ),
-      };
-
-    case LOGIN:
-      return {
-        ...state,
-        stateForLoggedOut: NavigationStack.router.getStateForAction(
-          NavigationActions.navigate({
-            routeName: 'login',
-            key: 'login',
-          }),
-          state.stateForLoggedOut
-        ),
-      };
-
-    case BACK:
-      return {
-        ...state,
-        stateForLoggedOut: NavigationStack.router.getStateForAction(
-          NavigationActions.back()
         ),
       };
 

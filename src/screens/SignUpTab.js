@@ -1,8 +1,7 @@
-// @flow
+//@flow
 
-import React from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
-// prettier-ignore
 import {
   Animated,
   Linking,
@@ -11,16 +10,17 @@ import {
   Text,
   View,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/Entypo';
+import { Content } from 'native-base';
 import { FormInput } from 'react-native-elements';
 // $FlowFixMe
 import AnimButton from 'react-native-micro-animated-button';
-import { Container, Content, Title } from 'native-base';
-import type { NavigationScreenProp } from 'react-navigation';
 import isEmail from 'validator/lib/isEmail';
 
-import { signup, goToLogin } from '../actions/actionCreator';
+import type { NavigationScreenProp } from 'react-navigation';
+
 import type { Dispatch, ReduxState } from '../types';
+
+import { signup } from '../actions/actionCreator';
 import { validPassword } from '../utils/validators';
 import colors from '../config/colors';
 import settings from '../config/settings';
@@ -42,7 +42,7 @@ type State = {
   hasFocusPass: boolean,
 };
 
-class SignupScreen extends React.Component<Props, State> {
+class SignUpTabContainer extends Component<Props, State> {
   EmailInput: ?FormInput;
   signupBtn;
   PwdInput: ?FormInput;
@@ -159,110 +159,94 @@ class SignupScreen extends React.Component<Props, State> {
     const { hasFocusUser, hasFocusEmail, hasFocusPass } = this.state;
 
     return (
-      <Container>
-        <Content>
-          <View style={styles.header}>
-            {/* <Icon name="flash" style={{ fontSize: 104 }} /> */}
-            <Title style={{ color: colors.black }}>ONOVA</Title>
+      <Content testID="signup-form">
+        <View style={{ flex: 1 }}>
+          <FormInput
+            placeholder="Username"
+            returnKeyType="next"
+            onBlur={this._onBlurUser}
+            onFocus={this._onFocusUser}
+            onSubmitEditing={() => this.EmailInput && this.EmailInput.focus()}
+            value={this.state.username}
+            onChangeText={t => this.onUserChange(t)}
+            accessibilityLabel="username"
+            underlineColorAndroid={hasFocusUser ? colors.primary : colors.grey2}
+            {...this._inputProps}
+          />
+          <FormInput
+            ref={c => {
+              this.EmailInput = c;
+            }}
+            placeholder="Email"
+            keyboardType="email-address"
+            returnKeyType="next"
+            onBlur={this._onBlurEmail}
+            onFocus={this._onFocusEmail}
+            onSubmitEditing={() => this.PwdInput && this.PwdInput.focus()}
+            value={this.state.emailAddress}
+            testID="EmailField"
+            onChangeText={emailAddress => this.setState({ emailAddress })}
+            accessibilityLabel="email address"
+            underlineColorAndroid={
+              hasFocusEmail ? colors.primary : colors.grey2
+            }
+            {...this._inputProps}
+          />
+          <FormInput
+            ref={c => {
+              this.PwdInput = c;
+            }}
+            secureTextEntry
+            placeholder="Password (minimum 8 characters)"
+            returnKeyType="go"
+            onBlur={this._onBlurPass}
+            onFocus={this._onFocusPass}
+            onSubmitEditing={() => this.onSignup()}
+            value={this.state.password}
+            onChangeText={password => this.setState({ password })}
+            accessibilityLabel="password"
+            underlineColorAndroid={hasFocusPass ? colors.primary : colors.grey2}
+            {...this._inputProps}
+          />
+          <View style={styles.mt15}>
+            <AnimButton
+              ref={r => (this.signupBtn = r)}
+              disabled={this.state.disabled}
+              // eslint-disable-next-line
+            style={[styles.SignupButton, {
+                  backgroundColor: this.backgroundColor,
+                  // elevation: this.animatedValue, // android
+                  // shadowOpacity: this.animatedValue, // ios
+                },
+              ]}
+              {...buttonProps}
+              onPress={() => this.onSignup()}
+              testID="SignupButton"
+              label="Create account"
+              accessibilityLabel="Create account"
+            />
           </View>
-          <View testID="signup-form">
-            <FormInput
-              placeholder="Username"
-              returnKeyType="next"
-              onBlur={this._onBlurUser}
-              onFocus={this._onFocusUser}
-              onSubmitEditing={() => this.EmailInput && this.EmailInput.focus()}
-              value={this.state.username}
-              onChangeText={t => this.onUserChange(t)}
-              accessibilityLabel="username"
-              underlineColorAndroid={
-                hasFocusUser ? colors.primary : colors.grey2
-              }
-              {...this._inputProps}
-            />
-            <FormInput
-              ref={c => {
-                this.EmailInput = c;
-              }}
-              placeholder="Email"
-              keyboardType="email-address"
-              returnKeyType="next"
-              onBlur={this._onBlurEmail}
-              onFocus={this._onFocusEmail}
-              onSubmitEditing={() => this.PwdInput && this.PwdInput.focus()}
-              value={this.state.emailAddress}
-              testID="EmailField"
-              onChangeText={emailAddress => this.setState({ emailAddress })}
-              accessibilityLabel="email address"
-              underlineColorAndroid={
-                hasFocusEmail ? colors.primary : colors.grey2
-              }
-              {...this._inputProps}
-            />
-            <FormInput
-              ref={c => {
-                this.PwdInput = c;
-              }}
-              secureTextEntry
-              placeholder="Password (minimum 8 characters)"
-              returnKeyType="go"
-              onBlur={this._onBlurPass}
-              onFocus={this._onFocusPass}
-              onSubmitEditing={() => this.onSignup()}
-              value={this.state.password}
-              onChangeText={password => this.setState({ password })}
-              accessibilityLabel="password"
-              underlineColorAndroid={
-                hasFocusPass ? colors.primary : colors.grey2
-              }
-              {...this._inputProps}
-            />
-            <View style={styles.mt15}>
-              <AnimButton
-                ref={r => (this.signupBtn = r)}
-                disabled={this.state.disabled}
-                // eslint-disable-next-line
-                style={[styles.SignupButton, {
-                    backgroundColor: this.backgroundColor,
-                    // elevation: this.animatedValue, // android
-                    // shadowOpacity: this.animatedValue, // ios
-                  },
-                ]}
-                {...buttonProps}
-                onPress={() => this.onSignup()}
-                testID="SignupButton"
-                label="Create account"
-                accessibilityLabel="Create account"
-              />
-              <Text style={[styles.hr, styles.mt15]}>
-                Already have an account?&nbsp;
-                <Text
-                  style={styles.linkText}
-                  onPress={() => this.props.navigation.dispatch(goToLogin())}>
-                  Log in
-                </Text>
-              </Text>
-              <Text style={[styles.hr, styles.mt15, { color: colors.grey1 }]}>
-                By creating an account you agree to the&nbsp;
-                {/* <Text
-                  style={[styles.linkText, styles.termsLink]}
-                  onPress={this.openTermPolicy}> */}
-                Terms and Policy
-                {/* </Text> */}
-              </Text>
-            </View>
-          </View>
-        </Content>
-      </Container>
+        </View>
+        <View
+          style={{
+            marginTop: '51%',
+            borderTopWidth: 1,
+            borderColor: colors.grey4,
+            paddingVertical: 20,
+          }}>
+          <Text style={[styles.hr, { color: colors.grey1 }]}>
+            By creating an account you agree to the&nbsp;
+            {/* <Text
+            style={[styles.linkText, styles.termsLink]}
+            onPress={this.openTermPolicy}> */}
+            Terms and Policy
+            {/* </Text> */}
+          </Text>
+        </View>
+      </Content>
     );
   }
 }
-
-const mapStateToProps: any = (state: ReduxState) => ({
-  loading: state.LoginReducer.loading,
-});
-
-export const Signup = connect(mapStateToProps)(SignupScreen);
 
 const buttonProps = {
   foregroundColor: colors.white,
@@ -291,11 +275,6 @@ const raised = {
 };
 
 const styles = StyleSheet.create({
-  header: {
-    alignItems: 'center',
-    marginTop: 40,
-    height: 180 / 2,
-  },
   input: {
     color: colors.black,
     width: '100%',
@@ -310,12 +289,14 @@ const styles = StyleSheet.create({
   mt15: {
     marginTop: 15,
   },
-  linkText: {
-    fontWeight: 'bold',
-    margin: 5,
-  },
   termsLink: {
     fontWeight: 'bold',
     color: colors.grey2,
   },
 });
+
+const mapStateToProps: any = (state: ReduxState) => ({
+  userData: state.LoginReducer.data,
+});
+
+export const SignUpTab = connect(mapStateToProps)(SignUpTabContainer);

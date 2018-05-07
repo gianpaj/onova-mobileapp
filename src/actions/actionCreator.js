@@ -17,8 +17,6 @@ import {
   GETUSER_PENDING,
   GETUSER_SUCCESS,
   GETUSER_FAIL,
-  LOGIN,
-  BACK,
 } from './actionTypes';
 import type {
   Dispatch,
@@ -247,14 +245,6 @@ function sendToken(pushToken: string, userData: UserData): Promise<any> {
     });
 }
 
-const goToLogin = () => ({
-  type: LOGIN,
-});
-
-const goback = () => ({
-  type: BACK,
-});
-
 const handleErrorWithAlert = (data: any, err: any) => {
   let errorType;
   if (err.status == 400 || err.status == 500) {
@@ -292,6 +282,4 @@ export {
   getPersonalUserData,
   getUserData,
   logout,
-  goToLogin,
-  goback,
 };

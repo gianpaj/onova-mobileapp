@@ -5,7 +5,6 @@ import {
   AddProduct,
   AddReview,
   Checkout,
-  Login,
   ChatRooms,
   Chat,
   Product,
@@ -16,17 +15,16 @@ import {
   Settings,
   Search,
   SearchProductsResults,
-  Signup,
+  SignUpLogin,
 } from '../screens';
 import { TabsStack } from './navigationTabs';
 
 export const StackNav = StackNavigator(
   {
-    signup: {
-      screen: Signup,
+    signuplogin: {
+      screen: SignUpLogin,
       navigationOptions: { gesturesEnabled: false },
     },
-    login: { screen: Login },
     product: {
       screen: Product,
       navigationOptions: { gesturesEnabled: false },

@@ -13,8 +13,6 @@ const LOGOUT = 'LOGOUT';
 const GETUSER_PENDING = 'GETUSER_PENDING';
 const GETUSER_SUCCESS = 'GETUSER_SUCCESS';
 const GETUSER_FAIL = 'GETUSER_FAIL';
-const LOGIN = 'LOGIN';
-const BACK = 'BACK';
 
 export {
   incrementCounter,
@@ -30,6 +28,4 @@ export {
   GETUSER_PENDING,
   GETUSER_SUCCESS,
   GETUSER_FAIL,
-  LOGIN,
-  BACK,
 };

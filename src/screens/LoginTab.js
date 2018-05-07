@@ -13,21 +13,20 @@ import {
 import { FormInput } from 'react-native-elements';
 import {
   Button as NBButton,
-  Container,
   Content,
   Right,
   Left,
   Body,
-  Title,
   Icon as NBIcon,
 } from 'native-base';
-import type { NavigationScreenProp } from 'react-navigation';
 import isEmail from 'validator/lib/isEmail';
 import { Toast } from 'antd-mobile';
 import AnimButton from 'react-native-micro-animated-button';
 
+import type { NavigationScreenProp } from 'react-navigation';
+
 import { Header } from '../components';
-import { login, goback } from '../actions/actionCreator';
+import { login } from '../actions/actionCreator';
 import * as api from '../utils/api';
 import colors from '../config/colors';
 
@@ -50,6 +49,8 @@ if (__DEV__) {
     };
   } else {
     defaultState = {
+      // emailAddress: 'gianpa+test@gmail.com',
+      // password: 'expressos',
       emailAddress: 'gianpa@gmail.com',
       password: '***REMOVED***',
     };
@@ -74,7 +75,7 @@ type State = {
   hasFocusEmailReset: boolean,
 };
 
-class LoginScreen extends React.Component<Props, State> {
+class LoginTabContainer extends React.Component<Props, State> {
   PwdInput: ?FormInput;
   loginBtn;
   animatedValue = new Animated.Value(__DEV__ ? 1 : 0);
@@ -202,87 +203,73 @@ class LoginScreen extends React.Component<Props, State> {
     } = this.state;
 
     return (
-      <Container>
-        <Content testID="login-form">
-          <View style={styles.header}>
-            <View style={{ alignItems: 'center' }}>
-              {/* <Icon name="flash" style={{ fontSize: 104 }} /> */}
-              <Title style={{ color: colors.black }}>ONOVA</Title>
-            </View>
-          </View>
-          <FormInput
-            placeholder="Email"
-            keyboardType="email-address"
-            returnKeyType="next"
-            onBlur={this._onBlurEmail}
-            onFocus={this._onFocusEmail}
-            onSubmitEditing={() =>
-              this.PwdInput ? this.PwdInput.focus() : undefined
-            }
-            value={emailAddress}
-            testID="EmailField"
-            onChangeText={text => this.setState({ emailAddress: text })}
-            underlineColorAndroid={
-              hasFocusEmail ? colors.primary : colors.grey2
-            }
-            {...this._inputProps}
+      <Content testID="login-form">
+        <View style={{ marginTop: 49, flex: 1 }} />
+        <FormInput
+          placeholder="Email"
+          keyboardType="email-address"
+          returnKeyType="next"
+          onBlur={this._onBlurEmail}
+          onFocus={this._onFocusEmail}
+          onSubmitEditing={() =>
+            this.PwdInput ? this.PwdInput.focus() : undefined
+          }
+          value={emailAddress}
+          testID="EmailField"
+          onChangeText={text => this.setState({ emailAddress: text })}
+          underlineColorAndroid={hasFocusEmail ? colors.primary : colors.grey2}
+          {...this._inputProps}
+        />
+        <FormInput
+          ref={c => {
+            this.PwdInput = c;
+          }}
+          secureTextEntry
+          placeholder="Password"
+          returnKeyType="go"
+          onBlur={this._onBlurPass}
+          onFocus={this._onFocusPass}
+          onSubmitEditing={this.onLogin}
+          value={password}
+          testID="PasswordField"
+          onChangeText={text => this.setState({ password: text })}
+          underlineColorAndroid={hasFocusPass ? colors.primary : colors.grey2}
+          {...this._inputProps}
+        />
+        <View style={{ marginTop: 15 }}>
+          <AnimButton
+            ref={r => (this.loginBtn = r)}
+            disabled={disabled}
+            noRadius
+            style={[
+              styles.LoginButton,
+              {
+                backgroundColor: this.backgroundColor,
+              },
+            ]}
+            {...buttonProps}
+            onPress={() => this.onLogin()}
+            label="Log in"
+            testID="LoginButton"
           />
-          <FormInput
-            ref={c => {
-              this.PwdInput = c;
-            }}
-            secureTextEntry
-            placeholder="Password"
-            returnKeyType="go"
-            onBlur={this._onBlurPass}
-            onFocus={this._onFocusPass}
-            onSubmitEditing={this.onLogin}
-            value={password}
-            testID="PasswordField"
-            onChangeText={text => this.setState({ password: text })}
-            underlineColorAndroid={hasFocusPass ? colors.primary : colors.grey2}
-            {...this._inputProps}
-          />
+        </View>
+        <View
+          style={{
+            marginTop: '51%',
+            borderTopWidth: 1,
+            borderColor: colors.grey4,
+            paddingVertical: 15,
+          }}>
           <Text
-            style={styles.hr}
+            style={[styles.hr, { color: colors.grey1 }]}
             onPress={() => {
               this.setModalVisible(true);
             }}>
             Forgot Password?
           </Text>
-          <View style={{ marginTop: 15 }}>
-            <AnimButton
-              ref={r => (this.loginBtn = r)}
-              disabled={disabled}
-              noRadius
-              style={[
-                styles.LoginButton,
-                {
-                  backgroundColor: this.backgroundColor,
-                },
-              ]}
-              {...buttonProps}
-              onPress={() => this.onLogin()}
-              label="Log in"
-              testID="LoginButton"
-            />
-            <Text style={styles.hr}>
-              <Text style={styles.hrLine}>────────</Text> or{' '}
-              <Text style={styles.hrLine}>────────</Text>
-            </Text>
-            <AnimButton
-              style={styles.PDarkButton}
-              onPress={() => this.props.dispatch(goback())}
-              {...buttonProps}
-              label="Sign up"
-              testID="SignupButton"
-              static
-              noRadius
-            />
-          </View>
-        </Content>
+        </View>
         {this.renderPasswordResetModal()}
-      </Container>
+      </Content>
     );
   }
 
@@ -359,7 +346,7 @@ const mapStateToProps: any = (state: ReduxState) => ({
   loadingLogin: state.LoginReducer.loading,
 });
 
-export const Login = connect(mapStateToProps)(LoginScreen);
+export const LoginTab = connect(mapStateToProps)(LoginTabContainer);
 
 const buttonProps = {
   foregroundColor: colors.white,
@@ -382,10 +369,6 @@ const raised = {
 };
 
 const styles = StyleSheet.create({
-  header: {
-    marginTop: 40,
-    height: 180 / 2,
-  },
   input: {
     color: colors.black,
     width: '100%',
@@ -393,15 +376,8 @@ const styles = StyleSheet.create({
   LoginButton: {
     ...raised,
   },
-  PDarkButton: {
-    backgroundColor: colors.pDark,
-    ...raised,
-  },
   hr: {
     alignSelf: 'center',
     margin: 10,
-  },
-  hrLine: {
-    color: colors.grey4,
   },
 });

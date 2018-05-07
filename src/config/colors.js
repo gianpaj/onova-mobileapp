@@ -7,7 +7,7 @@
 export default {
   primary: '#000000',
   active: '#008aff',
-  bgDefault: '#f8f8f8',
+  bgDefault: '#ffffff',
   pLight: '#666ad1',
   pDark: '#001970',
   secondary: '#ffb74d',

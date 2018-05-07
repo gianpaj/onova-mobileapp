@@ -166,7 +166,13 @@ export default class Avatar extends PureComponent<Props, State> {
           <Ionicons
             color={buttonActiveState ? colors.grey4 : colors.active}
             size={18}
-            name={buttonActiveState ? 'ios-checkmark-circle' : 'ios-add-circle'}
+            name={buttonActiveState ? 'ios-checkmark-circle' : 'md-add-circle'}
+            // style={[
+            //   buttonActiveState && {
+            //     backgroundColor: colors.black,
+            //     borderRadius: 50,
+            //   },
+            // ]}
           />
         </TouchableOpacity>
       </View>
@@ -197,10 +203,12 @@ const styles = StyleSheet.create({
   button: {
     alignItems: 'center',
     alignSelf: 'flex-end',
+    borderColor: colors.white,
     borderRadius: 25,
+    borderWidth: 2.5,
     height: 20,
     justifyContent: 'center',
-    top: -10,
+    top: -12,
     width: 20,
   },
   /* eslint-disable */

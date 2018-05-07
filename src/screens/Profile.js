@@ -135,15 +135,15 @@ class ProfileScreen extends React.Component<Props, State> {
           if (following == params._id) {
             this.setState({ isFollowing: true });
           }
-          this.setState({ isFetching: false });
         })
         .catch(err => {
           console.debug(err);
-        });
+        })
+        .then(() => this.setState({ isFetching: false }));
     } else {
       this.props
         .dispatch(getPersonalUserData(userData._id))
-        .then(() => this.setState({ isFetching: true }));
+        .then(() => this.setState({ isFetching: false }));
     }
   }
 

@@ -58,7 +58,7 @@ class FollowersContainer extends Component<Props, State> {
   async getFollowersAndSetState(): Promise<any> {
     const { token } = this.props.userData;
     // for development
-    let userId = '5a78d09d2d314a702698f955';
+    let userId = '5ac5ebcd939b7f1712b92baf';
 
     if (this.props.navigation.state.params) {
       userId = this.props.navigation.state.params.userId;
@@ -110,7 +110,6 @@ class FollowersContainer extends Component<Props, State> {
         <View style={{ alignItems: 'center' }}>
           <Avatar
             size={'small'}
-            withBorder
             withButton={shouldShowButton}
             uri={user.profilePic}
             placeholderText={user.username}
@@ -121,7 +120,10 @@ class FollowersContainer extends Component<Props, State> {
             onPress={() => this.goToProfile(user)}
           />
           <Text
-            style={[shouldShowButton ? { marginTop: -10 } : { marginTop: 10 }]}
+            style={[
+              { color: colors.black },
+              shouldShowButton ? { marginTop: -10 } : { marginTop: 10 },
+            ]}
             numberOfLines={1} /* android */
           >
             @{user.username}

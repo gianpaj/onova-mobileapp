@@ -140,30 +140,34 @@ class SearchSellersTabContainer extends Component<Props, State> {
           data={this.state.data}
           ItemSeparatorComponent={this._renderSeparator}
           ListHeaderComponent={
-            <SearchBar
-              autoCapitalize="none"
-              autoCorrect={false}
-              containerStyle={{
-                backgroundColor: colors.transparent,
-                borderBottomWidth: 0,
-              }}
-              onClearText={this.clearResults}
-              clearButtonMode="while-editing" // iOS
-              // enablesReturnKeyAutomatically // iOS
-              icon={{ type: 'feather', name: 'at-sign' }}
-              lightTheme
-              maxLength={30}
-              onChangeText={this.onChangeText}
-              onSubmitEditing={this.onSearch}
-              placeholder="username"
-              showLoadingIcon={isLoading}
-              inputStyle={{
-                backgroundColor: colors.white,
-                color: this.isSearchEnabled() ? colors.black : colors.grey2,
-              }}
-              returnKeyType="search"
-              value={this.state.text}
-            />
+            <View style={{ marginVertical: 30, alignItems: 'center' }}>
+              <SearchBar
+                autoCapitalize="none"
+                autoCorrect={false}
+                containerStyle={{
+                  backgroundColor: colors.transparent,
+                  borderTopWidth: 0,
+                  borderBottomWidth: 0,
+                  width: 150,
+                }}
+                onClearText={this.clearResults}
+                clearButtonMode="while-editing" // iOS
+                // enablesReturnKeyAutomatically // iOS
+                icon={{ type: 'feather', name: 'at-sign' }}
+                lightTheme
+                maxLength={30}
+                onChangeText={this.onChangeText}
+                onSubmitEditing={this.onSearch}
+                placeholder="username"
+                showLoadingIcon={isLoading}
+                inputStyle={{
+                  backgroundColor: colors.white,
+                  color: this.isSearchEnabled() ? colors.black : colors.grey2,
+                }}
+                returnKeyType="search"
+                value={this.state.text}
+              />
+            </View>
           }
           keyExtractor={this._keyExtractor}
           ListEmptyComponent={this.renderEmptyState}

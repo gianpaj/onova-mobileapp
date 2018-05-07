@@ -179,7 +179,6 @@ class ImageGridComponent extends React.Component<Props, State> {
 
     return (
       <View style={styles.emptyContainer}>
-        <Text>icon_here</Text>
         <Text style={styles.boldText}>We did not find anything like that</Text>
         <Text style={styles.centerText}>
           Try searching for some other things you like
@@ -250,7 +249,7 @@ const styles = StyleSheet.create({
   },
   emptyContainer: {
     alignItems: 'center',
-    height: height - 150,
+    height: height - 250,
     justifyContent: 'center',
     padding: 20,
   },

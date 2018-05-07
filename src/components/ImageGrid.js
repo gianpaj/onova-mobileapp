@@ -181,14 +181,14 @@ class ImageGridComponent extends React.Component<Props, State> {
         <Text style={styles.centerText}>
           The more sellers you follow, the more items you'll see in your feed
         </Text>
-        <Button
+        {/* <Button
           raised
           rounded
           backgroundColor={colors.pDark}
           containerViewStyle={styles.searchButton}
           onPress={() => alert('code me like those french girls 🎨')}
           title="Search"
-        />
+        /> */}
       </View>
     );
   };
@@ -257,7 +257,7 @@ const styles = StyleSheet.create({
   },
   emptyContainer: {
     alignItems: 'center',
-    height: height - 150,
+    height: height - 250,
     justifyContent: 'center',
     padding: 20,
   },

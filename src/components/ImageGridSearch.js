@@ -237,7 +237,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     marginHorizontal: -MARGIN * 2,
-    marginBottom: -MARGIN * 2,
+    marginBottom: 0,
   },
   image: {
     flex: 1,

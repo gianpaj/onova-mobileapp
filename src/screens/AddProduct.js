@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { connect } from 'react-redux';
-import { StyleSheet, View } from 'react-native';
+import { Dimensions, StyleSheet, View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {
   ActionSheet,
@@ -37,6 +37,8 @@ import * as ui from '../utils/ui';
 import type { UserData, ReduxState } from '../types';
 
 import type { NavigationScreenProp } from 'react-navigation';
+
+const width = Dimensions.get('window').width;
 
 const brands = require('../assets/brands.json');
 
@@ -367,8 +369,8 @@ export class AddProductScreen extends React.Component<Props, State> {
             </NBButton>
           </Right>
         </Header>
-        <Content>
-          <View style={{ flex: 1, flexDirection: 'row' }}>
+        <Content style={{ backgroundColor: colors.bgDefault }}>
+          <View style={{ flex: 1, flexDirection: 'row', paddingTop: 18 }}>
             <WingBlank>
               <AntImagePicker
                 files={images}
@@ -379,52 +381,114 @@ export class AddProductScreen extends React.Component<Props, State> {
                 onImageClick={i => this.selectPhotoTapped(i)}
                 onAddImageClick={() => this.selectPhotoTapped(images.length)}
                 selectable={images.length < 6}
+                styles={{
+                  container: {
+                    flexWrap: 'wrap',
+                    flexDirection: 'row',
+                  },
+                  size: {
+                    width: width / 6 - 10,
+                    height: width / 6 - 10,
+                  },
+                  item: {
+                    marginRight: 5,
+                    marginBottom: 6,
+                    overflow: 'hidden',
+                  },
+                  image: {
+                    overflow: 'hidden',
+                    borderRadius: 3,
+                  },
+                  closeWrap: {
+                    width: 16,
+                    height: 16,
+                    backgroundColor: '#999',
+                    borderRadius: 8,
+                    position: 'absolute',
+                    top: 4,
+                    right: 4,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    overflow: 'hidden',
+                  },
+                  closeText: {
+                    color: colors.white,
+                    backgroundColor: 'transparent',
+                    fontSize: 20,
+                    height: 20,
+                    marginTop: -8,
+                    fontWeight: '300',
+                  },
+                  plusWrap: {
+                    borderRadius: 3,
+                    borderWidth: 1,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  },
+                  plusWrapNormal: {
+                    backgroundColor: colors.white,
+                    borderColor: '#dddddd',
+                  },
+                  plusWrapHighlight: {
+                    backgroundColor: '#dddddd',
+                    borderColor: '#dddddd',
+                  },
+                  plusText: {
+                    fontSize: 32,
+                    backgroundColor: 'transparent',
+                    fontWeight: '100',
+                    color: '#888888',
+                  },
+                }}
               />
             </WingBlank>
           </View>
-          <FormLabel labelStyle={styles.label}>Price:</FormLabel>
-          <FormInput
-            autoCorrect={false}
-            clearButtonMode="while-editing"
-            containerStyle={styles.inputContainer}
-            editable={!this.state.pending}
-            inputStyle={styles.input}
-            keyboardType="numeric"
-            maxLength={8} // 10000.99
-            onChangeText={t => this.changePrice(t)}
-            placeholder="123 UAH"
-            value={this.state.price}
-          />
-          <FormLabel labelStyle={styles.label}>Description:</FormLabel>
-          <TextareaItem
-            editable={!this.state.pending}
-            style={styles.inputContainerNew}
-            rows={3}
-            count={settings.MAX_LENGTH_DESCRIPTION}
-            onChangeText={this.onChangeDescription}
-            placeholder="Please provide details such as brand, size, condition about the item"
-            value={this.state.description}
-            error={
-              this.state.description.trim().length <
-              settings.MIN_LENGTH_DESCRIPTION
-            }
-          />
-          <FormLabel labelStyle={styles.label}>#tags:</FormLabel>
-          <TagInput
-            inputDefaultWidth={140}
-            maxHeight={2000}
-            editable={!this.state.pending}
-            labelExtractor={tag => tag}
-            onChange={this.changeTags}
-            onChangeText={this.changeTagsTest}
-            tagColor={colors.primary}
-            tagTextColor="white"
-            text={this.state.tagsText}
-            value={tags}
-            inputProps={{
-              placeholder: tags.length < 1 ? 'adidas, summer' : '',
-            }}
-          />
+          <View style={{ paddingHorizontal: 12 }}>
+            <FormLabel labelStyle={styles.label}>Price:</FormLabel>
+            <FormInput
+              autoCorrect={false}
+              clearButtonMode="while-editing"
+              containerStyle={styles.inputContainer}
+              editable={!this.state.pending}
+              inputStyle={styles.input}
+              keyboardType="numeric"
+              maxLength={8} // 10000.99
+              onChangeText={t => this.changePrice(t)}
+              placeholder="123 UAH"
+              value={this.state.price}
+            />
+            <FormLabel labelStyle={styles.label}>Description:</FormLabel>
+            <TextareaItem
+              editable={!this.state.pending}
+              style={styles.inputContainerNew}
+              containerStyle={{ borderBottomWidth: 5, marginRight: 12 }}
+              rows={3}
+              count={settings.MAX_LENGTH_DESCRIPTION}
+              onChangeText={this.onChangeDescription}
+              placeholder="Please provide details such as brand, size, condition about the item"
+              value={this.state.description}
+              error={
+                this.state.description.trim().length <
+                settings.MIN_LENGTH_DESCRIPTION
+              }
+            />
+            <FormLabel labelStyle={styles.label}>#tags:</FormLabel>
+            <TagInput
+              inputDefaultWidth={140}
+              maxHeight={2000}
+              editable={!this.state.pending}
+              labelExtractor={tag => tag}
+              onChange={this.changeTags}
+              onChangeText={this.changeTagsTest}
+              tagColor={colors.primary}
+              tagTextColor="white"
+              text={this.state.tagsText}
+              value={tags}
+              inputProps={{
+                placeholder: tags.length < 1 ? 'adidas, summer' : '',
+              }}
+            />
+          </View>
           <View style={styles.grps}>
             <RadioForm animation formHorizontal>
               {category_radio_grp_1.map((option, i) => (
@@ -521,11 +585,12 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   inputContainer: {
-    marginVertical: 10,
+    marginVertical: 0,
   },
   inputContainerNew: {
     backgroundColor: colors.transparent,
-    marginTop: 10,
+    marginTop: 0,
+    marginHorizontal: 12,
     marginBottom: 28,
   },
   grps: {

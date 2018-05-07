@@ -119,8 +119,7 @@ export default class MediaView extends React.Component<Props, State> {
 
 const styles = StyleSheet.create({
   container: {
-    zIndex: 99,
-    marginBottom: -35,
+    // marginBottom: -35,
   },
   pagination: {
     bottom: 0,

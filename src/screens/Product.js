@@ -337,7 +337,13 @@ export class ProductContainer extends React.Component<Props, State> {
               </View>
               <MediaView source={item.photoURIs} />
               {!this.isMyProduct() && (
-                <View style={[styles.padder, styles.bottomSection]}>
+                <View
+                  style={[
+                    styles.padder,
+                    styles.bottomSection,
+                    // negative margin for the carousel dots
+                    item.photoURIs.length > 1 && { marginTop: -35 },
+                  ]}>
                   {/* <NBIcon name="ios-bookmark-outline" style={styles.iconSave} /> */}
                   {/* <TouchableOpacity
                   onPress={() => this.onPressLike()}
@@ -375,14 +381,7 @@ export class ProductContainer extends React.Component<Props, State> {
               {/* <View style={styles.bottomSectionAfter}>
                 <Text style={styles.timeAgo}>{'X MINUTES AGO'}</Text>
               </View> */}
-              <View
-                style={[
-                  styles.padder,
-                  styles.bottomSectionAfter,
-                  // give space to the carousel dots
-                  item.photoURIs.length > 1 && { marginTop: 45 },
-                ]}>
-                {/* // $FlowFixMe */}
+              <View style={[styles.padder, styles.bottomSectionAfter]}>
                 <Text style={styles.description}>{item.description}</Text>
                 {item.tags && (
                   <ParsedText
@@ -444,7 +443,6 @@ const styles = StyleSheet.create({
   },
   bottomSection: {
     height: 54,
-    backgroundColor: colors.white,
     flexDirection: 'row',
     marginRight: 0,
   },

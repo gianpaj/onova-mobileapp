@@ -52,8 +52,9 @@ class SearchWithHasthagsTabContainer extends Component<Props, State> {
   };
 
   onSearch = () => {
-    const { text, grp_1, grp_2 } = this.state;
     if (!this.isSearchEnabled()) return;
+
+    const { text, grp_1, grp_2 } = this.state;
 
     // this.setState({ isLoading: true });
     // TODO: check verify tags/items exists
@@ -109,6 +110,8 @@ class SearchWithHasthagsTabContainer extends Component<Props, State> {
               autoCorrect={false}
               containerStyle={{
                 backgroundColor: colors.white,
+                borderTopWidth: 0,
+                borderBottomWidth: 0,
                 width: 150,
               }}
               clearButtonMode="while-editing" // iOS
@@ -128,11 +131,7 @@ class SearchWithHasthagsTabContainer extends Component<Props, State> {
               value={this.state.text}
             />
           </View>
-          <View
-            style={[
-              styles.grps,
-              { marginTop: -2, backgroundColor: colors.white },
-            ]}>
+          <View style={styles.grps}>
             <RadioForm animation formHorizontal>
               {category_radio_grp_1.map((option, i) => (
                 <RadioButton labelHorizontal={false} key={i}>
@@ -217,7 +216,6 @@ const styles = StyleSheet.create({
   },
   grps: {
     alignItems: 'center',
-    left: -7,
     justifyContent: 'center',
     width: '100%',
   },

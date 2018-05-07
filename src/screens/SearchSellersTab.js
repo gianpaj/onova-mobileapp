@@ -145,7 +145,7 @@ class SearchSellersTabContainer extends Component<Props, State> {
               autoCorrect={false}
               containerStyle={{
                 backgroundColor: colors.transparent,
-                marginBottom: -2,
+                borderBottomWidth: 0,
               }}
               onClearText={this.clearResults}
               clearButtonMode="while-editing" // iOS

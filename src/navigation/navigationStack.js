@@ -11,7 +11,7 @@ import {
   Profile,
   Reviews,
   Notifications,
-  Followings,
+  Followers,
   Settings,
   Search,
   SearchProductsResults,
@@ -36,7 +36,7 @@ export const StackNav = StackNavigator(
     reviews: { screen: Reviews },
     notifications: { screen: Notifications },
     settings: { screen: Settings },
-    followings: { screen: Followings },
+    followers: { screen: Followers },
     search: { screen: Search },
     searchProductsResults: { screen: SearchProductsResults },
     profile: {

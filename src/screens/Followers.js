@@ -40,7 +40,7 @@ type State = {
   itemHeight: number,
 };
 
-class FollowingsContainer extends Component<Props, State> {
+class FollowersContainer extends Component<Props, State> {
   state = {
     isRefreshing: false,
     data: [],
@@ -91,7 +91,7 @@ class FollowingsContainer extends Component<Props, State> {
       .then(() => {
         console.debug(followOrUnfollow, _id);
         // this.setState({ isFollowing: followOrUnfollow == 'follow' });
-        this.refreshFollowings();
+        this.refreshFollowers();
       })
       .catch(err => {
         console.error(err);
@@ -146,7 +146,7 @@ class FollowingsContainer extends Component<Props, State> {
     );
   };
 
-  refreshFollowings = () => {
+  refreshFollowers = () => {
     this.setState({ isRefreshing: true });
     this.getFollowersAndSetState()
       .catch(err => {
@@ -182,7 +182,7 @@ class FollowingsContainer extends Component<Props, State> {
           refreshControl={
             <RefreshControl
               refreshing={this.state.isRefreshing}
-              onRefresh={this.refreshFollowings}
+              onRefresh={this.refreshFollowers}
             />
           }
           style={styles.root}
@@ -213,11 +213,9 @@ const mapStateToProps: any = (state: ReduxState) => ({
   userData: state.LoginReducer.data,
 });
 
-const Followings2 = withNavigation(
-  connect(mapStateToProps)(FollowingsContainer)
-);
+const Followers2 = withNavigation(connect(mapStateToProps)(FollowersContainer));
 
-export const Followings = connect(mapStateToProps)(Followings2);
+export const Followers = connect(mapStateToProps)(Followers2);
 
 const MARGIN = 1;
 

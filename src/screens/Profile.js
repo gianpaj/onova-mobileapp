@@ -322,7 +322,7 @@ class ProfileScreen extends React.Component<Props, State> {
   }
 
   goToFollowing() {
-    this.props.navigation.navigate('followings', { userId: this.state._id });
+    this.props.navigation.navigate('followers', { userId: this.state._id });
   }
 
   renderUserNumbers = () => {

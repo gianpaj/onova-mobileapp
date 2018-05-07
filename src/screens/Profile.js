@@ -46,7 +46,6 @@ type Props = {
   dispatch: Dispatch,
   navigation: NavigationScreenProp<*>,
   userData: UserData,
-  fetchLoading: boolean,
 };
 
 type State = {
@@ -56,7 +55,8 @@ type State = {
   editing: boolean,
   followersCount: number,
   isFollowing: boolean,
-  isLoading: boolean,
+  isSaving: boolean,
+  isFetching: boolean,
   profilePic: string | Image,
   rateAvg: number,
   reviewsCount: number,
@@ -70,7 +70,8 @@ const defaultState = {
   editing: false,
   followersCount: -1,
   isFollowing: false,
-  isLoading: false,
+  isSaving: false,
+  isFetching: true,
   profilePic: '',
   rateAvg: -1,
   reviewsCount: -1,
@@ -134,12 +135,15 @@ class ProfileScreen extends React.Component<Props, State> {
           if (following == params._id) {
             this.setState({ isFollowing: true });
           }
+          this.setState({ isFetching: false });
         })
         .catch(err => {
           console.debug(err);
         });
     } else {
-      this.props.dispatch(getPersonalUserData(userData._id));
+      this.props
+        .dispatch(getPersonalUserData(userData._id))
+        .then(() => this.setState({ isFetching: true }));
     }
   }
 
@@ -213,7 +217,7 @@ class ProfileScreen extends React.Component<Props, State> {
   };
 
   onSave = () => {
-    this.setState({ isLoading: true });
+    this.setState({ isSaving: true });
     const { userData } = this.props;
     const { bio, displayName, profilePic } = this.state;
     const formData = new FormData();
@@ -255,7 +259,7 @@ class ProfileScreen extends React.Component<Props, State> {
       // final
       .then(() => {
         Toast.hide();
-        this.setState({ isLoading: false });
+        this.setState({ isSaving: false });
       });
   };
 
@@ -380,8 +384,8 @@ class ProfileScreen extends React.Component<Props, State> {
       editing,
       profilePic,
       isFollowing,
+      isSaving,
       username,
-      isLoading,
     } = this.state;
     return (
       <View style={styles.profileTop}>
@@ -407,7 +411,7 @@ class ProfileScreen extends React.Component<Props, State> {
                     isTextEditable={editing}
                     style={styles.displayName}
                     shouldAutoFocus
-                    loading={isLoading}
+                    loading={isSaving}
                   />
                   {this.renderUserNumbers()}
                   <NBButton
@@ -477,11 +481,11 @@ class ProfileScreen extends React.Component<Props, State> {
   }
 
   render() {
-    const { _id, username } = this.state;
+    const { _id, username, isFetching } = this.state;
 
-    const { navigation, fetchLoading } = this.props;
+    const { navigation } = this.props;
 
-    if (fetchLoading) return null;
+    if (isFetching) return null;
 
     return (
       <Container>
@@ -645,7 +649,6 @@ const styles = StyleSheet.create({
 
 const mapStateToProps: any = (state: ReduxState) => ({
   userData: state.LoginReducer.data,
-  fetchLoading: state.LoginReducer.fetchLoading,
 });
 
 export const Profile = connect(mapStateToProps)(ProfileScreen);

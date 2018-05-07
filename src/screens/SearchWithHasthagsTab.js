@@ -43,7 +43,7 @@ type State = {
   grp_2: number,
 };
 
-class SearchProductsTabContainer extends Component<Props, State> {
+class SearchWithHasthagsTabContainer extends Component<Props, State> {
   state = {
     isLoading: false,
     text: '',
@@ -232,6 +232,6 @@ const mapStateToProps: any = (state: ReduxState) => ({
   userData: state.LoginReducer.data,
 });
 
-export const SearchProductsTab = withNavigation(
-  connect(mapStateToProps)(SearchProductsTabContainer)
+export const SearchWithHasthagsTab = withNavigation(
+  connect(mapStateToProps)(SearchWithHasthagsTabContainer)
 );

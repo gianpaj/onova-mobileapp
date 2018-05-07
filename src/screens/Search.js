@@ -5,7 +5,7 @@ import { Dimensions, StyleSheet } from 'react-native';
 import { Body, Container, Title, Left, Right } from 'native-base';
 import { TabViewAnimated, TabBar, SceneMap } from 'react-native-tab-view';
 
-import { SearchProductsTab } from './SearchProductsTab';
+import { SearchWithHasthagsTab } from './SearchWithHasthagsTab';
 import { SearchSellersTab } from './SearchSellersTab';
 import { Header } from '../components';
 
@@ -49,7 +49,7 @@ export class Search extends Component<Props, State> {
   );
 
   _renderScene = SceneMap({
-    tags: SearchProductsTab,
+    tags: SearchWithHasthagsTab,
     sellers: SearchSellersTab,
   });
 

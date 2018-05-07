@@ -429,9 +429,7 @@ const styles = StyleSheet.create({
   avatar: {
     alignSelf: 'center',
   },
-  username: {
-    fontWeight: 'bold',
-  },
+  username: {},
   location: {
     // height: 20,
     // lineHeight: 20,
@@ -441,6 +439,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     color: colors.black,
     fontWeight: 'bold',
+    fontSize: 16,
     marginRight: 15,
   },
   bottomSection: {

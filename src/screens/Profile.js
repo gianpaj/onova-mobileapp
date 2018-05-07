@@ -331,15 +331,7 @@ class ProfileScreen extends React.Component<Props, State> {
         <TouchableOpacity
           onPress={() => this.goToReviews()}
           style={styles.alignCenter}>
-          <Text
-            style={{
-              color: colors.primary,
-              fontSize: 16,
-              fontWeight: 'bold',
-              textAlign: 'center',
-            }}>
-            {this.state.reviewsCount}
-          </Text>
+          <Text style={styles.numbers}>{this.state.reviewsCount}</Text>
           <Text>reviews</Text>
           {/* <StarRating
             // eslint-disable-next-line
@@ -361,15 +353,7 @@ class ProfileScreen extends React.Component<Props, State> {
         <TouchableOpacity
           onPress={() => this.goToFollowing()}
           style={styles.alignCenter}>
-          <Text
-            style={{
-              color: colors.primary,
-              fontSize: 16,
-              fontWeight: 'bold',
-              textAlign: 'center',
-            }}>
-            {this.state.followersCount}
-          </Text>
+          <Text style={styles.numbers}>{this.state.followersCount}</Text>
           <Text>followers</Text>
         </TouchableOpacity>
       </View>
@@ -455,9 +439,16 @@ class ProfileScreen extends React.Component<Props, State> {
                     bordered
                     small
                     full
-                    style={styles.editOrFollowButton}
+                    style={[
+                      styles.editOrFollowButton,
+                      !isFollowing && { backgroundColor: colors.active },
+                    ]}
                     onPress={() => this.onFollowOrUnfollow()}>
-                    <Text style={styles.editOrFollowButtonText}>
+                    <Text
+                      style={[
+                        styles.editOrFollowButtonText,
+                        !isFollowing && { color: colors.white },
+                      ]}>
                       {isFollowing ? 'Unfollow' : 'Follow'}
                     </Text>
                   </NBButton>
@@ -608,6 +599,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     marginTop: 10,
+  },
+  numbers: {
+    color: colors.primary,
+    fontSize: 18,
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
   displayName: {
     color: colors.grey1,

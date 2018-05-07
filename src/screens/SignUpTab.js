@@ -160,7 +160,8 @@ class SignUpTabContainer extends Component<Props, State> {
 
     return (
       <Content testID="signup-form">
-        <View style={{ flex: 1 }}>
+        <View
+          style={{ flex: 1, width: '80%', alignSelf: 'center', marginTop: 40 }}>
           <FormInput
             placeholder="Username"
             returnKeyType="next"
@@ -170,7 +171,7 @@ class SignUpTabContainer extends Component<Props, State> {
             value={this.state.username}
             onChangeText={t => this.onUserChange(t)}
             accessibilityLabel="username"
-            underlineColorAndroid={hasFocusUser ? colors.primary : colors.grey2}
+            underlineColorAndroid={hasFocusUser ? colors.primary : colors.grey5}
             {...this._inputProps}
           />
           <FormInput
@@ -188,7 +189,7 @@ class SignUpTabContainer extends Component<Props, State> {
             onChangeText={emailAddress => this.setState({ emailAddress })}
             accessibilityLabel="email address"
             underlineColorAndroid={
-              hasFocusEmail ? colors.primary : colors.grey2
+              hasFocusEmail ? colors.primary : colors.grey5
             }
             {...this._inputProps}
           />
@@ -205,7 +206,7 @@ class SignUpTabContainer extends Component<Props, State> {
             value={this.state.password}
             onChangeText={password => this.setState({ password })}
             accessibilityLabel="password"
-            underlineColorAndroid={hasFocusPass ? colors.primary : colors.grey2}
+            underlineColorAndroid={hasFocusPass ? colors.primary : colors.grey5}
             {...this._inputProps}
           />
           <View style={styles.mt15}>
@@ -226,15 +227,8 @@ class SignUpTabContainer extends Component<Props, State> {
               accessibilityLabel="Create account"
             />
           </View>
-        </View>
-        <View
-          style={{
-            marginTop: '51%',
-            borderTopWidth: 1,
-            borderColor: colors.grey4,
-            paddingVertical: 20,
-          }}>
-          <Text style={[styles.hr, { color: colors.grey1 }]}>
+          <Text
+            style={[styles.hr, { color: colors.grey4, paddingVertical: 20 }]}>
             By creating an account you agree to the&nbsp;
             {/* <Text
             style={[styles.linkText, styles.termsLink]}

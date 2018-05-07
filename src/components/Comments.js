@@ -468,7 +468,7 @@ const styles = StyleSheet.create({
     marginBottom: 6,
   },
   commentText: {
-    color: colors.grey1,
+    color: colors.black,
     fontSize: 17,
     lineHeight: 16,
   },
@@ -522,8 +522,7 @@ const styles = StyleSheet.create({
     color: colors.grey2,
   },
   mention: {
-    color: colors.pDark,
-    fontWeight: 'bold',
+    color: colors.active,
   },
 });
 

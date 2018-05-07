@@ -164,7 +164,7 @@ export default class Avatar extends PureComponent<Props, State> {
           onPress={this.props.onButtonPress}
           style={styles.button}>
           <Ionicons
-            color={buttonActiveState ? colors.black : colors.active}
+            color={buttonActiveState ? colors.grey4 : colors.active}
             size={18}
             name={buttonActiveState ? 'ios-checkmark-circle' : 'ios-add-circle'}
           />

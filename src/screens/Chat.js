@@ -98,7 +98,10 @@ class ChatContainer extends Component<Props, State> {
 
   componentWillUnmount() {
     // no longer receive events from the chat room
-    if (this.currentUser.roomSubscriptions)
+    if (
+      this.currentUser &&
+      this.currentUser.roomSubscriptions[this.state.roomId]
+    )
       this.currentUser.roomSubscriptions[this.state.roomId].cancel();
   }
 

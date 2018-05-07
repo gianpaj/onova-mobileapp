@@ -204,69 +204,71 @@ class LoginTabContainer extends React.Component<Props, State> {
 
     return (
       <Content testID="login-form">
-        <View style={{ marginTop: 49, flex: 1 }} />
-        <FormInput
-          placeholder="Email"
-          keyboardType="email-address"
-          returnKeyType="next"
-          onBlur={this._onBlurEmail}
-          onFocus={this._onFocusEmail}
-          onSubmitEditing={() =>
-            this.PwdInput ? this.PwdInput.focus() : undefined
-          }
-          value={emailAddress}
-          testID="EmailField"
-          onChangeText={text => this.setState({ emailAddress: text })}
-          underlineColorAndroid={hasFocusEmail ? colors.primary : colors.grey2}
-          {...this._inputProps}
-        />
-        <FormInput
-          ref={c => {
-            this.PwdInput = c;
-          }}
-          secureTextEntry
-          placeholder="Password"
-          returnKeyType="go"
-          onBlur={this._onBlurPass}
-          onFocus={this._onFocusPass}
-          onSubmitEditing={this.onLogin}
-          value={password}
-          testID="PasswordField"
-          onChangeText={text => this.setState({ password: text })}
-          underlineColorAndroid={hasFocusPass ? colors.primary : colors.grey2}
-          {...this._inputProps}
-        />
-        <View style={{ marginTop: 15 }}>
-          <AnimButton
-            ref={r => (this.loginBtn = r)}
-            disabled={disabled}
-            noRadius
-            style={[
-              styles.LoginButton,
-              {
-                backgroundColor: this.backgroundColor,
-              },
-            ]}
-            {...buttonProps}
-            onPress={() => this.onLogin()}
-            label="Log in"
-            testID="LoginButton"
-          />
-        </View>
         <View
           style={{
-            marginTop: '51%',
-            borderTopWidth: 1,
-            borderColor: colors.grey4,
-            paddingVertical: 15,
+            marginTop: 49,
+            flex: 1,
+            width: '80%',
+            alignSelf: 'center',
+            marginTop: 40,
           }}>
-          <Text
-            style={[styles.hr, { color: colors.grey1 }]}
-            onPress={() => {
-              this.setModalVisible(true);
-            }}>
-            Forgot Password?
-          </Text>
+          <FormInput
+            placeholder="Email"
+            keyboardType="email-address"
+            returnKeyType="next"
+            onBlur={this._onBlurEmail}
+            onFocus={this._onFocusEmail}
+            onSubmitEditing={() =>
+              this.PwdInput ? this.PwdInput.focus() : undefined
+            }
+            value={emailAddress}
+            testID="EmailField"
+            onChangeText={text => this.setState({ emailAddress: text })}
+            underlineColorAndroid={
+              hasFocusEmail ? colors.primary : colors.grey5
+            }
+            {...this._inputProps}
+          />
+          <FormInput
+            ref={c => {
+              this.PwdInput = c;
+            }}
+            secureTextEntry
+            placeholder="Password"
+            returnKeyType="go"
+            onBlur={this._onBlurPass}
+            onFocus={this._onFocusPass}
+            onSubmitEditing={this.onLogin}
+            value={password}
+            testID="PasswordField"
+            onChangeText={text => this.setState({ password: text })}
+            underlineColorAndroid={hasFocusPass ? colors.primary : colors.grey5}
+            {...this._inputProps}
+          />
+          <View style={{ marginTop: 15 }}>
+            <AnimButton
+              ref={r => (this.loginBtn = r)}
+              disabled={disabled}
+              noRadius
+              style={[
+                styles.LoginButton,
+                {
+                  backgroundColor: this.backgroundColor,
+                },
+              ]}
+              {...buttonProps}
+              onPress={() => this.onLogin()}
+              label="Log in"
+              testID="LoginButton"
+            />
+            <Text
+              style={[styles.hr, { color: colors.grey4, paddingVertical: 20 }]}
+              onPress={() => {
+                this.setModalVisible(true);
+              }}>
+              Forgot Password?
+            </Text>
+          </View>
         </View>
         {this.renderPasswordResetModal()}
       </Content>
@@ -312,7 +314,7 @@ class LoginTabContainer extends React.Component<Props, State> {
             placeholder="Email"
             returnKeyType="go"
             underlineColorAndroid={
-              hasFocusEmailReset ? colors.primary : colors.grey2
+              hasFocusEmailReset ? colors.primary : colors.grey5
             }
             value={this.state.emailReset}
           />

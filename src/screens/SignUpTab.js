@@ -175,9 +175,7 @@ class SignUpTabContainer extends Component<Props, State> {
             {...this._inputProps}
           />
           <FormInput
-            ref={c => {
-              this.EmailInput = c;
-            }}
+            ref={c => (this.EmailInput = c)}
             placeholder="Email"
             keyboardType="email-address"
             returnKeyType="next"
@@ -194,9 +192,7 @@ class SignUpTabContainer extends Component<Props, State> {
             {...this._inputProps}
           />
           <FormInput
-            ref={c => {
-              this.PwdInput = c;
-            }}
+            ref={c => (this.PwdInput = c)}
             secureTextEntry
             placeholder="Password (minimum 8 characters)"
             returnKeyType="go"
@@ -213,8 +209,9 @@ class SignUpTabContainer extends Component<Props, State> {
             <AnimButton
               ref={r => (this.signupBtn = r)}
               disabled={this.state.disabled}
-              // eslint-disable-next-line
-            style={[styles.SignupButton, {
+              style={[
+                styles.SignupButton,
+                {
                   backgroundColor: this.backgroundColor,
                   // elevation: this.animatedValue, // android
                   // shadowOpacity: this.animatedValue, // ios
@@ -224,17 +221,18 @@ class SignUpTabContainer extends Component<Props, State> {
               onPress={() => this.onSignup()}
               testID="SignupButton"
               label="Create account"
+              labelStyle={{ color: colors.white }}
               accessibilityLabel="Create account"
             />
           </View>
           <Text
             style={[styles.hr, { color: colors.grey4, paddingVertical: 20 }]}>
             By creating an account you agree to the&nbsp;
-            {/* <Text
-            style={[styles.linkText, styles.termsLink]}
-            onPress={this.openTermPolicy}> */}
+            {/* <TouchableOpacity onPress={this.openTermPolicy}> */}
+            {/* <Text style={[styles.linkText, styles.termsLink]}> */}
             Terms and Policy
             {/* </Text> */}
+            {/* </TouchableOpacity> */}
           </Text>
         </View>
       </Content>

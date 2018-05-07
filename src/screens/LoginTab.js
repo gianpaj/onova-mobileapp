@@ -8,6 +8,7 @@ import {
   Platform,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from 'react-native';
 import { FormInput } from 'react-native-elements';
@@ -90,7 +91,7 @@ class LoginTabContainer extends React.Component<Props, State> {
     modalVisible: false,
     emailReset: '',
     loadingReset: false,
-    disabled: false,
+    disabled: __DEV__ ? false : true,
     hasFocusEmail: false,
     hasFocusPass: false,
     hasFocusEmailReset: false,
@@ -259,15 +260,14 @@ class LoginTabContainer extends React.Component<Props, State> {
               {...buttonProps}
               onPress={() => this.onLogin()}
               label="Log in"
+              labelStyle={{ color: colors.white }}
               testID="LoginButton"
             />
-            <Text
-              style={[styles.hr, { color: colors.grey4, paddingVertical: 20 }]}
-              onPress={() => {
-                this.setModalVisible(true);
-              }}>
-              Forgot Password?
-            </Text>
+            <TouchableOpacity
+              style={[styles.hr, { padding: 10, margin: 20 }]}
+              onPress={() => this.setModalVisible(true)}>
+              <Text style={{ color: colors.grey4 }}>Forgot Password?</Text>
+            </TouchableOpacity>
           </View>
         </View>
         {this.renderPasswordResetModal()}

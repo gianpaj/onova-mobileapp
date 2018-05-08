@@ -64,11 +64,11 @@ export class ProductContainer extends React.Component<Props, State> {
 
   showActionSheetForProduct = () => {
     let BUTTONS;
-    if (this.isMyProduct()) {
-      BUTTONS = ['Delete', 'Cancel'];
-    } else {
-      BUTTONS = ['Report', 'Cancel'];
-    }
+    // if (this.isMyProduct()) {
+    BUTTONS = ['Delete', 'Edit', 'Cancel'];
+    // } else {
+    //   BUTTONS = ['Report', 'Cancel'];
+    // }
 
     ActionSheet.show(
       {
@@ -78,9 +78,14 @@ export class ProductContainer extends React.Component<Props, State> {
       },
       buttonIndex => {
         switch (buttonIndex) {
-          case BUTTONS.indexOf('Report'):
-            alert('report me like those french girls 🎨');
-            // report action
+          // case BUTTONS.indexOf('Report'):
+          //   alert('report me like those french girls 🎨');
+          //   // report action
+          //   break;
+          case BUTTONS.indexOf('Edit'):
+            this.props.navigation.navigate('addProduct', {
+              item: this.state.item,
+            });
             break;
           case BUTTONS.indexOf('Delete'):
             ui.showConfirmAlert('Confirm deletion?', '', () => {
@@ -110,24 +115,24 @@ export class ProductContainer extends React.Component<Props, State> {
       .catch(e => console.error(e));
   }
 
-  // showShareActionSheet() {
-  //   Share.share({
-  //     title: 'cool',
-  //     url: 'https://onova.co', // ios only
-  //   }).then(res => {
-  //     console.log(res);
-  //     if (isIOS) {
-  //       if (res.action == Share.dismissedAction) {
-  //         console.log('iOS: user cancelled sharing');
-  //       } else if (res.action == Share.sharedAction) {
-  //         console.log('iOS: user shared on:', res.activityType);
-  //       }
-  //     } else {
-  //       // android
-  //       console.log("Android: we don't know if user shared item");
-  //     }
-  //   });
-  // }
+  /* showShareActionSheet() {
+    Share.share({
+      title: 'cool',
+      url: 'https://onova.co', // ios only
+    }).then(res => {
+      console.log(res);
+      if (isIOS) {
+        if (res.action == Share.dismissedAction) {
+          console.log('iOS: user cancelled sharing');
+        } else if (res.action == Share.sharedAction) {
+          console.log('iOS: user shared on:', res.activityType);
+        }
+      } else {
+        // android
+        console.log("Android: we don't know if user shared item");
+      }
+    });
+  }*/
 
   componentWillMount() {
     const { params }: { params: ProductType } = this.props.navigation.state;
@@ -135,7 +140,7 @@ export class ProductContainer extends React.Component<Props, State> {
 
     // for development
     if (!params) {
-      uuid = 'Hy-RJ66nz';
+      uuid = 'ry1yDIj6G';
     } else {
       uuid = params.uuid;
     }

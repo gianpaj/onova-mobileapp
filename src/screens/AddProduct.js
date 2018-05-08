@@ -73,6 +73,7 @@ type State = {
   grp_2: number,
   pending: boolean,
   numberOfBrands: number,
+  inEditMode: boolean,
 };
 
 export class AddProductScreen extends React.Component<Props, State> {
@@ -97,12 +98,32 @@ export class AddProductScreen extends React.Component<Props, State> {
     images: [],
     pending: false,
     numberOfBrands: 0,
+    inEditMode: false,
   };
 
   componentDidMount() {
-    // const { params } = this.props.navigation.state;
-    // if (params && params.focused == true) {
-    if (this.state.images.length == 0) {
+    const { params } = this.props.navigation.state;
+    // if editing
+    if (params) {
+      const { item } = params;
+      console.log(item);
+      let images = [];
+      for (let i = 0; i < item.photoURIs.length; i++) {
+        images.push({
+          url: item.photoURIs[i],
+          id: i,
+        });
+      }
+      this.setState({
+        inEditMode: true,
+        images,
+        description: item.description,
+        price: item.price,
+        tags: item.tags,
+        grp_1: item.categoryIds[0],
+        grp_2: item.typeIds[0],
+      });
+    } else if (this.state.images.length == 0) {
       this.selectPhotoTapped(0);
     }
   }
@@ -127,9 +148,7 @@ export class AddProductScreen extends React.Component<Props, State> {
               // loadingLabelText: 'Loading image...', // (ios only)
             })
               .then(response => this.processPhoto(response, i))
-              .catch(() => {
-                this.closeModal();
-              });
+              .catch(() => !this.state.inEditMode && this.closeModal());
             break;
           case 1:
             ImagePicker.openPicker({
@@ -140,12 +159,10 @@ export class AddProductScreen extends React.Component<Props, State> {
               // loadingLabelText: 'Loading image...', // (ios only)
             })
               .then(response => this.processPhoto(response, i))
-              .catch(() => {
-                this.closeModal();
-              });
+              .catch(() => !this.state.inEditMode && this.closeModal());
             break;
           default:
-            this.closeModal();
+            if (!this.state.inEditMode) this.closeModal();
             break;
         }
       }
@@ -337,12 +354,17 @@ export class AddProductScreen extends React.Component<Props, State> {
     );
   }*/
 
+  onImageChange = (images: Array<any>) => {
+    if (images.length < 1 && !this.state.inEditMode) this.closeModal();
+    this.setState({ images });
+  };
+
   onChangeDescription = (t: string) => this.setState({ description: t });
 
   render() {
-    const { images, tags } = this.state;
+    const { images, tags, inEditMode } = this.state;
 
-    if (images.length < 1) return null;
+    if (images.length < 1 && !inEditMode) return null;
 
     return (
       <Container>
@@ -353,7 +375,9 @@ export class AddProductScreen extends React.Component<Props, State> {
             </NBButton>
           </Left>
           <Body style={styles.container}>
-            <Title style={{ color: colors.black }}>Add Item</Title>
+            <Title style={{ color: colors.black }}>
+              {inEditMode ? 'Edit Item' : 'Add Item'}
+            </Title>
           </Body>
           <Right>
             <NBButton
@@ -374,72 +398,11 @@ export class AddProductScreen extends React.Component<Props, State> {
             <WingBlank>
               <AntImagePicker
                 files={images}
-                onChange={images => {
-                  if (images.length < 1) this.closeModal();
-                  this.setState({ images });
-                }}
+                onChange={this.onImageChange}
                 onImageClick={i => this.selectPhotoTapped(i)}
                 onAddImageClick={() => this.selectPhotoTapped(images.length)}
                 selectable={images.length < 6}
-                styles={{
-                  container: {
-                    flexWrap: 'wrap',
-                    flexDirection: 'row',
-                  },
-                  size: {
-                    width: width / 6 - 10,
-                    height: width / 6 - 10,
-                  },
-                  item: {
-                    marginRight: 5,
-                    marginBottom: 6,
-                    overflow: 'hidden',
-                  },
-                  image: {
-                    overflow: 'hidden',
-                    borderRadius: 3,
-                  },
-                  closeWrap: {
-                    width: 16,
-                    height: 16,
-                    backgroundColor: '#999',
-                    borderRadius: 8,
-                    position: 'absolute',
-                    top: 4,
-                    right: 4,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    overflow: 'hidden',
-                  },
-                  closeText: {
-                    color: colors.white,
-                    backgroundColor: 'transparent',
-                    fontSize: 20,
-                    height: 20,
-                    marginTop: -8,
-                    fontWeight: '300',
-                  },
-                  plusWrap: {
-                    borderRadius: 3,
-                    borderWidth: 1,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  },
-                  plusWrapNormal: {
-                    backgroundColor: colors.white,
-                    borderColor: '#dddddd',
-                  },
-                  plusWrapHighlight: {
-                    backgroundColor: '#dddddd',
-                    borderColor: '#dddddd',
-                  },
-                  plusText: {
-                    fontSize: 32,
-                    backgroundColor: 'transparent',
-                    fontWeight: '100',
-                    color: '#888888',
-                  },
-                }}
+                styles={imagePickerStyles}
               />
             </WingBlank>
           </View>
@@ -559,6 +522,66 @@ export class AddProductScreen extends React.Component<Props, State> {
 }
 
 // const { width } = Dimensions.get('window');
+
+const imagePickerStyles = {
+  container: {
+    flexWrap: 'wrap',
+    flexDirection: 'row',
+  },
+  size: {
+    width: width / 6 - 10,
+    height: width / 6 - 10,
+  },
+  item: {
+    marginRight: 5,
+    marginBottom: 6,
+    overflow: 'hidden',
+  },
+  image: {
+    overflow: 'hidden',
+    borderRadius: 3,
+  },
+  closeWrap: {
+    width: 16,
+    height: 16,
+    backgroundColor: '#999',
+    borderRadius: 8,
+    position: 'absolute',
+    top: 4,
+    right: 4,
+    justifyContent: 'center',
+    alignItems: 'center',
+    overflow: 'hidden',
+  },
+  closeText: {
+    color: colors.white,
+    backgroundColor: 'transparent',
+    fontSize: 20,
+    height: 20,
+    marginTop: -8,
+    fontWeight: '300',
+  },
+  plusWrap: {
+    borderRadius: 3,
+    borderWidth: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  plusWrapNormal: {
+    backgroundColor: colors.white,
+    borderColor: '#dddddd',
+  },
+  plusWrapHighlight: {
+    backgroundColor: '#dddddd',
+    borderColor: '#dddddd',
+  },
+  plusText: {
+    fontSize: 32,
+    backgroundColor: 'transparent',
+    fontWeight: '100',
+    color: '#888888',
+  },
+};
 
 const styles = StyleSheet.create({
   // imageContainer: {

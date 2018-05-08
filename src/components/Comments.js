@@ -159,7 +159,6 @@ class Comments extends React.Component<Props, State> {
         // $FlowFixMe
         onPress={() => this.props.goToProfile(c.user)}
         size={'verySmall'}
-        // withBorder
         uri={c.user.profilePic}
         placeholderText={c.user.username}
       />
@@ -308,6 +307,7 @@ class Comments extends React.Component<Props, State> {
 
   renderAddComment = () => {
     const { text, keyword, usersToMention } = this.state;
+    const { userData } = this.props;
     // is the text not empty and not longer that the max
     const showActiveOpacity =
       text.trim().length < 1 || text.length == settings.MAX_LENGTH_COMMENT;
@@ -315,9 +315,16 @@ class Comments extends React.Component<Props, State> {
     const shouldHideSuggestions = keyword == '@' || usersToMention.length == 0;
     return (
       <View style={styles.addCommentContainer}>
+        <Avatar
+          size={'verySmall'}
+          uri={userData.profilePic}
+          placeholderText={userData.username}
+          style={{ marginLeft: 10, marginTop: 10 }}
+        />
         <View
           style={[
             styles.addCommentInputContainer,
+
             // { height: shouldHideSuggestions ? 40 : 200 },
           ]}>
           <MentionsTextInput
@@ -376,17 +383,18 @@ class Comments extends React.Component<Props, State> {
             underlineColorAndroid="transparent"
           />
         </View>
-        <Send text={text} onSend={() => this.onSendComment(text)}>
-          <Ionicons
-            // eslint-disable-next-line
-            style={{
-              marginBottom: 5,
-              opacity: showActiveOpacity ? 0.7 : 1,
-            }}
-            name="md-send"
-            size={29}
-          />
-        </Send>
+        <View style={{ marginTop: 0 }}>
+          <Send text={text} onSend={() => this.onSendComment(text)}>
+            <Ionicons
+              // eslint-disable-next-line
+              style={{
+                opacity: showActiveOpacity ? 0.7 : 1,
+              }}
+              name="md-send"
+              size={29}
+            />
+          </Send>
+        </View>
       </View>
     );
   };
@@ -484,13 +492,13 @@ const styles = StyleSheet.create({
     paddingVertical: Platform.select({
       ios: 5,
     }),
-    margin: 10,
-    width: width - 49,
+    marginHorizontal: 10,
+    width: width - 49 - 60,
   },
   addCommentContainer: {
-    borderWidth: StyleSheet.hairlineWidth,
-    borderRadius: 10,
-    margin: 4,
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderColor: colors.grey6,
+    marginVertical: 4,
     flexDirection: 'row',
     paddingVertical: Platform.select({
       ios: 10,

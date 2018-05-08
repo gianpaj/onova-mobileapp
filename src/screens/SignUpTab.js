@@ -173,7 +173,7 @@ class SignUpTabContainer extends Component<Props, State> {
             value={this.state.username}
             onChangeText={t => this.onUserChange(t)}
             accessibilityLabel="username"
-            underlineColorAndroid={hasFocusUser ? colors.primary : colors.grey5}
+            underlineColorAndroid={hasFocusUser ? colors.primary : colors.grey4}
             {...this._inputProps}
           />
           <FormInput
@@ -189,7 +189,7 @@ class SignUpTabContainer extends Component<Props, State> {
             onChangeText={emailAddress => this.setState({ emailAddress })}
             accessibilityLabel="email address"
             underlineColorAndroid={
-              hasFocusEmail ? colors.primary : colors.grey5
+              hasFocusEmail ? colors.primary : colors.grey4
             }
             {...this._inputProps}
           />
@@ -204,7 +204,7 @@ class SignUpTabContainer extends Component<Props, State> {
             value={this.state.password}
             onChangeText={password => this.setState({ password })}
             accessibilityLabel="password"
-            underlineColorAndroid={hasFocusPass ? colors.primary : colors.grey5}
+            underlineColorAndroid={hasFocusPass ? colors.primary : colors.grey4}
             {...this._inputProps}
           />
           <View style={styles.mt15}>

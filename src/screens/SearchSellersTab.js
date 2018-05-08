@@ -140,7 +140,8 @@ class SearchSellersTabContainer extends Component<Props, State> {
           data={this.state.data}
           ItemSeparatorComponent={this._renderSeparator}
           ListHeaderComponent={
-            <View style={{ marginVertical: 30, alignItems: 'center' }}>
+            <View
+              style={{ marginVertical: 30, marginLeft: 65, marginRight: 65 }}>
               <SearchBar
                 autoCapitalize="none"
                 autoCorrect={false}
@@ -148,7 +149,6 @@ class SearchSellersTabContainer extends Component<Props, State> {
                   backgroundColor: colors.transparent,
                   borderTopWidth: 0,
                   borderBottomWidth: 0,
-                  width: 150,
                 }}
                 onClearText={this.clearResults}
                 clearButtonMode="while-editing" // iOS

@@ -227,7 +227,7 @@ class LoginTabContainer extends React.Component<Props, State> {
             testID="EmailField"
             onChangeText={text => this.setState({ emailAddress: text })}
             underlineColorAndroid={
-              hasFocusEmail ? colors.primary : colors.grey5
+              hasFocusEmail ? colors.primary : colors.grey4
             }
             {...this._inputProps}
           />
@@ -244,7 +244,7 @@ class LoginTabContainer extends React.Component<Props, State> {
             value={password}
             testID="PasswordField"
             onChangeText={text => this.setState({ password: text })}
-            underlineColorAndroid={hasFocusPass ? colors.primary : colors.grey5}
+            underlineColorAndroid={hasFocusPass ? colors.primary : colors.grey4}
             {...this._inputProps}
           />
           <View style={{ marginTop: 15 }}>
@@ -315,7 +315,7 @@ class LoginTabContainer extends React.Component<Props, State> {
             placeholder="Email"
             returnKeyType="go"
             underlineColorAndroid={
-              hasFocusEmailReset ? colors.primary : colors.grey5
+              hasFocusEmailReset ? colors.primary : colors.grey4
             }
             value={this.state.emailReset}
           />

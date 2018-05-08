@@ -387,7 +387,13 @@ export class ProductContainer extends React.Component<Props, State> {
               {/* <View style={styles.bottomSectionAfter}>
                 <Text style={styles.timeAgo}>{'X MINUTES AGO'}</Text>
               </View> */}
-              <View style={[styles.padder, styles.bottomSectionAfter]}>
+              <View
+                style={[
+                  styles.bottomSectionAfter,
+                  // negative margin for the carousel dots
+                  this.isMyProduct() &&
+                    item.photoURIs.length > 1 && { marginTop: 15 },
+                ]}>
                 <Text style={styles.description}>{item.description}</Text>
                 {item.tags && (
                   <ParsedText
@@ -443,7 +449,6 @@ const styles = StyleSheet.create({
   price: {
     alignSelf: 'center',
     color: colors.black,
-    fontWeight: 'bold',
     fontSize: 16,
     marginRight: 15,
   },
@@ -470,6 +475,7 @@ const styles = StyleSheet.create({
   bottomSectionAfter: {
     marginTop: 0,
     marginBottom: 20,
+    paddingHorizontal: 20,
   },
   padder: {
     paddingHorizontal: 10,
@@ -485,7 +491,7 @@ const styles = StyleSheet.create({
   //   fontSize: 12,
   // },
   hashtag: {
-    color: colors.pDark,
+    color: colors.active,
   },
 });
 

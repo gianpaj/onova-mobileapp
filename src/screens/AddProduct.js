@@ -106,7 +106,7 @@ export class AddProductScreen extends React.Component<Props, State> {
   componentDidMount() {
     const { params } = this.props.navigation.state;
     // if editing
-    if (params) {
+    if (params.item) {
       const { item }: { item: Product } = params;
       console.log(item);
       let images = [];

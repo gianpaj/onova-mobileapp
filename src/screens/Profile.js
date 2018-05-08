@@ -16,6 +16,7 @@ import {
   Body,
   Button as NBButton,
   Container,
+  Content,
   Icon as NBIcon,
   Left,
   Right,
@@ -437,11 +438,13 @@ class ProfileScreen extends React.Component<Props, State> {
                 </View>
               ) : (
                 <View style={styles.profileRight}>
-                  {displayName !== '' && <Text>{displayName}</Text>}
+                  {displayName !== '' && (
+                    <Text style={{ color: colors.black }}>{displayName}</Text>
+                  )}
                   {this.renderUserNumbers()}
                   <NBButton
                     transparent
-                    bordered
+                    bordered={isFollowing}
                     small
                     full
                     style={[
@@ -464,7 +467,7 @@ class ProfileScreen extends React.Component<Props, State> {
           <View style={{ paddingVertical: 30, paddingHorizontal: 10 }}>
             {this.isMe() ? (
               <EditableText
-                style={{ fontSize: 18 }}
+                style={{ fontSize: 15 }}
                 autoCorrect
                 text={bio}
                 onChangeText={t => this.setState({ bio: t })}
@@ -473,7 +476,9 @@ class ProfileScreen extends React.Component<Props, State> {
                 isTextEditable={editing}
               />
             ) : (
-              bio !== '' && <Text>{bio}</Text>
+              bio !== '' && (
+                <Text style={{ color: colors.black, fontSize: 15 }}>{bio}</Text>
+              )
             )}
           </View>
         </View>
@@ -525,41 +530,43 @@ class ProfileScreen extends React.Component<Props, State> {
             )}
           </Right>
         </Header>
-        <View>
-          {this.shouldShowNoticeBar() && (
-            <NoticeBar
-              marqueeProps={{ loop: false, style: styles.noticeBar }}
-              icon={false}>
-              Please verify you email to start buying or selling.
-            </NoticeBar>
+        <Content style={{ backgroundColor: colors.bgDefault }}>
+          <View>
+            {this.shouldShowNoticeBar() && (
+              <NoticeBar
+                marqueeProps={{ loop: false, style: styles.noticeBar }}
+                icon={false}>
+                Please verify you email to start buying or selling.
+              </NoticeBar>
+            )}
+            {this.renderProfileTop()}
+          </View>
+          {_id !== '' && (
+            <ImageGrid
+              apiURL={`/api/products?userid=${_id}`}
+              navigation={navigation}
+              emptyState={
+                <View style={styles.emptyContainer}>
+                  {this.isMe() ? (
+                    <View>
+                      <Text>You did not add any items yet</Text>
+                      <Button
+                        raised
+                        rounded
+                        backgroundColor={colors.black}
+                        containerViewStyle={styles.searchButton}
+                        onPress={() => navigation.navigate('addProduct')}
+                        title="Sell something now"
+                      />
+                    </View>
+                  ) : (
+                    <Text>There no any items yet</Text>
+                  )}
+                </View>
+              }
+            />
           )}
-          {this.renderProfileTop()}
-        </View>
-        {_id !== '' && (
-          <ImageGrid
-            apiURL={`/api/products?userid=${_id}`}
-            navigation={navigation}
-            emptyState={
-              <View style={styles.emptyContainer}>
-                {this.isMe() ? (
-                  <View>
-                    <Text>You did not add any items yet</Text>
-                    <Button
-                      raised
-                      rounded
-                      backgroundColor={colors.black}
-                      containerViewStyle={styles.searchButton}
-                      onPress={() => navigation.navigate('addProduct')}
-                      title="Sell something now"
-                    />
-                  </View>
-                ) : (
-                  <Text>There no any items yet</Text>
-                )}
-              </View>
-            }
-          />
-        )}
+        </Content>
       </Container>
     );
   }

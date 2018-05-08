@@ -104,7 +104,7 @@ class SearchWithHasthagsTabContainer extends Component<Props, State> {
     return (
       <View style={styles.flex1}>
         <View>
-          <View style={{ marginVertical: 30, alignItems: 'center' }}>
+          <View style={{ marginVertical: 30, marginLeft: 65, marginRight: 65 }}>
             <SearchBar
               autoCapitalize="none"
               autoCorrect={false}
@@ -112,7 +112,6 @@ class SearchWithHasthagsTabContainer extends Component<Props, State> {
                 backgroundColor: colors.white,
                 borderTopWidth: 0,
                 borderBottomWidth: 0,
-                width: 150,
               }}
               clearButtonMode="while-editing" // iOS
               // enablesReturnKeyAutomatically // iOS

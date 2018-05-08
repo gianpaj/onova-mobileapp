@@ -2,7 +2,14 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { FlatList, RefreshControl, StyleSheet, Text, View } from 'react-native';
+import {
+  FlatList,
+  Platform,
+  RefreshControl,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import {
   Body,
   Button,
@@ -14,12 +21,15 @@ import {
   Title,
 } from 'native-base';
 import { Icon as IconEL } from 'react-native-elements';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import { withNavigation } from 'react-navigation';
 
 import { Avatar, Header } from '../components';
 import colors from '../config/colors';
 import * as api from '../utils/api';
 import * as ui from '../utils/ui';
+
+const isiOS = Platform.OS === 'ios';
 
 import type {
   UserData,
@@ -75,7 +85,13 @@ class NotificationsContainer extends Component<Props, State> {
   renderEmptyState = () => {
     // TODO: center empty state in RN 0.56 - https://github.com/facebook/react-native/pull/18206
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, { alignSelf: 'center', height: 300 }]}>
+        <Ionicons
+          size={48}
+          name={isiOS ? 'ios-notifications' : 'md-notifications'}
+          color={colors.grey2}
+          style={{ alignSelf: 'center', marginBottom: 30 }}
+        />
         <Text>You do not have any notifications</Text>
       </View>
     );

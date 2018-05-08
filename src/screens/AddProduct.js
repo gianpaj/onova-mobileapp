@@ -147,7 +147,6 @@ export class AddProductScreen extends React.Component<Props, State> {
               width: IMAGE_WIDTH,
               height: IMAGE_HEIGHT,
               cropping: true,
-              // multiple: true // with openPicker()
               // loadingLabelText: 'Loading image...', // (ios only)
             })
               .then(response => this.processPhoto(response, i))
@@ -158,7 +157,6 @@ export class AddProductScreen extends React.Component<Props, State> {
               width: IMAGE_WIDTH,
               height: IMAGE_HEIGHT,
               cropping: true,
-              // multiple: true // with openPicker()
               // loadingLabelText: 'Loading image...', // (ios only)
             })
               .then(response => this.processPhoto(response, i))
@@ -237,19 +235,9 @@ export class AddProductScreen extends React.Component<Props, State> {
     const { token } = this.props.userData;
 
     if (inEditMode) {
-      const data = {
-        description,
-        price,
-        categoryIds: grp_1.toString(),
-        typeIds: grp_2.toString(),
-        tags,
-      };
-
-      console.log(data);
-
       return (
         api
-          .put(`/api/products/${uuid}`, data, { token, timeout: 300000 })
+          .put(`/api/products/${uuid}`, formData, { token, timeout: 300000 })
           .then(res => {
             console.debug(res);
             this.closeModal();

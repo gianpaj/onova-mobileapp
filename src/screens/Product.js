@@ -62,6 +62,12 @@ export class ProductContainer extends React.Component<Props, State> {
     item: null,
   };
 
+  componentWillMount() {
+    this.refresh();
+
+    this.props.navigation.addListener('didFocus', () => this.refresh());
+  }
+
   showActionSheetForProduct = () => {
     let BUTTONS;
     // if (this.isMyProduct()) {
@@ -133,12 +139,6 @@ export class ProductContainer extends React.Component<Props, State> {
       }
     });
   }*/
-
-  componentWillMount() {
-    this.refresh();
-
-    this.props.navigation.addListener('didFocus', () => this.refresh());
-  }
 
   refresh() {
     const { params }: { params: ProductType } = this.props.navigation.state;

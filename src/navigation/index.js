@@ -1,7 +1,7 @@
 // @flow
 
 import React, { Component } from 'react';
-import { BackHandler, Platform } from 'react-native';
+import { ActivityIndicator, BackHandler, StyleSheet, View } from 'react-native';
 import { connect } from 'react-redux';
 import { addNavigationHelpers, NavigationActions } from 'react-navigation';
 import { createReduxBoundAddListener } from 'react-navigation-redux-helpers';
@@ -23,11 +23,19 @@ type Props = {
   userData?: UserData,
 };
 
-// on Android, the URI prefix typically contains a host in addition to scheme
-const prefix = Platform.OS == 'android' ? 'onova://onova/' : 'onova://';
+type State = {
+  ready: boolean,
+};
 
-class AppNavigation extends Component<Props, void> {
+// on Android, the URI prefix typically contains a host in addition to scheme
+// const prefix = Platform.OS == 'android' ? 'onova://onova/' : 'onova://';
+
+class AppNavigation extends Component<Props, State> {
   notificationListener;
+
+  state = {
+    ready: false,
+  };
 
   componentDidMount() {
     BackHandler.addEventListener('hardwareBackPress', this.onBackPress);
@@ -35,8 +43,6 @@ class AppNavigation extends Component<Props, void> {
 
     // FIXME: horrible hack
     NavigationService.setDispatcher(dispatch);
-    // TODO: use redux with
-    // this.setState({ rehydrated: true });
 
     if (isLoggedIn && userData) {
       // retry to login to verify user is still valid
@@ -61,6 +67,7 @@ class AppNavigation extends Component<Props, void> {
           }
         })
         .then(() => initializePusher(userData))
+        .then(() => this.setState({ ready: true }))
         .catch(err => {
           console.debug(err);
           dispatch(logout());
@@ -85,12 +92,21 @@ class AppNavigation extends Component<Props, void> {
     return true;
   };
 
+  _renderLoading = () => (
+    <View style={styles.container}>
+      <ActivityIndicator size="large" />
+    </View>
+  );
+
   render() {
     const { dispatch, navigationState, isLoggedIn } = this.props;
     const state =
       isLoggedIn == true
         ? navigationState.stateForLoggedIn
         : navigationState.stateForLoggedOut;
+
+    if (!this.state.ready) return this._renderLoading();
+
     return (
       <NavigationStack
         navigation={addNavigationHelpers({
@@ -102,6 +118,14 @@ class AppNavigation extends Component<Props, void> {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
 
 const mapStateToProps: any = (state: ReduxState) => ({
   isLoggedIn: state.LoginReducer.isLoggedIn,

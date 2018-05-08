@@ -1,13 +1,7 @@
 // @flow
 
 import React from 'react';
-// prettier-ignore
-import {
-  ActivityIndicator,
-  AppState,
-  StyleSheet,
-  View,
-} from 'react-native';
+import { ActivityIndicator, AppState, StyleSheet, View } from 'react-native';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/lib/integration/react';
 import { Root } from 'native-base';

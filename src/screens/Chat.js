@@ -61,6 +61,7 @@ type State = {
 class ChatContainer extends Component<Props, State> {
   currentUser: PusherUser;
   sb;
+  rejectProm;
 
   state = {
     partner: null,
@@ -86,14 +87,16 @@ class ChatContainer extends Component<Props, State> {
     if (!params) {
       const roomId = 7359921;
 
-      // return this.getTempUserId('firstperson').then(userId => {
       return this.initialise(roomId);
-      // });
     }
     console.log(params);
     // coming from Checkout, ChatRooms or Push Notification
     // TODO: check show is the seller/buyer!
-    this.initialise(params.roomId, params.productUuid);
+    this.initialise(params.roomId, params.productUuid)
+      .then(() => this.setState({ isLoading: false }))
+      .catch(err => {
+        if (err && err.message !== 'no partner') console.error(err);
+      });
   }
 
   componentWillUnmount() {
@@ -103,6 +106,12 @@ class ChatContainer extends Component<Props, State> {
       this.currentUser.roomSubscriptions[this.state.roomId]
     )
       this.currentUser.roomSubscriptions[this.state.roomId].cancel();
+
+    // cancel initialise for when the Chat screen is openened and closed quickly
+    if (this.rejectProm) {
+      this.rejectProm();
+      this.rejectProm = null;
+    }
   }
 
   /*
@@ -138,162 +147,151 @@ class ChatContainer extends Component<Props, State> {
   }
   */
 
-  getTempUserId(username: string): Promise<string> {
-    return new Promise((resolve, reject) => {
-      api
-        .get('/api/users/')
-        .then((res: Array<UserData>) => {
-          const user = res.filter(u => u.username == username);
-          resolve(user[0]._id);
-        })
-        .catch(err => reject(err));
-    });
-  }
-
   initialise(roomId: number, productUuid?: string) {
     const { userData } = this.props;
-    // let o;
+    return new Promise((resolve, reject) => {
+      this.rejectProm = reject;
+      this.connectToPusher()
+        .then(() => {
+          console.debug(roomId);
 
-    this.connectToPusher()
-      .then(() => {
-        console.debug(roomId);
-
-        if (roomId !== -1) {
-          return this.currentUser
-            .joinRoom({ roomId })
-            .then(room => {
-              console.debug('Joined room ID:', room.id);
-              return room;
-            })
-            .then(room =>
-              api.getUser(room.userIds.find(id => id !== userData._id))
-            )
-            .then(partner => this.setState({ partner }))
-            .catch(err => {
-              console.log('Error joining room ID:', roomId);
-              console.log(err);
-            });
-        }
-
-        // coming from checkout
-        if (!productUuid) throw new Error('');
-
-        return this.createOrder(productUuid)
-          .then(o => o)
-          .catch(({ message, data }) => {
-            if (
-              message == 'Duplicate order' &&
-              data.data &&
-              // TODO: set to 'paid' once payment is completed
-              data.data.status == 'pending'
-            ) {
-              return data.data;
-            }
-          });
-      })
-      .then(o => {
-        console.log(o);
-
-        // joinable rooms are those you're not a member of
-        return this.currentUser
-          .getJoinableRooms()
-          .then((rooms: Array<any>) => {
-            const allRooms = [...rooms, ...this.currentUser.rooms];
-            return allRooms.filter(r => r.name == getRoomName(o));
-          })
-          .then(rooms => {
-            console.log(rooms);
-
-            // check if there's a previouly a room created,
-            // by a partner (seller) or my self
-            if (rooms.length > 0) {
-              const firstRoom = rooms[0].id;
-              return this.currentUser
-                .joinRoom({ roomId: firstRoom })
-                .then(room => {
-                  roomId = room.id;
-                  console.debug('Joined room ID:', room.id);
-                  return room;
-                })
-                .then(room =>
-                  api.getUser(room.userIds.find(id => id !== userData._id))
-                )
-                .then(partner => this.setState({ partner }))
-                .catch(err => {
-                  console.log('Error joining room ID:', firstRoom);
-                  console.log(err);
-                });
-            }
-
-            // no existing room existed. coming from Checkout
+          if (roomId !== -1) {
             return this.currentUser
-              .createRoom({
-                name: getRoomName(o),
-                private: true,
-                addUserIds: [o.seller, userData._id],
-              })
+              .joinRoom({ roomId })
               .then(room => {
-                roomId = room.id;
-                console.debug('Created room id', roomId);
+                console.debug('Joined room ID:', room.id);
+                return room;
               })
-              .then(() => api.getUser(o.seller))
+              .then(room =>
+                api.getUser(room.userIds.find(id => id !== userData._id))
+              )
               .then(partner => this.setState({ partner }))
               .catch(err => {
-                console.log('Error creating room', err);
+                console.log('Error joining room ID:', roomId);
+                console.log(err);
               });
-          })
-          .catch(err => {
-            console.log(`Error getting joinable rooms: ${err}`);
-          });
-      })
-      .then(() => this.setState({ roomId }))
-      .then(() =>
-        this.currentUser.fetchMessages({
-          roomId,
-          direction: 'newer',
-          limit: 100,
+          }
+
+          // coming from checkout
+          if (!productUuid) throw new Error('');
+
+          return this.createOrder(productUuid)
+            .then(o => o)
+            .catch(({ message, data }) => {
+              if (
+                message == 'Duplicate order' &&
+                data.data &&
+                // TODO: set to 'paid' once payment is completed
+                data.data.status == 'pending'
+              ) {
+                return data.data;
+              }
+            });
         })
-      )
-      .then(messages => {
-        let newMsgs = [];
-        for (let i = 0; i < messages.length; i++) {
-          newMsgs.push(this.createGiftedMessage(messages[i]));
-        }
-        this.setState({ messages: newMsgs.reverse() });
-        return messages[messages.length - 1];
-      })
-      .then(lastMsg => {
-        if (!lastMsg) return;
-        setTimeout(() => {
-          this.currentUser
-            .setReadCursor({
-              roomId,
-              position: lastMsg.id,
+        .then(o => {
+          console.log(o);
+
+          // joinable rooms are those you're not a member of
+          return this.currentUser
+            .getJoinableRooms()
+            .then((rooms: Array<any>) => {
+              const allRooms = [...rooms, ...this.currentUser.rooms];
+              return allRooms.filter(r => r.name == getRoomName(o));
             })
-            .then(() => {
-              console.debug('setReadCursor success');
+            .then(rooms => {
+              console.log(rooms);
+
+              // check if there's a previouly a room created,
+              // by a partner (seller) or my self
+              if (rooms.length > 0) {
+                const firstRoom = rooms[0].id;
+                return this.currentUser
+                  .joinRoom({ roomId: firstRoom })
+                  .then(room => {
+                    roomId = room.id;
+                    console.debug('Joined room ID:', room.id);
+                    return room;
+                  })
+                  .then(room =>
+                    api.getUser(room.userIds.find(id => id !== userData._id))
+                  )
+                  .then(partner => this.setState({ partner }))
+                  .catch(err => {
+                    console.log('Error joining room ID:', firstRoom);
+                    console.log(err);
+                  });
+              }
+
+              // no existing room existed. coming from Checkout
+              return this.currentUser
+                .createRoom({
+                  name: getRoomName(o),
+                  private: true,
+                  addUserIds: [o.seller, userData._id],
+                })
+                .then(room => {
+                  roomId = room.id;
+                  console.debug('Created room id', roomId);
+                })
+                .then(() => api.getUser(o.seller))
+                .then(partner => this.setState({ partner }))
+                .catch(err => {
+                  console.log('Error creating room', err);
+                });
             })
             .catch(err => {
-              console.log(`Error setting cursor: ${err}`);
+              console.log(`Error getting joinable rooms: ${err}`);
             });
-        }, MARK_AS_READ_AFTER_MS);
-      })
-      .then(
-        () =>
-          !this.currentUser.roomSubscriptions[roomId] &&
-          this.currentUser.subscribeToRoom({
+        })
+        .then(() => this.setState({ roomId }))
+        .then(() =>
+          this.currentUser.fetchMessages({
             roomId,
-            hooks: {
-              onNewReadCursor: cursor => console.log(cursor),
-              onNewMessage: this.newMessage,
-            },
-            messageLimit: 0,
+            direction: 'newer',
+            limit: 100,
           })
-      )
-      .then(() => {
-        this.setState({ isLoading: false });
-      })
-      .catch(err => console.error(err));
+        )
+        .then(messages => {
+          if (!this.state.partner) throw new Error('no partner');
+
+          let newMsgs = [];
+          for (let i = 0; i < messages.length; i++) {
+            newMsgs.push(this.createGiftedMessage(messages[i]));
+          }
+          this.setState({ messages: newMsgs.reverse() });
+          return messages[messages.length - 1];
+        })
+        .then(lastMsg => {
+          if (!lastMsg) return;
+          setTimeout(() => {
+            this.currentUser
+              .setReadCursor({
+                roomId,
+                position: lastMsg.id,
+              })
+              .then(() => {
+                console.debug('setReadCursor success');
+              })
+              .catch(err => {
+                console.log(`Error setting cursor: ${err}`);
+              });
+          }, MARK_AS_READ_AFTER_MS);
+        })
+        .then(
+          () =>
+            !this.currentUser.roomSubscriptions[roomId] &&
+            this.currentUser.subscribeToRoom({
+              roomId,
+              hooks: {
+                onNewReadCursor: cursor => console.log(cursor),
+                onNewMessage: this.newMessage,
+              },
+              messageLimit: 0,
+            })
+        )
+        .then(() => resolve())
+        .catch(err => reject(err));
+    });
   }
 
   createOrder(uuid: string): Promise<Order | Error> {

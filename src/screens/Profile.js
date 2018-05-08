@@ -172,6 +172,7 @@ class ProfileScreen extends React.Component<Props, State> {
       followersCount,
       rateAvg: ratingsTotal == 0 ? ratingsTotal : ratingsTotal / reviewsCount,
       reviewsCount,
+      isFetching: false,
     });
 
     if (this.hasStateDifferedFromProps(nextProps.userData, 'bio')) {

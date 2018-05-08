@@ -6,8 +6,6 @@ import { ChatManager, TokenProvider } from '@pusher/chatkit/react-native';
 import { Sentry } from 'react-native-sentry';
 
 import {
-  incrementCounter,
-  decrementCounter,
   LOGIN_PENDING,
   LOGIN_FAIL,
   LOGIN_SUCCESS,
@@ -30,13 +28,7 @@ import { registerPushNotifications } from '../utils/push';
 import * as api from '../utils/api';
 import * as ui from '../utils/ui';
 
-const incrementAction = () => ({
-  type: incrementCounter,
-});
 
-const decrementAction = () => ({
-  type: decrementCounter,
-});
 
 const login = (data: LoginData) => (dispatch: Dispatch) => (
   dispatch({ type: LOGIN_PENDING }),
@@ -294,8 +286,6 @@ const handleErrorWithAlert = (data: any, err: any) => {
 };
 
 export {
-  incrementAction,
-  decrementAction,
   // initializePusher,
   login,
   // loginWithGoogle,

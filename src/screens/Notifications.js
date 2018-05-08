@@ -159,7 +159,6 @@ class NotificationsContainer extends Component<Props, State> {
         {item.sourceUser && (
           <Avatar
             size={'small'}
-            withBorder
             style={{ marginHorizontal: 10 }}
             uri={item.sourceUser.profilePic}
             placeholderText={item.data.senderName}
@@ -259,7 +258,7 @@ const styles = StyleSheet.create({
   },
   separator: {
     height: StyleSheet.hairlineWidth,
-    backgroundColor: colors.grey5,
+    backgroundColor: colors.grey6,
   },
 
   contentRow: {

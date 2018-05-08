@@ -123,16 +123,16 @@ class ChatContainer extends Component<Props, State> {
               }
               // console.warn(room.users.map(u => u.name));
               const partner = room.users.filter(u => u.id !== userData._id)[0];
-              // const cursor = await this.currentUser.readCursor({
-              //   roomId: room.id,
-              // });
+              const cursor = await this.currentUser.readCursor({
+                roomId: room.id,
+              });
 
-              // // TODO: set haveUnreadMsgs
-              // if (cursor) console.log(cursor.position);
+              if (cursor) console.log(cursor.position, msgs[0].id);
               const isPartnerOnline = partner.presence.state == 'online';
               return {
                 ...room,
                 lastMessage: msgs[0],
+                hasUnreadMessages: cursor.position < msgs[0].id,
                 isPartnerOnline,
                 partner,
               };
@@ -294,22 +294,24 @@ class ChatContainer extends Component<Props, State> {
 
           <View style={[st.flex1, st.content]}>
             <View style={st.contentHeader}>
-              <Text style={st.name}>{item.partner.name}</Text>
+              <View style={{ flexDirection: 'row' }}>
+                <Text style={st.name}>{item.partner.name}</Text>
+                {lastMessage.senderId !== -1 &&
+                  item.isPartnerOnline && <View style={st.onlineDot} />}
+              </View>
               <Text style={st.datetime}>
                 {ui.formatTime(lastMessage.createdAt)}
               </Text>
             </View>
             <Text
               numberOfLines={1} // android
-              // eslint-disable-next-line
-              // style={item.haveUnreadMsgs ? { fontWeight: 'bold' } : {}}
-            >
+              style={[
+                { color: colors.black },
+                item.hasUnreadMessages && { fontWeight: 'bold' },
+              ]}>
               {from}
               {lastMessage.text}
             </Text>
-            {lastMessage.senderId !== -1 && (
-              <Text>{item.isPartnerOnline ? 'online' : 'offline'}</Text>
-            )}
           </View>
         </View>
       </TouchableOpacity>
@@ -421,7 +423,6 @@ const st = StyleSheet.create({
   },
   name: {
     color: colors.grey1,
-    fontWeight: '800',
   },
   datetime: {
     color: colors.grey1,
@@ -448,6 +449,13 @@ const st = StyleSheet.create({
   },
   separatorHorizontal: {
     width: 1,
+  },
+  onlineDot: {
+    backgroundColor: colors.green,
+    borderRadius: 15,
+    height: 4,
+    width: 4,
+    zIndex: 2,
   },
 });
 

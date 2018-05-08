@@ -25,6 +25,7 @@ export default {
   black: '#000000',
   white: '#ffffff',
   red: '#ff0000',
+  green: '#00ff55',
   transparent: 'transparent',
 };
 

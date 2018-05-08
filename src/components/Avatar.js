@@ -205,7 +205,6 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end',
     borderColor: colors.white,
     borderRadius: 25,
-    borderWidth: 2.5,
     height: 20,
     justifyContent: 'center',
     top: -12,

@@ -93,8 +93,7 @@ const initializePusher = (userData: UserData): Promise<any | Error> => {
   console.log('initializePusher');
   return new Promise((resolve, reject) => {
     if (
-      process.env.NODE_ENV !== 'production' ||
-      process.env.NODE_ENV !== 'prod'
+      !(process.env.NODE_ENV == 'production' || process.env.NODE_ENV == 'prod')
     )
       return resolve(userData);
     try {
@@ -120,6 +119,7 @@ const initializePusher = (userData: UserData): Promise<any | Error> => {
       chatManager
         .connect()
         .then(user => {
+          console.log('Pusher: connected');
           currentUser = user;
           resolve(userData);
           //   // Subscribe to all rooms the user is a member of

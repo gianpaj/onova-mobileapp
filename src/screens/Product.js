@@ -214,7 +214,7 @@ export class ProductContainer extends React.Component<Props, State> {
           throw Error('You need to validate your account...');
         }
       })
-      .then(() => this._getProduct(item.uuid))
+      .then(() => api.getProduct(item.uuid))
       .then((product: ProductType) => {
         // TODO: if product status is 'reserved' say you can try again later...
         if (product.status !== 'forsale') {

@@ -28,6 +28,8 @@ import * as ui from '../utils/ui';
 import { Header, Avatar } from '../components';
 import { getRoomName } from './Chat';
 
+import { currentUser as pusherCurrentUser } from '../actions/actionCreator';
+
 let config;
 
 type Props = {
@@ -44,7 +46,6 @@ type State = {
 };
 
 class ChatContainer extends Component<Props, State> {
-  currentUser: PusherUser;
   state = {
     hasError: false,
     isRefreshing: false,
@@ -63,20 +64,22 @@ class ChatContainer extends Component<Props, State> {
   }
 
   componentWillMount() {
-    this.connectToPusher()
-      .then(u => (this.currentUser = u))
-      .then(() => this.getChatsAndTheirOrders())
-      .then(ordersAndChats => {
-        this.setState({
-          ordersAndChats,
-          isLoading: false,
+    if (pusherCurrentUser) {
+      this.getChatsAndTheirOrders()
+        .then(ordersAndChats => {
+          this.setState({
+            ordersAndChats,
+            isLoading: false,
+          });
+        })
+        .catch(err => {
+          this.setState({ hasError: true });
+          console.debug(err);
+          ui.showToast(err.message);
         });
-      })
-      .catch(err => {
-        this.setState({ hasError: true });
-        console.debug(err);
-        ui.showToast(err.message);
-      });
+    } else {
+      console.error('no pusherCurrentUser');
+    }
   }
 
   getChatsAndTheirOrders(): Promise<Array<any>> {
@@ -89,10 +92,10 @@ class ChatContainer extends Component<Props, State> {
             return resolve([]);
           }
           orders = o;
-          return this.currentUser.getJoinableRooms();
+          return pusherCurrentUser.getJoinableRooms();
         })
         .then((rooms: Array<any>) => {
-          return [...rooms, ...this.currentUser.rooms];
+          return [...rooms, ...pusherCurrentUser.rooms];
         })
         .then(allRooms => {
           const { userData } = this.props;
@@ -113,7 +116,7 @@ class ChatContainer extends Component<Props, State> {
             roomsAndTheirOrders.map(async room => {
               let msgs;
               try {
-                msgs = await this.currentUser.fetchMessages({
+                msgs = await pusherCurrentUser.fetchMessages({
                   roomId: room.id,
                   direction: 'older',
                   limit: 1,
@@ -123,11 +126,10 @@ class ChatContainer extends Component<Props, State> {
               }
               // console.warn(room.users.map(u => u.name));
               const partner = room.users.filter(u => u.id !== userData._id)[0];
-              const cursor = await this.currentUser.readCursor({
+              const cursor = await pusherCurrentUser.readCursor({
                 roomId: room.id,
               });
 
-              if (cursor) console.log(cursor.position, msgs[0].id);
               const isPartnerOnline = partner.presence.state == 'online';
               return {
                 ...room,

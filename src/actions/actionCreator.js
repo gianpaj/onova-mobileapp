@@ -23,17 +23,22 @@ import type {
   SignupData,
   GetState,
   UserData,
+  PusherUser,
 } from '../types';
 import { registerPushNotifications } from '../utils/push';
 import * as api from '../utils/api';
 import * as ui from '../utils/ui';
 
+let config, currentUser: PusherUser;
 
+if (process.env.NODE_ENV == 'dev') {
+  config = require('../../config-dev.json');
+} else {
+  config = require('../../config-prod.json');
+}
 
 const login = (data: LoginData) => (dispatch: Dispatch) => (
   dispatch({ type: LOGIN_PENDING }),
-  // setTimeout(() => {
-
   api
     .post('/api/auth/login', {
       emailAddress: data.emailAddress,
@@ -46,60 +51,105 @@ const login = (data: LoginData) => (dispatch: Dispatch) => (
           ...res.data,
           ...{ token: res.token, provider: 'email' },
         };
-        // FIXME: use `userData` key in payload
-        dispatch({ type: LOGIN_SUCCESS, payload: userData });
-        // TODO: send analytics login event
-        registerPushNotifications()
-          .then(pushToken => {
-            if (pushToken) return sendToken(pushToken, userData);
-          })
-          .catch(err => {
-            console.warn(err);
-            dispatch({ type: LOGIN_FAIL });
-          });
-
-        if (process.env.NODE_ENV == 'production') {
-          Sentry.setUserContext({
-            email: userData.emailAddress,
-            userID: userData._id,
-            username: userData.username,
-            extra: {
-              accountStatus: userData.accountStatus,
-            },
-          });
-        }
-      } else {
-        console.debug(res);
-        dispatch({ type: LOGIN_FAIL });
+        return userData;
       }
+      console.debug(res);
+      dispatch({ type: LOGIN_FAIL });
+      throw new Error(res);
+    })
+    .then(userData => {
+      // TODO: send analytics login event
+      if (process.env.NODE_ENV == 'production') {
+        Sentry.setUserContext({
+          email: userData.emailAddress,
+          userID: userData._id,
+          username: userData.username,
+          extra: {
+            accountStatus: userData.accountStatus,
+          },
+        });
+      }
+      return userData;
+    })
+    .then(userData => initializePusher(userData))
+    .then(userData => {
+      // FIXME: use `userData` key in payload
+      dispatch({ type: LOGIN_SUCCESS, payload: userData });
+      return registerPushNotifications()
+        .then(pushToken => {
+          if (pushToken) return sendToken(pushToken, userData);
+        })
+        .catch(err => {
+          console.warn(err);
+          dispatch({ type: LOGIN_FAIL });
+        });
     })
     .catch((err: api.APIError) => {
       dispatch(handleErrorWithAlert({ type: LOGIN_FAIL }, err));
     })
-  // }, 5000)
 );
 
-const initializePusher = (userData: UserData): Promise<any> => {
+const initializePusher = (userData: UserData): Promise<any | Error> => {
+  console.log('initializePusher');
   return new Promise((resolve, reject) => {
     try {
-      new ChatManager({
-        instanceLocator: PUSHER_INSTANCE,
-        userId: userData._id, // user needs to already exist
+      const chatManager = new ChatManager({
+        instanceLocator: config.PUSHER_INSTANCE,
+        userId: userData._id,
         tokenProvider: new TokenProvider({
-          url: PUSHER_TOKEN_PROVIDER,
+          url: config.PUSHER_TOKEN_PROVIDER,
           headers: {
             token: userData.token,
             avatarURL: userData.profilePic,
             username: userData.username,
           },
         }),
+        logger: {
+          error: console.log,
+          warn: console.log,
+          info: () => {},
+          debug: () => {},
+          verbose: () => {},
+        },
       });
-      resolve();
-    } catch (error) {
-      reject(error);
+      chatManager
+        .connect()
+        .then(user => {
+          currentUser = user;
+          resolve(userData);
+          //   // Subscribe to all rooms the user is a member of
+          //   user.rooms.map(room =>
+          //     user.subscribeToRoom({
+          //       roomId: room.id,
+          //       hooks: { onNewMessage: onNewMessage },
+          //       messageLimit: 1,
+          //     })
+          //   );
+          //   const r = user.rooms.map(room => {
+          //     const cursor = user.readCursor({
+          //       roomId: room.id,
+          //     });
+          //     return { [room.id]: cursor.position };
+          //   });
+          //   console.log(r);
+          // })
+          // .then(() => {
+          //   resolve(userData);
+        })
+        .catch(err => {
+          console.log('eerr');
+          console.log(err);
+          reject(err);
+        });
+    } catch (err) {
+      reject(err);
     }
   });
 };
+
+function onNewMessage(params) {
+  console.log(params);
+}
 
 /* @DISABLED
 const loginWithGoogle = () => (dispatch: Dispatch) => {
@@ -153,6 +203,10 @@ const signup = (data: SignupData) => (dispatch: Dispatch) => (
           ...res.data,
           ...{ token: res.token, provider: 'email' },
         };
+
+        initializePusher(userData).then(userData =>
+          dispatch({ type: SIGNUP_SUCCESS, payload: userData })
+        );
         registerPushNotifications()
           .then(pushToken => {
             if (pushToken) return sendToken(pushToken, userData);
@@ -171,7 +225,6 @@ const signup = (data: SignupData) => (dispatch: Dispatch) => (
             },
           });
         }
-        dispatch({ type: SIGNUP_SUCCESS, payload: userData });
       } else {
         console.warn(res);
         dispatch({ type: SIGNUP_FAIL });
@@ -242,7 +295,7 @@ const logout = () => (dispatch: Dispatch) => {
   // }
 };
 
-function sendToken(pushToken: string, userData: UserData): Promise<any> {
+const sendToken = (pushToken: string, userData: UserData): Promise<any> => {
   const data = {
     platform: Platform.OS,
     pushToken,
@@ -257,7 +310,7 @@ function sendToken(pushToken: string, userData: UserData): Promise<any> {
     .catch(err => {
       console.error(err);
     });
-}
+};
 
 const handleErrorWithAlert = (data: any, err: any) => {
   let errorType;
@@ -286,7 +339,7 @@ const handleErrorWithAlert = (data: any, err: any) => {
 };
 
 export {
-  // initializePusher,
+  initializePusher,
   login,
   // loginWithGoogle,
   signup,
@@ -294,4 +347,5 @@ export {
   getPersonalUserData,
   getUserData,
   logout,
+  currentUser,
 };

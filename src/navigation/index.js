@@ -7,7 +7,7 @@ import { addNavigationHelpers, NavigationActions } from 'react-navigation';
 import { createReduxBoundAddListener } from 'react-navigation-redux-helpers';
 import { Sentry } from 'react-native-sentry';
 
-import { sendToken, logout } from '../actions/actionCreator';
+import { sendToken, logout, initializePusher } from '../actions/actionCreator';
 import NavigationStack from './navigationStack';
 import NavigationService from './NavigationService';
 import type { Dispatch, UserData, ReduxState } from '../types';
@@ -60,6 +60,7 @@ class AppNavigation extends Component<Props, void> {
             });
           }
         })
+        .then(() => initializePusher(userData))
         .catch(err => {
           console.debug(err);
           dispatch(logout());

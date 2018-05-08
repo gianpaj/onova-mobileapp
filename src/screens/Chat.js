@@ -22,6 +22,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { NavigationActions } from 'react-navigation';
 import { GiftedChat, Bubble, SystemMessage } from 'react-native-gifted-chat';
 import { ChatManager, TokenProvider } from '@pusher/chatkit/react-native';
+import { currentUser as pusherCurrentUser } from '../actions/actionCreator';
 
 import type { NavigationScreenProp } from 'react-navigation';
 
@@ -59,7 +60,6 @@ type State = {
 };
 
 class ChatContainer extends Component<Props, State> {
-  currentUser: PusherUser;
   sb;
   rejectProm;
 
@@ -102,10 +102,10 @@ class ChatContainer extends Component<Props, State> {
   componentWillUnmount() {
     // no longer receive events from the chat room
     if (
-      this.currentUser &&
-      this.currentUser.roomSubscriptions[this.state.roomId]
+      pusherCurrentUser &&
+      pusherCurrentUser.roomSubscriptions[this.state.roomId]
     )
-      this.currentUser.roomSubscriptions[this.state.roomId].cancel();
+      pusherCurrentUser.roomSubscriptions[this.state.roomId].cancel();
 
     // cancel initialise for when the Chat screen is openened and closed quickly
     if (this.rejectProm) {
@@ -156,7 +156,7 @@ class ChatContainer extends Component<Props, State> {
           console.debug(roomId);
 
           if (roomId !== -1) {
-            return this.currentUser
+            return pusherCurrentUser
               .joinRoom({ roomId })
               .then(room => {
                 console.debug('Joined room ID:', room.id);
@@ -192,10 +192,10 @@ class ChatContainer extends Component<Props, State> {
           console.log(o);
 
           // joinable rooms are those you're not a member of
-          return this.currentUser
+          return pusherCurrentUser
             .getJoinableRooms()
             .then((rooms: Array<any>) => {
-              const allRooms = [...rooms, ...this.currentUser.rooms];
+              const allRooms = [...rooms, ...pusherCurrentUser.rooms];
               return allRooms.filter(r => r.name == getRoomName(o));
             })
             .then(rooms => {
@@ -205,7 +205,7 @@ class ChatContainer extends Component<Props, State> {
               // by a partner (seller) or my self
               if (rooms.length > 0) {
                 const firstRoom = rooms[0].id;
-                return this.currentUser
+                return pusherCurrentUser
                   .joinRoom({ roomId: firstRoom })
                   .then(room => {
                     roomId = room.id;
@@ -223,7 +223,7 @@ class ChatContainer extends Component<Props, State> {
               }
 
               // no existing room existed. coming from Checkout
-              return this.currentUser
+              return pusherCurrentUser
                 .createRoom({
                   name: getRoomName(o),
                   private: true,
@@ -245,7 +245,7 @@ class ChatContainer extends Component<Props, State> {
         })
         .then(() => this.setState({ roomId }))
         .then(() =>
-          this.currentUser.fetchMessages({
+          pusherCurrentUser.fetchMessages({
             roomId,
             direction: 'newer',
             limit: 100,
@@ -264,7 +264,7 @@ class ChatContainer extends Component<Props, State> {
         .then(lastMsg => {
           if (!lastMsg) return;
           setTimeout(() => {
-            this.currentUser
+            pusherCurrentUser
               .setReadCursor({
                 roomId,
                 position: lastMsg.id,
@@ -279,8 +279,8 @@ class ChatContainer extends Component<Props, State> {
         })
         .then(
           () =>
-            !this.currentUser.roomSubscriptions[roomId] &&
-            this.currentUser.subscribeToRoom({
+            !pusherCurrentUser.roomSubscriptions[roomId] &&
+            pusherCurrentUser.subscribeToRoom({
               roomId,
               hooks: {
                 onNewReadCursor: cursor => console.log(cursor),
@@ -310,7 +310,7 @@ class ChatContainer extends Component<Props, State> {
     // TODO: Update cursor if the message was read
 
     setTimeout(() => {
-      this.currentUser
+      pusherCurrentUser
         .setReadCursor({
           roomId: this.state.roomId,
           position: m.id,
@@ -342,36 +342,9 @@ class ChatContainer extends Component<Props, State> {
     };
   }
 
-  connectToPusher = (): Promise<Error | PusherUser> => {
-    console.log('connectToPusher');
-    const { userData } = this.props;
-    return new Promise((resolve, reject) => {
-      const chatManager = new ChatManager({
-        instanceLocator: config.PUSHER_INSTANCE,
-        userId: userData._id,
-        tokenProvider: new TokenProvider({
-          url: config.PUSHER_TOKEN_PROVIDER,
-          headers: {
-            token: userData.token,
-            avatarURL: userData.profilePic,
-            username: userData.username,
-          },
-        }),
-        logger: {
-          error: console.log,
-          warn: console.log,
-          info: () => {},
-          debug: () => {},
-          verbose: () => {},
-        },
-      });
-      chatManager
-        .connect()
-        .then(currentUser => {
-          this.currentUser = currentUser;
-          resolve(currentUser);
-        })
-        .catch(err => reject(err));
+  connectToPusher = (): Promise<null> => {
+    return new Promise(resolve => {
+      resolve(null);
     });
   };
 
@@ -410,7 +383,7 @@ class ChatContainer extends Component<Props, State> {
   onSend = (messages: Array<Message>) => {
     const { text } = messages[0];
 
-    this.currentUser
+    pusherCurrentUser
       .sendMessage({
         text,
         roomId: this.state.roomId,

@@ -135,17 +135,27 @@ export class ProductContainer extends React.Component<Props, State> {
   }*/
 
   componentWillMount() {
+    this.refresh();
+
+    this.props.navigation.addListener('didFocus', () => this.refresh());
+  }
+
+  refresh() {
     const { params }: { params: ProductType } = this.props.navigation.state;
     let uuid;
 
     // for development
     if (!params) {
-      uuid = 'ry1yDIj6G';
+      // local
+      uuid = 'SJewilLU8z';
+      // // prod
+      // uuid = 'ry1yDIj6G';
     } else {
       uuid = params.uuid;
     }
     console.debug('product uuid:', uuid);
-    this._getProduct(uuid)
+    api
+      .getProduct(uuid)
       .then(data => {
         this.setState({
           item: data,
@@ -155,15 +165,6 @@ export class ProductContainer extends React.Component<Props, State> {
       .catch(e => {
         console.error(e);
       });
-  }
-
-  _getProduct(uuid: string): Promise<ProductType> {
-    return new Promise((resolve, reject) => {
-      api
-        .get(`/api/products/${uuid}`)
-        .then(({ data }) => resolve(data))
-        .catch(e => reject(e));
-    });
   }
 
   goToProfileOfSeller = () => {

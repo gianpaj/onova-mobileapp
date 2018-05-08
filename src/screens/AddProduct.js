@@ -34,7 +34,7 @@ import colors from '../config/colors';
 import settings from '../config/settings';
 import * as api from '../utils/api';
 import * as ui from '../utils/ui';
-import type { UserData, ReduxState } from '../types';
+import type { UserData, ReduxState, Product } from '../types';
 
 import type { NavigationScreenProp } from 'react-navigation';
 
@@ -74,6 +74,7 @@ type State = {
   pending: boolean,
   numberOfBrands: number,
   inEditMode: boolean,
+  uuid: string,
 };
 
 export class AddProductScreen extends React.Component<Props, State> {
@@ -99,13 +100,14 @@ export class AddProductScreen extends React.Component<Props, State> {
     pending: false,
     numberOfBrands: 0,
     inEditMode: false,
+    uuid: '',
   };
 
   componentDidMount() {
     const { params } = this.props.navigation.state;
     // if editing
     if (params) {
-      const { item } = params;
+      const { item }: { item: Product } = params;
       console.log(item);
       let images = [];
       for (let i = 0; i < item.photoURIs.length; i++) {
@@ -122,6 +124,7 @@ export class AddProductScreen extends React.Component<Props, State> {
         tags: item.tags,
         grp_1: item.categoryIds[0],
         grp_2: item.typeIds[0],
+        uuid: item.uuid,
       });
     } else if (this.state.images.length == 0) {
       this.selectPhotoTapped(0);
@@ -195,8 +198,17 @@ export class AddProductScreen extends React.Component<Props, State> {
     this.props.navigation.goBack();
   }
 
-  addItem = () => {
-    const { description, images, price, grp_1, grp_2, tags } = this.state;
+  addOrEditItem = () => {
+    const {
+      description,
+      images,
+      price,
+      grp_1,
+      grp_2,
+      tags,
+      inEditMode,
+      uuid,
+    } = this.state;
 
     this.setState({ pending: true, tagsText: '' });
     Toast.loading('Uploading...', 30);
@@ -223,6 +235,36 @@ export class AddProductScreen extends React.Component<Props, State> {
     // };
 
     const { token } = this.props.userData;
+
+    if (inEditMode) {
+      const data = {
+        description,
+        price,
+        categoryIds: grp_1.toString(),
+        typeIds: grp_2.toString(),
+        tags,
+      };
+
+      console.log(data);
+
+      return (
+        api
+          .put(`/api/products/${uuid}`, data, { token, timeout: 300000 })
+          .then(res => {
+            console.debug(res);
+            this.closeModal();
+          })
+          .catch(err => {
+            console.debug(err);
+            ui.showToast(err.message, 'warning');
+          })
+          // final
+          .then(() => {
+            this.setState({ pending: false });
+            Toast.hide();
+          })
+      );
+    }
     api
       .post('/api/products', formData, { token, timeout: 300000 })
       .then(res => {
@@ -384,7 +426,7 @@ export class AddProductScreen extends React.Component<Props, State> {
               transparent
               disabled={!this.addEnabled()}
               style={{ backgroundColor: colors.transparent }}
-              onPress={this.addItem}>
+              onPress={this.addOrEditItem}>
               <Icon
                 name="check"
                 style={!this.addEnabled() && { color: colors.grey4 }}

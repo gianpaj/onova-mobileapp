@@ -45,7 +45,7 @@ class AppNavigation extends Component<Props, State> {
     NavigationService.setDispatcher(dispatch);
 
     if (isLoggedIn && userData) {
-      // retry to login to verify user is still valid
+      // retrying to login to verify user is still valid
       const { token } = userData;
       return api
         .get(`/api/users/${userData._id}/personal`, { token })

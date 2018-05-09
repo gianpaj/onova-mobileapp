@@ -2,7 +2,7 @@
 import { StackNavigator } from 'react-navigation';
 
 import {
-  AddProduct,
+  AddandEditProduct,
   AddReview,
   Checkout,
   ChatRooms,
@@ -31,7 +31,7 @@ export const StackNav = StackNavigator(
       path: 'product/:productUUID',
     },
     tabs: { screen: TabsStack },
-    addProduct: { screen: AddProduct },
+    addandEditProduct: { screen: AddandEditProduct },
     addReview: { screen: AddReview },
     reviews: { screen: Reviews },
     notifications: { screen: Notifications },

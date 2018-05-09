@@ -5,7 +5,13 @@ import { Platform } from 'react-native';
 import { TabNavigator } from 'react-navigation';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-import { Home, AddProduct, ChatRooms, Profile, Search } from '../screens';
+import {
+  Home,
+  AddandEditProduct,
+  ChatRooms,
+  Profile,
+  Search,
+} from '../screens';
 import colors from '../config/colors';
 
 import TabBarComponent from './TabBarComponent';
@@ -15,7 +21,7 @@ const isiOS = Platform.OS === 'ios';
 const routeConfiguration = {
   Home: { screen: Home },
   Search: { screen: Search },
-  New: { screen: AddProduct },
+  New: { screen: AddandEditProduct },
   Orders: { screen: ChatRooms },
   Profile: { screen: Profile },
 };
@@ -76,8 +82,6 @@ const tabBarConfiguration = {
     },
     labelStyle: isiOS ? {} : { fontSize: 12 },
   },
-  // needed to open the Camera the first time opening the 'AddProduct' screen
-  // i.e componentWillMount() of AddProduct
   tabBarPosition: 'bottom',
   animationEnabled: false,
   swipeEnabled: false,

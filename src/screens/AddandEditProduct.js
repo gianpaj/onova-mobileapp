@@ -77,13 +77,15 @@ type State = {
   uuid: string,
 };
 
-export class AddProductScreen extends React.Component<Props, State> {
+export class AddandEditProductScreen extends React.Component<Props, State> {
   static navigationOptions = (props: any) => {
     return {
       // navigate to the screen instead of showing as a normal tab screen
       tabBarOnPress: ({ scene }: any) => {
         if (!scene.focused) {
-          props.navigation.navigate('addProduct', { focused: !scene.focused });
+          props.navigation.navigate('addandEditProduct', {
+            focused: !scene.focused,
+          });
         }
       },
     };
@@ -667,4 +669,6 @@ const mapStateToProps: any = (state: ReduxState) => ({
   userData: state.LoginReducer.data,
 });
 
-export const AddProduct = connect(mapStateToProps)(AddProductScreen);
+export const AddandEditProduct = connect(mapStateToProps)(
+  AddandEditProductScreen
+);

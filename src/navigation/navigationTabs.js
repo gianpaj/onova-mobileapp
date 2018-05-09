@@ -57,7 +57,7 @@ const tabBarConfiguration = {
           name={iconName}
           size={28}
           // eslint-disable-next-line
-          style={isiOS ? { marginBottom: -3 } : {}}
+          style={isiOS && { marginBottom: -3 }}
           color={
             focused ? (isiOS ? colors.active : colors.primary) : colors.grey4
           }

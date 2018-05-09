@@ -20,7 +20,7 @@ import { AnimatedCircularProgress } from 'react-native-circular-progress';
 
 import type { NavigationScreenProp } from 'react-navigation';
 // eslint-disable-next-line
-import type { UserData, ReduxState, Order, PusherUser, Room } from '../types';
+import type { UserData, ReduxState, Order, Room } from '../types';
 import colors from '../config/colors';
 import * as api from '../utils/api';
 import * as ui from '../utils/ui';

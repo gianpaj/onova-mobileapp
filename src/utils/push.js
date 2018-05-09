@@ -2,7 +2,6 @@
 
 import firebase from 'react-native-firebase';
 import type { Notification, NotificationOpen } from 'react-native-firebase';
-// eslint-disable-next-line
 // import Instabug from 'instabug-reactnative';
 
 import NavigationService from '../navigation/NavigationService';

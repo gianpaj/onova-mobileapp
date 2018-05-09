@@ -4,6 +4,7 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
 
+// eslint-disable-next-line
 import type { ReduxState } from '../types';
 import colors from '../config/colors';
 import { Avatar } from '../components';
@@ -36,16 +37,6 @@ class NotificationsDot extends React.Component<Props, void> {
           uri={userData.profilePic}
           placeholderText={userData.username}
         />
-        {/* <Ionicons
-          // name={isiOS ? `ios-person${focused ? '' : '-outline'}` : 'md-person'}
-          name={isiOS ? 'ios-person' : 'md-person'}
-          size={28}
-          // eslint-disable-next-line
-          // style={{ marginBottom: -3 }}
-          color={
-            focused ? (isiOS ? colors.active : colors.primary) : colors.grey4
-          }
-        /> */}
         {/* https://docs.nativebase.io/Components.html#footer-tabs-badge-headref */}
         {/* <Button active badge vertical>
           <Badge ><Text>51</Text></Badge>

@@ -387,9 +387,7 @@ class Comments extends React.Component<Props, State> {
           <Send text={text} onSend={() => this.onSendComment(text)}>
             <Ionicons
               // eslint-disable-next-line
-              style={{
-                opacity: showActiveOpacity ? 0.7 : 1,
-              }}
+              style={{ opacity: showActiveOpacity ? 0.7 : 1 }}
               name="md-send"
               size={29}
             />

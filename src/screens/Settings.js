@@ -43,6 +43,8 @@ import { validPassword, validShippingAddress } from '../utils/validators';
 import * as api from '../utils/api';
 import * as ui from '../utils/ui';
 
+import { version } from '../../package.json';
+
 if (!Object.is) {
   Object.is = function(x, y) {
     // SameValue algorithm
@@ -522,7 +524,7 @@ class SettingsContainer extends Component<Props, State> {
             <TouchableOpacity onPress={this.onSendEmail}>
               <Text style={styles.centerText}>hello@onova.co</Text>
             </TouchableOpacity>
-            {/* <Text style={styles.centerText}>__version__</Text> */}
+            <Text style={styles.centerText}>{version}</Text>
           </View>
           {/* <HR full /> */}
           {/* <NBButton light full onPress={() => Instabug.invoke()}>

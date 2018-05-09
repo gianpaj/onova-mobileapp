@@ -65,7 +65,11 @@ export class ProductContainer extends React.Component<Props, State> {
   componentWillMount() {
     this.refresh();
 
-    this.props.navigation.addListener('didFocus', () => this.refresh());
+    this.props.navigation.addListener('didFocus', () => {
+      setTimeout(() => {
+        this.refresh();
+      }, 1000);
+    });
   }
 
   showActionSheetForProduct = () => {

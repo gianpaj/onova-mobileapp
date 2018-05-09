@@ -40,7 +40,7 @@ import { getPersonalUserData } from '../actions/actionCreator';
 import colors from '../config/colors';
 import * as api from '../utils/api';
 import * as ui from '../utils/ui';
-
+// eslint-disable-next-line
 import type { UserData, Dispatch, ReduxState } from '../types';
 
 type Props = {

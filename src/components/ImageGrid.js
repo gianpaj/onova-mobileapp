@@ -80,18 +80,10 @@ class ImageGridComponent extends React.Component<Props, State> {
           loading: false,
         });
       })
-      .catch(() => {
-        this.setState({
-          error: true,
-        });
-      });
+      .catch(() => this.setState({ error: true }));
   };
 
-  onLayout = () => {
-    this.setState({
-      itemHeight: width / 3,
-    });
-  };
+  onLayout = () => this.setState({ itemHeight: width / 3 });
 
   getItemLayout = (data: any, index: number) => {
     const { itemHeight } = this.state;
@@ -133,29 +125,26 @@ class ImageGridComponent extends React.Component<Props, State> {
   render() {
     const { error, loading, items } = this.state;
 
+    if (!error && loading) return this.renderLoading();
+
     return (
       <View style={styles.container}>
-        {!error && loading ? (
-          this.renderLoading()
-        ) : (
-          // if not loading
-          <FlatList
-            onLayout={this.onLayout}
-            style={styles.list}
-            columnWrapperStyle={[
-              styles.columnWrapper,
-              { height: this.state.itemHeight },
-            ]}
-            refreshControl={this.renderRefreshControl()}
-            data={items}
-            renderItem={this.renderItem}
-            numColumns={3}
-            keyExtractor={this._keyExtractor}
-            getItemLayout={this.getItemLayout}
-            showsVerticalScrollIndicator={false}
-            ListEmptyComponent={this.renderEmptyState}
-          />
-        )}
+        <FlatList
+          onLayout={this.onLayout}
+          style={styles.list}
+          columnWrapperStyle={[
+            styles.columnWrapper,
+            { height: this.state.itemHeight },
+          ]}
+          refreshControl={this.renderRefreshControl()}
+          data={items}
+          renderItem={this.renderItem}
+          numColumns={3}
+          keyExtractor={this._keyExtractor}
+          getItemLayout={this.getItemLayout}
+          showsVerticalScrollIndicator={false}
+          ListEmptyComponent={this.renderEmptyState}
+        />
       </View>
     );
   }
@@ -193,22 +182,18 @@ class ImageGridComponent extends React.Component<Props, State> {
     );
   };
 
-  renderLoading() {
-    return (
-      <View style={styles.container}>
-        <ActivityIndicator size="large" />
-      </View>
-    );
-  }
+  renderLoading = () => (
+    <View style={styles.container}>
+      <ActivityIndicator size="large" />
+    </View>
+  );
 
-  renderRefreshControl() {
-    return (
-      <RefreshControl
-        refreshing={this.state.refreshing}
-        onRefresh={this.fetchItems}
-      />
-    );
-  }
+  renderRefreshControl = () => (
+    <RefreshControl
+      refreshing={this.state.refreshing}
+      onRefresh={this.fetchItems}
+    />
+  );
 }
 
 const mapStateToProps = (state: any) => ({

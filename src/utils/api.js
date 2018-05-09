@@ -233,6 +233,14 @@ export function getOrders(token: string): Promise<Array<Order>> {
   });
 }
 
+export function getOrder(orderId: string, token: string): Promise<Order> {
+  return new Promise((resolve, reject) => {
+    get(`/api/orders/${orderId}`, { token })
+      .then(({ data }) => resolve(data))
+      .catch(err => reject(err));
+  });
+}
+
 export type APIError = {
   status: number,
   message: string,

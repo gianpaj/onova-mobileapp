@@ -4,8 +4,10 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import {
   ActivityIndicator,
+  Image,
+  FlatList,
   StyleSheet,
-  // Text,
+  TouchableOpacity,
   View,
 } from 'react-native';
 import {
@@ -51,7 +53,7 @@ type State = {
   isLoading: boolean,
   // isTyping: boolean,
   messages: Array<Message>,
-  // order?: Order,
+  orders: Array<Order>,
   // product?: Product,
   roomId: number,
 };
@@ -64,6 +66,7 @@ class ChatContainer extends Component<Props, State> {
     partner: null,
     isLoading: true,
     // isTyping: false,
+    orders: [],
     messages: [],
     roomId: -1,
   };
@@ -73,9 +76,13 @@ class ChatContainer extends Component<Props, State> {
 
     // for development
     if (!params) {
-      const roomId = 7359921;
+      const roomId = 7305579;
 
-      return this.initialise(roomId);
+      return this.initialise(roomId)
+        .then(() => this.setState({ isLoading: false }))
+        .catch(err => {
+          if (err && err.message !== 'no partner') console.error(err);
+        });
     }
     console.log(params);
     // coming from Checkout, ChatRooms or Push Notification
@@ -102,52 +109,20 @@ class ChatContainer extends Component<Props, State> {
     }
   }
 
-  /*
-  fetchProduct(uuid: string): Promise<null> {
-    return new Promise((resolve, reject) => {
-      api
-        .get(`/api/products/${uuid}`)
-        .then(({ data }) => {
-          console.debug(data);
-          this.setState({ product: data });
-          resolve();
-        })
-        .catch(err => reject(err));
-    });
-  }
-  */
-
-  /*
-  fetchOrder(uuid: string): Promise<Order> {
-    const { token } = this.props.userData;
-    return new Promise((resolve, reject) => {
-      return api
-        .get(`/api/orders/${uuid}`, { token })
-        .then(({ data: order }) => {
-          console.debug(order);
-          this.setState({ order });
-          resolve();
-        })
-        .catch(err => {
-          reject(err);
-        });
-    });
-  }
-  */
-
   initialise(roomId: number, productUuid?: string) {
     const { userData } = this.props;
+    let thisRoom;
     return new Promise((resolve, reject) => {
+      if (!pusherCurrentUser) return reject();
       this.rejectProm = reject;
       this.connectToPusher()
         .then(() => {
-          console.debug(roomId);
-
           if (roomId !== -1) {
             return pusherCurrentUser
               .joinRoom({ roomId })
               .then(room => {
-                console.debug('Joined room ID:', room.id);
+                console.debug('1 Joined room ID:', room.id);
+                thisRoom = room;
                 return room;
               })
               .then(room =>
@@ -197,7 +172,8 @@ class ChatContainer extends Component<Props, State> {
                   .joinRoom({ roomId: firstRoom })
                   .then(room => {
                     roomId = room.id;
-                    console.debug('Joined room ID:', room.id);
+                    thisRoom = room;
+                    console.debug('2 Joined room ID:', room.id);
                     return room;
                   })
                   .then(room =>
@@ -219,6 +195,7 @@ class ChatContainer extends Component<Props, State> {
                 })
                 .then(room => {
                   roomId = room.id;
+                  thisRoom = room;
                   console.debug('Created room id', roomId);
                 })
                 .then(() => api.getUser(o.seller))
@@ -232,6 +209,11 @@ class ChatContainer extends Component<Props, State> {
             });
         })
         .then(() => this.setState({ roomId }))
+        .then(() => api.getOrders(userData.token))
+        .then(orders =>
+          orders.filter((o: Order) => getRoomName(o) == thisRoom.name)
+        )
+        .then(orders => this.setState({ orders }))
         .then(() =>
           pusherCurrentUser.fetchMessages({
             roomId,
@@ -294,8 +276,6 @@ class ChatContainer extends Component<Props, State> {
 
   newMessage = (m: PusherMessage) => {
     const newMsg = this.createGiftedMessage(m);
-
-    // TODO: Update cursor if the message was read
 
     setTimeout(() => {
       pusherCurrentUser
@@ -474,9 +454,34 @@ class ChatContainer extends Component<Props, State> {
     );
   };
 
+  goToAddReviewOrCancel(orderId: string) {
+    // $FlowFixMe
+    this.props.navigation.navigate({
+      routeName: 'addReview',
+      params: orderId,
+      key: `addReview-${orderId}`,
+    });
+  }
+
+  _renderOrderCircle = ({ item }: { item: Order }) => {
+    const { product } = item;
+
+    return (
+      <TouchableOpacity
+        style={st.orderCircle}
+        onPress={() => this.goToAddReviewOrCancel(item.id)}>
+        <Image style={st.itemImage} source={{ uri: product.photoURIs[0] }} />
+      </TouchableOpacity>
+    );
+  };
+
+  _keyExtractor = (item): number => item.id;
+
+  _renderSeparatorHorizontal = () => <View style={st.separatorHorizontal} />;
+
   render() {
     const { navigation, userData } = this.props;
-    const { messages, isLoading, partner } = this.state;
+    const { messages, isLoading, partner, orders } = this.state;
 
     return (
       <Container style={st.flex1}>
@@ -504,49 +509,43 @@ class ChatContainer extends Component<Props, State> {
               <ActivityIndicator size="large" />
             </View>
           ) : (
-            <View style={[st.flex1, { backgroundColor: colors.white }]}>
-              {/* <CardItem header>
-                <Text
-                  numberOfLines={1} // android
-                  style={{ width: '50%', top: -1.5 }}>
-                  description: {product.description}
-                </Text>
-                <View style={st.row}>
-                  <Text>order status: {order.status}</Text>
-                  <NBButton
-                    transparent
-                    style={{ height: 20 }}
-                    onPress={() =>
-                      alert('code me like those french girls 🎨')
-                    }>
-                    <NBIcon name="ios-information-circle-outline" />
-                  </NBButton>
-                </View>
-              </CardItem> */}
-              <GiftedChat
-                messages={messages}
-                onSend={m => this.onSend(m)}
-                placeholder="Type a message"
-                // placeholder={I18n.t('chat.typeAMessage')}
-                user={{
-                  _id: userData._id,
-                  name: userData.username,
-                  avatar: userData.profilePic,
-                  //   userData.profilePic !== null ? userData.profilePic : null,
-                }}
-                // locale=""
-                // timeformat="LT"
-                // dateformat="ll"
-                // onPressAvatar={() => alert('code me like those french girls 🎨')}
-                renderSend={this.renderSend}
-                renderSystemMessage={this.renderSystemMessage}
-                renderBubble={this.renderBubble}
-                // renderActions={this.renderActions}
-                // keyboardShouldPersistTaps="handled"
-                maxInputLength={settings.MAX_CHAT_INPUT_LENGTH}
-                // renderInputToolbar={this.renderInputToolbar}
-                // renderAvatar={null}
-              />
+            <View style={{ backgroundColor: colors.white }}>
+              {orders.length > 0 && (
+                <FlatList
+                  style={{ height: 60 + 8 }}
+                  data={orders}
+                  keyExtractor={this._keyExtractor}
+                  horizontal
+                  ItemSeparatorComponent={this._renderSeparatorHorizontal}
+                  renderItem={this._renderOrderCircle}
+                />
+              )}
+              <View style={[st.flex1, { backgroundColor: colors.white }]}>
+                <GiftedChat
+                  messages={messages}
+                  onSend={m => this.onSend(m)}
+                  placeholder="Type a message"
+                  // placeholder={I18n.t('chat.typeAMessage')}
+                  user={{
+                    _id: userData._id,
+                    name: userData.username,
+                    avatar: userData.profilePic,
+                    //   userData.profilePic !== null ? userData.profilePic : null,
+                  }}
+                  // locale=""
+                  // timeformat="LT"
+                  // dateformat="ll"
+                  // onPressAvatar={() => alert('code me like those french girls 🎨')}
+                  renderSend={this.renderSend}
+                  renderSystemMessage={this.renderSystemMessage}
+                  renderBubble={this.renderBubble}
+                  // renderActions={this.renderActions}
+                  // keyboardShouldPersistTaps="handled"
+                  maxInputLength={settings.MAX_CHAT_INPUT_LENGTH}
+                  // renderInputToolbar={this.renderInputToolbar}
+                  // renderAvatar={null}
+                />
+              </View>
             </View>
           )}
         </View>
@@ -605,6 +604,20 @@ const st = StyleSheet.create({
     color: colors.white,
     fontSize: 15,
     fontWeight: '400',
+  },
+  separatorHorizontal: {
+    width: 1,
+  },
+  orderCircle: {
+    marginHorizontal: 7,
+    marginVertical: 4,
+  },
+  itemImage: {
+    borderRadius: 50,
+    borderWidth: 2,
+    borderColor: colors.grey4,
+    height: 60,
+    width: 60,
   },
 });
 

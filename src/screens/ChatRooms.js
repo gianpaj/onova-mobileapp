@@ -74,6 +74,7 @@ class ChatContainer extends Component<Props, State> {
     let orders;
     const { token } = this.props.userData;
     return new Promise((resolve, reject) => {
+      if (!pusherCurrentUser) return reject();
       api
         .getOrders(token)
         .then(o => {
@@ -142,17 +143,6 @@ class ChatContainer extends Component<Props, State> {
         })
         .then(ordersAndChats => resolve(ordersAndChats))
         .catch(e => reject(e));
-    });
-  }
-
-  fetchOrder(orderId: string): Promise<Order> {
-    const { token } = this.props.userData;
-
-    return new Promise((resolve, reject) => {
-      api
-        .get(`/api/orders/${orderId}`, { token })
-        .then(({ data }) => resolve(data))
-        .catch(err => reject(err));
     });
   }
 

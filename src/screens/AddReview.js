@@ -40,7 +40,6 @@ const { width } = Dimensions.get('window');
 
 type Props = {
   navigation: NavigationScreenProp<*>,
-  order: Order,
   userData: UserData,
 };
 
@@ -50,6 +49,7 @@ type State = {
   text: string,
   isDisabled: boolean,
   isLoading: boolean,
+  order: Order,
 };
 
 export class AddReviewContainer extends Component<Props, State> {
@@ -59,90 +59,47 @@ export class AddReviewContainer extends Component<Props, State> {
     text: '',
     isDisabled: false,
     isLoading: true,
-  };
-
-  // for development
-  static defaultProps = {
-    // TODO: get order details from local API
-    // $FlowFixMe
-    order: {
-      id: '5a90077ff298522a0eddde0a',
-      buyer: {
-        _id: '5a78d09e2d314a702698f957',
-        accountStatus: 'verified',
-        id: '5a78d09e2d314a702698f957',
-        profilePic:
-          'https://storage.googleapis.com/staging.onova-183307.appspot.com/users/5a78d09e2d314a702698f957-1521722787711.jpg',
-        username: 'buyer',
-      },
-      priceOfItem: 99900.59,
-      seller: {
-        _id: '5a78d09d2d314a702698f955',
-        accountStatus: 'verified',
-        id: '5a78d09d2d314a702698f955',
-        profilePic:
-          'https://storage.googleapis.com/staging.onova-183307.appspot.com/users/5a78d09e2d314a702698f957-1521722787711.jpg',
-        username: 'firstperson',
-      },
-      product: {
-        categoryIds: [1, 2],
-        createdAt: new Date(),
-        currency: 'UAH',
-        description: 'description',
-        price: '30',
-        seller: {},
-        uuid: 'SJewilLU8z',
-        photoURIs: ['http://assets.onova.co/products/B14JwZ3iG-1.jpg'],
-      },
-      status: 'completed',
-    },
+    order: null,
   };
 
   async componentWillMount() {
-    // TODO: check if we have already reviewed this order
-
     const { token, _id } = this.props.userData;
+    const orderId = this.props.navigation.state.params;
     try {
-      const { data }: { data: Order } = await api.get(
-        `/api/orders/${this.props.order.id}`,
-        {
-          token,
-        }
-      );
-      const iAmTheSeller = _id.toString() == data.seller._id.toString();
-      const iAmTheBuyer = _id.toString() == data.buyer._id.toString();
+      const order = await api.getOrder(orderId, token);
+      console.log(order);
+      const iAmTheSeller = _id.toString() == order.seller._id.toString();
+      const iAmTheBuyer = _id.toString() == order.buyer._id.toString();
       if (
-        (data.reviewedBySeller && iAmTheSeller) ||
-        (data.reviewedByBuyer && iAmTheBuyer)
+        (order.reviewedBySeller && iAmTheSeller) ||
+        (order.reviewedByBuyer && iAmTheBuyer)
       ) {
         throw new Error('You have already left a review');
       }
+      this.setState({ isLoading: false, order });
+
+      Image.getSize(order.product.photoURIs[0], (w, h) => {
+        this.setState({ imageHeight: Math.floor(h * (width / 4 / w)) });
+      });
     } catch (err) {
       // console.error(err);
       this.props.navigation.goBack();
       Toast.fail(err.message, 5);
       return;
     }
-
-    this.setState({ isLoading: false });
-
-    Image.getSize(this.props.order.product.photoURIs[0], (w, h) => {
-      this.setState({ imageHeight: Math.floor(h * (width / 4 / w)) });
-    });
   }
 
   onChangeText = (text: string) => {
+    this.setState({ text });
     if (text.length > 0 && text.trim().length < settings.MIN_LENGTH_REVIEW) {
       this.setState({ isDisabled: true });
     } else {
       this.setState({ isDisabled: false });
     }
-    this.setState({ text });
   };
 
   onRate = async (rateNumber: number) => {
-    const { text } = this.state;
-    const { order } = this.props;
+    const { text, order } = this.state;
     const { token } = this.props.userData;
 
     if (text.length > 0 && text.trim().length < settings.MIN_LENGTH_REVIEW) {
@@ -183,8 +140,8 @@ export class AddReviewContainer extends Component<Props, State> {
   };
 
   render() {
-    const { order, userData } = this.props;
-    const { text, isDisabled, isLoading } = this.state;
+    const { userData } = this.props;
+    const { text, isDisabled, isLoading, order } = this.state;
     if (isLoading) return null;
 
     const iAmTheSeller = userData._id.toString() == order.seller._id.toString();

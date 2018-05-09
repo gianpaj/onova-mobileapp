@@ -1,6 +1,6 @@
 // @flow
 
-import { AddandEditProduct } from '../screens/AddandEditProduct';
+import { AddOrEditProduct } from '../screens/AddOrEditProduct';
 import { AddReview } from '../screens/AddReview';
 import { Checkout } from '../screens/Checkout';
 import { Home } from '../screens/Home';
@@ -17,7 +17,7 @@ import { SearchProductsResults } from '../screens/SearchProductsResults';
 import { SignUpLogin } from '../screens/SignUpLogin';
 
 export {
-  AddandEditProduct,
+  AddOrEditProduct,
   AddReview,
   Checkout,
   Home,

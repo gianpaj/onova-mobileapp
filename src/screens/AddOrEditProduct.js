@@ -77,13 +77,13 @@ type State = {
   uuid: string,
 };
 
-export class AddandEditProductScreen extends React.Component<Props, State> {
+export class AddOrEditProductScreen extends React.Component<Props, State> {
   static navigationOptions = (props: any) => {
     return {
       // navigate to the screen instead of showing as a normal tab screen
       tabBarOnPress: ({ scene }: any) => {
         if (!scene.focused) {
-          props.navigation.navigate('addandEditProduct', {
+          props.navigation.navigate('addOrEditProduct', {
             focused: !scene.focused,
           });
         }
@@ -198,7 +198,7 @@ export class AddandEditProductScreen extends React.Component<Props, State> {
     this.props.navigation.goBack();
   }
 
-  addOrEditItem = () => {
+  onAddOrEditItem = () => {
     const {
       description,
       images,
@@ -416,7 +416,7 @@ export class AddandEditProductScreen extends React.Component<Props, State> {
               transparent
               disabled={!this.addEnabled()}
               style={{ backgroundColor: colors.transparent }}
-              onPress={this.addOrEditItem}>
+              onPress={this.onAddOrEditItem}>
               <Icon
                 name="check"
                 style={!this.addEnabled() && { color: colors.grey4 }}
@@ -669,6 +669,6 @@ const mapStateToProps: any = (state: ReduxState) => ({
   userData: state.LoginReducer.data,
 });
 
-export const AddandEditProduct = connect(mapStateToProps)(
-  AddandEditProductScreen
+export const AddOrEditProduct = connect(mapStateToProps)(
+  AddOrEditProductScreen
 );

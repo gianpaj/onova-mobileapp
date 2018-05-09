@@ -555,7 +555,7 @@ class ProfileScreen extends React.Component<Props, State> {
                         rounded
                         backgroundColor={colors.black}
                         containerViewStyle={styles.searchButton}
-                        onPress={() => navigation.navigate('addandEditProduct')}
+                        onPress={() => navigation.navigate('addOrEditProduct')}
                         title="Sell something now"
                       />
                     </View>

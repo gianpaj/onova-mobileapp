@@ -89,7 +89,7 @@ export class ProductContainer extends React.Component<Props, State> {
           //   // report action
           //   break;
           case BUTTONS.indexOf('Edit'):
-            this.props.navigation.navigate('addandEditProduct', {
+            this.props.navigation.navigate('addOrEditProduct', {
               item: this.state.item,
             });
             break;

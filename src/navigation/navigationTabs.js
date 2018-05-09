@@ -7,7 +7,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import {
   Home,
-  AddandEditProduct,
+  AddOrEditProduct,
   ChatRooms,
   Profile,
   Search,
@@ -21,7 +21,7 @@ const isiOS = Platform.OS === 'ios';
 const routeConfiguration = {
   Home: { screen: Home },
   Search: { screen: Search },
-  New: { screen: AddandEditProduct },
+  New: { screen: AddOrEditProduct },
   Orders: { screen: ChatRooms },
   Profile: { screen: Profile },
 };

@@ -1,5 +1,5 @@
-// flow-typed signature: 15f8e87fd14a42df1c793230780edf48
-// flow-typed version: c19ef42683/react-navigation_v1.x.x/flow_>=v0.60.x
+// flow-typed signature: 8aaf473557d9b3d2de31fd2ff6d81795
+// flow-typed version: e00672bfc0/react-navigation_v1.x.x/flow_>=v0.60.x
 
 // @flow
 
@@ -116,27 +116,27 @@ declare module 'react-navigation' {
   |};
 
   declare export type NavigationReplaceAction = {|
-    type: 'Navigation/REPLACE',
-    key: string,
-    routeName: string,
-    params?: NavigationParams,
-    action?: NavigationNavigateAction,
+    +type: 'Navigation/REPLACE',
+    +key: string,
+    +routeName: string,
+    +params?: NavigationParams,
+    +action?: NavigationNavigateAction,
   |};
   declare export type NavigationPopAction = {|
-    type: 'Navigation/POP',
-    n?: number,
-    immediate?: boolean,
+    +type: 'Navigation/POP',
+    +n?: number,
+    +immediate?: boolean,
   |};
   declare export type NavigationPopToTopAction = {|
-    type: 'Navigation/POP_TO_TOP',
-    immediate?: boolean,
+    +type: 'Navigation/POP_TO_TOP',
+    +immediate?: boolean,
   |};
   declare export type NavigationPushAction = {|
-    type: 'Navigation/PUSH',
-    routeName: string,
-    params?: NavigationParams,
-    action?: NavigationNavigateAction,
-    key?: string,
+    +type: 'Navigation/PUSH',
+    +routeName: string,
+    +params?: NavigationParams,
+    +action?: NavigationNavigateAction,
+    +key?: string,
   |};
 
   declare export type NavigationAction =
@@ -363,6 +363,7 @@ declare module 'react-navigation' {
     initialRouteParams?: NavigationParams,
     paths?: NavigationPathsConfig,
     navigationOptions?: NavigationScreenConfig<*>,
+    initialRouteKey?: string,
   |};
 
   declare export type NavigationStackViewConfig = {|
@@ -493,6 +494,7 @@ declare module 'react-navigation' {
       action?: NavigationNavigateAction
     ) => boolean,
     setParams: (newParams: NavigationParams) => boolean,
+    getParam: (paramName: string, fallback?: any) => any,
     addListener: (
       eventName: string,
       callback: NavigationEventCallback
@@ -516,6 +518,29 @@ declare module 'react-navigation' {
     screenProps?: {},
     navigationOptions?: O,
   }>;
+
+  //declare export type NavigationNavigatorProps<O: {}, S: {}> =
+  //  | {}
+  //  | { navigation: NavigationScreenProp<S> }
+  //  | { screenProps: {} }
+  //  | { navigationOptions: O }
+  //  | {
+  //      navigation: NavigationScreenProp<S>,
+  //      screenProps: {},
+  //    }
+  //  | {
+  //      navigation: NavigationScreenProp<S>,
+  //      navigationOptions: O,
+  //    }
+  //  | {
+  //      screenProps: {},
+  //      navigationOptions: O,
+  //    }
+  //  | {
+  //      navigation: NavigationScreenProp<S>,
+  //      screenProps: {},
+  //      navigationOptions: O,
+  //    };
 
   /**
    * Navigation container
@@ -976,6 +1001,8 @@ declare module 'react-navigation' {
     itemsContainerStyle?: ViewStyleProp,
     itemStyle?: ViewStyleProp,
     labelStyle?: TextStyleProp,
+    activeLabelStyle?: TextStyleProp,
+    inactiveLabelStyle?: TextStyleProp,
     iconContainerStyle?: ViewStyleProp,
     drawerPosition: 'left' | 'right',
   };
@@ -1055,13 +1082,17 @@ declare module 'react-navigation' {
   };
   declare export var TabBarBottom: React$ComponentType<_TabBarBottomProps>;
 
-  declare type _NavigationInjectedProps = {
-    navigation: NavigationScreenProp<NavigationStateRoute>,
-  };
-  declare export function withNavigation<T: {}>(
-    Component: React$ComponentType<T & _NavigationInjectedProps>
-  ): React$ComponentType<T>;
-  declare export function withNavigationFocus<T: {}>(
-    Component: React$ComponentType<T & _NavigationInjectedProps>
-  ): React$ComponentType<T>;
+  declare export function withNavigation<Props: {}>(
+    Component: React$ComponentType<Props>
+  ): React$ComponentType<
+    $Diff<
+      Props,
+      {
+        navigation: NavigationScreenProp<NavigationStateRoute> | void,
+      }
+      >
+    >;
+  declare export function withNavigationFocus<Props: {}>(
+    Component: React$ComponentType<Props>
+  ): React$ComponentType<$Diff<Props, { isFocused: boolean | void }>>;
 }

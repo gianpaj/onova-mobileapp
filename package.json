@@ -29,6 +29,7 @@
     "babel-plugin-transform-inline-environment-variables": "^0.4.0",
     "date-fns": "^1.29.0",
     "firebase": "^4.8.1",
+    "foect": "^0.1.5",
     "immutability-helper": "^2.6.4",
     "instabug-reactnative": "^2.8.1",
     "lottie-react-native": "^2.3.2",

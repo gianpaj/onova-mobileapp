@@ -2,22 +2,13 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import {
-  Dimensions,
-  Image,
-  Platform,
-  StyleSheet,
-  Text,
-  TouchableHighlight,
-  View,
-} from 'react-native';
+import { Platform, StyleSheet, Text, TextInput, View } from 'react-native';
 import {
   Body,
   Button,
   Container,
   Content,
   Footer,
-  Header,
   Icon,
   Left,
   Right,
@@ -25,18 +16,20 @@ import {
 } from 'native-base';
 import { TextareaItem, Toast } from 'antd-mobile';
 import StarRating from 'react-native-star-rating';
+import Feather from 'react-native-vector-icons/Feather';
+import Foect from 'foect';
 
-import { Avatar } from '../components/index';
+import { Header } from '../components/index';
 
 import colors from '../config/colors';
 import settings from '../config/settings';
 import * as api from '../utils/api';
 
 import type { NavigationScreenProp } from 'react-navigation';
-
+// eslint-disable-next-line
 import type { Order, UserData, ReduxState } from '../types';
 
-const { width } = Dimensions.get('window');
+const starIcon = Platform.OS == 'ios' ? 'ios-star' : 'md-star';
 
 type Props = {
   navigation: NavigationScreenProp<*>,
@@ -47,7 +40,6 @@ type State = {
   imageHeight: number,
   rateNumber: number,
   text: string,
-  isDisabled: boolean,
   isLoading: boolean,
   order: Order,
 };
@@ -57,14 +49,16 @@ export class AddReviewContainer extends Component<Props, State> {
     imageHeight: 0,
     rateNumber: 0,
     text: '',
-    isDisabled: false,
     isLoading: true,
     order: null,
   };
 
   async componentWillMount() {
     const { token, _id } = this.props.userData;
-    const orderId = this.props.navigation.state.params;
+    let orderId = this.props.navigation.state.params;
+
+    if (!orderId) orderId = '5aeae04049af190a21c80d17';
+
     try {
       const order = await api.getOrder(orderId, token);
       console.log(order);
@@ -78,19 +72,17 @@ export class AddReviewContainer extends Component<Props, State> {
       }
       this.setState({ isLoading: false, order });
 
-      Image.getSize(order.product.photoURIs[0], (w, h) => {
-        this.setState({ imageHeight: Math.floor(h * (width / 4 / w)) });
-      });
+      // Image.getSize(order.product.photoURIs[0], (w, h) => {
+      //   this.setState({ imageHeight: Math.floor(h * (width / 4 / w)) });
+      // });
     } catch (err) {
       // console.error(err);
       this.props.navigation.goBack();
       Toast.fail(err.message, 5);
-      return;
     }
   }
 
   onChangeText = (text: string) => {
-    this.setState({ text });
     if (text.length > 0 && text.trim().length < settings.MIN_LENGTH_REVIEW) {
       this.setState({ isDisabled: true });
     } else {
@@ -98,11 +90,19 @@ export class AddReviewContainer extends Component<Props, State> {
     }
   };
 
-  onRate = async (rateNumber: number) => {
-    const { text, order } = this.state;
+  onRate = async ({
+    rateNumber,
+    text,
+    trackingNumber,
+  }: {
+    rateNumber: number,
+    text: string,
+    trackingNumber: number,
+  }) => {
+    const { order } = this.state;
     const { token } = this.props.userData;
 
-    if (text.length > 0 && text.trim().length < settings.MIN_LENGTH_REVIEW) {
+    if (text && text.trim().length < settings.MIN_LENGTH_REVIEW) {
       return;
     }
 
@@ -111,6 +111,7 @@ export class AddReviewContainer extends Component<Props, State> {
       orderId: order.id,
       rateNumber,
       lang: 'en',
+      trackingNumber,
     };
     if (text) body = { ...body, text: text };
     try {
@@ -122,10 +123,11 @@ export class AddReviewContainer extends Component<Props, State> {
         }
       );
       console.debug(data);
-      Toast.success('Thanks for the review', 5);
+      Toast.success('Thanks for the review!', 5);
       this.props.navigation.goBack();
     } catch (err) {
-      console.error(err);
+      Toast.fail(err, 3);
+      // console.error(err);
     }
   };
 
@@ -141,8 +143,8 @@ export class AddReviewContainer extends Component<Props, State> {
 
   render() {
     const { userData } = this.props;
-    const { text, isDisabled, isLoading, order } = this.state;
-    if (isLoading) return null;
+    const { text, isLoading, order } = this.state;
+    if (isLoading || !order) return null;
 
     const iAmTheSeller = userData._id.toString() == order.seller._id.toString();
 
@@ -162,77 +164,136 @@ export class AddReviewContainer extends Component<Props, State> {
           <Body>
             <Title>Review</Title>
           </Body>
-          <Right />
+          <Right>
+            <Button
+              transparent
+              dark
+              style={{ backgroundColor: colors.transparent }}
+              onPress={this.onCancel}>
+              <Feather name="trash-2" size={28} />
+            </Button>
+          </Right>
         </Header>
-        <Content>
-          <View style={{ width: '100%', flexDirection: 'row' }}>
-            <Image
-              resizeMode="contain"
-              style={[
-                styles.item,
-                { width: width / 4, height: this.state.imageHeight },
-              ]}
-              source={{ uri: order.product.photoURIs[0] }}
-            />
-            <Text
-              style={[
-                styles.orderStatus,
-                { marginRight: this.state.imageHeight },
-              ]}>
-              {order.status == 'completed' && 'collected'}
-            </Text>
-          </View>
-          <View style={{ flex: 1, marginTop: 30 }}>
-            <Avatar
-              // eslint-disable-next-line
-              style={{ alignSelf: 'center' }}
-              size={'medium'}
-              withBorder
-              uri={targetUser.profilePic}
-              placeholderText={targetUser.username}
-              onPress={() => this.goToProfile(targetUser)}
-            />
-            <TouchableHighlight onPress={() => this.goToProfile(targetUser)}>
-              <Text style={{ marginBottom: 20, textAlign: 'center' }}>
-                @{targetUser.username}
-              </Text>
-            </TouchableHighlight>
-            <TextareaItem
-              autoFocus
-              // editable={!this.state.isPending}
-              style={styles.textInputContainer}
-              rows={3}
-              count={settings.MAX_LENGTH_REVIEW}
-              onChangeText={this.onChangeText}
-              placeholder="Please review your experience (optional)"
-              value={text}
-              error={
-                text.length > 0 &&
-                text.trim().length < settings.MIN_LENGTH_REVIEW
-              }
-            />
-          </View>
+        <Content style={{ backgroundColor: colors.bgDefault }}>
+          <Foect.Form onValidSubmit={this.onRate}>
+            {form => (
+              <View style={{ padding: 10 }}>
+                <View style={{ width: '100%', flexDirection: 'row' }}>
+                  <Foect.Control
+                    name="trackingNumber"
+                    required
+                    minLength={14}
+                    maxLength={14}>
+                    {control => (
+                      <View style={{ flex: 1, alignItems: 'center' }}>
+                        <View
+                          style={{
+                            flexDirection: 'row',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                          }}>
+                          <Text>Nova Poshta tracking number</Text>
+                          <Button
+                            transparent
+                            dark
+                            style={{ marginLeft: 10 }}
+                            onPress={this.onTrackingInfo}>
+                            <Feather name="help-circle" size={28} />
+                          </Button>
+                        </View>
+
+                        <TextInput
+                          style={{
+                            height: 40,
+                            borderColor: colors.grey4,
+                            borderWidth: 1,
+                            width: 200,
+                          }}
+                          onBlur={control.markAsTouched}
+                          onChangeText={text => control.onChange(text)}
+                          value={control.value}
+                          keyboardType="numeric"
+                          autoCorrect={false}
+                          maxLength={14}
+                        />
+
+                        <Text style={{ color: colors.red }}>
+                          {(control.isTouched || form.isSubmitted) &&
+                          control.isInvalid
+                            ? 'Please enter a valid tracking number.'
+                            : ' '}
+                        </Text>
+                      </View>
+                    )}
+                  </Foect.Control>
+                </View>
+                <View style={{ flex: 1, marginTop: 30 }}>
+                  <Foect.Control name="rateNumber" required>
+                    {control => (
+                      <View>
+                        <StarRating
+                          // eslint-disable-next-line
+                          buttonStyle={{ paddingHorizontal: 5 }}
+                          // eslint-disable-next-line
+                          containerStyle={{ alignSelf: 'center' }}
+                          // disabled={isLoading}
+                          emptyStar={starIcon}
+                          emptyStarColor={colors.grey4}
+                          fullStar={starIcon}
+                          fullStarColor={colors.yellow}
+                          iconSet="Ionicons"
+                          maxStars={5}
+                          rating={parseInt(control.value)}
+                          selectedStar={rateNumber =>
+                            control.onChange(rateNumber)
+                          }
+                          starSize={50}
+                        />
+                        {form.isSubmitted &&
+                          control.isInvalid && (
+                            <Text
+                              style={{
+                                color: colors.red,
+                                textAlign: 'center',
+                              }}>
+                              Please select a rating
+                            </Text>
+                          )}
+                      </View>
+                    )}
+                  </Foect.Control>
+                  <Foect.Control name="text">
+                    {control => (
+                      <TextareaItem
+                        style={styles.textInputContainer}
+                        rows={3}
+                        count={settings.MAX_LENGTH_REVIEW}
+                        onChangeText={t => {
+                          // this.onChangeText(t);
+                          control.onChange(t);
+                        }}
+                        placeholder="Please review your experience (optional)"
+                        value={control.value}
+                        error={
+                          text.length > 0 &&
+                          text.trim().length < settings.MIN_LENGTH_REVIEW
+                        }
+                      />
+                    )}
+                  </Foect.Control>
+                  <Button
+                    block
+                    color={colors.active}
+                    // disabled={form.isInvalid}
+                    onPress={() => form.submit()}>
+                    <Text>Review</Text>
+                  </Button>
+                </View>
+              </View>
+            )}
+          </Foect.Form>
         </Content>
-        <Footer>
-          <StarRating
-            // eslint-disable-next-line
-            buttonStyle={{ paddingHorizontal: 5 }}
-            // eslint-disable-next-line
-            containerStyle={{ alignSelf: 'center' }}
-            disabled={isDisabled}
-            emptyStar={
-              Platform.OS == 'ios' ? 'ios-star-outline' : 'md-star-outline'
-            }
-            emptyStarColor={isDisabled ? colors.grey4 : colors.yellow}
-            fullStar={Platform.OS == 'ios' ? 'ios-star' : 'md-star'}
-            fullStarColor={isDisabled ? colors.grey4 : colors.yellow}
-            iconSet="Ionicons"
-            maxStars={5}
-            rating={this.state.rateNumber}
-            selectedStar={this.onRate}
-            starSize={50}
-          />
-        </Footer>
+        {/* <Footer /> */}
       </Container>
     );
   }
@@ -245,12 +306,6 @@ const mapStateToProps: any = (state: ReduxState) => ({
 export const AddReview = connect(mapStateToProps)(AddReviewContainer);
 
 const styles = StyleSheet.create({
-  orderStatus: {
-    alignSelf: 'center',
-    flex: 1,
-    fontSize: 24,
-    textAlign: 'center',
-  },
   textInputContainer: {
     borderWidth: StyleSheet.hairlineWidth,
   },

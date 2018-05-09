@@ -21,7 +21,6 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { NavigationActions } from 'react-navigation';
 import { GiftedChat, Bubble, SystemMessage } from 'react-native-gifted-chat';
-import { ChatManager, TokenProvider } from '@pusher/chatkit/react-native';
 import { currentUser as pusherCurrentUser } from '../actions/actionCreator';
 
 import type { NavigationScreenProp } from 'react-navigation';
@@ -33,7 +32,6 @@ import type {
   Product,
   ReduxState,
   PusherMessage,
-  PusherUser,
   UserData,
   // eslint-disable-next-line
 } from '../types';
@@ -42,7 +40,6 @@ import settings from '../config/settings';
 import * as api from '../utils/api';
 
 const MARK_AS_READ_AFTER_MS = 300;
-let config;
 
 type Props = {
   navigation: NavigationScreenProp<*>,
@@ -70,15 +67,6 @@ class ChatContainer extends Component<Props, State> {
     messages: [],
     roomId: -1,
   };
-
-  constructor() {
-    super();
-    if (process.env.NODE_ENV == 'dev') {
-      config = require('../../config-dev.json');
-    } else {
-      config = require('../../config-prod.json');
-    }
-  }
 
   componentWillMount() {
     const { params } = this.props.navigation.state;

@@ -15,7 +15,6 @@ import {
 } from 'react-native';
 import { Body, Container, Left, Right, Title } from 'native-base';
 import { NavigationActions } from 'react-navigation';
-import { ChatManager, TokenProvider } from '@pusher/chatkit/react-native';
 
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 
@@ -29,8 +28,6 @@ import { Header, Avatar } from '../components';
 import { getRoomName } from './Chat';
 
 import { currentUser as pusherCurrentUser } from '../actions/actionCreator';
-
-let config;
 
 type Props = {
   navigation: NavigationScreenProp<*>,
@@ -53,15 +50,6 @@ class ChatContainer extends Component<Props, State> {
     listQuery: null,
     ordersAndChats: [],
   };
-
-  constructor() {
-    super();
-    if (process.env.NODE_ENV == 'dev') {
-      config = require('../../config-dev.json');
-    } else {
-      config = require('../../config-prod.json');
-    }
-  }
 
   componentWillMount() {
     if (pusherCurrentUser) {
@@ -176,36 +164,6 @@ class ChatContainer extends Component<Props, State> {
         .catch(err => reject(err));
     });
   }
-
-  connectToPusher = (): Promise<Error | PusherUser> => {
-    console.log('connectToPusher');
-    const { userData } = this.props;
-    return new Promise((resolve, reject) => {
-      const chatManager = new ChatManager({
-        instanceLocator: config.PUSHER_INSTANCE,
-        userId: userData._id,
-        tokenProvider: new TokenProvider({
-          url: config.PUSHER_TOKEN_PROVIDER,
-          headers: {
-            token: userData.token,
-            avatarURL: userData.profilePic,
-            username: userData.username,
-          },
-        }),
-        logger: {
-          error: console.log,
-          warn: console.log,
-          info: () => {},
-          debug: () => {},
-          verbose: () => {},
-        },
-      });
-      chatManager
-        .connect()
-        .then(currentUser => resolve(currentUser))
-        .catch(err => reject(err));
-    });
-  };
 
   componentWillReceiveProps(nextProps) {
     // fix error when logging out

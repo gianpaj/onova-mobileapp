@@ -1,8 +1,8 @@
 // @flow
 
 import axios, { CancelTokenSource } from 'axios';
-
-import type { ProductType, UserData } from '../types';
+// eslint-disable-next-line
+import type { Order, ProductType, UserData } from '../types';
 
 let config;
 if (process.env.NODE_ENV == 'prod' || process.env.NODE_ENV == 'production') {
@@ -222,6 +222,14 @@ export function getProduct(uuid: string): Promise<ProductType> {
     get(`/api/products/${uuid}`)
       .then(({ data }) => resolve(data))
       .catch(e => reject(e));
+  });
+}
+
+export function getOrders(token: string): Promise<Array<Order>> {
+  return new Promise((resolve, reject) => {
+    get('/api/orders/', { token })
+      .then(({ data }) => resolve(data))
+      .catch(err => reject(err));
   });
 }
 

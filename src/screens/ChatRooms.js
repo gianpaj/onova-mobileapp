@@ -15,7 +15,6 @@ import {
 } from 'react-native';
 import { Body, Container, Left, Right, Title } from 'native-base';
 import { NavigationActions } from 'react-navigation';
-
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 
 import type { NavigationScreenProp } from 'react-navigation';
@@ -72,9 +71,11 @@ class ChatContainer extends Component<Props, State> {
 
   getChatsAndTheirOrders(): Promise<Array<any>> {
     console.log('getChatsAndTheirOrders');
+    let orders;
+    const { token } = this.props.userData;
     return new Promise((resolve, reject) => {
-      let orders;
-      this.fetchOrders()
+      api
+        .getOrders(token)
         .then(o => {
           if (o.length === 0) {
             return resolve([]);
@@ -141,16 +142,6 @@ class ChatContainer extends Component<Props, State> {
         })
         .then(ordersAndChats => resolve(ordersAndChats))
         .catch(e => reject(e));
-    });
-  }
-
-  fetchOrders(): Promise<Array<Order>> {
-    const { token } = this.props.userData;
-    return new Promise((resolve, reject) => {
-      api
-        .get('/api/orders/', { token })
-        .then(({ data }) => resolve(data))
-        .catch(err => reject(err));
     });
   }
 

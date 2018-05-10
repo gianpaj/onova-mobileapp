@@ -3,15 +3,16 @@ package com.onova.app;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
-import io.sentry.RNSentryPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
-import io.invertase.firebase.RNFirebasePackage;
+import com.AlexanderZaytsev.RNI18n.RNI18nPackage;
+import com.reactnative.ivpusic.imagepicker.PickerPackage;
 import io.invertase.firebase.messaging.RNFirebaseMessagingPackage;
 import io.invertase.firebase.notifications.RNFirebaseNotificationsPackage;
-import com.reactnative.ivpusic.imagepicker.PickerPackage;
+import io.invertase.firebase.RNFirebasePackage;
+import io.sentry.RNSentryPackage;
 
 import java.util.Arrays;
 import java.util.List;
@@ -28,11 +29,12 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
-            new RNSentryPackage(MainApplication.this),
-            new RNFirebasePackage(),
+            new PickerPackage(),
             new RNFirebaseMessagingPackage(),
             new RNFirebaseNotificationsPackage(),
-            new PickerPackage()
+            new RNFirebasePackage(),
+            new RNI18nPackage(),
+            new RNSentryPackage(MainApplication.this),
       );
     }
 

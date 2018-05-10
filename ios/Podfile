@@ -11,6 +11,8 @@ target 'onova' do
 
   pod 'SentryReactNative', :path => '../node_modules/react-native-sentry'
 
+  pod 'RNI18n', :path => '../node_modules/react-native-i18n'
+
   target 'onovaTests' do
     inherit! :search_paths
     # Pods for testing

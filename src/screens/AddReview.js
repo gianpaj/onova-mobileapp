@@ -37,18 +37,14 @@ type Props = {
 };
 
 type State = {
-  imageHeight: number,
-  rateNumber: number,
-  text: string,
+  // imageHeight: number,
   isLoading: boolean,
   order: Order,
 };
 
 export class AddReviewContainer extends Component<Props, State> {
   state = {
-    imageHeight: 0,
-    rateNumber: 0,
-    text: '',
+    // imageHeight: 0,
     isLoading: true,
     order: null,
   };
@@ -81,14 +77,6 @@ export class AddReviewContainer extends Component<Props, State> {
     }
   }
 
-  onChangeText = (text: string) => {
-    if (text.length > 0 && text.trim().length < settings.MIN_LENGTH_REVIEW) {
-      this.setState({ isDisabled: true });
-    } else {
-      this.setState({ isDisabled: false });
-    }
-  };
-
   onRate = async ({
     rateNumber,
     text,
@@ -105,14 +93,13 @@ export class AddReviewContainer extends Component<Props, State> {
       return;
     }
 
-    this.setState({ rateNumber });
     let body = {
       orderId: order.id,
       rateNumber,
       lang: 'en',
       trackingNumber,
     };
-    if (text) body = { ...body, text: text };
+    if (text) body = { ...body, text };
     try {
       const { data } = await api.post(
         `/api/users/${this.props.userData._id}/reviews`,
@@ -125,8 +112,8 @@ export class AddReviewContainer extends Component<Props, State> {
       Toast.success('Thanks for the review!', 5);
       this.props.navigation.goBack();
     } catch (err) {
-      Toast.fail(err, 3);
-      // console.error(err);
+      Toast.fail(err.message, 3);
+      console.log(err);
     }
   };
 
@@ -141,13 +128,13 @@ export class AddReviewContainer extends Component<Props, State> {
   };
 
   render() {
-    const { userData } = this.props;
-    const { text, isLoading, order } = this.state;
+    // const { userData } = this.props;
+    const { isLoading, order } = this.state;
     if (isLoading || !order) return null;
 
-    const iAmTheSeller = userData._id.toString() == order.seller._id.toString();
+    // const iAmTheSeller = userData._id.toString() == order.seller._id.toString();
 
-    const targetUser = iAmTheSeller ? order.buyer : order.seller;
+    // const targetUser = iAmTheSeller ? order.buyer : order.seller;
 
     return (
       <Container>
@@ -209,7 +196,9 @@ export class AddReviewContainer extends Component<Props, State> {
                             width: 200,
                           }}
                           onBlur={control.markAsTouched}
-                          onChangeText={text => control.onChange(text)}
+                          onChangeText={text =>
+                            control.onChange(text.replace(/[^0-9]/g, ''))
+                          }
                           value={control.value}
                           keyboardType="numeric"
                           autoCorrect={false}
@@ -274,8 +263,9 @@ export class AddReviewContainer extends Component<Props, State> {
                         placeholder="Please review your experience (optional)"
                         value={control.value}
                         error={
-                          text.length > 0 &&
-                          text.trim().length < settings.MIN_LENGTH_REVIEW
+                          control.value.length > 0 &&
+                          control.value.trim().length <
+                            settings.MIN_LENGTH_REVIEW
                         }
                       />
                     )}

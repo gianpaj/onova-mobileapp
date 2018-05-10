@@ -50,8 +50,12 @@ if (__DEV__) {
     };
   } else {
     defaultState = {
+      // local
+      // emailAddress: 'gianpa+test@gmail.com',
+      // password: 'expressos',
       // emailAddress: 'gianpa+test2@gmail.com',
       // password: 'express2',
+      // prod
       emailAddress: 'gianpa@gmail.com',
       password: '***REMOVED***',
     };

@@ -90,12 +90,15 @@ const login = (data: LoginData) => (dispatch: Dispatch) => (
 );
 
 const initializePusher = (userData: UserData): Promise<any | Error> => {
-  console.log('initializePusher');
   return new Promise((resolve, reject) => {
     if (
       !(process.env.NODE_ENV == 'production' || process.env.NODE_ENV == 'prod')
-    )
+    ) {
+      console.log('%c skipping Pusher', 'color: green');
       return resolve(userData);
+    }
+    console.log('initializePusher');
+
     try {
       const chatManager = new ChatManager({
         instanceLocator: config.PUSHER_INSTANCE,

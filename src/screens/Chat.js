@@ -441,7 +441,7 @@ class ChatContainer extends Component<Props, State> {
           left: {
             backgroundColor: colors.white,
             borderWidth: StyleSheet.hairlineWidth,
-            borderColor: colors.grey4,
+            borderColor: colors.grey3,
           },
           right: { backgroundColor: colors.grey5 },
         }}
@@ -458,17 +458,13 @@ class ChatContainer extends Component<Props, State> {
     });
   }
 
-  _renderOrderCircle = ({ item }: { item: Order }) => {
-    const { product } = item;
-
-    return (
+  _renderOrderCircle = ({ item }: { item: Order }) => (
       <TouchableOpacity
         style={st.orderCircle}
         onPress={() => this.goToAddReviewOrCancel(item.id)}>
-        <Image style={st.itemImage} source={{ uri: product.photoURIs[0] }} />
+      <Image style={st.itemImage} source={{ uri: item.product.photoURIs[0] }} />
       </TouchableOpacity>
     );
-  };
 
   _keyExtractor = (item): number => item.id;
 
@@ -505,7 +501,12 @@ class ChatContainer extends Component<Props, State> {
             </View>
           ) : (
             <View style={[st.flex1, { backgroundColor: colors.white }]}>
-              <View style={{ height: 60 + 8 }}>
+              <View
+                style={{
+                  height: 60 + 8,
+                  borderBottomWidth: StyleSheet.hairlineWidth,
+                  borderColor: colors.grey4,
+                }}>
               {orders.length > 0 && (
                 <FlatList
                   data={orders}

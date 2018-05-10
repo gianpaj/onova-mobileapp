@@ -6,11 +6,11 @@ import type { Notification, NotificationOpen } from 'react-native-firebase';
 
 import NavigationService from '../navigation/NavigationService';
 import * as api from '../utils/api';
-import type { UserData } from '../types';
 
 let onMessageSubscription, onNotificationOpenedSubscription;
 
 export function registerPushNotifications(): Promise<string | null> {
+  console.debug('registerPushNotifications');
   return new Promise((resolve, reject) => {
     firebase
       .messaging()

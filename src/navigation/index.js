@@ -82,13 +82,7 @@ class AppNavigation extends Component<Props, State> {
   }
 
   onBackPress = () => {
-    const { dispatch } = this.props;
-    // FIXME: the hardware back button should to go back to Login screen from the Signup page
-    // if (navigationState.stateForLoggedOut.routes[0].routeName == 'login') {
-    //   dispatch(goback());
-    //   return true;
-    // }
-    dispatch(NavigationActions.back());
+    this.props.dispatch(NavigationActions.back());
     return true;
   };
 
@@ -105,7 +99,8 @@ class AppNavigation extends Component<Props, State> {
         ? navigationState.stateForLoggedIn
         : navigationState.stateForLoggedOut;
 
-    if (!this.state.ready) return this._renderLoading();
+    // FIXME: renderLoading until Pusher has been initialiased (both if Logged IN or OUT)
+    // if (isLoggedIn && !this.state.ready) return this._renderLoading();
 
     return (
       <NavigationStack

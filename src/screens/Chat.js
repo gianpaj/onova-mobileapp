@@ -84,9 +84,7 @@ class ChatContainer extends Component<Props, State> {
           if (err && err.message !== 'no partner') console.error(err);
         });
     }
-    console.log(params);
     // coming from Checkout, ChatRooms or Push Notification
-    // TODO: check show is the seller/buyer!
     this.initialise(params.roomId, params.productUuid)
       .then(() => this.setState({ isLoading: false }))
       .catch(err => {
@@ -152,7 +150,7 @@ class ChatContainer extends Component<Props, State> {
             });
         })
         .then(o => {
-          console.log(o);
+          // console.debug(o);
 
           // joinable rooms are those you're not a member of
           return pusherCurrentUser
@@ -162,7 +160,7 @@ class ChatContainer extends Component<Props, State> {
               return allRooms.filter(r => r.name == getRoomName(o));
             })
             .then(rooms => {
-              console.log(rooms);
+              // console.debug(rooms);
 
               // check if there's a previouly a room created,
               // by a partner (seller) or my self
@@ -240,7 +238,7 @@ class ChatContainer extends Component<Props, State> {
                 position: lastMsg.id,
               })
               .then(() => {
-                console.debug('setReadCursor success');
+                // console.debug('setReadCursor success');
               })
               .catch(err => {
                 console.log(`Error setting cursor: ${err}`);
@@ -252,10 +250,7 @@ class ChatContainer extends Component<Props, State> {
             !pusherCurrentUser.roomSubscriptions[roomId] &&
             pusherCurrentUser.subscribeToRoom({
               roomId,
-              hooks: {
-                onNewReadCursor: cursor => console.log(cursor),
-                onNewMessage: this.newMessage,
-              },
+              hooks: { onNewMessage: this.newMessage },
               messageLimit: 0,
             })
         )
@@ -284,7 +279,7 @@ class ChatContainer extends Component<Props, State> {
           position: m.id,
         })
         .then(() => {
-          console.debug('setReadCursor success');
+          // console.debug('setReadCursor success');
         })
         .catch(err => {
           console.log(`Error setting cursor: ${err}`);
@@ -357,7 +352,7 @@ class ChatContainer extends Component<Props, State> {
         roomId: this.state.roomId,
       })
       .then(id => {
-        console.log('Message sent:', id);
+        // console.debug('Message sent:', id);
       })
       .catch(err => {
         console.error(err);
@@ -509,10 +504,10 @@ class ChatContainer extends Component<Props, State> {
               <ActivityIndicator size="large" />
             </View>
           ) : (
-            <View style={{ backgroundColor: colors.white }}>
+            <View style={[st.flex1, { backgroundColor: colors.white }]}>
+              <View style={{ height: 60 + 8 }}>
               {orders.length > 0 && (
                 <FlatList
-                  style={{ height: 60 + 8 }}
                   data={orders}
                   keyExtractor={this._keyExtractor}
                   horizontal
@@ -520,7 +515,7 @@ class ChatContainer extends Component<Props, State> {
                   renderItem={this._renderOrderCircle}
                 />
               )}
-              <View style={[st.flex1, { backgroundColor: colors.white }]}>
+              </View>
                 <GiftedChat
                   messages={messages}
                   onSend={m => this.onSend(m)}
@@ -546,7 +541,6 @@ class ChatContainer extends Component<Props, State> {
                   // renderAvatar={null}
                 />
               </View>
-            </View>
           )}
         </View>
       </Container>
@@ -609,7 +603,7 @@ const st = StyleSheet.create({
     width: 1,
   },
   orderCircle: {
-    marginHorizontal: 7,
+    marginHorizontal: 4,
     marginVertical: 4,
   },
   itemImage: {

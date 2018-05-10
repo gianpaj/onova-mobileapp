@@ -5,8 +5,8 @@ import { ActivityIndicator, AppState, StyleSheet, View } from 'react-native';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/lib/integration/react';
 import { Root } from 'native-base';
-import * as firebase from 'firebase';
 import { Sentry } from 'react-native-sentry';
+import * as firebase from 'firebase';
 
 import configureStore from './store';
 import AppNavigation from './navigation';
@@ -47,31 +47,6 @@ export default class App extends React.Component<*, State> {
       console.debug('SENTRY is not enabled');
     }
   }
-
-  // _handleAppStateChange = (nextAppState: any) => {
-  //   const sb = SendBird.getInstance();
-  //   if (sb) {
-  //     if (
-  //       this.state.appState.match(/inactive|background/) &&
-  //       nextAppState === 'active'
-  //     ) {
-  //       console.debug('appstate - foreground');
-  //       sb.setForegroundState();
-  //     } else {
-  //       console.debug('appstate - background');
-  //       sb.setBackgroundState();
-  //     }
-  //   }
-  //   this.setState({ appState: nextAppState });
-  // };
-
-  // componentDidMount() {
-  //   AppState.addEventListener('change', this._handleAppStateChange);
-  // }
-
-  // componentWillUnmount() {
-  //   AppState.removeEventListener('change', this._handleAppStateChange);
-  // }
 
   _renderLoading = () => (
     <View style={styles.container}>

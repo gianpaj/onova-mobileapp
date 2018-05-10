@@ -61,7 +61,6 @@ export class AddReviewContainer extends Component<Props, State> {
 
     try {
       const order = await api.getOrder(orderId, token);
-      console.log(order);
       const iAmTheSeller = _id.toString() == order.seller._id.toString();
       const iAmTheBuyer = _id.toString() == order.buyer._id.toString();
       if (

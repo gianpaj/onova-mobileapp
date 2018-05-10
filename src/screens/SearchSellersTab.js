@@ -52,9 +52,7 @@ class SearchSellersTabContainer extends Component<Props, State> {
     const { token } = this.props.userData;
     api
       .get(`/api/users/?u=${this.state.text}`, { token })
-      .then(data => {
-        this.setState({ data });
-      })
+      .then(data => this.setState({ data }))
       .catch(err => {
         this.setState({ hasError: true });
         console.debug(err);

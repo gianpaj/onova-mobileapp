@@ -515,19 +515,21 @@ class ProfileScreen extends React.Component<Props, State> {
             <Title style={{ color: colors.black }}>@{username}</Title>
           </Body>
           <Right>
-            {this.ifNavigatedFromProduct() ? (
+            {/* {this.ifNavigatedFromProduct() && !this.isMe() ? (
               <NBButton transparent dark onPress={this.showActionSheet}>
                 <NBIcon ios="ios-more" android="md-more" />
               </NBButton>
-            ) : (
-              <NBButton transparent onPress={this.onGoToSettings}>
-                <NBIcon
-                  ios="ios-settings"
-                  android="md-settings"
-                  style={styles.icon}
-                />
-              </NBButton>
-            )}
+            ) : ( */}
+            {!this.ifNavigatedFromProduct() &&
+              this.isMe() && (
+                <NBButton transparent onPress={this.onGoToSettings}>
+                  <NBIcon
+                    ios="ios-settings"
+                    android="md-settings"
+                    style={styles.icon}
+                  />
+                </NBButton>
+              )}
           </Right>
         </Header>
         <Content style={{ backgroundColor: colors.bgDefault }}>

@@ -24,6 +24,7 @@ import { Avatar, Send } from '../components';
 
 import colors, { convertHex } from '../config/colors';
 import settings from '../config/settings';
+import typography from '../config/typography';
 import * as api from '../utils/api';
 import * as ui from '../utils/ui';
 
@@ -94,11 +95,11 @@ class Comments extends React.Component<Props, State> {
   showActionSheetForComment = (comment: Comment) => {
     let BUTTONS;
     // if its my comment
-    if (comment.user._id == this.props.userData._id) {
-      BUTTONS = ['Delete', 'Cancel'];
-    } else {
-      BUTTONS = ['Report', 'Cancel'];
-    }
+    // if (comment.user._id == this.props.userData._id) {
+    BUTTONS = ['Delete', 'Cancel'];
+    // } else {
+    //   BUTTONS = ['Report', 'Cancel'];
+    // }
 
     ActionSheet.show(
       {
@@ -108,10 +109,10 @@ class Comments extends React.Component<Props, State> {
       },
       buttonIndex => {
         switch (buttonIndex) {
-          case BUTTONS.indexOf('Report'):
-            alert('report me like those french girls 🎨');
-            // report action
-            break;
+          // case BUTTONS.indexOf('Report'):
+          //   alert('report me like those french girls 🎨');
+          //   // report action
+          //   break;
           case BUTTONS.indexOf('Delete'):
             ui.showConfirmAlert('Confirm deletion?', '', () => {
               this.deleteComment(comment);
@@ -163,7 +164,10 @@ class Comments extends React.Component<Props, State> {
         placeholderText={c.user.username}
       />
       <TouchableWithoutFeedback
-        onLongPress={() => this.showActionSheetForComment(c)}>
+        onLongPress={() =>
+          c.user._id == this.props.userData._id &&
+          this.showActionSheetForComment(c)
+        }>
         <View style={styles.content}>
           <View style={styles.commentHeader}>
             <TouchableOpacity onPress={() => this.props.goToProfile(c.user)}>
@@ -475,7 +479,7 @@ const styles = StyleSheet.create({
   },
   commentText: {
     color: colors.black,
-    fontSize: 17,
+    fontSize: typography.font_body_size,
     lineHeight: 16,
   },
   time: {
@@ -484,7 +488,9 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   username: {
+    color: colors.black,
     fontSize: 14,
+    fontWeight: 'bold',
   },
   addCommentInputContainer: {
     paddingVertical: Platform.select({

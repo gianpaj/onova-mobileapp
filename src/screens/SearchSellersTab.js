@@ -111,9 +111,7 @@ class SearchSellersTabContainer extends Component<Props, State> {
           />
           <View style={[styles.flex1, styles.content]}>
             <View style={styles.contentHeader}>
-              <Text style={styles.name}>
-                {user.displayName || user.username}
-              </Text>
+              <Text style={styles.name}>{user.username}</Text>
             </View>
             <Text
               numberOfLines={1} // android
@@ -151,16 +149,17 @@ class SearchSellersTabContainer extends Component<Props, State> {
                 onClearText={this.clearResults}
                 clearButtonMode="while-editing" // iOS
                 // enablesReturnKeyAutomatically // iOS
-                icon={{ type: 'feather', name: 'at-sign' }}
+                icon={{ type: 'feather', name: 'at-sign', color: colors.grey1 }}
                 lightTheme
                 maxLength={30}
                 onChangeText={this.onChangeText}
                 onSubmitEditing={this.onSearch}
                 placeholder="username"
                 showLoadingIcon={isLoading}
+                placeholderTextColor={colors.grey1}
                 inputStyle={{
                   backgroundColor: colors.white,
-                  color: this.isSearchEnabled() ? colors.black : colors.grey2,
+                  color: this.isSearchEnabled() ? colors.black : colors.grey1,
                 }}
                 returnKeyType="search"
                 value={this.state.text}

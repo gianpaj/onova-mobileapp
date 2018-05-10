@@ -115,16 +115,17 @@ class SearchWithHasthagsTabContainer extends Component<Props, State> {
               }}
               clearButtonMode="while-editing" // iOS
               // enablesReturnKeyAutomatically // iOS
-              icon={{ type: 'feather', name: 'hash' }}
+              icon={{ type: 'feather', name: 'hash', color: colors.grey1 }}
               lightTheme
               maxLength={50}
               onChangeText={this.onChangeText}
               onSubmitEditing={this.onSearch}
               placeholder="hashtag"
               showLoadingIcon={isLoading}
+              placeholderTextColor={colors.grey1}
               inputStyle={{
                 backgroundColor: colors.white,
-                color: this.isSearchEnabled() ? colors.black : colors.grey2,
+                color: this.isSearchEnabled() ? colors.black : colors.grey1,
               }}
               returnKeyType="search"
               value={this.state.text}
@@ -219,10 +220,11 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   radioButtonLabel: {
+    color: colors.grey1,
     marginBottom: 10,
-    width: 75,
-    textAlign: 'center',
     paddingLeft: 0,
+    textAlign: 'center',
+    width: 75,
   },
   radioButtonInput: {
     width: 75,

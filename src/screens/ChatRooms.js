@@ -232,7 +232,6 @@ class ChatContainer extends Component<Props, State> {
             placeholderText={item.partner.name}
             withBorder
           />
-
           <View style={[st.flex1, st.content]}>
             <View style={st.contentHeader}>
               <View style={{ flexDirection: 'row' }}>
@@ -363,9 +362,11 @@ const st = StyleSheet.create({
     marginLeft: 16,
   },
   name: {
-    color: colors.grey1,
+    color: colors.black,
+    fontWeight: 'bold',
   },
   datetime: {
+    fontSize: 12,
     color: colors.grey1,
   },
   contentHeader: {

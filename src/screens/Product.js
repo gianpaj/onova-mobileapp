@@ -29,6 +29,7 @@ import { Avatar, Header, MediaView, Comments } from '../components';
 import colors from '../config/colors';
 import * as api from '../utils/api';
 import * as ui from '../utils/ui';
+import typography from '../config/typography';
 
 import type { MapStateToProps } from 'react-redux';
 import type { NavigationScreenProp } from 'react-navigation';
@@ -320,24 +321,22 @@ export class ProductContainer extends React.Component<Props, State> {
           {item && (
             <View>
               <View style={styles.topSection}>
-                <View style={styles.avatar}>
-                  <View style={styles.row}>
-                    <Avatar
-                      size={'verySmall'}
-                      uri={item.seller.profilePic}
-                      onPress={this.goToProfileOfSeller}
-                      placeholderText={item.seller.username}
-                    />
-                    <View style={{ marginLeft: 10, alignSelf: 'center' }}>
-                      <TouchableOpacity onPress={this.goToProfileOfSeller}>
-                        <Text style={styles.username}>
-                          {item.seller.username}
-                        </Text>
-                      </TouchableOpacity>
-                      {item.location && (
-                        <Text style={styles.location}>{item.location}</Text>
-                      )}
-                    </View>
+                <View style={[styles.avatar, styles.row]}>
+                  <Avatar
+                    size={'verySmall'}
+                    uri={item.seller.profilePic}
+                    onPress={this.goToProfileOfSeller}
+                    placeholderText={item.seller.username}
+                  />
+                  <View style={{ marginLeft: 10, alignSelf: 'center' }}>
+                    <TouchableOpacity onPress={this.goToProfileOfSeller}>
+                      <Text style={styles.username}>
+                        {item.seller.username}
+                      </Text>
+                    </TouchableOpacity>
+                    {item.location && (
+                      <Text style={styles.location}>{item.location}</Text>
+                    )}
                   </View>
                 </View>
                 <View style={styles.flex1} />
@@ -381,6 +380,7 @@ export class ProductContainer extends React.Component<Props, State> {
                   <View style={styles.flex1} />
                   <Button
                     // disabled
+                    style={{ fontWeight: 9 }}
                     buttonStyle={styles.buyButton}
                     onPress={() => this.onPressBuy()}
                     title="Chat"
@@ -437,14 +437,16 @@ const styles = StyleSheet.create({
   },
   topSection: {
     backgroundColor: colors.white,
-    height: 60,
+    height: 50,
     flexDirection: 'row',
     marginLeft: 15,
   },
   avatar: {
     alignSelf: 'center',
   },
-  username: {},
+  username: {
+    color: colors.black,
+  },
   location: {
     // height: 20,
     // lineHeight: 20,
@@ -477,7 +479,7 @@ const styles = StyleSheet.create({
     paddingTop: 8,
   },
   bottomSectionAfter: {
-    marginTop: 0,
+    marginTop: 10,
     marginBottom: 20,
     paddingHorizontal: 20,
   },
@@ -485,7 +487,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   description: {
-    fontSize: 18,
+    fontSize: typography.font_body_size,
+    color: colors.black,
   },
   row: {
     flexDirection: 'row',

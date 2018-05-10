@@ -26,6 +26,7 @@ import { NavigationActions } from 'react-navigation';
 import type { NavigationScreenProp } from 'react-navigation';
 import { Button } from 'react-native-elements';
 import { NoticeBar, Toast } from 'antd-mobile';
+import typography from '../config/typography';
 // import StarRating from 'react-native-star-rating';
 
 import {
@@ -392,7 +393,7 @@ class ProfileScreen extends React.Component<Props, State> {
     return (
       <View style={styles.profileTop}>
         <View>
-          <View style={[styles.row, { marginTop: 20 }]}>
+          <View style={[styles.row, { marginTop: 5 }]}>
             <Avatar
               style={styles.avatarContainer}
               size={'default'}
@@ -405,16 +406,6 @@ class ProfileScreen extends React.Component<Props, State> {
             <View style={styles.flex1}>
               {this.isMe() ? (
                 <View style={styles.profileRight}>
-                  <EditableText
-                    text={displayName}
-                    onChangeText={t => this.setState({ displayName: t })}
-                    placeholder="Edit your shop name"
-                    placeholderColor={colors.grey3}
-                    isTextEditable={editing}
-                    style={styles.displayName}
-                    shouldAutoFocus
-                    loading={isSaving}
-                  />
                   {this.renderUserNumbers()}
                   <NBButton
                     transparent
@@ -438,9 +429,6 @@ class ProfileScreen extends React.Component<Props, State> {
                 </View>
               ) : (
                 <View style={styles.profileRight}>
-                  {displayName !== '' && (
-                    <Text style={{ color: colors.black }}>{displayName}</Text>
-                  )}
                   {this.renderUserNumbers()}
                   <NBButton
                     transparent
@@ -464,22 +452,33 @@ class ProfileScreen extends React.Component<Props, State> {
               )}
             </View>
           </View>
-          <View style={{ paddingVertical: 30, paddingHorizontal: 10 }}>
-            {this.isMe() ? (
-              <EditableText
-                style={{ fontSize: 15 }}
-                autoCorrect
-                text={bio}
-                onChangeText={t => this.setState({ bio: t })}
-                placeholder="Edit your profile description"
-                placeholderColor={colors.grey3}
-                isTextEditable={editing}
-              />
-            ) : (
-              bio !== '' && (
-                <Text style={{ color: colors.black, fontSize: 15 }}>{bio}</Text>
-              )
-            )}
+          <View style={{ paddingVertical: 15, paddingHorizontal: 10 }}>
+            <EditableText
+              text={displayName}
+              onChangeText={t => this.setState({ displayName: t })}
+              placeholder="Edit your shop name"
+              placeholderColor={colors.primary}
+              isTextEditable={editing && this.isMe()}
+              style={{
+                fontSize: typography.font_body_size,
+                color: colors.black,
+                fontWeight: 'bold',
+              }}
+              shouldAutoFocus
+              loading={isSaving}
+            />
+            <EditableText
+              style={{
+                fontSize: typography.font_body_size,
+                color: colors.black,
+              }}
+              autoCorrect
+              text={bio}
+              onChangeText={t => this.setState({ bio: t })}
+              placeholder="Edit your profile description"
+              placeholderColor={colors.primary}
+              isTextEditable={editing && this.isMe()}
+            />
           </View>
         </View>
       </View>
@@ -595,8 +594,8 @@ const styles = StyleSheet.create({
   },
   avatarContainer: {
     marginTop: 4,
-    height: 115,
-    width: 115,
+    height: 100,
+    width: 100,
   },
   profileRight: {
     alignSelf: 'flex-start',

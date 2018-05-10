@@ -503,9 +503,11 @@ class ChatContainer extends Component<Props, State> {
             <View style={[st.flex1, { backgroundColor: colors.white }]}>
               <View
                 style={{
-                  height: 60 + 8,
+                  height: 50 + 16 + 1,
                   borderBottomWidth: StyleSheet.hairlineWidth,
-                  borderColor: colors.grey4,
+                  borderColor: colors.grey5,
+                  paddingVertical: 4,
+                  paddingLeft: 8,
                 }}>
               {orders.length > 0 && (
                 <FlatList
@@ -604,15 +606,14 @@ const st = StyleSheet.create({
     width: 1,
   },
   orderCircle: {
-    marginHorizontal: 4,
-    marginVertical: 4,
+    margin: 4,
   },
   itemImage: {
     borderRadius: 50,
-    borderWidth: 2,
-    borderColor: colors.grey4,
-    height: 60,
-    width: 60,
+    borderWidth: 1,
+    borderColor: colors.active,
+    height: 50,
+    width: 50,
   },
 });
 

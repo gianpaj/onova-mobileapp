@@ -245,16 +245,15 @@ export class AddReviewContainer extends Component<Props, State> {
                           }
                           starSize={50}
                         />
-                        {form.isSubmitted &&
-                          control.isInvalid && (
                             <Text
                               style={{
                                 color: colors.red,
                                 textAlign: 'center',
                               }}>
-                              Please select a rating
+                          {form.isSubmitted && control.isInvalid
+                            ? 'Please select a rating'
+                            : ' '}
                             </Text>
-                          )}
                       </View>
                     )}
                   </Foect.Control>

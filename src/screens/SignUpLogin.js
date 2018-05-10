@@ -4,8 +4,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Dimensions, StyleSheet, View } from 'react-native';
 import { TabViewAnimated, TabBar, SceneMap } from 'react-native-tab-view';
-
 import { Container, Title } from 'native-base';
+import I18n from 'react-native-i18n';
 
 import type { NavigationScreenProp } from 'react-navigation';
 
@@ -34,8 +34,8 @@ class SignUpLoginContainer extends React.Component<Props, State> {
   state = {
     index: 0,
     routes: [
-      { key: 'signup', title: 'sign up' },
-      { key: 'login', title: 'login' },
+      { key: 'signup', title: I18n.t('SignUpLogin_tabs.signup') },
+      { key: 'login', title: I18n.t('SignUpLogin_tabs.login') },
     ],
   };
 

@@ -23,6 +23,7 @@ import {
 import isEmail from 'validator/lib/isEmail';
 import { Toast } from 'antd-mobile';
 import AnimButton from 'react-native-micro-animated-button';
+import I18n from '../i18n';
 
 import type { NavigationScreenProp } from 'react-navigation';
 
@@ -138,15 +139,14 @@ class LoginTabContainer extends React.Component<Props, State> {
           Toast.success(res.message, 5);
         }
         console.log(res);
-        this.setState({ loadingReset: false });
       })
       .catch((err: api.APIError) => {
         // if (err.status = 400) {
         Toast.success(err.message, 5);
         // }
-        this.setState({ loadingReset: false });
       })
-      .then(() => this.setModalVisible(false));
+      .then(() => this.setModalVisible(false))
+      .then(() => this.setState({ loadingReset: false }));
   };
 
   _inputProps = {
@@ -219,7 +219,7 @@ class LoginTabContainer extends React.Component<Props, State> {
             marginTop: 40,
           }}>
           <FormInput
-            placeholder="Email"
+            placeholder={I18n.t('login.email_placeholder')}
             keyboardType="email-address"
             returnKeyType="next"
             onBlur={this._onBlurEmail}
@@ -240,7 +240,7 @@ class LoginTabContainer extends React.Component<Props, State> {
               this.PwdInput = c;
             }}
             secureTextEntry
-            placeholder="Password"
+            placeholder={I18n.t('login.password_placeholder')}
             returnKeyType="go"
             onBlur={this._onBlurPass}
             onFocus={this._onFocusPass}
@@ -264,14 +264,16 @@ class LoginTabContainer extends React.Component<Props, State> {
               ]}
               {...buttonProps}
               onPress={this.onLogin}
-              label="Log in"
+              label={I18n.t('login.log_in_button')}
               labelStyle={{ color: colors.white }}
               testID="LoginButton"
             />
             <TouchableOpacity
               style={[styles.hr, { padding: 10, margin: 20 }]}
               onPress={() => this.setModalVisible(true)}>
-              <Text style={{ color: colors.grey4 }}>Forgot Password?</Text>
+              <Text style={{ color: colors.grey4 }}>
+                {I18n.t('login.forgot_password')}
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -300,9 +302,9 @@ class LoginTabContainer extends React.Component<Props, State> {
           </Header>
           <View style={{ margin: 20 }}>
             <Text style={{ color: colors.black, fontWeight: 'bold' }}>
-              Trouble logging in?
+              {I18n.t('login.reset_password.title')}
             </Text>
-            <Text>Enter your email address to reset your password</Text>
+            <Text>{I18n.t('login.reset_password.info')}</Text>
           </View>
 
           <FormInput
@@ -339,7 +341,8 @@ class LoginTabContainer extends React.Component<Props, State> {
               },
             ]}
             onPress={this.onResetPassword}
-            label="Email instructions"
+            label={I18n.t('login.reset_password.button')}
+            labelStyle={{ color: colors.white }}
             testID="ResetButton"
             noRadius
           />
@@ -364,24 +367,13 @@ const buttonProps = {
   }),
 };
 
-const raised = {
-  alignSelf: 'center',
-  ...Platform.select({
-    ios: {
-      shadowColor: 'rgba(0,0,0, .4)',
-      shadowOffset: { height: 1, width: 1 },
-      shadowRadius: 1,
-    },
-  }),
-};
-
 const styles = StyleSheet.create({
   input: {
     color: colors.black,
     width: '100%',
   },
   LoginButton: {
-    ...raised,
+    alignSelf: 'center',
   },
   hr: {
     alignSelf: 'center',

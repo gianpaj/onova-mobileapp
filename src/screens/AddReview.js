@@ -2,7 +2,14 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Platform, StyleSheet, Text, TextInput, View } from 'react-native';
+import {
+  Alert,
+  Platform,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from 'react-native';
 import {
   Body,
   Button,
@@ -24,6 +31,7 @@ import { Header } from '../components/index';
 import colors from '../config/colors';
 import settings from '../config/settings';
 import * as api from '../utils/api';
+import * as ui from '../utils/ui';
 
 import type { NavigationScreenProp } from 'react-navigation';
 // eslint-disable-next-line
@@ -178,7 +186,7 @@ export class AddReviewContainer extends Component<Props, State> {
                             justifyContent: 'center',
                             alignItems: 'center',
                           }}>
-                          <Text>Nova Poshta tracking number</Text>
+                          <Text>Nova Poshta tracking number:</Text>
                           <Button
                             transparent
                             dark

@@ -221,7 +221,7 @@ const signup = (data: SignupData) => (dispatch: Dispatch) => (
           })
           .catch(err => {
             console.warn(err);
-            dispatch({ type: LOGIN_FAIL });
+            dispatch({ type: SIGNUP_FAIL });
           });
         if (process.env.NODE_ENV == 'production') {
           Sentry.setUserContext({

@@ -105,6 +105,7 @@ class LoginTabContainer extends React.Component<Props, State> {
 
   onLogin = () => {
     const { emailAddress, password } = this.state;
+    if (!emailAddress || !password || !this.loginBtn) return;
     this.loginBtn.load();
     this.props.dispatch(login({ emailAddress, password }));
   };
@@ -236,9 +237,7 @@ class LoginTabContainer extends React.Component<Props, State> {
             {...this._inputProps}
           />
           <FormInput
-            ref={c => {
-              this.PwdInput = c;
-            }}
+            ref={c => (this.PwdInput = c)}
             secureTextEntry
             placeholder={I18n.t('login.password_placeholder')}
             returnKeyType="go"
@@ -247,7 +246,7 @@ class LoginTabContainer extends React.Component<Props, State> {
             onSubmitEditing={this.onLogin}
             value={password}
             testID="PasswordField"
-            onChangeText={text => this.setState({ password: text })}
+            onChangeText={password => this.setState({ password })}
             underlineColorAndroid={hasFocusPass ? colors.primary : colors.grey3}
             {...this._inputProps}
           />

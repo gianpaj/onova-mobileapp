@@ -67,7 +67,9 @@ class SignUpTabContainer extends Component<Props, State> {
   };
 
   onSignup = () => {
-    const { username, emailAddress, password } = this.state;
+    const { username, emailAddress, password, disabled } = this.state;
+    if (disabled) return;
+
     console.debug('onSignup()', username, emailAddress, password);
 
     // username min(3) max(30)

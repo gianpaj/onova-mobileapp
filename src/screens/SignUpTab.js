@@ -173,7 +173,7 @@ class SignUpTabContainer extends Component<Props, State> {
             value={this.state.username}
             onChangeText={t => this.onUserChange(t)}
             accessibilityLabel="username"
-            underlineColorAndroid={hasFocusUser ? colors.primary : colors.grey4}
+            underlineColorAndroid={hasFocusUser ? colors.primary : colors.grey3}
             {...this._inputProps}
           />
           <FormInput
@@ -189,7 +189,7 @@ class SignUpTabContainer extends Component<Props, State> {
             onChangeText={emailAddress => this.setState({ emailAddress })}
             accessibilityLabel="email address"
             underlineColorAndroid={
-              hasFocusEmail ? colors.primary : colors.grey4
+              hasFocusEmail ? colors.primary : colors.grey3
             }
             {...this._inputProps}
           />
@@ -204,7 +204,7 @@ class SignUpTabContainer extends Component<Props, State> {
             value={this.state.password}
             onChangeText={password => this.setState({ password })}
             accessibilityLabel="password"
-            underlineColorAndroid={hasFocusPass ? colors.primary : colors.grey4}
+            underlineColorAndroid={hasFocusPass ? colors.primary : colors.grey3}
             {...this._inputProps}
           />
           <View style={styles.mt15}>
@@ -228,7 +228,10 @@ class SignUpTabContainer extends Component<Props, State> {
             />
           </View>
           <Text
-            style={[styles.hr, { color: colors.grey4, paddingVertical: 20 }]}>
+            style={[
+              styles.hr,
+              { textAlign: 'center', color: colors.grey4, paddingVertical: 20 },
+            ]}>
             By creating an account you agree to the&nbsp;
             {/* <TouchableOpacity onPress={this.openTermPolicy}> */}
             {/* <Text style={[styles.linkText, styles.termsLink]}> */}
@@ -251,30 +254,15 @@ const buttonProps = {
   }),
 };
 
-const raised = {
-  alignSelf: 'center',
-  borderWidth: 0,
-  borderRadius: 0,
-  ...Platform.select({
-    ios: {
-      shadowColor: 'rgba(0,0,0, .4)',
-      shadowOffset: { height: 1, width: 1 },
-      // shadowOpacity: 1,
-      shadowRadius: 1,
-    },
-    android: {
-      // elevation: 2,
-    },
-  }),
-};
-
 const styles = StyleSheet.create({
   input: {
     color: colors.black,
     width: '100%',
   },
   SignupButton: {
-    ...raised,
+    alignSelf: 'center',
+    borderWidth: 0,
+    borderRadius: 0,
   },
   hr: {
     alignSelf: 'center',

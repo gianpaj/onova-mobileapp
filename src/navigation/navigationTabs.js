@@ -5,13 +5,7 @@ import { Platform } from 'react-native';
 import { TabNavigator } from 'react-navigation';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-import {
-  Home,
-  AddOrEditProduct,
-  ChatRooms,
-  Profile,
-  Search,
-} from '../screens';
+import { Home, AddOrEditProduct, ChatRooms, Profile, Search } from '../screens';
 import colors from '../config/colors';
 
 import TabBarComponent from './TabBarComponent';
@@ -71,16 +65,17 @@ const tabBarConfiguration = {
     // tint color is passed to text and icons (if enabled) on the tab bar
     activeTintColor: isiOS ? colors.active : colors.primary,
     // background color is for the tab component
-    activeBackgroundColor: isiOS ? undefined : colors.grey6,
+    activeBackgroundColor: !isiOS && colors.grey6,
     inactiveTintColor: colors.grey1,
     inactiveBackgroundColor: colors.grey6,
     style: {
-      backgroundColor: isiOS ? undefined : colors.grey3,
+      backgroundColor: !isiOS && colors.grey3,
+      borderTopColor: colors.grey4,
     },
     indicatorStyle: {
       backgroundColor: colors.primary,
     },
-    labelStyle: isiOS ? {} : { fontSize: 12 },
+    labelStyle: !isiOS && { fontSize: 12 },
   },
   tabBarPosition: 'bottom',
   animationEnabled: false,

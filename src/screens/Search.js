@@ -1,6 +1,7 @@
 // @flow
 
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { Dimensions, StyleSheet } from 'react-native';
 import { Body, Container, Title, Left, Right } from 'native-base';
 import { TabViewAnimated, TabBar, SceneMap } from 'react-native-tab-view';
@@ -28,7 +29,7 @@ type State = {
   routes: Array<any>,
 };
 
-export class Search extends Component<Props, State> {
+class SearchContainer extends Component<Props, State> {
   state = {
     index: 0,
     routes: [
@@ -92,3 +93,5 @@ const styles = StyleSheet.create({
     backgroundColor: colors.black,
   },
 });
+
+export const Search = connect()(SearchContainer);

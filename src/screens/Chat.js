@@ -419,8 +419,6 @@ class ChatContainer extends Component<Props, State> {
   goToProfile = () => {
     const { partner } = this.state;
 
-    if (!partner) return;
-
     const navigateToProfile = NavigationActions.navigate({
       routeName: 'profile',
       params: partner,
@@ -430,8 +428,7 @@ class ChatContainer extends Component<Props, State> {
     this.props.navigation.dispatch(navigateToProfile);
   };
 
-  renderBubble = props => {
-    return (
+  renderBubble = props => (
       <Bubble
         {...props}
         textStyle={{
@@ -447,7 +444,6 @@ class ChatContainer extends Component<Props, State> {
         }}
       />
     );
-  };
 
   goToAddReviewOrCancel(orderId: string) {
     // $FlowFixMe

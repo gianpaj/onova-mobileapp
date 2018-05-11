@@ -1,6 +1,7 @@
 // @flow
 
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { Dimensions, StyleSheet } from 'react-native';
 import { Body, Container, Title, Right, Left, Button, Icon } from 'native-base';
 import { TabViewAnimated, TabBar, SceneMap } from 'react-native-tab-view';
@@ -29,7 +30,7 @@ type State = {
   routes: Array<any>,
 };
 
-export class Reviews extends Component<Props, State> {
+class ReviewsContainer extends Component<Props, State> {
   state = {
     index: 0,
     routes: [
@@ -82,6 +83,8 @@ export class Reviews extends Component<Props, State> {
     );
   }
 }
+
+export const Reviews = connect()(ReviewsContainer);
 
 const styles = StyleSheet.create({
   container: {

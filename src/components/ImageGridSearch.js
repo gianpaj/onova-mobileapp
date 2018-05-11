@@ -183,14 +183,6 @@ class ImageGridComponent extends React.Component<Props, State> {
         <Text style={styles.centerText}>
           Try searching for some other things you like
         </Text>
-        {/* <Button
-          raised
-          rounded
-          backgroundColor={colors.pDark}
-          containerViewStyle={styles.searchButton}
-          onPress={() => alert('code me like those french girls 🎨')}
-          title="Search"
-        /> */}
       </View>
     );
   };

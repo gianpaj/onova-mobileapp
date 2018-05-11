@@ -20,7 +20,7 @@ import {
 //   ImageCacheManager,
 // } from 'react-native-cached-image';
 import { NavigationActions } from 'react-navigation';
-import { Button } from 'react-native-elements';
+import { Button } from 'native-base';
 
 import type { NavigationScreenProp } from 'react-navigation';
 
@@ -170,14 +170,20 @@ class ImageGridComponent extends React.Component<Props, State> {
         <Text style={styles.centerText}>
           The more sellers you follow, the more items you'll see in your feed
         </Text>
-        {/* <Button
-          raised
-          rounded
-          backgroundColor={colors.pDark}
-          containerViewStyle={styles.searchButton}
-          onPress={() => alert('code me like those french girls 🎨')}
-          title="Search"
-        /> */}
+        <Button
+          block
+          backgroundColor={colors.primary}
+          style={styles.searchButton}
+          onPress={() => this.props.navigation.navigate('search')}>
+          <Text
+            // eslint-disable-next-line
+            style={{
+              fontSize: 16,
+              color: colors.white,
+            }}>
+            Search
+          </Text>
+        </Button>
       </View>
     );
   };
@@ -218,8 +224,9 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   searchButton: {
-    backgroundColor: colors.transparent,
+    alignSelf: 'center',
     marginTop: 20,
+    width: 100,
   },
   list: {
     flex: 1,

@@ -13,11 +13,11 @@ import TabBarComponent from './TabBarComponent';
 const isiOS = Platform.OS === 'ios';
 
 const routeConfiguration = {
-  Home: { screen: Home },
-  Search: { screen: Search },
-  New: { screen: AddOrEditProduct },
-  Orders: { screen: ChatRooms },
-  Profile: { screen: Profile },
+  home: { screen: Home },
+  search: { screen: Search },
+  new: { screen: AddOrEditProduct },
+  orders: { screen: ChatRooms },
+  profile: { screen: Profile },
 };
 
 const tabBarConfiguration = {
@@ -26,23 +26,20 @@ const tabBarConfiguration = {
       const { routeName } = navigation.state;
       let iconName;
       switch (routeName) {
-        case 'Home':
+        case 'home':
           // iconName = isiOS ? `ios-home${focused ? '' : ''}` : 'md-home';
           iconName = isiOS ? 'ios-home' : 'md-home';
           break;
-        case 'Search':
+        case 'search':
           // ? `ios-add-circle${focused ? '' : ''}`
           iconName = isiOS ? 'ios-search' : 'md-search';
           break;
-        case 'New':
+        case 'new':
           // ? `ios-add-circle${focused ? '' : ''}`
           iconName = isiOS ? 'ios-add-circle' : 'md-add-circle';
           break;
-        case 'Orders':
+        case 'orders':
           iconName = 'md-basket';
-          // iconName = isiOS
-          // ? `ios-add-circle${focused ? '' : ''}`
-          // : 'md-add-circle';
           break;
         // Profile uses <NotificationsDot> as its tabBarIcon
       }
@@ -52,9 +49,7 @@ const tabBarConfiguration = {
           size={28}
           // eslint-disable-next-line
           style={isiOS && { marginBottom: -3 }}
-          color={
-            focused ? (isiOS ? colors.active : colors.primary) : colors.grey4
-          }
+          color={focused ? colors.primary : colors.grey4}
         />
       );
     },
@@ -63,19 +58,19 @@ const tabBarConfiguration = {
     showLabel: false,
     showIcon: true,
     // tint color is passed to text and icons (if enabled) on the tab bar
-    activeTintColor: isiOS ? colors.active : colors.primary,
+    // activeTintColor: isiOS ? colors.active : colors.primary,
     // background color is for the tab component
-    activeBackgroundColor: !isiOS && colors.grey6,
+    activeBackgroundColor: colors.grey6,
     inactiveTintColor: colors.grey1,
     inactiveBackgroundColor: colors.grey6,
     style: {
-      backgroundColor: !isiOS && colors.grey3,
+      backgroundColor: colors.grey3,
       borderTopColor: colors.grey4,
     },
     indicatorStyle: {
       backgroundColor: colors.primary,
     },
-    labelStyle: !isiOS && { fontSize: 12 },
+    // labelStyle: !isiOS && { fontSize: 12 },
   },
   tabBarPosition: 'bottom',
   animationEnabled: false,

@@ -44,7 +44,7 @@ export function showToast(
 export function showConfirmAlert(
   title: string,
   message: string,
-  onContinue: () => void,
+  onContinue: () => void | Promise<any>,
   onDismiss?: () => void = () => {}
 ) {
   return Alert.alert(title, message, [

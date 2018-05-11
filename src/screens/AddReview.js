@@ -23,6 +23,7 @@ import {
 } from 'native-base';
 import { TextareaItem, Toast } from 'antd-mobile';
 import StarRating from 'react-native-star-rating';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import Feather from 'react-native-vector-icons/Feather';
 import Foect from 'foect';
 
@@ -64,12 +65,18 @@ export class AddReviewContainer extends Component<Props, State> {
     if (!orderId) orderId = '5aeae04049af190a21c80d17';
 
     try {
-      const order = await api.getOrder(orderId, token);
+      const order: Order = await api.getOrder(orderId, token);
       const iAmTheSeller = _id.toString() == order.seller._id.toString();
       const iAmTheBuyer = _id.toString() == order.buyer._id.toString();
       if (
-        (order.reviewedBySeller && iAmTheSeller) ||
-        (order.reviewedByBuyer && iAmTheBuyer)
+        (iAmTheSeller && order.archivedBySeller) ||
+        (iAmTheBuyer && order.archivedByBuyer)
+      ) {
+        throw new Error('You have already archived this order');
+      }
+      if (
+        (iAmTheSeller && order.reviewedBySeller) ||
+        (iAmTheBuyer && order.reviewedByBuyer)
       ) {
         throw new Error('You have already left a review');
       }
@@ -135,6 +142,30 @@ export class AddReviewContainer extends Component<Props, State> {
     });
   };
 
+  onArchive = () => {
+    const { token } = this.props.userData;
+    ui.showConfirmAlert('Confirm archiving the order?', '', async () => {
+      try {
+        const o = await api.put(
+          `/api/orders/${this.state.order.id}`,
+          { archive: true },
+          { token }
+        );
+        Toast.success('Done!', 3);
+        this.props.navigation.goBack();
+      } catch (error) {
+        console.error(error);
+      }
+    });
+  };
+
+  onTrackingInfo() {
+    Alert.alert(
+      'Tracking number',
+      'Please enter the tracking number of Nova Poshta from your package to leave a review. The tracking number is valid only for 7 days after the item has been delivered.'
+    );
+  }
+
   render() {
     // const { userData } = this.props;
     const { isLoading, order } = this.state;
@@ -163,8 +194,8 @@ export class AddReviewContainer extends Component<Props, State> {
               transparent
               dark
               style={{ backgroundColor: colors.transparent }}
-              onPress={this.onCancel}>
-              <Feather name="trash-2" size={28} />
+              onPress={this.onArchive}>
+              <Ionicons name="md-archive" size={28} color={colors.black} />
             </Button>
           </Right>
         </Header>
@@ -223,7 +254,7 @@ export class AddReviewContainer extends Component<Props, State> {
                     )}
                   </Foect.Control>
                 </View>
-                <View style={{ flex: 1, marginTop: 30 }}>
+                <View style={{ flex: 1, marginTop: 5 }}>
                   <Foect.Control name="rateNumber" required>
                     {control => (
                       <View>
@@ -245,15 +276,15 @@ export class AddReviewContainer extends Component<Props, State> {
                           }
                           starSize={50}
                         />
-                            <Text
-                              style={{
-                                color: colors.red,
-                                textAlign: 'center',
-                              }}>
+                        <Text
+                          style={{
+                            color: colors.red,
+                            textAlign: 'center',
+                          }}>
                           {form.isSubmitted && control.isInvalid
                             ? 'Please select a rating'
                             : ' '}
-                            </Text>
+                        </Text>
                       </View>
                     )}
                   </Foect.Control>
@@ -279,10 +310,10 @@ export class AddReviewContainer extends Component<Props, State> {
                   </Foect.Control>
                   <Button
                     block
-                    color={colors.active}
-                    // disabled={form.isInvalid}
+                    dark
+                    style={{ marginTop: 15 }}
                     onPress={() => form.submit()}>
-                    <Text>Review</Text>
+                    <Text style={styles.buttonText}>Review</Text>
                   </Button>
                 </View>
               </View>
@@ -304,5 +335,9 @@ export const AddReview = connect(mapStateToProps)(AddReviewContainer);
 const styles = StyleSheet.create({
   textInputContainer: {
     borderWidth: StyleSheet.hairlineWidth,
+  },
+  buttonText: {
+    fontSize: 16,
+    color: colors.white,
   },
 });

@@ -144,6 +144,8 @@ export type Room = {
 };
 
 export type Order = {
+  archivedBySeller: boolean,
+  archivedByBuyer: boolean,
   id: string,
   buyer: {
     _id: string,
@@ -152,8 +154,23 @@ export type Order = {
     profilePic: string,
     username: string,
   },
+  currency: string;
+  dateCancelled: ?Date;
+  dateCompleted: ?Date;
+  dateDelivered: ?Date;
+  datePending: Date;
+  datePaid: ?Date;
+  dateShipped: ?Date;
+  dateReadyforShipment: ?Date;
   priceOfItem: number,
-  product: string | Product,
+  onovaFee: number;
+  product: {
+    currency: string,
+    photoURIs: Array<string>,
+    price: string,
+    status: string,
+    uuid: string,
+  }
   seller: {
     _id: string,
     accountStatus: string,
@@ -162,7 +179,8 @@ export type Order = {
     username: string,
   },
   status: string,
-  transationFee?: number,
+  transationFee: ?number,
+  trackingNumber: ?string;
   reviewedByBuyer: boolean,
   reviewedBySeller: boolean,
   // lastMessage: Message,

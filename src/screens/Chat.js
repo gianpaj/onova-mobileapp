@@ -111,8 +111,31 @@ class ChatContainer extends Component<Props, State> {
     const { userData } = this.props;
     let thisRoom;
     return new Promise((resolve, reject) => {
+      if (true) {
+        // @anotherperson
+        api
+          .getUser('5a78d09e2d314a702698f957')
+          .then(partner => this.setState({ partner }));
+        // prod
+        // thisRoom = {
+        //   name: '5ac5ebcd939b7f1712b92baf-5ac5f22032eaae1c0b61ce1f',
+        // };
+        // local
+        thisRoom = {
+          name: getRoomName({
+            buyer: { _id: userData._id },
+            seller: { _id: '5a78d09e2d314a702698f957' },
+          }),
+        };
+        return this.fetchOrders(thisRoom)
+          .then(resolve)
+          .catch(e => console.error(e));
+      }
+      let Promises = [];
       if (!pusherCurrentUser) return reject();
       this.rejectProm = reject;
+
+      Promises.push(
       this.connectToPusher()
         .then(() => {
           if (roomId !== -1) {
@@ -207,11 +230,6 @@ class ChatContainer extends Component<Props, State> {
             });
         })
         .then(() => this.setState({ roomId }))
-        .then(() => api.getOrders(userData.token))
-        .then(orders =>
-          orders.filter((o: Order) => getRoomName(o) == thisRoom.name)
-        )
-        .then(orders => this.setState({ orders }))
         .then(() =>
           pusherCurrentUser.fetchMessages({
             roomId,
@@ -254,10 +272,44 @@ class ChatContainer extends Component<Props, State> {
               messageLimit: 0,
             })
         )
+      );
+      Promises.push(this.fetchOrders(thisRoom));
+      Promise.all(Promises)
         .then(() => resolve())
         .catch(err => reject(err));
     });
   }
+
+  fetchOrders = (thisRoom: any) => {
+    const { userData } = this.props;
+    console.log('fetchOrders');
+    return new Promise((resolve, reject) => {
+      api
+        .getOrders(userData.token)
+        // show orders which are with the person I'm chatting with
+        .then(orders =>
+          orders.filter((o: Order) => getRoomName(o) == thisRoom.name)
+        )
+        // show orders which i have not archived
+        // AND
+        // show orders which i have not reviewed
+        .then(orders =>
+          orders.filter((o: Order) => {
+            const iAmTheSeller = userData._id == o.seller._id;
+            const iAmTheBuyer = userData._id == o.buyer._id;
+            if (
+              (iAmTheSeller && !o.archivedBySeller && !o.reviewedBySeller) ||
+              (iAmTheBuyer && !o.archivedByBuyer && !o.reviewedByBuyer)
+            ) {
+              return o;
+            }
+          })
+        )
+        .then(orders => this.setState({ orders }))
+        .then(() => resolve())
+        .catch(e => reject(e));
+    });
+  };
 
   createOrder(uuid: string): Promise<Order | Error> {
     const { token } = this.props.userData;

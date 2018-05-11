@@ -74,6 +74,14 @@ class ChatContainer extends Component<Props, State> {
   componentWillMount() {
     const { params } = this.props.navigation.state;
 
+    this.props.navigation.addListener('didFocus', () => {
+      this.setState({ isLoading: true }, () =>
+        this.initialise(this.state.roomId)
+          .then(this.setState({ isLoading: false }))
+          .catch(e => console.error(e))
+      );
+    });
+
     // for development
     if (!params) {
       const roomId = 7305579;

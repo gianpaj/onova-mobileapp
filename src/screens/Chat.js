@@ -31,7 +31,6 @@ import { Header, Send } from '../components';
 import type {
   Message,
   Order,
-  Product,
   ReduxState,
   PusherMessage,
   UserData,
@@ -139,11 +138,9 @@ class ChatContainer extends Component<Props, State> {
           .then(resolve)
           .catch(e => console.error(e));
       }
-      let Promises = [];
       if (!pusherCurrentUser) return reject();
       this.rejectProm = reject;
 
-      Promises.push(
       this.connectToPusher()
         .then(() => {
           if (roomId !== -1) {
@@ -280,9 +277,7 @@ class ChatContainer extends Component<Props, State> {
               messageLimit: 0,
             })
         )
-      );
-      Promises.push(this.fetchOrders(thisRoom));
-      Promise.all(Promises)
+        .then(() => this.fetchOrders(thisRoom))
         .then(() => resolve())
         .catch(err => reject(err));
     });

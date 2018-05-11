@@ -189,7 +189,7 @@ class SearchWithHasthagsTabContainer extends Component<Props, State> {
         <View style={styles.padder}>
           <NBButton
             block
-            style={{ backgroundColor: colors.primary }}
+            backgroundColor={colors.primary}
             disabled={!this.isSearchEnabled()}
             onPress={this.onSearch}>
             <Text

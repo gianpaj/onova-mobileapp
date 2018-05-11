@@ -34,7 +34,7 @@ public class MainApplication extends Application implements ReactApplication {
             new RNFirebaseNotificationsPackage(),
             new RNFirebasePackage(),
             new RNI18nPackage(),
-            new RNSentryPackage(MainApplication.this),
+            new RNSentryPackage(MainApplication.this)
       );
     }
 

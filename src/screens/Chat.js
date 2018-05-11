@@ -119,7 +119,7 @@ class ChatContainer extends Component<Props, State> {
     const { userData } = this.props;
     let thisRoom;
     return new Promise((resolve, reject) => {
-      if (true) {
+      if (false) {
         // @anotherperson
         api
           .getUser('5a78d09e2d314a702698f957')

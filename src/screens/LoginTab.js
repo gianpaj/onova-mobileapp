@@ -213,7 +213,6 @@ class LoginTabContainer extends React.Component<Props, State> {
       <Content testID="login-form">
         <View
           style={{
-            marginTop: 49,
             flex: 1,
             width: '80%',
             alignSelf: 'center',

@@ -202,7 +202,10 @@ class ProfileScreen extends React.Component<Props, State> {
         () => {
           // on continue
           this.goToSettings();
-        }
+        },
+        () => {},
+        'NO',
+        'YES'
       );
     } else {
       this.goToSettings();

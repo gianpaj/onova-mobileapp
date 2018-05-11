@@ -45,11 +45,13 @@ export function showConfirmAlert(
   title: string,
   message: string,
   onContinue: () => void | Promise<any>,
-  onDismiss?: () => void = () => {}
+  onDismiss?: () => void = () => {},
+  cancelText: string = 'CANCEL',
+  confirmText: string = 'CONFIRM'
 ) {
   return Alert.alert(title, message, [
-    { text: 'No', onPress: onDismiss, style: 'cancel' },
-    { text: 'Yes', onPress: onContinue },
+    { text: cancelText, onPress: onDismiss, style: 'cancel' },
+    { text: confirmText, onPress: onContinue },
   ]);
 }
 

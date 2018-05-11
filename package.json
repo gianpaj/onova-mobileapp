@@ -7,20 +7,21 @@
     "url": "https://bitbucket.org/onova/mobileapp.git"
   },
   "scripts": {
+    "build-android": "cd android/ && ./gradlew assembleRelease",
     "flow-check": "flow check",
     "flow-start": "flow start",
     "flow-stop": "flow stop",
     "flow": "flow",
-    "postinstall": "rm -f ./node_modules/react-native/local-cli/core/__fixtures__/files/package.json && flow-typed install",
-    "start-emulator": "cd $ANDROID_HOME/tools && ./emulator -avd Nexus_5X_API_25_7.1.1_ &",
     "nuke-android": "yarn nuke-bundler && cd android/ && ./gradlew clean && cd ..",
     "nuke-bundler": "watchman watch-del-all && rm -rf $TMPDIR/react-*",
     "nuke-ios": "yarn nuke-bundler && rm -rf ios/build/ModuleCache && rm -rf ~/Library/Developer/Xcode/DerivedData/*",
+    "postinstall": "rm -f ./node_modules/react-native/local-cli/core/__fixtures__/files/package.json && flow-typed install",
+    "start-emulator": "cd $ANDROID_HOME/tools && ./emulator -avd Nexus_5X_API_25_7.1.1_ &",
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "test-e2e-android": "detox test -c android.emu.debug --loglevel verbose",
     "test-e2e-ios": "detox test -c ios.sim.debug",
-    "test": "jest __tests__",
-    "test:lint": "eslint src --quiet"
+    "test:lint": "eslint src --quiet",
+    "test": "jest __tests__"
   },
   "dependencies": {
     "@pusher/chatkit": "^0.7.12",

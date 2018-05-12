@@ -199,6 +199,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
   }
 
   onAddOrEditItem = () => {
+    Toast.loading('Uploading...', 30);
     const {
       description,
       images,
@@ -211,7 +212,6 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     } = this.state;
 
     this.setState({ pending: true, tagsText: '' });
-    Toast.loading('Uploading...', 30);
 
     const formData = new FormData();
     images.forEach((image, i) => {

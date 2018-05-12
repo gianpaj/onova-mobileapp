@@ -7,6 +7,7 @@ import {
   Image,
   StyleSheet,
   Platform,
+  RefreshControl,
   Text,
   TouchableOpacity,
   View,
@@ -59,6 +60,7 @@ type State = {
   isFollowing: boolean,
   isSaving: boolean,
   isFetching: boolean,
+  isRefreshing: boolean,
   profilePic: string | Image,
   rateAvg: number,
   reviewsCount: number,
@@ -72,6 +74,7 @@ const defaultState = {
   editing: false,
   followersCount: -1,
   isFollowing: false,
+  isRefreshing: false,
   isSaving: false,
   isFetching: true,
   profilePic: '',
@@ -92,65 +95,75 @@ class ProfileScreen extends React.Component<Props, State> {
     tabBarIcon: (props: any) => <NotificationsDot {...props} />,
   });
 
-  refresh() {
+  refresh = (): Promise<any> => {
     const { params } = this.props.navigation.state;
     const { userData } = this.props;
 
     // const CancelToken = axios.CancelToken;
     // this.cancelToken = CancelToken.source();
 
-    // if the screen navigated with an userID
-    if (params && params._id) {
-      api
-        .get(`/api/users/${params._id}`)
-        .then((res: UserData) => {
-          const {
-            _id,
-            bio,
-            displayName,
-            profilePic,
-            username,
-            followersCount,
-            ratingsTotal,
-            reviewsCount,
-          } = res;
-          this.setState({
-            _id,
-            bio,
-            displayName,
-            profilePic,
-            username,
-            followersCount,
-            rateAvg:
-              ratingsTotal == 0 ? ratingsTotal : ratingsTotal / reviewsCount,
-            reviewsCount,
+    return new Promise((resolve, reject) => {
+      // if the screen navigated with an userID
+      if (params && params._id) {
+        api
+          .get(`/api/users/${params._id}`)
+          .then((res: UserData) => {
+            const {
+              _id,
+              bio,
+              displayName,
+              profilePic,
+              username,
+              followersCount,
+              ratingsTotal,
+              reviewsCount,
+            } = res;
+            this.setState({
+              _id,
+              bio,
+              displayName,
+              profilePic,
+              username,
+              followersCount,
+              rateAvg:
+                ratingsTotal == 0 ? ratingsTotal : ratingsTotal / reviewsCount,
+              reviewsCount,
+            });
+          })
+          .catch(err => {
+            reject(err);
+            console.debug(err);
           });
-        })
-        .catch(err => {
-          console.debug(err);
-        });
-      const { token } = this.props.userData;
-      api
-        .get(`/api/users/${params._id}/follow`, { token })
-        .then(res => {
-          const { following } = res.data;
-          if (following == params._id) {
-            this.setState({ isFollowing: true });
-          }
-        })
-        .catch(err => {
-          console.debug(err);
-        })
-        .then(() => this.setState({ isFetching: false }));
-    } else {
-      this.props
-        .dispatch(getPersonalUserData(userData._id))
-        .then(() => this.setState({ isFetching: false }));
-    }
-  }
+        const { token } = this.props.userData;
+        api
+          .get(`/api/users/${params._id}/follow`, { token })
+          .then(res => {
+            const { following } = res.data;
+            if (following == params._id) {
+              this.setState({ isFollowing: true });
+            }
+            resolve();
+          })
+          .catch(err => {
+            console.debug(err);
+            reject(err);
+          });
+      } else {
+        this.props
+          .dispatch(getPersonalUserData(userData._id))
+          .then(() => resolve());
+      }
+    });
+  };
+
+  onRefresh = () => {
+    this.setState({ isRefreshing: true });
+
+    this.refresh().then(() => this.setState({ isRefreshing: false }));
+  };
 
   componentWillMount() {
-    this.refresh();
+    this.refresh().then(() => this.setState({ isFetching: false }));
   }
 
   componentWillReceiveProps(nextProps) {
@@ -534,7 +547,15 @@ class ProfileScreen extends React.Component<Props, State> {
               )}
           </Right>
         </Header>
-        <Content style={{ backgroundColor: colors.bgDefault }}>
+        <Content
+          style={{ backgroundColor: colors.bgDefault }}
+          refreshControl={
+            <RefreshControl
+              style={{ backgroundColor: '#E0FFFF' }}
+              refreshing={this.state.isRefreshing}
+              onRefresh={this.refresh}
+            />
+          }>
           <View>
             {this.shouldShowNoticeBar() && (
               <NoticeBar

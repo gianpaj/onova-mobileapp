@@ -162,6 +162,9 @@ export class ProductContainer extends React.Component<Props, State> {
     api
       .getProduct(uuid)
       .then(data => {
+        if (data.status !== 'forsale') {
+          return this.props.navigation.goBack();
+        }
         this.setState({
           item: data,
           loading: false,

@@ -62,6 +62,7 @@ export class AddReviewContainer extends Component<Props, State> {
     const { token, _id } = this.props.userData;
     let { orderId } = this.props.navigation.state.params;
 
+    // for development
     if (!orderId) orderId = '5aeae04049af190a21c80d17';
 
     try {
@@ -75,8 +76,8 @@ export class AddReviewContainer extends Component<Props, State> {
         throw new Error('You have already archived this order');
       }
       if (
-        (iAmTheSeller && order.reviewedBySeller) ||
-        (iAmTheBuyer && order.reviewedByBuyer)
+        (iAmTheSeller && order.reviewFromSeller) ||
+        (iAmTheBuyer && order.reviewFromBuyer)
       ) {
         throw new Error('You have already left a review');
       }
@@ -86,9 +87,9 @@ export class AddReviewContainer extends Component<Props, State> {
       //   this.setState({ imageHeight: Math.floor(h * (width / 4 / w)) });
       // });
     } catch (err) {
-      // console.error(err);
-      this.goBackAndRefresh();
+      console.log(err);
       Toast.fail(err.message, 5);
+      this.goBackAndRefresh();
     }
   }
 

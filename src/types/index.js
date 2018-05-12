@@ -181,8 +181,8 @@ export type Order = {
   status: string,
   transationFee: ?number,
   trackingNumber: ?string;
-  reviewedByBuyer: boolean,
-  reviewedBySeller: boolean,
+  reviewFromBuyer: ?string,
+  reviewFromSeller: ?string,
   // lastMessage: Message,
   // unreadMessageCount: number,
 };

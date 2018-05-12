@@ -312,8 +312,8 @@ class ChatContainer extends Component<Props, State> {
             const iAmTheSeller = userData._id == o.seller._id;
             const iAmTheBuyer = userData._id == o.buyer._id;
             if (
-              (iAmTheSeller && !o.archivedBySeller && !o.reviewedBySeller) ||
-              (iAmTheBuyer && !o.archivedByBuyer && !o.reviewedByBuyer)
+              (iAmTheSeller && !o.archivedBySeller && !o.reviewFromSeller) ||
+              (iAmTheBuyer && !o.archivedByBuyer && !o.reviewFromBuyer)
             ) {
               return o;
             }

@@ -30,6 +30,7 @@ export default class Accordion extends PureComponent<Props, void> {
     Animated.timing(this.animatedValue, {
       toValue: i === false ? 0 : 1,
       duration: this.props.duration,
+      useNativeDriver: true,
     }).start();
   }
 

@@ -1,5 +1,7 @@
 // @flow
 import { StackNavigator } from 'react-navigation';
+import { Animated, Easing, Platform } from 'react-native';
+import CardStackStyleInterpolator from 'react-navigation/src/views/CardStack/CardStackStyleInterpolator';
 
 import {
   AddOrEditProduct,
@@ -23,11 +25,9 @@ export const StackNav = StackNavigator(
   {
     signuplogin: {
       screen: SignUpLogin,
-      navigationOptions: { gesturesEnabled: false },
     },
     product: {
       screen: Product,
-      navigationOptions: { gesturesEnabled: false },
       path: 'product/:productUUID',
     },
     tabs: { screen: TabsStack },
@@ -52,6 +52,18 @@ export const StackNav = StackNavigator(
   },
   {
     headerMode: 'none',
+    navigationOptions: {
+      gesturesEnabled: Platform.OS === 'ios',
+    },
+    transitionConfig: () => ({
+      transitionSpec: {
+        duration: 175,
+        easing: Easing.out(Easing.ease),
+        timing: Animated.timing,
+        useNativeDriver: true,
+      },
+      screenInterpolator: CardStackStyleInterpolator.forHorizontal,
+    }),
   }
 );
 

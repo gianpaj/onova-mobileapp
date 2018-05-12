@@ -168,7 +168,7 @@ class ImageGridComponent extends React.Component<Props, State> {
       <View style={styles.emptyContainer}>
         <Text style={styles.boldText}>There are no items to browse</Text>
         <Text style={styles.centerText}>
-          The more sellers you follow, the more items you'll see in your feed
+          {`The more sellers you follow, the more items you'll see in your feed`}
         </Text>
         <Button
           block

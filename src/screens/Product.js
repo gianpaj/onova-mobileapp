@@ -227,7 +227,6 @@ export class ProductContainer extends React.Component<Props, State> {
         } else {
           // $FlowFixMe
           this.props.navigation.navigate({
-            key: `chat-${product.uuid}`,
             routeName: 'chat',
             params: {
               productUuid: product.uuid,

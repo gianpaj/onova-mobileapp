@@ -60,7 +60,7 @@ export class AddReviewContainer extends Component<Props, State> {
 
   async componentWillMount() {
     const { token, _id } = this.props.userData;
-    let orderId = this.props.navigation.state.params;
+    let { orderId } = this.props.navigation.state.params;
 
     if (!orderId) orderId = '5aeae04049af190a21c80d17';
 
@@ -87,7 +87,7 @@ export class AddReviewContainer extends Component<Props, State> {
       // });
     } catch (err) {
       // console.error(err);
-      this.props.navigation.goBack();
+      this.goBackAndRefresh();
       Toast.fail(err.message, 5);
     }
   }
@@ -125,7 +125,7 @@ export class AddReviewContainer extends Component<Props, State> {
       );
       console.debug(data);
       Toast.success('Thanks for the review!', 5);
-      this.props.navigation.goBack();
+      this.goBackAndRefresh();
     } catch (err) {
       Toast.fail(err.message, 3);
       console.log(err);
@@ -152,12 +152,17 @@ export class AddReviewContainer extends Component<Props, State> {
           { token }
         );
         Toast.success('Done!', 3);
-        this.props.navigation.goBack();
+        this.goBackAndRefresh();
       } catch (error) {
         console.error(error);
       }
     });
   };
+
+  goBackAndRefresh() {
+    this.props.navigation.state.params.shouldRefresh(true);
+    this.props.navigation.goBack();
+  }
 
   onTrackingInfo() {
     Alert.alert(

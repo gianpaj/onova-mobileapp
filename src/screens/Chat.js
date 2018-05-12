@@ -53,8 +53,8 @@ type State = {
   // isTyping: boolean,
   messages: Array<Message>,
   orders: Array<Order>,
-  // product?: Product,
   roomId: number,
+  shouldRefresh: boolean,
 };
 
 class ChatContainer extends Component<Props, State> {
@@ -68,15 +68,21 @@ class ChatContainer extends Component<Props, State> {
     orders: [],
     messages: [],
     roomId: -1,
+    shouldRefresh: false,
   };
 
   componentWillMount() {
     const { params } = this.props.navigation.state;
 
-    this.props.navigation.addListener('didFocus', () => {
+    this.props.navigation.addListener('willFocus', () => {
+      const { roomId, shouldRefresh } = this.state;
+      // do not initiate twice at the beginning
+      // OR
+      // when it should not refresh (review hasn't been added or order archived)
+      if (roomId == -1 || !shouldRefresh) return;
       this.setState({ isLoading: true }, () =>
-        this.initialise(this.state.roomId)
-          .then(this.setState({ isLoading: false }))
+        this.initialise(roomId)
+          .then(this.setState({ isLoading: false, shouldRefresh: false }))
           .catch(e => console.error(e))
       );
     });
@@ -91,12 +97,16 @@ class ChatContainer extends Component<Props, State> {
           if (err && err.message !== 'no partner') console.error(err);
         });
     }
-    // coming from Checkout, ChatRooms or Push Notification
+    // coming from Product, ChatRooms or Push Notification
     this.initialise(params.roomId, params.productUuid)
       .then(() => this.setState({ isLoading: false }))
       .catch(err => {
         if (err && err.message !== 'no partner') console.error(err);
       });
+  }
+
+  shouldRefresh(shouldRefresh: boolean) {
+    this.setState({ shouldRefresh });
   }
 
   componentWillUnmount() {
@@ -143,6 +153,7 @@ class ChatContainer extends Component<Props, State> {
 
       this.connectToPusher()
         .then(() => {
+          // coming from ChatRooms or Push Notification
           if (roomId !== -1) {
             return pusherCurrentUser
               .joinRoom({ roomId })
@@ -161,8 +172,8 @@ class ChatContainer extends Component<Props, State> {
               });
           }
 
-          // coming from checkout
-          if (!productUuid) throw new Error('');
+          // coming from Product
+          if (!productUuid) throw new Error('productUuid missing');
 
           return this.createOrder(productUuid)
             .then(o => o)
@@ -504,7 +515,8 @@ class ChatContainer extends Component<Props, State> {
     // $FlowFixMe
     this.props.navigation.navigate({
       routeName: 'addReview',
-      params: orderId,
+      // hack https://github.com/react-navigation/react-navigation/issues/1416#issuecomment-300489310
+      params: { orderId, shouldRefresh: this.shouldRefresh.bind(this) },
       key: `addReview-${orderId}`,
     });
   }
@@ -552,14 +564,7 @@ class ChatContainer extends Component<Props, State> {
             </View>
           ) : (
             <View style={[st.flex1, { backgroundColor: colors.white }]}>
-              <View
-                style={{
-                  height: 50 + 16 + 1,
-                  borderBottomWidth: StyleSheet.hairlineWidth,
-                  borderColor: colors.grey5,
-                  paddingVertical: 4,
-                  paddingLeft: 8,
-                }}>
+              <View style={st.orderCirclesContainer}>
               {orders.length > 0 && (
                 <FlatList
                   data={orders}
@@ -627,6 +632,13 @@ const st = StyleSheet.create({
     alignItems: 'stretch',
     flex: 1,
     justifyContent: 'center',
+  },
+  orderCirclesContainer: {
+    height: 50 + 16 + 1,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderColor: colors.grey5,
+    paddingVertical: 4,
+    paddingLeft: 8,
   },
   flex1: {
     flex: 1,

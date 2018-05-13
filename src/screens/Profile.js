@@ -570,13 +570,14 @@ class ProfileScreen extends React.Component<Props, State> {
             />
           }>
           <View>
-            {this.shouldShowNoticeBar() && (
-              <NoticeBar
-                marqueeProps={{ loop: false, style: styles.noticeBar }}
-                icon={false}>
-                Please verify you email to start buying or selling.
-              </NoticeBar>
-            )}
+            {this.isMe() &&
+              this.shouldShowNoticeBar() && (
+                <NoticeBar
+                  marqueeProps={{ loop: false, style: styles.noticeBar }}
+                  icon={false}>
+                  Please verify you email to start buying or selling.
+                </NoticeBar>
+              )}
             {this.renderProfileTop()}
           </View>
           {_id !== '' && (
@@ -655,12 +656,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     textAlign: 'center',
-  },
-  displayName: {
-    color: colors.grey1,
-    fontSize: 20,
-    fontWeight: '400',
-    // elipsis?
   },
   editOrFollowButton: {
     marginRight: 20,

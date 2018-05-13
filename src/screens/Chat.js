@@ -484,9 +484,15 @@ class ChatContainer extends Component<Props, State> {
 
   goToProfile = () => {
     const { partner } = this.state;
+    const { _id } = this.props.userData;
+
+    let routeName = 'profileInStack';
+    if (_id == partner._id) {
+      routeName = 'profile';
+    }
 
     const navigateToProfile = NavigationActions.navigate({
-      routeName: 'profile',
+      routeName,
       params: partner,
       key: `profile-${partner.username}`,
     });

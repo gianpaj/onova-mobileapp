@@ -4,7 +4,7 @@ import {
   LOGIN_PENDING,
   LOGIN_SUCCESS,
   LOGIN_FAIL,
-  GOOGLE_LOGIN_PENDING,
+  // GOOGLE_LOGIN_PENDING,
   SIGNUP_PENDING,
   SIGNUP_SUCCESS,
   SIGNUP_FAIL,
@@ -16,13 +16,14 @@ import {
 import type { Action, LoginState } from '../types/loginReducer';
 
 const initialState: LoginState = {
+  // errorMsg: null,
+  checkedLoggedIn: false,
+  data: null,
+  fetchLoading: false,
+  hasError: false,
   isLoggedIn: false,
   loading: false,
   loadingGoogleLogin: false,
-  data: null,
-  hasError: false,
-  // errorMsg: null,
-  fetchLoading: false,
   token: '',
 };
 
@@ -35,10 +36,11 @@ export default function(
     case SIGNUP_PENDING:
       return {
         ...state,
-        isLoggedIn: false,
-        loading: true,
+        checkedLoggedIn: false,
         data: null,
         hasError: false,
+        isLoggedIn: false,
+        loading: true,
         // errorMsg: null,
       };
 
@@ -46,9 +48,10 @@ export default function(
     case SIGNUP_SUCCESS:
       return {
         ...state,
+        checkedLoggedIn: true,
+        data: action.payload,
         isLoggedIn: true,
         loading: false,
-        data: action.payload,
         token: action.payload ? action.payload.token : '',
       };
 
@@ -56,32 +59,39 @@ export default function(
     case SIGNUP_FAIL:
       return {
         ...state,
+        checkedLoggedIn: false,
+        data: null,
+        hasError: true,
         isLoggedIn: false,
         loading: false,
         loadingGoogleLogin: false,
-        data: null,
-        hasError: true,
         token: '',
         // errorMsg: action.payload,
       };
 
-    case GOOGLE_LOGIN_PENDING:
-      return {
-        ...state,
-        isLoggedIn: false,
-        loading: false,
-        loadingGoogleLogin: true,
-        data: null,
-        hasError: false,
-        // errorMsg: null,
-      };
+    case 'RELOAD_SUCCESS':
+      return { ...state, hasError: false, checkedLoggedIn: true };
+
+    case 'RELOAD_FAIL':
+      return { ...state, hasError: true, checkedLoggedIn: false };
+
+    // case GOOGLE_LOGIN_PENDING:
+    //   return {
+    //     ...state,
+    //     data: null,
+    //     hasError: false,
+    //     isLoggedIn: false,
+    //     loading: false,
+    //     loadingGoogleLogin: true,
+    //     // errorMsg: null,
+    //   };
 
     case LOGOUT:
       return {
         ...state,
+        data: null,
         isLoggedIn: false,
         loadingGoogleLogin: false,
-        data: null,
       };
 
     case GETUSER_PENDING:
@@ -93,9 +103,9 @@ export default function(
     case GETUSER_SUCCESS:
       return {
         ...state,
+        data: { ...state.data, ...action.payload },
         fetchLoading: false,
         hasError: false,
-        data: { ...state.data, ...action.payload },
       };
 
     case GETUSER_FAIL:

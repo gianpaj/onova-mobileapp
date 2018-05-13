@@ -9,14 +9,12 @@ export type Action = {
 };
 
 export type LoginState = {
-  // isLoading: boolean,
-  // isHydrated: boolean,
+  +data: any,
+  +fetchLoading: boolean,
+  +hasError: boolean,
   +isLoggedIn: boolean,
   +loading: boolean,
   +loadingGoogleLogin: boolean,
-  +data: any,
-  +hasError: boolean,
-  // errorMsg: string | null,
-  +fetchLoading: boolean,
   +token: string,
+  // errorMsg: string | null,
 };

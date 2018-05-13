@@ -5,37 +5,27 @@ import { ActivityIndicator, BackHandler, StyleSheet, View } from 'react-native';
 import { connect } from 'react-redux';
 import { addNavigationHelpers, NavigationActions } from 'react-navigation';
 import { createReduxBoundAddListener } from 'react-navigation-redux-helpers';
-import { Sentry } from 'react-native-sentry';
 
-import { sendToken, logout, initializePusher } from '../actions/actionCreator';
+import { checkLogin } from '../actions/actionCreator';
 import NavigationStack from './navigationStack';
 import NavigationService from './NavigationService';
+
 import type { Dispatch, UserData, ReduxState } from '../types';
 import type { NavigationState } from '../types/navigationReducer';
-import { registerPushNotifications } from '../utils/push';
-import * as ui from '../utils/ui';
-import * as api from '../utils/api';
 
 type Props = {
+  checkedLoggedIn: boolean,
   dispatch: Dispatch,
-  navigationState: NavigationState,
   isLoggedIn: boolean,
+  navigationState: NavigationState,
   userData?: UserData,
-};
-
-type State = {
-  ready: boolean,
 };
 
 // on Android, the URI prefix typically contains a host in addition to scheme
 // const prefix = Platform.OS == 'android' ? 'onova://onova/' : 'onova://';
 
-class AppNavigation extends Component<Props, State> {
+class AppNavigation extends Component<Props, *> {
   notificationListener;
-
-  state = {
-    ready: false,
-  };
 
   componentDidMount() {
     BackHandler.addEventListener('hardwareBackPress', this.onBackPress);
@@ -45,34 +35,8 @@ class AppNavigation extends Component<Props, State> {
     NavigationService.setDispatcher(dispatch);
 
     if (isLoggedIn && userData) {
-      // retrying to login to verify user is still valid
-      const { token } = userData;
-      return api
-        .get(`/api/users/${userData._id}/personal`, { token })
-        .then(() => registerPushNotifications())
-        .then(pushToken => {
-          console.debug('Push notifications: initialized');
-          if (pushToken) return sendToken(pushToken, userData);
-        })
-        .then(() => {
-          if (process.env.NODE_ENV == 'production') {
-            Sentry.setUserContext({
-              email: userData.emailAddress,
-              userID: userData._id,
-              username: userData.username,
-              extra: {
-                accountStatus: userData.accountStatus,
-              },
-            });
-          }
-        })
-        .then(() => initializePusher(userData))
-        .then(() => this.setState({ ready: true }))
-        .catch(err => {
-          console.debug(err);
-          dispatch(logout());
-          ui.showToast(err.message, 'danger');
-        });
+      // checking again if user is still logged in
+      dispatch(checkLogin(userData));
     }
   }
 
@@ -93,14 +57,18 @@ class AppNavigation extends Component<Props, State> {
   );
 
   render() {
-    const { dispatch, navigationState, isLoggedIn } = this.props;
+    const {
+      dispatch,
+      navigationState,
+      isLoggedIn,
+      checkedLoggedIn,
+    } = this.props;
     const state =
       isLoggedIn == true
         ? navigationState.stateForLoggedIn
         : navigationState.stateForLoggedOut;
 
-    // FIXME: renderLoading until Pusher has been initialiased (both if Logged IN or OUT)
-    // if (isLoggedIn && !this.state.ready) return this._renderLoading();
+    if (isLoggedIn && !checkedLoggedIn) return this._renderLoading();
 
     return (
       <NavigationStack
@@ -126,6 +94,7 @@ const mapStateToProps: any = (state: ReduxState) => ({
   isLoggedIn: state.LoginReducer.isLoggedIn,
   navigationState: state.NavigationReducer,
   userData: state.LoginReducer.data,
+  checkedLoggedIn: state.LoginReducer.checkedLoggedIn,
 });
 
 export default connect(mapStateToProps)(AppNavigation);

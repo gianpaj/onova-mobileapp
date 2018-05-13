@@ -12,7 +12,7 @@ import loginReducer from './reducers/loginReducer';
 const config1 = {
   key: 'primary',
   storage,
-  // blacklist: ['counterString'],
+  blacklist: ['checkedLoggedIn'],
 };
 
 const reactNavigation = createReactNavigationReduxMiddleware('root', state => {

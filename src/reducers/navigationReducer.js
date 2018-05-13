@@ -40,7 +40,10 @@ const navigationReducer = (state: any = initialState, action: Action) => {
     case LOGOUT:
       return {
         stateForLoggedOut: NavigationStack.router.getStateForAction(
-          stateForLoggedOut
+          NavigationActions.reset({
+            index: 0,
+            actions: [NavigationActions.navigate({ routeName: 'signuplogin' })],
+          })
         ),
       };
 

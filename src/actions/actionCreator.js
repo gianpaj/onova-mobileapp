@@ -195,6 +195,38 @@ const loginWithGoogle = () => (dispatch: Dispatch) => {
 };
 */
 
+const checkLogin = (userData: UserData) => (dispatch: Dispatch) => {
+  console.debug('checkLogin');
+  const { token } = userData;
+  dispatch({ type: 'RELOAD_PENDING' });
+  return api
+    .get(`/api/users/${userData._id}/personal`, { token })
+    .then(() => registerPushNotifications())
+    .then(pushToken => {
+      console.debug('Push notifications: initialized');
+      if (pushToken) return sendToken(pushToken, userData);
+    })
+    .then(() => {
+      if (process.env.NODE_ENV == 'production') {
+        Sentry.setUserContext({
+          email: userData.emailAddress,
+          userID: userData._id,
+          username: userData.username,
+          extra: {
+            accountStatus: userData.accountStatus,
+          },
+        });
+      }
+    })
+    .then(() => initializePusher(userData))
+    .then(() => dispatch({ type: 'RELOAD_SUCCESS' }))
+    .catch(err => {
+      console.debug(err);
+      dispatch({ type: 'RELOAD_FAIL' });
+      ui.showToast(err.message, 'danger');
+    });
+};
+
 const signup = (data: SignupData) => (dispatch: Dispatch) => (
   dispatch({ type: SIGNUP_PENDING }),
   api
@@ -350,6 +382,7 @@ export {
   initializePusher,
   login,
   // loginWithGoogle,
+  checkLogin,
   signup,
   sendToken,
   getPersonalUserData,

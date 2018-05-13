@@ -2,6 +2,8 @@ import React from 'react';
 import { Keyboard } from 'react-native';
 import { TabBarBottom } from 'react-navigation';
 
+// Hide TabBar React Navigation when Keyboard is activated
+// e.g when typing while searching with hashtags
 class TabBarComponent extends React.PureComponent {
   state = {
     isVisible: true,

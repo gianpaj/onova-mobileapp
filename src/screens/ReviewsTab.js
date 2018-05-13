@@ -11,9 +11,10 @@ import {
   StyleSheet,
   Text,
   TouchableHighlight,
+  TouchableOpacity,
   View,
 } from 'react-native';
-import { Body, ListItem, Right } from 'native-base';
+import { Body, ListItem } from 'native-base';
 import { withNavigation } from 'react-navigation';
 import StarRating from 'react-native-star-rating';
 
@@ -56,8 +57,8 @@ class ReviewsTabContainer extends Component<Props, State> {
 
   async getReviewsAndSetState(): Promise<any> {
     const { token } = this.props.userData;
-    // for development
-    let userId = '5a78d09d2d314a702698f955';
+    // for development (krokubik) on prod server
+    let userId = '5ac5f22032eaae1c0b61ce1f';
 
     if (this.props.navigation.state.params) {
       userId = this.props.navigation.state.params.userId;
@@ -113,12 +114,13 @@ class ReviewsTabContainer extends Component<Props, State> {
   };
 
   renderEmptyState = () => {
-    if (!this.state.showingResults) return null;
-
     // TODO: center empty state in RN 0.56 - https://github.com/facebook/react-native/pull/18206
     return (
-      <View style={styles.container}>
-        <Text>{this.state.hasError ? 'Error' : 'There are no reviews'}</Text>
+      <View style={styles.emptyStateContainer}>
+        <Text style={{ textAlign: 'center' }}>
+          To transfer your reviews from VK, Instagram, Facebook or other places,
+          contact us at support@onova.co
+        </Text>
       </View>
     );
   };
@@ -155,6 +157,11 @@ class ReviewsTabContainer extends Component<Props, State> {
               >
                 {order.priceOfItem} {order.currency}
               </Text>
+              <Text
+                numberOfLines={1} // android
+              >
+                {ui.formatTime(review.createdAt)}
+              </Text>
             </View>
             <View style={styles.contentRow}>
               <StarRating
@@ -166,19 +173,21 @@ class ReviewsTabContainer extends Component<Props, State> {
                 emptyStar={
                   Platform.OS == 'ios' ? 'ios-star-outline' : 'md-star-outline'
                 }
-                emptyStarColor={colors.yellow}
+                emptyStarColor={colors.black}
                 fullStar={Platform.OS == 'ios' ? 'ios-star' : 'md-star'}
-                fullStarColor={colors.yellow}
+                fullStarColor={colors.black}
                 iconSet="Ionicons"
                 rating={review.rateNumber}
                 starSize={20}
               />
-              <Text
-                style={styles.name}
-                numberOfLines={1} // android
-              >
-                @{reviewer.username}
-              </Text>
+              <TouchableOpacity onPress={() => this.goToProfile(reviewer)}>
+                <Text
+                  style={styles.username}
+                  numberOfLines={1} // android
+                >
+                  @{reviewer.username}
+                </Text>
+              </TouchableOpacity>
             </View>
             <Text
               style={styles.reviewText}
@@ -187,13 +196,6 @@ class ReviewsTabContainer extends Component<Props, State> {
               {review.text}
             </Text>
           </Body>
-          <Right style={{ height: '100%' }}>
-            <Text
-              numberOfLines={1} // android
-            >
-              {ui.formatTime(review.createdAt)}
-            </Text>
-          </Right>
         </ListItem>
       </TouchableHighlight>
     );
@@ -231,6 +233,12 @@ export const ReviewsTab = withNavigation(
 );
 
 const styles = StyleSheet.create({
+  emptyStateContainer: {
+    alignItems: 'center',
+    flex: 1,
+    justifyContent: 'center',
+    padding: 20,
+  },
   root: {
     height: '100%',
   },
@@ -243,7 +251,7 @@ const styles = StyleSheet.create({
   },
 
   itemImage: {
-    marginHorizontal: 19,
+    marginHorizontal: 15,
     borderWidth: StyleSheet.hairlineWidth,
     borderColor: colors.grey4,
   },
@@ -252,10 +260,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginBottom: 6,
   },
-  name: {
+  username: {
     color: colors.grey1,
-    fontWeight: '800',
-    width: '55%',
   },
   reviewText: {
     flex: 1,

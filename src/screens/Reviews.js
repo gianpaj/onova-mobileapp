@@ -2,9 +2,10 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Dimensions, StyleSheet } from 'react-native';
+import { Alert, Dimensions, StyleSheet } from 'react-native';
 import { Body, Container, Title, Right, Left, Button, Icon } from 'native-base';
 import { TabViewAnimated, TabBar, SceneMap } from 'react-native-tab-view';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import { ReviewsTab } from './ReviewsTab';
 import { Header } from '../components';
@@ -55,6 +56,13 @@ class ReviewsContainer extends Component<Props, State> {
     purchased: () => <ReviewsTab as="buyer" />,
   });
 
+  onInfoIcon() {
+    Alert.alert(
+      'Want more reviews?',
+      'To transfer your reviews from VK, Instagram, Facebook or other places, contact us at support@onova.co'
+    );
+  }
+
   render() {
     return (
       <Container>
@@ -70,7 +78,15 @@ class ReviewsContainer extends Component<Props, State> {
           <Body style={styles.container}>
             <Title style={{ color: colors.black }}>Reviews</Title>
           </Body>
-          <Right />
+          <Right>
+            <Button
+              transparent
+              dark
+              style={{ marginLeft: 10 }}
+              onPress={this.onInfoIcon}>
+              <MaterialCommunityIcons name="information-outline" size={28} />
+            </Button>
+          </Right>
         </Header>
         <TabViewAnimated
           navigationState={this.state}

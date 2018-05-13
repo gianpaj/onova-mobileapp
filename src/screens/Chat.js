@@ -128,6 +128,7 @@ class ChatContainer extends Component<Props, State> {
     const { userData } = this.props;
     let thisRoom;
     return new Promise((resolve, reject) => {
+      // for development
       if (false) {
         // @anotherperson
         api
@@ -148,7 +149,7 @@ class ChatContainer extends Component<Props, State> {
           .then(resolve)
           .catch(e => console.error(e));
       }
-      if (!pusherCurrentUser) return reject();
+      if (!pusherCurrentUser) return reject('no pusherCurrentUser');
       this.rejectProm = reject;
 
       this.connectToPusher()

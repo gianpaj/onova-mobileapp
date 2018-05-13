@@ -23,7 +23,6 @@ import {
 } from 'native-base';
 import { TextareaItem, Toast } from 'antd-mobile';
 import StarRating from 'react-native-star-rating';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Foect from 'foect';
 

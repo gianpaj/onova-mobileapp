@@ -45,9 +45,8 @@ export const StackNav = StackNavigator(
     followers: { screen: Followers },
     search: { screen: Search },
     searchProductsResults: { screen: SearchProductsResults },
-    profile: {
+    profileInStack: {
       screen: Profile,
-      path: 'profile/:id',
     },
     chatRooms: { screen: ChatRooms },
     chat: {

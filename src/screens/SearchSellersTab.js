@@ -75,7 +75,7 @@ class SearchSellersTabContainer extends Component<Props, State> {
     console.log(user);
     // $FlowFixMe
     this.props.navigation.navigate({
-      routeName: 'profile',
+      routeName: 'profileInStack',
       params: user,
       key: `profile-${user.username}`,
     });

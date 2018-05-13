@@ -101,6 +101,7 @@ class SignUpTabContainer extends Component<Props, State> {
       console.error('An error occurred', err)
     );
   }
+
   openPolicy() {
     Linking.openURL('https://onova.co/privacy-policy.html').catch(err =>
       console.error('An error occurred', err)

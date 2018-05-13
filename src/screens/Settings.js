@@ -250,11 +250,9 @@ class SettingsContainer extends Component<Props, State> {
   };
 
   onSendEmail() {
-    Linking.openURL('mailto:hello@onova.co')
-      .then(() => {
-        console.log('email client opened');
-      })
-      .catch(err => console.error('An error occurred', err));
+    Linking.openURL('mailto:hello@onova.co').catch(err =>
+      console.error('An error occurred', err)
+    );
   }
 
   onCCChange = form => {
@@ -318,6 +316,13 @@ class SettingsContainer extends Component<Props, State> {
 
     const focusingRef = this.state.activeInputRef + direction;
     this.inputs[focusingRef] && this.inputs[focusingRef].focus();
+  }
+
+  onFAQ() {
+    // in Ukrainian
+    Linking.openURL('https://onova.co/faq.html').catch(err =>
+      console.error('An error occurred', err)
+    );
   }
 
   render() {
@@ -519,11 +524,22 @@ class SettingsContainer extends Component<Props, State> {
             <NBButton light full onPress={this.onSignout}>
               <Text>Sign out</Text>
             </NBButton>
-          </View>
-          <View style={[styles.padder, { alignItems: 'center' }]}>
-            <TouchableOpacity onPress={this.onSendEmail}>
-              <Text style={styles.centerText}>hello@onova.co</Text>
-            </TouchableOpacity>
+            <View
+              style={[
+                styles.padder,
+                { alignItems: 'center', flexDirection: 'row' },
+              ]}>
+              <NBButton transparent onPress={this.onFAQ}>
+                <NBIcon
+                  name="md-information-circle"
+                  color={colors.grey4}
+                  size={28}
+                />
+              </NBButton>
+              <TouchableOpacity onPress={this.onSendEmail}>
+                <Text style={styles.centerText}>hello@onova.co</Text>
+              </TouchableOpacity>
+            </View>
             <Text style={styles.centerText}>{version}</Text>
           </View>
           {/* <HR full /> */}

@@ -293,7 +293,7 @@ class ChatContainer extends Component<Props, State> {
 
     return (
       <Container>
-        <Header style={{ backgroundColor: colors.bgDefault }}>
+        <Header>
           <Left style={st.container} />
           <Body style={st.container}>
             <Title style={{ color: colors.black }}>Chats</Title>
@@ -346,7 +346,6 @@ const st = StyleSheet.create({
     justifyContent: 'center',
   },
   root: {
-    backgroundColor: colors.bgDefault,
     height: '100%',
   },
   flex1: {

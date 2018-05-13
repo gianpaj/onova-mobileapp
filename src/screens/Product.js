@@ -294,7 +294,7 @@ export class ProductContainer extends React.Component<Props, State> {
 
     return (
       <Container>
-        <Header style={{ backgroundColor: colors.bgDefault }}>
+        <Header>
           <Left>
             <NBButton
               transparent
@@ -433,13 +433,11 @@ export class ProductContainer extends React.Component<Props, State> {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.white,
   },
   flex1: {
     flex: 1,
   },
   topSection: {
-    backgroundColor: colors.white,
     height: 50,
     flexDirection: 'row',
     marginLeft: 15,

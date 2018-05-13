@@ -58,7 +58,7 @@ class ReviewsContainer extends Component<Props, State> {
   render() {
     return (
       <Container>
-        <Header style={{ backgroundColor: colors.white }} hasTabs>
+        <Header hasTabs>
           <Left style={styles.container}>
             <Button
               transparent

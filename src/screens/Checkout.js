@@ -359,7 +359,7 @@ class CheckoutContainer extends Component<Props, State> {
           </View>
         ) : (
           <View style={styles.flex1}>
-            <Content style={{ backgroundColor: colors.bgDefault }}>
+            <Content>
               <View style={[styles.padder]}>
                 <View style={styles.priceContainer}>
                   {/* $FlowFixMe */}

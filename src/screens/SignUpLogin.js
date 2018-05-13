@@ -57,7 +57,7 @@ class SignUpLoginContainer extends React.Component<Props, State> {
 
   render() {
     return (
-      <Container style={{ backgroundColor: colors.white }}>
+      <Container>
         <View style={styles.header}>
           {/* <Icon name="flash" style={{ fontSize: 104 }} /> */}
           <Title style={{ color: colors.black }}>ONOVA</Title>
@@ -68,6 +68,7 @@ class SignUpLoginContainer extends React.Component<Props, State> {
           renderHeader={this._renderHeader}
           onIndexChange={this._handleIndexChange}
           initialLayout={initialLayout}
+          useNativeDriver
         />
       </Container>
     );

@@ -205,7 +205,7 @@ export class AddReviewContainer extends Component<Props, State> {
             </Button>
           </Right>
         </Header>
-        <Content style={{ backgroundColor: colors.bgDefault }}>
+        <Content>
           <Foect.Form onValidSubmit={this.onRate}>
             {form => (
               <View style={{ padding: 10 }}>

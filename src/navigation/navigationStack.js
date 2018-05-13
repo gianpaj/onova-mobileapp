@@ -19,6 +19,7 @@ import {
   SearchProductsResults,
   SignUpLogin,
 } from '../screens';
+import colors from '../config/colors';
 import { TabsStack } from './navigationTabs';
 
 export const StackNav = StackNavigator(
@@ -31,7 +32,12 @@ export const StackNav = StackNavigator(
       path: 'product/:productUUID',
     },
     tabs: { screen: TabsStack },
-    addOrEditProduct: { screen: AddOrEditProduct },
+    addOrEditProduct: {
+      screen: AddOrEditProduct,
+      navigationOptions: {
+        gesturesEnabled: false,
+      },
+    },
     addReview: { screen: AddReview },
     reviews: { screen: Reviews },
     notifications: { screen: Notifications },
@@ -52,6 +58,9 @@ export const StackNav = StackNavigator(
   },
   {
     headerMode: 'none',
+    cardStyle: {
+      backgroundColor: colors.white,
+    },
     navigationOptions: {
       gesturesEnabled: Platform.OS === 'ios',
     },

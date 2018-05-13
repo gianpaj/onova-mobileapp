@@ -216,7 +216,6 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'stretch',
     flex: 1,
-    backgroundColor: colors.white,
     justifyContent: 'center',
   },
   centerText: {

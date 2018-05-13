@@ -143,7 +143,7 @@ class SearchSellersTabContainer extends Component<Props, State> {
                 autoCapitalize="none"
                 autoCorrect={false}
                 containerStyle={{
-                  backgroundColor: colors.transparent,
+                  backgroundColor: colors.white,
                   borderTopWidth: 0,
                   borderBottomWidth: 0,
                 }}

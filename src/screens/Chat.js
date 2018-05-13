@@ -539,7 +539,7 @@ class ChatContainer extends Component<Props, State> {
 
     return (
       <Container style={st.flex1}>
-        <Header style={{ backgroundColor: colors.bgDefault }}>
+        <Header>
           <Left style={st.containerHeader}>
             <NBButton transparent dark onPress={() => navigation.goBack()}>
               <NBIcon ios="ios-arrow-back" android="md-arrow-back" />
@@ -563,7 +563,7 @@ class ChatContainer extends Component<Props, State> {
               <ActivityIndicator size="large" />
             </View>
           ) : (
-            <View style={[st.flex1, { backgroundColor: colors.white }]}>
+            <View style={st.flex1}>
               <View style={st.orderCirclesContainer}>
               {orders.length > 0 && (
                 <FlatList

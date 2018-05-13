@@ -400,7 +400,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
 
     return (
       <Container>
-        <Header style={{ backgroundColor: colors.bgDefault }}>
+        <Header>
           <Left style={styles.container}>
             <NBButton transparent onPress={() => this.closeModal()}>
               <Icon name="close" size={28} />
@@ -425,7 +425,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
             </NBButton>
           </Right>
         </Header>
-        <Content style={{ backgroundColor: colors.bgDefault }}>
+        <Content>
           <View style={{ flex: 1, flexDirection: 'row', paddingTop: 18 }}>
             <WingBlank>
               <AntImagePicker

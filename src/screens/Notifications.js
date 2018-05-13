@@ -219,7 +219,7 @@ class NotificationsContainer extends Component<Props, State> {
   render() {
     return (
       <Container>
-        <Header style={{ backgroundColor: colors.bgDefault }}>
+        <Header>
           <Left style={styles.container}>
             <Button
               transparent
@@ -269,7 +269,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   root: {
-    backgroundColor: colors.bgDefault,
     height: '100%',
   },
   separator: {

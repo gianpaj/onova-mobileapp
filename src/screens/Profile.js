@@ -524,7 +524,7 @@ class ProfileScreen extends React.Component<Props, State> {
 
     return (
       <Container>
-        <Header style={{ backgroundColor: colors.bgDefault }}>
+        <Header>
           <Left style={styles.container}>
             {this.ifNavigatedFromProduct() ? (
               <NBButton transparent dark onPress={() => navigation.goBack()}>
@@ -562,7 +562,6 @@ class ProfileScreen extends React.Component<Props, State> {
           </Right>
         </Header>
         <Content
-          style={{ backgroundColor: colors.bgDefault }}
           refreshControl={
             <RefreshControl
               style={{ backgroundColor: '#E0FFFF' }}
@@ -645,7 +644,6 @@ const styles = StyleSheet.create({
   profileTop: {
     paddingLeft: 10,
     paddingTop: 10,
-    backgroundColor: colors.white,
   },
   userNumbers: {
     flexDirection: 'row',

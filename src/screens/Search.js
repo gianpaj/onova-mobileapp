@@ -56,8 +56,8 @@ class SearchContainer extends Component<Props, State> {
 
   render() {
     return (
-      <Container style={{ backgroundColor: colors.white }}>
-        <Header style={{ backgroundColor: colors.bgDefault }} hasTabs>
+      <Container>
+        <Header hasTabs>
           <Left style={styles.container} />
           <Body style={styles.container}>
             <Title style={{ color: colors.black }}>Search</Title>

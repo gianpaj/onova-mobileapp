@@ -78,7 +78,7 @@ class SearchProductsResultsContainer extends Component<Props, State> {
 
     return (
       <View style={styles.flex1}>
-        <Header style={{ backgroundColor: colors.bgDefault }}>
+        <Header>
           <Left style={styles.container}>
             <NBButton
               transparent
@@ -107,7 +107,7 @@ class SearchProductsResultsContainer extends Component<Props, State> {
           </Body>
           <Right />
         </Header>
-        <Content style={{ backgroundColor: colors.white }}>
+        <Content>
           <ImageGridSearch terms={terms} navigation={this.props.navigation} />
         </Content>
       </View>

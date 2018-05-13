@@ -227,7 +227,6 @@ export const ReviewsTab = withNavigation(
 
 const styles = StyleSheet.create({
   root: {
-    backgroundColor: colors.bgDefault,
     height: '100%',
   },
   flex1: {

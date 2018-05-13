@@ -336,7 +336,7 @@ class SettingsContainer extends Component<Props, State> {
 
     return (
       <Container>
-        <Header style={{ backgroundColor: colors.bgDefault }}>
+        <Header>
           <Left style={styles.container}>
             <NBButton
               transparent
@@ -364,7 +364,7 @@ class SettingsContainer extends Component<Props, State> {
             </NBButton>
           </Right>
         </Header>
-        <Content style={{ backgroundColor: colors.white }}>
+        <Content>
           {/* <View style={styles.padder}> */}
           {/* <Accordion
               headerText="Shipping Address:"

@@ -8,6 +8,7 @@ import {
   Platform,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from 'react-native';
 import { Content } from 'native-base';
@@ -95,8 +96,13 @@ class SignUpTabContainer extends Component<Props, State> {
     }
   };
 
-  openTermPolicy() {
-    Linking.openURL('https://onova.co').catch(err =>
+  openTerm() {
+    Linking.openURL('https://onova.co/terms-and-condition.html').catch(err =>
+      console.error('An error occurred', err)
+    );
+  }
+  openPolicy() {
+    Linking.openURL('https://onova.co/privacy-policy.html').catch(err =>
       console.error('An error occurred', err)
     );
   }
@@ -229,18 +235,27 @@ class SignUpTabContainer extends Component<Props, State> {
               accessibilityLabel="Create account"
             />
           </View>
-          <Text
-            style={[
-              styles.hr,
-              { textAlign: 'center', color: colors.grey4, paddingVertical: 20 },
-            ]}>
-            By creating an account you agree to the&nbsp;
-            {/* <TouchableOpacity onPress={this.openTermPolicy}> */}
-            {/* <Text style={[styles.linkText, styles.termsLink]}> */}
-            Terms and Policy
-            {/* </Text> */}
-            {/* </TouchableOpacity> */}
-          </Text>
+          <View
+            style={{
+              alignSelf: 'center',
+              flexDirection: 'row',
+              flexWrap: 'wrap',
+              paddingVertical: 20,
+              width: 320,
+            }}>
+            <Text style={{ color: colors.grey4 }}>
+              By creating an account you agree to the&nbsp;
+            </Text>
+            <TouchableOpacity onPress={this.openTerm}>
+              <Text style={[styles.linkText, styles.termsLink]}>Terms</Text>
+            </TouchableOpacity>
+            <Text style={{ color: colors.grey4 }}>&nbsp;and&nbsp;</Text>
+            <TouchableOpacity onPress={this.openPolicy}>
+              <Text style={[styles.linkText, styles.termsLink]}>
+                Privacy Policy
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </Content>
     );
@@ -266,16 +281,11 @@ const styles = StyleSheet.create({
     borderWidth: 0,
     borderRadius: 0,
   },
-  hr: {
-    alignSelf: 'center',
-    margin: 5,
-  },
   mt15: {
     marginTop: 15,
   },
   termsLink: {
-    fontWeight: 'bold',
-    color: colors.grey2,
+    textDecorationLine: 'underline',
   },
 });
 

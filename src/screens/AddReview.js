@@ -24,12 +24,13 @@ import {
 import { TextareaItem, Toast } from 'antd-mobile';
 import StarRating from 'react-native-star-rating';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import Feather from 'react-native-vector-icons/Feather';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Foect from 'foect';
 
 import { Header } from '../components/index';
 
 import colors from '../config/colors';
+import typography from '../config/typography';
 import settings from '../config/settings';
 import * as api from '../utils/api';
 import * as ui from '../utils/ui';
@@ -60,10 +61,13 @@ export class AddReviewContainer extends Component<Props, State> {
 
   async componentWillMount() {
     const { token, _id } = this.props.userData;
-    let { orderId } = this.props.navigation.state.params;
+    let params = this.props.navigation.state.params;
+    let { orderId } = params;
 
     // for development
-    if (!orderId) orderId = '5aeae04049af190a21c80d17';
+    if (!params) {
+      orderId = '5aeae04049af190a21c80d17';
+    }
 
     try {
       const order: Order = await api.getOrder(orderId, token);
@@ -201,7 +205,11 @@ export class AddReviewContainer extends Component<Props, State> {
               dark
               style={{ backgroundColor: colors.transparent }}
               onPress={this.onArchive}>
-              <Ionicons name="md-archive" size={28} color={colors.black} />
+              <MaterialCommunityIcons
+                name="delete"
+                size={28}
+                color={colors.black}
+              />
             </Button>
           </Right>
         </Header>
@@ -215,71 +223,105 @@ export class AddReviewContainer extends Component<Props, State> {
                     required
                     minLength={14}
                     maxLength={14}>
-                    {control => (
-                      <View style={{ flex: 1, alignItems: 'center' }}>
-                        <View
-                          style={{
-                            flexDirection: 'row',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                          }}>
-                          <Text>Nova Poshta tracking number:</Text>
-                          <Button
-                            transparent
-                            dark
-                            style={{ marginLeft: 10 }}
-                            onPress={this.onTrackingInfo}>
-                            <Feather name="help-circle" size={28} />
-                          </Button>
+                    {control => {
+                      const hasError =
+                        (control.isTouched || form.isSubmitted) &&
+                        control.isInvalid;
+                      return (
+                        <View style={{ flex: 1, alignItems: 'center' }}>
+                          <View
+                            style={{
+                              alignItems: 'center',
+                              flexDirection: 'row',
+                              justifyContent: 'space-between',
+                              width: widthFields,
+                            }}>
+                            <Text
+                              style={{
+                                fontWeight: 'bold',
+                                color: colors.black,
+                              }}>
+                              Nova Poshta tracking number
+                            </Text>
+                            <Button
+                              transparent
+                              dark
+                              style={{ marginLeft: 10 }}
+                              onPress={this.onTrackingInfo}>
+                              <MaterialCommunityIcons
+                                name="information-outline"
+                                size={28}
+                              />
+                            </Button>
+                          </View>
+
+                          <TextInput
+                            style={{
+                              fontSize: typography.font_body_size,
+                              width: widthFields,
+                            }}
+                            onBlur={control.markAsTouched}
+                            onChangeText={text =>
+                              control.onChange(text.replace(/[^0-9]/g, ''))
+                            }
+                            underlineColorAndroid={
+                              hasError ? colors.red : colors.black
+                            }
+                            value={control.value}
+                            keyboardType="numeric"
+                            autoCorrect={false}
+                            maxLength={14}
+                          />
+
+                          {/* <Text style={{ color: colors.red }}>
+                            {hasError
+                              ? 'Please enter a valid tracking number.'
+                              : ' '}
+                          </Text> */}
                         </View>
-
-                        <TextInput
-                          style={{
-                            height: 40,
-                            borderColor: colors.grey4,
-                            borderWidth: 1,
-                            width: 200,
-                          }}
-                          onBlur={control.markAsTouched}
-                          onChangeText={text =>
-                            control.onChange(text.replace(/[^0-9]/g, ''))
-                          }
-                          underlineColorAndroid="transparent"
-                          value={control.value}
-                          keyboardType="numeric"
-                          autoCorrect={false}
-                          maxLength={14}
-                        />
-
-                        <Text style={{ color: colors.red }}>
-                          {(control.isTouched || form.isSubmitted) &&
-                          control.isInvalid
-                            ? 'Please enter a valid tracking number.'
-                            : ' '}
-                        </Text>
-                      </View>
-                    )}
+                      );
+                    }}
                   </Foect.Control>
                 </View>
                 <View style={{ flex: 1, marginTop: 5 }}>
+                  <Foect.Control name="text">
+                    {control => (
+                      <TextareaItem
+                        style={styles.textInputContainer}
+                        last
+                        rows={3}
+                        count={settings.MAX_LENGTH_REVIEW}
+                        onChangeText={control.onChange}
+                        placeholder="Text (optional)"
+                        value={control.value}
+                        error={
+                          control.value.length > 0 &&
+                          control.value.trim().length <
+                            settings.MIN_LENGTH_REVIEW
+                        }
+                      />
+                    )}
+                  </Foect.Control>
                   <Foect.Control name="rateNumber" required>
                     {control => (
                       <View>
                         <StarRating
                           // eslint-disable-next-line
-                          buttonStyle={{ paddingHorizontal: 5 }}
-                          // eslint-disable-next-line
-                          containerStyle={{ alignSelf: 'center' }}
+                          containerStyle={{
+                            alignSelf: 'center',
+                            width: widthFields,
+                            justifyContent: 'space-between',
+                          }}
                           // disabled={isLoading}
-                          emptyStar={starIcon}
-                          emptyStarColor={colors.grey4}
-                          fullStar={starIcon}
-                          fullStarColor={colors.yellow}
+                          emptyStar="md-star-outline"
+                          emptyStarColor={colors.black}
+                          fullStar="md-star"
+                          fullStarColor={colors.black}
                           iconSet="Ionicons"
                           maxStars={5}
                           rating={parseInt(control.value)}
                           selectedStar={control.onChange}
-                          starSize={50}
+                          starSize={35}
                         />
                         <Text
                           style={{
@@ -293,30 +335,16 @@ export class AddReviewContainer extends Component<Props, State> {
                       </View>
                     )}
                   </Foect.Control>
-                  <Foect.Control name="text">
-                    {control => (
-                      <TextareaItem
-                        style={styles.textInputContainer}
-                        last
-                        rows={3}
-                        count={settings.MAX_LENGTH_REVIEW}
-                        onChangeText={control.onChange}
-                        placeholder="Please review your experience (optional)"
-                        value={control.value}
-                        error={
-                          control.value.length > 0 &&
-                          control.value.trim().length <
-                            settings.MIN_LENGTH_REVIEW
-                        }
-                      />
-                    )}
-                  </Foect.Control>
                   <Button
                     block
                     dark
-                    style={{ marginTop: 15 }}
+                    style={{
+                      marginTop: 15,
+                      width: widthFields,
+                      alignSelf: 'center',
+                    }}
                     onPress={() => form.submit()}>
-                    <Text style={styles.buttonText}>Review</Text>
+                    <Text style={styles.buttonText}>Leave a review</Text>
                   </Button>
                 </View>
               </View>
@@ -335,9 +363,13 @@ const mapStateToProps: any = (state: ReduxState) => ({
 
 export const AddReview = connect(mapStateToProps)(AddReviewContainer);
 
+const widthFields = 280;
+
 const styles = StyleSheet.create({
   textInputContainer: {
-    borderWidth: 0,
+    alignSelf: 'center',
+    fontSize: typography.font_body_size,
+    width: widthFields + 10,
   },
   buttonText: {
     fontSize: 16,

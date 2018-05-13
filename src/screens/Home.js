@@ -105,6 +105,7 @@ export class Home extends PureComponent<Props, State> {
           renderHeader={this._renderHeader}
           onIndexChange={this._handleIndexChange}
           initialLayout={initialLayout}
+          useNativeDriver
         />
       </Container>
     );
@@ -131,6 +132,7 @@ const styles = StyleSheet.create({
   },
   header: {
     backgroundColor: colors.bgDefault,
+    elevation: 2,
   },
   tab: {
     width: initialLayout.width / 3,

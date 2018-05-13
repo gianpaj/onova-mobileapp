@@ -78,6 +78,7 @@ class ReviewsContainer extends Component<Props, State> {
           renderHeader={this._renderHeader}
           onIndexChange={this._handleIndexChange}
           initialLayout={initialLayout}
+          useNativeDriver
         />
       </Container>
     );

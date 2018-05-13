@@ -72,6 +72,7 @@ class SearchSellersTabContainer extends Component<Props, State> {
   }
 
   goToProfile = (user: UserData) => {
+    console.log(user);
     // $FlowFixMe
     this.props.navigation.navigate({
       routeName: 'profile',

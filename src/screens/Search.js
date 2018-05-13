@@ -70,6 +70,7 @@ class SearchContainer extends Component<Props, State> {
           renderHeader={this._renderHeader}
           onIndexChange={this._handleIndexChange}
           initialLayout={initialLayout}
+          useNativeDriver
         />
       </Container>
     );
@@ -84,6 +85,7 @@ const styles = StyleSheet.create({
   },
   tabbar: {
     backgroundColor: colors.bgDefault,
+    elevation: 2,
   },
   label: {
     color: colors.black,

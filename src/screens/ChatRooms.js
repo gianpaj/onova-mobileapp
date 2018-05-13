@@ -124,7 +124,9 @@ class ChatContainer extends Component<Props, State> {
               return {
                 ...room,
                 lastMessage: msgs[0],
-                hasUnreadMessages: cursor.position < msgs[0].id,
+                hasUnreadMessages: cursor
+                  ? cursor.position < msgs[0].id
+                  : false,
                 isPartnerOnline,
                 partner,
               };

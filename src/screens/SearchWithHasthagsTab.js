@@ -3,7 +3,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { StyleSheet, Text, View } from 'react-native';
-import { Button as NBButton } from 'native-base';
+import { Button as NBButton, Content } from 'native-base';
 import { SearchBar } from 'react-native-elements';
 import RadioForm, {
   RadioButton,
@@ -15,6 +15,7 @@ import { withNavigation } from 'react-navigation';
 import type { NavigationScreenProp } from 'react-navigation';
 
 import colors from '../config/colors';
+import settings from '../config/settings';
 
 import type { UserData, Dispatch, ReduxState } from '../types';
 
@@ -72,10 +73,15 @@ class SearchWithHasthagsTabContainer extends Component<Props, State> {
   };
 
   isSearchEnabled(): boolean {
+    if (
+      this.state.text.length &&
+      this.state.text.length < settings.MIN_LENGTH_PER_TAG
+    )
+      return false;
+
     return (
-      (this.state.text.length > 2 ||
-        this.state.grp_1 !== -1 ||
-        this.state.grp_2 !== -1) &&
+      this.state.grp_1 !== -1 ||
+      this.state.grp_2 !== -1 ||
       this.state.isLoading == false
     );
   }
@@ -102,7 +108,7 @@ class SearchWithHasthagsTabContainer extends Component<Props, State> {
     const { isLoading } = this.state;
 
     return (
-      <View style={styles.flex1}>
+      <Content style={styles.flex1}>
         <View>
           <View style={{ marginVertical: 30, marginLeft: 65, marginRight: 65 }}>
             <SearchBar
@@ -125,7 +131,7 @@ class SearchWithHasthagsTabContainer extends Component<Props, State> {
               placeholderTextColor={colors.grey1}
               inputStyle={{
                 backgroundColor: colors.white,
-                color: this.isSearchEnabled() ? colors.black : colors.grey1,
+                color: this.isSearchEnabled() ? colors.black : colors.red,
               }}
               returnKeyType="search"
               value={this.state.text}
@@ -202,7 +208,7 @@ class SearchWithHasthagsTabContainer extends Component<Props, State> {
             </Text>
           </NBButton>
         </View>
-      </View>
+      </Content>
     );
   }
 }

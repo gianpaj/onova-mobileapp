@@ -673,8 +673,6 @@ const st = StyleSheet.create({
   },
   itemImage: {
     borderRadius: 50,
-    borderWidth: 1,
-    borderColor: colors.active,
     height: 50,
     width: 50,
   },

@@ -54,6 +54,7 @@ if (__DEV__) {
       // local
       // emailAddress: 'gianpa+test@gmail.com',
       // password: 'expressos',
+      // prod
       // emailAddress: 'gianpa+test2@gmail.com',
       // password: 'express2',
       // prod

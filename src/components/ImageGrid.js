@@ -206,7 +206,9 @@ const mapStateToProps = (state: any) => ({
   userData: state.LoginReducer.data,
 });
 
-export default connect(mapStateToProps)(ImageGridComponent);
+export default connect(mapStateToProps, null, null, { withRef: true })(
+  ImageGridComponent
+);
 
 const MARGIN = 1;
 

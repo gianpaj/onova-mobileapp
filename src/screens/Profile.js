@@ -49,6 +49,7 @@ type Props = {
   dispatch: Dispatch,
   navigation: NavigationScreenProp<*>,
   userData: UserData,
+  imageGrid: any,
 };
 
 type State = {
@@ -90,6 +91,12 @@ const { height } = Dimensions.get('window');
 
 class ProfileScreen extends React.Component<Props, State> {
   state = { ...defaultState };
+  imageGrid: any;
+
+  constructor(props) {
+    super(props);
+    this.imageGrid = React.createRef();
+  }
 
   static navigationOptions = () => ({
     tabBarIcon: (props: any) => <NotificationsDot {...props} />,
@@ -159,7 +166,11 @@ class ProfileScreen extends React.Component<Props, State> {
   onRefresh = () => {
     this.setState({ isRefreshing: true });
 
-    this.refresh().then(() => this.setState({ isRefreshing: false }));
+    let Promises = [];
+    Promises.push(this.refresh());
+    if (this.imageGrid)
+      Promises.push(this.imageGrid.getWrappedInstance().fetchItems());
+    Promise.all(Promises).then(() => this.setState({ isRefreshing: false }));
   };
 
   componentWillMount() {
@@ -553,7 +564,7 @@ class ProfileScreen extends React.Component<Props, State> {
             <RefreshControl
               style={{ backgroundColor: '#E0FFFF' }}
               refreshing={this.state.isRefreshing}
-              onRefresh={this.refresh}
+              onRefresh={this.onRefresh}
             />
           }>
           <View>
@@ -568,6 +579,7 @@ class ProfileScreen extends React.Component<Props, State> {
           </View>
           {_id !== '' && (
             <ImageGrid
+              ref={i => (this.imageGrid = i)}
               apiURL={`/api/products?userid=${_id}`}
               navigation={navigation}
               emptyState={

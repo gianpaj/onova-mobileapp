@@ -246,7 +246,8 @@ export class ProductContainer extends React.Component<Props, State> {
       })
       .catch(err => {
         // TODO: show toast with err
-        console.warn(err.message);
+        ui.showToast(err.message, 'warning', 'ok');
+        console.log(err);
       })
       .then(() => {
         setTimeout(() => {

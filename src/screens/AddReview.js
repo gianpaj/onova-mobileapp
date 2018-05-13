@@ -244,6 +244,7 @@ export class AddReviewContainer extends Component<Props, State> {
                           onChangeText={text =>
                             control.onChange(text.replace(/[^0-9]/g, ''))
                           }
+                          underlineColorAndroid="transparent"
                           value={control.value}
                           keyboardType="numeric"
                           autoCorrect={false}

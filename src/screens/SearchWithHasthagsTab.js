@@ -110,7 +110,12 @@ class SearchWithHasthagsTabContainer extends Component<Props, State> {
     return (
       <Content style={styles.flex1}>
         <View>
-          <View style={{ marginVertical: 30, marginLeft: 65, marginRight: 65 }}>
+          <View
+            style={{
+              alignSelf: 'center',
+              marginVertical: 30,
+              width: 280,
+            }}>
             <SearchBar
               autoCapitalize="none"
               autoCorrect={false}
@@ -119,6 +124,7 @@ class SearchWithHasthagsTabContainer extends Component<Props, State> {
                 borderTopWidth: 0,
                 borderBottomWidth: 0,
               }}
+              underlineColorAndroid={colors.black}
               clearButtonMode="while-editing" // iOS
               // enablesReturnKeyAutomatically // iOS
               icon={{ type: 'feather', name: 'hash', color: colors.grey1 }}
@@ -192,7 +198,15 @@ class SearchWithHasthagsTabContainer extends Component<Props, State> {
             </RadioForm>
           </View>
         </View>
-        <View style={styles.padder}>
+        <View
+          style={[
+            styles.padder,
+            {
+              alignSelf: 'center',
+              marginVertical: 30,
+              width: 280,
+            },
+          ]}>
           <NBButton
             block
             backgroundColor={colors.primary}

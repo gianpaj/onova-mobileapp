@@ -138,7 +138,11 @@ class SearchSellersTabContainer extends Component<Props, State> {
           ItemSeparatorComponent={this._renderSeparator}
           ListHeaderComponent={
             <View
-              style={{ marginVertical: 30, marginLeft: 65, marginRight: 65 }}>
+              style={{
+                alignSelf: 'center',
+                marginVertical: 30,
+                width: 280,
+              }}>
               <SearchBar
                 autoCapitalize="none"
                 autoCorrect={false}
@@ -147,6 +151,7 @@ class SearchSellersTabContainer extends Component<Props, State> {
                   borderTopWidth: 0,
                   borderBottomWidth: 0,
                 }}
+                underlineColorAndroid={colors.black}
                 onClearText={this.clearResults}
                 clearButtonMode="while-editing" // iOS
                 // enablesReturnKeyAutomatically // iOS

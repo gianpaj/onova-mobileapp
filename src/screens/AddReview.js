@@ -278,9 +278,7 @@ export class AddReviewContainer extends Component<Props, State> {
                           iconSet="Ionicons"
                           maxStars={5}
                           rating={parseInt(control.value)}
-                          selectedStar={rateNumber =>
-                            control.onChange(rateNumber)
-                          }
+                          selectedStar={control.onChange}
                           starSize={50}
                         />
                         <Text
@@ -299,12 +297,10 @@ export class AddReviewContainer extends Component<Props, State> {
                     {control => (
                       <TextareaItem
                         style={styles.textInputContainer}
+                        last
                         rows={3}
                         count={settings.MAX_LENGTH_REVIEW}
-                        onChangeText={t => {
-                          // this.onChangeText(t);
-                          control.onChange(t);
-                        }}
+                        onChangeText={control.onChange}
                         placeholder="Please review your experience (optional)"
                         value={control.value}
                         error={
@@ -341,7 +337,7 @@ export const AddReview = connect(mapStateToProps)(AddReviewContainer);
 
 const styles = StyleSheet.create({
   textInputContainer: {
-    borderWidth: StyleSheet.hairlineWidth,
+    borderWidth: 0,
   },
   buttonText: {
     fontSize: 16,

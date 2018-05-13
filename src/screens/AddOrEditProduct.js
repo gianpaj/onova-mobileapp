@@ -348,7 +348,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     return (
       // If images are added
       this.state.images.length > 0 &&
-      // If the item is uploading is not pending
+      // If the item is uploading is not in progress
       !this.state.pending &&
       // If the price is not empty
       this.state.price !== '' &&
@@ -456,6 +456,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
             <TextareaItem
               editable={!this.state.pending}
               style={styles.inputContainerNew}
+              last // to set borderBottomWidth=0
               containerStyle={{ borderBottomWidth: 5, marginRight: 12 }}
               rows={3}
               count={settings.MAX_LENGTH_DESCRIPTION}
@@ -515,8 +516,8 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
               ))}
             </RadioForm>
           </View>
-          <HR />
-          <View style={styles.grps}>
+          <HR color={colors.grey6} />
+          <View style={[styles.grps, { marginBottom: 20 }]}>
             <RadioForm animation formHorizontal>
               {category_radio_grp_2.map((option, i) => (
                 <RadioButton labelHorizontal={false} key={i}>

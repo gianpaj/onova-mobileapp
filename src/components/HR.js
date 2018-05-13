@@ -6,10 +6,17 @@ import colors from '../config/colors';
 
 type Props = {
   full: boolean,
+  color?: string,
 };
 
 const HR = (props: Props): React$Element<any> => (
-  <View style={[styles.hr, { width: `${props.full ? '100%' : '89.5%'}` }]} />
+  <View
+    style={[
+      styles.hr,
+      props.color && { borderColor: props.color },
+      { width: `${props.full ? '100%' : '89.5%'}` },
+    ]}
+  />
 );
 
 HR.defaultProps = {

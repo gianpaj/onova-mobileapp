@@ -153,6 +153,9 @@ class ProfileScreen extends React.Component<Props, State> {
           })
           .catch(err => {
             console.debug(err);
+            if (err.message == 'Not following') {
+              return resolve();
+            }
             reject(err);
           });
       } else {
@@ -168,7 +171,7 @@ class ProfileScreen extends React.Component<Props, State> {
 
     let Promises = [];
     Promises.push(this.refresh());
-    if (this.imageGrid)
+    if (this.imageGrid && this.imageGrid.getWrappedInstance)
       Promises.push(this.imageGrid.getWrappedInstance().fetchItems());
     Promise.all(Promises).then(() => this.setState({ isRefreshing: false }));
   };

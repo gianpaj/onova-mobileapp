@@ -22,6 +22,7 @@ import MentionsTextInput from 'react-native-mentions';
 
 import { Avatar, Send } from '../components';
 
+import I18n from '../i18n';
 import colors, { convertHex } from '../config/colors';
 import settings from '../config/settings';
 import typography from '../config/typography';
@@ -64,22 +65,20 @@ class Comments extends React.Component<Props, State> {
   };
 
   componentWillMount() {
-    let { uuid } = this.props;
+    // let { uuid } = this.props;
     // for development
     // if (!uuid) {
     //   uuid = 'SJWwox8LLG';
     // }
 
     this._getComments(this.props.uuid)
-      .then(({ comments }) => {
+      .then(({ comments }) =>
         this.setState({
           comments,
           loading: false,
-        });
-      })
-      .catch(e => {
-        console.error(e);
-      });
+        })
+      )
+      .catch(e => console.error(e));
   }
 
   _getComments(uuid: string): Promise<ProductType> {
@@ -93,19 +92,21 @@ class Comments extends React.Component<Props, State> {
   }
 
   showActionSheetForComment = (comment: Comment) => {
+    const DELETE = I18n.t('comments.action_button_delete');
+    const CANCEL = I18n.t('comments.action_button_cancel');
     let BUTTONS;
     // if its my comment
     // if (comment.user._id == this.props.userData._id) {
-    BUTTONS = ['Delete', 'Cancel'];
+    BUTTONS = [DELETE, CANCEL];
     // } else {
-    //   BUTTONS = ['Report', 'Cancel'];
+    //   BUTTONS = ['Report', CANCEL];
     // }
 
     ActionSheet.show(
       {
         options: BUTTONS,
         destructiveButtonIndex: 0,
-        cancelButtonIndex: BUTTONS.indexOf('Cancel'),
+        cancelButtonIndex: BUTTONS.indexOf(CANCEL),
       },
       buttonIndex => {
         switch (buttonIndex) {
@@ -113,7 +114,7 @@ class Comments extends React.Component<Props, State> {
           //   alert('report me like those french girls 🎨');
           //   // report action
           //   break;
-          case BUTTONS.indexOf('Delete'):
+          case BUTTONS.indexOf(DELETE):
             ui.showConfirmAlert('Confirm deletion?', '', () => {
               this.deleteComment(comment);
               // this.forceUpdate();
@@ -124,7 +125,6 @@ class Comments extends React.Component<Props, State> {
           //   this.showShareActionSheet();
           //   break;
           default:
-            console.debug('Cancel');
             break;
         }
       }
@@ -201,7 +201,10 @@ class Comments extends React.Component<Props, State> {
     if (!matches) return console.error('error');
 
     if (matches[2] == 'null') {
-      return ui.showToast('User not found', 'warning');
+      return ui.showToast(
+        I18n.t('comments.toast_warning_mention_not_found'),
+        'warning'
+      );
     }
     console.log(matches);
     // $FlowFixMe
@@ -216,24 +219,22 @@ class Comments extends React.Component<Props, State> {
   renderSeparator = () => <View style={styles.separator} />;
 
   renderComments() {
+    if (this.state.comments.length < 1) return null;
+
     return (
-      this.state.comments !== null && (
-        <View style={styles.padder}>
-          <FlatList
-            style={styles.root}
-            data={this.state.comments}
-            ItemSeparatorComponent={this.renderSeparator}
-            keyExtractor={this._keyExtractor}
-            renderItem={this.renderSingleComment}
-          />
-        </View>
-      )
+      <View style={styles.padder}>
+        <FlatList
+          style={styles.root}
+          data={this.state.comments}
+          ItemSeparatorComponent={this.renderSeparator}
+          keyExtractor={this._keyExtractor}
+          renderItem={this.renderSingleComment}
+        />
+      </View>
     );
   }
 
-  renderText(string: string, matches: Array<string>) {
-    return matches[1];
-  }
+  renderText = (string: string, matches: Array<string>) => matches[1];
 
   renderSuggestionsRow = (
     { item: user }: { item: UserData },
@@ -374,7 +375,7 @@ class Comments extends React.Component<Props, State> {
             keyExtractor={item => item._id}
             MaxVisibleRowCount={7} // this is required if horizontal={false}
             onChangeText={this.onChangeText}
-            placeholder="Add a comment"
+            placeholder={I18n.t('comments.add_comment_placeholder')}
             renderSuggestionsRow={this.renderSuggestionsRow}
             suggestionRowHeight={45}
             suggestionsData={this.state.usersToMention} // array of objects
@@ -433,7 +434,7 @@ class Comments extends React.Component<Props, State> {
         // this.setState({ addCommentError: true });
         if (e.message && e.message.indexOf('verify your account') > -1) {
           ui.showToast(
-            'Please verify your account before writing a comment',
+            I18n.t('comments.toast_warning_on_unverified_account'),
             'warning'
           );
         } else {
@@ -445,12 +446,8 @@ class Comments extends React.Component<Props, State> {
       });
   };
 
-  onChangeText = (text: string) => {
-    this.setState({
-      // addCommentError: text.length == settings.MAX_LENGTH_COMMENT,
-      text,
-    });
-  };
+  // addCommentError: text.length == settings.MAX_LENGTH_COMMENT,
+  onChangeText = (text: string) => this.setState({ text });
 
   render() {
     return (

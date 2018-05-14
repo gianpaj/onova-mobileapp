@@ -22,6 +22,7 @@ import { NavigationActions } from 'react-navigation';
 
 import type { NavigationScreenProp } from 'react-navigation';
 
+import I18n from '../i18n';
 import * as api from '../utils/api';
 import colors from '../config/colors';
 import type { UserData } from '../types';
@@ -168,7 +169,7 @@ class ImageGridComponent extends React.Component<Props, State> {
     if (this.state.hasError) {
       return (
         <View style={[styles.container, { height: height - 150 }]}>
-          <Text style={styles.centerText}>Error fetching listing</Text>
+          <Text style={styles.centerText}>{I18n.t('image_grid.error')}</Text>
         </View>
       );
     }
@@ -177,9 +178,11 @@ class ImageGridComponent extends React.Component<Props, State> {
 
     return (
       <View style={styles.emptyContainer}>
-        <Text style={styles.boldText}>We did not find anything like that</Text>
+        <Text style={styles.boldText}>
+          {I18n.t('image_grid.empty_state_title')}
+        </Text>
         <Text style={styles.centerText}>
-          Try searching for some other things you like
+          {I18n.t('image_grid.empty_state_body')}
         </Text>
       </View>
     );
@@ -213,10 +216,6 @@ const styles = StyleSheet.create({
   },
   boldText: {
     fontWeight: 'bold',
-  },
-  searchButton: {
-    backgroundColor: colors.transparent,
-    marginTop: 20,
   },
   list: {
     flex: 1,

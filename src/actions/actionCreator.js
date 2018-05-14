@@ -28,6 +28,7 @@ import type {
 import { registerPushNotifications } from '../utils/push';
 import * as api from '../utils/api';
 import * as ui from '../utils/ui';
+import I18n from '../i18n';
 
 let config, currentUser: PusherUser;
 
@@ -270,9 +271,9 @@ const signup = (data: SignupData) => (dispatch: Dispatch) => (
         dispatch({ type: SIGNUP_FAIL });
       }
     })
-    .catch((err: api.APIError) => {
-      dispatch(handleErrorWithAlert({ type: SIGNUP_FAIL }, err));
-    })
+    .catch((err: api.APIError) =>
+      dispatch(handleErrorWithAlert({ type: SIGNUP_FAIL }, err))
+    )
 );
 
 const getPersonalUserData = (userId: string, options?: any = {}) => (
@@ -284,19 +285,15 @@ const getPersonalUserData = (userId: string, options?: any = {}) => (
   dispatch({ type: GETUSER_PENDING });
   return api
     .get(`/api/users/${userId}/personal`, { ...options, token })
-    .then((res: UserData) => {
-      return dispatch({ type: GETUSER_SUCCESS, payload: res });
-    })
-    .catch(err => {
-      return dispatch(handleErrorWithAlert({ type: GETUSER_FAIL }, err));
-    })
+    .then((res: UserData) => dispatch({ type: GETUSER_SUCCESS, payload: res }))
+    .catch(err => dispatch(handleErrorWithAlert({ type: GETUSER_FAIL }, err)))
     .then(() => Toast.hide());
 };
 
 const getUserData = (userId: string, options?: any = {}) => (
   dispatch: Dispatch
 ) => (
-  Toast.loading('Loading...', 30),
+  Toast.loading(I18n.t('alerts.loading_message'), 30),
   dispatch({ type: GETUSER_PENDING }),
   api
     .get(`/api/users/${userId}`, options)
@@ -363,7 +360,7 @@ const handleErrorWithAlert = (data: any, err: any) => {
     err.message.includes('timeout') ||
     err.message == 'Network Error'
   ) {
-    err.message = 'Connectivity issue. Please check your internetz';
+    err.message = I18n.t('alerts.network_error');
     errorType = 'danger';
   } else if (err.message == 'operation_canceled') {
     return {

@@ -35,6 +35,10 @@ export default {
     empty_state_body: `Follow sellers to see items in your feed`,
     empty_state_button: 'Search',
   },
+  image_grid_search: {
+    empty_state_title: 'We did not find anything like that',
+    empty_state_body: 'Try searching for some other things you like',
+  },
   product: {
     buy_button: 'Chat',
     action_button_delete: 'Delete',
@@ -44,5 +48,17 @@ export default {
     toast_warning_on_unverified_account: 'You need to verify your account...',
     toast_warning_on_product_sold: 'This product is not longer for sale',
     toast_warning_ok_button: 'ok',
+  },
+  comments: {
+    action_button_delete: 'Delete',
+    action_button_cancel: 'Cancel',
+    toast_warning_mention_not_found: 'User not found',
+    toast_warning_on_unverified_account:
+      'Please verify your account to write a comment',
+    add_comment_placeholder: 'Add a comment',
+  },
+  alerts: {
+    network_error: 'Connectivity issue. Please check your internetz',
+    loading_message: 'Loading...',
   },
 };

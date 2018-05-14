@@ -488,6 +488,7 @@ class ProfileScreen extends React.Component<Props, State> {
               onChangeText={t => this.setState({ displayName: t })}
               placeholder="Edit your shop name"
               placeholderColor={colors.primary}
+              showPlaceholder={this.isMe()}
               isTextEditable={editing && this.isMe()}
               style={{
                 fontSize: typography.font_body_size,
@@ -507,6 +508,7 @@ class ProfileScreen extends React.Component<Props, State> {
               onChangeText={t => this.setState({ bio: t })}
               placeholder="Edit your profile description"
               placeholderColor={colors.primary}
+              showPlaceholder={this.isMe()}
               isTextEditable={editing && this.isMe()}
             />
           </View>

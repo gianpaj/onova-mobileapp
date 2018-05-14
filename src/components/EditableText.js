@@ -19,8 +19,9 @@ type Props = {
   loading: boolean,
   onChangeText: (text: string) => void,
   placeholder: string,
-  placeholderColor: string,
+  placeholderColor: ?string,
   shouldAutoFocus: boolean,
+  showPlaceholder: boolean,
   style?: StyleSheet.Styles,
   text: string,
   textInputProps: any,
@@ -28,6 +29,7 @@ type Props = {
 };
 
 type State = {
+  editing: boolean,
   text: string,
 };
 
@@ -46,10 +48,11 @@ class EditableText extends PureComponent<Props, State> {
   static defaultProps = {
     autoCorrect: false,
     isTextEditable: true,
-    placeholderColor: '#cccccc',
     loading: false,
-    style: {},
+    placeholderColor: '#cccccc',
     shouldAutoFocus: false,
+    showPlaceholder: true,
+    style: {},
     textInputProps: {},
     textProps: {},
   };
@@ -58,16 +61,17 @@ class EditableText extends PureComponent<Props, State> {
     const {
       placeholder,
       placeholderColor,
+      showPlaceholder,
       style,
-      textProps,
       text,
+      textProps,
     } = this.props;
 
     return (
       <Text
         {...textProps}
         style={[style, text ? {} : { color: placeholderColor }]}>
-        {text || placeholder}
+        {text || (showPlaceholder ? placeholder : '')}
       </Text>
     );
   }
@@ -107,15 +111,13 @@ class EditableText extends PureComponent<Props, State> {
     return null;
   }
 
-  render() {
-    return (
-      <View>
-        {this.props.isTextEditable || this.props.loading
-          ? this.renderTextInput()
-          : this.renderText()}
-      </View>
-    );
-  }
+  render = () => (
+    <View>
+      {this.props.isTextEditable || this.props.loading
+        ? this.renderTextInput()
+        : this.renderText()}
+    </View>
+  );
 }
 
 const st = StyleSheet.create({

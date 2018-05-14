@@ -42,7 +42,7 @@ class AppNavigation extends Component<Props, *> {
 
   componentWillUnmount() {
     BackHandler.removeEventListener('hardwareBackPress', this.onBackPress);
-    this.notificationListener.remove();
+    this.notificationListener && this.notificationListener.remove();
   }
 
   onBackPress = () => {

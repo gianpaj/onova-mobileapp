@@ -34,8 +34,8 @@ class SignUpLoginContainer extends React.Component<Props, State> {
   state = {
     index: 0,
     routes: [
-      { key: 'signup', title: I18n.t('SignUpLogin_tabs.signup') },
-      { key: 'login', title: I18n.t('SignUpLogin_tabs.login') },
+      { key: 'signup', title: I18n.t('sign_up_login_tabs.signup') },
+      { key: 'login', title: I18n.t('sign_up_login_tabs.login') },
     ],
   };
 

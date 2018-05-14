@@ -24,6 +24,7 @@ import { Button } from 'native-base';
 
 import type { NavigationScreenProp } from 'react-navigation';
 
+import I18n from '../i18n';
 import * as api from '../utils/api';
 import colors from '../config/colors';
 import type { UserData } from '../types';
@@ -157,7 +158,7 @@ class ImageGridComponent extends React.Component<Props, State> {
     if (this.state.error) {
       return (
         <View style={[styles.container, { height: height - 150 }]}>
-          <Text style={styles.centerText}>Error fetching listing</Text>
+          <Text style={styles.centerText}>{I18n.t('image_grid.error')}</Text>
         </View>
       );
     }
@@ -166,9 +167,11 @@ class ImageGridComponent extends React.Component<Props, State> {
 
     return (
       <View style={styles.emptyContainer}>
-        <Text style={styles.boldText}>There are no items to browse</Text>
+        <Text style={styles.boldText}>
+          {I18n.t('image_grid.empty_state_title')}
+        </Text>
         <Text style={styles.centerText}>
-          {`The more sellers you follow, the more items you'll see in your feed`}
+          {I18n.t('image_grid.empty_state_body')}
         </Text>
         <Button
           block
@@ -181,7 +184,7 @@ class ImageGridComponent extends React.Component<Props, State> {
               fontSize: 16,
               color: colors.white,
             }}>
-            Search
+            {I18n.t('image_grid.empty_state_button')}
           </Text>
         </Button>
       </View>

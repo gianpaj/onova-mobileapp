@@ -1,5 +1,5 @@
 export default {
-  SignUpLogin_tabs: {
+  sign_up_login_tabs: {
     signup: 'SIGNUP',
     login: 'LOGIN',
   },
@@ -23,5 +23,16 @@ export default {
     terms_text_2: 'Terms',
     terms_text_3: 'and',
     terms_text_4: 'Privacy Policy',
+  },
+  home: {
+    clothes_tab: 'Clothes',
+    shoes_tab: 'Shoes',
+    other_tab: 'Other',
+  },
+  image_grid: {
+    error: 'Error fetching listing',
+    empty_state_title: 'There are no items to browse',
+    empty_state_body: `Follow sellers to see items in your feed`,
+    empty_state_button: 'Search',
   },
 };

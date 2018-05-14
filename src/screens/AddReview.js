@@ -322,7 +322,7 @@ export class AddReviewContainer extends Component<Props, State> {
                             textAlign: 'center',
                           }}>
                           {form.isSubmitted && control.isInvalid
-                            ? I18n.t('add_review.error')
+                            ? I18n.t('add_review.rating_error')
                             : ' '}
                         </Text>
                       </View>

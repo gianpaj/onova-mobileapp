@@ -115,7 +115,7 @@ class FollowersContainer extends Component<Props, State> {
         onPress={() => this.goToProfile(user)}>
         <View style={{ alignItems: 'center' }}>
           <Avatar
-            size={'small'}
+            size={'medium'}
             withButton={shouldShowButton}
             uri={user.profilePic}
             placeholderText={user.username}
@@ -128,7 +128,7 @@ class FollowersContainer extends Component<Props, State> {
           <Text
             style={[
               { color: colors.black },
-              shouldShowButton ? { marginTop: -10 } : { marginTop: 10 },
+              shouldShowButton ? { marginTop: -15 } : { marginTop: 10 },
             ]}
             numberOfLines={1} /* android */
           >

@@ -392,9 +392,9 @@ export class ProductContainer extends React.Component<Props, State> {
 
                   <View style={styles.flex1} />
                   <Button
-                    style={{ fontWeight: 9 }}
                     buttonStyle={styles.buyButton}
                     onPress={() => this.onPressBuy()}
+                    textStyle={{ fontWeight: 'bold' }}
                     title={I18n.t('product.buy_button')}
                     loading={this.state.loadingBuy}
                   />
@@ -483,7 +483,7 @@ const styles = StyleSheet.create({
   // },
   buyButton: {
     backgroundColor: colors.red,
-    borderRadius: 5,
+    borderRadius: 2,
     marginTop: 9,
     paddingBottom: 8,
     paddingHorizontal: 22,

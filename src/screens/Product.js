@@ -410,7 +410,13 @@ export class ProductContainer extends React.Component<Props, State> {
                   this.isMyProduct() &&
                     item.photoURIs.length > 1 && { marginTop: 15 },
                 ]}>
-                <Text style={styles.description}>{item.description}</Text>
+                <Text
+                  style={[
+                    styles.description,
+                    item.tags && { marginBottom: 10 },
+                  ]}>
+                  {item.description}
+                </Text>
                 {item.tags && (
                   <ParsedText
                     parse={[
@@ -456,7 +462,6 @@ const styles = StyleSheet.create({
   },
   username: {
     color: colors.black,
-    fontWeight: 'bold',
   },
   location: {
     // height: 20,

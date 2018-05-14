@@ -489,7 +489,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   username: {
-    color: colors.black,
+    color: colors.grey2,
     fontSize: 14,
   },
   addCommentInputContainer: {

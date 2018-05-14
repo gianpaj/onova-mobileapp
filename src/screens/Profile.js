@@ -110,8 +110,8 @@ class ProfileScreen extends React.Component<Props, State> {
     // this.cancelToken = CancelToken.source();
 
     return new Promise((resolve, reject) => {
-      // if the screen navigated with an userID
-      if (params && params._id) {
+      // if the screen navigated with an userID and it's not me
+      if (params && params._id && userData._id !== params._id) {
         api
           .get(`/api/users/${params._id}`)
           .then((res: UserData) => {

@@ -6,6 +6,7 @@ import { Dimensions, StyleSheet } from 'react-native';
 import { Body, Left, Right, Container, Title } from 'native-base';
 import { TabViewAnimated, TabBar, SceneMap } from 'react-native-tab-view';
 
+import I18n from '../i18n';
 import { Header, ImageGrid } from '../components';
 
 import type { NavigationScreenProp } from 'react-navigation';
@@ -31,9 +32,9 @@ export class Home extends PureComponent<Props, State> {
   state = {
     index: 0,
     routes: [
-      { key: 'clothes', title: 'Clothes' },
-      { key: 'shoes', title: 'Shoes' },
-      { key: 'other', title: 'Other' },
+      { key: 'clothes', title: I18n.t('home.clothes_tab') },
+      { key: 'shoes', title: I18n.t('home.shoes_tab') },
+      { key: 'other', title: I18n.t('home.other_tab') },
     ],
   };
 

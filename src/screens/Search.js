@@ -10,6 +10,7 @@ import { SearchWithHasthagsTab } from './SearchWithHasthagsTab';
 import { SearchSellersTab } from './SearchSellersTab';
 import { Header } from '../components';
 
+import I18n from '../i18n';
 import colors from '../config/colors';
 
 import type { NavigationScreenProp } from 'react-navigation';
@@ -33,8 +34,8 @@ class SearchContainer extends Component<Props, State> {
   state = {
     index: 0,
     routes: [
-      { key: 'tags', title: '#Tags' },
-      { key: 'sellers', title: '@Shops' },
+      { key: 'tags', title: I18n.t('search.tags_tab') },
+      { key: 'sellers', title: I18n.t('search.shops_tab') },
     ],
   };
 
@@ -60,7 +61,9 @@ class SearchContainer extends Component<Props, State> {
         <Header hasTabs>
           <Left style={styles.container} />
           <Body style={styles.container}>
-            <Title style={{ color: colors.black }}>Search</Title>
+            <Title style={{ color: colors.black }}>
+              {I18n.t('search.header')}
+            </Title>
           </Body>
           <Right />
         </Header>

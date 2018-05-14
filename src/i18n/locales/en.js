@@ -65,6 +65,9 @@ export default {
     confirm_alert_button_confirm: 'confirm',
   },
   search: {
+    header: 'Пошук',
+    tags_tab: '#Tags',
+    shops_tab: '@Shops',
     empty_state_message: 'No users found',
     error: 'Error while searching',
     hashtag_placeholder: 'hashtag',

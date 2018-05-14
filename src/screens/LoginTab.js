@@ -134,7 +134,7 @@ class LoginTabContainer extends React.Component<Props, State> {
     this.setState({ loadingReset: true });
     api
       .post('/api/auth/reset', {
-        emailAddress: this.state.emailAddress,
+        emailAddress: this.state.emailReset,
       })
       .then((res: any) => {
         if (res.message) {

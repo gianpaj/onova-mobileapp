@@ -36,6 +36,11 @@ export default {
       'Додавай інших користувачів в друзі щоб бачити що вони виставляють',
     empty_state_button: 'Знайти',
   },
+  image_grid_search: {
+    empty_state_title: 'Ми не знайшли нічого подібного',
+    empty_state_body: 'Спробуй пошукати щось інше',
+  },
+
   product: {
     buy_button: 'Чат',
     action_button_delete: 'Видалити',
@@ -45,5 +50,35 @@ export default {
     toast_warning_on_unverified_account: 'Підтвердіть ваш профіль в email...',
     toast_warning_on_product_sold: 'Цю річ вже продано',
     toast_warning_ok_button: 'гаразд',
+  },
+  comments: {
+    action_button_cancel: 'Відмінити',
+    action_button_delete: 'Видалити',
+    add_comment_placeholder: 'Прокоментувати',
+    alert_confirm_deletion: 'Видалити?',
+    toast_warning_mention_not_found: 'Користувача не знайдено',
+    toast_warning_on_unverified_account:
+      'Підтвердіть свій профіль щоб коментувати',
+  },
+  alerts: {
+    loading_message: 'Хвилинку...',
+    network_error: 'Проблема з інтернетом',
+    confirm_alert_button_cancel: 'відміна',
+    confirm_alert_button_confirm: 'гаразд',
+  },
+  search: {
+    empty_state_message: 'Немає таких',
+    error: 'Помилка під час пошуку',
+    hashtag_placeholder: 'hashtag',
+    search_button: 'Знайти',
+    username_placeholder: 'username',
+  },
+  categories: {
+    clothes: 'Одяг',
+    shoes: 'Взуття',
+    other_cat: 'Інше',
+    man: 'Чоловіче',
+    woman: 'Жіноче',
+    other_type: 'Інше',
   },
 };

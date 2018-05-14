@@ -257,8 +257,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   borderInteractive: {
-    borderColor: colors.grey2,
-    borderWidth: 4,
+    borderColor: colors.active,
+    borderWidth: 2,
   },
   // container: {
   //   flex: 1,

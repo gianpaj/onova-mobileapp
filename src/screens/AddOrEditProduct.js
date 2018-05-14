@@ -319,6 +319,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
    * if a brand is typed, allow only one to be added
    */
   onlyOneBrand(text: string): boolean {
+    text = text.toLowerCase();
     if (brands.brands.indexOf(text) == -1) return true;
     if (
       brands.brands.indexOf(text) > -1 &&

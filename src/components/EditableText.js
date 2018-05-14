@@ -11,6 +11,8 @@ import {
   type TextProps,
 } from 'react-native';
 
+import colors from '../config/colors';
+
 type Props = {
   autoCorrect: boolean,
   isTextEditable: boolean,
@@ -85,6 +87,7 @@ class EditableText extends PureComponent<Props, State> {
             placeholder={placeholder}
             value={this.props.text}
             style={style}
+            underlineColorAndroid={colors.black}
             {...this.props.textInputProps}
           />
         </View>
@@ -117,7 +120,7 @@ class EditableText extends PureComponent<Props, State> {
 
 const st = StyleSheet.create({
   textInputContainer: {
-    borderBottomWidth: StyleSheet.hairlineWidth,
+    // borderBottomWidth: StyleSheet.hairlineWidth,
     marginBottom: -StyleSheet.hairlineWidth,
   },
 });

@@ -532,7 +532,7 @@ class SettingsContainer extends Component<Props, State> {
               <NBButton transparent onPress={this.onFAQ}>
                 <NBIcon
                   name="md-information-circle"
-                  color={colors.grey4}
+                  style={{ color: colors.grey4 }}
                   size={28}
                 />
               </NBButton>

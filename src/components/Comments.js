@@ -490,7 +490,6 @@ const styles = StyleSheet.create({
   username: {
     color: colors.black,
     fontSize: 14,
-    fontWeight: 'bold',
   },
   addCommentInputContainer: {
     paddingVertical: Platform.select({

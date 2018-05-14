@@ -453,6 +453,7 @@ const styles = StyleSheet.create({
   },
   username: {
     color: colors.black,
+    fontWeight: 'bold',
   },
   location: {
     // height: 20,

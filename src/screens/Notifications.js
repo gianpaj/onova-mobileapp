@@ -170,7 +170,6 @@ class NotificationsContainer extends Component<Props, State> {
 
   _renderItem = ({ item }: { item: Notification }) => {
     return (
-      // <ListItem style={{ marginLeft: 0, marginRight: -10 }}>
       <ListItem
         button
         underlayColor={colors.red}
@@ -184,13 +183,10 @@ class NotificationsContainer extends Component<Props, State> {
         }}>
         {item.sourceUser && (
           <Avatar
-            size={'small'}
-            style={{ marginHorizontal: 10 }}
+            size={'verySmall'}
+            style={{ marginHorizontal: 10, top: -10 }}
             uri={item.sourceUser.profilePic}
             placeholderText={item.data.senderName}
-            // onButtonPress={() =>
-            //   this.onFollowOrUnfollow(user._id, user.amIAFollower)
-            // }
           />
         )}
         <Body>
@@ -213,15 +209,15 @@ class NotificationsContainer extends Component<Props, State> {
               ': ' + item.data.text}
           </Text>
         </Body>
-        <Right style={{ height: '100%' }}>
+        <Right>
           <Text
+            style={styles.time}
             numberOfLines={1} // android
           >
             {ui.formatTime(item.dateCreated)}
           </Text>
           <IconEL size={28} name="chevron-right" color={colors.grey4} />
         </Right>
-        {/* </TouchableHighlight> */}
       </ListItem>
     );
   };
@@ -297,20 +293,24 @@ const styles = StyleSheet.create({
     height: StyleSheet.hairlineWidth,
     backgroundColor: colors.grey6,
   },
-
   contentRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 6,
+    marginBottom: 0,
   },
   name: {
     color: colors.grey1,
     fontWeight: '800',
     width: '55%',
   },
+  time: {
+    fontSize: 12,
+    color: colors.grey2,
+    marginTop: 5,
+  },
   reviewText: {
     flex: 1,
     textAlignVertical: 'bottom', // android
-    paddingBottom: 5,
+    paddingBottom: 0,
   },
 });

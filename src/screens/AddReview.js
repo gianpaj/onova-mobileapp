@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import {
   Alert,
-  Platform,
+  // Platform,
   StyleSheet,
   Text,
   TextInput,
@@ -15,19 +15,19 @@ import {
   Button,
   Container,
   Content,
-  Footer,
+  // Footer,
   Icon,
   Left,
   Right,
-  Title,
 } from 'native-base';
 import { TextareaItem, Toast } from 'antd-mobile';
 import StarRating from 'react-native-star-rating';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Foect from 'foect';
 
-import { Header } from '../components/index';
+import { Header, Title } from '../components';
 
+import I18n from '../i18n';
 import colors from '../config/colors';
 import typography from '../config/typography';
 import settings from '../config/settings';
@@ -38,7 +38,7 @@ import type { NavigationScreenProp } from 'react-navigation';
 // eslint-disable-next-line
 import type { Order, UserData, ReduxState } from '../types';
 
-const starIcon = Platform.OS == 'ios' ? 'ios-star' : 'md-star';
+// const starIcon = Platform.OS == 'ios' ? 'ios-star' : 'md-star';
 
 type Props = {
   navigation: NavigationScreenProp<*>,
@@ -76,13 +76,13 @@ export class AddReviewContainer extends Component<Props, State> {
         (iAmTheSeller && order.archivedBySeller) ||
         (iAmTheBuyer && order.archivedByBuyer)
       ) {
-        throw new Error('You have already archived this order');
+        throw new Error(I18n.t('add_review.toast_msg_archived'));
       }
       if (
         (iAmTheSeller && order.reviewFromSeller) ||
         (iAmTheBuyer && order.reviewFromBuyer)
       ) {
-        throw new Error('You have already left a review');
+        throw new Error(I18n.t('add_review.toast_msg_reviewed'));
       }
       this.setState({ isLoading: false, order });
 
@@ -136,38 +136,25 @@ export class AddReviewContainer extends Component<Props, State> {
     }
   };
 
-  goToProfile = (user: UserData) => {
-    if (!user._id) return;
-    // $FlowFixMe
-
-    const { _id } = this.props.userData;
-    let routeName = 'profileInStack';
-    if (_id == user._id) {
-      routeName = 'profile';
-    }
-    // $FlowFixMe
-    this.props.navigation.navigate({
-      routeName,
-      params: user,
-      key: `profile-${user.username}`,
-    });
-  };
-
   onArchive = () => {
     const { token } = this.props.userData;
-    ui.showConfirmAlert('Confirm archiving the order?', '', async () => {
-      try {
-        const o = await api.put(
-          `/api/orders/${this.state.order.id}`,
-          { archive: true },
-          { token }
-        );
-        Toast.success('Done!', 3);
-        this.goBackAndRefresh();
-      } catch (error) {
-        console.error(error);
+    ui.showConfirmAlert(
+      I18n.t('add_review.alert_confirm_archive'),
+      '',
+      async () => {
+        try {
+          await api.put(
+            `/api/orders/${this.state.order.id}`,
+            { archive: true },
+            { token }
+          );
+          Toast.success('Done!', 3);
+          this.goBackAndRefresh();
+        } catch (error) {
+          console.error(error);
+        }
       }
-    });
+    );
   };
 
   goBackAndRefresh() {
@@ -194,7 +181,7 @@ export class AddReviewContainer extends Component<Props, State> {
     return (
       <Container>
         <Header>
-          <Left>
+          <Left style={styles.container}>
             <Button
               transparent
               dark
@@ -202,8 +189,8 @@ export class AddReviewContainer extends Component<Props, State> {
               <Icon ios="ios-arrow-back" android="md-arrow-back" />
             </Button>
           </Left>
-          <Body>
-            <Title>Review</Title>
+          <Body style={styles.container}>
+            <Title>{I18n.t('add_review.header')}</Title>
           </Body>
           <Right>
             <Button
@@ -247,7 +234,7 @@ export class AddReviewContainer extends Component<Props, State> {
                                 fontWeight: 'bold',
                                 color: colors.black,
                               }}>
-                              Nova Poshta tracking number
+                              {I18n.t('add_review.nova_poshta_tracking_num')}
                             </Text>
                             <Button
                               transparent
@@ -298,7 +285,7 @@ export class AddReviewContainer extends Component<Props, State> {
                         rows={3}
                         count={settings.MAX_LENGTH_REVIEW}
                         onChangeText={control.onChange}
-                        placeholder="Text (optional)"
+                        placeholder={I18n.t('add_review.text_placeholder')}
                         value={control.value}
                         error={
                           control.value.length > 0 &&
@@ -335,7 +322,7 @@ export class AddReviewContainer extends Component<Props, State> {
                             textAlign: 'center',
                           }}>
                           {form.isSubmitted && control.isInvalid
-                            ? 'Please select a rating'
+                            ? I18n.t('add_review.error')
                             : ' '}
                         </Text>
                       </View>
@@ -350,7 +337,9 @@ export class AddReviewContainer extends Component<Props, State> {
                       alignSelf: 'center',
                     }}
                     onPress={() => form.submit()}>
-                    <Text style={styles.buttonText}>Leave a review</Text>
+                    <Text style={styles.buttonText}>
+                      {I18n.t('add_review.button')}
+                    </Text>
                   </Button>
                 </View>
               </View>
@@ -372,6 +361,11 @@ export const AddReview = connect(mapStateToProps)(AddReviewContainer);
 const widthFields = 280;
 
 const styles = StyleSheet.create({
+  container: {
+    alignItems: 'stretch',
+    flex: 1,
+    justifyContent: 'center',
+  },
   textInputContainer: {
     alignSelf: 'center',
     fontSize: typography.font_body_size,

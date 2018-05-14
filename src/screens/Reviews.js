@@ -10,10 +10,10 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import { ReviewsTab } from './ReviewsTab';
 import { Header } from '../components';
 
+import I18n from '../i18n';
 import colors from '../config/colors';
 
 import type { Dispatch } from '../types';
-
 import type { NavigationScreenProp } from 'react-navigation';
 
 const initialLayout = {
@@ -35,8 +35,8 @@ class ReviewsContainer extends Component<Props, State> {
   state = {
     index: 0,
     routes: [
-      { key: 'sold', title: 'Sold' },
-      { key: 'purchased', title: 'Purchased' },
+      { key: 'sold', title: I18n.t('reviews.sold_tab') },
+      { key: 'purchased', title: I18n.t('reviews.purchased_tab') },
     ],
   };
 
@@ -58,8 +58,8 @@ class ReviewsContainer extends Component<Props, State> {
 
   onInfoIcon() {
     Alert.alert(
-      'Want more reviews?',
-      'To transfer your reviews from VK, Instagram, Facebook or other places, contact us at support@onova.co'
+      I18n.t('reviews.alert_info_title'),
+      I18n.t('reviews.alert_info_body')
     );
   }
 
@@ -76,7 +76,9 @@ class ReviewsContainer extends Component<Props, State> {
             </Button>
           </Left>
           <Body style={styles.container}>
-            <Title style={{ color: colors.black }}>Reviews</Title>
+            <Title style={{ color: colors.black }}>
+              {I18n.t('reviews.header')}
+            </Title>
           </Body>
           <Right>
             <Button

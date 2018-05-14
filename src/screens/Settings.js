@@ -24,12 +24,12 @@ import {
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { FormInput, FormLabel } from 'react-native-elements';
 import type { NavigationScreenProp } from 'react-navigation';
-import { CardView, LiteCreditCardInput } from 'react-native-credit-card-input';
-import FlipCard from 'react-native-flip-card';
+// import { CardView, LiteCreditCardInput } from 'react-native-credit-card-input';
+// import FlipCard from 'react-native-flip-card';
 import { Toast } from 'antd-mobile';
 import axios from 'axios';
 import isEmail from 'validator/lib/isEmail';
-import update from 'immutability-helper';
+// import update from 'immutability-helper';
 // import Instabug from 'instabug-reactnative';
 import { KeyboardAccessoryNavigation } from 'react-native-keyboard-accessory';
 
@@ -37,6 +37,7 @@ import { Accordion, HR, Header } from '../components';
 
 import { getPersonalUserData, logout } from '../actions/actionCreator';
 
+import I18n from '../i18n';
 import colors from '../config/colors';
 import settings from '../config/settings';
 import { validPassword, validShippingAddress } from '../utils/validators';
@@ -128,11 +129,12 @@ class SettingsContainer extends Component<Props, State> {
     // fix error when logging out
     if (!nextProps.userData) return;
 
-    const { emailAddress, shippingAddress, username } = nextProps.userData;
+    const { emailAddress, /*shippingAddress,*/ username } = nextProps.userData;
 
+    /*
     if (this.hasStateDifferedFromProps(nextProps.userData, 'shippingAddress')) {
       this.setState({ shippingAddress });
-    }
+    }*/
 
     if (this.hasStateDifferedFromProps(nextProps.userData, 'username')) {
       this.setState({ username });
@@ -207,6 +209,7 @@ class SettingsContainer extends Component<Props, State> {
       data.emailAddress = emailAddress;
     }
 
+    /*
     if (paymentInfo.valid) {
       const { values } = paymentInfo;
 
@@ -217,11 +220,11 @@ class SettingsContainer extends Component<Props, State> {
 
     if (validShippingAddress(shippingAddress)) {
       data.shippingAddress = shippingAddress;
-    }
+    }*/
 
     console.log(data);
 
-    Toast.loading('Loading...', 3);
+    Toast.loading(I18n.t('alerts.loading_message'), 3);
 
     api
       .put(`/api/users/${userData._id}`, data, { token: userData.token })
@@ -230,11 +233,11 @@ class SettingsContainer extends Component<Props, State> {
         // if we changed the email
         if (data.emailAddress) {
           ui.showToast(
-            'The new email address requires to be valided. Please check your inbox',
+            I18n.t('settings.alert_msg_email_address_changed'),
             'success'
           );
         } else {
-          ui.showToast('Your settings have been updated', 'success');
+          ui.showToast(I18n.t('settings.alert_msg_settigs_changed'), 'success');
         }
         this.props.navigation && this.props.navigation.goBack();
       })
@@ -242,8 +245,8 @@ class SettingsContainer extends Component<Props, State> {
         console.debug(err);
         ui.showToast(err.message, 'danger');
       })
+      // final
       .then(() => {
-        // final
         Toast.hide();
         this.setState({ pending: false });
       });
@@ -276,10 +279,9 @@ class SettingsContainer extends Component<Props, State> {
     return this.setState({ username: u });
   };
 
-  onSignout = () => {
-    this.props.dispatch(logout());
-  };
+  onSignout = () => this.props.dispatch(logout());
 
+  /*
   formatCardInfo() {
     const { paymentInfo } = this.props.userData;
 
@@ -289,6 +291,7 @@ class SettingsContainer extends Component<Props, State> {
       name: ' ',
     };
   }
+  */
 
   shouldComponentUpdate(nextProps) {
     // fix error when logging out
@@ -326,13 +329,13 @@ class SettingsContainer extends Component<Props, State> {
   }
 
   render() {
-    const { userData } = this.props;
+    // const { userData } = this.props;
     const {
       pending,
       isLoading,
       password,
       emailAddress,
-      shippingAddress,
+      // shippingAddress,
       username,
       usernameError,
     } = this.state;
@@ -353,7 +356,9 @@ class SettingsContainer extends Component<Props, State> {
             </NBButton>
           </Left>
           <Body style={styles.container}>
-            <Title style={{ color: colors.black }}>Settings</Title>
+            <Title style={{ color: colors.black }}>
+              {I18n.t('settings.header')}
+            </Title>
           </Body>
           <Right>
             <NBButton
@@ -467,7 +472,9 @@ class SettingsContainer extends Component<Props, State> {
           {/* </View> */}
           {/* </View> */}
           <View style={styles.padder}>
-            <FormLabel labelStyle={styles.label}>Username:</FormLabel>
+            <FormLabel labelStyle={styles.label}>
+              {I18n.t('settings.username_label')}
+            </FormLabel>
             <FormInput
               ref={el => {
                 this.inputs[5] = el;
@@ -477,14 +484,16 @@ class SettingsContainer extends Component<Props, State> {
               editable={!pending}
               inputStyle={styles.input}
               onChangeText={t => this.onUserChange(t)}
-              placeholder="Edit your username"
+              placeholder={I18n.t('settings.username_placeholder')}
               value={username}
               clearButtonMode="while-editing"
               shake={usernameError}
               onFocus={this.handleFocus.bind(this, 5)}
               onSubmitEditing={this.changeInputFocus.bind(this, 1)}
             />
-            <FormLabel labelStyle={styles.label}>Email:</FormLabel>
+            <FormLabel labelStyle={styles.label}>
+              {I18n.t('settings.email_label')}
+            </FormLabel>
             <FormInput
               ref={el => {
                 this.inputs[6] = el;
@@ -494,13 +503,15 @@ class SettingsContainer extends Component<Props, State> {
               editable={!pending}
               inputStyle={styles.input}
               onChangeText={t => this.setState({ emailAddress: t })}
-              placeholder="Edit your email address (Requires re-verification)"
+              placeholder={I18n.t('settings.email_placeholder')}
               value={emailAddress}
               clearButtonMode="while-editing"
               onFocus={this.handleFocus.bind(this, 6)}
               onSubmitEditing={this.changeInputFocus.bind(this, 1)}
             />
-            <FormLabel labelStyle={styles.label}>Password:</FormLabel>
+            <FormLabel labelStyle={styles.label}>
+              {I18n.t('settings.password_label')}
+            </FormLabel>
             <FormInput
               ref={el => {
                 this.inputs[7] = el;
@@ -511,7 +522,7 @@ class SettingsContainer extends Component<Props, State> {
               inputStyle={styles.input}
               onChangeText={t => this.setState({ password: t })}
               secureTextEntry
-              placeholder="******"
+              placeholder={I18n.t('settings.password_placeholder')}
               value={password}
               clearButtonMode="while-editing"
               onFocus={this.handleFocus.bind(this, 7)}
@@ -522,7 +533,7 @@ class SettingsContainer extends Component<Props, State> {
             We won't distract when you get new followers and other non-important matters */}
           <View style={[styles.padder, { alignItems: 'center' }]}>
             <NBButton light full onPress={this.onSignout}>
-              <Text>Sign out</Text>
+              <Text>{I18n.t('settings.sign_out_button')}</Text>
             </NBButton>
             <View
               style={[

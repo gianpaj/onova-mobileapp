@@ -18,6 +18,7 @@ import { Body, ListItem } from 'native-base';
 import { withNavigation } from 'react-navigation';
 import StarRating from 'react-native-star-rating';
 
+import I18n from '../i18n';
 import colors from '../config/colors';
 import * as api from '../utils/api';
 import * as ui from '../utils/ui';
@@ -100,11 +101,7 @@ class ReviewsTabContainer extends Component<Props, State> {
   };
 
   goToProfile = (user: UserData) => {
-    const { _id } = this.props.userData;
     let routeName = 'profileInStack';
-    if (_id == user._id) {
-      routeName = 'profile';
-    }
     // $FlowFixMe
     this.props.navigation.navigate({
       routeName,
@@ -118,8 +115,7 @@ class ReviewsTabContainer extends Component<Props, State> {
     return (
       <View style={styles.emptyStateContainer}>
         <Text style={{ textAlign: 'center' }}>
-          To transfer your reviews from VK, Instagram, Facebook or other places,
-          contact us at support@onova.co
+          {I18n.t('reviews.empty_state_message')}
         </Text>
       </View>
     );

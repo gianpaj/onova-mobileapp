@@ -5,15 +5,13 @@ import { connect } from 'react-redux';
 import {
   Dimensions,
   Image,
-  StyleSheet,
-  Platform,
   RefreshControl,
+  StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
 import {
-  ActionSheet,
   Body,
   Button as NBButton,
   Container,
@@ -27,8 +25,9 @@ import { NavigationActions } from 'react-navigation';
 import type { NavigationScreenProp } from 'react-navigation';
 import { Button } from 'react-native-elements';
 import { NoticeBar, Toast } from 'antd-mobile';
+
+import I18n from '../i18n';
 import typography from '../config/typography';
-// import StarRating from 'react-native-star-rating';
 
 import {
   Avatar,
@@ -85,7 +84,7 @@ const defaultState = {
 };
 
 // TODO: if Product is mine Delete, Edit
-const BUTTONS = ['Report', 'Cancel'];
+// const BUTTONS = ['Report', 'Cancel'];
 
 const { height } = Dimensions.get('window');
 
@@ -224,15 +223,15 @@ class ProfileScreen extends React.Component<Props, State> {
   onGoToSettings = () => {
     if (this.hasUnsavedChanges()) {
       ui.showConfirmAlert(
-        'Unsaved Changes',
-        'Are you sure you want to Cancel?',
+        I18n.t('profile.alert_unsaved_changes_title'),
+        I18n.t('profile.alert_unsaved_changes_body'),
         () => {
           // on continue
           this.goToSettings();
         },
         () => {},
-        'NO',
-        'YES'
+        I18n.t('profile.alert_unsaved_changes_button_no'),
+        I18n.t('profile.alert_unsaved_changes_button_yes')
       );
     } else {
       this.goToSettings();
@@ -272,7 +271,7 @@ class ProfileScreen extends React.Component<Props, State> {
       });
     }
 
-    Toast.loading('Loading...', 30);
+    Toast.loading(I18n.t('profile.toast_saving'), 30);
 
     api
       .put(`/api/users/${userData._id}`, formData, {
@@ -283,7 +282,7 @@ class ProfileScreen extends React.Component<Props, State> {
       .then(res => {
         this.setState({ editing: false });
         console.debug(res);
-        ui.showToast('Your profile has been updated', 'success');
+        ui.showToast(I18n.t('profile.toast_updated'), 'success');
       })
       .catch(err => {
         console.debug(err);
@@ -307,6 +306,7 @@ class ProfileScreen extends React.Component<Props, State> {
     );
   }
 
+  /*
   showActionSheet = () => {
     ActionSheet.show(
       {
@@ -322,7 +322,7 @@ class ProfileScreen extends React.Component<Props, State> {
         }
       }
     );
-  };
+  };*/
 
   isMe(): boolean {
     const navState = this.props.navigation.state;
@@ -333,10 +333,8 @@ class ProfileScreen extends React.Component<Props, State> {
     return navState.params._id == this.props.userData._id;
   }
 
-  ifNavigatedFromProduct = () => {
-    const navState = this.props.navigation.state;
-    return navState.params ? true : false;
-  };
+  ifNavigatedFromProduct = () =>
+    this.props.navigation.state.params ? true : false;
 
   openNotifications = () => {
     this.props.navigation.navigate('notifications');
@@ -369,7 +367,7 @@ class ProfileScreen extends React.Component<Props, State> {
           onPress={() => this.goToReviews()}
           style={styles.alignCenter}>
           <Text style={styles.numbers}>{this.state.reviewsCount}</Text>
-          <Text>reviews</Text>
+          <Text>{I18n.t('profile.reviews_label')}</Text>
           {/* <StarRating
             // eslint-disable-next-line
             buttonStyle={{ paddingHorizontal: 0 }}
@@ -391,7 +389,7 @@ class ProfileScreen extends React.Component<Props, State> {
           onPress={() => this.goToFollowing()}
           style={styles.alignCenter}>
           <Text style={styles.numbers}>{this.state.followersCount}</Text>
-          <Text>followers</Text>
+          <Text>{I18n.t('profile.followers_label')}</Text>
         </TouchableOpacity>
       </View>
     );
@@ -402,12 +400,8 @@ class ProfileScreen extends React.Component<Props, State> {
     const followOrUnfollow = !this.state.isFollowing ? 'follow' : 'unfollow';
     api
       .post(`/api/users/${this.state._id}/${followOrUnfollow}`, {}, { token })
-      .then(() => {
-        this.setState({ isFollowing: followOrUnfollow == 'follow' });
-      })
-      .catch(err => {
-        console.error(err);
-      });
+      .then(() => this.setState({ isFollowing: followOrUnfollow == 'follow' }))
+      .catch(err => console.error(err));
   }
 
   renderProfileTop() {
@@ -453,7 +447,9 @@ class ProfileScreen extends React.Component<Props, State> {
                         : this.setState({ editing: !editing });
                     }}>
                     <Text style={styles.editOrFollowButtonText}>
-                      {editing ? 'Save' : 'Edit Profile'}
+                      {editing
+                        ? I18n.t('profile.save_profile_button')
+                        : I18n.t('profile.edit_profile_button')}
                     </Text>
                   </NBButton>
                 </View>
@@ -475,7 +471,9 @@ class ProfileScreen extends React.Component<Props, State> {
                         styles.editOrFollowButtonText,
                         !isFollowing && { color: colors.white },
                       ]}>
-                      {isFollowing ? 'Unfollow' : 'Follow'}
+                      {isFollowing
+                        ? I18n.t('profile.unfollow_button')
+                        : I18n.t('profile.follow_button')}
                     </Text>
                   </NBButton>
                 </View>
@@ -486,7 +484,7 @@ class ProfileScreen extends React.Component<Props, State> {
             <EditableText
               text={displayName}
               onChangeText={t => this.setState({ displayName: t })}
-              placeholder="Edit your shop name"
+              placeholder={I18n.t('profile.display_name_placeholder')}
               placeholderColor={colors.primary}
               showPlaceholder={this.isMe()}
               isTextEditable={editing && this.isMe()}
@@ -506,7 +504,7 @@ class ProfileScreen extends React.Component<Props, State> {
               autoCorrect
               text={bio}
               onChangeText={t => this.setState({ bio: t })}
-              placeholder="Edit your profile description"
+              placeholder={I18n.t('profile.bio_placeholder')}
               placeholderColor={colors.primary}
               showPlaceholder={this.isMe()}
               isTextEditable={editing && this.isMe()}
@@ -566,7 +564,6 @@ class ProfileScreen extends React.Component<Props, State> {
         <Content
           refreshControl={
             <RefreshControl
-              style={{ backgroundColor: '#E0FFFF' }}
               refreshing={this.state.isRefreshing}
               onRefresh={this.onRefresh}
             />
@@ -577,7 +574,7 @@ class ProfileScreen extends React.Component<Props, State> {
                 <NoticeBar
                   marqueeProps={{ loop: false, style: styles.noticeBar }}
                   icon={false}>
-                  Please verify you email to start buying or selling.
+                  {I18n.t('profile.notice_bar')}
                 </NoticeBar>
               )}
             {this.renderProfileTop()}
@@ -591,18 +588,18 @@ class ProfileScreen extends React.Component<Props, State> {
                 <View style={styles.emptyContainer}>
                   {this.isMe() ? (
                     <View>
-                      <Text>You did not add any items yet</Text>
+                      <Text>{I18n.t('profile.empty_state_message_mine')}</Text>
                       <Button
                         raised
                         rounded
                         backgroundColor={colors.black}
                         containerViewStyle={styles.searchButton}
                         onPress={() => navigation.navigate('addOrEditProduct')}
-                        title="Sell something now"
+                        title={I18n.t('profile.empty_state_button_mine')}
                       />
                     </View>
                   ) : (
-                    <Text>There no any items yet</Text>
+                    <Text>{I18n.t('profile.empty_state_message_others')}</Text>
                   )}
                 </View>
               }

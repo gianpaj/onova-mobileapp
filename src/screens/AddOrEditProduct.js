@@ -30,6 +30,7 @@ import {
 
 import { Header, HR, TagInput } from '../components';
 
+import I18n from '../i18n';
 import colors from '../config/colors';
 import settings from '../config/settings';
 import * as api from '../utils/api';
@@ -123,12 +124,15 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
 
   selectPhotoTapped = (i: number = 0) => {
     if (this.state.pending) return;
-    const BUTTONS = ['Camera', 'Gallery', 'Cancel'];
+    const CAMERA = I18n.t('add_or_edit_item.select_photo_source_camera');
+    const GALLERY = I18n.t('add_or_edit_item.select_photo_source_gallery');
+    const CANCEL = I18n.t('add_or_edit_item.select_photo_source_cancel');
+    const BUTTONS = [CAMERA, GALLERY, CANCEL];
     ActionSheet.show(
       {
         options: BUTTONS,
         destructiveButtonIndex: 0,
-        cancelButtonIndex: BUTTONS.indexOf('Cancel'),
+        cancelButtonIndex: BUTTONS.indexOf(CANCEL),
       },
       buttonIndex => {
         switch (buttonIndex) {
@@ -187,7 +191,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
   }
 
   onAddOrEditItem = () => {
-    Toast.loading('Uploading...', 30);
+    Toast.loading(I18n.t('add_or_edit_item.toast_uploading'), 30);
     const {
       description,
       images,
@@ -397,7 +401,9 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
           </Left>
           <Body style={styles.container}>
             <Title style={{ color: colors.black }}>
-              {inEditMode ? 'Edit Item' : 'Add Item'}
+              {inEditMode
+                ? I18n.t('add_or_edit_item.edit_item_header')
+                : I18n.t('add_or_edit_item.add_item_header')}
             </Title>
           </Body>
           <Right>
@@ -428,7 +434,9 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
             </WingBlank>
           </View>
           <View style={{ paddingHorizontal: 12 }}>
-            <FormLabel labelStyle={styles.label}>Price:</FormLabel>
+            <FormLabel labelStyle={styles.label}>
+              {I18n.t('add_or_edit_item.price_label')}
+            </FormLabel>
             <FormInput
               autoCorrect={false}
               clearButtonMode="while-editing"
@@ -438,10 +446,12 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
               keyboardType="numeric"
               maxLength={8} // 10000.99
               onChangeText={t => this.changePrice(t)}
-              placeholder="123 UAH"
+              placeholder={I18n.t('add_or_edit_item.price_placeholder')}
               value={this.state.price}
             />
-            <FormLabel labelStyle={styles.label}>Description:</FormLabel>
+            <FormLabel labelStyle={styles.label}>
+              {I18n.t('add_or_edit_item.description_label')}
+            </FormLabel>
             <TextareaItem
               editable={!this.state.pending}
               style={styles.inputContainerNew}
@@ -450,14 +460,16 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
               rows={3}
               count={settings.MAX_LENGTH_DESCRIPTION}
               onChangeText={this.onChangeDescription}
-              placeholder="Please provide details such as brand, size, condition about the item"
+              placeholder={I18n.t('add_or_edit_item.description_placeholder')}
               value={this.state.description}
               error={
                 this.state.description.trim().length <
                 settings.MIN_LENGTH_DESCRIPTION
               }
             />
-            <FormLabel labelStyle={styles.label}>#tags:</FormLabel>
+            <FormLabel labelStyle={styles.label}>
+              {I18n.t('add_or_edit_item.hashtags_label')}
+            </FormLabel>
             <TagInput
               inputDefaultWidth={140}
               maxHeight={2000}
@@ -470,7 +482,10 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
               text={this.state.tagsText}
               value={tags}
               inputProps={{
-                placeholder: tags.length < 1 ? 'adidas, summer' : '',
+                placeholder:
+                  tags.length < 1
+                    ? I18n.t('add_or_edit_item.hashtags_placeholder')
+                    : '',
               }}
             />
           </View>

@@ -20,6 +20,8 @@ import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import type { NavigationScreenProp } from 'react-navigation';
 // eslint-disable-next-line
 import type { UserData, ReduxState, Order, Room } from '../types';
+
+import I18n from '../i18n';
 import colors from '../config/colors';
 import * as api from '../utils/api';
 import * as ui from '../utils/ui';
@@ -218,7 +220,7 @@ class ChatContainer extends Component<Props, State> {
     // if (lastMessage.messageType == 'user') {
     const isMyMessage = lastMessage.senderId == myUserId;
 
-    from = isMyMessage ? 'You: ' : '';
+    from = isMyMessage ? I18n.t('chat_rooms.my_message_prefix') : '';
     // } else {
     //   // admin messages
     //   from = `${lastMessage.messageType}: `;
@@ -270,7 +272,9 @@ class ChatContainer extends Component<Props, State> {
     return (
       <View style={[st.container]}>
         <Text>
-          {this.state.hasError ? 'Error fetching chats' : 'No chats found'}
+          {this.state.hasError
+            ? I18n.t('chat_rooms.error')
+            : I18n.t('chat_rooms.empty_state_message')}
         </Text>
       </View>
     );
@@ -298,7 +302,9 @@ class ChatContainer extends Component<Props, State> {
         <Header>
           <Left style={st.container} />
           <Body style={st.container}>
-            <Title style={{ color: colors.black }}>Chats</Title>
+            <Title style={{ color: colors.black }}>
+              {I18n.t('chat_rooms.header')}
+            </Title>
           </Body>
           <Right />
         </Header>

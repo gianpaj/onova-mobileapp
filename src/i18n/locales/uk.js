@@ -40,7 +40,6 @@ export default {
     empty_state_title: 'Ми не знайшли нічого подібного',
     empty_state_body: 'Спробуй пошукати щось інше',
   },
-
   product: {
     buy_button: 'Чат',
     action_button_delete: 'Видалити',

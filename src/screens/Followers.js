@@ -3,6 +3,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import {
+  ActivityIndicator,
   Dimensions,
   FlatList,
   RefreshControl,
@@ -14,6 +15,7 @@ import {
 import { Body, Button, Container, Icon, Left, Right, Title } from 'native-base';
 import { withNavigation } from 'react-navigation';
 
+import I18n from '../i18n';
 import colors from '../config/colors';
 import * as api from '../utils/api';
 // import * as ui from '../utils/ui';
@@ -37,12 +39,14 @@ type Props = {
 type State = {
   data: Array<UserData>,
   isRefreshing: boolean,
+  isLoading: boolean,
   itemHeight: number,
 };
 
 class FollowersContainer extends Component<Props, State> {
   state = {
     isRefreshing: false,
+    isLoading: true,
     data: [],
     itemHeight: -1,
   };
@@ -50,6 +54,7 @@ class FollowersContainer extends Component<Props, State> {
   async componentWillMount() {
     try {
       await this.getFollowersAndSetState();
+      this.setState({ isLoading: false });
     } catch (err) {
       console.error(err);
     }
@@ -75,11 +80,7 @@ class FollowersContainer extends Component<Props, State> {
   }
 
   goToProfile = (user: UserData) => {
-    const { _id } = this.props.userData;
     let routeName = 'profileInStack';
-    if (_id == user._id) {
-      routeName = 'profile';
-    }
     // $FlowFixMe
     this.props.navigation.navigate({
       routeName,
@@ -148,7 +149,7 @@ class FollowersContainer extends Component<Props, State> {
     // TODO: center empty state in RN 0.56 - https://github.com/facebook/react-native/pull/18206
     return (
       <View style={styles.container}>
-        <Text>There are no followers</Text>
+        <Text>{I18n.t('followers.empty_state_message')}</Text>
       </View>
     );
   };
@@ -163,6 +164,12 @@ class FollowersContainer extends Component<Props, State> {
       .then(() => this.setState({ isRefreshing: false }));
   };
 
+  renderLoading = () => (
+    <View style={styles.container}>
+      <ActivityIndicator size="large" />
+    </View>
+  );
+
   render() {
     return (
       <Container>
@@ -176,32 +183,38 @@ class FollowersContainer extends Component<Props, State> {
             </Button>
           </Left>
           <Body style={styles.container}>
-            <Title style={{ color: colors.black }}>Followers</Title>
+            <Title style={{ color: colors.black }}>
+              {I18n.t('followers.header')}
+            </Title>
           </Body>
           <Right />
         </Header>
-        <FlatList
-          data={this.state.data}
-          ItemSeparatorComponent={this._renderSeparator}
-          keyExtractor={this._keyExtractor}
-          ListEmptyComponent={this.renderEmptyState}
-          renderItem={this._renderItem}
-          refreshControl={
-            <RefreshControl
-              refreshing={this.state.isRefreshing}
-              onRefresh={this.refreshFollowers}
-            />
-          }
-          style={styles.root}
-          numColumns={3}
-          getItemLayout={this.getItemLayout}
-          onLayout={this.onLayout}
-          showsVerticalScrollIndicator={false}
-          columnWrapperStyle={[
-            styles.columnWrapper,
-            { height: this.state.itemHeight },
-          ]}
-        />
+        {this.state.isLoading ? (
+          this.renderLoading()
+        ) : (
+          <FlatList
+            data={this.state.data}
+            ItemSeparatorComponent={this._renderSeparator}
+            keyExtractor={this._keyExtractor}
+            ListEmptyComponent={this.renderEmptyState}
+            renderItem={this._renderItem}
+            refreshControl={
+              <RefreshControl
+                refreshing={this.state.isRefreshing}
+                onRefresh={this.refreshFollowers}
+              />
+            }
+            style={styles.root}
+            numColumns={3}
+            getItemLayout={this.getItemLayout}
+            onLayout={this.onLayout}
+            showsVerticalScrollIndicator={false}
+            columnWrapperStyle={[
+              styles.columnWrapper,
+              { height: this.state.itemHeight },
+            ]}
+          />
+        )}
       </Container>
     );
   }

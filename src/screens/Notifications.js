@@ -3,6 +3,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import {
+  ActivityIndicator,
   FlatList,
   Platform,
   RefreshControl,
@@ -24,6 +25,7 @@ import { Icon as IconEL } from 'react-native-elements';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { withNavigation } from 'react-navigation';
 
+import I18n from '../i18n';
 import { Avatar, Header } from '../components';
 import colors from '../config/colors';
 import * as api from '../utils/api';
@@ -50,6 +52,7 @@ type Props = {
 type State = {
   data: Array<Notification>,
   isRefreshing: boolean,
+  isLoading: boolean,
   lastId: string,
 };
 
@@ -57,12 +60,14 @@ class NotificationsContainer extends Component<Props, State> {
   state = {
     data: [],
     isRefreshing: false,
+    isLoading: true,
     lastId: '',
   };
 
   async componentWillMount() {
     try {
       await this.getNotificationsAndSetState();
+      this.setState({ isLoading: false });
     } catch (err) {
       console.error(err);
     }
@@ -92,7 +97,7 @@ class NotificationsContainer extends Component<Props, State> {
           color={colors.grey2}
           style={{ alignSelf: 'center', marginBottom: 30 }}
         />
-        <Text>You do not have any notifications</Text>
+        <Text>{I18n.t('notifications.empty_state_message')}</Text>
       </View>
     );
   };
@@ -124,7 +129,7 @@ class NotificationsContainer extends Component<Props, State> {
     return (
       <View style={styles.container}>
         <Button full light onPress={this.loadMore}>
-          <Text>Load more</Text>
+          <Text>{I18n.t('notifications.load_more_button')}</Text>
         </Button>
       </View>
     );
@@ -221,6 +226,12 @@ class NotificationsContainer extends Component<Props, State> {
     );
   };
 
+  renderLoading = () => (
+    <View style={styles.container}>
+      <ActivityIndicator size="large" />
+    </View>
+  );
+
   render() {
     return (
       <Container>
@@ -234,25 +245,31 @@ class NotificationsContainer extends Component<Props, State> {
             </Button>
           </Left>
           <Body style={styles.container}>
-            <Title style={{ color: colors.black }}>Notifications</Title>
+            <Title style={{ color: colors.black }}>
+              {I18n.t('notifications.header')}
+            </Title>
           </Body>
           <Right />
         </Header>
-        <FlatList
-          data={this.state.data}
-          ItemSeparatorComponent={this._renderSeparator}
-          keyExtractor={this._keyExtractor}
-          ListEmptyComponent={this.renderEmptyState}
-          ListFooterComponent={this.renderFooter}
-          renderItem={this._renderItem}
-          refreshControl={
-            <RefreshControl
-              refreshing={this.state.isRefreshing}
-              onRefresh={this.refreshNotifications}
-            />
-          }
-          style={styles.root}
-        />
+        {this.state.isLoading ? (
+          this.renderLoading()
+        ) : (
+          <FlatList
+            data={this.state.data}
+            ItemSeparatorComponent={this._renderSeparator}
+            keyExtractor={this._keyExtractor}
+            ListEmptyComponent={this.renderEmptyState}
+            ListFooterComponent={this.renderFooter}
+            renderItem={this._renderItem}
+            refreshControl={
+              <RefreshControl
+                refreshing={this.state.isRefreshing}
+                onRefresh={this.refreshNotifications}
+              />
+            }
+            style={styles.root}
+          />
+        )}
       </Container>
     );
   }

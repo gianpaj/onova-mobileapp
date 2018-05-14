@@ -23,7 +23,9 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { NavigationActions } from 'react-navigation';
 import { GiftedChat, Bubble, SystemMessage } from 'react-native-gifted-chat';
+
 import { currentUser as pusherCurrentUser } from '../actions/actionCreator';
+import I18n from '../i18n';
 
 import type { NavigationScreenProp } from 'react-navigation';
 
@@ -414,10 +416,7 @@ class ChatContainer extends Component<Props, State> {
     const { text } = messages[0];
 
     pusherCurrentUser
-      .sendMessage({
-        text,
-        roomId: this.state.roomId,
-      })
+      .sendMessage({ text, roomId: this.state.roomId })
       .then(id => {
         // console.debug('Message sent:', id);
       })
@@ -585,7 +584,7 @@ class ChatContainer extends Component<Props, State> {
                 <GiftedChat
                   messages={messages}
                   onSend={m => this.onSend(m)}
-                  placeholder="Type a message"
+                placeholder={I18n.t('chat.send_msg_placeholder')}
                   // placeholder={I18n.t('chat.typeAMessage')}
                   user={{
                     _id: userData._id,

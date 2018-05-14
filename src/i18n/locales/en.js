@@ -35,4 +35,14 @@ export default {
     empty_state_body: `Follow sellers to see items in your feed`,
     empty_state_button: 'Search',
   },
+  product: {
+    buy_button: 'Chat',
+    action_button_delete: 'Delete',
+    action_button_edit: 'Edit',
+    action_button_cancel: 'Cancel',
+    alert_confirm_delete: 'Confirm deletion?',
+    toast_warning_on_unverified_account: 'You need to verify your account...',
+    toast_warning_on_product_sold: 'This product is not longer for sale',
+    toast_warning_ok_button: 'ok',
+  },
 };

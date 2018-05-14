@@ -26,6 +26,7 @@ import ParsedText from 'react-native-parsed-text';
 
 import { Avatar, Header, MediaView, Comments } from '../components';
 
+import I18n from '../i18n';
 import colors from '../config/colors';
 import * as api from '../utils/api';
 import * as ui from '../utils/ui';
@@ -74,9 +75,12 @@ export class ProductContainer extends React.Component<Props, State> {
   }
 
   showActionSheetForProduct = () => {
+    const DELETE = I18n.t('product.action_button_delete');
+    const EDIT = I18n.t('product.action_button_edit');
+    const CANCEL = I18n.t('product.action_button_cancel');
     let BUTTONS;
     // if (this.isMyProduct()) {
-    BUTTONS = ['Delete', 'Edit', 'Cancel'];
+    BUTTONS = [DELETE, EDIT, CANCEL];
     // } else {
     //   BUTTONS = ['Report', 'Cancel'];
     // }
@@ -85,7 +89,7 @@ export class ProductContainer extends React.Component<Props, State> {
       {
         options: BUTTONS,
         destructiveButtonIndex: 0,
-        cancelButtonIndex: BUTTONS.indexOf('Cancel'),
+        cancelButtonIndex: BUTTONS.indexOf(CANCEL),
       },
       buttonIndex => {
         switch (buttonIndex) {
@@ -93,22 +97,26 @@ export class ProductContainer extends React.Component<Props, State> {
           //   alert('report me like those french girls 🎨');
           //   // report action
           //   break;
-          case BUTTONS.indexOf('Edit'):
+          case BUTTONS.indexOf(EDIT):
             this.props.navigation.navigate('addOrEditProduct', {
               item: this.state.item,
             });
             break;
-          case BUTTONS.indexOf('Delete'):
-            ui.showConfirmAlert('Confirm deletion?', '', () => {
-              this.deleteItem();
-            });
+          case BUTTONS.indexOf(DELETE):
+            ui.showConfirmAlert(
+              I18n.t('product.alert_confirm_delete'),
+              '',
+              () => {
+                this.deleteItem();
+              }
+            );
             // report action
             break;
           // case BUTTONS.indexOf('Share'):
           //   this.showShareActionSheet();
           //   break;
           default:
-            console.debug('Cancel');
+            console.debug(CANCEL);
             break;
         }
       }
@@ -209,9 +217,7 @@ export class ProductContainer extends React.Component<Props, State> {
           }
           resolve(false);
         })
-        .catch(err => {
-          reject(err);
-        });
+        .catch(err => reject(err));
     });
   }
 
@@ -225,34 +231,36 @@ export class ProductContainer extends React.Component<Props, State> {
     this.isUserVerified()
       .then(isVerified => {
         if (!isVerified) {
-          throw Error('You need to validate your account...');
+          throw Error(I18n.t('product.toast_warning_on_unverified_account'));
         }
       })
       .then(() => api.getProduct(item.uuid))
       .then((product: ProductType) => {
         // TODO: if product status is 'reserved' say you can try again later...
         if (product.status !== 'forsale') {
-          throw Error('This product is not longer for sale');
-        } else {
-          // $FlowFixMe
-          this.props.navigation.navigate({
-            routeName: 'chat',
-            params: {
-              productUuid: product.uuid,
-              roomId: -1,
-              userId: product.seller.id,
-            },
-          });
-          // this.props.navigation.navigate({
-          //   routeName: 'checkout',
-          //   params: item,
-          //   key: `checkout-${product.uuid}`,
-          // });
+          throw Error(I18n.t('product.toast_warning_on_product_sold'));
         }
+        // $FlowFixMe
+        this.props.navigation.navigate({
+          routeName: 'chat',
+          params: {
+            productUuid: product.uuid,
+            roomId: -1,
+            userId: product.seller.id,
+          },
+        });
+        // this.props.navigation.navigate({
+        //   routeName: 'checkout',
+        //   params: item,
+        //   key: `checkout-${product.uuid}`,
+        // });
       })
       .catch(err => {
-        // TODO: show toast with err
-        ui.showToast(err.message, 'warning', 'ok');
+        ui.showToast(
+          err.message,
+          'warning',
+          I18n.t('product.toast_warning_ok_button')
+        );
         console.log(err);
       })
       .then(() => {
@@ -388,11 +396,10 @@ export class ProductContainer extends React.Component<Props, State> {
 
                   <View style={styles.flex1} />
                   <Button
-                    // disabled
                     style={{ fontWeight: 9 }}
                     buttonStyle={styles.buyButton}
                     onPress={() => this.onPressBuy()}
-                    title="Chat"
+                    title={I18n.t('product.buy_button')}
                     loading={this.state.loadingBuy}
                   />
                 </View>

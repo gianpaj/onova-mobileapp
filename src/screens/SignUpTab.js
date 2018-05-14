@@ -16,9 +16,9 @@ import { FormInput } from 'react-native-elements';
 // $FlowFixMe
 import AnimButton from 'react-native-micro-animated-button';
 import isEmail from 'validator/lib/isEmail';
+import I18n from '../i18n';
 
 import type { NavigationScreenProp } from 'react-navigation';
-
 import type { Dispatch, ReduxState } from '../types';
 
 import { signup } from '../actions/actionCreator';
@@ -174,7 +174,7 @@ class SignUpTabContainer extends Component<Props, State> {
         <View
           style={{ flex: 1, width: '80%', alignSelf: 'center', marginTop: 40 }}>
           <FormInput
-            placeholder="Username"
+            placeholder={I18n.t('signup.username_placeholder')}
             returnKeyType="next"
             onBlur={this._onBlurUser}
             onFocus={this._onFocusUser}
@@ -187,7 +187,7 @@ class SignUpTabContainer extends Component<Props, State> {
           />
           <FormInput
             ref={c => (this.EmailInput = c)}
-            placeholder="Email"
+            placeholder={I18n.t('signup.email_placeholder')}
             keyboardType="email-address"
             returnKeyType="next"
             onBlur={this._onBlurEmail}
@@ -205,7 +205,7 @@ class SignUpTabContainer extends Component<Props, State> {
           <FormInput
             ref={c => (this.PwdInput = c)}
             secureTextEntry
-            placeholder="Password (minimum 8 characters)"
+            placeholder={I18n.t('signup.password_placeholder')}
             returnKeyType="go"
             onBlur={this._onBlurPass}
             onFocus={this._onFocusPass}
@@ -231,9 +231,9 @@ class SignUpTabContainer extends Component<Props, State> {
               {...buttonProps}
               onPress={this.onSignup}
               testID="SignupButton"
-              label="Create account"
+              label={I18n.t('signup.sign_up_button')}
               labelStyle={{ color: colors.white }}
-              accessibilityLabel="Create account"
+              accessibilityLabel={I18n.t('signup.sign_up_button')}
             />
           </View>
           <View
@@ -245,15 +245,19 @@ class SignUpTabContainer extends Component<Props, State> {
               width: 320,
             }}>
             <Text style={{ color: colors.grey4 }}>
-              By creating an account you agree to the&nbsp;
+              {I18n.t('signup.terms_text_1')}&nbsp;
             </Text>
             <TouchableOpacity onPress={this.openTerm}>
-              <Text style={[styles.linkText, styles.termsLink]}>Terms</Text>
+              <Text style={[styles.linkText, styles.termsLink]}>
+                {I18n.t('signup.terms_text_2')}
+              </Text>
             </TouchableOpacity>
-            <Text style={{ color: colors.grey4 }}>&nbsp;and&nbsp;</Text>
+            <Text style={{ color: colors.grey4 }}>
+              &nbsp;{I18n.t('signup.terms_text_3')}&nbsp;
+            </Text>
             <TouchableOpacity onPress={this.openPolicy}>
               <Text style={[styles.linkText, styles.termsLink]}>
-                Privacy Policy
+                {I18n.t('signup.terms_text_4')}
               </Text>
             </TouchableOpacity>
           </View>

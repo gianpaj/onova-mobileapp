@@ -50,15 +50,33 @@ export default {
     toast_warning_ok_button: 'ok',
   },
   comments: {
-    action_button_delete: 'Delete',
     action_button_cancel: 'Cancel',
+    action_button_delete: 'Delete',
+    add_comment_placeholder: 'Add a comment',
+    alert_confirm_deletion: 'Confirm deletion?',
     toast_warning_mention_not_found: 'User not found',
     toast_warning_on_unverified_account:
       'Please verify your account to write a comment',
-    add_comment_placeholder: 'Add a comment',
   },
   alerts: {
-    network_error: 'Connectivity issue. Please check your internetz',
     loading_message: 'Loading...',
+    network_error: 'Connectivity issue. Please check your internetz',
+    confirm_alert_button_cancel: 'cancel',
+    confirm_alert_button_confirm: 'confirm',
+  },
+  search: {
+    empty_state_message: 'No users found',
+    error: 'Error while searching',
+    hashtag_placeholder: 'hashtag',
+    search_button: 'Search',
+    username_placeholder: 'username',
+  },
+  categories: {
+    clothes: 'Clothes',
+    shoes: 'Shoes',
+    other_cat: 'Other',
+    man: 'Man',
+    woman: 'Woman',
+    other_type: 'Other',
   },
 };

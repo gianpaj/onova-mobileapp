@@ -42,18 +42,6 @@ const width = Dimensions.get('window').width;
 
 const brands = require('../assets/brands.json');
 
-const category_radio_grp_1 = [
-  { label: 'Clothes', value: 0 },
-  { label: 'Shoes', value: 1 },
-  { label: 'Other', value: 2 },
-];
-
-const category_radio_grp_2 = [
-  { label: 'Man', value: 0 },
-  { label: 'Woman', value: 1 },
-  { label: 'Other', value: 2 },
-];
-
 const IMAGE_WIDTH = 700;
 const IMAGE_HEIGHT = 700;
 
@@ -488,7 +476,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
           </View>
           <View style={styles.grps}>
             <RadioForm animation formHorizontal>
-              {category_radio_grp_1.map((option, i) => (
+              {ui.category_radio_grp_1.map((option, i) => (
                 <RadioButton labelHorizontal={false} key={i}>
                   <RadioButtonLabel
                     labelHorizontal
@@ -520,7 +508,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
           <HR color={colors.grey6} />
           <View style={[styles.grps, { marginBottom: 20 }]}>
             <RadioForm animation formHorizontal>
-              {category_radio_grp_2.map((option, i) => (
+              {ui.category_radio_grp_2.map((option, i) => (
                 <RadioButton labelHorizontal={false} key={i}>
                   <RadioButtonLabel
                     labelHorizontal

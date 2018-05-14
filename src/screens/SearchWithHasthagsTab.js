@@ -14,22 +14,12 @@ import { withNavigation } from 'react-navigation';
 
 import type { NavigationScreenProp } from 'react-navigation';
 
+import I18n from '../i18n';
 import colors from '../config/colors';
 import settings from '../config/settings';
+import { category_radio_grp_1, category_radio_grp_2 } from '../utils/ui';
 
 import type { UserData, Dispatch, ReduxState } from '../types';
-
-const category_radio_grp_1 = [
-  { label: 'Clothes', value: 0 },
-  { label: 'Shoes', value: 1 },
-  { label: 'Other', value: 2 },
-];
-
-const category_radio_grp_2 = [
-  { label: 'Man', value: 0 },
-  { label: 'Woman', value: 1 },
-  { label: 'Other', value: 2 },
-];
 
 type Props = {
   dispatch: Dispatch,
@@ -68,9 +58,7 @@ class SearchWithHasthagsTabContainer extends Component<Props, State> {
     });
   };
 
-  onChangeText = (text: string) => {
-    this.setState({ text: text.trim() });
-  };
+  onChangeText = (text: string) => this.setState({ text: text.trim() });
 
   isSearchEnabled(): boolean {
     if (
@@ -132,7 +120,7 @@ class SearchWithHasthagsTabContainer extends Component<Props, State> {
               maxLength={50}
               onChangeText={this.onChangeText}
               onSubmitEditing={this.onSearch}
-              placeholder="hashtag"
+              placeholder={I18n.t('search.hashtag_placeholder')}
               showLoadingIcon={isLoading}
               placeholderTextColor={colors.grey1}
               inputStyle={{
@@ -218,7 +206,7 @@ class SearchWithHasthagsTabContainer extends Component<Props, State> {
                 fontSize: 16,
                 color: this.isSearchEnabled() ? colors.white : colors.grey2,
               }}>
-              Search
+              {I18n.t('search.search_button')}
             </Text>
           </NBButton>
         </View>

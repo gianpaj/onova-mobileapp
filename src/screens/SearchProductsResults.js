@@ -15,23 +15,12 @@ import {
 
 import { Header, ImageGridSearch } from '../components';
 
+import I18n from '../i18n';
 import colors from '../config/colors';
+import { category_radio_grp_1, category_radio_grp_2 } from '../utils/ui';
 
 import type { NavigationScreenProp } from 'react-navigation';
-
 import type { UserData, Dispatch, ReduxState } from '../types';
-
-const category_radio_grp_1 = [
-  { label: 'Clothes', value: 0 },
-  { label: 'Shoes', value: 1 },
-  { label: 'Other', value: 2 },
-];
-
-const category_radio_grp_2 = [
-  { label: 'Man', value: 0 },
-  { label: 'Woman', value: 1 },
-  { label: 'Other', value: 2 },
-];
 
 type Props = {
   dispatch: Dispatch,
@@ -51,26 +40,22 @@ class SearchProductsResultsContainer extends Component<Props, State> {
 
   componentWillMount() {
     const { params } = this.props.navigation.state;
-    let terms = {};
+    let terms = params;
 
     // for development
     if (!params) {
       terms.tag = 'boots';
-    } else {
-      terms = params;
     }
     this.setState({ terms });
   }
 
-  getCategoryLabel(num: number): string {
+  getCategoryLabel = (num: number): string =>
     // $FlowFixMe
-    return category_radio_grp_1.find(g => g.value == num).label;
-  }
+    category_radio_grp_1.find(g => g.value == num).label;
 
-  getTypeLabel(num: number): string {
+  getTypeLabel = (num: number): string =>
     // $FlowFixMe
-    return category_radio_grp_2.find(g => g.value == num).label;
-  }
+    category_radio_grp_2.find(g => g.value == num).label;
 
   render() {
     if (!this.state.terms) return null;
@@ -102,7 +87,9 @@ class SearchProductsResultsContainer extends Component<Props, State> {
               </Title>
             ) : (
               // else, a combination
-              <Title style={{ color: colors.black }}>Results</Title>
+              <Title style={{ color: colors.black }}>
+                {I18n.t('search.results_header')}
+              </Title>
             )}
           </Body>
           <Right />

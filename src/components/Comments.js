@@ -115,10 +115,14 @@ class Comments extends React.Component<Props, State> {
           //   // report action
           //   break;
           case BUTTONS.indexOf(DELETE):
-            ui.showConfirmAlert('Confirm deletion?', '', () => {
-              this.deleteComment(comment);
-              // this.forceUpdate();
-            });
+            ui.showConfirmAlert(
+              I18n.t('comments.alert_confirm_deletion'),
+              '',
+              () => {
+                this.deleteComment(comment);
+                // this.forceUpdate();
+              }
+            );
             // report action
             break;
           // case BUTTONS.indexOf('Share'):

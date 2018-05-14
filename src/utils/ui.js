@@ -2,6 +2,7 @@
 
 import { Alert } from 'react-native';
 import { Toast } from 'native-base';
+import I18n from '../i18n';
 
 // prettier-ignore
 import {
@@ -22,7 +23,8 @@ export function showToast(
   type: string = '',
   buttonText: ?string
 ) {
-  if (!buttonText && type == 'success') buttonText = 'ok';
+  if (!buttonText && type == 'success')
+    buttonText = I18n.t('product.toast_warning_ok_button');
   Toast.show({
     text: message,
     type: type,
@@ -46,8 +48,8 @@ export function showConfirmAlert(
   message: string,
   onContinue: () => void | Promise<any>,
   onDismiss?: () => void = () => {},
-  cancelText: string = 'CANCEL',
-  confirmText: string = 'CONFIRM'
+  cancelText: string = I18n.t('alerts.confirm_alert_button_cancel'),
+  confirmText: string = I18n.t('alerts.confirm_alert_button_confirm')
 ) {
   return Alert.alert(title, message, [
     { text: cancelText, onPress: onDismiss, style: 'cancel' },
@@ -69,3 +71,15 @@ export function formatTime(createdAt: Date): string {
   }
   return format(createdAt, 'D MMM');
 }
+
+export const category_radio_grp_1 = [
+  { label: I18n.t('categories.clothes'), value: 0 },
+  { label: I18n.t('categories.shoes'), value: 1 },
+  { label: I18n.t('categories.other_cat'), value: 2 },
+];
+
+export const category_radio_grp_2 = [
+  { label: I18n.t('categories.man'), value: 0 },
+  { label: I18n.t('categories.woman'), value: 1 },
+  { label: I18n.t('categories.other_type'), value: 2 },
+];

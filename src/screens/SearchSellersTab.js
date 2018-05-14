@@ -14,6 +14,7 @@ import { withNavigation } from 'react-navigation';
 
 import { Avatar } from '../components';
 
+import I18n from '../i18n';
 import colors from '../config/colors';
 import * as api from '../utils/api';
 
@@ -57,9 +58,7 @@ class SearchSellersTabContainer extends Component<Props, State> {
         this.setState({ hasError: true });
         console.debug(err);
       })
-      .then(() => {
-        this.setState({ isLoading: false, showingResults: true });
-      });
+      .then(() => this.setState({ isLoading: false, showingResults: true }));
   };
 
   onChangeText = (text: string) => {
@@ -67,9 +66,8 @@ class SearchSellersTabContainer extends Component<Props, State> {
     this.setState({ text: text.trim() });
   };
 
-  isSearchEnabled(): boolean {
-    return this.state.text.length > 2 && this.state.isLoading == false;
-  }
+  isSearchEnabled = (): boolean =>
+    this.state.text.length > 2 && this.state.isLoading == false;
 
   goToProfile = (user: UserData) => {
     console.log(user);
@@ -88,7 +86,9 @@ class SearchSellersTabContainer extends Component<Props, State> {
     return (
       <View style={styles.container}>
         <Text>
-          {this.state.hasError ? 'Error searching' : 'No users found'}
+          {this.state.hasError
+            ? I18n.t('search.error')
+            : I18n.t('search.empty_state_message')}
         </Text>
       </View>
     );
@@ -160,7 +160,7 @@ class SearchSellersTabContainer extends Component<Props, State> {
                 maxLength={30}
                 onChangeText={this.onChangeText}
                 onSubmitEditing={this.onSearch}
-                placeholder="username"
+                placeholder={I18n.t('search.username_placeholder')}
                 showLoadingIcon={isLoading}
                 placeholderTextColor={colors.grey1}
                 inputStyle={{

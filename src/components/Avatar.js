@@ -3,7 +3,6 @@
 
 import React, { PureComponent } from 'react';
 import {
-  // ActivityIndicator,
   Image,
   Platform,
   StyleSheet,
@@ -74,9 +73,7 @@ export default class Avatar extends PureComponent<Props, State> {
       })
       .catch(e => {
         if (e.code == 'E_PICKER_CANCELLED') {
-          this.setState({
-            failed: true,
-          });
+          this.setState({ failed: true });
           if (this.props.onChangeFailed) {
             this.props.onChangeFailed();
           }

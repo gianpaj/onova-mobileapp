@@ -39,17 +39,17 @@ platform :android do
       auth_token: '***REMOVED***',
       org_slug: 'onova',
       project_slug: 'mobile',
-      # version: '...', # release version to create
+      version: ENV["PACKAGE_VERSION"], # release version to create
       app_identifier: 'com.onova.app',
       finalize: true # Whether to finalize the release. If not provided or false, the release can be finalized using the sentry_finalize_release action
     )
 
     # upload_to_play_store
 
-    slack(
-      message: "The Onova Android App successfully released 🎉",
-      username: 'fastlane',
-      use_webhook_configured_username_and_icon: 'false'
-    )
+    # slack(
+    #   message: "The Onova Android App successfully released 🎉",
+    #   username: 'fastlane',
+    #   use_webhook_configured_username_and_icon: 'false'
+    # )
   end
 end

@@ -230,8 +230,8 @@ class ProfileScreen extends React.Component<Props, State> {
           this.goToSettings();
         },
         () => {},
-        I18n.t('profile.alert_unsaved_changes_button_no'),
-        I18n.t('profile.alert_unsaved_changes_button_yes')
+        I18n.t('profile.alert_unsaved_changes_button_cancel'),
+        I18n.t('profile.alert_unsaved_changes_button_confirm')
       );
     } else {
       this.goToSettings();
@@ -589,14 +589,20 @@ class ProfileScreen extends React.Component<Props, State> {
                   {this.isMe() ? (
                     <View>
                       <Text>{I18n.t('profile.empty_state_message_mine')}</Text>
-                      <Button
-                        raised
-                        rounded
-                        backgroundColor={colors.black}
-                        containerViewStyle={styles.searchButton}
-                        onPress={() => navigation.navigate('addOrEditProduct')}
-                        title={I18n.t('profile.empty_state_button_mine')}
-                      />
+                      <NBButton
+                        block
+                        backgroundColor={colors.primary}
+                        style={styles.searchButton}
+                        onPress={() => navigation.navigate('addOrEditProduct')}>
+                        <Text
+                          // eslint-disable-next-line
+                          style={{
+                            fontSize: 16,
+                            color: colors.white,
+                          }}>
+                          {I18n.t('profile.empty_state_button_mine')}
+                        </Text>
+                      </NBButton>
                     </View>
                   ) : (
                     <Text>{I18n.t('profile.empty_state_message_others')}</Text>

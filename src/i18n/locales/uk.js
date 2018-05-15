@@ -48,7 +48,7 @@ export default {
     alert_confirm_delete: 'Точно видалити?',
     toast_warning_on_unverified_account: 'Підтвердіть ваш профіль в email...',
     toast_warning_on_product_sold: 'Цю річ вже продано',
-    toast_warning_ok_button: 'гаразд',
+    toast_warning_ok_button: 'ОК',
   },
   comments: {
     action_button_cancel: 'Відмінити',
@@ -63,7 +63,7 @@ export default {
     loading_message: 'Хвилинку...',
     network_error: 'Проблема з інтернетом',
     confirm_alert_button_cancel: 'відміна',
-    confirm_alert_button_confirm: 'гаразд',
+    confirm_alert_button_confirm: 'OK',
   },
   search: {
     header: 'Пошук',
@@ -114,12 +114,12 @@ export default {
     toast_saving: 'Зберігаємо...',
     toast_updated: 'Твій профіль оновлено',
     alert_unsaved_changes_title: 'Незбережені зміни',
-    alert_unsaved_changes_body: 'Впевнений?',
+    alert_unsaved_changes_body: 'Не зберігати зміни?',
     alert_unsaved_changes_button_cancel: 'Ні',
     alert_unsaved_changes_button_confirm: 'Так',
   },
   chat_rooms: {
-    header: 'Замовлення',
+    header: 'Чати',
     error: 'Помилка завантаження чатів',
     empty_state_message: 'Немає замовлень',
     my_message_prefix: 'Ти: ',

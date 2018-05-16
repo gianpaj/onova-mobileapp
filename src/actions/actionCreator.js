@@ -245,13 +245,12 @@ const signup = (data: SignupData) => (dispatch: Dispatch) => (
           ...{ token: res.token, provider: 'email' },
         };
 
-        initializePusher(userData).then(userData =>
-          dispatch({ type: SIGNUP_SUCCESS, payload: userData })
-        );
-        registerPushNotifications()
+        initializePusher(userData)
+          .then(() => registerPushNotifications())
           .then(pushToken => {
             if (pushToken) return sendToken(pushToken, userData);
           })
+          .then(() => dispatch({ type: SIGNUP_SUCCESS, payload: userData }))
           .catch(err => {
             console.warn(err);
             dispatch({ type: SIGNUP_FAIL });

@@ -11,10 +11,10 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { Content } from 'native-base';
+import { Content, Button } from 'native-base';
 import { FormInput } from 'react-native-elements';
 // $FlowFixMe
-import AnimButton from 'react-native-micro-animated-button';
+// import AnimButton from 'react-native-micro-animated-button';
 import isEmail from 'validator/lib/isEmail';
 import I18n from '../i18n';
 
@@ -54,14 +54,14 @@ class SignUpTabContainer extends Component<Props, State> {
   });
 
   state = {
-    // username: 'testaccount',
-    // emailAddress: 'gianpa+test2@gmail.com',
-    // password: 'express2',
+    // username: 'gianfranco',
+    // emailAddress: 'gianfranco_p@hotmail.com',
+    // password: '***REMOVED***',
     username: '',
     emailAddress: '',
     password: '',
     loading: false,
-    disabled: true,
+    disabled: false,
     hasFocusUser: false,
     hasFocusEmail: false,
     hasFocusPass: false,
@@ -70,6 +70,8 @@ class SignUpTabContainer extends Component<Props, State> {
   onSignup = () => {
     const { username, emailAddress, password, disabled } = this.state;
     if (disabled) return;
+
+    this.setState({ disabled: true });
 
     console.debug('onSignup()', username, emailAddress, password);
 
@@ -85,9 +87,14 @@ class SignUpTabContainer extends Component<Props, State> {
     //   });
     // }
 
-    this.signupBtn.load();
+    // this.signupBtn.load();
 
-    this.props.dispatch(signup({ username, emailAddress, password }));
+    this.props
+      .dispatch(signup({ username, emailAddress, password }))
+      .then(() => {
+        console.warn('finished');
+        this.setState({ disabled: false });
+      });
   };
 
   onUserChange = (u: string) => {
@@ -108,7 +115,7 @@ class SignUpTabContainer extends Component<Props, State> {
     );
   }
 
-  componentWillUpdate(nextProps, nextState) {
+  DISABLED_componentWillUpdate(nextProps, nextState) {
     const { loading } = nextProps;
     const {
       emailAddress: emailAddressNext,
@@ -118,9 +125,9 @@ class SignUpTabContainer extends Component<Props, State> {
     } = nextState;
     const { emailAddress, password, disabled, username } = this.state;
 
-    if (!loading && this.signupBtn) {
-      this.signupBtn.reset();
-    }
+    // if (!loading && this.signupBtn) {
+    //   this.signupBtn.reset();
+    // }
 
     if (
       emailAddressNext !== emailAddress ||
@@ -131,22 +138,35 @@ class SignUpTabContainer extends Component<Props, State> {
       if (
         !isEmail(emailAddressNext) ||
         !validPassword(passwordNext) ||
-        usernameNext.length < 3 ||
-        loading
+        usernameNext.length < 3
+        // loading
       ) {
         this.setState({ disabled: true });
-        Animated.timing(this.animatedValue, {
-          toValue: 0,
-          duration: 300,
-        }).start();
+        // Animated.timing(this.animatedValue, {
+        //   toValue: 0,
+        //   duration: 300,
+        // }).start();
       } else {
         this.setState({ disabled: false });
-        Animated.timing(this.animatedValue, {
-          toValue: 1,
-          duration: 300,
-        }).start();
+        // Animated.timing(this.animatedValue, {
+        //   toValue: 1,
+        //   duration: 300,
+        // }).start();
       }
     }
+  }
+
+  isDisabled() {
+    const { emailAddress, password, username, disabled } = this.state;
+    if (
+      !isEmail(emailAddress) ||
+      !validPassword(password) ||
+      username.length < 3 ||
+      disabled
+    ) {
+      return true;
+    }
+    return false;
   }
 
   _inputProps = {
@@ -167,7 +187,7 @@ class SignUpTabContainer extends Component<Props, State> {
   _onFocusPass = () => this.setState({ hasFocusPass: true });
 
   render() {
-    const { hasFocusUser, hasFocusEmail, hasFocusPass } = this.state;
+    const { hasFocusUser, hasFocusEmail, hasFocusPass, disabled } = this.state;
 
     return (
       <Content testID="signup-form">
@@ -217,7 +237,7 @@ class SignUpTabContainer extends Component<Props, State> {
             {...this._inputProps}
           />
           <View style={styles.mt15}>
-            <AnimButton
+            {/* <AnimButton
               ref={r => (this.signupBtn = r)}
               disabled={this.state.disabled}
               style={[
@@ -234,7 +254,25 @@ class SignUpTabContainer extends Component<Props, State> {
               label={I18n.t('signup.sign_up_button')}
               labelStyle={{ color: colors.white }}
               accessibilityLabel={I18n.t('signup.sign_up_button')}
-            />
+            /> */}
+            <Button
+              block
+              disabled={this.isDisabled()}
+              backgroundColor={
+                this.isDisabled() ? colors.grey4 : colors.primary
+              }
+              style={styles.searchButton}
+              {...buttonProps}
+              onPress={this.onSignup}>
+              <Text
+                // eslint-disable-next-line
+                style={{
+                  fontSize: 16,
+                  color: colors.white,
+                }}>
+                {I18n.t('signup.sign_up_button')}
+              </Text>
+            </Button>
           </View>
           <View
             style={{

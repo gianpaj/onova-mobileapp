@@ -14,7 +14,7 @@ if (process.env.NODE_ENV == 'prod' || process.env.NODE_ENV == 'production') {
 console.debug(`connecting to ${config.API_URL}`);
 
 axios.defaults.baseURL = config.API_URL;
-const TIMEOUT = 4000;
+const TIMEOUT = 10000;
 
 type Options = {
   suppressRedBox?: boolean, // If true, no warning is shown on failed request

@@ -137,7 +137,7 @@ async function navigate(notif) {
       console.debug(triggeredBy);
       const user = await api.getUser(triggeredBy);
       return NavigationService.navigate(
-        'profile',
+        'profileInStack',
         user,
         `profile-${user.username}`
       );

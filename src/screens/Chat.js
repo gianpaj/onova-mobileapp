@@ -501,21 +501,27 @@ class ChatContainer extends Component<Props, State> {
   };
 
   renderBubble = props => (
-      <Bubble
-        {...props}
-        textStyle={{
-          right: { color: colors.black },
-        }}
-        wrapperStyle={{
-          left: {
-            backgroundColor: colors.white,
-            borderWidth: StyleSheet.hairlineWidth,
-            borderColor: colors.grey3,
-          },
-          right: { backgroundColor: colors.grey5 },
-        }}
-      />
-    );
+    <Bubble
+      {...props}
+      messageTextProps={{
+        linkStyle: {
+          right: { color: 'red' },
+          left: { color: 'red' },
+        },
+      }}
+      textStyle={{
+        right: { color: colors.black },
+      }}
+      wrapperStyle={{
+        left: {
+          backgroundColor: colors.white,
+          borderWidth: StyleSheet.hairlineWidth,
+          borderColor: colors.grey3,
+        },
+        right: { backgroundColor: colors.grey5 },
+      }}
+    />
+  );
 
   goToAddReviewOrCancel(orderId: string) {
     // $FlowFixMe
@@ -528,12 +534,12 @@ class ChatContainer extends Component<Props, State> {
   }
 
   _renderOrderCircle = ({ item }: { item: Order }) => (
-      <TouchableOpacity
-        style={st.orderCircle}
-        onPress={() => this.goToAddReviewOrCancel(item.id)}>
+    <TouchableOpacity
+      style={st.orderCircle}
+      onPress={() => this.goToAddReviewOrCancel(item.id)}>
       <Image style={st.itemImage} source={{ uri: item.product.photoURIs[0] }} />
-      </TouchableOpacity>
-    );
+    </TouchableOpacity>
+  );
 
   _keyExtractor = (item): number => item.id;
 
@@ -571,41 +577,46 @@ class ChatContainer extends Component<Props, State> {
           ) : (
             <View style={st.flex1}>
               <View style={st.orderCirclesContainer}>
-              {orders.length > 0 && (
-                <FlatList
-                  data={orders}
-                  keyExtractor={this._keyExtractor}
-                  horizontal
-                  ItemSeparatorComponent={this._renderSeparatorHorizontal}
-                  renderItem={this._renderOrderCircle}
-                />
-              )}
+                {orders.length > 0 && (
+                  <FlatList
+                    data={orders}
+                    keyExtractor={this._keyExtractor}
+                    horizontal
+                    ItemSeparatorComponent={this._renderSeparatorHorizontal}
+                    renderItem={this._renderOrderCircle}
+                  />
+                )}
               </View>
-                <GiftedChat
-                  messages={messages}
-                  onSend={m => this.onSend(m)}
+              <GiftedChat
+                messages={messages}
+                onSend={m => this.onSend(m)}
                 placeholder={I18n.t('chat.send_msg_placeholder')}
-                  // placeholder={I18n.t('chat.typeAMessage')}
-                  user={{
-                    _id: userData._id,
-                    name: userData.username,
-                    avatar: userData.profilePic,
-                    //   userData.profilePic !== null ? userData.profilePic : null,
-                  }}
-                  // locale=""
-                  // timeformat="LT"
-                  // dateformat="ll"
-                  // onPressAvatar={() => alert('code me like those french girls 🎨')}
-                  renderSend={this.renderSend}
-                  renderSystemMessage={this.renderSystemMessage}
-                  renderBubble={this.renderBubble}
-                  // renderActions={this.renderActions}
-                  // keyboardShouldPersistTaps="handled"
-                  maxInputLength={settings.MAX_CHAT_INPUT_LENGTH}
-                  // renderInputToolbar={this.renderInputToolbar}
-                  // renderAvatar={null}
-                />
-              </View>
+                // placeholder={I18n.t('chat.typeAMessage')}
+                user={{
+                  _id: userData._id,
+                  name: userData.username,
+                  avatar: userData.profilePic,
+                  //   userData.profilePic !== null ? userData.profilePic : null,
+                }}
+                // locale=""
+                // timeformat="LT"
+                // dateformat="ll"
+                // onPressAvatar={() => alert('code me like those french girls 🎨')}
+                renderSend={this.renderSend}
+                renderSystemMessage={this.renderSystemMessage}
+                renderBubble={this.renderBubble}
+                // parsePatterns={(linkStyle) => [
+                //   {type: 'url', style: linkStyle, onPress: this.onUrlPress},
+                //   {type: 'phone', style: linkStyle, onPress: this.onPhonePress},
+                //   {type: 'email', style: linkStyle, onPress: this.onEmailPress},
+                //   ]}
+                // renderActions={this.renderActions}
+                // keyboardShouldPersistTaps="handled"
+                maxInputLength={settings.MAX_CHAT_INPUT_LENGTH}
+                // renderInputToolbar={this.renderInputToolbar}
+                // renderAvatar={null}
+              />
+            </View>
           )}
         </View>
       </Container>
@@ -678,7 +689,7 @@ const st = StyleSheet.create({
     margin: 4,
   },
   itemImage: {
-    borderRadius: 50,
+    // borderRadius: 50, // FIXME:
     height: 50,
     width: 50,
   },

@@ -91,10 +91,7 @@ class SignUpTabContainer extends Component<Props, State> {
 
     this.props
       .dispatch(signup({ username, emailAddress, password }))
-      .then(() => {
-        console.warn('finished');
-        this.setState({ disabled: false });
-      });
+      .then(() => this.setState({ disabled: false }));
   };
 
   onUserChange = (u: string) => {

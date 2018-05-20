@@ -11,6 +11,8 @@ target 'onova' do
 
   pod 'SentryReactNative', :path => '../node_modules/react-native-sentry'
 
+  pod 'lottie-react-native', :path => '../node_modules/lottie-react-native'
+
   pod 'RNI18n', :path => '../node_modules/react-native-i18n'
 
   target 'onovaTests' do

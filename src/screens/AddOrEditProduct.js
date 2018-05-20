@@ -230,6 +230,15 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
 
     if (inEditMode) {
       return (
+        // fetch(`https://onova.co/api/products/${uuid}`, {
+        //   method: 'POST',
+        //   headers: {
+        //     Accept: 'application/json',
+        //     Authorization: token,
+        //   },
+        //   body: formData,
+        // })
+        //   .then(response => response.json())
         api
           .put(`/api/products/${uuid}`, formData, { token, timeout: 300000 })
           .then(res => {

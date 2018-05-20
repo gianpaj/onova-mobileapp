@@ -141,8 +141,6 @@ class FollowersContainer extends Component<Props, State> {
 
   _keyExtractor = (item): string => item.dateCreated;
 
-  _renderSeparator = () => <View style={styles.separator} />;
-
   renderEmptyState = () => {
     // if (!this.state.showingResults) return null;
 
@@ -194,7 +192,6 @@ class FollowersContainer extends Component<Props, State> {
         ) : (
           <FlatList
             data={this.state.data}
-            ItemSeparatorComponent={this._renderSeparator}
             keyExtractor={this._keyExtractor}
             ListEmptyComponent={this.renderEmptyState}
             renderItem={this._renderItem}
@@ -247,10 +244,6 @@ const styles = StyleSheet.create({
   },
   root: {
     height: '100%',
-  },
-  separator: {
-    height: StyleSheet.hairlineWidth,
-    backgroundColor: colors.grey5,
   },
   columnWrapper: {
     flex: 1,

@@ -3,7 +3,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import {
-  Animated,
+  // Animated,
   Linking,
   Platform,
   StyleSheet,
@@ -36,8 +36,6 @@ type State = {
   username: string,
   emailAddress: string,
   password: string,
-  loading: false,
-  disabled: boolean,
   hasFocusUser: boolean,
   hasFocusEmail: boolean,
   hasFocusPass: boolean,
@@ -45,13 +43,13 @@ type State = {
 
 class SignUpTabContainer extends Component<Props, State> {
   EmailInput: ?FormInput;
-  signupBtn;
+  // signupBtn;
   PwdInput: ?FormInput;
-  animatedValue = new Animated.Value(0);
-  backgroundColor = this.animatedValue.interpolate({
-    inputRange: [0, 1],
-    outputRange: [colors.grey4, colors.primary],
-  });
+  // animatedValue = new Animated.Value(0);
+  // backgroundColor = this.animatedValue.interpolate({
+  //   inputRange: [0, 1],
+  //   outputRange: [colors.grey4, colors.primary],
+  // });
 
   state = {
     // username: 'gianfranco',
@@ -60,18 +58,13 @@ class SignUpTabContainer extends Component<Props, State> {
     username: '',
     emailAddress: '',
     password: '',
-    loading: false,
-    disabled: false,
     hasFocusUser: false,
     hasFocusEmail: false,
     hasFocusPass: false,
   };
 
   onSignup = () => {
-    const { username, emailAddress, password, disabled } = this.state;
-    if (disabled) return;
-
-    this.setState({ disabled: true });
+    const { username, emailAddress, password } = this.state;
 
     console.debug('onSignup()', username, emailAddress, password);
 
@@ -89,14 +82,12 @@ class SignUpTabContainer extends Component<Props, State> {
 
     // this.signupBtn.load();
 
-    this.props
-      .dispatch(signup({ username, emailAddress, password }))
-      .then(() => this.setState({ disabled: false }));
+    this.props.dispatch(signup({ username, emailAddress, password }));
   };
 
   onUserChange = (u: string) => {
     if (settings.USERNAME_REGEX.test(u) || u.length == 0) {
-      return this.setState({ username: u });
+      this.setState({ username: u });
     }
   };
 
@@ -154,12 +145,12 @@ class SignUpTabContainer extends Component<Props, State> {
   }
 
   isDisabled() {
-    const { emailAddress, password, username, disabled } = this.state;
+    const { emailAddress, password, username } = this.state;
     if (
       !isEmail(emailAddress) ||
       !validPassword(password) ||
       username.length < 3 ||
-      disabled
+      this.props.loading
     ) {
       return true;
     }
@@ -184,7 +175,7 @@ class SignUpTabContainer extends Component<Props, State> {
   _onFocusPass = () => this.setState({ hasFocusPass: true });
 
   render() {
-    const { hasFocusUser, hasFocusEmail, hasFocusPass, disabled } = this.state;
+    const { hasFocusUser, hasFocusEmail, hasFocusPass } = this.state;
 
     return (
       <Content testID="signup-form">
@@ -316,11 +307,11 @@ const styles = StyleSheet.create({
     color: colors.black,
     width: '100%',
   },
-  SignupButton: {
-    alignSelf: 'center',
-    borderWidth: 0,
-    borderRadius: 0,
-  },
+  // SignupButton: {
+  //   alignSelf: 'center',
+  //   borderWidth: 0,
+  //   borderRadius: 0,
+  // },
   mt15: {
     marginTop: 15,
   },
@@ -331,6 +322,7 @@ const styles = StyleSheet.create({
 
 const mapStateToProps: any = (state: ReduxState) => ({
   userData: state.LoginReducer.data,
+  loading: state.LoginReducer.loading,
 });
 
 export const SignUpTab = connect(mapStateToProps)(SignUpTabContainer);

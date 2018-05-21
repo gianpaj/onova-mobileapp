@@ -214,7 +214,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
         name: 'image' + i + '.jpg',
       });
     });
-    formData.append('description', description);
+    formData.append('description', description.trim());
     formData.append('price', price);
     formData.append('categoryIds', grp_1.toString());
     formData.append('typeIds', grp_2.toString());

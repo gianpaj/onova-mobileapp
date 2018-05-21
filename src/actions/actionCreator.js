@@ -40,6 +40,7 @@ if (process.env.NODE_ENV == 'dev') {
 
 const login = (data: LoginData) => (dispatch: Dispatch) => (
   dispatch({ type: LOGIN_PENDING }),
+  Toast.loading('', 30),
   api
     .post('/api/auth/login', {
       emailAddress: data.emailAddress,
@@ -88,6 +89,7 @@ const login = (data: LoginData) => (dispatch: Dispatch) => (
     .catch((err: api.APIError) => {
       dispatch(handleErrorWithAlert({ type: LOGIN_FAIL }, err));
     })
+    .then(() => Toast.hide())
 );
 
 const initializePusher = (userData: UserData): Promise<any | Error> => {
@@ -230,6 +232,7 @@ const checkLogin = (userData: UserData) => (dispatch: Dispatch) => {
 
 const signup = (data: SignupData) => (dispatch: Dispatch) => (
   dispatch({ type: SIGNUP_PENDING }),
+  Toast.loading('', 30),
   api
     .post('/api/users', {
       username: data.username,
@@ -273,6 +276,7 @@ const signup = (data: SignupData) => (dispatch: Dispatch) => (
     .catch((err: api.APIError) =>
       dispatch(handleErrorWithAlert({ type: SIGNUP_FAIL }, err))
     )
+    .then(() => Toast.hide())
 );
 
 const getPersonalUserData = (userId: string, options?: any = {}) => (
@@ -280,7 +284,7 @@ const getPersonalUserData = (userId: string, options?: any = {}) => (
   getState: GetState
 ) => {
   const { token } = getState().LoginReducer;
-  Toast.loading('Loading...', 30);
+  Toast.loading(I18n.t('alerts.loading_message'), 30);
   dispatch({ type: GETUSER_PENDING });
   return api
     .get(`/api/users/${userId}/personal`, { ...options, token })

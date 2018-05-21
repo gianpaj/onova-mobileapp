@@ -184,7 +184,7 @@ class ChatContainer extends Component<Props, State> {
               if (
                 message == 'Duplicate order' &&
                 data.data &&
-                // TODO: set to 'paid' once payment is completed
+                // TODO: check is 'paid' once payment is completed
                 data.data.status == 'pending'
               ) {
                 return data.data;

@@ -3,7 +3,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import {
-  Animated,
+  // Animated,
   Modal,
   Platform,
   StyleSheet,
@@ -55,18 +55,18 @@ if (__DEV__) {
       // emailAddress: 'gianpa+test@gmail.com',
       // password: 'expressos',
       // prod
-      // emailAddress: 'gianpa+test2@gmail.com',
-      // password: 'express2',
+      emailAddress: 'gianfranco_p@hotmail.com',
+      password: '***REMOVED***007',
       // prod
-      emailAddress: 'gianpa@gmail.com',
-      password: '***REMOVED***',
+      // emailAddress: 'gianpa@gmail.com',
+      // password: '***REMOVED***',
     };
   }
 }
 
 type Props = {
   dispatch: Dispatch,
-  loadingLogin: boolean,
+  loading: boolean,
   navigation?: NavigationScreenProp<*>,
 };
 
@@ -76,7 +76,6 @@ type State = {
   loadingReset: boolean,
   modalVisible: boolean,
   password: string,
-  disabled: boolean,
   hasFocusEmail: boolean,
   hasFocusPass: boolean,
   hasFocusEmailReset: boolean,
@@ -84,12 +83,12 @@ type State = {
 
 class LoginTabContainer extends React.Component<Props, State> {
   PwdInput: ?FormInput;
-  loginBtn;
-  animatedValue = new Animated.Value(__DEV__ ? 1 : 0);
-  backgroundColor = this.animatedValue.interpolate({
-    inputRange: [0, 1],
-    outputRange: [colors.grey4, colors.primary],
-  });
+  // loginBtn;
+  // animatedValue = new Animated.Value(__DEV__ ? 1 : 0);
+  // backgroundColor = this.animatedValue.interpolate({
+  //   inputRange: [0, 1],
+  //   outputRange: [colors.grey4, colors.primary],
+  // });
 
   state = {
     emailAddress: '',
@@ -97,7 +96,6 @@ class LoginTabContainer extends React.Component<Props, State> {
     modalVisible: false,
     emailReset: '',
     loadingReset: false,
-    disabled: __DEV__ ? false : true,
     hasFocusEmail: false,
     hasFocusPass: false,
     hasFocusEmailReset: false,
@@ -106,8 +104,7 @@ class LoginTabContainer extends React.Component<Props, State> {
 
   onLogin = () => {
     const { emailAddress, password } = this.state;
-    if (!emailAddress || !password || !this.loginBtn) return;
-    this.loginBtn.load();
+    if (!emailAddress || !password || this.props.loading) return;
     this.props.dispatch(login({ emailAddress, password }));
   };
 
@@ -155,7 +152,7 @@ class LoginTabContainer extends React.Component<Props, State> {
     autoCapitalize: 'none',
     autoCorrect: false,
     clearButtonMode: 'while-editing',
-    editable: !this.props.loadingLogin,
+    editable: !this.props.loading,
     enablesReturnKeyAutomatically: true,
     inputStyle: styles.input,
   };
@@ -163,7 +160,7 @@ class LoginTabContainer extends React.Component<Props, State> {
   /**
    * trigger the background color animation of the LoginButton
    */
-  componentWillUpdate(nextProps, nextState) {
+  DISABLED_componentWillUpdate(nextProps, nextState) {
     const { loadingLogin } = nextProps;
     const {
       emailAddress: emailAddressNext,
@@ -173,7 +170,7 @@ class LoginTabContainer extends React.Component<Props, State> {
     const { emailAddress, password, disabled } = this.state;
 
     // if we are waiting for the login API call to return
-    if (!loadingLogin && this.loginBtn) {
+    if (!loading && this.loginBtn) {
       this.loginBtn.reset();
     }
 
@@ -185,10 +182,10 @@ class LoginTabContainer extends React.Component<Props, State> {
       // if the email or password are empty
       const areFieldEmpty = !emailAddressNext || !passwordNext;
       this.setState({ disabled: areFieldEmpty });
-      Animated.timing(this.animatedValue, {
-        toValue: areFieldEmpty ? 0 : 1,
-        duration: 300,
-      }).start();
+      // Animated.timing(this.animatedValue, {
+      //   toValue: areFieldEmpty ? 0 : 1,
+      //   duration: 300,
+      // }).start();
     }
   }
 
@@ -201,14 +198,16 @@ class LoginTabContainer extends React.Component<Props, State> {
   _onBlurEmailReset = () => this.setState({ hasFocusEmailReset: false });
   _onFocusEmailReset = () => this.setState({ hasFocusEmailReset: true });
 
+  isDisabled() {
+    const { emailAddress, password } = this.state;
+    if (!emailAddress || !password || this.props.loading) {
+      return true;
+    }
+    return false;
+  }
+
   render() {
-    const {
-      emailAddress,
-      password,
-      disabled,
-      hasFocusEmail,
-      hasFocusPass,
-    } = this.state;
+    const { emailAddress, password, hasFocusEmail, hasFocusPass } = this.state;
 
     return (
       <Content testID="login-form">
@@ -251,7 +250,7 @@ class LoginTabContainer extends React.Component<Props, State> {
             {...this._inputProps}
           />
           <View style={{ marginTop: 15 }}>
-            <AnimButton
+            {/* <AnimButton
               ref={r => (this.loginBtn = r)}
               disabled={disabled}
               noRadius
@@ -266,7 +265,25 @@ class LoginTabContainer extends React.Component<Props, State> {
               label={I18n.t('login.log_in_button')}
               labelStyle={{ color: colors.white }}
               testID="LoginButton"
-            />
+            /> */}
+            <NBButton
+              block
+              disabled={this.isDisabled()}
+              backgroundColor={
+                this.isDisabled() ? colors.grey4 : colors.primary
+              }
+              style={styles.searchButton}
+              {...buttonProps}
+              onPress={this.onLogin}>
+              <Text
+                // eslint-disable-next-line
+                style={{
+                  fontSize: 16,
+                  color: colors.white,
+                }}>
+                {I18n.t('login.log_in_button')}
+              </Text>
+            </NBButton>
             <TouchableOpacity
               style={[styles.hr, { padding: 10, margin: 20 }]}
               onPress={() => this.setModalVisible(true)}>
@@ -352,7 +369,7 @@ class LoginTabContainer extends React.Component<Props, State> {
 }
 
 const mapStateToProps: any = (state: ReduxState) => ({
-  loadingLogin: state.LoginReducer.loading,
+  loading: state.LoginReducer.loading,
 });
 
 export const LoginTab = connect(mapStateToProps)(LoginTabContainer);

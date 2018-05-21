@@ -282,14 +282,12 @@ class ChatContainer extends Component<Props, State> {
               });
           }, MARK_AS_READ_AFTER_MS);
         })
-        .then(
-          () =>
-            !pusherCurrentUser.roomSubscriptions[roomId] &&
-            pusherCurrentUser.subscribeToRoom({
-              roomId,
-              hooks: { onNewMessage: this.newMessage },
-              messageLimit: 0,
-            })
+        .then(() =>
+          pusherCurrentUser.subscribeToRoom({
+            roomId,
+            hooks: { onNewMessage: this.newMessage },
+            messageLimit: 0,
+          })
         )
         .then(() => this.fetchOrders(thisRoom))
         .then(() => resolve())

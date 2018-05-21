@@ -158,9 +158,9 @@ const initializePusher = (userData: UserData): Promise<any | Error> => {
   });
 };
 
-function onNewMessage(params) {
-  console.log(params);
-}
+// function onNewMessage(params) {
+//   console.log(params);
+// }
 
 /* @DISABLED
 const loginWithGoogle = () => (dispatch: Dispatch) => {

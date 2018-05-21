@@ -16,6 +16,7 @@ import {
 import { Body, Container, Left, Right, Title } from 'native-base';
 import { NavigationActions } from 'react-navigation';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import type { NavigationScreenProp } from 'react-navigation';
 // eslint-disable-next-line
@@ -270,7 +271,13 @@ class ChatContainer extends Component<Props, State> {
   renderEmptyState = () => {
     if (this.state.ordersAndChats.length > 0) return null;
     return (
-      <View style={[st.container]}>
+      <View style={st.emptyContainer}>
+        <MaterialCommunityIcons
+          size={48}
+          name="cart-plus"
+          color={colors.grey2}
+          style={{ alignSelf: 'center', marginBottom: 30 }}
+        />
         <Text>
           {this.state.hasError
             ? I18n.t('chat_rooms.error')
@@ -352,6 +359,12 @@ const st = StyleSheet.create({
     alignItems: 'stretch',
     flex: 1,
     justifyContent: 'center',
+  },
+  emptyContainer: {
+    alignItems: 'center',
+    flex: 1,
+    justifyContent: 'center',
+    padding: 20,
   },
   root: {
     height: '100%',

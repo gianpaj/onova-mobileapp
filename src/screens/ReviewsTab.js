@@ -74,7 +74,11 @@ class ReviewsTabContainer extends Component<Props, State> {
     // get the first image size and then setState `data` for the FlatList
     if (res.data && res.data.length) {
       const { data } = res;
-      Image.getSize(data[0].order.product.photoURIs[0], (w, h) => {
+      const uri = data[0].order.product.photoURIs[0].replace(
+        '.jpg',
+        '-thumb.jpg'
+      );
+      Image.getSize(uri, (w, h) => {
         this.setState(
           {
             imageHeight: Math.floor(h * (width / 4 / w)),
@@ -131,6 +135,8 @@ class ReviewsTabContainer extends Component<Props, State> {
     const reviewer =
       order.seller == review.fromUser ? order.seller : order.buyer;
 
+    const uri = order.product.photoURIs[0].replace('.jpg', '-thumb.jpg');
+
     return (
       <TouchableHighlight
         underlayColor={colors.grey4}
@@ -144,7 +150,7 @@ class ReviewsTabContainer extends Component<Props, State> {
                 height: this.state.imageHeight,
               },
             ]}
-            source={{ uri: order.product.photoURIs[0] }}
+            source={{ uri }}
           />
           <Body>
             <View style={styles.contentRow}>

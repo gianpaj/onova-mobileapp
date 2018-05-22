@@ -535,7 +535,12 @@ class ChatContainer extends Component<Props, State> {
     <TouchableOpacity
       style={st.orderCircle}
       onPress={() => this.goToAddReviewOrCancel(item.id)}>
-      <Image style={st.itemImage} source={{ uri: item.product.photoURIs[0] }} />
+      <Image
+        style={st.itemImage}
+        source={{
+          uri: item.product.photoURIs[0].replace('.jpg', '-thumb.jpg'),
+        }}
+      />
     </TouchableOpacity>
   );
 

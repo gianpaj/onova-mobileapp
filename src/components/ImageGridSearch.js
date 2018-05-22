@@ -24,8 +24,14 @@ import type { NavigationScreenProp } from 'react-navigation';
 
 import I18n from '../i18n';
 import * as api from '../utils/api';
-import colors from '../config/colors';
+// import colors from '../config/colors';
 import type { UserData } from '../types';
+
+const VIEWABILITY_CONFIG = {
+  minimumViewTime: 3000,
+  viewAreaCoveragePercentThreshold: 100,
+  waitForInteraction: true,
+};
 
 type Props = {
   terms: any,
@@ -146,12 +152,9 @@ class ImageGridComponent extends React.Component<Props, State> {
         ) : (
           // if not loading or no error
           <FlatList
-            onLayout={this.onLayout}
+            // onLayout={this.onLayout}
             style={styles.list}
-            columnWrapperStyle={[
-              styles.columnWrapper,
-              { height: this.state.itemHeight },
-            ]}
+            columnWrapperStyle={[styles.columnWrapper, { height: width / 3 }]}
             data={items}
             renderItem={this.renderItem}
             numColumns={3}
@@ -159,6 +162,10 @@ class ImageGridComponent extends React.Component<Props, State> {
             getItemLayout={this.getItemLayout}
             showsVerticalScrollIndicator={false}
             ListEmptyComponent={this.renderEmptyState}
+            initialNumToRender={6}
+            viewabilityConfig={VIEWABILITY_CONFIG}
+            refreshing={false}
+            windowSize={6}
           />
         )}
       </View>

@@ -33,6 +33,12 @@ import type { UserData } from '../types';
 // const loading = require('../assets/images/loading.jpg');
 // const TTL = 4 * 60 * 60; // cache images for 4 hours
 
+const VIEWABILITY_CONFIG = {
+  minimumViewTime: 3000,
+  viewAreaCoveragePercentThreshold: 100,
+  waitForInteraction: true,
+};
+
 // TODO: define type of Item
 
 type Props = {
@@ -45,23 +51,23 @@ type Props = {
 type State = {
   error: boolean,
   items: Array<any>,
-  itemHeight: number,
+  // itemHeight: number,
   loading: boolean,
   // loadingMore: boolean,
   refreshing: boolean,
-  skip: number,
+  lastId: number,
 };
 
 const { width, height } = Dimensions.get('window');
 
-class ImageGridComponent extends React.Component<Props, State> {
+class ImageGridComponent extends React.PureComponent<Props, State> {
   state = {
     error: false,
     items: [],
-    itemHeight: 0,
+    // itemHeight: 0,
     loading: true,
     refreshing: false,
-    skip: 0,
+    lastId: 0,
   };
 
   componentDidMount() {
@@ -84,10 +90,11 @@ class ImageGridComponent extends React.Component<Props, State> {
       .catch(() => this.setState({ error: true }));
   };
 
-  onLayout = () => this.setState({ itemHeight: width / 3 });
+  // onLayout = () => this.setState({ itemHeight: width / 3 });
 
   getItemLayout = (data: any, index: number) => {
-    const { itemHeight } = this.state;
+    // const { itemHeight } = this.state;
+    const itemHeight = width / 3;
     return { length: itemHeight, offset: itemHeight * index, index };
   };
 
@@ -103,7 +110,7 @@ class ImageGridComponent extends React.Component<Props, State> {
   }
 
   renderItem = ({ item }: any) => {
-    const uri = JSON.parse(JSON.stringify(item)).photoURIs[0];
+    const uri = item.photoURIs[0].replace('.jpg', '-thumb.jpg');
     return (
       <View style={styles.imageContainer} id={item.uuid}>
         <TouchableOpacity
@@ -131,12 +138,9 @@ class ImageGridComponent extends React.Component<Props, State> {
     return (
       <View style={styles.container}>
         <FlatList
-          onLayout={this.onLayout}
+          // onLayout={this.onLayout}
           style={styles.list}
-          columnWrapperStyle={[
-            styles.columnWrapper,
-            { height: this.state.itemHeight },
-          ]}
+          columnWrapperStyle={[styles.columnWrapper, { height: width / 3 }]}
           refreshControl={this.renderRefreshControl()}
           data={items}
           renderItem={this.renderItem}
@@ -145,6 +149,10 @@ class ImageGridComponent extends React.Component<Props, State> {
           getItemLayout={this.getItemLayout}
           showsVerticalScrollIndicator={false}
           ListEmptyComponent={this.renderEmptyState}
+          initialNumToRender={6}
+          viewabilityConfig={VIEWABILITY_CONFIG}
+          refreshing={false}
+          windowSize={6}
         />
       </View>
     );

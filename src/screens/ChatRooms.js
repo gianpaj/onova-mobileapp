@@ -126,7 +126,10 @@ class ChatContainer extends Component<Props, State> {
               const isPartnerOnline = partner.presence.state == 'online';
               return {
                 ...room,
-                lastMessage: msgs[0],
+                // if no messages (very first order step)
+                lastMessage: msgs.length
+                  ? msgs[0]
+                  : { createdAt: room.createdAt },
                 hasUnreadMessages: cursor
                   ? cursor.position < msgs[0].id
                   : false,
@@ -137,7 +140,7 @@ class ChatContainer extends Component<Props, State> {
           );
         })
         .then(ordersAndChats => {
-          if (ordersAndChats.length > 0 && ordersAndChats[0].lastMessage) {
+          if (ordersAndChats.length > 1) {
             return ordersAndChats.sort(
               (a, b) =>
                 new Date(b.lastMessage.createdAt) -
@@ -173,6 +176,7 @@ class ChatContainer extends Component<Props, State> {
     this.props.navigation.dispatch(navigateToChat);
   };
 
+  /*
   _renderOrderCircle = ({ item }: { item: Room }) => {
     // if no messages (very first order step)
     if (!item.lastMessage) {
@@ -207,16 +211,12 @@ class ChatContainer extends Component<Props, State> {
       </TouchableOpacity>
     );
   };
+  */
 
   _renderRoomRow = ({ item }: { item: Room }) => {
     let { lastMessage } = item;
     let from;
     const myUserId = this.props.userData._id;
-
-    // if no messages (very first order step)
-    if (!lastMessage) {
-      lastMessage = { senderId: -1, createdAt: item.createdAt };
-    }
 
     // if (lastMessage.messageType == 'user') {
     const isMyMessage = lastMessage.senderId == myUserId;
@@ -302,7 +302,6 @@ class ChatContainer extends Component<Props, State> {
     const { hasError, ordersAndChats, isLoading } = this.state;
 
     // const allOrders = ordersAndChats.reduce((a, b) => a.concat(b.orders), []);
-    const allOrders = [];
 
     return (
       <Container>
@@ -322,7 +321,7 @@ class ChatContainer extends Component<Props, State> {
             </View>
           ) : (
             <View>
-              {allOrders.length > 0 && (
+              {/* {allOrders.length > 0 && (
                 <FlatList
                   style={{ height: 60 + 8 + 8 }}
                   data={allOrders}
@@ -331,7 +330,7 @@ class ChatContainer extends Component<Props, State> {
                   ItemSeparatorComponent={this._renderSeparatorHorizontal}
                   renderItem={this._renderOrderCircle}
                 />
-              )}
+              )} */}
               <FlatList
                 data={ordersAndChats}
                 ItemSeparatorComponent={this._renderSeparator}

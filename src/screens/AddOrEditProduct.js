@@ -27,6 +27,7 @@ import {
   ImagePicker as AntImagePicker,
   WingBlank,
 } from 'antd-mobile';
+import RNFetchBlob from 'react-native-fetch-blob';
 
 import { Header, HR, TagInput } from '../components';
 
@@ -99,7 +100,6 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     // if editing
     if (params && params.item) {
       const { item }: { item: Product } = params;
-      console.log(item);
       let images = [];
       for (let i = 0; i < item.photoURIs.length; i++) {
         images.push({
@@ -190,7 +190,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     this.props.navigation.goBack();
   }
 
-  onAddOrEditItem = () => {
+  onAddOrEditItem = async () => {
     Toast.loading(I18n.t('add_or_edit_item.toast_uploading'), 30);
     const {
       description,
@@ -206,14 +206,6 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     this.setState({ pending: true, tagsText: '' });
 
     const formData = new FormData();
-    images.forEach((image, i) => {
-      // $FlowFixMe
-      formData.append('photos', {
-        uri: image.url,
-        type: 'image/jpeg',
-        name: 'image' + i + '.jpg',
-      });
-    });
     formData.append('description', description.trim());
     formData.append('price', price);
     formData.append('categoryIds', grp_1.toString());
@@ -229,48 +221,90 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     const { token } = this.props.userData;
 
     if (inEditMode) {
-      return (
-        // fetch(`https://onova.co/api/products/${uuid}`, {
-        //   method: 'POST',
-        //   headers: {
-        //     Accept: 'application/json',
-        //     Authorization: token,
-        //   },
-        //   body: formData,
-        // })
-        //   .then(response => response.json())
-        api
-          .put(`/api/products/${uuid}`, formData, { token, timeout: 300000 })
-          .then(res => {
-            console.debug(res);
-            this.closeModal();
+      var todo = images.length;
+      if (!todo) return;
+      images.forEach(async (image, i) => {
+        console.log(image);
+        // if remote file
+        if (image.url.startsWith('http')) {
+          RNFetchBlob.config({
+            fileCache: true,
+            session: 'edit',
+            appendExt: 'jpg',
           })
-          .catch(err => {
-            console.debug(err);
-            ui.showToast(err.message, 'warning');
-          })
-          // final
-          .then(() => {
-            this.setState({ pending: false });
-            Toast.hide();
-          })
-      );
-    }
-    api
-      .post('/api/products', formData, { token, timeout: 300000 })
-      .then(res => {
-        console.debug(res);
-        this.closeModal();
-      })
-      .catch(err => {
-        console.debug(err);
-        ui.showToast(err.message, 'warning');
-      })
-      // final
-      .then(() => {
-        this.setState({ pending: false });
-        Toast.hide();
+            .fetch('GET', image.url)
+            .then(res => {
+              // the temp file path
+              // console.log('The file saved to ', res.path());
+              formData.append('photos', {
+                uri: `file://${res.path()}`,
+                type: 'image/jpeg',
+                name: 'image' + i + '.jpg',
+              });
+              if (--todo === 0) return this.uploadEditedProduct(uuid, formData);
+            });
+        } else {
+          formData.append('photos', {
+            uri: image.url,
+            type: 'image/jpeg',
+            name: 'image' + i + '.jpg',
+          });
+          if (--todo === 0) return this.uploadEditedProduct(uuid, formData);
+        }
       });
+
+      // RNFetchBlob.session('edit')
+      //   .dispose()
+      //   .then(() => console.log('cleaned'));
+    } else {
+      images.forEach((image, i) => {
+        // $FlowFixMe
+        formData.append('photos', {
+          uri: image.url,
+          type: 'image/jpeg',
+          name: 'image' + i + '.jpg',
+        });
+      });
+      api
+        .post('/api/products', formData, { token, timeout: 300000 })
+        .then(res => {
+          console.debug(res);
+          this.closeModal();
+        })
+        .catch(err => {
+          console.debug(err);
+          ui.showToast(err.message, 'warning');
+        })
+        // final
+        .then(() => {
+          this.setState({ pending: false });
+          Toast.hide();
+        });
+    }
+  };
+
+  uploadEditedProduct = (uuid: string, formData: any): Promise<any> => {
+    const { token } = this.props.userData;
+    return (
+      api
+        .put(`/api/products/${uuid}`, formData, {
+          token,
+          timeout: 30000,
+        })
+        .then(res => {
+          console.debug(res);
+          this.closeModal();
+        })
+        .catch(err => {
+          console.debug(err);
+          ui.showToast(err.message, 'warning');
+        })
+        // final
+        .then(() => {
+          this.setState({ pending: false });
+          Toast.hide();
+        })
+    );
   };
 
   /**

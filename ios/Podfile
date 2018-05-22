@@ -15,6 +15,8 @@ target 'onova' do
 
   pod 'RNI18n', :path => '../node_modules/react-native-i18n'
 
+  pod 'react-native-fetch-blob', :path => '../node_modules/react-native-fetch-blob'
+
   target 'onovaTests' do
     inherit! :search_paths
     # Pods for testing

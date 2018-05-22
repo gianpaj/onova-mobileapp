@@ -104,7 +104,7 @@ const initializePusher = (userData: UserData): Promise<any | Error> => {
 
     setTimeout(() => {
       reject(new Error('Error connecting to Chat provider'));
-    }, 15000);
+    }, 30000);
 
     try {
       const chatManager = new ChatManager({

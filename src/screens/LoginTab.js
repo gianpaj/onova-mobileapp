@@ -272,10 +272,7 @@ class LoginTabContainer extends React.Component<Props, State> {
             <NBButton
               block
               disabled={this.isDisabled()}
-              backgroundColor={
-                this.isDisabled() ? colors.grey4 : colors.primary
-              }
-              style={styles.searchButton}
+              dark={!this.isDisabled()}
               {...buttonProps}
               onPress={this.onLogin}>
               <Text

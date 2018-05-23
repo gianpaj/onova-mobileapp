@@ -68,9 +68,8 @@ class SearchWithHasthagsTabContainer extends Component<Props, State> {
       return false;
 
     return (
-      this.state.grp_1 !== -1 ||
-      this.state.grp_2 !== -1 ||
-      this.state.isLoading == false
+      this.state.grp_1 !== -1 || this.state.grp_2 !== -1
+      // this.state.isLoading == false
     );
   }
 
@@ -197,14 +196,14 @@ class SearchWithHasthagsTabContainer extends Component<Props, State> {
           ]}>
           <NBButton
             block
-            backgroundColor={colors.primary}
+            dark={this.isSearchEnabled()}
             disabled={!this.isSearchEnabled()}
             onPress={this.onSearch}>
             <Text
               // eslint-disable-next-line
               style={{
                 fontSize: 16,
-                color: this.isSearchEnabled() ? colors.white : colors.grey2,
+                color: colors.white,
               }}>
               {I18n.t('search.search_button')}
             </Text>

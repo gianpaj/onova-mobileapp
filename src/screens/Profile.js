@@ -591,7 +591,7 @@ class ProfileScreen extends React.Component<Props, State> {
                       <Text>{I18n.t('profile.empty_state_message_mine')}</Text>
                       <NBButton
                         block
-                        backgroundColor={colors.primary}
+                        dark
                         style={styles.searchButton}
                         onPress={() => navigation.navigate('addOrEditProduct')}>
                         <Text
@@ -688,7 +688,6 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   searchButton: {
-    backgroundColor: colors.transparent,
     marginTop: 20,
   },
 });

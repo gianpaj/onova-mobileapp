@@ -246,10 +246,7 @@ class SignUpTabContainer extends Component<Props, State> {
             <Button
               block
               disabled={this.isDisabled()}
-              backgroundColor={
-                this.isDisabled() ? colors.grey4 : colors.primary
-              }
-              style={styles.searchButton}
+              dark={!this.isDisabled()}
               {...buttonProps}
               onPress={this.onSignup}>
               <Text

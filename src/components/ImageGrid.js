@@ -183,7 +183,6 @@ class ImageGridComponent extends React.PureComponent<Props, State> {
         </Text>
         <Button
           block
-          backgroundColor={colors.primary}
           style={styles.searchButton}
           onPress={() => this.props.navigation.navigate('search')}>
           <Text
@@ -236,6 +235,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   searchButton: {
+    backgroundColor: colors.primary,
     alignSelf: 'center',
     marginTop: 20,
     width: 100,

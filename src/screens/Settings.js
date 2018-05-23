@@ -222,14 +222,14 @@ class SettingsContainer extends Component<Props, State> {
       data.shippingAddress = shippingAddress;
     }*/
 
-    console.log(data);
+    // console.log(data);
 
     Toast.loading(I18n.t('alerts.loading_message'), 3);
 
     api
       .put(`/api/users/${userData._id}`, data, { token: userData.token })
       .then(res => {
-        console.log(res);
+        // console.log(res);
         // if we changed the email
         if (data.emailAddress) {
           ui.showToast(

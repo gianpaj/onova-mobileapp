@@ -60,6 +60,8 @@ export default {
       'Підтвердіть свій профіль щоб коментувати',
   },
   alerts: {
+    email_error: 'Цей email не зареєстровано',
+    password_error: 'Неправильний пароль',
     loading_message: 'Хвилинку...',
     network_error: 'Проблема з інтернетом',
     confirm_alert_button_cancel: 'відміна',

@@ -59,6 +59,8 @@ export default {
       'Please verify your account to write a comment',
   },
   alerts: {
+    email_error: 'The email address does not exist',
+    password_error: 'The password is incorrect',
     loading_message: 'Loading...',
     network_error: 'Connectivity issue. Please check your internetz',
     confirm_alert_button_cancel: 'cancel',

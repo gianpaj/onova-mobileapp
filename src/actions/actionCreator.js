@@ -362,6 +362,12 @@ const handleErrorWithAlert = (data: any, err: any) => {
   if (err.status == 400 || err.status == 500) {
     errorType = 'danger';
   } else if (err.status == 401) {
+    if (err.message == 'invalid password') {
+      err.message = I18n.t('alerts.password_error');
+    }
+    if (err.message == 'invalid email') {
+      err.message = I18n.t('alerts.email_error');
+    }
     // auth error
     errorType = 'warning';
   } else if (

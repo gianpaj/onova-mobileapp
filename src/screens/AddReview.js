@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import {
   Alert,
-  // Platform,
+  Platform,
   StyleSheet,
   Text,
   TextInput,
@@ -249,9 +249,15 @@ export class AddReviewContainer extends Component<Props, State> {
                           </View>
 
                           <TextInput
+                            autoCorrect={false}
                             style={{
                               fontSize: typography.font_body_size,
                               width: widthFields,
+                              borderBottomWidth: Platform.select({
+                                ios: 1,
+                                android: 0,
+                              }),
+                              borderColor: hasError ? colors.red : colors.black,
                             }}
                             onBlur={control.markAsTouched}
                             onChangeText={text =>
@@ -262,7 +268,6 @@ export class AddReviewContainer extends Component<Props, State> {
                             }
                             value={control.value}
                             keyboardType="numeric"
-                            autoCorrect={false}
                             maxLength={14}
                           />
 
@@ -304,6 +309,7 @@ export class AddReviewContainer extends Component<Props, State> {
                             alignSelf: 'center',
                             width: widthFields,
                             justifyContent: 'space-between',
+                            marginTop: 10,
                           }}
                           // disabled={isLoading}
                           emptyStar="md-star-outline"
@@ -368,6 +374,10 @@ const styles = StyleSheet.create({
   },
   textInputContainer: {
     alignSelf: 'center',
+    borderBottomWidth: Platform.select({
+      ios: 1,
+      android: 0,
+    }),
     fontSize: typography.font_body_size,
     width: widthFields + 10,
   },

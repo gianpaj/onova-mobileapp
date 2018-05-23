@@ -85,6 +85,7 @@ class EditableText extends PureComponent<Props, State> {
           <TextInput
             autoFocus={this.props.shouldAutoFocus}
             autoCorrect={autoCorrect}
+            clearButtonMode="while-editing" // ios
             onChangeText={t => this.props.onChangeText(t)}
             opacity={this.props.isTextEditable ? 1 : 0.1}
             returnKeyType={'done'}

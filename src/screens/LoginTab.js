@@ -227,9 +227,7 @@ class LoginTabContainer extends React.Component<Props, State> {
             returnKeyType="next"
             onBlur={this._onBlurEmail}
             onFocus={this._onFocusEmail}
-            onSubmitEditing={() =>
-              this.PwdInput ? this.PwdInput.focus() : undefined
-            }
+            onSubmitEditing={() => this.PwdInput && this.PwdInput.focus()}
             value={emailAddress}
             testID="EmailField"
             onChangeText={text => this.setState({ emailAddress: text })}

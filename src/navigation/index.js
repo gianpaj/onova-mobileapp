@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { addNavigationHelpers, NavigationActions } from 'react-navigation';
 import { createReduxBoundAddListener } from 'react-navigation-redux-helpers';
 
-import { checkLogin } from '../actions/actionCreator';
+import { checkLogin, logout } from '../actions/actionCreator';
 import NavigationStack from './navigationStack';
 import NavigationService from './NavigationService';
 
@@ -36,7 +36,12 @@ class AppNavigation extends Component<Props, *> {
 
     if (isLoggedIn && userData) {
       // checking again if user is still logged in
-      dispatch(checkLogin(userData));
+      dispatch(checkLogin(userData)).catch(e => {
+        if (e.message == 'Invalid user') {
+          console.debug(e);
+          dispatch(logout());
+        }
+      });
     }
   }
 

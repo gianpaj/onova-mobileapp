@@ -231,6 +231,7 @@ const checkLogin = (userData: UserData) => (dispatch: Dispatch) => {
       console.debug(err);
       dispatch({ type: 'RELOAD_FAIL' });
       ui.showToast(err.message, 'danger');
+      return err;
     });
 };
 

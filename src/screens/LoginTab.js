@@ -46,8 +46,11 @@ if (__DEV__) {
     }
     defaultState = {
       // gianpatestlocal
-      emailAddress: 'gianpa+test@gmail.com',
-      password: '***REMOVED***',
+      // emailAddress: 'gianpa+test@gmail.com',
+      // password: '***REMOVED***',
+      // prod
+      emailAddress: 'gianfranco_p@hotmail.com',
+      password: '***REMOVED***007',
     };
   } else {
     defaultState = {
@@ -73,12 +76,12 @@ type Props = {
 type State = {
   emailAddress: string,
   emailReset: string,
+  hasFocusEmail: boolean,
+  hasFocusEmailReset: boolean,
+  hasFocusPass: boolean,
   loadingReset: boolean,
   modalVisible: boolean,
   password: string,
-  hasFocusEmail: boolean,
-  hasFocusPass: boolean,
-  hasFocusEmailReset: boolean,
 };
 
 class LoginTabContainer extends React.Component<Props, State> {
@@ -92,13 +95,13 @@ class LoginTabContainer extends React.Component<Props, State> {
 
   state = {
     emailAddress: '',
-    password: '',
-    modalVisible: false,
     emailReset: '',
-    loadingReset: false,
     hasFocusEmail: false,
-    hasFocusPass: false,
     hasFocusEmailReset: false,
+    hasFocusPass: false,
+    loadingReset: false,
+    modalVisible: false,
+    password: '',
     ...defaultState,
   };
 

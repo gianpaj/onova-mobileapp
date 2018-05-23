@@ -189,8 +189,8 @@ class SettingsContainer extends Component<Props, State> {
     const {
       password,
       emailAddress,
-      paymentInfo,
-      shippingAddress,
+      // paymentInfo,
+      // shippingAddress,
       username,
     } = this.state;
     const data = {};
@@ -304,7 +304,7 @@ class SettingsContainer extends Component<Props, State> {
   handleFocus(ref) {
     this.setState({
       nextFocusDisabled: ref === 7,
-      previousFocusDisabled: ref === 0,
+      previousFocusDisabled: ref === 5,
       activeInputRef: ref,
     });
   }

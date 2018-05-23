@@ -135,7 +135,8 @@ export default {
   },
   followers: {
     header: 'Followers',
-    empty_state_message: 'There are no followers',
+    empty_state_message_title: 'No followers yet',
+    empty_state_message_body: 'Somebody interesting is out there for sure',
   },
   reviews: {
     header: 'Reviews',

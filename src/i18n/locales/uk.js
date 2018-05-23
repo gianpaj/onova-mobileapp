@@ -136,7 +136,8 @@ export default {
   },
   followers: {
     header: 'Контакти',
-    empty_state_message: 'Поки немає контактів',
+    empty_state_message_title: 'Жодних доданих користувачів',
+    empty_state_message_body: 'Хтось тобі по смаку десь там є точно - пошукай',
   },
   reviews: {
     header: 'Відгуки',

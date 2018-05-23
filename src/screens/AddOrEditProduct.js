@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { connect } from 'react-redux';
-import { Dimensions, StyleSheet, View } from 'react-native';
+import { Dimensions, StyleSheet, Platform, View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {
   ActionSheet,
@@ -27,7 +27,11 @@ import {
   ImagePicker as AntImagePicker,
   WingBlank,
 } from 'antd-mobile';
-import RNFetchBlob from 'react-native-fetch-blob';
+// import RNFetchBlob from 'react-native-fetch-blob';
+let RNFetchBlob;
+if (Platform.OS == 'android') {
+  RNFetchBlob = require('react-native-fetch-blob').default;
+}
 
 import { Header, HR, TagInput } from '../components';
 
@@ -226,7 +230,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
       images.forEach(async (image, i) => {
         console.log(image);
         // if remote file
-        if (image.url.startsWith('http')) {
+        if (Platform.OS == 'android' && image.url.startsWith('http')) {
           RNFetchBlob.config({
             fileCache: true,
             session: 'edit',

@@ -13,6 +13,7 @@ import {
   View,
 } from 'react-native';
 import { Body, Button, Container, Icon, Left, Right, Title } from 'native-base';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { withNavigation } from 'react-navigation';
 
 import I18n from '../i18n';
@@ -146,8 +147,17 @@ class FollowersContainer extends Component<Props, State> {
 
     // TODO: center empty state in RN 0.56 - https://github.com/facebook/react-native/pull/18206
     return (
-      <View style={styles.container}>
-        <Text>{I18n.t('followers.empty_state_message')}</Text>
+      <View style={styles.emptyContainer}>
+        <MaterialCommunityIcons
+          size={48}
+          name={'account-multiple-plus'}
+          color={colors.grey2}
+          style={{ alignSelf: 'center', marginBottom: 30 }}
+        />
+        <Text style={styles.boldText}>
+          {I18n.t('followers.empty_state_message_title')}
+        </Text>
+        <Text>{I18n.t('followers.empty_state_message_body')}</Text>
       </View>
     );
   };
@@ -244,6 +254,15 @@ const styles = StyleSheet.create({
   },
   root: {
     height: '100%',
+  },
+  boldText: {
+    fontWeight: 'bold',
+  },
+  emptyContainer: {
+    alignItems: 'center',
+    height: 250,
+    justifyContent: 'center',
+    padding: 20,
   },
   columnWrapper: {
     flex: 1,

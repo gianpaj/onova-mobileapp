@@ -210,7 +210,7 @@ class Comments extends React.Component<Props, State> {
         'warning'
       );
     }
-    console.log(matches);
+    // console.log(matches);
     // $FlowFixMe
     this.props.goToProfile({
       username: matches[1].replace('@', ''),

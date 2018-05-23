@@ -25,11 +25,10 @@ class NotificationsDot extends React.Component<Props, void> {
 
   render() {
     const { userData, focused } = this.props;
-    userData.notifications = false;
 
     return (
       <View style={st.iconContainer}>
-        {userData.notifications && <View style={st.dot} />}
+        {/* {userData.notifications && <View style={st.dot} />} */}
         <Avatar
           style={st.avatarContainer}
           size={'verySmall'}
@@ -56,16 +55,16 @@ const st = StyleSheet.create({
     justifyContent: 'space-around',
     alignItems: 'center',
   },
-  dot: {
-    backgroundColor: colors.red,
-    borderRadius: 15,
-    bottom: 5,
-    height: 4,
-    left: 9,
-    minWidth: 4,
-    position: 'absolute',
-    zIndex: 2,
-  },
+  // dot: {
+  //   backgroundColor: colors.red,
+  //   borderRadius: 15,
+  //   bottom: 5,
+  //   height: 4,
+  //   left: 9,
+  //   minWidth: 4,
+  //   position: 'absolute',
+  //   zIndex: 2,
+  // },
   avatarContainer: {
     height: 25,
     width: 25,

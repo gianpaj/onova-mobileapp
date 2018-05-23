@@ -22,8 +22,8 @@ export const email = (email: string): void => {
         ? Alert.alert(`We can't open the following email 😯: ${email}`)
         : Linking.openURL(`mailto:${email}`);
     })
-    .catch(error => {
-      console.log(error);
+    .catch(err => {
+      console.log(err);
       Alert.alert('Something went wrong during the redirection 😯…');
     });
 };

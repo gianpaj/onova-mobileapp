@@ -135,7 +135,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     ActionSheet.show(
       {
         options: BUTTONS,
-        destructiveButtonIndex: 0,
+        // destructiveButtonIndex: 2,
         cancelButtonIndex: BUTTONS.indexOf(CANCEL),
       },
       buttonIndex => {
@@ -228,7 +228,6 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
       var todo = images.length;
       if (!todo) return;
       images.forEach(async (image, i) => {
-        console.log(image);
         // if remote file
         if (Platform.OS == 'android' && image.url.startsWith('http')) {
           RNFetchBlob.config({
@@ -373,12 +372,12 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
   /**
    * numbers only, one dot and 2 decimal points
    */
-  changePrice(price: string) {
+  changePrice = (price: string) => {
     const pattern = /^(\b[\d]+[\.]?[\d]{0,2})$/;
     if (pattern.test(price) || price == '') {
       this.setState({ price });
     }
-  }
+  };
 
   addEnabled(): boolean {
     // const pricePattern = /^\d+(\.\d{2})?$/;
@@ -492,7 +491,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
               inputStyle={styles.input}
               keyboardType="numeric"
               maxLength={8} // 10000.99
-              onChangeText={t => this.changePrice(t)}
+              onChangeText={this.changePrice}
               placeholder={I18n.t('add_or_edit_item.price_placeholder')}
               value={this.state.price}
             />

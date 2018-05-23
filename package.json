@@ -21,6 +21,7 @@
     "test-e2e-android": "detox test -c android.emu.debug --loglevel verbose",
     "test-e2e-ios": "detox test -c ios.sim.debug",
     "test:lint": "eslint src --quiet",
+    "test:watch": "jest __tests__ --watch",
     "test": "jest __tests__"
   },
   "dependencies": {
@@ -92,6 +93,7 @@
   },
   "jest": {
     "setupTestFrameworkScriptFile": "./e2e/init.js",
+    "cacheDirectory": "./.cache",
     "testPathIgnorePatterns": [
       "/node_modules/",
       "App.js"

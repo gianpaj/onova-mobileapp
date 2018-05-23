@@ -63,3 +63,6 @@ ios/Pods/*
 .env
 .env.prod
 config-*.json
+
+# jest
+.cache

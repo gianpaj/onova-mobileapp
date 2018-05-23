@@ -1,0 +1,20 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`HR renders correctly 1`] = `
+<View
+  style={
+    Array [
+      Object {
+        "alignSelf": "center",
+        "borderColor": "#d0d0d0",
+        "borderTopWidth": 0.5,
+        "marginVertical": 10,
+      },
+      undefined,
+      Object {
+        "width": "89.5%",
+      },
+    ]
+  }
+/>
+`;

@@ -3,7 +3,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import {
-  // Animated,
+  Animated,
   Modal,
   Platform,
   StyleSheet,
@@ -87,11 +87,11 @@ type State = {
 class LoginTabContainer extends React.Component<Props, State> {
   PwdInput: ?FormInput;
   // loginBtn;
-  // animatedValue = new Animated.Value(__DEV__ ? 1 : 0);
-  // backgroundColor = this.animatedValue.interpolate({
-  //   inputRange: [0, 1],
-  //   outputRange: [colors.grey4, colors.primary],
-  // });
+  animatedValue = new Animated.Value(__DEV__ ? 1 : 0);
+  backgroundColor = this.animatedValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: [colors.grey4, colors.primary],
+  });
 
   state = {
     emailAddress: '',
@@ -163,8 +163,8 @@ class LoginTabContainer extends React.Component<Props, State> {
   /**
    * trigger the background color animation of the LoginButton
    */
-  DISABLED_componentWillUpdate(nextProps, nextState) {
-    const { loadingLogin } = nextProps;
+  componentWillUpdate(nextProps, nextState) {
+    // const { loadingLogin } = nextProps;
     const {
       emailAddress: emailAddressNext,
       password: passwordNext,
@@ -173,9 +173,9 @@ class LoginTabContainer extends React.Component<Props, State> {
     const { emailAddress, password, disabled } = this.state;
 
     // if we are waiting for the login API call to return
-    if (!loading && this.loginBtn) {
-      this.loginBtn.reset();
-    }
+    // if (!loading && this.loginBtn) {
+    //   this.loginBtn.reset();
+    // }
 
     if (
       emailAddressNext !== emailAddress ||
@@ -184,11 +184,11 @@ class LoginTabContainer extends React.Component<Props, State> {
     ) {
       // if the email or password are empty
       const areFieldEmpty = !emailAddressNext || !passwordNext;
-      this.setState({ disabled: areFieldEmpty });
-      // Animated.timing(this.animatedValue, {
-      //   toValue: areFieldEmpty ? 0 : 1,
-      //   duration: 300,
-      // }).start();
+      // this.setState({ disabled: areFieldEmpty });
+      Animated.timing(this.animatedValue, {
+        toValue: areFieldEmpty ? 0 : 1,
+        duration: 300,
+      }).start();
     }
   }
 
@@ -270,8 +270,13 @@ class LoginTabContainer extends React.Component<Props, State> {
             <NBButton
               block
               disabled={this.isDisabled()}
-              dark={!this.isDisabled()}
+              // dark={!this.isDisabled()}
               {...buttonProps}
+              style={[
+                {
+                  backgroundColor: this.backgroundColor,
+                },
+              ]}
               onPress={this.onLogin}>
               <Text
                 // eslint-disable-next-line

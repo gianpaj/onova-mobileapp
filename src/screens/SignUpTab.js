@@ -3,7 +3,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import {
-  // Animated,
+  Animated,
   Linking,
   Platform,
   StyleSheet,
@@ -45,11 +45,11 @@ class SignUpTabContainer extends Component<Props, State> {
   EmailInput: ?FormInput;
   // signupBtn;
   PwdInput: ?FormInput;
-  // animatedValue = new Animated.Value(0);
-  // backgroundColor = this.animatedValue.interpolate({
-  //   inputRange: [0, 1],
-  //   outputRange: [colors.grey4, colors.primary],
-  // });
+  animatedValue = new Animated.Value(0);
+  backgroundColor = this.animatedValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: [colors.grey4, colors.primary],
+  });
 
   state = {
     // username: 'gianfranco',
@@ -103,8 +103,8 @@ class SignUpTabContainer extends Component<Props, State> {
     );
   }
 
-  DISABLED_componentWillUpdate(nextProps, nextState) {
-    const { loading } = nextProps;
+  componentWillUpdate(nextProps, nextState) {
+    // const { loading } = nextProps;
     const {
       emailAddress: emailAddressNext,
       password: passwordNext,
@@ -129,17 +129,17 @@ class SignUpTabContainer extends Component<Props, State> {
         usernameNext.length < 3
         // loading
       ) {
-        this.setState({ disabled: true });
-        // Animated.timing(this.animatedValue, {
-        //   toValue: 0,
-        //   duration: 300,
-        // }).start();
+        // this.setState({ disabled: true });
+        Animated.timing(this.animatedValue, {
+          toValue: 0,
+          duration: 300,
+        }).start();
       } else {
-        this.setState({ disabled: false });
-        // Animated.timing(this.animatedValue, {
-        //   toValue: 1,
-        //   duration: 300,
-        // }).start();
+        // this.setState({ disabled: false });
+        Animated.timing(this.animatedValue, {
+          toValue: 1,
+          duration: 300,
+        }).start();
       }
     }
   }
@@ -246,7 +246,12 @@ class SignUpTabContainer extends Component<Props, State> {
             <Button
               block
               disabled={this.isDisabled()}
-              dark={!this.isDisabled()}
+              style={[
+                styles.SignupButton,
+                {
+                  backgroundColor: this.backgroundColor,
+                },
+              ]}
               {...buttonProps}
               onPress={this.onSignup}>
               <Text

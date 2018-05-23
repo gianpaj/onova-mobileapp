@@ -7,16 +7,16 @@ import type { StyleObj } from 'react-native/Libraries/StyleSheet/StyleSheetTypes
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import {
-  View,
+  Dimensions,
+  Platform,
+  ScrollView,
+  StyleSheet,
   Text,
   TextInput,
-  StyleSheet,
   TouchableOpacity,
-  Dimensions,
   TouchableWithoutFeedback,
-  ScrollView,
+  View,
   ViewPropTypes,
-  Platform,
 } from 'react-native';
 import invariant from 'invariant';
 
@@ -469,13 +469,19 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginTop: 3,
     marginRight: 3,
-    padding: 8,
-    // paddingBottom: 10,
+    padding: Platform.select({
+      android: 8,
+      ios: 4,
+    }),
+    paddingLeft: 8,
     height: 28,
     borderRadius: 2,
   },
   tagText: {
-    fontSize: 18,
+    fontSize: Platform.select({
+      android: 18,
+      ios: 15,
+    }),
   },
 });
 

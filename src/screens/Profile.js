@@ -638,8 +638,6 @@ const styles = StyleSheet.create({
   },
   avatarContainer: {
     marginTop: 4,
-    height: 100,
-    width: 100,
   },
   profileRight: {
     alignSelf: 'flex-start',

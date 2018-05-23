@@ -63,8 +63,8 @@ export default {
     password_error: 'The password is incorrect',
     loading_message: 'Loading...',
     network_error: 'Connectivity issue. Please check your internetz',
-    confirm_alert_button_cancel: 'cancel',
-    confirm_alert_button_confirm: 'confirm',
+    confirm_alert_button_cancel: 'Cancel',
+    confirm_alert_button_confirm: 'Confirm',
   },
   search: {
     header: 'Search',

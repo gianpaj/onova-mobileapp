@@ -4,6 +4,7 @@
 import React, { PureComponent } from 'react';
 import {
   Image,
+  PixelRatio,
   Platform,
   StyleSheet,
   TouchableOpacity,
@@ -218,22 +219,34 @@ const styles = StyleSheet.create({
   verySmallAvatar: {
     width: 30,
     height: 30,
-    borderRadius: 20,
+    borderRadius: Platform.select({
+      ios: 30 / PixelRatio.get(),
+      android: 20,
+    }),
   },
   smallAvatar: {
     width: 50,
     height: 50,
-    borderRadius: 26,
+    borderRadius: Platform.select({
+      ios: 50 / PixelRatio.get(),
+      android: 26,
+    }),
   },
   mediumAvatar: {
     width: 60,
     height: 60,
-    borderRadius: 40,
+    borderRadius: Platform.select({
+      ios: 60 / PixelRatio.get(),
+      android: 40,
+    }),
   },
   defaultAvatar: {
-    width: 125,
-    height: 125,
-    borderRadius: 63,
+    width: 100,
+    height: 100,
+    borderRadius: Platform.select({
+      ios: 100 / PixelRatio.get(),
+      android: 63,
+    }),
   },
   miniAvatarPlaceHolderText: {
     fontSize: 20

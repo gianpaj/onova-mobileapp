@@ -153,7 +153,7 @@ export default {
     email_label: 'Email:',
     email_placeholder: 'Змінити email (Потрібно буде підтвердити)',
     password_label: 'Пароль:',
-    password_placeholder: '******',
+    password_placeholder: 'Password (minimum 8 characters)',
     sign_out_button: 'Вийти',
     alert_msg_email_address_changed:
       'Новий email має бути підтверджено. Ми надіслали інструкції',

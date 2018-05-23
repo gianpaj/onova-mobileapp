@@ -152,7 +152,7 @@ export default {
     email_label: 'Email:',
     email_placeholder: 'Edit your email address (Requires re-verification)',
     password_label: 'Password:',
-    password_placeholder: '******',
+    password_placeholder: 'Password (minimum 8 characters)',
     sign_out_button: 'Sign out',
     alert_msg_email_address_changed:
       'The new email address requires to be valided. Please check your inbox',

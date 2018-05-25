@@ -469,6 +469,7 @@
 			isa = PBXGroup;
 			children = (
 				583DC0A020B715400048EE54 /* Info.plist */,
+				583DC0A620B715A60048EE54 /* InfoPlist.strings */,
 				583DC04C20B711480048EE54 /* GoogleService-Info.plist */,
 				583DC01420B710790048EE54 /* onova.entitlements */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
@@ -477,7 +478,6 @@
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB11A68108700A75B9A /* LaunchScreen.xib */,
 				13B07FB71A68108700A75B9A /* main.m */,
-				583DC0A620B715A60048EE54 /* InfoPlist.strings */,
 			);
 			name = onova;
 			sourceTree = "<group>";

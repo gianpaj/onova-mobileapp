@@ -43,6 +43,7 @@ import settings from '../config/settings';
 import { validPassword, validShippingAddress } from '../utils/validators';
 import * as api from '../utils/api';
 import * as ui from '../utils/ui';
+import * as linking from '../utils/linking';
 
 import { version } from '../../package.json';
 
@@ -251,12 +252,6 @@ class SettingsContainer extends Component<Props, State> {
         this.setState({ pending: false });
       });
   };
-
-  onSendEmail() {
-    Linking.openURL('mailto:hello@onova.co').catch(err =>
-      console.error('An error occurred', err)
-    );
-  }
 
   onCCChange = form => {
     this.setState({
@@ -547,7 +542,8 @@ class SettingsContainer extends Component<Props, State> {
                   size={28}
                 />
               </NBButton>
-              <TouchableOpacity onPress={this.onSendEmail}>
+              <TouchableOpacity
+                onPress={() => linking.email('mailto:hello@onova.co')}>
                 <Text style={styles.centerText}>hello@onova.co</Text>
               </TouchableOpacity>
             </View>

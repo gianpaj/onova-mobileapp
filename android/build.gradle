@@ -12,7 +12,7 @@ buildscript {
         // in the individual module build.gradle files
 
         // for react-native-firebase
-        classpath 'com.google.gms:google-services:3.1.2'
+        classpath 'com.google.gms:google-services:3.2.1'
     }
 }
 
@@ -31,5 +31,6 @@ allprojects {
         maven {
             url 'https://maven.google.com'
         }
+        google()
     }
 }

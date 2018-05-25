@@ -13,9 +13,9 @@ import com.AlexanderZaytsev.RNI18n.RNI18nPackage;
 // import com.dylanvann.fastimage.FastImageViewPackage;
 // import com.instabug.reactlibrary.RNInstabugReactnativePackage;
 import com.reactnative.ivpusic.imagepicker.PickerPackage;
+import io.invertase.firebase.RNFirebasePackage;
 import io.invertase.firebase.messaging.RNFirebaseMessagingPackage;
 import io.invertase.firebase.notifications.RNFirebaseNotificationsPackage;
-import io.invertase.firebase.RNFirebasePackage;
 import io.sentry.RNSentryPackage;
 
 import java.util.Arrays;
@@ -37,9 +37,9 @@ public class MainApplication extends Application implements ReactApplication {
             // new FastImageViewPackage(),
             // new LottiePackage(),
             new PickerPackage(),
+            new RNFirebasePackage(),
             new RNFirebaseMessagingPackage(),
             new RNFirebaseNotificationsPackage(),
-            new RNFirebasePackage(),
             new RNI18nPackage(),
             // new RNInstabugReactnativePackage.Builder("YOUR_ANDROID_APPLICATION_TOKEN",MainApplication.this)
             //   .setInvocationEvent("shake")

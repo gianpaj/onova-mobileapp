@@ -13,10 +13,29 @@ default_platform(:ios)
 
 platform :ios do
   desc "Submit a new Beta Build to Apple TestFlight"
-  desc "This will also make sure the profile is up to date"
+  # desc "This will also make sure the profile is up to date"
   lane :beta do
-    # match(type: "appstore") # more information: https://codesigning.guide
-    gym(scheme: "onova")
-    pilot
+    ensure_git_branch(branch: "master")
+    # answer = UI.select("Would you like to add a Changelog?", ["Yes", "No"])
+
+    # update_info_plist(
+    #   xcodeproj: xcodeproj,
+    #   plist_path: ENV['IOS_PLIST_PATH'],
+    #   block: lambda { |plist|
+    #     plist['CFBundleShortVersionString'] = ENV['IOS_VERSION']
+    #     plist['CFBundleVersion'] = ENV['IOS_VERSION_BUILD_NUMBER']
+    #   },
+    # )
+
+    sync_code_signing(type: "appstore") # get latest certificates/provisioning profiles
+    build_ios_app(scheme: "onova")
+
+    upload_to_testflight(skip_submission: true) # Skip the distributing action of pilot and only upload the ipa file
+
+    # slack(
+    #     message: "The Onova iOS App successfully uploaded to iTunes",
+    #     username: 'fastlane',
+    #     use_webhook_configured_username_and_icon: 'false'
+    #   )
   end
 end

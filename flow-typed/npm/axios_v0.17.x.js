@@ -1,5 +1,5 @@
-// flow-typed signature: 4552413ec2a67e1215d1e7d98fb37fc7
-// flow-typed version: 8b766558cb/axios_v0.17.x/flow_>=v0.25.x
+// flow-typed signature: 0c2422c26c319a9b17e93759b57b5113
+// flow-typed version: /axios_v0.17.x/flow_>=v0.25.x
 
 declare module "axios" {
   declare interface ProxyConfig {

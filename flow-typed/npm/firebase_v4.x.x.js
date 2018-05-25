@@ -1,5 +1,5 @@
-// flow-typed signature: b05e537bad42ff86b772c9d6c8677154
-// flow-typed version: 5123ba71af/firebase_v4.x.x/flow_>=v0.34.x
+// flow-typed signature: ed26d187ec6cb9011a6fd667e9512d20
+// flow-typed version: /firebase_v4.x.x/flow_>=v0.34.x
 
 /* @flow */
 /** ** firebase ****/

@@ -1,38 +1,41 @@
 /**
  * Copyright (c) 2015-present, Facebook, Inc.
- * All rights reserved.
  *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  */
 
 #import "AppDelegate.h"
-
-// for react-native-firebase w/ messaging + remote notifications
-#import <Firebase.h>
-#import "RNFirebaseNotifications.h"
-#import "RNFirebaseMessaging.h"
 
 // for react-navigation w/ deep linking
 #import <React/RCTLinkingManager.h>
 
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
+#if __has_include(<React/RNSentry.h>)
 #import <React/RNSentry.h> // This is used for versions of react >= 0.40
+#else
+#import "RNSentry.h" // This is used for versions of react < 0.40
+#endif
+
+// for react-native-firebase w/ messaging + remote notifications
+#import <Firebase.h>
+#import "RNFirebaseNotifications.h"
+#import "RNFirebaseMessaging.h"
 
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-  NSURL *jsCodeLocation;
-
   // for react-native-firebase
   [FIRApp configure];
   [RNFirebaseNotifications configure];
 
+  NSURL *jsCodeLocation;
+
   jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:nil];
-RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
+
+  RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
                                                       moduleName:@"onova"
                                                initialProperties:nil
                                                    launchOptions:launchOptions];
@@ -49,12 +52,12 @@ RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
   return YES;
 }
 
+// for react-native-firebase w/ notifications
 - (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification {
   [[RNFirebaseNotifications instance] didReceiveLocalNotification:notification];
 }
 
-// remote notifications
-
+// for react-native-firebase w/ remote notifications (FCM)
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(nonnull NSDictionary *)userInfo
                                                        fetchCompletionHandler:(nonnull void (^)(UIBackgroundFetchResult))completionHandler{
   [[RNFirebaseNotifications instance] didReceiveRemoteNotification:userInfo fetchCompletionHandler:completionHandler];

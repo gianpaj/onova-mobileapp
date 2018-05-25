@@ -28,13 +28,6 @@
 	<dict>
 		<key>NSExceptionDomains</key>
 		<dict>
-			<key>onova.co</key>
-			<dict>
-				<key>NSIncludesSubdomains</key>
-				<true/>
-				<key>NSExceptionAllowsInsecureHTTPLoads</key>
-				<true/>
-			</dict>
 			<key>localhost</key>
 			<dict>
 				<key>NSExceptionAllowsInsecureHTTPLoads</key>
@@ -43,11 +36,11 @@
 		</dict>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>Onova is requesting access to your camera to add pictures to the item</string>
+	<string>Потрібен доступ до камери щоб фотографувати речі</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Onova is requesting access to your photo library to add pictures to your item</string>
+	<string>Потрібен дозвіл щоб додавати фото з галереї зображень</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Ionicons.ttf</string>

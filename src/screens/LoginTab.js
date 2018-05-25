@@ -3,7 +3,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import {
-  Animated,
+  // Animated,
   Modal,
   Platform,
   StyleSheet,
@@ -38,12 +38,6 @@ let defaultState = {};
 
 if (__DEV__) {
   if (Platform.OS == 'ios') {
-    if (process.env.NODE_ENV == 'dev') {
-      defaultState = {
-        emailAddress: 'gianpa+test4@gmail.com',
-        password: '***REMOVED***',
-      };
-    }
     defaultState = {
       // gianpatestlocal
       // emailAddress: 'gianpa+test@gmail.com',
@@ -52,6 +46,12 @@ if (__DEV__) {
       emailAddress: 'gianfranco_p@hotmail.com',
       password: '***REMOVED***007',
     };
+    if (process.env.NODE_ENV !== 'prod') {
+      defaultState = {
+        emailAddress: 'gianpa+test4@gmail.com',
+        password: '***REMOVED***',
+      };
+    }
   } else {
     defaultState = {
       // local
@@ -87,11 +87,11 @@ type State = {
 class LoginTabContainer extends React.Component<Props, State> {
   PwdInput: ?FormInput;
   // loginBtn;
-  animatedValue = new Animated.Value(__DEV__ ? 1 : 0);
-  backgroundColor = this.animatedValue.interpolate({
-    inputRange: [0, 1],
-    outputRange: [colors.grey4, colors.primary],
-  });
+  // animatedValue = new Animated.Value(__DEV__ ? 1 : 0);
+  // backgroundColor = this.animatedValue.interpolate({
+  //   inputRange: [0, 1],
+  //   outputRange: [colors.grey4, colors.primary],
+  // });
 
   state = {
     emailAddress: '',
@@ -162,8 +162,8 @@ class LoginTabContainer extends React.Component<Props, State> {
 
   /**
    * trigger the background color animation of the LoginButton
-   */
-  componentWillUpdate(nextProps, nextState) {
+   *
+  DISABLED_componentWillUpdate(nextProps, nextState) {
     // const { loadingLogin } = nextProps;
     const {
       emailAddress: emailAddressNext,
@@ -190,7 +190,7 @@ class LoginTabContainer extends React.Component<Props, State> {
         duration: 300,
       }).start();
     }
-  }
+  }*/
 
   _onBlurEmail = () => this.setState({ hasFocusEmail: false });
   _onFocusEmail = () => this.setState({ hasFocusEmail: true });
@@ -270,13 +270,13 @@ class LoginTabContainer extends React.Component<Props, State> {
             <NBButton
               block
               disabled={this.isDisabled()}
-              // dark={!this.isDisabled()}
+              dark={!this.isDisabled()}
               {...buttonProps}
-              style={[
-                {
-                  backgroundColor: this.backgroundColor,
-                },
-              ]}
+              // style={[
+              //   {
+              //     backgroundColor: this.backgroundColor,
+              //   },
+              // ]}
               onPress={this.onLogin}>
               <Text
                 // eslint-disable-next-line

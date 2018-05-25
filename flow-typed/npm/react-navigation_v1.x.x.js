@@ -1,5 +1,5 @@
-// flow-typed signature: 8aaf473557d9b3d2de31fd2ff6d81795
-// flow-typed version: e00672bfc0/react-navigation_v1.x.x/flow_>=v0.60.x
+// flow-typed signature: fd9d8ff47d0d4c69b9346d3486af99f8
+// flow-typed version: /react-navigation_v1.x.x/flow_>=v0.60.x
 
 // @flow
 

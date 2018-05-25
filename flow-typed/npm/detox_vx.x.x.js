@@ -1,4 +1,4 @@
-// flow-typed signature: 7babe2db9e276bf59c322dc9de723ac8
+// flow-typed signature: ad8dbaea1424cc23ced13f18f48316b9
 // flow-typed version: <<STUB>>/detox_v^6.0.4/flow_v0.65.0
 
 /**
@@ -22,6 +22,14 @@ declare module 'detox' {
  * require those files directly. Feel free to delete any files that aren't
  * needed.
  */
+declare module 'detox/ios_src/EarlGrey/Tests/FunctionalTests/TestRig/Resources/www/material.min' {
+  declare module.exports: any;
+}
+
+declare module 'detox/ios_src/SocketRocket/TestChatServer/static/proxy' {
+  declare module.exports: any;
+}
+
 declare module 'detox/local-cli/detox-build-framework-cache' {
   declare module.exports: any;
 }
@@ -227,6 +235,12 @@ declare module 'detox/wallaby' {
 }
 
 // Filename aliases
+declare module 'detox/ios_src/EarlGrey/Tests/FunctionalTests/TestRig/Resources/www/material.min.js' {
+  declare module.exports: $Exports<'detox/ios_src/EarlGrey/Tests/FunctionalTests/TestRig/Resources/www/material.min'>;
+}
+declare module 'detox/ios_src/SocketRocket/TestChatServer/static/proxy.js' {
+  declare module.exports: $Exports<'detox/ios_src/SocketRocket/TestChatServer/static/proxy'>;
+}
 declare module 'detox/local-cli/detox-build-framework-cache.js' {
   declare module.exports: $Exports<'detox/local-cli/detox-build-framework-cache'>;
 }

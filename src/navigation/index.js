@@ -36,9 +36,9 @@ class AppNavigation extends Component<Props, *> {
 
     if (isLoggedIn && userData) {
       // checking again if user is still logged in
-      dispatch(checkLogin(userData)).catch(e => {
+      dispatch(checkLogin(userData)).then(e => {
         if (e.message == 'Invalid user') {
-          console.debug(e);
+          console.warn(e);
           dispatch(logout());
         }
       });

@@ -3,7 +3,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import {
-  Animated,
+  // Animated,
   Linking,
   Platform,
   StyleSheet,
@@ -45,11 +45,11 @@ class SignUpTabContainer extends Component<Props, State> {
   EmailInput: ?FormInput;
   // signupBtn;
   PwdInput: ?FormInput;
-  animatedValue = new Animated.Value(0);
-  backgroundColor = this.animatedValue.interpolate({
-    inputRange: [0, 1],
-    outputRange: [colors.grey4, colors.primary],
-  });
+  // animatedValue = new Animated.Value(0);
+  // backgroundColor = this.animatedValue.interpolate({
+  //   inputRange: [0, 1],
+  //   outputRange: [colors.grey4, colors.primary],
+  // });
 
   state = {
     // username: 'gianfranco',
@@ -103,6 +103,7 @@ class SignUpTabContainer extends Component<Props, State> {
     );
   }
 
+  /*
   componentWillUpdate(nextProps, nextState) {
     // const { loading } = nextProps;
     const {
@@ -142,7 +143,7 @@ class SignUpTabContainer extends Component<Props, State> {
         }).start();
       }
     }
-  }
+  }*/
 
   isDisabled() {
     const { emailAddress, password, username } = this.state;
@@ -246,12 +247,12 @@ class SignUpTabContainer extends Component<Props, State> {
             <Button
               block
               disabled={this.isDisabled()}
-              style={[
-                styles.SignupButton,
-                {
-                  backgroundColor: this.backgroundColor,
-                },
-              ]}
+              dark={!this.isDisabled()}
+              // style={[
+              //   {
+              //     backgroundColor: this.backgroundColor,
+              //   },
+              // ]}
               {...buttonProps}
               onPress={this.onSignup}>
               <Text

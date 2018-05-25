@@ -1,5 +1,5 @@
-// flow-typed signature: 5f6b80ba0fa4571aac1e7ea6e5fea425
-// flow-typed version: f4a7859cd3/jest_v22.x.x/flow_>=v0.39.x
+// flow-typed signature: bdf3199087040855ecde538bf258fa41
+// flow-typed version: /jest_v22.x.x/flow_>=v0.39.x
 
 type JestMockFn<TArguments: $ReadOnlyArray<*>, TReturn> = {
   (...args: TArguments): TReturn,

@@ -112,6 +112,7 @@ PODS:
     - React
     - Sentry (~> 3.12.4)
     - Sentry/KSCrash (~> 3.12.4)
+  - TensorFlow-experimental (1.1.1)
   - yoga (0.55.4.React)
 
 DEPENDENCIES:
@@ -132,6 +133,7 @@ DEPENDENCIES:
   - RNImageCropPicker (from `../node_modules/react-native-image-crop-picker`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - SentryReactNative (from `../node_modules/react-native-sentry`)
+  - TensorFlow-experimental
   - yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -152,6 +154,7 @@ SPEC REPOS:
     - QBImagePickerController
     - RSKImageCropper
     - Sentry
+    - TensorFlow-experimental
 
 EXTERNAL SOURCES:
   React:
@@ -192,8 +195,9 @@ SPEC CHECKSUMS:
   RSKImageCropper: 50d5a3e4160f0309b14d75b89d5ae2f496d56e0d
   Sentry: 7d3ea7176e5184e9c35c12a5825905345807e8c1
   SentryReactNative: 787a08161d641dde91dd36d4c8e76f9b0ba4fc84
+  TensorFlow-experimental: c38ed2a43acaa2d42ce4174ac076efaa76e26a12
   yoga: a23273df0088bf7f2bb7e5d7b00044ea57a2a54a
 
-PODFILE CHECKSUM: baf2ad33d79903040647e1c77c3c3cc0c67c1a5e
+PODFILE CHECKSUM: 11aca363959bcb82d5c0e28dfb4f3fa016f36874
 
-COCOAPODS: 1.5.3
+COCOAPODS: 1.5.2

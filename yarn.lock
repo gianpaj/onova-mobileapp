@@ -6664,6 +6664,12 @@ react-native-tab-view@^0.0.75:
   dependencies:
     prop-types "^15.6.0"
 
+react-native-tensorflow@^0.1.7:
+  version "0.1.7"
+  resolved "https://registry.yarnpkg.com/react-native-tensorflow/-/react-native-tensorflow-0.1.7.tgz#51b6385e953e27a71833fe57d20e3cacdf3102ea"
+  dependencies:
+    uuid "^3.1.0"
+
 react-native-touch-visualizer@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/react-native-touch-visualizer/-/react-native-touch-visualizer-0.1.0.tgz#b796def661e131583b33474f8c915b34686ab5f4"

@@ -27,6 +27,7 @@ import {
   ImagePicker as AntImagePicker,
   WingBlank,
 } from 'antd-mobile';
+import { TfImageRecognition } from 'react-native-tensorflow';
 // import RNFetchBlob from 'react-native-fetch-blob';
 let RNFetchBlob;
 if (Platform.OS == 'android') {
@@ -126,6 +127,40 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     }
   }
 
+  async tensorflow(imagePath: string) {
+    const tfImageRecognition = new TfImageRecognition({
+      model: require('../assets/tensorflow_inception_graph.pb'),
+      labels: require('../assets/tensorflow_labels.txt'),
+      imageMean: 117, // Optional, defaults to 117
+      imageStd: 1, // Optional, defaults to 1
+    });
+
+    console.log(imagePath);
+
+    const results = await tfImageRecognition.recognize({
+      image: imagePath,
+      inputName: 'input', // Optional, defaults to "input"
+      inputSize: 224, // Optional, defaults to 224
+      outputName: 'output', // Optional, defaults to "output"
+      maxResults: 3, // Optional, defaults to 3
+      threshold: 0.1, // Optional, defaults to 0.1
+    });
+
+    results.forEach(result =>
+      console.log(
+        result.id, // Id of the result
+        result.name, // Name of the result
+        result.confidence // Confidence value between 0 - 1
+      )
+    );
+
+    console.log(results);
+
+    alert(results.map(r => r.name).join(' '));
+
+    await tfImageRecognition.close(); // Necessary in order to release objects on native side
+  }
+
   selectPhotoTapped = (i: number = 0) => {
     if (this.state.pending) return;
     const CAMERA = I18n.t('add_or_edit_item.select_photo_source_camera');
@@ -188,6 +223,8 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
         images: [...prevState.images, image],
       };
     });
+
+    this.tensorflow(response.path);
   }
 
   closeModal() {

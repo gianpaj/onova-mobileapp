@@ -1,3 +1,5 @@
+fastlane_require 'dotenv'
+
 # This file contains the fastlane.tools configuration
 # You can find the documentation at https://docs.fastlane.tools
 #
@@ -11,26 +13,47 @@
 
 default_platform(:ios)
 
+before_all do
+  Dotenv.overload ".env"
+
+  if ENV["IOS_VERSION"].nil?
+    UI.user_error! "IOS_VERSION env not loaded"
+  end
+  if ENV["IOS_VERSION_BUILD_NUMBER"].nil?
+    UI.user_error! "IOS_VERSION_BUILD_NUMBER env not loaded"
+  end
+  puts "IOS_VERSION: #{ENV['IOS_VERSION']}"
+  puts "IOS_VERSION_BUILD_NUMBER: #{ENV['IOS_VERSION_BUILD_NUMBER']}"
+
+  choice = UI.select("Confirm versions?", ["Yes", "No"])
+  if choice == 'No'
+    UI.user_error! "Woops"
+  end
+end
+
 platform :ios do
   desc "Submit a new Beta Build to Apple TestFlight"
   # desc "This will also make sure the profile is up to date"
   lane :beta do
     ensure_git_branch(branch: "master")
-    # answer = UI.select("Would you like to add a Changelog?", ["Yes", "No"])
 
-    # update_info_plist(
-    #   xcodeproj: xcodeproj,
-    #   plist_path: ENV['IOS_PLIST_PATH'],
-    #   block: lambda { |plist|
-    #     plist['CFBundleShortVersionString'] = ENV['IOS_VERSION']
-    #     plist['CFBundleVersion'] = ENV['IOS_VERSION_BUILD_NUMBER']
-    #   },
-    # )
+    xcodeproj = "onova.xcodeproj"
+
+    update_info_plist(
+      xcodeproj: xcodeproj,
+      plist_path: "onova/Info.plist",
+      block: lambda { |plist|
+        plist['CFBundleShortVersionString'] = ENV['IOS_VERSION']
+        plist['CFBundleVersion'] = ENV['IOS_VERSION_BUILD_NUMBER']
+      },
+    )
 
     sync_code_signing(type: "appstore") # get latest certificates/provisioning profiles
     build_ios_app(scheme: "onova")
 
     upload_to_testflight(skip_submission: true) # Skip the distributing action of pilot and only upload the ipa file
+
+    # TODO: upload to sentry via ENV option
 
     # slack(
     #     message: "The Onova iOS App successfully uploaded to iTunes",

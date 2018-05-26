@@ -65,5 +65,8 @@ ios/Pods/*
 .env.prod
 config-*.json
 
+# fastlane iOS
+!ios/.env
+
 # jest
 .cache

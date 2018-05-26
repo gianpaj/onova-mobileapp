@@ -13,6 +13,13 @@ target 'onova' do
     'DevSupport', # Include this to enable In-App Devmenu if RN >= 0.43
     'RCTActionSheet',
     'RCTLinkingIOS',
+    # 'RCTGeolocation',
+    # 'RCTVibration',
+    # 'RCTSettings',
+    # 'ART',
+    # 'RCTBlob',
+    # 'RCTCameraRoll',
+    # 'RCTPushNotification',
     'RCTImage',
     'RCTText',
     'RCTNetwork',
@@ -48,5 +55,25 @@ post_install do |installer|
     if target.name == "React"
       target.remove_from_project
     end
+  end
+
+  change_lines_in_file('../node_modules/react-native/Libraries/WebSocket/RCTReconnectingWebSocket.m') do |lines|
+    lines.map { |line| line.include?("#import <React/fishhook.h>") ? '#import "fishhook.h"' : line }
+  end
+end
+
+def change_lines_in_file(file_path, &change)
+  print "Fixing #{file_path}...\n"
+
+  contents = []
+
+  file = File.open(file_path, 'r')
+  file.each_line do | line |
+    contents << line
+  end
+  file.close
+
+  File.open(file_path, 'w') do |f|
+    f.puts(change.call(contents))
   end
 end

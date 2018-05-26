@@ -14,11 +14,11 @@
 .*/Libraries/react-native/React.js
 
 ; Ignore unrelated errors in node_modules
-.*/react-native/Libraries/.*
-.*/react-native/lib/.*
-.*/react-native-tab-view/.*
-.*/node_modules/protobufjs/src/bower.json
-.*/node_modules/rc-util/lib/PureRenderMixin.js
+; .*/react-native/Libraries/.*
+; .*/react-native/lib/.*
+; .*/react-native-tab-view/.*
+; .*/node_modules/protobufjs/src/bower.json
+; .*/node_modules/rc-util/lib/PureRenderMixin.js
 
 ; Ignore polyfills
 .*/Libraries/polyfills/.*

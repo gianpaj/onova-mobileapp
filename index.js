@@ -11,6 +11,8 @@ YellowBox.ignoreWarnings([
   // workaround for https://github.com/facebook/react-native/issues/17504
   // until is 0.56.0 is released
   'Module RCTImageLoader requires main',
+  // bug...
+  'Class RCTCxxModule was not exported',
 ]);
 
 AppRegistry.registerComponent('onova', () => App);

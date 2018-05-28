@@ -37,6 +37,8 @@ type State = {
 };
 
 class SearchSellersTabContainer extends Component<Props, State> {
+  search = React.createRef();
+
   state = {
     data: [],
     hasError: false,
@@ -49,6 +51,8 @@ class SearchSellersTabContainer extends Component<Props, State> {
     if (!this.isSearchEnabled()) return;
 
     this.setState({ isLoading: true });
+
+    this.search.blur();
 
     const { token } = this.props.userData;
     api
@@ -144,8 +148,10 @@ class SearchSellersTabContainer extends Component<Props, State> {
                 width: 280,
               }}>
               <SearchBar
+                ref={r => (this.search = r)}
                 autoCapitalize="none"
                 autoCorrect={false}
+                blurOnSubmit={false}
                 containerStyle={{
                   backgroundColor: colors.white,
                   borderTopWidth: 0,

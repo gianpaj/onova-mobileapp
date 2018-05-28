@@ -45,7 +45,8 @@ export default {
     action_button_edit: 'Edit',
     action_button_cancel: 'Cancel',
     alert_confirm_delete: 'Confirm deletion?',
-    toast_warning_on_unverified_account: 'You need to verify your account...',
+    toast_warning_on_unverified_account:
+      'Please verify your email address to buy. Check your inbox',
     toast_warning_on_product_sold: 'This product is not longer for sale',
     toast_warning_ok_button: 'ok',
   },
@@ -56,7 +57,7 @@ export default {
     alert_confirm_deletion: 'Confirm deletion?',
     toast_warning_mention_not_found: 'User not found',
     toast_warning_on_unverified_account:
-      'Please verify your account to write a comment',
+      'Please verify your email address to write a comment. Check your inbox',
   },
   alerts: {
     email_error: 'The email address does not exist',
@@ -111,7 +112,7 @@ export default {
     empty_state_message_others: 'There no any items yet',
     empty_state_message_mine: 'You did not add any items yet',
     empty_state_button_mine: 'Sell something now',
-    notice_bar: 'Please verify you email to start buying or selling.',
+    notice_bar: 'Please verify you email address. Check your inbox',
     toast_saving: 'Loading...',
     toast_updated: 'Your profile has been updated',
     alert_unsaved_changes_title: 'Unsaved Changes',

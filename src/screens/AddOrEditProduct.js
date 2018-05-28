@@ -23,6 +23,7 @@ import RadioForm, {
 import ImagePicker from 'react-native-image-crop-picker';
 import {
   TextareaItem,
+  NoticeBar,
   Toast,
   ImagePicker as AntImagePicker,
   WingBlank,
@@ -432,6 +433,10 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
 
   onChangeDescription = (t: string) => this.setState({ description: t });
 
+  shouldShowNoticeBar() {
+    return this.props.userData.accountStatus == 'notverified';
+  }
+
   render() {
     const { images, tags, inEditMode } = this.state;
 
@@ -467,6 +472,13 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
           </Right>
         </Header>
         <Content>
+          {this.shouldShowNoticeBar() && (
+            <NoticeBar
+              marqueeProps={{ loop: false, style: styles.noticeBar }}
+              icon={false}>
+              {I18n.t('profile.notice_bar')}
+            </NoticeBar>
+          )}
           <View style={{ flex: 1, flexDirection: 'row', paddingTop: 18 }}>
             <WingBlank>
               <AntImagePicker
@@ -677,6 +689,11 @@ const styles = StyleSheet.create({
   //   width: width / 6,
   //   height: width / 6,
   // },
+  noticeBar: {
+    color: colors.grey2,
+    textAlign: 'center',
+    width: '34.5%',
+  },
   container: {
     alignItems: 'stretch',
     flex: 1,

@@ -87,6 +87,9 @@ export default {
   },
   add_or_edit_item: {
     add_item_header: 'Add Item',
+    cropper_toolbar_title: 'Edit Photo',
+    cropper_choose_text: 'Choose',
+    cropper_cancel_text: 'Cancel',
     edit_item_header: 'Edit Item',
     price_label: 'Price:',
     price_placeholder: '123 UAH',

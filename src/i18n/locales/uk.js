@@ -87,6 +87,9 @@ export default {
   },
   add_or_edit_item: {
     add_item_header: 'Додати',
+    cropper_toolbar_title: 'Кадрування',
+    cropper_choose_text: 'Погодити',
+    cropper_cancel_text: 'Відмінити',
     edit_item_header: 'Редагувати',
     price_label: 'Ціна:',
     price_placeholder: '123 UAH',

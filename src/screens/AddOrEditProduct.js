@@ -146,7 +146,10 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
               width: IMAGE_WIDTH,
               height: IMAGE_HEIGHT,
               cropping: true,
-              // loadingLabelText: 'Loading image...', // (ios only)
+              mediaType: 'photo',
+              cropper_toolbar_title: I18n.t(
+                'add_or_edit_item.cropper_toolbar_title'
+              ),
             })
               .then(response => this.processPhoto(response, i))
               .catch(() => !this.state.inEditMode && this.closeModal());
@@ -156,7 +159,20 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
               width: IMAGE_WIDTH,
               height: IMAGE_HEIGHT,
               cropping: true,
-              // loadingLabelText: 'Loading image...', // (ios only)
+              mediaType: 'photo',
+              cropperChooseText: I18n.t('add_or_edit_item.cropper_choose_text'),
+              cropperCancelText: I18n.t('add_or_edit_item.cropper_cancel_text'),
+              smartAlbums: [
+                'UserLibrary',
+                'PhotoStream',
+                'Screenshots',
+                'Generic',
+                'Favorites',
+                'RecentlyAdded',
+              ],
+              cropper_toolbar_title: I18n.t(
+                'add_or_edit_item.cropper_toolbar_title'
+              ),
             })
               .then(response => this.processPhoto(response, i))
               .catch(() => !this.state.inEditMode && this.closeModal());

@@ -165,7 +165,7 @@ class SearchSellersTabContainer extends Component<Props, State> {
                 placeholderTextColor={colors.grey1}
                 inputStyle={{
                   backgroundColor: colors.white,
-                  color: this.isSearchEnabled() ? colors.black : colors.grey1,
+                  color: this.isSearchEnabled() ? colors.black : colors.red,
                 }}
                 returnKeyType="search"
                 value={this.state.text}

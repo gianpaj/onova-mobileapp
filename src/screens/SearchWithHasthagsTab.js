@@ -35,6 +35,8 @@ type State = {
 };
 
 class SearchWithHasthagsTabContainer extends Component<Props, State> {
+  search = React.createRef();
+
   state = {
     isLoading: false,
     text: '',
@@ -46,6 +48,8 @@ class SearchWithHasthagsTabContainer extends Component<Props, State> {
     if (!this.isSearchEnabled()) return;
 
     const { text, grp_1, grp_2 } = this.state;
+
+    this.search.blur();
 
     // this.setState({ isLoading: true });
     // TODO: check verify tags/items exists
@@ -61,14 +65,16 @@ class SearchWithHasthagsTabContainer extends Component<Props, State> {
   onChangeText = (text: string) => this.setState({ text: text.trim() });
 
   isSearchEnabled(): boolean {
-    if (
-      this.state.text.length &&
-      this.state.text.length < settings.MIN_LENGTH_PER_TAG
-    )
-      return false;
+    // if the hash tag is not empty needs have a mininum length
 
+    // OR
+
+    // it can be empty and either category or type
     return (
-      this.state.grp_1 !== -1 || this.state.grp_2 !== -1
+      (this.state.text.length &&
+        this.state.text.length >= settings.MIN_LENGTH_PER_TAG) ||
+      (!this.state.text.length &&
+        (this.state.grp_1 !== -1 || this.state.grp_2 !== -1))
       // this.state.isLoading == false
     );
   }
@@ -104,8 +110,10 @@ class SearchWithHasthagsTabContainer extends Component<Props, State> {
               width: 280,
             }}>
             <SearchBar
+              ref={r => (this.search = r)}
               autoCapitalize="none"
               autoCorrect={false}
+              blurOnSubmit={false}
               containerStyle={{
                 backgroundColor: colors.white,
                 borderTopWidth: 0,

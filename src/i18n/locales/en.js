@@ -32,7 +32,7 @@ export default {
   image_grid: {
     error: 'Error fetching listing',
     empty_state_title: 'There are no items to browse',
-    empty_state_body: `Follow sellers to see items in your feed`,
+    empty_state_body: 'Follow sellers to see items in your feed',
     empty_state_button: 'Search',
   },
   image_grid_search: {

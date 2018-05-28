@@ -88,7 +88,7 @@ class SearchProductsResultsContainer extends Component<Props, State> {
             ) : (
               // else, a combination
               <Title style={{ color: colors.black }}>
-                {I18n.t('search.results_header')}
+                {I18n.t('search.header')}
               </Title>
             )}
           </Body>

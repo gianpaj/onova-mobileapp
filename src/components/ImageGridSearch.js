@@ -17,14 +17,16 @@ import {
 //   CachedImage,
 //   ImageCacheProvider,
 //   // ImageCacheManager,
-// } from 'react-native-cached-image';
+// } from 'react-native-cached-image'
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { NavigationActions } from 'react-navigation';
 
 import type { NavigationScreenProp } from 'react-navigation';
 
 import I18n from '../i18n';
 import * as api from '../utils/api';
-// import colors from '../config/colors';
+import typography from '../config/typography';
+import colors from '../config/colors';
 import type { UserData } from '../types';
 
 const VIEWABILITY_CONFIG = {
@@ -185,11 +187,17 @@ class ImageGridComponent extends React.Component<Props, State> {
 
     return (
       <View style={styles.emptyContainer}>
+        <Icon
+          size={typography.empty_state_icon}
+          name={'hanger'}
+          color={colors.grey2}
+          style={{ alignSelf: 'center', marginBottom: 30 }}
+        />
         <Text style={styles.boldText}>
-          {I18n.t('image_grid.empty_state_title')}
+          {I18n.t('image_grid_search.empty_state_title')}
         </Text>
         <Text style={styles.centerText}>
-          {I18n.t('image_grid.empty_state_body')}
+          {I18n.t('image_grid_search.empty_state_body')}
         </Text>
       </View>
     );

@@ -12,6 +12,7 @@ import {
   View,
 } from 'react-native';
 import {
+  ActionSheet,
   Body,
   Button as NBButton,
   Container,
@@ -23,8 +24,8 @@ import {
 } from 'native-base';
 import { NavigationActions } from 'react-navigation';
 import type { NavigationScreenProp } from 'react-navigation';
-import { Button } from 'react-native-elements';
-import { NoticeBar, Toast } from 'antd-mobile';
+// import { Button } from 'react-native-elements';
+import { Modal, NoticeBar, Toast } from 'antd-mobile';
 
 import I18n from '../i18n';
 import typography from '../config/typography';
@@ -39,6 +40,7 @@ import {
 import { getPersonalUserData } from '../actions/actionCreator';
 
 import colors from '../config/colors';
+import settings from '../config/settings';
 import * as api from '../utils/api';
 import * as ui from '../utils/ui';
 // eslint-disable-next-line
@@ -81,10 +83,10 @@ const defaultState = {
   rateAvg: -1,
   reviewsCount: -1,
   username: '',
+  isPopoverVisible: true,
 };
 
-// TODO: if Product is mine Delete, Edit
-// const BUTTONS = ['Report', 'Cancel'];
+const BUTTONS = ['Report', 'Cancel'];
 
 const { height } = Dimensions.get('window');
 
@@ -306,8 +308,7 @@ class ProfileScreen extends React.Component<Props, State> {
     );
   }
 
-  /*
-  showActionSheet = () => {
+  showReportUserActionSheet = () => {
     ActionSheet.show(
       {
         options: BUTTONS,
@@ -316,13 +317,57 @@ class ProfileScreen extends React.Component<Props, State> {
       },
       buttonIndex => {
         if (buttonIndex == BUTTONS.indexOf('Report')) {
-          // report action
+          Modal.prompt(
+            'Report user?',
+            'Enter reason (required)',
+            [
+              { text: 'Cancel' },
+              {
+                text: 'Report',
+                onPress: t => this.sendReport(t),
+              },
+            ],
+            'default',
+            ''
+          );
         } else {
           console.debug('Cancel');
         }
       }
     );
-  };*/
+  };
+
+  sendReport = async text => {
+    const { token } = this.props.userData;
+    if (text.length < settings.MIN_LENGTH_REPORT) {
+      ui.showToast(
+        'Please give a longer reason. Min 7 characters',
+        'warning',
+        'OK'
+      );
+      return;
+    }
+    try {
+      await api.post(
+        '/api/report',
+        {
+          user: this.state._id,
+          text,
+        },
+        { token }
+      );
+      // const message = `Thank you for helping keep the Onova community safe and fun for everyone. Remember, we don't reveal who submitted reports to the seller.`;
+      ui.showToast(
+        'Thank you for helping keep the Onova community safe',
+        'success',
+        'OK'
+      );
+      this.props.navigation.goBack();
+    } catch (err) {
+      console.error(err);
+      ui.showToast(err.message, 'error', 'OK');
+    }
+  };
 
   isMe(): boolean {
     const navState = this.props.navigation.state;
@@ -544,11 +589,6 @@ class ProfileScreen extends React.Component<Props, State> {
             <Title style={{ color: colors.black }}>@{username}</Title>
           </Body>
           <Right>
-            {/* {this.ifNavigatedFromProduct() && !this.isMe() ? (
-              <NBButton transparent dark onPress={this.showActionSheet}>
-                <NBIcon ios="ios-more" android="md-more" />
-              </NBButton>
-            ) : ( */}
             {!this.ifNavigatedFromProduct() &&
               this.isMe() && (
                 <NBButton transparent onPress={this.onGoToSettings}>
@@ -559,6 +599,16 @@ class ProfileScreen extends React.Component<Props, State> {
                   />
                 </NBButton>
               )}
+            {!this.isMe() && (
+              <NBButton
+                transparent
+                dark
+                onPress={this.showReportUserActionSheet}>
+                {' '}
+                */}
+                <NBIcon ios="ios-more" android="md-more" style={styles.icon} />
+              </NBButton>
+            )}
           </Right>
         </Header>
         <Content

@@ -2,7 +2,7 @@
 
 import { AddOrEditProduct } from '../screens/AddOrEditProduct';
 import { AddReview } from '../screens/AddReview';
-import { Checkout } from '../screens/Checkout';
+// import { Checkout } from '../screens/Checkout';
 import { Home } from '../screens/Home';
 import { ChatRooms } from '../screens/ChatRooms';
 import { Chat } from '../screens/Chat';
@@ -19,7 +19,7 @@ import { SignUpLogin } from '../screens/SignUpLogin';
 export {
   AddOrEditProduct,
   AddReview,
-  Checkout,
+  // Checkout,
   Home,
   ChatRooms,
   Chat,

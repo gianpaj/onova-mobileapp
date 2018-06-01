@@ -6,7 +6,7 @@ import CardStackStyleInterpolator from 'react-navigation/src/views/CardStack/Car
 import {
   AddOrEditProduct,
   AddReview,
-  Checkout,
+  // Checkout,
   ChatRooms,
   Chat,
   Product,
@@ -53,7 +53,7 @@ export const StackNav = StackNavigator(
       screen: Chat,
       path: 'chat/:name',
     },
-    checkout: { screen: Checkout },
+    // checkout: { screen: Checkout },
   },
   {
     headerMode: 'none',

@@ -226,7 +226,7 @@ class ChatContainer extends Component<Props, State> {
                   });
               }
 
-              // no existing room existed. coming from Checkout
+              // no existing room existed
               return pusherCurrentUser
                 .createRoom({
                   name: getRoomName(o),

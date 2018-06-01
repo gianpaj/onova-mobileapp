@@ -6,7 +6,8 @@
   "retainLines": true,
   "plugins": [
     ["import", { "libraryName": "antd-mobile" }],
-    "transform-inline-environment-variables"
+    "transform-inline-environment-variables",
+    "transform-remove-console"
   ],
   "env": {
     "development": {

@@ -168,7 +168,7 @@ export default {
   add_review: {
     header: 'Відгук',
     nova_poshta_tracking_num: 'Номер накладної Нової Пошти',
-    text_placeholder: `Текст (не обов'язково)`,
+    text_placeholder: "Текст (не обов'язково)",
     rating_error: 'Обери якість від 1 до 5',
     button: 'Залишити відгук',
     toast_msg_archived: 'Ти вже видалив це замовлення',

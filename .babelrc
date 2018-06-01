@@ -6,14 +6,14 @@
   "retainLines": true,
   "plugins": [
     ["import", { "libraryName": "antd-mobile" }],
-    "transform-inline-environment-variables",
-    "transform-remove-console"
+    "transform-inline-environment-variables"
   ],
   "env": {
     "development": {
-      "plugins": [
-        "transform-react-jsx-source"
-      ]
+      "plugins": ["transform-react-jsx-source"]
+    },
+    "production": {
+      "plugins": ["transform-remove-console"]
     }
   }
 }

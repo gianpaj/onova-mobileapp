@@ -628,8 +628,6 @@ class ProfileScreen extends React.Component<Props, State> {
                 transparent
                 dark
                 onPress={this.showReportUserActionSheet}>
-                {' '}
-                */}
                 <NBIcon ios="ios-more" android="md-more" style={styles.icon} />
               </NBButton>
             )}

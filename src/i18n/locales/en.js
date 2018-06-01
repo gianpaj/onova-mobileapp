@@ -41,9 +41,6 @@ export default {
   },
   product: {
     buy_button: 'Chat',
-    action_button_delete: 'Delete',
-    action_button_edit: 'Edit',
-    action_button_cancel: 'Cancel',
     alert_confirm_delete: 'Confirm deletion?',
     toast_warning_on_unverified_account:
       'Please verify your email address to buy. Check your inbox',
@@ -52,8 +49,6 @@ export default {
     alert_report_title: 'Report Item?',
   },
   comments: {
-    action_button_cancel: 'Cancel',
-    action_button_delete: 'Delete',
     add_comment_placeholder: 'Add a comment',
     alert_confirm_deletion: 'Confirm deletion?',
     toast_warning_mention_not_found: 'User not found',
@@ -67,6 +62,15 @@ export default {
     network_error: 'Connectivity issue. Please check your internetz',
     confirm_alert_button_cancel: 'Cancel',
     confirm_alert_button_confirm: 'Confirm',
+    // `Thank you for helping keep the Onova community safe and fun for everyone. Remember, we don't reveal who submitted reports to the seller.`
+    report_subtitle: 'Enter reason (required)',
+    report_error: 'Please give a longer reason. Min 7 characters',
+    report_success: 'Thank you for helping keep the Onova community safe',
+    action_button_block: 'Block',
+    action_button_cancel: 'Cancel',
+    action_button_delete: 'Delete',
+    action_button_edit: 'Edit',
+    action_button_report: 'Report',
   },
   search: {
     header: 'Search',
@@ -123,14 +127,7 @@ export default {
     alert_unsaved_changes_body: 'Are you sure you want to Cancel?',
     alert_unsaved_changes_button_cancel: 'NO',
     alert_unsaved_changes_button_confirm: 'YES',
-    action_button_report: 'Report',
-    action_button_block: 'Block',
-    action_button_cancel: 'Cancel',
     alert_report_title: 'Report User?',
-    alert_report_subtitle: 'Enter reason (required)',
-    alert_report_error: 'Please give a longer reason. Min 7 characters',
-    // `Thank you for helping keep the Onova community safe and fun for everyone. Remember, we don't reveal who submitted reports to the seller.`
-    alert_report_success: 'Thank you for helping keep the Onova community safe',
     alert_block_title: 'Block user?',
     alert_block_subtitle:
       "They won't be able to find your profile or items. Onova won't let them know you blocked them",

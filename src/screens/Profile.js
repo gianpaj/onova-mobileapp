@@ -307,9 +307,9 @@ class ProfileScreen extends React.Component<Props, State> {
   }
 
   showReportUserActionSheet = () => {
-    const REPORT = I18n.t('profile.action_button_report');
-    const BLOCK = I18n.t('profile.action_button_block');
-    const CANCEL = I18n.t('profile.action_button_cancel');
+    const REPORT = I18n.t('alerts.action_button_report');
+    const BLOCK = I18n.t('alerts.action_button_block');
+    const CANCEL = I18n.t('alerts.action_button_cancel');
 
     const BUTTONS = [REPORT, BLOCK, CANCEL];
 
@@ -323,7 +323,7 @@ class ProfileScreen extends React.Component<Props, State> {
         if (buttonIndex == BUTTONS.indexOf(REPORT)) {
           Modal.prompt(
             I18n.t('profile.alert_report_title'),
-            I18n.t('profile.alert_report_subtitle'),
+            I18n.t('alerts.report_subtitle'),
             [
               { text: CANCEL },
               {
@@ -350,7 +350,7 @@ class ProfileScreen extends React.Component<Props, State> {
   onReport = async text => {
     const { token } = this.props.userData;
     if (text.length < settings.MIN_LENGTH_REPORT) {
-      ui.showToast(I18n.t('profile.alert_report_error'), 'warning', 'OK');
+      ui.showToast(I18n.t('alerts.report_error'), 'warning', 'OK');
       return;
     }
     try {
@@ -362,13 +362,14 @@ class ProfileScreen extends React.Component<Props, State> {
         },
         { token }
       );
-      ui.showToast(I18n.t('profile.alert_report_success'), '', 'OK');
+      ui.showToast(I18n.t('alerts.report_success'), '', 'OK');
       this.props.navigation.goBack();
     } catch (err) {
       console.error(err);
       ui.showToast(err.message, 'error', 'OK');
     }
   };
+
   onBlock = async () => {
     const { token } = this.props.userData;
     try {

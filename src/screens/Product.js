@@ -22,12 +22,14 @@ import {
 } from 'native-base';
 import { Button } from 'react-native-elements';
 import ParsedText from 'react-native-parsed-text';
+import { Modal } from 'antd-mobile';
 // import LottieView from 'lottie-react-native';
 
 import { Avatar, Header, MediaView, Comments } from '../components';
 
 import I18n from '../i18n';
 import colors from '../config/colors';
+import settings from '../config/settings';
 import * as api from '../utils/api';
 import * as ui from '../utils/ui';
 import typography from '../config/typography';
@@ -75,15 +77,16 @@ export class ProductContainer extends React.Component<Props, State> {
   }
 
   showActionSheetForProduct = () => {
-    const DELETE = I18n.t('product.action_button_delete');
-    const EDIT = I18n.t('product.action_button_edit');
-    const CANCEL = I18n.t('product.action_button_cancel');
-    let BUTTONS;
-    // if (this.isMyProduct()) {
-    BUTTONS = [DELETE, EDIT, CANCEL];
-    // } else {
-    //   BUTTONS = ['Report', 'Cancel'];
-    // }
+    const DELETE = I18n.t('alerts.action_button_delete');
+    const EDIT = I18n.t('alerts.action_button_edit');
+    const CANCEL = I18n.t('alerts.action_button_cancel');
+    const REPORT = I18n.t('alerts.action_button_report');
+
+    let BUTTONS = [REPORT, CANCEL];
+
+    if (this.isMyProduct()) {
+      BUTTONS = [DELETE, EDIT, CANCEL];
+    }
 
     ActionSheet.show(
       {
@@ -93,10 +96,21 @@ export class ProductContainer extends React.Component<Props, State> {
       },
       buttonIndex => {
         switch (buttonIndex) {
-          // case BUTTONS.indexOf('Report'):
-          //   alert('report me like those french girls 🎨');
-          //   // report action
-          //   break;
+          case BUTTONS.indexOf(REPORT):
+            Modal.prompt(
+              I18n.t('product.alert_report_title'),
+              I18n.t('alerts.report_subtitle'),
+              [
+                { text: CANCEL },
+                {
+                  text: REPORT,
+                  onPress: t => this.onReport(t),
+                },
+              ],
+              'default',
+              ''
+            );
+            break;
           case BUTTONS.indexOf(EDIT):
             this.props.navigation.navigate('addOrEditProduct', {
               item: this.state.item,
@@ -121,6 +135,30 @@ export class ProductContainer extends React.Component<Props, State> {
         }
       }
     );
+  };
+
+  onReport = async text => {
+    const { token } = this.props.userData;
+    if (text.length < settings.MIN_LENGTH_REPORT) {
+      ui.showToast(I18n.t('alerts.report_error'), 'warning', 'OK');
+      return;
+    }
+
+    try {
+      await api.post(
+        '/api/report',
+        {
+          product: this.state.item.uuid,
+          text,
+        },
+        { token }
+      );
+      ui.showToast(I18n.t('alerts.report_success'), '', 'OK');
+      this.props.navigation.goBack();
+    } catch (err) {
+      console.error(err);
+      ui.showToast(err.message, 'error', 'OK');
+    }
   };
 
   deleteItem() {
@@ -315,14 +353,9 @@ export class ProductContainer extends React.Component<Props, State> {
           </Left>
           <Body />
           <Right>
-            {this.isMyProduct() && (
-              <NBButton
-                transparent
-                dark
-                onPress={this.showActionSheetForProduct}>
-                <NBIcon ios="ios-more" android="md-more" />
-              </NBButton>
-            )}
+            <NBButton transparent dark onPress={this.showActionSheetForProduct}>
+              <NBIcon ios="ios-more" android="md-more" />
+            </NBButton>
           </Right>
         </Header>
         <Content

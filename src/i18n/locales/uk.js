@@ -54,7 +54,7 @@ export default {
     action_button_cancel: 'Відмінити',
     action_button_delete: 'Видалити',
     add_comment_placeholder: 'Прокоментувати',
-    alert_confirm_deletion: 'Видалити?',
+    alert_confirm_deletion: 'Точно Видалити?',
     toast_warning_mention_not_found: 'Користувача не знайдено',
     toast_warning_on_unverified_account:
       'Підтвердіть свій профіль щоб коментувати',
@@ -122,6 +122,18 @@ export default {
     alert_unsaved_changes_body: 'Не зберігати зміни?',
     alert_unsaved_changes_button_cancel: 'Ні',
     alert_unsaved_changes_button_confirm: 'Так',
+    action_button_report: 'Поскаржитись',
+    action_button_block: 'Блокувати',
+    action_button_cancel: 'Відмінити',
+    alert_report_title: ' Поскаржитись на користувача?',
+    alert_report_subtitle: "Напишіть причину (обов'язково)",
+    alert_report_error: 'Мінімально 7 знаків',
+    alert_report_success:
+      'Дякую, що допомагаєте нам відсіювати поганих користувачів',
+    alert_block_title: 'Заблокувати користувача?',
+    alert_block_subtitle:
+      'Тепер ви не будете бачити речей цього користувача, він не буде бачити ваших',
+    alert_block_success: 'User blocked',
   },
   chat_rooms: {
     header: 'Чати',

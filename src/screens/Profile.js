@@ -86,8 +86,6 @@ const defaultState = {
   isPopoverVisible: true,
 };
 
-const BUTTONS = ['Report', 'Cancel'];
-
 const { height } = Dimensions.get('window');
 
 class ProfileScreen extends React.Component<Props, State> {
@@ -309,26 +307,38 @@ class ProfileScreen extends React.Component<Props, State> {
   }
 
   showReportUserActionSheet = () => {
+    const REPORT = I18n.t('profile.action_button_report');
+    const BLOCK = I18n.t('profile.action_button_block');
+    const CANCEL = I18n.t('profile.action_button_cancel');
+
+    const BUTTONS = [REPORT, BLOCK, CANCEL];
+
     ActionSheet.show(
       {
         options: BUTTONS,
-        destructiveButtonIndex: BUTTONS.indexOf('Report'),
-        cancelButtonIndex: BUTTONS.indexOf('Cancel'),
+        // destructiveButtonIndex: BUTTONS.indexOf(REPORT),
+        cancelButtonIndex: BUTTONS.indexOf(CANCEL),
       },
       buttonIndex => {
-        if (buttonIndex == BUTTONS.indexOf('Report')) {
+        if (buttonIndex == BUTTONS.indexOf(REPORT)) {
           Modal.prompt(
-            'Report user?',
-            'Enter reason (required)',
+            I18n.t('profile.alert_report_title'),
+            I18n.t('profile.alert_report_subtitle'),
             [
-              { text: 'Cancel' },
+              { text: CANCEL },
               {
-                text: 'Report',
-                onPress: t => this.sendReport(t),
+                text: REPORT,
+                onPress: t => this.onReport(t),
               },
             ],
             'default',
             ''
+          );
+        } else if (buttonIndex == BUTTONS.indexOf(BLOCK)) {
+          ui.showConfirmAlert(
+            I18n.t('profile.alert_block_title'),
+            I18n.t('profile.alert_block_subtitle'),
+            () => this.onBlock()
           );
         } else {
           console.debug('Cancel');
@@ -337,14 +347,10 @@ class ProfileScreen extends React.Component<Props, State> {
     );
   };
 
-  sendReport = async text => {
+  onReport = async text => {
     const { token } = this.props.userData;
     if (text.length < settings.MIN_LENGTH_REPORT) {
-      ui.showToast(
-        'Please give a longer reason. Min 7 characters',
-        'warning',
-        'OK'
-      );
+      ui.showToast(I18n.t('profile.alert_report_error'), 'warning', 'OK');
       return;
     }
     try {
@@ -356,12 +362,24 @@ class ProfileScreen extends React.Component<Props, State> {
         },
         { token }
       );
-      // const message = `Thank you for helping keep the Onova community safe and fun for everyone. Remember, we don't reveal who submitted reports to the seller.`;
-      ui.showToast(
-        'Thank you for helping keep the Onova community safe',
-        'success',
-        'OK'
+      ui.showToast(I18n.t('profile.alert_report_success'), '', 'OK');
+      this.props.navigation.goBack();
+    } catch (err) {
+      console.error(err);
+      ui.showToast(err.message, 'error', 'OK');
+    }
+  };
+  onBlock = async () => {
+    const { token } = this.props.userData;
+    try {
+      await api.post(
+        '/api/block',
+        {
+          targetUser: this.state._id,
+        },
+        { token }
       );
+      ui.showToast(I18n.t('profile.alert_block_success'), '', 'OK');
       this.props.navigation.goBack();
     } catch (err) {
       console.error(err);

@@ -491,7 +491,11 @@ class ProfileScreen extends React.Component<Props, State> {
                         ? this.onSave()
                         : this.setState({ editing: !editing });
                     }}>
-                    <Text style={styles.editOrFollowButtonText}>
+                    <Text
+                      style={[
+                        styles.editOrFollowButtonText,
+                        editing && { color: colors.white },
+                      ]}>
                       {editing
                         ? I18n.t('profile.save_profile_button')
                         : I18n.t('profile.edit_profile_button')}
@@ -547,6 +551,7 @@ class ProfileScreen extends React.Component<Props, State> {
                 color: colors.black,
               }}
               autoCorrect
+              textInputProps={{ multiline: true, returnKeyType: 'default' }}
               text={bio}
               onChangeText={t => this.setState({ bio: t })}
               placeholder={I18n.t('profile.bio_placeholder')}
@@ -721,7 +726,7 @@ const styles = StyleSheet.create({
     color: colors.grey1,
   },
   saveButton: {
-    borderColor: colors.primary,
+    backgroundColor: colors.active,
   },
   noticeBar: {
     color: colors.grey2,

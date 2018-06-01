@@ -70,7 +70,7 @@ class EditableText extends PureComponent<Props, State> {
     return (
       <Text
         {...textProps}
-        style={[style, text ? {} : { color: placeholderColor }]}>
+        style={[style, !text && { color: placeholderColor }]}>
         {text || (showPlaceholder ? placeholder : '')}
       </Text>
     );
@@ -83,16 +83,16 @@ class EditableText extends PureComponent<Props, State> {
       <View>
         <View style={st.textInputContainer}>
           <TextInput
-            autoFocus={this.props.shouldAutoFocus}
             autoCorrect={autoCorrect}
+            autoFocus={this.props.shouldAutoFocus}
             clearButtonMode="while-editing" // ios
             onChangeText={t => this.props.onChangeText(t)}
             opacity={this.props.isTextEditable ? 1 : 0.1}
-            returnKeyType={'done'}
             placeholder={placeholder}
-            value={this.props.text}
+            returnKeyType={'done'}
             style={style}
-            underlineColorAndroid={colors.black}
+            underlineColorAndroid={colors.active}
+            value={this.props.text}
             {...this.props.textInputProps}
           />
         </View>

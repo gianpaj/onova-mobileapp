@@ -669,8 +669,6 @@ const st = StyleSheet.create({
   send: {
     marginBottom: 5,
     marginRight: 10,
-    justifyContent: 'center',
-    height: '100%',
   },
   systemContainer: {
     backgroundColor: colors.primary,

@@ -76,11 +76,11 @@ class NotificationsContainer extends Component<Props, State> {
   async getNotificationsAndSetState(): Promise<any> {
     const { token } = this.props.userData;
 
-    const res = await api.get('/api/users/notifications', { token });
+    const { data } = await api.get('/api/users/notifications', { token });
 
     let lastNotifId = '';
-    if (res.data.length > 0) lastNotifId = res.data[res.data.length - 1]._id;
-    this.setState({ data: res.data, lastId: lastNotifId });
+    if (data.length > 0) lastNotifId = data[data.length - 1]._id;
+    this.setState({ data: data, lastId: lastNotifId });
   }
 
   _keyExtractor = (item): string => item._id;
@@ -256,13 +256,13 @@ class NotificationsContainer extends Component<Props, State> {
             keyExtractor={this._keyExtractor}
             ListEmptyComponent={this.renderEmptyState}
             ListFooterComponent={this.renderFooter}
-            renderItem={this._renderItem}
             refreshControl={
               <RefreshControl
                 refreshing={this.state.isRefreshing}
                 onRefresh={this.refreshNotifications}
               />
             }
+            renderItem={this._renderItem}
             style={styles.root}
           />
         )}

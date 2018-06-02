@@ -2,7 +2,7 @@
 import colors from '../config/colors';
 
 import React, { PureComponent } from 'react';
-import { Dimensions, StyleSheet } from 'react-native';
+import { Dimensions, StyleSheet, View } from 'react-native';
 import { Body, Left, Right, Container, Title } from 'native-base';
 import { TabViewAnimated, TabBar, SceneMap } from 'react-native-tab-view';
 
@@ -78,7 +78,7 @@ export class Home extends PureComponent<Props, State> {
 
   render() {
     return (
-      <Container testID="Home">
+      <View testID="Home" style={{ flex: 1 }}>
         {/* <View style={styles.statusBarUnderlay} /> */}
         <Header hasTabs>
           <Left style={styles.container} />
@@ -108,7 +108,7 @@ export class Home extends PureComponent<Props, State> {
           initialLayout={initialLayout}
           useNativeDriver
         />
-      </Container>
+      </View>
     );
   }
 }

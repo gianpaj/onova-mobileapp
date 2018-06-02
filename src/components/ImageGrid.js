@@ -8,7 +8,7 @@ import {
   Dimensions,
   Image,
   FlatList,
-  RefreshControl,
+  // RefreshControl,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -52,22 +52,22 @@ type State = {
   error: boolean,
   items: Array<any>,
   // itemHeight: number,
-  loading: boolean,
-  // loadingMore: boolean,
-  refreshing: boolean,
-  lastId: number,
+  isLoading: boolean,
+  isRefreshing: boolean,
+  lastId: string,
 };
 
 const { width, height } = Dimensions.get('window');
 
 class ImageGridComponent extends React.PureComponent<Props, State> {
+  reqTimer = 0;
   state = {
     error: false,
     items: [],
     // itemHeight: 0,
-    loading: true,
-    refreshing: false,
-    lastId: 0,
+    isLoading: false,
+    isRefreshing: false,
+    lastId: '',
   };
 
   componentDidMount() {
@@ -76,18 +76,71 @@ class ImageGridComponent extends React.PureComponent<Props, State> {
     this.fetchItems();
   }
 
-  fetchItems = () => {
+  /**
+   * used when pulling and refreshing AND when initially
+   */
+  fetchItems = async () => {
     const { token } = this.props.userData;
 
-    return api
-      .get(this.props.apiURL, { token })
-      .then(({ data }) => {
-        this.setState({
-          items: data,
-          loading: false,
-        });
-      })
-      .catch(() => this.setState({ error: true }));
+    this.setState({ isLoading: true });
+
+    try {
+      const { data } = await api.get(`${this.props.apiURL}&limit=20`, {
+        token,
+      });
+      const lastItem = data[data.length - 1];
+      this.setState({
+        items: data,
+        isRefreshing: false,
+        isLoading: false,
+        lastId: data.length > 0 ? lastItem._id : '',
+      });
+    } catch (err) {
+      this.setState({
+        error: true,
+        isRefreshing: false,
+        isLoading: false,
+      });
+    }
+  };
+
+  loadMore = () => {
+    const { lastId, items } = this.state;
+
+    if (this.reqTimer) {
+      clearTimeout(this.reqTimer);
+    }
+    this.setState({ isRefreshing: true }, async () => {
+      const { token } = this.props.userData;
+      this.reqTimer = setTimeout(async () => {
+        try {
+          const { data } = await api.get(
+            `${this.props.apiURL}&lastId=${lastId}`,
+            { token }
+          );
+
+          const lastItem = data[data.length - 1];
+
+          if (lastId == lastItem._id || data.length == 0) {
+            return this.setState({ isRefreshing: false, isLoading: false });
+          }
+
+          this.setState({
+            items: [...items, ...data],
+            lastId: lastItem._id,
+            isRefreshing: false,
+            isLoading: false,
+          });
+        } catch (err) {
+          this.setState({
+            error: true,
+            isRefreshing: false,
+            isLoading: false,
+          });
+          console.error(err);
+        }
+      }, 200);
+    });
   };
 
   // onLayout = () => this.setState({ itemHeight: width / 3 });
@@ -119,7 +172,7 @@ class ImageGridComponent extends React.PureComponent<Props, State> {
           {/* <ImageCacheProvider
             numberOfConcurrentPreloads={3}
             ttl={TTL} // num of seconds to cache the image url for
-            defaultSource={loading}
+            defaultSource={isLoading}
             // urlsToPreload={this.state.images}
           >
             <CachedImage style={styles.image} source={{ uri }} />
@@ -130,29 +183,42 @@ class ImageGridComponent extends React.PureComponent<Props, State> {
     );
   };
 
-  render() {
-    const { error, loading, items } = this.state;
+  renderFooter = () => {
+    if (!this.state.isRefreshing) return null;
 
-    if (!error && loading) return this.renderLoading();
+    return (
+      <View style={{ paddingVertical: 20 }}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  };
+
+  render() {
+    const { error, isLoading, items } = this.state;
+
+    if (!error && isLoading) return this.renderLoading();
 
     return (
       <View style={styles.container}>
         <FlatList
           // onLayout={this.onLayout}
-          style={styles.list}
           columnWrapperStyle={[styles.columnWrapper, { height: width / 3 }]}
-          refreshControl={this.renderRefreshControl()}
           data={items}
-          renderItem={this.renderItem}
-          numColumns={3}
-          keyExtractor={this._keyExtractor}
           getItemLayout={this.getItemLayout}
-          showsVerticalScrollIndicator={false}
-          ListEmptyComponent={this.renderEmptyState}
           initialNumToRender={6}
+          keyExtractor={this._keyExtractor}
+          ListEmptyComponent={this.renderEmptyState}
+          numColumns={3}
+          onRefresh={this.fetchItems}
+          refreshing={isLoading}
+          ListFooterComponent={this.renderFooter}
+          renderItem={this.renderItem}
+          // showsVerticalScrollIndicator={false}
+          style={styles.list}
           viewabilityConfig={VIEWABILITY_CONFIG}
-          refreshing={false}
           windowSize={6}
+          onEndReached={this.loadMore}
+          onEndReachedThreshold={0.1}
         />
       </View>
     );
@@ -202,13 +268,6 @@ class ImageGridComponent extends React.PureComponent<Props, State> {
     <View style={styles.container}>
       <ActivityIndicator size="large" />
     </View>
-  );
-
-  renderRefreshControl = () => (
-    <RefreshControl
-      refreshing={this.state.refreshing}
-      onRefresh={this.fetchItems}
-    />
   );
 }
 

@@ -35,6 +35,8 @@ const VIEWABILITY_CONFIG = {
   waitForInteraction: true,
 };
 
+const LIMIT = 48; // divisible by 3
+
 type Props = {
   terms: any,
   navigation?: NavigationScreenProp<*>,
@@ -45,11 +47,10 @@ type Props = {
 type State = {
   // loadingMore: boolean,
   hasError: boolean,
+  isLoading: boolean,
+  isRefreshing: boolean,
   itemHeight: number,
   items: Array<any>,
-  loading: boolean,
-  refreshing: boolean,
-  skip: number,
 };
 
 const { width, height } = Dimensions.get('window');
@@ -57,11 +58,11 @@ const { width, height } = Dimensions.get('window');
 class ImageGridComponent extends React.Component<Props, State> {
   state = {
     hasError: false,
+    isLoading: false,
+    isRefreshing: false,
     itemHeight: 0,
     items: [],
-    loading: true,
     refreshing: false,
-    skip: 0,
   };
 
   componentDidMount() {
@@ -72,40 +73,99 @@ class ImageGridComponent extends React.Component<Props, State> {
     // }
   }
 
+  /**
+   * used when pulling and refreshing AND when initially
+   */
   fetchItems({ tag, grp_1, grp_2 }): Promise<any> {
+    this.setState({ isLoading: true });
     const { token } = this.props.userData;
     const tagQuery = tag == '' ? '' : `tag=${tag}`;
     const categoryQuery = grp_1 == -1 ? '' : `&categoryIds=${grp_1}`;
     const typeQuery = grp_2 == -1 ? '' : `&typeIds=${grp_2}`;
+
     return api
-      .get(`/api/search/?${tagQuery}${categoryQuery}${typeQuery}`, {
-        token,
-      })
+      .get(
+        `/api/search/?${tagQuery}${categoryQuery}${typeQuery}&limit=${LIMIT}`,
+        {
+          token,
+        }
+      )
       .then(({ data }) => {
+        const lastItem = data[data.length - 1];
         this.setState({
+          isLoading: false,
+          isRefreshing: false,
           items: data,
-          loading: false,
+          lastId: data.length > 0 ? lastItem._id : '',
         });
       })
       .catch(e => {
-        console.debug(e);
         // if the hashtag is incorrect format (e.g #111)
         if (e.message.indexOf('fails to match the required pattern') > -1) {
           return this.setState({
-            loading: false,
+            isLoading: false,
+            isRefreshing: false,
           });
         }
         this.setState({
           hasError: true,
-          loading: false,
+          isLoading: false,
+          isRefreshing: false,
         });
+        console.err(e);
       });
   }
-  onLayout = () => {
-    this.setState({
-      itemHeight: width / 3,
+
+  loadMore = () => {
+    const { lastId, items, theEnd, isRefreshing } = this.state;
+
+    if (theEnd || isRefreshing) return;
+
+    const { tag, grp_1, grp_2 } = this.props.terms;
+    const tagQuery = tag == '' ? '' : `tag=${tag}`;
+    const categoryQuery = grp_1 == -1 ? '' : `&categoryIds=${grp_1}`;
+    const typeQuery = grp_2 == -1 ? '' : `&typeIds=${grp_2}`;
+
+    if (this.reqTimer) {
+      clearTimeout(this.reqTimer);
+    }
+    this.setState({ isRefreshing: true }, async () => {
+      const { token } = this.props.userData;
+      this.reqTimer = setTimeout(async () => {
+        try {
+          const { data } = await api.get(
+            `/api/search/?${tagQuery}${categoryQuery}${typeQuery}&lastId=${lastId}&limit=${LIMIT}`,
+            { token }
+          );
+
+          if (data.length == 0) {
+            return this.setState({
+              isRefreshing: false,
+              isLoading: false,
+              theEnd: true,
+            });
+          }
+          const lastItem = data[data.length - 1];
+
+          this.setState({
+            items: [...items, ...data],
+            lastId: lastItem._id,
+            isRefreshing: false,
+            isLoading: false,
+          });
+        } catch (err) {
+          this.setState({
+            hasError: true,
+            isRefreshing: false,
+            isLoading: false,
+          });
+          console.error(err);
+        }
+      }, 200);
     });
   };
+
+  // onLayout = () => this.setState({ itemHeight: width / 3 });
 
   getItemLayout = (data: any, index: number) => {
     const { itemHeight } = this.state;
@@ -133,7 +193,7 @@ class ImageGridComponent extends React.Component<Props, State> {
           {/* <ImageCacheProvider
             numberOfConcurrentPreloads={3}
             ttl={TTL} // num of seconds to cache the image url for
-            defaultSource={loading}
+            defaultSource={isLoading}
             // urlsToPreload={this.state.images}
           >
             <CachedImage style={styles.image} source={{ uri }} />
@@ -144,35 +204,48 @@ class ImageGridComponent extends React.Component<Props, State> {
     );
   };
 
+  renderFooter = () => {
+    if (!this.state.isRefreshing) return null;
+
+    return (
+      <View style={{ paddingVertical: 20 }}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  };
+
   render() {
-    const { loading, items } = this.state;
+    const { hasError, isLoading, items } = this.state;
+
+    if (!hasError && isLoading) return this.renderLoading();
 
     return (
       <View style={styles.container}>
-        {loading ? (
-          this.renderLoading()
-        ) : (
-          // if not loading or no error
-          <FlatList
-            // onLayout={this.onLayout}
-            style={styles.list}
-            columnWrapperStyle={[styles.columnWrapper, { height: width / 3 }]}
-            data={items}
-            renderItem={this.renderItem}
-            numColumns={3}
-            keyExtractor={el => el.uuid}
-            getItemLayout={this.getItemLayout}
-            showsVerticalScrollIndicator={false}
-            ListEmptyComponent={this.renderEmptyState}
-            initialNumToRender={6}
-            viewabilityConfig={VIEWABILITY_CONFIG}
-            refreshing={false}
-            windowSize={6}
-          />
-        )}
+        <FlatList
+          // onLayout={this.onLayout}
+          columnWrapperStyle={[styles.columnWrapper, { height: width / 3 }]}
+          data={items}
+          getItemLayout={this.getItemLayout}
+          initialNumToRender={6}
+          keyExtractor={this._keyExtractor}
+          ListEmptyComponent={this.renderEmptyState}
+          numColumns={3}
+          onRefresh={this.fetchItems}
+          refreshing={isLoading}
+          ListFooterComponent={this.renderFooter}
+          renderItem={this.renderItem}
+          // showsVerticalScrollIndicator={false}
+          style={styles.list}
+          viewabilityConfig={VIEWABILITY_CONFIG}
+          windowSize={6}
+          onEndReached={this.loadMore}
+          onEndReachedThreshold={0.1}
+        />
       </View>
     );
   }
+
+  _keyExtractor = (item): string => item.uuid;
 
   renderEmptyState = () => {
     if (this.state.hasError) {

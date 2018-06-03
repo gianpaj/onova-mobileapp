@@ -39,6 +39,8 @@ const VIEWABILITY_CONFIG = {
   waitForInteraction: true,
 };
 
+const LIMIT = 48; // divisible by 3
+
 // TODO: define type of Item
 
 type Props = {
@@ -49,11 +51,11 @@ type Props = {
 };
 
 type State = {
-  error: boolean,
-  items: Array<any>,
   // itemHeight: number,
+  hasError: boolean,
   isLoading: boolean,
   isRefreshing: boolean,
+  items: Array<any>,
   lastId: string,
   theEnd: boolean,
 };
@@ -63,11 +65,11 @@ const { width, height } = Dimensions.get('window');
 class ImageGridComponent extends React.PureComponent<Props, State> {
   reqTimer = 0;
   state = {
-    error: false,
-    items: [],
     // itemHeight: 0,
+    hasError: false,
     isLoading: false,
     isRefreshing: false,
+    items: [],
     lastId: '',
     theEnd: false,
   };
@@ -82,44 +84,45 @@ class ImageGridComponent extends React.PureComponent<Props, State> {
    * used when pulling and refreshing AND when initially
    */
   fetchItems = async () => {
+    this.setState({ isLoading: true });
     const { token } = this.props.userData;
 
-    this.setState({ isLoading: true });
-
     try {
-      const { data } = await api.get(`${this.props.apiURL}`, {
+      const { data } = await api.get(`${this.props.apiURL}&limit=${LIMIT}`, {
         token,
       });
       const lastItem = data[data.length - 1];
       this.setState({
         items: data,
-        isRefreshing: false,
         isLoading: false,
+        isRefreshing: false,
         lastId: data.length > 0 ? lastItem._id : '',
       });
     } catch (err) {
       this.setState({
-        error: true,
-        isRefreshing: false,
+        hasError: true,
         isLoading: false,
+        isRefreshing: false,
       });
+      console.error(err);
     }
   };
 
   loadMore = () => {
-    const { lastId, items, theEnd } = this.state;
+    const { lastId, items, theEnd, isRefreshing } = this.state;
 
-    if (theEnd) return;
+    if (theEnd || isRefreshing) return;
 
     if (this.reqTimer) {
       clearTimeout(this.reqTimer);
     }
+    console.warn('loading');
     this.setState({ isRefreshing: true }, async () => {
       const { token } = this.props.userData;
       this.reqTimer = setTimeout(async () => {
         try {
           const { data } = await api.get(
-            `${this.props.apiURL}&lastId=${lastId}`,
+            `${this.props.apiURL}&lastId=${lastId}&limit=${LIMIT}`,
             { token }
           );
 
@@ -140,7 +143,7 @@ class ImageGridComponent extends React.PureComponent<Props, State> {
           });
         } catch (err) {
           this.setState({
-            error: true,
+            hasError: true,
             isRefreshing: false,
             isLoading: false,
           });
@@ -201,9 +204,9 @@ class ImageGridComponent extends React.PureComponent<Props, State> {
   };
 
   render() {
-    const { error, isLoading, items } = this.state;
+    const { hasError, isLoading, items } = this.state;
 
-    if (!error && isLoading) return this.renderLoading();
+    if (!hasError && isLoading) return this.renderLoading();
 
     return (
       <View style={styles.container}>
@@ -236,7 +239,7 @@ class ImageGridComponent extends React.PureComponent<Props, State> {
   renderEmptyState = () => {
     if (this.state.items.length > 1) return null;
 
-    if (this.state.error) {
+    if (this.state.hasError) {
       return (
         <View style={[styles.container, { height: height - 150 }]}>
           <Text style={styles.centerText}>{I18n.t('image_grid.error')}</Text>

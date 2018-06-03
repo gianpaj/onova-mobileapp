@@ -22,16 +22,16 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		140ED2AC1D01E1AD002B40FF /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
+		1DF982FFA59E8765E4D79833 /* libPods-onova.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 44514294AC69B9750F2C504A /* libPods-onova.a */; };
 		583DC04D20B711480048EE54 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 583DC04C20B711480048EE54 /* GoogleService-Info.plist */; };
 		583DC0A120B715400048EE54 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 583DC0A020B715400048EE54 /* Info.plist */; };
 		583DC0A420B715A60048EE54 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 583DC0A620B715A60048EE54 /* InfoPlist.strings */; };
 		595829533D3A4D3FB9D3BF9F /* libRNFirebase.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4DB66C5A10A2467AAFF57234 /* libRNFirebase.a */; };
 		5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
-		8090E993FF81A579836576CB /* libPods-onovaTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F79EE7CEB2ADB86662CD00A2 /* libPods-onovaTests.a */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
+		9D8E7F10F92E90D3EBEE2565 /* libPods-onovaTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 34EA2A94A8E6372B10761F3A /* libPods-onovaTests.a */; };
 		ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */; };
 		CAED3EE42BA842B7BC02B40D /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = E6D088081B7C462AAF6CB3EA /* libz.tbd */; };
-		CB04757AAE3A11C6DCE539F2 /* libPods-onova.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 251FA85F4953A917792F4799 /* libPods-onova.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -311,6 +311,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		00247CC0352CD70057393878 /* Pods-onovaTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-onovaTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-onovaTests/Pods-onovaTests.debug.xcconfig"; sourceTree = "<group>"; };
 		008F07F21AC5B25A0029DE68 /* main.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = main.jsbundle; sourceTree = "<group>"; };
 		00C302A71ABCB8CE00DB3ED1 /* RCTActionSheet.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTActionSheet.xcodeproj; path = "../node_modules/react-native/Libraries/ActionSheetIOS/RCTActionSheet.xcodeproj"; sourceTree = "<group>"; };
 		00C302B51ABCB90400DB3ED1 /* RCTGeolocation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTGeolocation.xcodeproj; path = "../node_modules/react-native/Libraries/Geolocation/RCTGeolocation.xcodeproj"; sourceTree = "<group>"; };
@@ -320,7 +321,6 @@
 		00E356EE1AD99517003FC87E /* onovaTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = onovaTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* onovaTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = onovaTests.m; sourceTree = "<group>"; };
-		0DDC368E95BA812E88001F83 /* Pods-onovaTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-onovaTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-onovaTests/Pods-onovaTests.debug.xcconfig"; sourceTree = "<group>"; };
 		139105B61AF99BAD00B5F7CC /* RCTSettings.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTSettings.xcodeproj; path = "../node_modules/react-native/Libraries/Settings/RCTSettings.xcodeproj"; sourceTree = "<group>"; };
 		139FDEE61B06529A00C62182 /* RCTWebSocket.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTWebSocket.xcodeproj; path = "../node_modules/react-native/Libraries/WebSocket/RCTWebSocket.xcodeproj"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* onova.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = onova.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -330,8 +330,11 @@
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = onova/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = onova/main.m; sourceTree = "<group>"; };
 		146833FF1AC3E56700842450 /* React.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = React.xcodeproj; path = "../node_modules/react-native/React/React.xcodeproj"; sourceTree = "<group>"; };
-		251FA85F4953A917792F4799 /* libPods-onova.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-onova.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2169BB148F22DC3A86678E05 /* Pods-onova.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-onova.release.xcconfig"; path = "Pods/Target Support Files/Pods-onova/Pods-onova.release.xcconfig"; sourceTree = "<group>"; };
 		2D16E6891FA4F8E400B85C8A /* libReact.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libReact.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		34EA2A94A8E6372B10761F3A /* libPods-onovaTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-onovaTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		3612DD43F3363A1BF1C1BA59 /* Pods-onovaTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-onovaTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-onovaTests/Pods-onovaTests.release.xcconfig"; sourceTree = "<group>"; };
+		44514294AC69B9750F2C504A /* libPods-onova.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-onova.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4DB66C5A10A2467AAFF57234 /* libRNFirebase.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNFirebase.a; sourceTree = "<group>"; };
 		583DC01420B710790048EE54 /* onova.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = onova.entitlements; path = onova/onova.entitlements; sourceTree = "<group>"; };
 		583DC04C20B711480048EE54 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "onova/GoogleService-Info.plist"; sourceTree = "<group>"; };
@@ -342,12 +345,9 @@
 		695C045E1A68466289A12BA9 /* RNFirebase.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNFirebase.xcodeproj; path = "../node_modules/react-native-firebase/ios/RNFirebase.xcodeproj"; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
+		A90FD0213430C7DB87777DB2 /* Pods-onova.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-onova.debug.xcconfig"; path = "Pods/Target Support Files/Pods-onova/Pods-onova.debug.xcconfig"; sourceTree = "<group>"; };
 		ADBDB91F1DFEBF0600ED6528 /* RCTBlob.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTBlob.xcodeproj; path = "../node_modules/react-native/Libraries/Blob/RCTBlob.xcodeproj"; sourceTree = "<group>"; };
-		B5D0E3C273C0E5E25143B253 /* Pods-onova.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-onova.release.xcconfig"; path = "Pods/Target Support Files/Pods-onova/Pods-onova.release.xcconfig"; sourceTree = "<group>"; };
-		D27BDA7CF4224D26EBE28B32 /* Pods-onova.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-onova.debug.xcconfig"; path = "Pods/Target Support Files/Pods-onova/Pods-onova.debug.xcconfig"; sourceTree = "<group>"; };
 		E6D088081B7C462AAF6CB3EA /* libz.tbd */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
-		F79EE7CEB2ADB86662CD00A2 /* libPods-onovaTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-onovaTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		FD5ADF294A05DD392C26FBAB /* Pods-onovaTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-onovaTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-onovaTests/Pods-onovaTests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -356,7 +356,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				140ED2AC1D01E1AD002B40FF /* libReact.a in Frameworks */,
-				8090E993FF81A579836576CB /* libPods-onovaTests.a in Frameworks */,
+				9D8E7F10F92E90D3EBEE2565 /* libPods-onovaTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -377,9 +377,9 @@
 				832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */,
 				00C302EA1ABCBA2D00DB3ED1 /* libRCTVibration.a in Frameworks */,
 				139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */,
-				CB04757AAE3A11C6DCE539F2 /* libPods-onova.a in Frameworks */,
 				595829533D3A4D3FB9D3BF9F /* libRNFirebase.a in Frameworks */,
 				CAED3EE42BA842B7BC02B40D /* libz.tbd in Frameworks */,
+				1DF982FFA59E8765E4D79833 /* libPods-onova.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -505,13 +505,24 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		2091EB0BDB2ECFF0EBE55BD6 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				A90FD0213430C7DB87777DB2 /* Pods-onova.debug.xcconfig */,
+				2169BB148F22DC3A86678E05 /* Pods-onova.release.xcconfig */,
+				00247CC0352CD70057393878 /* Pods-onovaTests.debug.xcconfig */,
+				3612DD43F3363A1BF1C1BA59 /* Pods-onovaTests.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
 				2D16E6891FA4F8E400B85C8A /* libReact.a */,
-				251FA85F4953A917792F4799 /* libPods-onova.a */,
-				F79EE7CEB2ADB86662CD00A2 /* libPods-onovaTests.a */,
 				E6D088081B7C462AAF6CB3EA /* libz.tbd */,
+				44514294AC69B9750F2C504A /* libPods-onova.a */,
+				34EA2A94A8E6372B10761F3A /* libPods-onovaTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -587,8 +598,8 @@
 				00E356EF1AD99517003FC87E /* onovaTests */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
-				D98BAA5451CF62B144EE771F /* Pods */,
 				583DC02120B710B40048EE54 /* Recovered References */,
+				2091EB0BDB2ECFF0EBE55BD6 /* Pods */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -613,17 +624,6 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		D98BAA5451CF62B144EE771F /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				D27BDA7CF4224D26EBE28B32 /* Pods-onova.debug.xcconfig */,
-				B5D0E3C273C0E5E25143B253 /* Pods-onova.release.xcconfig */,
-				0DDC368E95BA812E88001F83 /* Pods-onovaTests.debug.xcconfig */,
-				FD5ADF294A05DD392C26FBAB /* Pods-onovaTests.release.xcconfig */,
-			);
-			name = Pods;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -631,7 +631,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "onovaTests" */;
 			buildPhases = (
-				EEED4D921E05CCA35DFF1E11 /* [CP] Check Pods Manifest.lock */,
+				A936533924F8480431773B8E /* [CP] Check Pods Manifest.lock */,
 				00E356EA1AD99517003FC87E /* Sources */,
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
@@ -650,13 +650,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "onova" */;
 			buildPhases = (
-				21B19EC6310BB48AE1FAEC32 /* [CP] Check Pods Manifest.lock */,
+				F74E554E594C566CA815AF72 /* [CP] Check Pods Manifest.lock */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				69378E4B1C08980359D5E1E0 /* [CP] Copy Pods Resources */,
 				285BD5F887B6429CACCCB52E /* Upload Debug Symbols to Sentry */,
+				91FA6F3658F87F7C4840E655 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -1075,24 +1075,6 @@
 			shellPath = /bin/sh;
 			shellScript = "#export SENTRY_PROPERTIES=sentry.properties\nexport NODE_BINARY=node\n#../node_modules/@sentry/cli/bin/sentry-cli react-native xcode\n../node_modules/react-native/scripts/react-native-xcode.sh";
 		};
-		21B19EC6310BB48AE1FAEC32 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-onova-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
 		285BD5F887B6429CACCCB52E /* Upload Debug Symbols to Sentry */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1107,7 +1089,7 @@
 			shellPath = /bin/sh;
 			shellScript = "export SENTRY_PROPERTIES=sentry.properties\n../node_modules/@sentry/cli/bin/sentry-cli upload-dsym";
 		};
-		69378E4B1C08980359D5E1E0 /* [CP] Copy Pods Resources */ = {
+		91FA6F3658F87F7C4840E655 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1149,7 +1131,7 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-onova/Pods-onova-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		EEED4D921E05CCA35DFF1E11 /* [CP] Check Pods Manifest.lock */ = {
+		A936533924F8480431773B8E /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1161,6 +1143,24 @@
 			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
 				"$(DERIVED_FILE_DIR)/Pods-onovaTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		F74E554E594C566CA815AF72 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-onova-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1222,7 +1222,7 @@
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 0DDC368E95BA812E88001F83 /* Pods-onovaTests.debug.xcconfig */;
+			baseConfigurationReference = 00247CC0352CD70057393878 /* Pods-onovaTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Manual;
@@ -1253,7 +1253,7 @@
 		};
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = FD5ADF294A05DD392C26FBAB /* Pods-onovaTests.release.xcconfig */;
+			baseConfigurationReference = 3612DD43F3363A1BF1C1BA59 /* Pods-onovaTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Manual;
@@ -1281,7 +1281,7 @@
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = D27BDA7CF4224D26EBE28B32 /* Pods-onova.debug.xcconfig */;
+			baseConfigurationReference = A90FD0213430C7DB87777DB2 /* Pods-onova.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = onova/onova.entitlements;
@@ -1310,7 +1310,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B5D0E3C273C0E5E25143B253 /* Pods-onova.release.xcconfig */;
+			baseConfigurationReference = 2169BB148F22DC3A86678E05 /* Pods-onova.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = onova/onova.entitlements;

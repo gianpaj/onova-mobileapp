@@ -12,15 +12,23 @@ Follow [these instructions](https://facebook.github.io/react-native/docs/getting
 ## Getting started
 
 1.  Start the development server (server.data).
-2.  Update the `.env` to the IP address of where the server.data is running (e.g. you laptop's)
+2.  Copy `config-example_env.json` to `.config-dev.json` to the IP address of where the `server.data` is running (e.g. you laptop's `http://192.168.1.5:4040`).
 3.  Install `npm -g flow-typed`. It's automatically executed after running `yarn`.
 
 ```bash
 yarn
+
 react-native run-ios
 # or
 yarn run start-emulator # only tested in Gian's laptop
+
 react-native run-android
+
+# run package on developer mode (local server)
+yarn start
+
+# run package on developer mode (remote server)
+NODE_ENV=prod yarn start
 ```
 
 ## Run E2E test on iOS 🍎
@@ -46,7 +54,7 @@ Currently supporting `Android 8.0 (SDK 27)` – for react-native-firebase
 
 1.  Install [fastlane](https://docs.fastlane.tools/getting-started/android/setup/)
 2.  Install Android SDK/Android Studio
-3.  (_optional_) Clone the [repo](https://bitbucket.org/onova/private.stuff) containg the Android certificate for the release build (you need to have access)
+3.  (_optional_) Clone the [repo](https://bitbucket.org/onova/private.stuff) contaning the Android certificate for the release build (you need to have access)
 
     ```bash
     cd onova

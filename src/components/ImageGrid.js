@@ -55,6 +55,7 @@ type State = {
   isLoading: boolean,
   isRefreshing: boolean,
   lastId: string,
+  theEnd: boolean,
 };
 
 const { width, height } = Dimensions.get('window');
@@ -68,6 +69,7 @@ class ImageGridComponent extends React.PureComponent<Props, State> {
     isLoading: false,
     isRefreshing: false,
     lastId: '',
+    theEnd: false,
   };
 
   componentDidMount() {
@@ -105,7 +107,9 @@ class ImageGridComponent extends React.PureComponent<Props, State> {
   };
 
   loadMore = () => {
-    const { lastId, items } = this.state;
+    const { lastId, items, theEnd } = this.state;
+
+    if (theEnd) return;
 
     if (this.reqTimer) {
       clearTimeout(this.reqTimer);
@@ -120,7 +124,11 @@ class ImageGridComponent extends React.PureComponent<Props, State> {
           );
 
           if (data.length == 0) {
-            return this.setState({ isRefreshing: false, isLoading: false });
+            return this.setState({
+              isRefreshing: false,
+              isLoading: false,
+              theEnd: true,
+            });
           }
           const lastItem = data[data.length - 1];
 

@@ -3,7 +3,7 @@ import colors from '../config/colors';
 
 import React, { PureComponent } from 'react';
 import { Dimensions, StyleSheet, View } from 'react-native';
-import { Body, Left, Right, Container, Title } from 'native-base';
+import { Body, Left, Right, Title } from 'native-base';
 import { TabViewAnimated, TabBar, SceneMap } from 'react-native-tab-view';
 
 import I18n from '../i18n';

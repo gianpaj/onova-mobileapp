@@ -48,8 +48,10 @@ if (__DEV__) {
     };
     if (process.env.NODE_ENV !== 'prod') {
       defaultState = {
-        emailAddress: 'gianpa+test4@gmail.com',
-        password: '***REMOVED***',
+        // emailAddress: 'gianpa+test4@gmail.com',
+        // password: '***REMOVED***',
+        emailAddress: 'gianpa+test@gmail.com',
+        password: 'expressos',
       };
     }
   } else {

@@ -85,7 +85,7 @@ class ImageGridComponent extends React.PureComponent<Props, State> {
     this.setState({ isLoading: true });
 
     try {
-      const { data } = await api.get(`${this.props.apiURL}&limit=20`, {
+      const { data } = await api.get(`${this.props.apiURL}`, {
         token,
       });
       const lastItem = data[data.length - 1];
@@ -119,11 +119,10 @@ class ImageGridComponent extends React.PureComponent<Props, State> {
             { token }
           );
 
-          const lastItem = data[data.length - 1];
-
-          if (lastId == lastItem._id || data.length == 0) {
+          if (data.length == 0) {
             return this.setState({ isRefreshing: false, isLoading: false });
           }
+          const lastItem = data[data.length - 1];
 
           this.setState({
             items: [...items, ...data],

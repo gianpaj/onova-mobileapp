@@ -55,10 +55,14 @@ class SearchWithHasthagsTabContainer extends Component<Props, State> {
     // TODO: check verify tags/items exists
     // this.setState({ isLoading: false });
 
-    this.props.navigation.navigate('searchProductsResults', {
-      tag: text,
-      grp_1,
-      grp_2,
+    this.props.navigation.navigate({
+      routeName: 'searchProductsResults',
+      params: {
+        tag: text,
+        grp_1,
+        grp_2,
+      },
+      key: `searchProductsResults`,
     });
   };
 

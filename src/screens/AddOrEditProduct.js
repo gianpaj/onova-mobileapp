@@ -78,8 +78,9 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
       // navigate to the screen instead of showing as a normal tab screen
       tabBarOnPress: ({ scene }: any) => {
         if (!scene.focused) {
-          props.navigation.navigate('addOrEditProduct', {
-            focused: !scene.focused,
+          props.navigation.navigate({
+            routeName: 'addOrEditProduct',
+            key: `addOrEditProduct`,
           });
         }
       },

@@ -400,9 +400,11 @@ class ProfileScreen extends React.Component<Props, State> {
   ifNavigatedFromProduct = () =>
     this.props.navigation.state.params ? true : false;
 
-  openNotifications = () => {
-    this.props.navigation.navigate('notifications');
-  };
+  openNotifications = () =>
+    this.props.navigation.navigate({
+      routeName: 'notifications',
+      key: `notifications`,
+    });
 
   shouldComponentUpdate(nextProps) {
     // fix error when logging out
@@ -417,11 +419,19 @@ class ProfileScreen extends React.Component<Props, State> {
   }
 
   goToReviews() {
-    this.props.navigation.navigate('reviews', { userId: this.state._id });
+    this.props.navigation.navigate({
+      routeName: 'reviews',
+      params: { userId: this.state._id },
+      key: `reviews-${this.state._id}`,
+    });
   }
 
-  goToFollowing() {
-    this.props.navigation.navigate('followers', { userId: this.state._id });
+  goToFollowers() {
+    this.props.navigation.navigate({
+      routeName: 'followers',
+      params: { userId: this.state._id },
+      key: `followers-${this.state._id}`,
+    });
   }
 
   renderUserNumbers = () => {
@@ -450,7 +460,7 @@ class ProfileScreen extends React.Component<Props, State> {
           /> */}
         </TouchableOpacity>
         <TouchableOpacity
-          onPress={() => this.goToFollowing()}
+          onPress={() => this.goToFollowers()}
           style={styles.alignCenter}>
           <Text style={styles.numbers}>{this.state.followersCount}</Text>
           <Text>{I18n.t('profile.followers_label')}</Text>

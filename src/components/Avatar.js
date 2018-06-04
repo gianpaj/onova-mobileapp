@@ -163,7 +163,7 @@ export default class Avatar extends PureComponent<Props, State> {
           style={styles.button}>
           <Ionicons
             color={buttonActiveState ? colors.grey4 : colors.active}
-            size={20}
+            size={25}
             name={buttonActiveState ? 'ios-checkmark-circle' : 'md-add-circle'}
             // style={[
             //   buttonActiveState && {
@@ -203,12 +203,12 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end',
     borderColor: colors.white,
     borderRadius: 25,
-    height: 30,
+    height: 40,
+    width: 40,
     padding: 5,
     justifyContent: 'center',
-    top: -18,
-    right: -5,
-    width: 30,
+    right: -8,
+    top: -19,
   },
   /* eslint-disable */
   miniAvatar: {

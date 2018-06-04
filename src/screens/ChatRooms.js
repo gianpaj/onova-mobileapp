@@ -239,7 +239,6 @@ class ChatContainer extends Component<Props, State> {
             size="verySmall"
             uri={item.partner.avatarURL}
             placeholderText={item.partner.name}
-            withBorder
           />
           <View style={[st.flex1, st.content]}>
             <View style={st.contentHeader}>

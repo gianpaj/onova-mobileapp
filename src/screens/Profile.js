@@ -485,7 +485,6 @@ class ProfileScreen extends React.Component<Props, State> {
             <Avatar
               style={styles.avatarContainer}
               size={'default'}
-              withBorder
               onChange={p => this.setState({ profilePic: p })}
               interactive={editing}
               uri={profilePic}

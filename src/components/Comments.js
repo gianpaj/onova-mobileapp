@@ -257,7 +257,6 @@ class Comments extends React.Component<Props, State> {
         <Avatar
           style={{ marginTop: 2 }}
           size={'verySmall'}
-          withBorder
           uri={user.profilePic || ''}
           placeholderText={user.username}
         />

@@ -110,7 +110,6 @@ class SearchSellersTabContainer extends Component<Props, State> {
         <View style={styles.itemContainer}>
           <Avatar
             size={'verySmall'}
-            withBorder
             uri={user.profilePic}
             placeholderText={user.username}
           />

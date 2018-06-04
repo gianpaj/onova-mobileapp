@@ -116,7 +116,7 @@ class ImageGridComponent extends React.PureComponent<Props, State> {
     if (this.reqTimer) {
       clearTimeout(this.reqTimer);
     }
-    console.warn('loading');
+
     this.setState({ isRefreshing: true }, async () => {
       const { token } = this.props.userData;
       this.reqTimer = setTimeout(async () => {

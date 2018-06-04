@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import {
   ActivityIndicator,
   FlatList,
-  Image,
+  // Image,
   RefreshControl,
   StyleSheet,
   Text,
@@ -15,7 +15,7 @@ import {
 } from 'react-native';
 import { Body, Container, Left, Right, Title } from 'native-base';
 import { NavigationActions } from 'react-navigation';
-import { AnimatedCircularProgress } from 'react-native-circular-progress';
+// import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import type { NavigationScreenProp } from 'react-navigation';
@@ -76,6 +76,7 @@ class ChatContainer extends Component<Props, State> {
     console.log('getChatsAndTheirOrders');
     let orders;
     const { token } = this.props.userData;
+    const { userData } = this.props;
     return new Promise((resolve, reject) => {
       if (!pusherCurrentUser) return reject();
       api
@@ -91,14 +92,18 @@ class ChatContainer extends Component<Props, State> {
           return [...rooms, ...pusherCurrentUser.rooms];
         })
         .then(allRooms => {
-          const { userData } = this.props;
+          // let roomsAndTheirOrders = allRooms.filter(r => {
+          //   const o = orders.filter((o: Order) => getRoomName(o) == r.name);
+          //   if (o) return true;
+          //   return false;
+          // });
+
           // filter chat rooms by checking if there is
           // at least one room name == order generated name
-          let roomsAndTheirOrders = allRooms.filter(r => {
-            const o = orders.filter((o: Order) => getRoomName(o) == r.name);
-            if (o) return true;
-            return false;
-          });
+          const thisOrders = orders.map(o => getRoomName(o));
+          let roomsAndTheirOrders = allRooms.filter(function(r) {
+            return this.indexOf(r.name) >= 0;
+          }, thisOrders);
           // add order and room objects
           roomsAndTheirOrders = roomsAndTheirOrders.map(r => {
             r.orders = orders.filter((o: Order) => getRoomName(o) == r.name);
@@ -117,7 +122,6 @@ class ChatContainer extends Component<Props, State> {
               } catch (err) {
                 throw new Error(err);
               }
-              // console.warn(room.users.map(u => u.name));
               const partner = room.users.filter(u => u.id !== userData._id)[0];
               const cursor = await pusherCurrentUser.readCursor({
                 roomId: room.id,
@@ -393,17 +397,17 @@ const st = StyleSheet.create({
     justifyContent: 'space-between',
     marginBottom: 6,
   },
-  orderCircle: {
-    marginHorizontal: 10,
-    marginVertical: 4,
-  },
-  itemImage: {
-    borderRadius: 50,
-    borderWidth: 2,
-    borderColor: colors.white,
-    height: '100%',
-    width: '100%',
-  },
+  // orderCircle: {
+  //   marginHorizontal: 10,
+  //   marginVertical: 4,
+  // },
+  // itemImage: {
+  //   borderRadius: 50,
+  //   borderWidth: 2,
+  //   borderColor: colors.white,
+  //   height: '100%',
+  //   width: '100%',
+  // },
   separator: {
     height: StyleSheet.hairlineWidth,
     backgroundColor: colors.grey5,

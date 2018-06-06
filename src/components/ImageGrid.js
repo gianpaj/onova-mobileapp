@@ -24,6 +24,8 @@ import { Button } from 'native-base';
 
 import type { NavigationScreenProp } from 'react-navigation';
 
+import { disableRefresh } from '../actions/actionCreator';
+
 import I18n from '../i18n';
 import * as api from '../utils/api';
 import colors from '../config/colors';
@@ -80,9 +82,10 @@ class ImageGridComponent extends React.PureComponent<Props, State> {
     this.fetchItems();
 
     this.props.navigation.addListener('didFocus', () => {
-      setTimeout(() => {
+      if (this.props.shouldRefresh) {
         this.fetchItems();
-      }, 500);
+        this.props.dispatch(disableRefresh());
+      }
     });
   }
 
@@ -289,6 +292,7 @@ class ImageGridComponent extends React.PureComponent<Props, State> {
 
 const mapStateToProps = (state: any) => ({
   userData: state.LoginReducer.data,
+  shouldRefresh: state.GenericReducer.shouldRefresh,
 });
 
 export default connect(mapStateToProps, null, null, { withRef: true })(

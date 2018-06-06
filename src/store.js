@@ -8,6 +8,7 @@ import { createReactNavigationReduxMiddleware } from 'react-navigation-redux-hel
 
 import NavigationReducer from './reducers/navigationReducer';
 import loginReducer from './reducers/loginReducer';
+import GenericReducer from './reducers/genericReducer';
 
 const config1 = {
   key: 'primary',
@@ -28,6 +29,7 @@ const LoginReducer = persistReducer(config1, loginReducer);
 const rootReducer = combineReducers({
   NavigationReducer,
   LoginReducer,
+  GenericReducer,
 });
 
 if (__DEV__) {

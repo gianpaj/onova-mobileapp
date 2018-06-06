@@ -37,7 +37,7 @@ import {
   ImageGrid,
   NotificationsDot,
 } from '../components';
-import { getPersonalUserData } from '../actions/actionCreator';
+import { getPersonalUserData, enableRefresh } from '../actions/actionCreator';
 
 import colors from '../config/colors';
 import settings from '../config/settings';
@@ -380,6 +380,7 @@ class ProfileScreen extends React.Component<Props, State> {
         },
         { token }
       );
+      this.props.dispatch(enableRefresh());
       ui.showToast(I18n.t('profile.alert_block_success'), '', 'OK');
       this.props.navigation.goBack();
     } catch (err) {

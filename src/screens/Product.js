@@ -33,6 +33,7 @@ import settings from '../config/settings';
 import * as api from '../utils/api';
 import * as ui from '../utils/ui';
 import typography from '../config/typography';
+import { enableRefresh } from '../actions/actionCreator';
 
 import type { MapStateToProps } from 'react-redux';
 import type { NavigationScreenProp } from 'react-navigation';
@@ -167,6 +168,7 @@ export class ProductContainer extends React.Component<Props, State> {
     api
       .del(`/api/products/${uuid}`, { token })
       .then(() => {
+        this.props.dispatch(enableRefresh());
         this.props.navigation.goBack();
       })
       .catch(e => console.error(e));

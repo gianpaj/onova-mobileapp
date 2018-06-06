@@ -35,7 +35,7 @@ if (Platform.OS == 'android') {
 }
 
 import { Header, HR, TagInput } from '../components';
-
+import { enableRefresh } from '../actions/actionCreator';
 import I18n from '../i18n';
 import colors from '../config/colors';
 import settings from '../config/settings';
@@ -240,8 +240,6 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     //   },
     // };
 
-    const { token } = this.props.userData;
-
     if (inEditMode) {
       var todo = images.length;
       if (!todo) return;
@@ -286,22 +284,28 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
           name: 'image' + i + '.jpg',
         });
       });
-      api
-        .post('/api/products', formData, { token, timeout: 300000 })
-        .then(res => {
-          console.debug(res);
-          this.closeModal();
-        })
-        .catch(err => {
-          console.debug(err);
-          ui.showToast(err.message, 'warning');
-        })
-        // final
-        .then(() => {
-          this.setState({ pending: false });
-          Toast.hide();
-        });
+      this.uploadNewProduct(uuid, formData);
     }
+  };
+
+  uploadNewProduct = (uuid: string, formData: any): Promise<any> => {
+    const { token } = this.props.userData;
+    api
+      .post('/api/products', formData, { token, timeout: 300000 })
+      .then(res => {
+        console.debug(res);
+        this.props.dispatch(enableRefresh());
+        this.closeModal();
+      })
+      .catch(err => {
+        console.debug(err);
+        ui.showToast(err.message, 'warning');
+      })
+      // final
+      .then(() => {
+        this.setState({ pending: false });
+        Toast.hide();
+      });
   };
 
   uploadEditedProduct = (uuid: string, formData: any): Promise<any> => {
@@ -314,6 +318,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
         })
         .then(res => {
           console.debug(res);
+          this.props.dispatch(enableRefresh());
           this.closeModal();
         })
         .catch(err => {

@@ -389,6 +389,10 @@ const handleErrorWithAlert = (data: any, err: any) => {
   };
 };
 
+const enableRefresh = () => ({ type: 'DO_REFRESH' });
+
+const disableRefresh = () => ({ type: 'DONOT_REFRESH' });
+
 export {
   initializePusher,
   login,
@@ -400,4 +404,6 @@ export {
   getUserData,
   logout,
   currentUser,
+  enableRefresh,
+  disableRefresh,
 };

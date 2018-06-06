@@ -78,6 +78,12 @@ class ImageGridComponent extends React.PureComponent<Props, State> {
     // const defaultImageCacheManager = ImageCacheManager();
     // defaultImageCacheManager.clearCache();
     this.fetchItems();
+
+    this.props.navigation.addListener('didFocus', () => {
+      setTimeout(() => {
+        this.fetchItems();
+      }, 500);
+    });
   }
 
   /**

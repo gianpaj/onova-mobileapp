@@ -20,12 +20,10 @@ import colors from '../config/colors';
 import { category_radio_grp_1, category_radio_grp_2 } from '../utils/ui';
 
 import type { NavigationScreenProp } from 'react-navigation';
-import type { UserData, Dispatch, ReduxState } from '../types';
+import type { ReduxState } from '../types';
 
 type Props = {
-  dispatch: Dispatch,
   navigation: NavigationScreenProp<*>,
-  userData: UserData,
 };
 
 type State = {

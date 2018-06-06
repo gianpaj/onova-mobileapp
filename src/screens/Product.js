@@ -37,13 +37,17 @@ import { enableRefresh } from '../actions/actionCreator';
 
 import type { MapStateToProps } from 'react-redux';
 import type { NavigationScreenProp } from 'react-navigation';
-import type { Product as ProductType, UserData, ReduxState } from '../types';
+import type {
+  Dispatch,
+  Product as ProductType,
+  UserData,
+  ReduxState,
+} from '../types';
 
 type Props = {
   navigation: NavigationScreenProp<*>,
-  product: ProductType,
-  URL: string,
   userData: UserData,
+  dispatch: Dispatch,
 };
 
 type State = {

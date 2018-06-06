@@ -46,6 +46,7 @@
         "skipUndeclared": true
       }
     ],
+    "react/no-unused-prop-types": 2,
     "react/display-name": 0,
     "react/jsx-boolean-value": 2,
     "react/jsx-wrap-multilines": 2,

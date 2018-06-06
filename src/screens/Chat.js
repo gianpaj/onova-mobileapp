@@ -663,9 +663,6 @@ const st = StyleSheet.create({
   flex1: {
     flex: 1,
   },
-  row: {
-    flexDirection: 'row',
-  },
   send: {
     marginBottom: 5,
     marginRight: 10,

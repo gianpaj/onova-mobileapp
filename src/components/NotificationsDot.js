@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 
 // eslint-disable-next-line
 import type { ReduxState } from '../types';
-import colors from '../config/colors';
+// // import colors from '../config/colors';
 import { Avatar } from '../components';
 
 type Props = {
@@ -56,7 +56,7 @@ const st = StyleSheet.create({
     alignItems: 'center',
   },
   // dot: {
-  //   backgroundColor: colors.red,
+  backgroundColor: colors.red,
   //   borderRadius: 15,
   //   bottom: 5,
   //   height: 4,

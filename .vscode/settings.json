@@ -1,9 +1,8 @@
 {
   // Enable/disable JavaScript validation. (For Flow)
   "javascript.validate.enable": false,
-  "flow.useNPMPackagedFlow": true,
   "eslint.enable": true,
-  "flow.enabled": true,
+  "flowide.enable": true,
   "search.exclude": {
     "**/node_modules": true,
     "**/coverage": true

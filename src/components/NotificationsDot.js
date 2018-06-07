@@ -56,7 +56,7 @@ const st = StyleSheet.create({
     alignItems: 'center',
   },
   // dot: {
-  backgroundColor: colors.red,
+  //   backgroundColor: colors.red,
   //   borderRadius: 15,
   //   bottom: 5,
   //   height: 4,

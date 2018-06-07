@@ -4,6 +4,7 @@ import { Platform } from 'react-native';
 import { Toast } from 'antd-mobile';
 import { ChatManager, TokenProvider } from '@pusher/chatkit/react-native';
 import { Sentry } from 'react-native-sentry';
+// import firebase from 'react-native-firebase';
 
 import {
   LOGIN_PENDING,
@@ -393,6 +394,22 @@ const enableRefresh = () => ({ type: 'DO_REFRESH' });
 
 const disableRefresh = () => ({ type: 'DONOT_REFRESH' });
 
+const displayNotification = (notification: any) => (
+  dispatch: Dispatch,
+  getState: GetState
+) => {
+  const routes = getState().NavigationReducer.stateForLoggedIn.routes;
+  const routeName = routes[routes.length - 1].routeName;
+  console.log(routeName);
+  // if we're NOT on the chat route/screen of the push notification, display the push
+  if (routeName == 'chat') {
+    const { params } = routes[routes.length - 1];
+    console.log(params);
+  } else {
+    firebase.notifications().displayNotification(notification);
+  }
+};
+
 export {
   initializePusher,
   login,
@@ -406,4 +423,5 @@ export {
   currentUser,
   enableRefresh,
   disableRefresh,
+  // displayNotification,
 };

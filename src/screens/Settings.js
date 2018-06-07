@@ -33,7 +33,7 @@ import isEmail from 'validator/lib/isEmail';
 // import Instabug from 'instabug-reactnative';
 import { KeyboardAccessoryNavigation } from 'react-native-keyboard-accessory';
 
-import { Accordion, HR, Header } from '../components';
+import { Header } from '../components';
 
 import { getPersonalUserData, logout } from '../actions/actionCreator';
 
@@ -229,7 +229,7 @@ class SettingsContainer extends Component<Props, State> {
 
     api
       .put(`/api/users/${userData._id}`, data, { token: userData.token })
-      .then(res => {
+      .then(data => {
         // console.log(res);
         // if we changed the email
         if (data.emailAddress) {

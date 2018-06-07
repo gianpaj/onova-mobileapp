@@ -112,16 +112,16 @@ export function registerPushNotifications(): Promise<string | null> {
 }
 
 // FIXME: send pushToken here instead from actionCreator
-function registerPushToken(token: string): Promise<string | null> {
-  return new Promise((resolve, reject) => {
-    // if (err) {
-    //   console.error(err);
-    //   return reject();
-    // }
-    // Notifications.setApplicationIconBadgeNumber(number);
-    resolve(token);
-  });
-}
+// function registerPushToken(token: string): Promise<string | null> {
+//   return new Promise((resolve, reject) => {
+//     // if (err) {
+//     //   console.error(err);
+//     //   return reject();
+//     // }
+//     // Notifications.setApplicationIconBadgeNumber(number);
+//     resolve(token);
+//   });
+// }
 
 async function navigate(notif) {
   console.log(notif);

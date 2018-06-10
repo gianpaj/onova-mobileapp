@@ -326,7 +326,7 @@ export class ProductContainer extends React.Component<Props, State> {
     // $FlowFixMe
     this.props.navigation.navigate({
       routeName: 'searchProductsResults',
-      key: 'searchProductsResults',
+      key: `searchProductsResults-${matchingString}`,
       params: {
         tag: matchingString.replace('#', ''),
         grp_1: -1,

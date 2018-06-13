@@ -111,7 +111,7 @@ class FollowersContainer extends Component<Props, State> {
     const shouldShowButton = user._id !== _id;
     return (
       <TouchableHighlight
-        style={{ width: initialLayout.width / 3, paddingVertical: 20 }}
+        style={{ width: initialLayout.width / 3 }}
         underlayColor={colors.grey4}
         onPress={() => this.goToProfile(user)}>
         <View style={{ alignItems: 'center' }}>
@@ -129,7 +129,7 @@ class FollowersContainer extends Component<Props, State> {
           <Text
             style={[
               { color: colors.black },
-              shouldShowButton ? { marginTop: -15 } : { marginTop: 10 },
+              shouldShowButton ? { marginTop: -26 } : { marginTop: 10 },
             ]}
             numberOfLines={1} /* android */
           >
@@ -212,10 +212,10 @@ class FollowersContainer extends Component<Props, State> {
               />
             }
             style={styles.root}
+            contentContainerStyle={styles.contentContainer}
             numColumns={3}
             getItemLayout={this.getItemLayout}
             onLayout={this.onLayout}
-            showsVerticalScrollIndicator={false}
             columnWrapperStyle={[
               styles.columnWrapper,
               { height: this.state.itemHeight },
@@ -252,8 +252,12 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
   },
+  contentContainer: {
+    paddingVertical: 20,
+    paddingHorizontal: 5,
+  },
   root: {
-    height: '100%',
+    flex: 1,
   },
   boldText: {
     fontWeight: 'bold',

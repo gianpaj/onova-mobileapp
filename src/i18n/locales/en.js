@@ -86,8 +86,8 @@ export default {
     clothes: 'Clothes',
     shoes: 'Shoes',
     other_cat: 'Other',
-    man: 'Man',
-    woman: 'Woman',
+    men: 'Men',
+    women: 'Women',
     other_type: 'Other',
   },
   add_or_edit_item: {
@@ -120,7 +120,8 @@ export default {
     empty_state_message_others: 'There no any items yet',
     empty_state_message_mine: 'You did not add any items yet',
     empty_state_button_mine: 'Sell something now',
-    notice_bar: 'Please verify you email address. Check your inbox',
+    notice_bar:
+      'Only one step left! Check your inbox for a confirmation email.',
     toast_saving: 'Loading...',
     toast_updated: 'Your profile has been updated',
     alert_unsaved_changes_title: 'Unsaved Changes',

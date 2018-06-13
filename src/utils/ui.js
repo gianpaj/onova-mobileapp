@@ -79,7 +79,7 @@ export const category_radio_grp_1 = [
 ];
 
 export const category_radio_grp_2 = [
-  { label: I18n.t('categories.man'), value: 0 },
-  { label: I18n.t('categories.woman'), value: 1 },
+  { label: I18n.t('categories.men'), value: 0 },
+  { label: I18n.t('categories.women'), value: 1 },
   { label: I18n.t('categories.other_type'), value: 2 },
 ];

@@ -86,8 +86,8 @@ export default {
     clothes: 'Одяг',
     shoes: 'Взуття',
     other_cat: 'Інше',
-    man: 'Чоловіче',
-    woman: 'Жіноче',
+    men: 'Чоловіче',
+    women: 'Жіноче',
     other_type: 'Інше',
   },
   add_or_edit_item: {

@@ -78,7 +78,7 @@ class SearchProductsResultsContainer extends Component<Props, State> {
               <Title style={{ color: colors.black }}>
                 {this.getCategoryLabel(terms.grp_1)}
               </Title>
-            ) : // searching for type (man, woman or other)
+            ) : // searching for type (men, women or other)
             terms.tag == '' && terms.grp_1 == -1 && terms.grp_2 !== -1 ? (
               <Title style={{ color: colors.black }}>
                 {this.getTypeLabel(terms.grp_2)}

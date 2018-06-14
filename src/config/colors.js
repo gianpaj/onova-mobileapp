@@ -12,7 +12,7 @@ export default {
   pDark: '#001970',
   secondary: '#ffb74d',
   sLight: '#ffe97d',
-  yellow: '#ffe501',
+  yellow: '#fff000',
   sDark: '#c88719',
   grey1: '#515151',
   grey2: '#767676',
@@ -24,7 +24,7 @@ export default {
   greyOutline: '#d8d8d8',
   black: '#000000',
   white: '#ffffff',
-  red: '#ff0000',
+  red: '#ff001e',
   green: '#00ff55',
   transparent: 'transparent',
 };

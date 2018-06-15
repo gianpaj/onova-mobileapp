@@ -23,6 +23,7 @@ import {
 import isEmail from 'validator/lib/isEmail';
 import { Toast } from 'antd-mobile';
 import AnimButton from 'react-native-micro-animated-button';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import I18n from '../i18n';
 
 import type { NavigationScreenProp } from 'react-navigation';
@@ -31,10 +32,15 @@ import { Header } from '../components';
 import { login } from '../actions/actionCreator';
 import * as api from '../utils/api';
 import colors from '../config/colors';
+import typography from '../config/typography';
 
 import type { Dispatch, ReduxState } from '../types';
 
 let defaultState = {};
+let isProd = false;
+if (process.env.NODE_ENV == 'prod' || process.env.NODE_ENV == 'production') {
+  isProd = true;
+}
 
 if (__DEV__) {
   if (Platform.OS == 'ios') {
@@ -46,12 +52,14 @@ if (__DEV__) {
       emailAddress: 'gianfranco_p@hotmail.com',
       password: '***REMOVED***007',
     };
-    if (process.env.NODE_ENV !== 'prod') {
+    if (isProd) {
       defaultState = {
         // emailAddress: 'gianpa+test4@gmail.com',
         // password: '***REMOVED***',
-        emailAddress: 'gianpa+test@gmail.com',
-        password: 'expressos',
+        // emailAddress: 'gianpa+test@gmail.com',
+        // password: 'expressos',
+        emailAddress: 'gianpa@gmail.com',
+        password: '***REMOVED***',
       };
     }
   } else {
@@ -82,7 +90,8 @@ type State = {
   hasFocusEmailReset: boolean,
   hasFocusPass: boolean,
   loadingReset: boolean,
-  modalVisible: boolean,
+  pwdResetModalVisible: boolean,
+  verifyAccountModalVisible: boolean,
   password: string,
 };
 
@@ -102,7 +111,8 @@ class LoginTabContainer extends React.Component<Props, State> {
     hasFocusEmailReset: false,
     hasFocusPass: false,
     loadingReset: false,
-    modalVisible: false,
+    pwdResetModalVisible: false,
+    verifyAccountModalVisible: false,
     password: '',
     ...defaultState,
   };
@@ -110,22 +120,28 @@ class LoginTabContainer extends React.Component<Props, State> {
   onLogin = () => {
     const { emailAddress, password } = this.state;
     if (!emailAddress || !password || this.props.loading) return;
-    this.props.dispatch(login({ emailAddress, password }));
+    this.props.dispatch(login({ emailAddress, password })).catch(() => {
+      this.setVerifyAccountVisible(true);
+    });
   };
 
   // googleSignin() {
   //   this.props.dispatch(loginWithGoogle());
   // }
 
-  setModalVisible(visible: boolean) {
+  setPwdResetModalVisible(visible: boolean) {
     this.setState(prevState => {
       return {
         emailReset: prevState.emailReset
           ? prevState.emailReset
           : prevState.emailAddress,
-        modalVisible: visible,
+        pwdResetModalVisible: visible,
       };
     });
+  }
+
+  setVerifyAccountVisible(visible: boolean) {
+    this.setState({ verifyAccountModalVisible: visible });
   }
 
   onResetPassword = () => {
@@ -149,7 +165,7 @@ class LoginTabContainer extends React.Component<Props, State> {
         Toast.success(err.message, 5);
         // }
       })
-      .then(() => this.setModalVisible(false))
+      .then(() => this.setPwdResetModalVisible(false))
       .then(() => this.setState({ loadingReset: false }));
   };
 
@@ -291,32 +307,73 @@ class LoginTabContainer extends React.Component<Props, State> {
             </NBButton>
             <TouchableOpacity
               style={[styles.hr, { padding: 10, margin: 20 }]}
-              onPress={() => this.setModalVisible(true)}>
+              onPress={() => this.setPwdResetModalVisible(true)}>
               <Text style={{ color: colors.grey4 }}>
                 {I18n.t('login.forgot_password')}
               </Text>
             </TouchableOpacity>
           </View>
         </View>
-        {this.renderPasswordResetModal()}
+        {this.renderPwdResetModal()}
+        {this.renderVerifyAccountModal()}
       </Content>
     );
   }
 
-  renderPasswordResetModal() {
-    const { hasFocusEmailReset } = this.state;
-
+  renderVerifyAccountModal() {
     return (
       <Modal
         animationType="slide"
-        visible={this.state.modalVisible}
-        onRequestClose={() => this.setModalVisible(false)}>
+        visible={this.state.verifyAccountModalVisible}
+        onRequestClose={() => this.setVerifyAccountVisible(false)}>
         <View>
           <Header noShadow style={{ backgroundColor: colors.transparent }}>
             <Left />
             <Body />
             <Right>
-              <NBButton transparent onPress={() => this.setModalVisible(false)}>
+              <NBButton
+                transparent
+                onPress={() => this.setVerifyAccountVisible(false)}>
+                <NBIcon name="close" style={{ color: colors.black }} />
+              </NBButton>
+            </Right>
+          </Header>
+          <View style={{ margin: 20 }}>
+            <Icon
+              size={typography.empty_state_icon}
+              name={'email-open-outline'}
+              color={colors.grey2}
+              style={{ alignSelf: 'center', marginBottom: 30 }}
+            />
+            <Text
+              style={{
+                color: colors.black,
+                textAlign: 'center',
+              }}>
+              {I18n.t('login.verify_account.title')}
+            </Text>
+          </View>
+        </View>
+      </Modal>
+    );
+  }
+
+  renderPwdResetModal() {
+    const { hasFocusEmailReset } = this.state;
+
+    return (
+      <Modal
+        animationType="slide"
+        visible={this.state.pwdResetModalVisible}
+        onRequestClose={() => this.setPwdResetModalVisible(false)}>
+        <View>
+          <Header noShadow style={{ backgroundColor: colors.transparent }}>
+            <Left />
+            <Body />
+            <Right>
+              <NBButton
+                transparent
+                onPress={() => this.setPwdResetModalVisible(false)}>
                 <NBIcon name="close" style={{ color: colors.black }} />
               </NBButton>
             </Right>

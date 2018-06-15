@@ -4,6 +4,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import {
   // Animated,
+  Modal,
   Linking,
   Platform,
   StyleSheet,
@@ -11,12 +12,22 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { Content, Button } from 'native-base';
+import {
+  Content,
+  Right,
+  Left,
+  Body,
+  Button,
+  Icon as NBIcon,
+} from 'native-base';
 import { FormInput } from 'react-native-elements';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 // $FlowFixMe
 // import AnimButton from 'react-native-micro-animated-button';
 import isEmail from 'validator/lib/isEmail';
+
 import I18n from '../i18n';
+import { Header } from '../components';
 
 import type { NavigationScreenProp } from 'react-navigation';
 import type { Dispatch, ReduxState } from '../types';
@@ -25,6 +36,7 @@ import { signup } from '../actions/actionCreator';
 import { validPassword } from '../utils/validators';
 import colors from '../config/colors';
 import settings from '../config/settings';
+import typography from '../config/typography';
 
 type Props = {
   dispatch: Dispatch,
@@ -39,6 +51,7 @@ type State = {
   hasFocusUser: boolean,
   hasFocusEmail: boolean,
   hasFocusPass: boolean,
+  verifyAccountModalVisible: boolean,
 };
 
 class SignUpTabContainer extends Component<Props, State> {
@@ -61,7 +74,12 @@ class SignUpTabContainer extends Component<Props, State> {
     hasFocusUser: false,
     hasFocusEmail: false,
     hasFocusPass: false,
+    verifyAccountModalVisible: false,
   };
+
+  setVerifyAccountVisible(visible: boolean) {
+    this.setState({ verifyAccountModalVisible: visible });
+  }
 
   onSignup = () => {
     const { username, emailAddress, password } = this.state;
@@ -82,7 +100,11 @@ class SignUpTabContainer extends Component<Props, State> {
 
     // this.signupBtn.load();
 
-    this.props.dispatch(signup({ username, emailAddress, password }));
+    this.props
+      .dispatch(signup({ username, emailAddress, password }))
+      .catch(() => {
+        this.setVerifyAccountVisible(true);
+      });
   };
 
   onUserChange = (u: string) => {
@@ -291,7 +313,46 @@ class SignUpTabContainer extends Component<Props, State> {
             </TouchableOpacity>
           </View>
         </View>
+        {this.renderVerifyAccountModal()}
       </Content>
+    );
+  }
+
+  renderVerifyAccountModal() {
+    return (
+      <Modal
+        animationType="slide"
+        visible={this.state.verifyAccountModalVisible}
+        onRequestClose={() => this.setVerifyAccountVisible(false)}>
+        <View>
+          <Header noShadow style={{ backgroundColor: colors.transparent }}>
+            <Left />
+            <Body />
+            <Right>
+              <Button
+                transparent
+                onPress={() => this.setVerifyAccountVisible(false)}>
+                <NBIcon name="close" style={{ color: colors.black }} />
+              </Button>
+            </Right>
+          </Header>
+          <View style={{ margin: 20 }}>
+            <Icon
+              size={typography.empty_state_icon}
+              name={'email-open-outline'}
+              color={colors.grey2}
+              style={{ alignSelf: 'center', marginBottom: 30 }}
+            />
+            <Text
+              style={{
+                color: colors.black,
+                textAlign: 'center',
+              }}>
+              {I18n.t('login.verify_account.title')}
+            </Text>
+          </View>
+        </View>
+      </Modal>
     );
   }
 }

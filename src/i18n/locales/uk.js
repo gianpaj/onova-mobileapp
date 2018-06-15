@@ -13,6 +13,9 @@ export default {
       info: 'Введіть ваш email для зміни паролю',
       button: 'Надіслати інструкції по зміні',
     },
+    verify_account: {
+      title: 'Ми надіслали вам підтвердження на пошту!',
+    },
   },
   signup: {
     username_placeholder: 'Username',

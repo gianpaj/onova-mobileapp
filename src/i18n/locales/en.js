@@ -13,6 +13,9 @@ export default {
       info: 'Enter your email address to reset your password',
       button: 'Email instructions',
     },
+    verify_account: {
+      title: 'Only one step left! Check your inbox for a confirmation email.',
+    },
   },
   signup: {
     username_placeholder: 'Username',

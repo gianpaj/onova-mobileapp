@@ -54,6 +54,10 @@ const login = (data: LoginData) => (dispatch: Dispatch) => (
           ...res.data,
           ...{ token: res.token, provider: 'email' },
         };
+
+        if (userData.accountStatus !== 'verified') {
+          throw new Error('NOT_VERIFIED');
+        }
         return userData;
       }
       console.debug(res);
@@ -85,12 +89,18 @@ const login = (data: LoginData) => (dispatch: Dispatch) => (
         .catch(err => {
           console.warn(err);
           dispatch({ type: LOGIN_FAIL });
-        });
+        })
+        .then(() => Toast.hide());
     })
     .catch((err: api.APIError) => {
-      dispatch(handleErrorWithAlert({ type: LOGIN_FAIL }, err));
+      Toast.hide();
+      if (err.message !== 'NOT_VERIFIED') {
+        dispatch(handleErrorWithAlert({ type: LOGIN_FAIL }, err));
+      } else {
+        dispatch({ type: LOGIN_FAIL });
+        throw err;
+      }
     })
-    .then(() => Toast.hide())
 );
 
 const initializePusher = (userData: UserData): Promise<any | Error> => {
@@ -254,35 +264,45 @@ const signup = (data: SignupData) => (dispatch: Dispatch) => (
           ...{ token: res.token, provider: 'email' },
         };
 
-        initializePusher(userData)
-          .then(() => registerPushNotifications())
-          .then(pushToken => {
-            if (pushToken) return sendToken(pushToken, userData);
-          })
-          .then(() => dispatch({ type: SIGNUP_SUCCESS, payload: userData }))
-          .catch(err => {
-            console.warn(err);
-            dispatch({ type: SIGNUP_FAIL });
-          });
-        if (process.env.NODE_ENV == 'production') {
-          Sentry.setUserContext({
-            email: userData.emailAddress,
-            userID: userData._id,
-            username: userData.username,
-            extra: {
-              accountStatus: userData.accountStatus,
-            },
-          });
-        }
+        // if (userData.accountStatus !== 'verified') {
+        throw new Error('NOT_VERIFIED');
+        // }
+
+        // initializePusher(userData)
+        //   .then(() => registerPushNotifications())
+        //   .then(pushToken => {
+        //     if (pushToken) return sendToken(pushToken, userData);
+        //   })
+        //   .then(() => dispatch({ type: SIGNUP_SUCCESS, payload: userData }))
+        //   .catch(err => {
+        //     console.warn(err);
+        //     dispatch({ type: SIGNUP_FAIL });
+        //     Toast.hide();
+        //   });
+        // if (process.env.NODE_ENV == 'production') {
+        //   Sentry.setUserContext({
+        //     email: userData.emailAddress,
+        //     userID: userData._id,
+        //     username: userData.username,
+        //     extra: {
+        //       accountStatus: userData.accountStatus,
+        //     },
+        //   });
+        // }
       } else {
         console.warn(res);
         dispatch({ type: SIGNUP_FAIL });
       }
     })
-    .catch((err: api.APIError) =>
-      dispatch(handleErrorWithAlert({ type: SIGNUP_FAIL }, err))
-    )
-    .then(() => Toast.hide())
+    .catch((err: api.APIError) => {
+      Toast.hide();
+      if (err.message !== 'NOT_VERIFIED') {
+        dispatch(handleErrorWithAlert({ type: SIGNUP_FAIL }, err));
+      } else {
+        dispatch({ type: SIGNUP_FAIL });
+        throw err;
+      }
+    })
 );
 
 const getPersonalUserData = (userId: string, options?: any = {}) => (

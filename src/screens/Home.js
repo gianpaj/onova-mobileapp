@@ -2,8 +2,8 @@
 import colors from '../config/colors';
 
 import React, { PureComponent } from 'react';
-import { Dimensions, StyleSheet, View } from 'react-native';
-import { Body, Left, Right, Title } from 'native-base';
+import { Dimensions, Share, Platform, StyleSheet, View } from 'react-native';
+import { Body, Button, Icon, Left, Right, Title } from 'native-base';
 import { TabViewAnimated, TabBar, SceneMap } from 'react-native-tab-view';
 
 import I18n from '../i18n';
@@ -72,9 +72,9 @@ export class Home extends PureComponent<Props, State> {
     ),
   });
 
-  // onShare() {
-  //   alert('code me like those french girls 🎨');
-  // }
+  onShare() {
+    Share.share({ message: I18n.t('home.share'), title: 'Share' });
+  }
 
   render() {
     return (
@@ -86,17 +86,16 @@ export class Home extends PureComponent<Props, State> {
             <Title style={{ color: colors.black }}>ONOVA</Title>
           </Body>
           <Right />
-          {/* <Right>
+          <Right>
             <Button transparent>
               <Icon
                 style={{ color: colors.black }}
                 onPress={this.onShare}
-                name={
-                  Platform.OS === 'ios' ? 'ios-person-add' : 'md-person-add'
-                }
+                android="md-person-add"
+                ios="ios-person-add"
               />
             </Button>
-          </Right> */}
+          </Right>
         </Header>
         <TabViewAnimated
           testID="Tabs"

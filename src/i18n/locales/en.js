@@ -31,6 +31,8 @@ export default {
     clothes_tab: 'Clothes',
     shoes_tab: 'Shoes',
     other_tab: 'Other',
+    share:
+      'Android: https://play.google.com/store/apps/details?id=com.onova.app&hl=uk - Apple Store: https://itunes.apple.com/ua/app/onova/id1365771422?mt=8',
   },
   image_grid: {
     error: 'Error fetching listing',
@@ -48,8 +50,9 @@ export default {
     toast_warning_on_unverified_account:
       'Please verify your email address to buy. Check your inbox',
     toast_warning_on_product_sold: 'This product is not longer for sale',
-    toast_warning_ok_button: 'ok',
+    toast_warning_ok_button: 'OK',
     alert_report_title: 'Report Item?',
+    share_before: 'Invite your friends to chatting on Onova',
   },
   comments: {
     add_comment_placeholder: 'Add a comment',

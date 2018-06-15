@@ -5,6 +5,8 @@ import { connect } from 'react-redux';
 import {
   ActivityIndicator,
   // Animated,
+  Platform,
+  Share,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -56,8 +58,6 @@ type State = {
   item: ?ProductType,
   // likeAnimValue: number,
 };
-
-// const isIOS = Platform.OS === 'ios';
 
 export class ProductContainer extends React.Component<Props, State> {
   anim: ?React$Element<*>;
@@ -142,7 +142,48 @@ export class ProductContainer extends React.Component<Props, State> {
     );
   };
 
-  onReport = async text => {
+  onShare(): Promise<any> {
+    return new Promise((resolve, reject) => {
+      Share.share({ message: I18n.t('home.share'), title: 'Share' })
+        .then(async res => {
+          // ios user shared it
+          // android probably user shared it
+          if (
+            (Platform.OS == 'ios' && res.action !== Share.dismissedAction) ||
+            Platform.OS !== 'ios'
+          ) {
+            await this.onSuccessfulShare();
+            resolve();
+          } else {
+            reject(new Error('not_shared'));
+          }
+        })
+        .catch(e => {
+          console.warn(e);
+          reject(e);
+        });
+    });
+  }
+
+  onSuccessfulShare = (): Promise<any> => {
+    const { userData } = this.props;
+    return new Promise(async (resolve, reject) => {
+      try {
+        const res = await api.put(
+          `/api/users/${userData._id}`,
+          {
+            increaseShare: true,
+          },
+          { token: userData.token }
+        );
+        resolve(res);
+      } catch (err) {
+        reject(err);
+      }
+    });
+  };
+
+  onReport = async (text: string) => {
     const { token } = this.props.userData;
     if (text.length < settings.MIN_LENGTH_REPORT) {
       ui.showToast(I18n.t('alerts.report_error'), 'warning', 'OK');
@@ -177,25 +218,6 @@ export class ProductContainer extends React.Component<Props, State> {
       })
       .catch(e => console.error(e));
   }
-
-  /* showShareActionSheet() {
-    Share.share({
-      title: 'cool',
-      url: 'https://onova.co', // ios only
-    }).then(res => {
-      console.log(res);
-      if (isIOS) {
-        if (res.action == Share.dismissedAction) {
-          console.log('iOS: user cancelled sharing');
-        } else if (res.action == Share.sharedAction) {
-          console.log('iOS: user shared on:', res.activityType);
-        }
-      } else {
-        // android
-        console.log("Android: we don't know if user shared item");
-      }
-    });
-  }*/
 
   refresh() {
     const { params }: { params: ProductType } = this.props.navigation.state;
@@ -246,13 +268,13 @@ export class ProductContainer extends React.Component<Props, State> {
     });
   };
 
-  isUserVerified(): Promise<boolean> {
+  hasUserShared(): Promise<boolean> {
     return new Promise((resolve, reject) => {
       api
         .get(`/api/users/${this.props.userData._id}`)
         .then((res: UserData) => {
           console.debug(res);
-          if (res.accountStatus == 'verified') {
+          if (res.sharedCount > 0) {
             return resolve(true);
           }
           resolve(false);
@@ -268,10 +290,26 @@ export class ProductContainer extends React.Component<Props, State> {
     // check if product is still `forsale`
     this.setState({ loadingBuy: true });
 
-    this.isUserVerified()
-      .then(isVerified => {
-        if (!isVerified) {
-          throw Error(I18n.t('product.toast_warning_on_unverified_account'));
+    this.hasUserShared()
+      .then(async hasShared => {
+        if (!hasShared) {
+          await new Promise((resolve, reject) => {
+            ui.showConfirmAlert(
+              I18n.t('product.share_before'),
+              '',
+              async () => {
+                try {
+                  await this.onShare();
+                  resolve();
+                } catch (err) {
+                  reject(err);
+                }
+              },
+              () => this.setState({ loadingBuy: false }),
+              I18n.t('alerts.confirm_alert_button_cancel'),
+              I18n.t('product.toast_warning_ok_button')
+            );
+          });
         }
       })
       .then(() => api.getProduct(item.uuid))
@@ -296,6 +334,8 @@ export class ProductContainer extends React.Component<Props, State> {
         // });
       })
       .catch(err => {
+        if (err.message === 'not_shared')
+          err.message = I18n.t('product.share_before');
         ui.showToast(
           err.message,
           'warning',

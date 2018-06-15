@@ -31,6 +31,8 @@ export default {
     clothes_tab: 'Одяг',
     shoes_tab: 'Взуття',
     other_tab: 'Інше',
+    share:
+      'Android: https://play.google.com/store/apps/details?id=com.onova.app&hl=uk - Apple Store: https://itunes.apple.com/ua/app/onova/id1365771422?mt=8',
   },
   image_grid: {
     error: 'Помилка завантаження інформації оголошення',
@@ -50,6 +52,7 @@ export default {
     toast_warning_on_product_sold: 'Цю річ вже продано',
     toast_warning_ok_button: 'ОК',
     alert_report_title: 'Поскаржитись на річ?',
+    share_before: 'Запроси двох друзів щоб почати купувати на Онові',
   },
   comments: {
     action_button_cancel: 'Відмінити',

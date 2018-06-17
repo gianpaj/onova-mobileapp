@@ -9,8 +9,9 @@ import I18n from '../i18n';
 import colors from '../config/colors';
 
 const PICKER_OPTIONS = {
-  width: 1440,
-  height: 1440,
+  compressImageMaxWidth: 1440,
+  compressImageMaxHeight: 1440,
+  compressImageQuality: 0.7,
   cropping: false,
   mediaType: 'photo',
   cropper_toolbar_title: I18n.t('add_or_edit_item.cropper_toolbar_title'),
@@ -78,9 +79,7 @@ export default class CustomActions extends React.Component<Props> {
   render() {
     return (
       <TouchableOpacity style={styles.container} onPress={this.pickImage}>
-        <View style={styles.wrapper}>
-          <Icon name="camera" size={18} color={colors.grey3} />
-        </View>
+        <Icon name="camera" size={22} color={colors.grey3} />
       </TouchableOpacity>
     );
   }
@@ -92,14 +91,6 @@ const styles = StyleSheet.create({
     height: 28,
     marginLeft: 10,
     marginBottom: 5,
-    top: -6,
-  },
-  wrapper: {
-    borderRadius: 50,
-    borderColor: colors.grey3,
-    borderWidth: 1.5,
-    flex: 1,
-    paddingLeft: 3.5,
-    paddingTop: 2.5,
+    top: -5,
   },
 });

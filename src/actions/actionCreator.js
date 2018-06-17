@@ -349,6 +349,11 @@ const logout = () => (dispatch: Dispatch) => {
   //     console.debug('SendBird: unregisterPushToken')
   //   );
   // }
+  if (currentUser) {
+    currentUser.disconnect();
+    console.log('disconnected from Pusher');
+  }
+
   return dispatch({ type: LOGOUT });
 
   // const provider = getState().LoginReducer.data.provider;

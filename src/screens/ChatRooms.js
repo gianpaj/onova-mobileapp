@@ -17,6 +17,7 @@ import { Body, Container, Left, Right, Title } from 'native-base';
 import { NavigationActions } from 'react-navigation';
 // import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Feather from 'react-native-vector-icons/Feather';
 
 import type { NavigationScreenProp } from 'react-navigation';
 // eslint-disable-next-line
@@ -243,23 +244,35 @@ class ChatContainer extends Component<Props, State> {
           <View style={[st.flex1, st.content]}>
             <View style={st.contentHeader}>
               <View style={{ flexDirection: 'row' }}>
-                <Text style={st.name}>{item.partner.name}</Text>
+                <Text style={[st.name, item.hasUnreadMessages && st.unread]}>
+                  {item.partner.name}
+                </Text>
                 {lastMessage.senderId !== -1 &&
                   item.isPartnerOnline && <View style={st.onlineDot} />}
               </View>
-              <Text style={st.datetime}>
+              <Text style={[st.datetime, item.hasUnreadMessages && st.unread]}>
                 {ui.formatTime(lastMessage.createdAt)}
               </Text>
             </View>
-            <Text
-              numberOfLines={1} // android
-              style={[
-                { color: colors.black },
-                item.hasUnreadMessages && { fontWeight: 'bold' },
-              ]}>
-              {from}
-              {lastMessage.attachment ? '🖼' : lastMessage.text}
-            </Text>
+            <View style={st.contentHeader}>
+              <Text
+                numberOfLines={1} // android
+                style={[item.hasUnreadMessages && st.unread]}>
+                {from}
+                {lastMessage.attachment ? (
+                  <Feather name="camera" size={11} color={colors.grey3} />
+                ) : (
+                  lastMessage.text
+                )}
+              </Text>
+              {item.hasUnreadMessages && (
+                <View style={st.unreadDot}>
+                  <Text style={{ color: colors.white, top: -2, fontSize: 13 }}>
+                    1
+                  </Text>
+                </View>
+              )}
+            </View>
           </View>
         </View>
       </TouchableOpacity>
@@ -385,6 +398,8 @@ const st = StyleSheet.create({
   },
   name: {
     color: colors.black,
+  },
+  unread: {
     fontWeight: 'bold',
   },
   datetime: {
@@ -420,6 +435,13 @@ const st = StyleSheet.create({
     height: 4,
     width: 4,
     zIndex: 2,
+  },
+  unreadDot: {
+    backgroundColor: colors.active,
+    borderRadius: 15,
+    height: 15,
+    width: 15,
+    paddingLeft: 3.5,
   },
 });
 

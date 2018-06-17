@@ -52,7 +52,7 @@ export default {
     toast_warning_on_product_sold: 'This product is not longer for sale',
     toast_warning_ok_button: 'OK',
     alert_report_title: 'Report Item?',
-    share_before: 'Invite your friends to chatting on Onova',
+    share_before: 'Invite your friends to chat on Onova',
   },
   comments: {
     add_comment_placeholder: 'Add a comment',

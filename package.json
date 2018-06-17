@@ -25,7 +25,7 @@
     "test": "jest __tests__"
   },
   "dependencies": {
-    "@pusher/chatkit": "^0.7.12",
+    "@pusher/chatkit": "^0.7.14",
     "antd-mobile": "^2.1.8",
     "axios": "^0.17.1",
     "babel-plugin-transform-inline-environment-variables": "^0.4.0",

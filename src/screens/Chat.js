@@ -435,7 +435,7 @@ class ChatContainer extends Component<Props, State> {
     } else {
       pusherCurrentUser
         .sendMessage({
-          text: messages[0].text || ' ', // cannot be empty string or null
+          text: ' ', // cannot be empty string or null
           roomId: this.state.roomId,
           attachment: {
             file: {
@@ -494,9 +494,7 @@ class ChatContainer extends Component<Props, State> {
     return true;
   }
 
-  renderActions(props: any) {
-    return <CustomActions {...props} />;
-  }
+  renderActions = (props: any) => <CustomActions {...props} />;
 
   goToProfile = () => {
     const { partner } = this.state;
@@ -516,28 +514,33 @@ class ChatContainer extends Component<Props, State> {
     this.props.navigation.dispatch(navigateToProfile);
   };
 
-  renderBubble = props => (
-    <Bubble
-      {...props}
-      messageTextProps={{
-        linkStyle: {
-          right: { color: 'red' },
-          left: { color: 'red' },
-        },
-      }}
-      textStyle={{
-        right: { color: colors.black },
-      }}
-      wrapperStyle={{
-        left: {
-          backgroundColor: colors.white,
-          borderWidth: StyleSheet.hairlineWidth,
-          borderColor: colors.grey3,
-        },
-        right: { backgroundColor: colors.grey5 },
-      }}
-    />
-  );
+  renderBubble = props => {
+    // this prevent the <MessageText /> from rendering when an image has been sent
+    props.currentMessage.text = props.currentMessage.text.trim();
+
+    return (
+      <Bubble
+        {...props}
+        messageTextProps={{
+          linkStyle: {
+            right: { color: 'red' },
+            left: { color: 'red' },
+          },
+        }}
+        textStyle={{
+          right: { color: colors.black },
+        }}
+        wrapperStyle={{
+          left: {
+            backgroundColor: colors.white,
+            borderWidth: StyleSheet.hairlineWidth,
+            borderColor: colors.grey3,
+          },
+          right: { backgroundColor: colors.grey5 },
+        }}
+      />
+    );
+  };
 
   goToAddReviewOrCancel(orderId: string) {
     // $FlowFixMe
@@ -681,7 +684,7 @@ const st = StyleSheet.create({
     flex: 1,
   },
   send: {
-    marginBottom: 5,
+    marginBottom: 10,
     marginRight: 10,
   },
   systemContainer: {

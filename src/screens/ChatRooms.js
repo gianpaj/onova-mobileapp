@@ -258,7 +258,7 @@ class ChatContainer extends Component<Props, State> {
                 item.hasUnreadMessages && { fontWeight: 'bold' },
               ]}>
               {from}
-              {lastMessage.text}
+              {lastMessage.attachment ? '🖼' : lastMessage.text}
             </Text>
           </View>
         </View>

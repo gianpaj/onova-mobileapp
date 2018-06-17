@@ -1,0 +1,105 @@
+// @flow
+
+import React from 'react';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import ImagePicker from 'react-native-image-crop-picker';
+import Icon from 'react-native-vector-icons/Feather';
+
+import I18n from '../i18n';
+import colors from '../config/colors';
+
+const PICKER_OPTIONS = {
+  width: 1440,
+  height: 1440,
+  cropping: false,
+  mediaType: 'photo',
+  cropper_toolbar_title: I18n.t('add_or_edit_item.cropper_toolbar_title'),
+};
+
+type Props = {
+  onSend: (any: any) => void,
+};
+
+export default class CustomActions extends React.Component<Props> {
+  /*onActionsPress = () => {
+    // const options = ['Choose From Library', 'Send Location', 'Cancel'];
+    const options = ['Choose From Library', 'Cancel'];
+    const cancelButtonIndex = 1;
+    this.context.actionSheet().showActionSheetWithOptions(
+      {
+        options,
+        cancelButtonIndex,
+      },
+      buttonIndex => {
+        switch (buttonIndex) {
+          case 0:
+            this.pickImage();
+            break;
+          // case 1:
+          //   navigator.geolocation.getCurrentPosition(
+          //     position => {
+          //       this.props.onSend({
+          //         location: {
+          //           latitude: position.coords.latitude,
+          //           longitude: position.coords.longitude,
+          //         },
+          //       });
+          //     },
+          //     error => alert(error.message),
+          //     { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
+          //   );
+          //   break;
+          default:
+        }
+      }
+    );
+  };
+  */
+
+  pickImage = () => {
+    ImagePicker.openCamera({
+      ...PICKER_OPTIONS,
+    })
+      .then(res => {
+        this.props.onSend({
+          uri: res.path,
+          image: res.path,
+          name: res.filename, // undefined on Android
+          type: res.mime,
+        });
+      })
+      .catch(e => {
+        if (e.code !== 'E_PICKER_CANCELLED') {
+          console.warn(e);
+        }
+      });
+  };
+
+  render() {
+    return (
+      <TouchableOpacity style={styles.container} onPress={this.pickImage}>
+        <View style={styles.wrapper}>
+          <Icon name="camera" size={18} color={colors.grey3} />
+        </View>
+      </TouchableOpacity>
+    );
+  }
+}
+
+const styles = StyleSheet.create({
+  container: {
+    width: 28,
+    height: 28,
+    marginLeft: 10,
+    marginBottom: 5,
+    top: -6,
+  },
+  wrapper: {
+    borderRadius: 50,
+    borderColor: colors.grey3,
+    borderWidth: 1.5,
+    flex: 1,
+    paddingLeft: 3.5,
+    paddingTop: 2.5,
+  },
+});

@@ -30,6 +30,8 @@ import I18n from '../i18n';
 import type { NavigationScreenProp } from 'react-navigation';
 
 import { Header, Send } from '../components';
+import CustomActions from '../components/ChatActions';
+
 import type {
   Message,
   Order,
@@ -256,12 +258,12 @@ class ChatContainer extends Component<Props, State> {
             limit: 100,
           })
         )
-        .then(messages => {
+        .then(async messages => {
           if (!this.state.partner) throw new Error('no partner');
 
           let newMsgs = [];
           for (let i = 0; i < messages.length; i++) {
-            newMsgs.push(this.createGiftedMessage(messages[i]));
+            newMsgs.push(await this.createGiftedMessage(messages[i]));
           }
           this.setState({ messages: newMsgs.reverse() });
           return messages[messages.length - 1];
@@ -336,8 +338,8 @@ class ChatContainer extends Component<Props, State> {
     });
   }
 
-  newMessage = (m: PusherMessage) => {
-    const newMsg = this.createGiftedMessage(m);
+  newMessage = async (m: PusherMessage) => {
+    const newMsg = await this.createGiftedMessage(m);
 
     setTimeout(() => {
       pusherCurrentUser
@@ -378,14 +380,11 @@ class ChatContainer extends Component<Props, State> {
     });
   };
 
-  createGiftedMessage(msg: PusherMessage): Message {
+  async createGiftedMessage(msg: PusherMessage): Message {
     const { userData } = this.props;
     const otherUser = this.getPartner();
-    // if (m.sender) {
     const user = msg.senderId == userData._id ? userData : otherUser;
-    // }
-    // $FlowFixMe
-    return {
+    const message = {
       _id: msg.id,
       createdAt: new Date(msg.createdAt),
       text: msg.text,
@@ -399,6 +398,17 @@ class ChatContainer extends Component<Props, State> {
       sent: msg.sent ? msg.sent : false,
       received: msg.received ? msg.received : false,
     };
+
+    if (msg.attachment && msg.attachment.fetchRequired) {
+      let url = await pusherCurrentUser.fetchAttachment({
+        url: msg.attachment.link,
+      });
+      return {
+        ...message,
+        image: url.link,
+      };
+    }
+    return message;
   }
 
   createGiftedSystemMessage(msg: PusherMessage) {
@@ -411,16 +421,38 @@ class ChatContainer extends Component<Props, State> {
   }
 
   onSend = (messages: Array<Message>) => {
-    const { text } = messages[0];
+    if (messages[0].text) {
+      const { text } = messages[0];
 
-    pusherCurrentUser
-      .sendMessage({ text, roomId: this.state.roomId })
-      .then(id => {
-        // console.debug('Message sent:', id);
-      })
-      .catch(err => {
-        console.error(err);
-      });
+      pusherCurrentUser
+        .sendMessage({ text, roomId: this.state.roomId })
+        .then(() => {
+          // console.debug('Message sent:', id);
+        })
+        .catch(err => {
+          console.error(err);
+        });
+    } else {
+      pusherCurrentUser
+        .sendMessage({
+          text: messages[0].text || ' ', // cannot be empty string or null
+          roomId: this.state.roomId,
+          attachment: {
+            file: {
+              uri: messages[0].image,
+              type: 'image/jpeg',
+              name: 'image.jpg',
+            },
+            name: 'myfile.jpg',
+          },
+        })
+        .then(id => {
+          console.debug('Message sent:', id);
+        })
+        .catch(err => {
+          console.error(err);
+        });
+    }
   };
 
   renderSystemMessage(props): React$Element<*> {
@@ -462,23 +494,9 @@ class ChatContainer extends Component<Props, State> {
     return true;
   }
 
-  /*
   renderActions(props: any) {
-    if (Platform.OS === 'ios') {
-      return <ChatActions {...props} />;
-    }
-    const options = {
-      'Action 1': (props: any) => {
-        console.warn('option 1', props);
-      },
-      'Action 2': (props: any) => {
-        console.warn('option 2', props);
-      },
-      Cancel: () => {},
-    };
-    return <Actions {...props} options={options} />;
+    return <CustomActions {...props} />;
   }
-  */
 
   goToProfile = () => {
     const { partner } = this.state;
@@ -544,7 +562,7 @@ class ChatContainer extends Component<Props, State> {
     </TouchableOpacity>
   );
 
-  _keyExtractor = (item): number => item.id;
+  _keyExtractor = (item): string => item.id;
 
   _renderSeparatorHorizontal = () => <View style={st.separatorHorizontal} />;
 
@@ -592,9 +610,8 @@ class ChatContainer extends Component<Props, State> {
               </View>
               <GiftedChat
                 messages={messages}
-                onSend={m => this.onSend(m)}
+                onSend={this.onSend}
                 placeholder={I18n.t('chat.send_msg_placeholder')}
-                // placeholder={I18n.t('chat.typeAMessage')}
                 user={{
                   _id: userData._id,
                   name: userData.username,
@@ -613,7 +630,7 @@ class ChatContainer extends Component<Props, State> {
                 //   {type: 'phone', style: linkStyle, onPress: this.onPhonePress},
                 //   {type: 'email', style: linkStyle, onPress: this.onEmailPress},
                 //   ]}
-                // renderActions={this.renderActions}
+                renderActions={this.renderActions}
                 // keyboardShouldPersistTaps="handled"
                 maxInputLength={settings.MAX_CHAT_INPUT_LENGTH}
                 // renderInputToolbar={this.renderInputToolbar}

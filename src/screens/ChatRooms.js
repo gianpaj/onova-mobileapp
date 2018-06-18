@@ -73,7 +73,6 @@ class ChatContainer extends Component<Props, State> {
     }
 
     this.props.navigation.addListener('didFocus', () => {
-      // if (pusherCurrentUser && this.props.shouldRefresh) {
       if (pusherCurrentUser) {
         this.getChatsAndTheirOrders()
           .then(ordersAndChats => this.setState({ ordersAndChats }))
@@ -456,6 +455,8 @@ const st = StyleSheet.create({
   unreadBadge: {
     backgroundColor: colors.active,
     height: 20,
+    width: 20,
+    paddingLeft: 7,
     paddingTop: 4,
   },
   unreadText: {

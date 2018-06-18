@@ -13,7 +13,6 @@ import ImageGridSearch from './ImageGridSearch';
 import MediaView from './MediaView';
 import NotificationsDot from './NotificationsDot';
 import Send from './Send';
-import SpinningIcon from './SpinningIcon';
 import TagInput from './TagInput';
 
 export {
@@ -30,6 +29,5 @@ export {
   MediaView,
   NotificationsDot,
   Send,
-  SpinningIcon,
   TagInput,
 };

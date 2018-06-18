@@ -13,7 +13,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { Body, Container, Left, Right, Title } from 'native-base';
+import { Badge, Body, Container, Left, Right, Title } from 'native-base';
 import { NavigationActions } from 'react-navigation';
 // import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -118,7 +118,7 @@ class ChatContainer extends Component<Props, State> {
                 msgs = await pusherCurrentUser.fetchMessages({
                   roomId: room.id,
                   direction: 'older',
-                  limit: 1,
+                  limit: 9,
                 });
               } catch (err) {
                 throw new Error(err);
@@ -133,12 +133,10 @@ class ChatContainer extends Component<Props, State> {
                 ...room,
                 // if no messages (very first order step)
                 lastMessage: msgs.length
-                  ? msgs[0]
+                  ? msgs[msgs.length - 1]
                   : { createdAt: room.createdAt },
-                hasUnreadMessages: cursor
-                  ? cursor.position < msgs[0].id
-                  : false,
                 isPartnerOnline,
+                unreadCount: unreads(cursor, msgs) || 0,
                 partner,
               };
             })
@@ -244,20 +242,20 @@ class ChatContainer extends Component<Props, State> {
           <View style={[st.flex1, st.content]}>
             <View style={st.contentHeader}>
               <View style={{ flexDirection: 'row' }}>
-                <Text style={[st.name, item.hasUnreadMessages && st.unread]}>
+                <Text style={[st.name, item.unreadCount > 0 && st.unread]}>
                   {item.partner.name}
                 </Text>
                 {lastMessage.senderId !== -1 &&
                   item.isPartnerOnline && <View style={st.onlineDot} />}
               </View>
-              <Text style={[st.datetime, item.hasUnreadMessages && st.unread]}>
+              <Text style={[st.datetime, item.unreadCount > 0 && st.unread]}>
                 {ui.formatTime(lastMessage.createdAt)}
               </Text>
             </View>
             <View style={st.contentHeader}>
               <Text
                 numberOfLines={1} // android
-                style={[item.hasUnreadMessages && st.unread]}>
+                style={[item.unreadCount > 0 && st.unread]}>
                 {from}
                 {lastMessage.attachment ? (
                   <Feather name="camera" size={11} color={colors.grey3} />
@@ -265,12 +263,10 @@ class ChatContainer extends Component<Props, State> {
                   lastMessage.text
                 )}
               </Text>
-              {item.hasUnreadMessages && (
-                <View style={st.unreadDot}>
-                  <Text style={{ color: colors.white, top: -2, fontSize: 13 }}>
-                    1
-                  </Text>
-                </View>
+              {item.unreadCount > 0 && (
+                <Badge style={st.unreadBadge}>
+                  <Text style={st.unreadText}>{item.unreadCount}</Text>
+                </Badge>
               )}
             </View>
           </View>
@@ -369,6 +365,15 @@ class ChatContainer extends Component<Props, State> {
   }
 }
 
+const unreads = (cursor, messages = {}) => {
+  // compare the message id with the cursor position id
+  return (
+    (cursor &&
+      messages.map(a => a.id).filter(x => x > cursor.position).length) ||
+    undefined
+  );
+};
+
 const st = StyleSheet.create({
   container: {
     alignItems: 'stretch',
@@ -436,12 +441,15 @@ const st = StyleSheet.create({
     width: 4,
     zIndex: 2,
   },
-  unreadDot: {
+  unreadBadge: {
     backgroundColor: colors.active,
-    borderRadius: 15,
-    height: 15,
-    width: 15,
-    paddingLeft: 3.5,
+    height: 20,
+    paddingTop: 4,
+  },
+  unreadText: {
+    color: colors.white,
+    fontSize: 13,
+    top: -2,
   },
 });
 

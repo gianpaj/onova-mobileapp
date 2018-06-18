@@ -71,6 +71,18 @@ class ChatContainer extends Component<Props, State> {
     } else {
       console.error('no pusherCurrentUser');
     }
+
+    this.props.navigation.addListener('didFocus', () => {
+      // if (pusherCurrentUser && this.props.shouldRefresh) {
+      if (pusherCurrentUser) {
+        this.getChatsAndTheirOrders()
+          .then(ordersAndChats => this.setState({ ordersAndChats }))
+          .catch(err => {
+            console.debug(err);
+            this.setState({ hasError: true });
+          });
+      }
+    });
   }
 
   getChatsAndTheirOrders(): Promise<Array<any>> {

@@ -6,8 +6,10 @@ import {
   ActivityIndicator,
   Image,
   FlatList,
+  Modal,
   StyleSheet,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
 } from 'react-native';
 import {
@@ -23,6 +25,7 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { NavigationActions } from 'react-navigation';
 import { GiftedChat, Bubble, SystemMessage } from 'react-native-gifted-chat';
+import ImageViewer from 'react-native-image-zoom-viewer';
 
 import { currentUser as pusherCurrentUser } from '../actions/actionCreator';
 import I18n from '../i18n';
@@ -31,6 +34,7 @@ import type { NavigationScreenProp } from 'react-navigation';
 
 import { Header, Send } from '../components';
 import CustomActions from '../components/ChatActions';
+import MessageImage from '../components/MessageImage';
 
 import type {
   Message,
@@ -59,6 +63,7 @@ type State = {
   orders: Array<Order>,
   roomId: number,
   shouldRefresh: boolean,
+  uploadingImage: boolean,
 };
 
 class ChatContainer extends Component<Props, State> {
@@ -73,6 +78,7 @@ class ChatContainer extends Component<Props, State> {
     messages: [],
     roomId: -1,
     shouldRefresh: false,
+    uploadingImage: false,
   };
 
   componentWillMount() {
@@ -400,7 +406,7 @@ class ChatContainer extends Component<Props, State> {
     };
 
     if (msg.attachment && msg.attachment.fetchRequired) {
-      let url = await pusherCurrentUser.fetchAttachment({
+      const url = await pusherCurrentUser.fetchAttachment({
         url: msg.attachment.link,
       });
       return {
@@ -619,15 +625,14 @@ class ChatContainer extends Component<Props, State> {
                   _id: userData._id,
                   name: userData.username,
                   avatar: userData.profilePic,
-                  //   userData.profilePic !== null ? userData.profilePic : null,
                 }}
                 // locale=""
                 // timeformat="LT"
                 // dateformat="ll"
-                // onPressAvatar={() => alert('code me like those french girls 🎨')}
                 renderSend={this.renderSend}
                 renderSystemMessage={this.renderSystemMessage}
                 renderBubble={this.renderBubble}
+                renderMessageImage={props => <MessageImage {...props} />}
                 // parsePatterns={(linkStyle) => [
                 //   {type: 'url', style: linkStyle, onPress: this.onUrlPress},
                 //   {type: 'phone', style: linkStyle, onPress: this.onPhonePress},

@@ -191,17 +191,11 @@ class NotificationsContainer extends Component<Props, State> {
         )}
         <Body>
           <View style={styles.contentRow}>
-            <Text
-              style={styles.name}
-              numberOfLines={1} // android
-            >
+            <Text style={styles.name} numberOfLines={1}>
               @{item.data.senderName}
             </Text>
           </View>
-          <Text
-            style={styles.reviewText}
-            numberOfLines={3} // android
-          >
+          <Text style={styles.reviewText} numberOfLines={3}>
             {item.notifI18n}
             {/* for comment notifications */}
             {item.triggeredType == 'Product' &&
@@ -210,10 +204,7 @@ class NotificationsContainer extends Component<Props, State> {
           </Text>
         </Body>
         <Right>
-          <Text
-            style={styles.time}
-            numberOfLines={1} // android
-          >
+          <Text style={styles.time} numberOfLines={1}>
             {ui.formatTime(item.dateCreated)}
           </Text>
           <IconEL size={28} name="chevron-right" color={colors.grey4} />

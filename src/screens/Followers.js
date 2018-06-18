@@ -131,8 +131,7 @@ class FollowersContainer extends Component<Props, State> {
               { color: colors.black },
               shouldShowButton ? { marginTop: -26 } : { marginTop: 10 },
             ]}
-            numberOfLines={1} /* android */
-          >
+            numberOfLines={1}>
             @{user.username}
           </Text>
         </View>

@@ -265,7 +265,7 @@ class ChatContainer extends Component<Props, State> {
             </View>
             <View style={st.contentHeader}>
               <Text
-                numberOfLines={1} // android
+                numberOfLines={1}
                 style={[item.unreadCount > 0 && st.unread]}>
                 {from}
                 {lastMessage.attachment ? (

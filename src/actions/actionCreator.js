@@ -108,7 +108,7 @@ const initializePusher = (userData: UserData): Promise<any | Error> => {
     if (
       !(process.env.NODE_ENV == 'production' || process.env.NODE_ENV == 'prod')
     ) {
-      console.log('%c skipping Pusher', 'color: green');
+      console.log('%cskipping Pusher', 'color: green');
       return resolve(userData);
     }
     console.log('initializePusher');

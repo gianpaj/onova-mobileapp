@@ -10,7 +10,6 @@ import {
   RefreshControl,
   StyleSheet,
   Text,
-  TouchableHighlight,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -133,73 +132,57 @@ class ReviewsTabContainer extends Component<Props, State> {
     const { order } = review;
 
     const reviewer =
-      order.seller == review.fromUser ? order.seller : order.buyer;
+      order.seller == review.fromUser ? order.buyer : order.seller;
 
     const uri = order.product.photoURIs[0].replace('.jpg', '-thumb.jpg');
 
     return (
-      <TouchableHighlight
-        underlayColor={colors.grey4}
-        onPress={() => this.goToProfile(reviewer)}>
-        <ListItem style={{ marginLeft: 0 }}>
-          <Image
-            style={[
-              styles.itemImage,
-              {
-                width: width / 4,
-                height: this.state.imageHeight,
-              },
-            ]}
-            source={{ uri }}
-          />
-          <Body>
-            <View style={styles.contentRow}>
-              <Text
-                numberOfLines={1} // android
-              >
-                {order.priceOfItem} {order.currency}
-              </Text>
-              <Text
-                numberOfLines={1} // android
-              >
-                {ui.formatTime(review.createdAt)}
-              </Text>
-            </View>
-            <View style={styles.contentRow}>
-              <StarRating
-                // eslint-disable-next-line
-                buttonStyle={{ paddingHorizontal: 2 }}
-                // eslint-disable-next-line
-                containerStyle={{ alignSelf: 'center' }}
-                disabled
-                emptyStar={
-                  Platform.OS == 'ios' ? 'ios-star-outline' : 'md-star-outline'
-                }
-                emptyStarColor={colors.black}
-                fullStar={Platform.OS == 'ios' ? 'ios-star' : 'md-star'}
-                fullStarColor={colors.black}
-                iconSet="Ionicons"
-                rating={review.rateNumber}
-                starSize={20}
-              />
-              <TouchableOpacity onPress={() => this.goToProfile(reviewer)}>
-                <Text
-                  style={styles.username}
-                  numberOfLines={1} // android
-                >
-                  @{reviewer.username}
-                </Text>
-              </TouchableOpacity>
-            </View>
-            <Text
-              style={styles.reviewText}
-              numberOfLines={3} // android
-            >
-              {review.text}
+      <ListItem style={{ marginLeft: 0 }}>
+        <Image
+          style={[
+            styles.itemImage,
+            {
+              width: width / 4,
+              height: this.state.imageHeight,
+            },
+          ]}
+          source={{ uri }}
+        />
+        <Body>
+          <View style={styles.contentRow}>
+            <Text numberOfLines={1}>
+              {order.priceOfItem} {order.currency}
             </Text>
-          </Body>
-        </ListItem>
-      </TouchableHighlight>
+            <Text numberOfLines={1}>{ui.formatTime(review.createdAt)}</Text>
+          </View>
+          <View style={styles.contentRow}>
+            <StarRating
+              // eslint-disable-next-line
+                buttonStyle={{ paddingHorizontal: 2 }}
+              // eslint-disable-next-line
+                containerStyle={{ alignSelf: 'center' }}
+              disabled
+              emptyStar={
+                Platform.OS == 'ios' ? 'ios-star-outline' : 'md-star-outline'
+              }
+              emptyStarColor={colors.black}
+              fullStar={Platform.OS == 'ios' ? 'ios-star' : 'md-star'}
+              fullStarColor={colors.black}
+              iconSet="Ionicons"
+              rating={review.rateNumber}
+              starSize={20}
+            />
+            <TouchableOpacity onPress={() => this.goToProfile(reviewer)}>
+              <Text style={styles.username} numberOfLines={1}>
+                @{reviewer.username}
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <Text style={styles.reviewText} numberOfLines={3}>
+            {review.text}
+          </Text>
+        </Body>
+      </ListItem>
     );
   };
 
@@ -267,7 +250,7 @@ const styles = StyleSheet.create({
   },
   reviewText: {
     flex: 1,
-    textAlignVertical: 'bottom', // android
+    // textAlignVertical: 'bottom', // android
     paddingBottom: 5,
   },
 });

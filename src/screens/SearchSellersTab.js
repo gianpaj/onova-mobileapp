@@ -117,11 +117,7 @@ class SearchSellersTabContainer extends Component<Props, State> {
             <View style={styles.contentHeader}>
               <Text style={styles.name}>{user.username}</Text>
             </View>
-            <Text
-              numberOfLines={1} // android
-            >
-              {user.username}
-            </Text>
+            <Text numberOfLines={1}>{user.username}</Text>
           </View>
           <Icon size={28} name="chevron-right" color={colors.grey4} />
         </View>

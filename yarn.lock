@@ -690,9 +690,9 @@
   version "0.2.7"
   resolved "https://registry.yarnpkg.com/@firebase/webchannel-wrapper/-/webchannel-wrapper-0.2.7.tgz#0495fd7294348d9887abb182aa27432cb8936488"
 
-"@pusher/chatkit@^0.7.14":
-  version "0.7.15"
-  resolved "https://registry.yarnpkg.com/@pusher/chatkit/-/chatkit-0.7.15.tgz#6e53320497243992d4abd0b6e06d28a84b4ab6b0"
+"@pusher/chatkit@^0.7.16":
+  version "0.7.16"
+  resolved "https://registry.yarnpkg.com/@pusher/chatkit/-/chatkit-0.7.16.tgz#a234deccc885c56ce25bf6ae59c22ba77fa2e975"
   dependencies:
     pusher-platform "^0.15.1"
     ramda "^0.25.0"

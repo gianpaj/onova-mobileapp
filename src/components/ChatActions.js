@@ -1,7 +1,12 @@
 // @flow
 
 import React from 'react';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import {
+  ActivityIndicator,
+  StyleSheet,
+  TouchableOpacity,
+  Platform,
+} from 'react-native';
 import ImagePicker from 'react-native-image-crop-picker';
 import Icon from 'react-native-vector-icons/Feather';
 
@@ -19,6 +24,7 @@ const PICKER_OPTIONS = {
 
 type Props = {
   onSend: (any: any) => void,
+  uploadingImage: boolean,
 };
 
 export default class CustomActions extends React.Component<Props> {
@@ -58,28 +64,51 @@ export default class CustomActions extends React.Component<Props> {
   */
 
   pickImage = () => {
-    ImagePicker.openCamera({
-      ...PICKER_OPTIONS,
-    })
-      .then(res => {
-        this.props.onSend({
-          uri: res.path,
-          image: res.path,
-          name: res.filename, // undefined on Android
-          type: res.mime,
-        });
+    if (__DEV__ && Platform.OS === 'ios') {
+      ImagePicker.openPicker({
+        ...PICKER_OPTIONS,
       })
-      .catch(e => {
-        if (e.code !== 'E_PICKER_CANCELLED') {
-          console.warn(e);
-        }
-      });
+        .then(res => {
+          this.props.onSend({
+            uri: res.path,
+            image: res.path,
+            name: res.filename, // undefined on Android
+            type: res.mime,
+          });
+        })
+        .catch(e => {
+          if (e.code !== 'E_PICKER_CANCELLED') {
+            console.warn(e);
+          }
+        });
+    } else {
+      ImagePicker.openCamera({
+        ...PICKER_OPTIONS,
+      })
+        .then(res => {
+          this.props.onSend({
+            uri: res.path,
+            image: res.path,
+            name: res.filename, // undefined on Android
+            type: res.mime,
+          });
+        })
+        .catch(e => {
+          if (e.code !== 'E_PICKER_CANCELLED') {
+            console.warn(e);
+          }
+        });
+    }
   };
 
   render() {
     return (
       <TouchableOpacity style={styles.container} onPress={this.pickImage}>
-        <Icon name="camera" size={22} color={colors.grey3} />
+        {this.props.uploadingImage ? (
+          <ActivityIndicator size="small" />
+        ) : (
+          <Icon name="camera" size={22} color={colors.grey3} />
+        )}
       </TouchableOpacity>
     );
   }

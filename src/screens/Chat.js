@@ -439,6 +439,7 @@ class ChatContainer extends Component<Props, State> {
           console.error(err);
         });
     } else {
+      this.setState({ uploadingImage: true });
       pusherCurrentUser
         .sendMessage({
           text: ' ', // cannot be empty string or null
@@ -457,6 +458,9 @@ class ChatContainer extends Component<Props, State> {
         })
         .catch(err => {
           console.error(err);
+        })
+        .then(id => {
+          this.setState({ uploadingImage: false });
         });
     }
   };
@@ -500,7 +504,9 @@ class ChatContainer extends Component<Props, State> {
     return true;
   }
 
-  renderActions = (props: any) => <CustomActions {...props} />;
+  renderActions = (props: any) => (
+    <CustomActions {...props} uploadingImage={this.state.uploadingImage} />
+  );
 
   goToProfile = () => {
     const { partner } = this.state;

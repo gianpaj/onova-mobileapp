@@ -43,31 +43,16 @@ if (process.env.NODE_ENV == 'prod' || process.env.NODE_ENV == 'production') {
 }
 
 if (__DEV__) {
-  if (Platform.OS == 'ios') {
+  defaultState = {
+    // emailAddress: 'gianpa+test@gmail.com',
+    // password: 'expressos',
+    // local
+    emailAddress: 'gianpa+test@gmail.com',
+    password: 'expressos',
+  };
+
+  if (isProd) {
     defaultState = {
-      // gianpatestlocal
-      // emailAddress: 'gianpa+test@gmail.com',
-      // password: '***REMOVED***',
-      // prod
-      emailAddress: 'gianfranco_p@hotmail.com',
-      password: '***REMOVED***007',
-    };
-    if (isProd) {
-      defaultState = {
-        // emailAddress: 'gianpa+test4@gmail.com',
-        // password: '***REMOVED***',
-        // emailAddress: 'gianpa+test@gmail.com',
-        // password: 'expressos',
-        emailAddress: 'gianpa@gmail.com',
-        password: '***REMOVED***',
-      };
-    }
-  } else {
-    defaultState = {
-      // local
-      // emailAddress: 'gianpa+test@gmail.com',
-      // password: 'expressos',
-      // prod
       emailAddress: 'gianfranco_p@hotmail.com',
       password: '***REMOVED***007',
       // prod

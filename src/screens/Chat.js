@@ -6,10 +6,8 @@ import {
   ActivityIndicator,
   Image,
   FlatList,
-  Modal,
   StyleSheet,
   TouchableOpacity,
-  TouchableWithoutFeedback,
   View,
 } from 'react-native';
 import {
@@ -25,7 +23,6 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { NavigationActions } from 'react-navigation';
 import { GiftedChat, Bubble, SystemMessage } from 'react-native-gifted-chat';
-import ImageViewer from 'react-native-image-zoom-viewer';
 
 import { currentUser as pusherCurrentUser } from '../actions/actionCreator';
 import I18n from '../i18n';
@@ -564,9 +561,9 @@ class ChatContainer extends Component<Props, State> {
     });
   }
 
-  _renderOrderCircle = ({ item }: { item: Order }) => (
+  _renderOrderSquare = ({ item }: { item: Order }) => (
     <TouchableOpacity
-      style={st.orderCircle}
+      style={st.orderSquare}
       onPress={() => this.goToAddReviewOrCancel(item.id)}>
       <Image
         style={st.itemImage}
@@ -612,14 +609,14 @@ class ChatContainer extends Component<Props, State> {
             </View>
           ) : (
             <View style={st.flex1}>
-              <View style={st.orderCirclesContainer}>
+              <View style={st.orderSquaresContainer}>
                 {orders.length > 0 && (
                   <FlatList
                     data={orders}
                     keyExtractor={this._keyExtractor}
                     horizontal
                     ItemSeparatorComponent={this._renderSeparatorHorizontal}
-                    renderItem={this._renderOrderCircle}
+                    renderItem={this._renderOrderSquare}
                   />
                 )}
               </View>
@@ -684,12 +681,17 @@ const st = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
   },
-  orderCirclesContainer: {
+  orderSquaresContainer: {
     height: 50 + 16 + 1,
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderColor: colors.grey5,
     paddingVertical: 4,
     paddingLeft: 8,
+  },
+  orderSquare: {
+    borderBottomWidth: 2,
+    borderColor: colors.active,
+    marginBottom: 3,
   },
   flex1: {
     flex: 1,
@@ -713,9 +715,6 @@ const st = StyleSheet.create({
   },
   separatorHorizontal: {
     width: 1,
-  },
-  orderCircle: {
-    margin: 4,
   },
   itemImage: {
     // borderRadius: 50, // FIXME:

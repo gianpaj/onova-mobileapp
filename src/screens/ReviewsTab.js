@@ -131,8 +131,13 @@ class ReviewsTabContainer extends Component<Props, State> {
   _renderItem = ({ item: review }: { item: Review }) => {
     const { order } = review;
 
-    const reviewer =
-      order.seller == review.fromUser ? order.buyer : order.seller;
+    let reviewer;
+
+    if (this.props.as === 'seller') {
+      reviewer = order.seller == review.fromUser ? order.seller : order.buyer;
+    } else {
+      reviewer = order.seller == review.fromUser ? order.buyer : order.seller;
+    }
 
     const uri = order.product.photoURIs[0].replace('.jpg', '-thumb.jpg');
 

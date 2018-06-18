@@ -49,8 +49,8 @@ const width = Dimensions.get('window').width;
 
 const brands = require('../assets/brands.json');
 
-const IMAGE_WIDTH = 700;
-const IMAGE_HEIGHT = 700;
+const IMAGE_WIDTH = 1440;
+const IMAGE_HEIGHT = 1440;
 
 type Props = {
   isFocused: boolean,
@@ -146,6 +146,9 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
             ImagePicker.openCamera({
               width: IMAGE_WIDTH,
               height: IMAGE_HEIGHT,
+              compressImageMaxWidth: IMAGE_WIDTH,
+              compressImageMaxHeight: IMAGE_HEIGHT,
+              compressImageQuality: 0.7,
               cropping: true,
               mediaType: 'photo',
               cropper_toolbar_title: I18n.t(
@@ -159,6 +162,9 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
             ImagePicker.openPicker({
               width: IMAGE_WIDTH,
               height: IMAGE_HEIGHT,
+              compressImageMaxWidth: IMAGE_WIDTH,
+              compressImageMaxHeight: IMAGE_HEIGHT,
+              compressImageQuality: 0.7,
               cropping: true,
               mediaType: 'photo',
               cropperChooseText: I18n.t('add_or_edit_item.cropper_choose_text'),

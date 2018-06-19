@@ -1,6 +1,7 @@
 // @flow
 
 export default {
+  font_button_size: 16,
   // font_title: 'NotoSans-Bold',
   // font_body: 'NotoSans-Regular',
   font_body_size: 15,

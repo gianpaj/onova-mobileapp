@@ -379,10 +379,7 @@ class CheckoutContainer extends Component<Props, State> {
             </Content>
             <Footer>
               <FooterTab>
-                <NBButton
-                  onPress={this.onCheckout}
-                  full
-                  style={styles.buyButtonContainer}>
+                <NBButton onPress={this.onCheckout} full dark>
                   <Text style={styles.buyButtonText}>Make Payment</Text>
                 </NBButton>
               </FooterTab>
@@ -402,9 +399,6 @@ const styles = StyleSheet.create({
   },
   flex1: {
     flex: 1,
-  },
-  buyButtonContainer: {
-    backgroundColor: colors.primary,
   },
   buyButtonText: {
     color: colors.white,

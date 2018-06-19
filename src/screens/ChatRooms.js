@@ -286,7 +286,7 @@ class ChatContainer extends Component<Props, State> {
     );
   };
 
-  _keyExtractor = (item): number => item.id.toString();
+  _keyExtractor = (item): string => item.id.toString();
 
   _renderSeparator = () => <View style={st.separator} />;
   _renderSeparatorHorizontal = () => <View style={st.separatorHorizontal} />;

@@ -6,12 +6,13 @@ import { ChatManager, TokenProvider } from '@pusher/chatkit/react-native';
 import { Sentry } from 'react-native-sentry';
 // import firebase from 'react-native-firebase';
 
+import type { PusherUser } from '@pusher/chatkit';
 import {
   LOGIN_PENDING,
   LOGIN_FAIL,
   LOGIN_SUCCESS,
   SIGNUP_PENDING,
-  SIGNUP_SUCCESS,
+  // SIGNUP_SUCCESS,
   SIGNUP_FAIL,
   LOGOUT,
   GETUSER_PENDING,
@@ -24,8 +25,9 @@ import type {
   SignupData,
   GetState,
   UserData,
-  PusherUser,
+  // PusherUser,
 } from '../types';
+
 import { registerPushNotifications } from '../utils/push';
 import * as api from '../utils/api';
 import * as ui from '../utils/ui';

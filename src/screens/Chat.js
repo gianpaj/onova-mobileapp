@@ -30,11 +30,10 @@ import I18n from '../i18n';
 import type { NavigationScreenProp } from 'react-navigation';
 
 import { Header, Send } from '../components';
-import CustomActions from '../components/ChatActions';
+import ChatActions from '../components/ChatActions';
 import MessageImage from '../components/MessageImage';
 
 import type {
-  Message,
   Order,
   ReduxState,
   PusherMessage,
@@ -56,7 +55,7 @@ type State = {
   partner: UserData,
   isLoading: boolean,
   // isTyping: boolean,
-  messages: Array<Message>,
+  messages: Array<PusherMessage>,
   orders: Array<Order>,
   roomId: number,
   shouldRefresh: boolean,
@@ -88,6 +87,9 @@ class ChatContainer extends Component<Props, State> {
       // OR
       // when it should not refresh (review hasn't been added or order archived)
       if (roomId == -1 || !shouldRefresh) return;
+
+      // TODO: maybe only refresh the orders?
+      // this.fetchOrders(thisRoom)
 
       this.setState({ isLoading: true }, () =>
         this.initialise(roomId)
@@ -360,7 +362,7 @@ class ChatContainer extends Component<Props, State> {
     });
   };
 
-  async createGiftedMessage(msg: PusherMessage): Message {
+  async createGiftedMessage(msg: PusherMessage): PusherMessage {
     const { userData } = this.props;
     const otherUser = this.getPartner();
     const user = msg.senderId == userData._id ? userData : otherUser;
@@ -370,22 +372,17 @@ class ChatContainer extends Component<Props, State> {
       text: msg.text,
       user: {
         _id: user._id,
-        // $FlowFixMe
         name: user.username || user.name,
-        // $FlowFixMe
         avatar: user.avatar || user.profilePic,
       },
       sent: msg.sent ? msg.sent : false,
       received: msg.received ? msg.received : false,
     };
 
-    if (msg.attachment && msg.attachment.fetchRequired) {
-      const url = await pusherCurrentUser.fetchAttachment({
-        url: msg.attachment.link,
-      });
+    if (msg.attachment) {
       return {
         ...message,
-        image: url.link,
+        image: msg.attachment,
       };
     }
     return message;
@@ -400,7 +397,7 @@ class ChatContainer extends Component<Props, State> {
     };
   }
 
-  onSend = (messages: Array<Message>) => {
+  onSend = (messages: Array<PusherMessage>) => {
     if (messages[0].text) {
       const { text } = messages[0];
 
@@ -479,7 +476,7 @@ class ChatContainer extends Component<Props, State> {
   }
 
   renderActions = (props: any) => (
-    <CustomActions {...props} uploadingImage={this.state.uploadingImage} />
+    <ChatActions {...props} uploadingImage={this.state.uploadingImage} />
   );
 
   goToProfile = () => {

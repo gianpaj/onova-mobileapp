@@ -1,3 +1,4 @@
+// @flow
 /* eslint no-use-before-define: ["error", { "variables": false }] */
 
 import React from 'react';
@@ -12,12 +13,35 @@ import {
 } from 'react-native';
 import ImageViewer from 'react-native-image-zoom-viewer';
 
-class MessageImage extends React.Component<Props> {
+import { currentUser } from '../actions/actionCreator';
+
+type State = {
+  fetchedLink: string,
+  isModalVisible: boolean,
+};
+
+class MessageImage extends React.Component<*, State> {
   state = {
+    fetchedLink: '',
     isModalVisible: false,
   };
 
+  componentDidMount() {
+    const { image } = this.props.currentMessage;
+    if (image.fetchRequired) {
+      console.log(image.link);
+      currentUser
+        .fetchAttachment({ url: image.link })
+        .then(fetched => this.setState({ fetchedLink: fetched.link }));
+    }
+  }
+
   render() {
+    const { image } = this.props.currentMessage;
+    const { fetchedLink, isModalVisible } = this.state;
+
+    const uri =
+      image.fetchRequired && fetchedLink !== '' ? fetchedLink : image.link;
     return (
       <View style={this.props.containerStyle}>
         <TouchableWithoutFeedback
@@ -25,19 +49,19 @@ class MessageImage extends React.Component<Props> {
           <Image
             {...this.props.imageProps}
             style={[styles.image, this.props.imageStyle]}
-            source={{ uri: this.props.currentMessage.image }}
+            source={{ uri }}
           />
         </TouchableWithoutFeedback>
         <Modal
           animationType="fade"
           // hardwareAccelerated={true} // android
-          visible={this.state.isModalVisible}
+          visible={isModalVisible}
           transparent={false}
           onRequestClose={() => this.setState({ isModalVisible: false })}>
           <ImageViewer
             renderIndicator={() => null}
             onCancel={() => this.setState({ isModalVisible: false })}
-            imageUrls={[{ url: this.props.currentMessage.image }]}
+            imageUrls={[{ uri }]}
           />
         </Modal>
       </View>

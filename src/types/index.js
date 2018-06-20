@@ -105,30 +105,35 @@ export type ShippingAddress = {
 export type PusherMessage = {
   id: number,
   text: string,
-  attachment?: any,
+  attachment?: {
+    link: string,
+    type: 'image', // | 'video' | 'blahblah',
+    fetchRequired: boolean,
+  },
   createdAt: number,
   updatedAt: number,
-  senderId: number,
+  senderId: string,
   sender: number,
   room: number,
   sent?: boolean,
   received?: boolean,
 };
 
-export type PusherUser = {
-  avatarURL: string,
-  // eslint-disable-next-line
-  createRoom: (name: string, private: boolean, addUserIds: Array<strings>) => Promise<any>,
-  fetchMessages: any => {},
-  id: number,
-  joinRoom: () => {},
-  name: string,
-  readCursor: any => any,
-  rooms: Array<Room>,
-  roomSubscriptions: any,
-  sendMessage: () => {},
-  users: Array<any>,
-};
+// export type PusherUser = {
+//   avatarURL: string,
+//   // eslint-disable-next-line
+//   createRoom: (name: string, private: boolean, addUserIds: Array<strings>) => Promise<any>,
+//   fetchMessages: any => {},
+//   fetchAttachment: any => (,
+//   id: number,
+//   joinRoom: () => {},
+//   name: string,
+//   readCursor: any => any,
+//   rooms: Array<Room>,
+//   roomSubscriptions: any,
+//   sendMessage: () => {},
+//   users: Array<any>,
+// };
 
 export type Room = {
   createdAt: string,
@@ -154,23 +159,23 @@ export type Order = {
     profilePic: string,
     username: string,
   },
-  currency: string;
-  dateCancelled: ?Date;
-  dateCompleted: ?Date;
-  dateDelivered: ?Date;
-  datePending: Date;
-  datePaid: ?Date;
-  dateShipped: ?Date;
-  dateReadyforShipment: ?Date;
+  currency: string,
+  dateCancelled: ?Date,
+  dateCompleted: ?Date,
+  dateDelivered: ?Date,
+  datePending: Date,
+  datePaid: ?Date,
+  dateShipped: ?Date,
+  dateReadyforShipment: ?Date,
   priceOfItem: number,
-  onovaFee: number;
+  onovaFee: number,
   product: {
     currency: string,
     photoURIs: Array<string>,
     price: string,
     status: string,
     uuid: string,
-  }
+  },
   seller: {
     _id: string,
     accountStatus: string,
@@ -180,7 +185,7 @@ export type Order = {
   },
   status: string,
   transationFee: ?number,
-  trackingNumber: ?string;
+  trackingNumber: ?string,
   reviewFromBuyer: ?string,
   reviewFromSeller: ?string,
   // lastMessage: Message,

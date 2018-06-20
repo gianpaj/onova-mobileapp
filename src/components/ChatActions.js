@@ -27,7 +27,7 @@ type Props = {
   uploadingImage: boolean,
 };
 
-export default class CustomActions extends React.Component<Props> {
+export default class ChatActions extends React.Component<Props> {
   /*onActionsPress = () => {
     // const options = ['Choose From Library', 'Send Location', 'Cancel'];
     const options = ['Choose From Library', 'Cancel'];

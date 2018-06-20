@@ -79,14 +79,16 @@ class ChatContainer extends Component<Props, State> {
   };
 
   componentWillMount() {
-    const { params } = this.props.navigation.state;
+    let { params } = this.props.navigation.state;
 
+    // refresh after leaving a review or archiving an order
     this.props.navigation.addListener('willFocus', () => {
       const { roomId, shouldRefresh } = this.state;
       // do not initiate twice at the beginning
       // OR
       // when it should not refresh (review hasn't been added or order archived)
       if (roomId == -1 || !shouldRefresh) return;
+
       this.setState({ isLoading: true }, () =>
         this.initialise(roomId)
           .then(this.setState({ isLoading: false, shouldRefresh: false }))
@@ -96,15 +98,11 @@ class ChatContainer extends Component<Props, State> {
 
     // for development
     if (!params) {
-      const roomId = 7305579;
-
-      return this.initialise(roomId)
-        .then(() => this.setState({ isLoading: false }))
-        .catch(err => {
-          if (err && err.message !== 'no partner') console.error(err);
-        });
+      params = { roomId: 8086206 };
     }
+
     // coming from Product, ChatRooms or Push Notification
+    // there is now `productUuid` from ChatRooms
     this.initialise(params.roomId, params.productUuid)
       .then(() => this.setState({ isLoading: false }))
       .catch(err => {
@@ -135,27 +133,6 @@ class ChatContainer extends Component<Props, State> {
     const { userData } = this.props;
     let thisRoom;
     return new Promise((resolve, reject) => {
-      // for development
-      if (false) {
-        // @anotherperson
-        api
-          .getUser('5a78d09e2d314a702698f957')
-          .then(partner => this.setState({ partner }));
-        // prod
-        // thisRoom = {
-        //   name: '5ac5ebcd939b7f1712b92baf-5ac5f22032eaae1c0b61ce1f',
-        // };
-        // local
-        thisRoom = {
-          name: getRoomName({
-            buyer: { _id: userData._id },
-            seller: { _id: '5a78d09e2d314a702698f957' },
-          }),
-        };
-        return this.fetchOrders(thisRoom)
-          .then(resolve)
-          .catch(e => console.error(e));
-      }
       if (!pusherCurrentUser) return reject('no pusherCurrentUser');
       this.rejectProm = reject;
 
@@ -183,7 +160,10 @@ class ChatContainer extends Component<Props, State> {
           // coming from Product
           if (!productUuid) throw new Error('productUuid missing');
 
-          return this.createOrder(productUuid)
+          const { token } = this.props.userData;
+
+          return api
+            .createOrder(productUuid, token)
             .then(o => o)
             .catch(({ message, data }) => {
               if (
@@ -198,6 +178,13 @@ class ChatContainer extends Component<Props, State> {
         })
         .then(o => {
           // console.debug(o);
+
+          // coming from ChatRooms
+          if (roomId !== -1) {
+            return;
+          }
+
+          // else join an existing room or create one
 
           // joinable rooms are those you're not a member of
           return pusherCurrentUser
@@ -330,16 +317,6 @@ class ChatContainer extends Component<Props, State> {
         .catch(e => reject(e));
     });
   };
-
-  createOrder(uuid: string): Promise<Order | Error> {
-    const { token } = this.props.userData;
-    return new Promise((resolve, reject) => {
-      api
-        .post('/api/orders', { product: uuid }, { token })
-        .then(res => resolve(res.data))
-        .catch(err => reject(err));
-    });
-  }
 
   newMessage = async (m: PusherMessage) => {
     const newMsg = await this.createGiftedMessage(m);

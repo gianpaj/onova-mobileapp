@@ -241,6 +241,17 @@ export function getOrder(orderId: string, token: string): Promise<Order> {
   });
 }
 
+export function createOrder(
+  uuid: string,
+  token: string
+): Promise<Order | Error> {
+  return new Promise((resolve, reject) => {
+    post('/api/orders', { product: uuid }, { token })
+      .then(({ data }) => resolve(data))
+      .catch(err => reject(err));
+  });
+}
+
 export type APIError = {
   status: number,
   message: string,

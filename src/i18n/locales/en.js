@@ -190,6 +190,6 @@ export default {
     button: 'Leave a review',
     toast_msg_archived: 'You have already archived this order',
     toast_msg_reviewed: 'You have already left a review',
-    alert_confirm_archive: 'Confirm archiving the order?',
+    alert_confirm_archive: 'Are you sure you want to archive the order?',
   },
 };

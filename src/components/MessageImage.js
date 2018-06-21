@@ -8,6 +8,7 @@ import {
   Image,
   StyleSheet,
   TouchableWithoutFeedback,
+  Platform,
   View,
   ViewPropTypes,
 } from 'react-native';
@@ -17,7 +18,7 @@ import ImageZoom from 'react-native-image-pan-zoom';
 import { currentUser } from '../actions/actionCreator';
 import colors from '../config/colors';
 
-const { width } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 type State = {
   fetchedLink: string,
@@ -72,23 +73,23 @@ class MessageImage extends React.Component<*, State> {
           isVisible={isModalVisible}
           onBackdropPress={this._toggleModal}
           onSwipe={this._toggleModal}
-          style={{ left: -19 }}
+          style={[Platform.OS === 'ios' ? { left: -19 } : {}]}
+          onBackButtonPress={this._toggleModal}
           swipeDirection="down">
           <ImageZoom
             cropWidth={width}
-            cropHeight={imageHeight}
+            cropHeight={height}
             imageWidth={width}
-            imageHeight={imageHeight}>
-            <View style={{ backgroundColor: colors.black }}>
-              <Image
-                style={{
-                  width,
-                  height: imageHeight,
-                }}
-                resizeMode="contain"
-                source={{ uri: uri.replace('thumb', '') }}
-              />
-            </View>
+            imageHeight={imageHeight}
+            style={{ backgroundColor: colors.black }}>
+            <Image
+              style={{
+                width,
+                height: imageHeight,
+              }}
+              resizeMode="contain"
+              source={{ uri: uri.replace('thumb', '') }}
+            />
           </ImageZoom>
         </Modal>
       </View>

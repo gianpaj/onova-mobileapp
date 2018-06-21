@@ -79,6 +79,8 @@ class MessageImage extends React.Component<*, State> {
           <ImageZoom
             cropWidth={width}
             cropHeight={height}
+            enableSwipeDown
+            onSwipeDown={this._toggleModal}
             imageWidth={width}
             imageHeight={imageHeight}
             style={{ backgroundColor: colors.black }}>

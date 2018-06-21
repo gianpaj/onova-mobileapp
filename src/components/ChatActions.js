@@ -22,12 +22,16 @@ const PICKER_OPTIONS = {
   cropper_toolbar_title: I18n.t('add_or_edit_item.cropper_toolbar_title'),
 };
 
+type State = {
+  isCameraOpened: boolean,
+};
+
 type Props = {
   onSend: (any: any) => void,
   uploadingImage: boolean,
 };
 
-export default class ChatActions extends React.Component<Props> {
+export default class ChatActions extends React.Component<Props, State> {
   /*onActionsPress = () => {
     // const options = ['Choose From Library', 'Send Location', 'Cancel'];
     const options = ['Choose From Library', 'Cancel'];
@@ -62,53 +66,55 @@ export default class ChatActions extends React.Component<Props> {
     );
   };
   */
+  state = {
+    isCameraOpened: false,
+  };
 
   pickImage = () => {
+    // prevent pressing multiple times on the image
+    if (this.state.isCameraOpened) return;
+
+    this.setState({ isCameraOpened: true });
+
+    let imagePickerPromise;
     if (__DEV__ && Platform.OS === 'ios') {
-      ImagePicker.openPicker({
+      imagePickerPromise = ImagePicker.openPicker({
         ...PICKER_OPTIONS,
-      })
-        .then(res => {
-          this.props.onSend({
-            uri: res.path,
-            image: res.path,
-            name: res.filename, // undefined on Android
-            type: res.mime,
-          });
-        })
-        .catch(e => {
-          if (e.code !== 'E_PICKER_CANCELLED') {
-            console.warn(e);
-          }
-        });
+      });
     } else {
-      ImagePicker.openCamera({
+      imagePickerPromise = ImagePicker.openCamera({
         ...PICKER_OPTIONS,
-      })
-        .then(res => {
-          this.props.onSend({
-            uri: res.path,
-            image: res.path,
-            name: res.filename, // undefined on Android
-            type: res.mime,
-          });
-        })
-        .catch(e => {
-          if (e.code !== 'E_PICKER_CANCELLED') {
-            console.warn(e);
-          }
-        });
+      });
     }
+    imagePickerPromise
+      .then(res =>
+        this.props.onSend({
+          uri: res.path,
+          image: res.path,
+          name: res.filename, // undefined on Android
+          type: res.mime,
+        })
+      )
+      .catch(e => {
+        if (e.code !== 'E_PICKER_CANCELLED') {
+          console.error(e);
+        }
+      })
+      .then(() => this.setState({ isCameraOpened: false }));
   };
 
   render() {
+    if (this.props.uploadingImage)
+      return <ActivityIndicator style={styles.container} size="small" />;
+
     return (
-      <TouchableOpacity style={styles.container} onPress={this.pickImage}>
-        {this.props.uploadingImage ? (
-          <ActivityIndicator size="small" />
-        ) : (
-          <Icon name="camera" size={22} color={colors.grey3} />
-        )}
+      <TouchableOpacity style={styles.container}>
+        <Icon
+          name="camera"
+          size={22}
+          onPress={this.pickImage}
+          color={colors.grey3}
+        />
       </TouchableOpacity>
     );
   }

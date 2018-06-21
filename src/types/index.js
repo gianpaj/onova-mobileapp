@@ -103,20 +103,21 @@ export type ShippingAddress = {
 // };
 
 export type PusherMessage = {
-  id: number,
-  text: string,
   attachment?: {
     link: string,
     type: 'image', // | 'video' | 'blahblah',
     fetchRequired: boolean,
   },
   createdAt: number,
-  updatedAt: number,
-  senderId: string,
-  sender: number,
-  room: number,
-  sent?: boolean,
+  id: number,
+  image: string,
   received?: boolean,
+  room: number,
+  sender: number,
+  senderId: string,
+  sent?: boolean,
+  text: string,
+  updatedAt: number,
 };
 
 // export type PusherUser = {

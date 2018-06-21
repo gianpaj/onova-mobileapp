@@ -252,10 +252,7 @@ export function createOrder(
   });
 }
 
-export function sendChatPhoto(
-  photo: any,
-  token: string
-): Promise<Order | Error> {
+export function sendChatPhoto(photo: any, token: string): Promise<any> {
   return new Promise((resolve, reject) => {
     const fd = new FormData();
     fd.append('photo', photo);

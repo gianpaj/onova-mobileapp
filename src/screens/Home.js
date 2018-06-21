@@ -85,7 +85,6 @@ export class Home extends PureComponent<Props, State> {
           <Body style={styles.container}>
             <Title style={{ color: colors.black }}>ONOVA</Title>
           </Body>
-          <Right />
           <Right>
             <Button transparent>
               <Icon

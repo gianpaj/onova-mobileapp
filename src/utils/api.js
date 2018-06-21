@@ -252,6 +252,19 @@ export function createOrder(
   });
 }
 
+export function sendChatPhoto(
+  photo: any,
+  token: string
+): Promise<Order | Error> {
+  return new Promise((resolve, reject) => {
+    const fd = new FormData();
+    fd.append('photo', photo);
+    post('/api/photos/upload-chat-images', fd, { token })
+      .then(({ data }) => resolve(data))
+      .catch(err => reject(err));
+  });
+}
+
 export type APIError = {
   status: number,
   message: string,

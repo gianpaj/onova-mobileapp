@@ -25,6 +25,6 @@ declare class PusherUser {
   readCursor: any => any;
   // rooms: Array<Room>;
   roomSubscriptions: any;
-  sendMessage: () => {};
+  sendMessage: ({ text: string, roomId: number }) => {};
   users: Array<any>;
 }

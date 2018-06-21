@@ -4,48 +4,63 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  Modal,
+  Dimensions,
   Image,
   StyleSheet,
+  TouchableWithoutFeedback,
   View,
   ViewPropTypes,
-  TouchableWithoutFeedback,
 } from 'react-native';
-import ImageViewer from 'react-native-image-zoom-viewer';
+import Modal from 'react-native-modal';
+import ImageZoom from 'react-native-image-pan-zoom';
 
 import { currentUser } from '../actions/actionCreator';
+import colors from '../config/colors';
+
+const { width } = Dimensions.get('window');
 
 type State = {
   fetchedLink: string,
   isModalVisible: boolean,
+  imageHeight: number,
 };
 
 class MessageImage extends React.Component<*, State> {
   state = {
     fetchedLink: '',
     isModalVisible: false,
+    imageHeight: 0,
   };
 
-  componentDidMount() {
+  async componentDidMount() {
     const { image } = this.props.currentMessage;
     if (image.fetchRequired) {
-      console.log(image.link);
-      currentUser
-        .fetchAttachment({ url: image.link })
-        .then(fetched => this.setState({ fetchedLink: fetched.link }));
+      const fetched = await currentUser.fetchAttachment({ url: image.link });
+      this.setState({ fetchedLink: fetched.link });
+      Image.getSize(fetched.link, (w, h) => {
+        this.setState({ imageHeight: Math.floor(h * (width / w)) });
+      });
+    } else {
+      Image.getSize(image.link, (w, h) => {
+        this.setState({ imageHeight: Math.floor(h * (width / w)) });
+      });
     }
   }
 
+  _toggleModal = () =>
+    this.setState({ isModalVisible: !this.state.isModalVisible });
+
   render() {
     const { image } = this.props.currentMessage;
-    const { fetchedLink, isModalVisible } = this.state;
+    const { fetchedLink, isModalVisible, imageHeight } = this.state;
+    let uri = image.link;
 
-    const uri =
-      image.fetchRequired && fetchedLink !== '' ? fetchedLink : image.link;
+    if (image.fetchRequired && fetchedLink !== '') {
+      uri = fetchedLink;
+    }
     return (
       <View style={this.props.containerStyle}>
-        <TouchableWithoutFeedback
-          onPress={() => this.setState({ isModalVisible: true })}>
+        <TouchableWithoutFeedback onPress={this._toggleModal}>
           <Image
             {...this.props.imageProps}
             style={[styles.image, this.props.imageStyle]}
@@ -53,16 +68,28 @@ class MessageImage extends React.Component<*, State> {
           />
         </TouchableWithoutFeedback>
         <Modal
-          animationType="fade"
-          // hardwareAccelerated={true} // android
-          visible={isModalVisible}
-          transparent={false}
-          onRequestClose={() => this.setState({ isModalVisible: false })}>
-          <ImageViewer
-            renderIndicator={() => null}
-            onCancel={() => this.setState({ isModalVisible: false })}
-            imageUrls={[{ uri }]}
-          />
+          backdropOpacity={1}
+          isVisible={isModalVisible}
+          onBackdropPress={this._toggleModal}
+          onSwipe={this._toggleModal}
+          style={{ left: -19 }}
+          swipeDirection="down">
+          <ImageZoom
+            cropWidth={width}
+            cropHeight={imageHeight}
+            imageWidth={width}
+            imageHeight={imageHeight}>
+            <View style={{ backgroundColor: colors.black }}>
+              <Image
+                style={{
+                  width,
+                  height: imageHeight,
+                }}
+                resizeMode="contain"
+                source={{ uri: uri.replace('thumb', '') }}
+              />
+            </View>
+          </ImageZoom>
         </Modal>
       </View>
     );

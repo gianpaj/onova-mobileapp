@@ -8485,6 +8485,13 @@ react-native-micro-animated-button@^0.0.21:
   version "0.0.21"
   resolved "https://registry.yarnpkg.com/react-native-micro-animated-button/-/react-native-micro-animated-button-0.0.21.tgz#8e525c3fba99f2cb7a145b8775ff0ac0a47a1ef0"
 
+react-native-modal@^6.1.0:
+  version "6.1.0"
+  resolved "https://registry.yarnpkg.com/react-native-modal/-/react-native-modal-6.1.0.tgz#cc63946bd62cebfb8e531aa125796e26f5acd9c3"
+  dependencies:
+    prop-types "^15.6.1"
+    react-native-animatable "^1.2.4"
+
 react-native-parsed-text@^0.0.20:
   version "0.0.20"
   resolved "https://registry.yarnpkg.com/react-native-parsed-text/-/react-native-parsed-text-0.0.20.tgz#7bd35fec88c3ca0eb0e8250a98e24092b4ee7fef"

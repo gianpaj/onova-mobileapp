@@ -397,7 +397,7 @@ class ChatContainer extends Component<Props, State> {
     };
   }
 
-  onSend = (messages: Array<PusherMessage>) => {
+  onSend = async (messages: Array<PusherMessage>) => {
     if (messages[0].text) {
       const { text } = messages[0];
 
@@ -410,29 +410,54 @@ class ChatContainer extends Component<Props, State> {
           console.error(err);
         });
     } else {
+      const { token } = this.props.userData;
+
       this.setState({ uploadingImage: true });
-      pusherCurrentUser
-        .sendMessage({
-          text: ' ', // cannot be empty string or null
-          roomId: this.state.roomId,
-          attachment: {
-            file: {
-              uri: messages[0].image,
-              type: 'image/jpeg',
-              name: 'image.jpg',
-            },
-            name: 'myfile.jpg',
+      // Sending Images via Pusher
+      // pusherCurrentUser
+      //   .sendMessage({
+      //     text: ' ', // cannot be empty string or null
+      //     roomId: this.state.roomId,
+      //     attachment: {
+      //       file: {
+      //         uri: messages[0].image,
+      //         type: 'image/jpeg',
+      //         name: 'image.jpg',
+      //       },
+      //       name: 'myfile.jpg',
+      //     },
+      //   })
+      // Sending Images via our API
+      try {
+        const res = await api.sendChatPhoto(
+          {
+            uri: messages[0].image,
+            type: 'image/jpeg',
+            name: 'photo.jpg',
           },
-        })
-        .then(id => {
-          console.debug('Message sent:', id);
-        })
-        .catch(err => {
-          console.error(err);
-        })
-        .then(id => {
-          this.setState({ uploadingImage: false });
-        });
+          token
+        );
+        pusherCurrentUser
+          .sendMessage({
+            text: ' ', // cannot be empty string or null
+            roomId: this.state.roomId,
+            attachment: {
+              type: 'image',
+              link: res['thumb.jpeg'].path,
+            },
+          })
+          .then(id => {
+            console.debug('Image message sent:', id);
+          })
+          .catch(err => {
+            console.error(err);
+          })
+          .then(() => {
+            this.setState({ uploadingImage: false });
+          });
+      } catch (err) {
+        console.error(err);
+      }
     }
   };
 

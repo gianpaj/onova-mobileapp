@@ -17,6 +17,8 @@ import {
   GETUSER_PENDING,
   GETUSER_SUCCESS,
   GETUSER_FAIL,
+  DO_REFRESH,
+  DONOT_REFRESH,
 } from './actionTypes';
 import type {
   Dispatch,
@@ -414,9 +416,9 @@ const handleErrorWithAlert = (data: any, err: any) => {
   };
 };
 
-const enableRefresh = () => ({ type: 'DO_REFRESH' });
+const enableRefresh = () => ({ type: DO_REFRESH });
 
-const disableRefresh = () => ({ type: 'DONOT_REFRESH' });
+const disableRefresh = () => ({ type: DONOT_REFRESH });
 
 const displayNotification = (notification: any) => (
   dispatch: Dispatch,

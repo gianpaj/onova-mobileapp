@@ -165,8 +165,7 @@ const initializePusher = (userData: UserData): Promise<any | Error> => {
           //   resolve(userData);
         })
         .catch(err => {
-          console.log('eerr');
-          console.log(err);
+          console.error(err);
           reject(err);
         });
     } catch (err) {

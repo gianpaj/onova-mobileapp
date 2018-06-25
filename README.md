@@ -2,17 +2,23 @@
 
 # Onova mobile app
 
-* Android app: <!-- [link](https://play.google.com/store/apps/details?id=com.onova.app) -->
-* iOS app: <!-- [link](https://itunes.apple.com/us/app/?mt=8) -->
+* Android app: [link](https://play.google.com/store/apps/details?id=com.onova.app&hl=uk)
+* iOS app: [link](https://itunes.apple.com/ua/app/onova/id1365771422?mt=8)
 
-> Created using React Native CLI (`react-native`), not Create React Native App (CRNA) or Expo client.
+> Created using React Native CLI (`react-native`), not the Create React Native App (CRNA) or Expo client.
 
-Follow [these instructions](https://facebook.github.io/react-native/docs/getting-started.html) to install the React Native requirements.
+Follow [these instructions](https://facebook.github.io/react-native/docs/getting-started.html) to install the requirements for React Native.
 
 ## Getting started
 
-1.  Start the development server (server.data).
-2.  Copy `config-example_env.json` to `.config-dev.json` to the IP address of where the `server.data` is running (e.g. you laptop's `http://192.168.1.5:4040`).
+1.  Start the local development server (`server.data`).
+
+    or connect the production server
+
+2.  Copy `config-example_env.json` to `.config-dev.json` to the URL of where the `server.data` is running (e.g. you laptop's, `http://192.168.1.5:4040`).
+
+    Note: `localhost` works with the iOS Simulator but not for the Android Emulator.
+
 3.  Install `npm -g flow-typed`. It's automatically executed after running `yarn`.
 
 ```bash
@@ -20,14 +26,14 @@ yarn
 
 react-native run-ios
 # or
-yarn run start-emulator # only tested in Gian's laptop
-
+yarn run start-emulator # for Android - only tested in Gian's laptop
+# and
 react-native run-android
 
-# run package on developer mode (local server)
+# run packager and connect to the local server
 yarn start
 
-# run package on developer mode (remote server)
+# run packager and connect to the remote server
 NODE_ENV=prod yarn start
 ```
 
@@ -66,31 +72,41 @@ Currently supporting `Android 8.0 (SDK 27)` – for react-native-firebase
     drwxr-xr-x    6 gianfranco  staff   204B 28 Feb 12:13 private.stuff
     ```
 
-    The `private.stuff` folder needs to be at the same level as the `mobileapp`.
+    Put `private.stuff` folder at the same level as the `mobileapp`.
 
 4.  Now you're ready to make a prod build.
 
 #### Build Android 🤖
 
-* Simple release build
+* Build release APK
 
-      fastlane beta
+  This builds and uploads the source code to Sentry.io 🎉
 
-* Deploy a new version to the Google Play
+      yarn run build-android
+
+* Build release for internal testing ONLY
+
+  This builds and skip uploading the source code to Sentry.io
+
+      SENTRY_SKIP_UPLOAD=true yarn run build-android
+
+<!-- * Deploy a new version to the Google Play
 
   Build and sends the source code to Sentry.io and sends a msg on Slack the #bots-dev-onova channel once finished 🎉
 
-      fastlane deploy
+      fastlane deploy -->
 
 ### iOS 🍎
 
 #### Setup 🔨🍎
 
-_todo_
+1.  Install Xcode
 
 #### Build iOS 🍎
 
-_todo_
+1.  Archive a build
+
+This builds and uploads the source code to Sentry.io 🎉
 
 ## Tools
 
@@ -102,7 +118,7 @@ Using [react-native-bundle-visualizer](https://github.com/IjzerenHein/react-nati
 
 ## Troubleshooting 🔫
 
-1.  Issue with packager / Metro bundler
+1.  Issue with JS packager (Metro bundler)
 
     ```
     error: bundling failed: ambiguous resolution: module `.../onova/mobileapp/index.js` tries to require `react-native`, but there are several files providing this module. You can delete or fix them:

@@ -4,7 +4,6 @@ import { Platform } from 'react-native';
 import { Toast } from 'antd-mobile';
 import { ChatManager, TokenProvider } from '@pusher/chatkit/react-native';
 import { Sentry } from 'react-native-sentry';
-// import firebase from 'react-native-firebase';
 
 import type { PusherUser } from '@pusher/chatkit';
 import {
@@ -260,10 +259,10 @@ const signup = (data: SignupData) => (dispatch: Dispatch) => (
       if (res.data) {
         console.debug('user created', res.data);
         console.debug('token', res.token);
-        const userData: UserData = {
-          ...res.data,
-          ...{ token: res.token, provider: 'email' },
-        };
+        // const userData: UserData = {
+        //   ...res.data,
+        //   ...{ token: res.token, provider: 'email' },
+        // };
 
         // if (userData.accountStatus !== 'verified') {
         throw new Error('NOT_VERIFIED');
@@ -290,10 +289,9 @@ const signup = (data: SignupData) => (dispatch: Dispatch) => (
         //     },
         //   });
         // }
-      } else {
-        console.warn(res);
-        dispatch({ type: SIGNUP_FAIL });
       }
+      console.warn(res);
+      dispatch({ type: SIGNUP_FAIL });
     })
     .catch((err: api.APIError) => {
       Toast.hide();

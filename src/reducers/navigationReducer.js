@@ -3,6 +3,7 @@ import { NavigationActions } from 'react-navigation';
 
 import NavigationStack from '../navigation/navigationStack';
 import { LOGIN_SUCCESS, SIGNUP_SUCCESS, LOGOUT } from '../actions/actionTypes';
+
 import type { Action } from '../types/navigationReducer';
 
 const ActionForLoggedOut = NavigationStack.router.getActionForPathAndParams(
@@ -15,7 +16,6 @@ const ActionForLoggedIn = NavigationActions.reset({
 });
 
 const stateForLoggedOut = NavigationStack.router.getStateForAction(
-  // $FlowFixMe
   ActionForLoggedOut
 );
 const stateForLoggedIn = NavigationStack.router.getStateForAction(

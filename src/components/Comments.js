@@ -16,7 +16,6 @@ import {
 import { ActionSheet, Content } from 'native-base';
 // import LottieView from 'lottie-react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-// import { TextareaItem } from 'antd-mobile';
 import ParsedText from 'react-native-parsed-text';
 import MentionsTextInput from 'react-native-mentions';
 
@@ -65,19 +64,14 @@ class Comments extends React.Component<Props, State> {
   };
 
   componentWillMount() {
-    // let { uuid } = this.props;
+    let { uuid } = this.props;
     // for development
     // if (!uuid) {
     //   uuid = 'SJWwox8LLG';
     // }
 
-    this._getComments(this.props.uuid)
-      .then(({ comments }) =>
-        this.setState({
-          comments,
-          loading: false,
-        })
-      )
+    this._getComments(uuid)
+      .then(({ comments }) => this.setState({ comments, loading: false }))
       .catch(e => console.error(e));
   }
 

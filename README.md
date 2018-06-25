@@ -37,6 +37,16 @@ yarn start
 NODE_ENV=prod yarn start
 ```
 
+## Storybook for Component design
+
+Run the packager for [Storybook](https://storybook.js.org)
+
+    yarn storybook
+
+## Tests with jest
+
+    yarn test
+
 ## Run E2E test on iOS 🍎
 
 _todo_
@@ -118,14 +128,25 @@ Using [react-native-bundle-visualizer](https://github.com/IjzerenHein/react-nati
 
 ## Troubleshooting 🔫
 
-1.  Issue with JS packager (Metro bundler)
+* Issue with JS packager (Metro bundler)
 
-    ```
-    error: bundling failed: ambiguous resolution: module `.../onova/mobileapp/index.js` tries to require `react-native`, but there are several files providing this module. You can delete or fix them:
-    ```
+  ```
+  error: bundling failed: ambiguous resolution: module `.../onova/mobileapp/index.js` tries to require `react-native`, but there are several files providing this module. You can delete or fix them:
+  ```
 
-        yarn start --reset-cache
+      yarn start --reset-cache
 
-2.  iOS is just being a b\*tch
+* iOS is just being a b\*tch
 
-        yarn nuke-ios
+      yarn nuke-ios
+
+* Android is just being a b\*tch
+
+      yarn nuke-android
+
+* Issues with Redux Store
+
+  1.  To delete all the store, uncomment `// persistor.purge();` in `store.js`
+  2.  Refresh the App
+  3.  Comment the line again to persist it.
+  4.  Refresh tha App, one last time

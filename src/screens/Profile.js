@@ -283,6 +283,7 @@ class ProfileScreen extends React.Component<Props, State> {
         this.setState({ editing: false });
         console.debug(res);
         ui.showToast(I18n.t('profile.toast_updated'), 'success');
+        this.refresh();
       })
       .catch(err => {
         console.debug(err);

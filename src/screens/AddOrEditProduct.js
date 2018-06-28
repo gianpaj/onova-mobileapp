@@ -130,6 +130,22 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
 
   selectPhotoTapped = (i: number = 0) => {
     if (this.state.pending) return;
+
+    const imagePickerOptons = {
+      width: IMAGE_WIDTH,
+      height: IMAGE_HEIGHT,
+      compressImageMaxWidth: IMAGE_WIDTH,
+      compressImageMaxHeight: IMAGE_HEIGHT,
+      compressImageQuality: 0.7,
+      // cropping: true,
+      mediaType: 'photo',
+      cropperToolbarTitle: I18n.t('add_or_edit_item.cropper_toolbar_title'),
+      // ios
+      cropperChooseText: I18n.t('add_or_edit_item.cropper_choose_text'),
+      // ios
+      cropperCancelText: I18n.t('add_or_edit_item.cropper_cancel_text'),
+    };
+
     const CAMERA = I18n.t('add_or_edit_item.select_photo_source_camera');
     const GALLERY = I18n.t('add_or_edit_item.select_photo_source_gallery');
     const CANCEL = I18n.t('add_or_edit_item.select_photo_source_cancel');
@@ -144,31 +160,14 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
         switch (buttonIndex) {
           case 0:
             ImagePicker.openCamera({
-              width: IMAGE_WIDTH,
-              height: IMAGE_HEIGHT,
-              compressImageMaxWidth: IMAGE_WIDTH,
-              compressImageMaxHeight: IMAGE_HEIGHT,
-              compressImageQuality: 0.7,
-              cropping: true,
-              mediaType: 'photo',
-              cropper_toolbar_title: I18n.t(
-                'add_or_edit_item.cropper_toolbar_title'
-              ),
+              ...imagePickerOptons,
             })
-              .then(response => this.processPhoto(response, i))
-              .catch(() => !this.state.inEditMode && this.closeModal());
+              .then(response => this.appendPhoto(response, i))
+              .catch(() => this.closeModalConditional());
             break;
           case 1:
             ImagePicker.openPicker({
-              width: IMAGE_WIDTH,
-              height: IMAGE_HEIGHT,
-              compressImageMaxWidth: IMAGE_WIDTH,
-              compressImageMaxHeight: IMAGE_HEIGHT,
-              compressImageQuality: 0.7,
-              cropping: true,
-              mediaType: 'photo',
-              cropperChooseText: I18n.t('add_or_edit_item.cropper_choose_text'),
-              cropperCancelText: I18n.t('add_or_edit_item.cropper_cancel_text'),
+              ...imagePickerOptons,
               smartAlbums: [
                 'UserLibrary',
                 'PhotoStream',
@@ -177,22 +176,19 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
                 'Favorites',
                 'RecentlyAdded',
               ],
-              cropper_toolbar_title: I18n.t(
-                'add_or_edit_item.cropper_toolbar_title'
-              ),
             })
-              .then(response => this.processPhoto(response, i))
-              .catch(() => !this.state.inEditMode && this.closeModal());
+              .then(response => this.appendPhoto(response, i))
+              .catch(() => this.closeModalConditional());
             break;
           default:
-            if (!this.state.inEditMode) this.closeModal();
+            this.closeModalConditional();
             break;
         }
       }
     );
   };
 
-  processPhoto(response: any, i: number) {
+  appendPhoto(response: any, i: number) {
     let image = {
       url: response.path,
       id: i,
@@ -217,6 +213,13 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
   closeModal() {
     this.props.navigation.goBack();
   }
+
+  closeModalConditional = () => {
+    const { inEditMode, images } = this.state;
+    if (!inEditMode && images.length === 0 /* && fields.touched() */) {
+      this.props.navigation.goBack();
+    }
+  };
 
   onAddOrEditItem = async () => {
     Toast.loading(I18n.t('add_or_edit_item.toast_uploading'), 30);
@@ -455,7 +458,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
   }*/
 
   onImageChange = (images: Array<any>) => {
-    if (images.length < 1 && !this.state.inEditMode) this.closeModal();
+    this.closeModalConditional();
     this.setState({ images });
   };
 
@@ -468,7 +471,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
   render() {
     const { images, tags, inEditMode } = this.state;
 
-    if (images.length < 1 && !inEditMode) return null;
+    // if (images.length < 1 && !inEditMode) return null;
 
     return (
       <Container>

@@ -48,17 +48,17 @@ class ReviewCard extends PureComponent<Props> {
     return (
       <ListItem style={{ marginLeft: 0 }}>
         <View style={{ height: width / 4 + heightContainer }}>
-        <Image
-          style={[
-            styles.itemImage,
-            {
-              width: width / 4,
-              height: width / 4,
-              // height: this.state.imageHeight,
-            },
-          ]}
-          source={{ uri }}
-        />
+          <Image
+            style={[
+              styles.itemImage,
+              {
+                width: width / 4,
+                height: width / 4,
+                // height: this.state.imageHeight,
+              },
+            ]}
+            source={{ uri }}
+          />
         </View>
         <Body>
           <View style={styles.contentRow}>
@@ -92,6 +92,9 @@ class ReviewCard extends PureComponent<Props> {
           </View>
           <Text style={styles.reviewText} numberOfLines={3}>
             {review.text}
+          </Text>
+          <Text numberOfLines={1}>
+            {order.citySender}-{order.cityRecipient}
           </Text>
         </Body>
       </ListItem>

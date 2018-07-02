@@ -160,6 +160,8 @@ export type Order = {
     profilePic: string,
     username: string,
   },
+  citySender: string,
+  cityRecipient: string,
   currency: string,
   dateCancelled: ?Date,
   dateCompleted: ?Date,

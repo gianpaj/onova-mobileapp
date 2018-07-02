@@ -2,6 +2,7 @@
 
 import { AppRegistry, YellowBox } from 'react-native';
 import App from './src/App';
+import { name as appName } from './app.json';
 
 YellowBox.ignoreWarnings([
   // workaround for https://github.com/facebook/react-native/issues/18868
@@ -16,4 +17,4 @@ YellowBox.ignoreWarnings([
   'Class RCTCxxModule was not exported',
 ]);
 
-AppRegistry.registerComponent('onova', () => App);
+AppRegistry.registerComponent(appName, () => App);

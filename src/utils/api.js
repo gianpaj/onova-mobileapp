@@ -2,7 +2,7 @@
 
 import axios, { CancelTokenSource } from 'axios';
 // eslint-disable-next-line
-import type { Order, ProductType, UserData } from '../types';
+import type { Order, Product, UserData } from '../types';
 
 let config;
 if (process.env.NODE_ENV == 'prod' || process.env.NODE_ENV == 'production') {
@@ -217,7 +217,7 @@ export function getUser(userId: string): Promise<UserData> {
   });
 }
 
-export function getProduct(uuid: string): Promise<ProductType> {
+export function getProduct(uuid: string): Promise<Product> {
   return new Promise((resolve, reject) => {
     get(`/api/products/${uuid}`)
       .then(({ data }) => resolve(data))

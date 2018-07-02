@@ -11,6 +11,7 @@ import { linkTo } from '@storybook/addon-links';
 import Button from './Button';
 import CenterView from './CenterView';
 import Welcome from './Welcome';
+import ReviewCard from './ReviewCard';
 
 import colors from '../../src/config/colors';
 import typography from '../../src/config/typography';
@@ -61,4 +62,100 @@ storiesOf('Button', module)
     <Button block onPress={action('clicked-text')}>
       <Text>Hello Buttons</Text>
     </Button>
+  ));
+
+storiesOf('ReviewCard', module)
+  // .addDecorator(getStory => <CenterView>{getStory()}</CenterView>)
+  .add('Max lenght', () => (
+    <ReviewCard
+      onPress={action('clicked-reviewee')}
+      review={{
+        _id: '5b250287fdf7ca7634b8f6a7',
+        fromUser: '5b208a03508ef817b284d995',
+        targetUser: '5afaa93daeeb1453812fc011',
+        order: {
+          currency: 'UAH',
+          buyer: {
+            _id: '5afaa93daeeb1453812fc011',
+            username: 'alex',
+          },
+          onovaFee: '350',
+          priceOfItem: '350',
+          product: {
+            currency: 'UAH',
+            photoURIs: [
+              'http://assets.onova.co/products/HJdFQOG-Q-1-1529148288157.jpg',
+              'http://assets.onova.co/products/HJdFQOG-Q-2-1529148288157.jpg',
+              'http://assets.onova.co/products/HJdFQOG-Q-3-1529148288157.jpg',
+            ],
+            _id: '5b24f380fdf7ca7634b8f6a1',
+            price: '350',
+            uuid: 'ByGheYGZ7',
+            comments: [],
+            seller: '5b208a03508ef817b284d995',
+          },
+          seller: {
+            _id: '5b208a03508ef817b284d995',
+            username: 'alex_lisov',
+          },
+          datePending: '2018-06-16T12:18:55.239Z',
+          reviewFromBuyer: '5b2500aafdf7ca7634b8f6a6',
+          trackingNumber: '20450076656159',
+          reviewFromSeller: '5b250287fdf7ca7634b8f6a7',
+          id: '5b25002ffdf7ca7634b8f6a5',
+        },
+        text:
+          'Ответственный покупатель! Сделка прошло отлично! Только положительные эмоции',
+        rateNumber: 5,
+        lang: 'en',
+        createdAt: '2018-06-16T12:28:55.296Z',
+        id: '5b250287fdf7ca7634b8f6a7',
+      }}
+    />
+  ))
+  .add('Short lenght', () => (
+    <ReviewCard
+      onPress={action('clicked-reviewee')}
+      review={{
+        _id: '5b250287fdf7ca7634b8f6a7',
+        fromUser: '5b208a03508ef817b284d995',
+        targetUser: '5afaa93daeeb1453812fc011',
+        order: {
+          currency: 'UAH',
+          buyer: {
+            _id: '5afaa93daeeb1453812fc011',
+            username: 'alex',
+          },
+          onovaFee: '350',
+          priceOfItem: '350',
+          product: {
+            currency: 'UAH',
+            photoURIs: [
+              'http://assets.onova.co/products/HJdFQOG-Q-1-1529148288157.jpg',
+              'http://assets.onova.co/products/HJdFQOG-Q-2-1529148288157.jpg',
+              'http://assets.onova.co/products/HJdFQOG-Q-3-1529148288157.jpg',
+            ],
+            _id: '5b24f380fdf7ca7634b8f6a1',
+            price: '350',
+            uuid: 'ByGheYGZ7',
+            comments: [],
+            seller: '5b208a03508ef817b284d995',
+          },
+          seller: {
+            _id: '5b208a03508ef817b284d995',
+            username: 'alex_lisov',
+          },
+          datePending: '2018-06-16T12:18:55.239Z',
+          reviewFromBuyer: '5b2500aafdf7ca7634b8f6a6',
+          trackingNumber: '20450076656159',
+          reviewFromSeller: '5b250287fdf7ca7634b8f6a7',
+          id: '5b25002ffdf7ca7634b8f6a5',
+        },
+        text: 'Ответственный покупатель!',
+        rateNumber: 5,
+        lang: 'en',
+        createdAt: '2018-06-16T12:28:55.296Z',
+        id: '5b250287fdf7ca7634b8f6a7',
+      }}
+    />
   ));

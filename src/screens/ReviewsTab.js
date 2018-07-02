@@ -6,21 +6,17 @@ import {
   Dimensions,
   FlatList,
   Image,
-  Platform,
   RefreshControl,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
 } from 'react-native';
-import { Body, ListItem } from 'native-base';
 import { withNavigation } from 'react-navigation';
-import StarRating from 'react-native-star-rating';
 
 import I18n from '../i18n';
 import colors from '../config/colors';
 import * as api from '../utils/api';
-import * as ui from '../utils/ui';
+import ReviewCard from '../components/ReviewCard';
 
 import type { NavigationScreenProp } from 'react-navigation';
 
@@ -55,10 +51,13 @@ class ReviewsTabContainer extends Component<Props, State> {
     }
   }
 
-  async getReviewsAndSetState(): Promise<any> {
+  async getReviewsAndSetState(): Promise<void> {
     const { token } = this.props.userData;
-    // for development (krokubik) on prod server
-    let userId = '5ac5f22032eaae1c0b61ce1f';
+    // for development
+    // (firstuser) on local server
+    // let userId = '5a78d09e2d314a702698f957';
+    // (alex) on prod server
+    let userId = '5afaa93daeeb1453812fc011';
 
     if (this.props.navigation.state.params) {
       userId = this.props.navigation.state.params.userId;
@@ -66,9 +65,7 @@ class ReviewsTabContainer extends Component<Props, State> {
 
     const res = await api.get(
       `/api/users/${userId}/reviews?as=${this.props.as}`,
-      {
-        token,
-      }
+      { token }
     );
     // get the first image size and then setState `data` for the FlatList
     if (res.data && res.data.length) {
@@ -78,15 +75,10 @@ class ReviewsTabContainer extends Component<Props, State> {
         '-thumb.jpg'
       );
       Image.getSize(uri, (w, h) => {
-        this.setState(
-          {
-            imageHeight: Math.floor(h * (width / 4 / w)),
-            data,
-          },
-          () => {
-            Promise.resolve();
-          }
-        );
+        this.setState({
+          imageHeight: Math.floor(h * (width / 4 / w)),
+          data,
+        });
       });
     } else {
       this.setState({ data: [] });
@@ -128,66 +120,9 @@ class ReviewsTabContainer extends Component<Props, State> {
 
   _renderSeparator = () => <View style={styles.separator} />;
 
-  _renderItem = ({ item: review }: { item: Review }) => {
-    const { order } = review;
-
-    let reviewer;
-
-    if (this.props.as === 'seller') {
-      reviewer = order.seller == review.fromUser ? order.seller : order.buyer;
-    } else {
-      reviewer = order.seller == review.fromUser ? order.buyer : order.seller;
-    }
-
-    const uri = order.product.photoURIs[0].replace('.jpg', '-thumb.jpg');
-
+  _renderItem = ({ item }) => {
     return (
-      <ListItem style={{ marginLeft: 0 }}>
-        <Image
-          style={[
-            styles.itemImage,
-            {
-              width: width / 4,
-              height: this.state.imageHeight,
-            },
-          ]}
-          source={{ uri }}
-        />
-        <Body>
-          <View style={styles.contentRow}>
-            <Text numberOfLines={1}>
-              {order.priceOfItem} {order.currency}
-            </Text>
-            <Text numberOfLines={1}>{ui.formatTime(review.createdAt)}</Text>
-          </View>
-          <View style={styles.contentRow}>
-            <StarRating
-              // eslint-disable-next-line
-                buttonStyle={{ paddingHorizontal: 2 }}
-              // eslint-disable-next-line
-                containerStyle={{ alignSelf: 'center' }}
-              disabled
-              emptyStar={
-                Platform.OS == 'ios' ? 'ios-star-outline' : 'md-star-outline'
-              }
-              emptyStarColor={colors.black}
-              fullStar={Platform.OS == 'ios' ? 'ios-star' : 'md-star'}
-              fullStarColor={colors.black}
-              iconSet="Ionicons"
-              rating={review.rateNumber}
-              starSize={20}
-            />
-            <TouchableOpacity onPress={() => this.goToProfile(reviewer)}>
-              <Text style={styles.username} numberOfLines={1}>
-                @{reviewer.username}
-              </Text>
-            </TouchableOpacity>
-          </View>
-          <Text style={styles.reviewText} numberOfLines={3}>
-            {review.text}
-          </Text>
-        </Body>
-      </ListItem>
+      <ReviewCard review={item} as={this.props.as} onPress={this.goToProfile} />
     );
   };
 
@@ -238,24 +173,5 @@ const styles = StyleSheet.create({
   separator: {
     height: StyleSheet.hairlineWidth,
     backgroundColor: colors.grey5,
-  },
-
-  itemImage: {
-    marginHorizontal: 15,
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor: colors.grey4,
-  },
-  contentRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 6,
-  },
-  username: {
-    color: colors.grey1,
-  },
-  reviewText: {
-    flex: 1,
-    // textAlignVertical: 'bottom', // android
-    paddingBottom: 5,
   },
 });

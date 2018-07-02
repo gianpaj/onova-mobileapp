@@ -124,4 +124,7 @@ storiesOf('ReviewCard', module)
       onPress={action('clicked-reviewee')}
       review={{ ...REVIEW, text: 'Ответственный покупатель!' }}
     />
+  ))
+  .add('with NO review text', () => (
+    <ReviewCard onPress={action('clicked-reviewee')} review={{ ...REVIEW }} />
   ));

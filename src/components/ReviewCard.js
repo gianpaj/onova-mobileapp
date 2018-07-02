@@ -43,7 +43,7 @@ class ReviewCard extends PureComponent<Props> {
 
     const uri = order.product.photoURIs[0].replace('.jpg', '-thumb.jpg');
 
-    const heightContainer = review.text.length > 30 ? 20 : 0;
+    const heightContainer = review.text && review.text.length > 30 ? 20 : 0;
 
     return (
       <ListItem style={{ marginLeft: 0 }}>

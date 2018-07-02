@@ -43,8 +43,11 @@ class ReviewCard extends PureComponent<Props> {
 
     const uri = order.product.photoURIs[0].replace('.jpg', '-thumb.jpg');
 
+    const heightContainer = review.text.length > 30 ? 20 : 0;
+
     return (
       <ListItem style={{ marginLeft: 0 }}>
+        <View style={{ height: width / 4 + heightContainer }}>
         <Image
           style={[
             styles.itemImage,
@@ -56,6 +59,7 @@ class ReviewCard extends PureComponent<Props> {
           ]}
           source={{ uri }}
         />
+        </View>
         <Body>
           <View style={styles.contentRow}>
             <Text numberOfLines={1}>
@@ -66,9 +70,9 @@ class ReviewCard extends PureComponent<Props> {
           <View style={styles.contentRow}>
             <StarRating
               // eslint-disable-next-line
-                buttonStyle={{ paddingHorizontal: 2 }}
+              buttonStyle={{ paddingHorizontal: 1.7 }}
               // eslint-disable-next-line
-                containerStyle={{ alignSelf: 'center' }}
+              // containerStyle={{ alignSelf: 'center' }}
               disabled
               emptyStar={
                 Platform.OS == 'ios' ? 'ios-star-outline' : 'md-star-outline'

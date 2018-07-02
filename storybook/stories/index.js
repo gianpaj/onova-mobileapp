@@ -66,7 +66,7 @@ storiesOf('Button', module)
 
 storiesOf('ReviewCard', module)
   // .addDecorator(getStory => <CenterView>{getStory()}</CenterView>)
-  .add('Max lenght', () => (
+  .add('with a long review text', () => (
     <ReviewCard
       onPress={action('clicked-reviewee')}
       review={{
@@ -113,7 +113,7 @@ storiesOf('ReviewCard', module)
       }}
     />
   ))
-  .add('Short lenght', () => (
+  .add('with a short review text', () => (
     <ReviewCard
       onPress={action('clicked-reviewee')}
       review={{

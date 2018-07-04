@@ -187,6 +187,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-android-open-settings')
     compile project(':react-native-fetch-blob')
     compile project(':react-native-i18n')
     // compile project(':react-native-fast-image')

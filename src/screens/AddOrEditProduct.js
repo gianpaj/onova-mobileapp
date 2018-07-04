@@ -167,6 +167,10 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
         }
       },
       err => {
+        // Location authorized but not enabled
+        if (err.message === 'No location provider available.') {
+          return this.alertForPermission('notEnabled');
+        }
         console.error(err);
       },
       { enableHighAccuracy: true, timeout: 20000, maximumAge: 10000 }
@@ -195,10 +199,15 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
               text: I18n.t('add_or_edit_item.permission_alert_button_settings'),
               onPress: () => {
                 if (Platform.OS === 'android') {
-                  AndroidOpenSettings.locationSourceSettings();
+                  if (response === 'notEnabled') {
+                    AndroidOpenSettings.locationSourceSettings();
+                  } else {
+                    AndroidOpenSettings.appDetailsSettings();
+                  }
                 } else {
                   Permissions.openSettings();
                 }
+                this.closeModal();
               },
             },
       ]

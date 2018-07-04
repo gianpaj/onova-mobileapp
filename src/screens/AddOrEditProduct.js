@@ -167,7 +167,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
         }
       },
       err => {
-        // Location authorized but not enabled
+        // Location authorized but not enabled (only Android)
         if (err.message === 'No location provider available.') {
           return this.alertForPermission('notEnabled');
         }

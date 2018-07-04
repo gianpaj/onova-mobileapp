@@ -93,6 +93,8 @@ PODS:
     - React/Core
     - React/fishhook
     - React/RCTBlob
+  - ReactNativePermissions (1.1.1):
+    - React
   - RNI18n (2.0.12):
     - React
   - RNImageCropPicker (0.20.3):
@@ -128,6 +130,7 @@ DEPENDENCIES:
   - React/RCTNetwork (from `../node_modules/react-native`)
   - React/RCTText (from `../node_modules/react-native`)
   - React/RCTWebSocket (from `../node_modules/react-native`)
+  - ReactNativePermissions (from `../node_modules/react-native-permissions`)
   - RNI18n (from `../node_modules/react-native-i18n`)
   - RNImageCropPicker (from `../node_modules/react-native-image-crop-picker`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
@@ -158,6 +161,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native"
   react-native-fetch-blob:
     :path: "../node_modules/react-native-fetch-blob"
+  ReactNativePermissions:
+    :path: "../node_modules/react-native-permissions"
   RNI18n:
     :path: "../node_modules/react-native-i18n"
   RNImageCropPicker:
@@ -186,6 +191,7 @@ SPEC CHECKSUMS:
   QBImagePickerController: d54cf93db6decf26baf6ed3472f336ef35cae022
   React: aa2040dbb6f317b95314968021bd2888816e03d5
   react-native-fetch-blob: 63394b1d7b0781547b3e4463b3195790177b1222
+  ReactNativePermissions: 9f2d9c45c98800795e6c2ed330e25d11a66a8169
   RNI18n: db9be06a40336f04d136f24dd5de3f5eb9f3207c
   RNImageCropPicker: 32ca4b9fef4e1b7b85ba69494242122948117e06
   RNVectorIcons: c0dbfbf6068fefa240c37b0f71bd03b45dddac44
@@ -194,6 +200,6 @@ SPEC CHECKSUMS:
   SentryReactNative: 787a08161d641dde91dd36d4c8e76f9b0ba4fc84
   yoga: a23273df0088bf7f2bb7e5d7b00044ea57a2a54a
 
-PODFILE CHECKSUM: baf2ad33d79903040647e1c77c3c3cc0c67c1a5e
+PODFILE CHECKSUM: e5fb514058d60962d46a38132a9c1095855ce387
 
 COCOAPODS: 1.5.3

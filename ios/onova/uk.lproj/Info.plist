@@ -38,7 +38,7 @@
 	<key>NSCameraUsageDescription</key>
 	<string>Потрібен доступ до камери щоб фотографувати речі</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string>Нам потрібен доступ до твого місцезнаходження щоб показати де знаходиться твій магазин.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Потрібен дозвіл щоб додавати фото з галереї зображень</string>
 	<key>UIAppFonts</key>

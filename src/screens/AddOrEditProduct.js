@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { connect } from 'react-redux';
-import { Dimensions, StyleSheet, Platform, View } from 'react-native';
+import { Alert, Dimensions, StyleSheet, Platform, View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {
   ActionSheet,
@@ -28,9 +28,12 @@ import {
   ImagePicker as AntImagePicker,
   WingBlank,
 } from 'antd-mobile';
+import Permissions from 'react-native-permissions';
 // import RNFetchBlob from 'react-native-fetch-blob';
 let RNFetchBlob;
+let AndroidOpenSettings;
 if (Platform.OS == 'android') {
+  AndroidOpenSettings = require('react-native-android-open-settings');
   RNFetchBlob = require('react-native-fetch-blob').default;
 }
 
@@ -70,6 +73,12 @@ type State = {
   numberOfBrands: number,
   inEditMode: boolean,
   uuid: string,
+  location:
+    | {
+        longitude: number,
+        latitude: number,
+      }
+    | {},
 };
 
 export class AddOrEditProductScreen extends React.Component<Props, State> {
@@ -99,34 +108,115 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     numberOfBrands: 0,
     inEditMode: false,
     uuid: '',
+    location: {},
   };
 
   componentDidMount() {
-    const { params } = this.props.navigation.state;
-    // if editing
-    if (params && params.item) {
-      const { item }: { item: Product } = params;
-      let images = [];
-      for (let i = 0; i < item.photoURIs.length; i++) {
-        images.push({
-          url: item.photoURIs[i],
-          id: i,
-        });
+    Permissions.check('location').then(response => {
+      // Response is one of: 'authorized', 'denied', 'restricted', or 'undetermined'
+      console.log(response);
+      if (response === 'restricted' || response === 'denied') {
+        // show error
+        this.alertForPermission(response);
+        this.closeModal();
+      } else if (response === 'undetermined') {
+        // show Modal explaining why
+        this.alertForPermission(response);
+      } else {
+        this.getLocationAndInitiate();
       }
-      this.setState({
-        inEditMode: true,
-        images,
-        description: item.description,
-        price: item.price,
-        tags: item.tags,
-        grp_1: item.categoryIds[0],
-        grp_2: item.typeIds[0],
-        uuid: item.uuid,
-      });
-    } else if (this.state.images.length == 0) {
-      this.selectPhotoTapped(0);
-    }
+    });
   }
+
+  getLocationAndInitiate = () => {
+    // $FlowFixMe
+    // navigator.geolocation.requestAuthorization();
+    navigator.geolocation.getCurrentPosition(
+      position => {
+        const { coords } = position;
+        console.log(coords);
+        this.setState({
+          location: {
+            longitude: coords.longitude,
+            latitude: coords.latitude,
+          },
+        });
+        const { params } = this.props.navigation.state;
+        // if editing
+        if (params && params.item) {
+          const { item }: { item: Product } = params;
+          let images = [];
+          for (let i = 0; i < item.photoURIs.length; i++) {
+            images.push({
+              url: item.photoURIs[i],
+              id: i,
+            });
+          }
+          this.setState({
+            inEditMode: true,
+            images,
+            description: item.description,
+            price: item.price,
+            tags: item.tags,
+            grp_1: item.categoryIds[0],
+            grp_2: item.typeIds[0],
+            uuid: item.uuid,
+          });
+        } else if (this.state.images.length == 0) {
+          this.selectPhotoTapped(0);
+        }
+      },
+      err => {
+        console.error(err);
+      },
+      { enableHighAccuracy: true, timeout: 20000, maximumAge: 10000 }
+    );
+  };
+
+  alertForPermission(response: string) {
+    Alert.alert(
+      I18n.t('add_or_edit_item.permission_title'),
+      I18n.t('add_or_edit_item.permission_message'),
+      [
+        {
+          text: I18n.t('profile.alert_unsaved_changes_button_cancel'),
+          onPress: () => {
+            console.log('Permission denied');
+            this.closeModal();
+          },
+          style: 'cancel',
+        },
+        response === 'undetermined'
+          ? {
+              text: I18n.t('profile.alert_unsaved_changes_button_confirm'),
+              onPress: this.requestPermission,
+            }
+          : {
+              text: I18n.t('add_or_edit_item.permission_alert_button_settings'),
+              onPress: () => {
+                if (Platform.OS === 'android') {
+                  AndroidOpenSettings.locationSourceSettings();
+                } else {
+                  Permissions.openSettings();
+                }
+              },
+            },
+      ]
+    );
+  }
+
+  requestPermission = () => {
+    Permissions.request('location').then(response => {
+      // Returns once the user has chosen to 'allow' or to 'not allow' access
+      // Response is one of: 'authorized', 'denied', 'restricted', or 'undetermined'
+      if (response !== 'authorized') {
+        // show error
+        this.closeModal();
+      } else {
+        this.getLocationAndInitiate();
+      }
+    });
+  };
 
   selectPhotoTapped = (i: number = 0) => {
     if (this.state.pending) return;
@@ -231,6 +321,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
       grp_2,
       tags,
       inEditMode,
+      location,
       uuid,
     } = this.state;
 
@@ -285,6 +376,8 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
       //   .dispose()
       //   .then(() => console.log('cleaned'));
     } else {
+      formData.append('latitude', location.latitude.toString());
+      formData.append('longitude', location.longitude.toString());
       images.forEach((image, i) => {
         // $FlowFixMe
         formData.append('photos', {
@@ -297,7 +390,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     }
   };
 
-  uploadNewProduct = (uuid: string, formData: any): Promise<any> => {
+  uploadNewProduct = (uuid: string, formData: any): void => {
     const { token } = this.props.userData;
     api
       .post('/api/products', formData, { token, timeout: 300000 })

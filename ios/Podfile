@@ -37,6 +37,7 @@ target 'onova' do
   pod 'react-native-fetch-blob', :path => '../node_modules/react-native-fetch-blob'
   pod 'RNI18n', :path => '../node_modules/react-native-i18n'
   pod 'SentryReactNative', :path => '../node_modules/react-native-sentry'
+  pod 'ReactNativePermissions', :path => '../node_modules/react-native-permissions'
 
   pod 'Firebase/Core'
   pod 'Firebase/Messaging'

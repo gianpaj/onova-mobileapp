@@ -426,8 +426,8 @@ export class ProductContainer extends React.Component<Props, State> {
                         {item.seller.username}
                       </Text>
                     </TouchableOpacity>
-                    {item.location && (
-                      <Text style={styles.location}>{item.location}</Text>
+                    {item.locality && (
+                      <Text style={styles.location}>{item.locality}</Text>
                     )}
                   </View>
                 </View>

@@ -62,7 +62,7 @@
 	<key>NSCameraUsageDescription</key>
 	<string>Onova is requesting access to your camera to add pictures to the item</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string>Onova uses your location to know where your shop is located.</string>
 	<key>NSMainNibFile</key>
 	<string>LaunchScreen</string>
 	<key>NSPhotoLibraryUsageDescription</key>

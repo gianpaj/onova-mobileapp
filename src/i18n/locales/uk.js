@@ -113,6 +113,9 @@ export default {
     select_photo_source_camera: 'Камера',
     select_photo_source_gallery: 'Галерея',
     select_photo_source_cancel: 'Відмінити',
+    permission_title: 'Доступ до місцезнаходження',
+    permission_message: 'Нам потрібно відображати де знаходяться речі.',
+    permission_alert_button_settings: 'Відкрити налаштування',
   },
   profile: {
     reviews_label: 'відгуки',

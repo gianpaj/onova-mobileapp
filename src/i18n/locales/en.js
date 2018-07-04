@@ -113,6 +113,9 @@ export default {
     select_photo_source_camera: 'Camera',
     select_photo_source_gallery: 'Gallery',
     select_photo_source_cancel: 'Cancel',
+    permission_title: 'Can we access your location?',
+    permission_message: 'We need access so items have a specific location.',
+    permission_alert_button_settings: 'Open Settings',
   },
   profile: {
     reviews_label: 'reviews',

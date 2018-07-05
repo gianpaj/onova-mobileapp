@@ -36,7 +36,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>107000</string>
+	<string>107001</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>LSRequiresIPhoneOS</key>
@@ -67,6 +67,24 @@
 	<string>LaunchScreen</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Onova is requesting access to your photo library to add pictures to your item</string>
+  <key>NSBluetoothPeripheralUsageDescription</key>
+  <string>Onova does not need this</string>
+  <key>NSCalendarsUsageDescription</key>
+  <string>Onova does not need this</string>
+  <key>NSCameraUsageDescription</key>
+  <string>Onova does not need this</string>
+  <key>NSLocationWhenInUseUsageDescription</key>
+  <string>Onova does not need this</string>
+  <key>NSPhotoLibraryAddUsageDescription</key>
+  <string>Onova does not need this</string>
+  <key>NSPhotoLibraryUsageDescription</key>
+  <string>Onova does not need this</string>
+  <key>NSSpeechRecognitionUsageDescription</key>
+  <string>Onova does not need this</string>
+  <key>NSAppleMusicUsageDescription</key>
+  <string>Onova does not need this</string>
+  <key>NSMotionUsageDescription</key>
+  <string>Onova does not need this</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Ionicons.ttf</string>

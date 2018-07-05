@@ -1,17 +1,20 @@
 // import detox from 'detox';
-// import packageFile from '../package.json';
-// const detoxConfig = packageFile.detox;
+// const detoxConfig = require('../package.json').detox;
+// const adapter = require('detox/runners/jest/adapter');
 
-// jasmine.DEFAULT_TIMEOUT_INTERVAL = 120000;
+// // Set the default timeout
+// jest.setTimeout(30000);
+// jasmine.getEnv().addReporter(adapter);
 
 // beforeAll(async () => {
 //   await detox.init(detoxConfig);
 // });
 
-// afterAll(async () => {
-//   await detox.cleanup();
+// beforeEach(async function() {
+//   await adapter.beforeEach();
 // });
 
-// beforeEach(async () => {
-//   await device.reloadReactNative();
+// afterAll(async () => {
+//   await adapter.afterAll();
+//   await detox.cleanup();
 // });

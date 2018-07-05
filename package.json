@@ -19,9 +19,10 @@
     "start-emulator": "cd $ANDROID_HOME/emulator && ./emulator -avd Nexus_5X_API_25_7.1.1_ &",
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "storybook": "storybook start -p 7007",
-    "test-e2e-android": "detox test -c android.emu.debug --loglevel verbose",
-    "test-e2e-ios": "detox test -c ios.sim.debug",
     "test": "jest",
+    "test:e2e:android": "detox test -c android.emu.debug --loglevel verbose",
+    "test:e2e:ios": "detox test -c ios.sim.debug",
+    "test:e2e:build:ios": "detox build -c ios.sim.debug",
     "test:coverage": "jest --coverage",
     "test:lint": "eslint src --quiet",
     "test:watch": "jest __tests__ --watch"
@@ -88,7 +89,7 @@
     "babel-preset-flow": "^6.23.0",
     "babel-preset-react-native": "4.0.0",
     "babel-runtime": "^6.26.0",
-    "detox": "^6.0.4",
+    "detox": "^8.0.0",
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-16": "^1.1.1",
     "eslint": "^4.14.1",
@@ -118,6 +119,7 @@
     "testPathIgnorePatterns": [
       "/node_modules/",
       "./__tests__/setup",
+      "./__tests__/App",
       "./e2e/"
     ],
     "preset": "react-native",

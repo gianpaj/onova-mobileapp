@@ -1,0 +1,36 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Header renders correctly 1`] = `
+<View>
+  <View
+    androidStatusBarColor="#000000"
+    style={
+      Array [
+        Object {
+          "backgroundColor": "#F8F8F8",
+          "borderBottomColor": "#a7a6ab",
+          "borderBottomWidth": 0.5,
+          "elevation": 3,
+          "flexDirection": "row",
+          "height": 64,
+          "justifyContent": "center",
+          "left": 0,
+          "paddingLeft": 10,
+          "paddingRight": 10,
+          "paddingTop": 15,
+          "right": 0,
+          "shadowColor": undefined,
+          "shadowOffset": undefined,
+          "shadowOpacity": undefined,
+          "shadowRadius": undefined,
+          "top": 0,
+        },
+        Object {
+          "backgroundColor": "#ffffff",
+        },
+      ]
+    }
+    virtual={undefined}
+  />
+</View>
+`;

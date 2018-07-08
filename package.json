@@ -124,8 +124,11 @@
     ],
     "preset": "react-native",
     "transformIgnorePatterns": [
-      "node_modules/(?!(jest-)?react-native|react-native-vector-icons|react-navigation|native-base-shoutem-theme|redux-persist|react-native-gifted-chat|native-base)"
-    ]
+      "node_modules/(?!(jest-)?react-native|react-native-vector-icons|react-navigation|native-base-shoutem-theme|redux-persist|react-native-gifted-chat|native-base|@expo/react-native-action-sheet)"
+    ],
+    "globals": {
+      "window": true
+    }
   },
   "detox": {
     "test-runner": "jest",

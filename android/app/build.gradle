@@ -130,13 +130,13 @@ def enableSeparateBuildPerCPUArchitecture = false
 def enableProguardInReleaseBuilds = false
 
 android {
-    compileSdkVersion 27
-    buildToolsVersion '27.0.3'
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
         applicationId "com.onova.app"
-        minSdkVersion 18
-        targetSdkVersion 27
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode googleVer
         versionName userVer
         consumerProguardFiles 'proguard-rules.pro'
@@ -195,9 +195,8 @@ dependencies {
     // compile project(':instabug-reactnative')
     implementation project(':react-native-sentry')
     implementation fileTree(dir: "libs", include: ["*.jar"])
-    implementation "com.android.support:appcompat-v7:27.1.1"
-    implementation "com.facebook.react:react-native:+"  // From node_modules
-
+    implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
+    implementation "com.facebook.react:react-native:+" // From node_modules
 
     implementation(project(':react-native-firebase')) {
         transitive = false

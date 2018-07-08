@@ -29,8 +29,17 @@ allprojects {
         maven { url "https://jitpack.io" }
 
         maven {
-            url 'https://maven.google.com'
+            url 'https://maven.google.com/'
+            name 'Google'
         }
         google()
     }
+}
+
+ext {
+    buildToolsVersion = "27.0.3"
+    minSdkVersion = 18
+    compileSdkVersion = 27
+    targetSdkVersion = 27
+    supportLibVersion = "27.1.0"
 }

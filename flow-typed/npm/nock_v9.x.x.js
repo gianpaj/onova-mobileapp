@@ -1,5 +1,5 @@
-// flow-typed signature: c84ad82fc0a25c37696b0e5e23548571
-// flow-typed version: 61b2be7bf2/nock_v9.x.x/flow_>=v0.31.x <=v0.74.x
+// flow-typed signature: 4f9e04b553f0ca267fa583c603f607ad
+// flow-typed version: /nock_v9.x.x/flow_>=v0.31.x <=v0.74.x
 
 import EventEmitter from "eventemitter";
 

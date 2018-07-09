@@ -67,6 +67,8 @@
 	<string>LaunchScreen</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Onova is requesting access to your photo library to add pictures to your item</string>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>Onova does not need this</string>
   <key>NSBluetoothPeripheralUsageDescription</key>
   <string>Onova does not need this</string>
   <key>NSCalendarsUsageDescription</key>
@@ -75,15 +77,15 @@
   <string>Onova does not need this</string>
   <key>NSLocationWhenInUseUsageDescription</key>
   <string>Onova does not need this</string>
+	<key>NSMainNibFile</key>
+	<string>LaunchScreen</string>
+	<key>NSMotionUsageDescription</key>
+	<string>Onova does not need this</string>
   <key>NSPhotoLibraryAddUsageDescription</key>
   <string>Onova does not need this</string>
   <key>NSPhotoLibraryUsageDescription</key>
   <string>Onova does not need this</string>
   <key>NSSpeechRecognitionUsageDescription</key>
-  <string>Onova does not need this</string>
-  <key>NSAppleMusicUsageDescription</key>
-  <string>Onova does not need this</string>
-  <key>NSMotionUsageDescription</key>
   <string>Onova does not need this</string>
 	<key>UIAppFonts</key>
 	<array>

@@ -49,7 +49,7 @@ public class MainApplication extends Application implements ReactApplication {
             //   .setFloatingEdge("left")
             //   .setFloatingButtonOffsetFromTop(250)
             //   .build(),
-            new RNSentryPackage(MainApplication.this)
+            new RNSentryPackage()
       );
     }
 

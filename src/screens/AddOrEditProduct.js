@@ -29,12 +29,12 @@ import {
   WingBlank,
 } from 'antd-mobile';
 import Permissions from 'react-native-permissions';
-// import RNFetchBlob from 'react-native-fetch-blob';
+// import RNFetchBlob from 'rn-fetch-blob';
 let RNFetchBlob;
 let AndroidOpenSettings;
 if (Platform.OS == 'android') {
   AndroidOpenSettings = require('react-native-android-open-settings');
-  RNFetchBlob = require('react-native-fetch-blob').default;
+  RNFetchBlob = require('rn-fetch-blob').default;
 }
 
 import { Header, HR, TagInput } from '../components';
@@ -205,7 +205,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
                     AndroidOpenSettings.appDetailsSettings();
                   }
                 } else {
-                  Permissions.openSettings();
+                Permissions.openSettings();
                 }
                 this.closeModal();
               },

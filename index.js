@@ -7,8 +7,6 @@ import { name as appName } from './app.json';
 YellowBox.ignoreWarnings([
   // workaround for https://github.com/facebook/react-native/issues/18868
   'Warning: isMounted(...) is deprecated',
-  // workaround until https://github.com/joltup/react-native-fetch-blob is published to npm
-  'Module RNFetchBlob requires main',
   // workaround for https://github.com/facebook/react-native/issues/17504
   // until is 0.56.0 is released
   'Module RCTImageLoader requires main',

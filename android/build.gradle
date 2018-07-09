@@ -41,5 +41,16 @@ ext {
     minSdkVersion = 18
     compileSdkVersion = 27
     targetSdkVersion = 27
-    supportLibVersion = "27.1.0"
+    supportLibVersion = "27.1.1"
+}
+
+subprojects { subproject ->
+    afterEvaluate{
+        if((subproject.plugins.hasPlugin('android') || subproject.plugins.hasPlugin('android-library'))) {
+            android {
+                compileSdkVersion rootProject.ext.compileSdkVersion
+                buildToolsVersion rootProject.ext.buildToolsVersion
+            }
+        }
+    }
 }

@@ -187,9 +187,9 @@ android {
 }
 
 dependencies {
-    compile project(':react-native-android-open-settings')
-    compile project(':react-native-fetch-blob')
-    compile project(':react-native-i18n')
+    implementation project(':react-native-android-open-settings')
+    implementation project(':rn-fetch-blob')
+    implementation project(':react-native-i18n')
     // compile project(':react-native-fast-image')
     // compile project(':lottie-react-native')
     // compile project(':instabug-reactnative')
@@ -198,13 +198,11 @@ dependencies {
     implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
     implementation "com.facebook.react:react-native:+" // From node_modules
 
-    implementation(project(':react-native-firebase')) {
-        transitive = false
-    }
+    implementation project(':react-native-firebase')
     // Firebase dependencies
     implementation "com.google.android.gms:play-services-base:15.0.0"
     implementation "com.google.firebase:firebase-core:15.0.2"
-    // // react-native-firebase w/ messaging
+    // react-native-firebase w/ messaging
     implementation "com.google.firebase:firebase-messaging:15.0.2"
     // implementation 'me.leolin:ShortcutBadger:1.1.21@aar' // <-- Add this line if you wish to use badge on Android
     implementation project(':react-native-image-crop-picker')

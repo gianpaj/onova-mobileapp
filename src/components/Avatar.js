@@ -220,7 +220,7 @@ const styles = StyleSheet.create({
     width: 30,
     height: 30,
     borderRadius: Platform.select({
-      ios: 30 / PixelRatio.get(),
+      ios: 25 / PixelRatio.get(),
       android: 20,
     }),
   },

@@ -33,7 +33,7 @@ const rootReducer = combineReducers({
 });
 
 if (__DEV__) {
-  console.warn('__DEV__ mode on');
+  console.debug('__DEV__ mode on');
 }
 
 function configureStore() {

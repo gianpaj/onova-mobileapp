@@ -1,7 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Header renders correctly 1`] = `
-<View>
+<View
+  onLayout={[Function]}
+>
   <View
     androidStatusBarColor="#000000"
     style={
@@ -15,9 +17,9 @@ exports[`Header renders correctly 1`] = `
           "height": 64,
           "justifyContent": "center",
           "left": 0,
-          "paddingLeft": 10,
+          "paddingLeft": 6,
           "paddingRight": 10,
-          "paddingTop": 15,
+          "paddingTop": 18,
           "right": 0,
           "shadowColor": undefined,
           "shadowOffset": undefined,
@@ -30,7 +32,6 @@ exports[`Header renders correctly 1`] = `
         },
       ]
     }
-    virtual={undefined}
   />
 </View>
 `;

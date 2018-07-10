@@ -19,13 +19,13 @@
     "start-emulator": "cd $ANDROID_HOME/emulator && ./emulator -avd Nexus_5X_API_25_7.1.1_ &",
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "storybook": "storybook start -p 7007",
-    "test": "jest",
+    "test": "jest --verbose",
     "test:e2e:android": "detox test -c android.emu.debug --loglevel verbose",
     "test:e2e:ios": "detox test -c ios.sim.debug",
     "test:e2e:build:ios": "detox build -c ios.sim.debug",
-    "test:coverage": "jest --coverage",
+    "test:coverage": "jest --coverage --verbose",
     "test:lint": "eslint src --quiet",
-    "test:watch": "jest __tests__ --watch"
+    "test:watch": "jest __tests__ --verbose --watch"
   },
   "dependencies": {
     "@pusher/chatkit": "^0.7.16",
@@ -112,10 +112,9 @@
     "react-test-renderer": "16.4.1"
   },
   "jest": {
-    "setupTestFrameworkScriptFile": "./e2e/init.js",
     "cacheDirectory": "./.cache",
     "setupFiles": [
-      "./__tests__/setup"
+      "<rootDir>/__tests__/setup.js"
     ],
     "testPathIgnorePatterns": [
       "/node_modules/",
@@ -127,6 +126,9 @@
     "transformIgnorePatterns": [
       "node_modules/(?!(jest-)?react-native|react-native-vector-icons|react-navigation|native-base-shoutem-theme|redux-persist|react-native-gifted-chat|native-base|@expo/react-native-action-sheet)"
     ],
+    "transform": {
+      "^.+\\.js$": "<rootDir>/node_modules/react-native/jest/preprocessor.js"
+    },
     "globals": {
       "window": true
     }

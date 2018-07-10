@@ -1,4 +1,4 @@
-// flow-typed signature: a1152c2acf6c513310fc7f32a7f5973e
+// flow-typed signature: 9e25e73ebd834e1fe075878da3e53a69
 // flow-typed version: <<STUB>>/native-base_v^2.7.0/flow_v0.75.0
 
 /**
@@ -962,19 +962,19 @@ declare module 'native-base/src/theme/variables/platform' {
   declare module.exports: any;
 }
 
-declare module 'native-base/src/Utils/computeProps' {
+declare module 'native-base/src/utils/computeProps' {
   declare module.exports: any;
 }
 
-declare module 'native-base/src/Utils/index' {
+declare module 'native-base/src/utils/index' {
   declare module.exports: any;
 }
 
-declare module 'native-base/src/Utils/interactionManager' {
+declare module 'native-base/src/utils/interactionManager' {
   declare module.exports: any;
 }
 
-declare module 'native-base/src/Utils/mapPropsToStyleNames' {
+declare module 'native-base/src/utils/mapPropsToStyleNames' {
   declare module.exports: any;
 }
 
@@ -1688,17 +1688,17 @@ declare module 'native-base/src/theme/variables/material.js' {
 declare module 'native-base/src/theme/variables/platform.js' {
   declare module.exports: $Exports<'native-base/src/theme/variables/platform'>;
 }
-declare module 'native-base/src/Utils/computeProps.js' {
-  declare module.exports: $Exports<'native-base/src/Utils/computeProps'>;
+declare module 'native-base/src/utils/computeProps.js' {
+  declare module.exports: $Exports<'native-base/src/utils/computeProps'>;
 }
-declare module 'native-base/src/Utils/index.js' {
-  declare module.exports: $Exports<'native-base/src/Utils/index'>;
+declare module 'native-base/src/utils/index.js' {
+  declare module.exports: $Exports<'native-base/src/utils/index'>;
 }
-declare module 'native-base/src/Utils/interactionManager.js' {
-  declare module.exports: $Exports<'native-base/src/Utils/interactionManager'>;
+declare module 'native-base/src/utils/interactionManager.js' {
+  declare module.exports: $Exports<'native-base/src/utils/interactionManager'>;
 }
-declare module 'native-base/src/Utils/mapPropsToStyleNames.js' {
-  declare module.exports: $Exports<'native-base/src/Utils/mapPropsToStyleNames'>;
+declare module 'native-base/src/utils/mapPropsToStyleNames.js' {
+  declare module.exports: $Exports<'native-base/src/utils/mapPropsToStyleNames'>;
 }
 declare module 'native-base/src/vue-native.js' {
   declare module.exports: $Exports<'native-base/src/vue-native'>;

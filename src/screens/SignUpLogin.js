@@ -1,7 +1,6 @@
 // @flow
 
 import React from 'react';
-import { connect } from 'react-redux';
 import { Dimensions, StyleSheet, View } from 'react-native';
 import { TabViewAnimated, TabBar, SceneMap } from 'react-native-tab-view';
 import { Container, Title } from 'native-base';
@@ -9,7 +8,7 @@ import I18n from 'react-native-i18n';
 
 import type { NavigationScreenProp } from 'react-navigation';
 
-import type { Dispatch, ReduxState } from '../types';
+import type { Dispatch } from '../types';
 
 import { SignUpTab } from './SignUpTab';
 import { LoginTab } from './LoginTab';
@@ -59,7 +58,6 @@ class SignUpLoginContainer extends React.Component<Props, State> {
     return (
       <Container>
         <View style={styles.header}>
-          {/* <Icon name="flash" style={{ fontSize: 104 }} /> */}
           <Title style={{ color: colors.black }}>ONOVA</Title>
         </View>
         <TabViewAnimated
@@ -75,11 +73,7 @@ class SignUpLoginContainer extends React.Component<Props, State> {
   }
 }
 
-const mapStateToProps: any = (state: ReduxState) => ({
-  loading: state.LoginReducer.loading,
-});
-
-export const SignUpLogin = connect(mapStateToProps)(SignUpLoginContainer);
+export const SignUpLogin = SignUpLoginContainer;
 
 const styles = StyleSheet.create({
   header: {

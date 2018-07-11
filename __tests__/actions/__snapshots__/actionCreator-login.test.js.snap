@@ -1,0 +1,45 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Login action should NOT login 1`] = `
+Array [
+  Object {
+    "type": "LOGIN_PENDING",
+  },
+  Object {
+    "type": "LOGIN_FAIL",
+  },
+]
+`;
+
+exports[`Login action should NOT login account without a verified account 1`] = `
+Array [
+  Object {
+    "type": "LOGIN_PENDING",
+  },
+  Object {
+    "type": "LOGIN_FAIL",
+  },
+]
+`;
+
+exports[`Login action should login account with a verified account 1`] = `
+Array [
+  Object {
+    "type": "LOGIN_PENDING",
+  },
+  Object {
+    "payload": Object {
+      "_id": "5b45deca367816789aba299d",
+      "accountStatus": "verified",
+      "emailAddress": "user@gmail.com",
+      "provider": "email",
+      "token": "JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YjQ1ZGVjYTM2NzgxNjc4OWFiYTI5OWQiLCJhY2NvdW50U3RhdHVzIjoidmVyaWZpZWQiLCJlbWFpbEFkZHJlc3MiOiJnaWFucGErdGVzdEBnbWFpbC5jb20iLCJ1c2VybmFtZSI6ImZpcnN0cGVyc29uIiwiaWF0IjoxNTMxMzA1Njc1fQ.yxnijjnnctqqnFMnwj_AD-ViiZahYzar3aNRxxc-0-M",
+      "username": "firstperson",
+    },
+    "type": "LOGIN_SUCCESS",
+  },
+  Object {
+    "type": "LOGIN_FAIL",
+  },
+]
+`;

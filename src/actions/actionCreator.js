@@ -66,7 +66,6 @@ const login = (data: LoginData) => (dispatch: Dispatch) => (
         return userData;
       }
       console.debug(res);
-      dispatch({ type: LOGIN_FAIL });
       throw new Error(res);
     })
     .then(userData => {

@@ -411,7 +411,7 @@ const handleErrorWithAlert = (data: any, err: any) => {
   } else {
     console.error(err);
   }
-  ui.showToast(err.message, errorType || '');
+  if (!__TESTING__) ui.showToast(err.message, errorType || '');
   return {
     type: data.type,
   };

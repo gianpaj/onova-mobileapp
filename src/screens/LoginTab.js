@@ -42,7 +42,7 @@ if (process.env.NODE_ENV == 'prod' || process.env.NODE_ENV == 'production') {
   isProd = true;
 }
 
-if (__DEV__) {
+if (__DEV__ && !__TESTING__) {
   defaultState = {
     // emailAddress: 'gianpa+test@gmail.com',
     // password: 'expressos',
@@ -80,7 +80,7 @@ type State = {
   password: string,
 };
 
-class LoginTabContainer extends React.Component<Props, State> {
+export class LoginTabContainer extends React.Component<Props, State> {
   PwdInput: ?FormInput;
   // loginBtn;
   // animatedValue = new Animated.Value(__DEV__ ? 1 : 0);
@@ -271,6 +271,7 @@ class LoginTabContainer extends React.Component<Props, State> {
               testID="LoginButton"
             /> */}
             <NBButton
+              testID="loginButton"
               block
               disabled={this.isDisabled()}
               dark={!this.isDisabled()}

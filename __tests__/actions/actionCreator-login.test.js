@@ -3,20 +3,6 @@ import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import moxios from 'moxios';
 
-import {
-  LOGIN_PENDING,
-  LOGIN_SUCCESS,
-  LOGIN_FAIL,
-  SIGNUP_PENDING,
-  SIGNUP_SUCCESS,
-  SIGNUP_FAIL,
-  LOGOUT,
-  GETUSER_PENDING,
-  GETUSER_SUCCESS,
-  GETUSER_FAIL,
-  RELOAD_SUCCESS,
-  RELOAD_FAIL,
-} from '../../src/actions/actionTypes';
 
 import { login } from '../../src/actions/actionCreator';
 

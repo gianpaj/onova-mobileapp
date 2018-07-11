@@ -18,6 +18,7 @@
   ],
   "globals": {
     "__DEV__": true,
+    "__TESTING__": true,
     "React$Element": true,
     "document": false
   },

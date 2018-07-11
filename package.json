@@ -132,7 +132,8 @@
       "^.+\\.js$": "<rootDir>/node_modules/react-native/jest/preprocessor.js"
     },
     "globals": {
-      "window": true
+      "window": true,
+      "__TESTING__": true
     }
   },
   "detox": {

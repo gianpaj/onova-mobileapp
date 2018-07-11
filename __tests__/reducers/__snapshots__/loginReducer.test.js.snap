@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Login actions should have an initial state 1`] = `
+Object {
+  "checkedLoggedIn": false,
+  "data": null,
+  "fetchLoading": false,
+  "hasError": false,
+  "isLoggedIn": false,
+  "loading": false,
+  "loadingGoogleLogin": false,
+  "token": "",
+}
+`;

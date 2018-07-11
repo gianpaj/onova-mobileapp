@@ -385,7 +385,6 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps: any = (state: ReduxState) => ({
-  userData: state.LoginReducer.data,
   loading: state.LoginReducer.loading,
 });
 

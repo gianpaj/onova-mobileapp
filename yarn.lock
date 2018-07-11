@@ -9718,6 +9718,12 @@ reduce-function-call@^1.0.1:
   dependencies:
     balanced-match "^0.4.2"
 
+redux-mock-store@^1.5.3:
+  version "1.5.3"
+  resolved "https://registry.yarnpkg.com/redux-mock-store/-/redux-mock-store-1.5.3.tgz#1f10528949b7ce8056c2532624f7cafa98576c6d"
+  dependencies:
+    lodash.isplainobject "^4.0.6"
+
 redux-persist@^5.7.0:
   version "5.9.0"
   resolved "https://registry.yarnpkg.com/redux-persist/-/redux-persist-5.9.0.tgz#700ee49fd5f7ecf5868025c9fd0a7672b0f9ddc2"

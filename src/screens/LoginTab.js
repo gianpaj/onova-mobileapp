@@ -395,7 +395,7 @@ class LoginTabContainer extends React.Component<Props, State> {
             }
             foregroundColor={colors.white}
             style={[
-              styles.LoginButton,
+              styles.PassResetButton,
               {
                 backgroundColor:
                   isEmail(this.state.emailReset) || this.state.loadingReset
@@ -435,8 +435,9 @@ const styles = StyleSheet.create({
     color: colors.black,
     width: '100%',
   },
-  LoginButton: {
+  PassResetButton: {
     alignSelf: 'center',
+    borderRadius: 5,
   },
   hr: {
     alignSelf: 'center',

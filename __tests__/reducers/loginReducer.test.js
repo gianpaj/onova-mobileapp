@@ -1,5 +1,4 @@
 // @flow
-import configureStore from 'redux-mock-store';
 
 import {
   LOGIN_PENDING,
@@ -19,14 +18,6 @@ import {
 import loginReducer from '../../src/reducers/loginReducer';
 
 describe('Login reducer', () => {
-  const mockStore = configureStore([]);
-  const initialState = {};
-  const store = mockStore(initialState);
-
-  beforeEach(() => {
-    store.clearActions();
-  });
-
   it('should have an initial state', () => {
     expect(loginReducer(undefined, { type: '' })).toMatchSnapshot();
   });

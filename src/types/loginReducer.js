@@ -8,6 +8,7 @@ export type Action = {
 };
 
 export type LoginState = {
+  +checkedLoggedIn: boolean,
   +data: any,
   +fetchLoading: boolean,
   +hasError: boolean,

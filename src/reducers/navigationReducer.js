@@ -4,7 +4,7 @@ import { NavigationActions } from 'react-navigation';
 import NavigationStack from '../navigation/navigationStack';
 import { LOGIN_SUCCESS, SIGNUP_SUCCESS, LOGOUT } from '../actions/actionTypes';
 
-import type { Action } from '../types/navigationReducer';
+import type { Action, NavigationState } from '../types/navigationReducer';
 
 const ActionForLoggedOut = NavigationStack.router.getActionForPathAndParams(
   'signuplogin'
@@ -24,7 +24,10 @@ const stateForLoggedIn = NavigationStack.router.getStateForAction(
 
 const initialState = { stateForLoggedOut, stateForLoggedIn };
 
-const navigationReducer = (state: any = initialState, action: Action) => {
+const navigationReducer = (
+  state: NavigationState = initialState,
+  action: Action
+): NavigationState => {
   switch (action.type) {
     case '@@redux/INIT':
     case LOGIN_SUCCESS:

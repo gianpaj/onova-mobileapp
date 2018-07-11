@@ -10,17 +10,23 @@ import NavigationReducer from './reducers/navigationReducer';
 import loginReducer from './reducers/loginReducer';
 import GenericReducer from './reducers/genericReducer';
 
+import type { NavigationState } from './types/navigationReducer';
+import type { LoginState } from './types/loginReducer';
+
 const config1 = {
   key: 'primary',
   storage,
   blacklist: ['checkedLoggedIn'],
 };
 
-const reactNavigation = createReactNavigationReduxMiddleware('root', state => {
-  return state.LoginReducer.isLoggedIn == true
-    ? state.NavigationReducer.stateForLoggedIn
-    : state.NavigationReducer.stateForLoggedOut;
-});
+const reactNavigation = createReactNavigationReduxMiddleware(
+  'root',
+  (state: { LoginReducer: LoginState, NavigationReducer: NavigationState }) => {
+    return state.LoginReducer.isLoggedIn == true
+      ? state.NavigationReducer.stateForLoggedIn
+      : state.NavigationReducer.stateForLoggedOut;
+  }
+);
 
 // We are only persisting the loginReducer
 const LoginReducer = persistReducer(config1, loginReducer);

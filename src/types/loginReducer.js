@@ -3,7 +3,6 @@
 export type Action = {
   type: string,
   payload?: {
-    counter: number,
     token: string,
   },
 };

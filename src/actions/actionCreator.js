@@ -19,6 +19,8 @@ import {
   GETUSER_FAIL,
   DO_REFRESH,
   DONOT_REFRESH,
+  RELOAD_FAIL,
+  RELOAD_SUCCESS,
 } from './actionTypes';
 import type {
   Dispatch,
@@ -239,10 +241,10 @@ const checkLogin = (userData: UserData) => (dispatch: Dispatch) => {
       }
     })
     .then(() => initializePusher(userData))
-    .then(() => dispatch({ type: 'RELOAD_SUCCESS' }))
+    .then(() => dispatch({ type: RELOAD_SUCCESS }))
     .catch(err => {
       console.debug(err);
-      dispatch({ type: 'RELOAD_FAIL' });
+      dispatch({ type: RELOAD_FAIL });
       ui.showToast(err.message, 'danger');
       throw err;
     });

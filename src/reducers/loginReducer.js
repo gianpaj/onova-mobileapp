@@ -9,6 +9,8 @@ import {
   SIGNUP_SUCCESS,
   SIGNUP_FAIL,
   LOGOUT,
+  RELOAD_SUCCESS,
+  RELOAD_FAIL,
   GETUSER_PENDING,
   GETUSER_SUCCESS,
   GETUSER_FAIL,
@@ -46,14 +48,24 @@ export default function(
 
     case LOGIN_SUCCESS:
     case SIGNUP_SUCCESS:
-      return {
+      const thisState = {
         ...state,
         checkedLoggedIn: true,
-        data: action.payload,
         isLoggedIn: true,
         loading: false,
-        token: action.payload ? action.payload.token : '',
       };
+      if (action && action.payload) {
+        const { token, ...noToken } = action.payload;
+        return {
+          ...thisState,
+          data: noToken,
+          token: action.payload ? token : '',
+        };
+      } else {
+        return {
+          ...thisState,
+        };
+      }
 
     case LOGIN_FAIL:
     case SIGNUP_FAIL:
@@ -66,13 +78,12 @@ export default function(
         loading: false,
         loadingGoogleLogin: false,
         token: '',
-        // errorMsg: action.payload,
       };
 
-    case 'RELOAD_SUCCESS':
+    case RELOAD_SUCCESS:
       return { ...state, hasError: false, checkedLoggedIn: true };
 
-    case 'RELOAD_FAIL':
+    case RELOAD_FAIL:
       return { ...state, hasError: true, checkedLoggedIn: false };
 
     // case GOOGLE_LOGIN_PENDING:
@@ -113,7 +124,6 @@ export default function(
         ...state,
         fetchLoading: false,
         hasError: true,
-        // errorMsg: action.payload,
       };
 
     default:

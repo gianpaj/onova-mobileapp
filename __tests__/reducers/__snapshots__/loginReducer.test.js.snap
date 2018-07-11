@@ -1,6 +1,48 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Login actions should have an initial state 1`] = `
+exports[`Login reducer should have an get user fail state 1`] = `
+Object {
+  "checkedLoggedIn": false,
+  "data": null,
+  "fetchLoading": false,
+  "hasError": true,
+  "isLoggedIn": false,
+  "loading": false,
+  "loadingGoogleLogin": false,
+  "token": "",
+}
+`;
+
+exports[`Login reducer should have an get user pending state 1`] = `
+Object {
+  "checkedLoggedIn": false,
+  "data": null,
+  "fetchLoading": true,
+  "hasError": false,
+  "isLoggedIn": false,
+  "loading": false,
+  "loadingGoogleLogin": false,
+  "token": "",
+}
+`;
+
+exports[`Login reducer should have an get user success state 1`] = `
+Object {
+  "checkedLoggedIn": false,
+  "data": Object {
+    "emailAddress": "user@gmail.com",
+    "token": "TOKENDOESNOTRETURN",
+  },
+  "fetchLoading": false,
+  "hasError": false,
+  "isLoggedIn": false,
+  "loading": false,
+  "loadingGoogleLogin": false,
+  "token": "",
+}
+`;
+
+exports[`Login reducer should have an initial state 1`] = `
 Object {
   "checkedLoggedIn": false,
   "data": null,
@@ -10,5 +52,126 @@ Object {
   "loading": false,
   "loadingGoogleLogin": false,
   "token": "",
+}
+`;
+
+exports[`Login reducer should have an login fail state 1`] = `
+Object {
+  "checkedLoggedIn": false,
+  "data": null,
+  "fetchLoading": false,
+  "hasError": true,
+  "isLoggedIn": false,
+  "loading": false,
+  "loadingGoogleLogin": false,
+  "token": "",
+}
+`;
+
+exports[`Login reducer should have an login pending state 1`] = `
+Object {
+  "checkedLoggedIn": false,
+  "data": null,
+  "fetchLoading": false,
+  "hasError": false,
+  "isLoggedIn": false,
+  "loading": true,
+  "loadingGoogleLogin": false,
+  "token": "",
+}
+`;
+
+exports[`Login reducer should have an login success state 1`] = `
+Object {
+  "checkedLoggedIn": true,
+  "data": Object {
+    "extraTestData": Object {},
+  },
+  "fetchLoading": false,
+  "hasError": false,
+  "isLoggedIn": true,
+  "loading": false,
+  "loadingGoogleLogin": false,
+  "token": "myJWTAuthtoken",
+}
+`;
+
+exports[`Login reducer should have an logout state 1`] = `
+Object {
+  "checkedLoggedIn": false,
+  "data": null,
+  "fetchLoading": false,
+  "hasError": false,
+  "isLoggedIn": false,
+  "loading": false,
+  "loadingGoogleLogin": false,
+  "token": "",
+}
+`;
+
+exports[`Login reducer should have an reload fail state 1`] = `
+Object {
+  "checkedLoggedIn": false,
+  "data": null,
+  "fetchLoading": false,
+  "hasError": true,
+  "isLoggedIn": false,
+  "loading": false,
+  "loadingGoogleLogin": false,
+  "token": "",
+}
+`;
+
+exports[`Login reducer should have an reload success state 1`] = `
+Object {
+  "checkedLoggedIn": true,
+  "data": null,
+  "fetchLoading": false,
+  "hasError": false,
+  "isLoggedIn": false,
+  "loading": false,
+  "loadingGoogleLogin": false,
+  "token": "",
+}
+`;
+
+exports[`Login reducer should have an signup fail state 1`] = `
+Object {
+  "checkedLoggedIn": false,
+  "data": null,
+  "fetchLoading": false,
+  "hasError": true,
+  "isLoggedIn": false,
+  "loading": false,
+  "loadingGoogleLogin": false,
+  "token": "",
+}
+`;
+
+exports[`Login reducer should have an signup pending state 1`] = `
+Object {
+  "checkedLoggedIn": false,
+  "data": null,
+  "fetchLoading": false,
+  "hasError": false,
+  "isLoggedIn": false,
+  "loading": true,
+  "loadingGoogleLogin": false,
+  "token": "",
+}
+`;
+
+exports[`Login reducer should have an signup success state 1`] = `
+Object {
+  "checkedLoggedIn": true,
+  "data": Object {
+    "extraTestData": Object {},
+  },
+  "fetchLoading": false,
+  "hasError": false,
+  "isLoggedIn": true,
+  "loading": false,
+  "loadingGoogleLogin": false,
+  "token": "myJWTAuthtoken",
 }
 `;

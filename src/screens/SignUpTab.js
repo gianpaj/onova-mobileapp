@@ -41,7 +41,7 @@ import typography from '../config/typography';
 type Props = {
   dispatch: Dispatch,
   loading: boolean,
-  navigation: NavigationScreenProp<*>,
+  navigation?: NavigationScreenProp<*>,
 };
 
 type State = {
@@ -54,7 +54,7 @@ type State = {
   verifyAccountModalVisible: boolean,
 };
 
-class SignUpTabContainer extends Component<Props, State> {
+export class SignUpTabContainer extends Component<Props, State> {
   EmailInput: ?FormInput;
   // signupBtn;
   PwdInput: ?FormInput;
@@ -261,12 +261,12 @@ class SignUpTabContainer extends Component<Props, State> {
               ]}
               {...buttonProps}
               onPress={this.onSignup}
-              testID="SignupButton"
               label={I18n.t('signup.sign_up_button')}
               labelStyle={{ color: colors.white }}
               accessibilityLabel={I18n.t('signup.sign_up_button')}
             /> */}
             <Button
+              testID="signUpButton"
               block
               disabled={this.isDisabled()}
               dark={!this.isDisabled()}

@@ -14,7 +14,7 @@ describe('LoginTab screen', () => {
     const wrapper = shallow(
       <LoginTabContainer dispatch={() => {}} loading={false} />
     );
-    it('at the beggining the Login button should be disabled', () => {
+    it('at the beggining the Login button should NOT be enabled', () => {
       expect(wrapper.find('[testID="loginButton"]').prop('disabled')).toBe(
         true
       );

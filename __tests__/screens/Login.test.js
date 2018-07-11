@@ -41,13 +41,27 @@ describe('LoginTab screen', () => {
     );
     wrapper.setState({ emailAddress: 'asdf@gmail.com' });
 
-    it('should be able to request a password reset if entering a valid email address', () => {
+    it('should be able to request a password reset entering a valid email address', () => {
       wrapper.find('[testID="openPwdResetModalButton"]').simulate('press');
       expect(wrapper.find('[testID="PwdResetModal"]').prop('visible')).toBe(
         true
       );
       expect(wrapper.find('[testID="ResetButton"]').prop('disabled')).toBe(
         false
+      );
+    });
+  });
+
+  describe('password reset (invalid email)', () => {
+    const dispatch = jest.fn();
+    const wrapper = shallow(
+      <LoginTabContainer dispatch={dispatch} loading={false} />
+    );
+    wrapper.setState({ emailAddress: 'asdf' });
+
+    it('should NOT be able to request a password reset entering an invalid email address', () => {
+      expect(wrapper.find('[testID="ResetButton"]').prop('disabled')).toBe(
+        true
       );
     });
   });

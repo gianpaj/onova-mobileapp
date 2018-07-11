@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Signup action should signup but not login 1`] = `
+Array [
+  Object {
+    "type": "SIGNUP_PENDING",
+  },
+  Object {
+    "type": "SIGNUP_FAIL",
+  },
+]
+`;

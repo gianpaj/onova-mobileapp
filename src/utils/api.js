@@ -11,7 +11,7 @@ if (process.env.NODE_ENV == 'prod' || process.env.NODE_ENV == 'production') {
   config = require('../../config-dev.json');
 }
 
-console.debug(`connecting to ${config.API_URL}`);
+if (!__TESTING__) console.debug(`connecting to ${config.API_URL}`);
 
 axios.defaults.baseURL = config.API_URL;
 const TIMEOUT = 10000;

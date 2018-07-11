@@ -29,7 +29,6 @@ import { disableRefresh } from '../actions/actionCreator';
 import I18n from '../i18n';
 import * as api from '../utils/api';
 import colors from '../config/colors';
-import type { UserData } from '../types';
 
 // $FlowFixMe
 // const loading = require('../assets/images/loading.jpg');
@@ -48,7 +47,7 @@ const LIMIT = 48; // divisible by 3
 type Props = {
   apiURL: string,
   navigation?: NavigationScreenProp<*>,
-  userData?: UserData,
+  token?: string,
   emptyState?: React.Component<*>,
   shouldRefresh?: boolean,
 };
@@ -95,7 +94,7 @@ class ImageGridComponent extends React.PureComponent<Props, State> {
    */
   fetchItems = async () => {
     this.setState({ isLoading: true });
-    const { token } = this.props.userData;
+    const { token } = this.props;
 
     try {
       const { data } = await api.get(`${this.props.apiURL}&limit=${LIMIT}`, {
@@ -128,7 +127,7 @@ class ImageGridComponent extends React.PureComponent<Props, State> {
     }
 
     this.setState({ isRefreshing: true }, async () => {
-      const { token } = this.props.userData;
+      const { token } = this.props;
       this.reqTimer = setTimeout(async () => {
         try {
           const { data } = await api.get(
@@ -292,7 +291,7 @@ class ImageGridComponent extends React.PureComponent<Props, State> {
 }
 
 const mapStateToProps = (state: any) => ({
-  userData: state.LoginReducer.data,
+  token: state.LoginReducer.token,
   shouldRefresh: state.GenericReducer.shouldRefresh,
 });
 

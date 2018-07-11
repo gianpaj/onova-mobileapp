@@ -42,7 +42,7 @@ if (process.env.NODE_ENV == 'prod' || process.env.NODE_ENV == 'production') {
   isProd = true;
 }
 
-if (__DEV__ && !__TESTING__) {
+if (__DEV__ && !global.__TESTING__) {
   defaultState = {
     // emailAddress: 'gianpa+test@gmail.com',
     // password: 'expressos',

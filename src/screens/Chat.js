@@ -33,13 +33,7 @@ import { Header, Send } from '../components';
 import ChatActions from '../components/ChatActions';
 import MessageImage from '../components/MessageImage';
 
-import type {
-  Order,
-  ReduxState,
-  PusherMessage,
-  UserData,
-  // eslint-disable-next-line
-} from '../types';
+import type { Order, ReduxState, PusherMessage, UserData } from '../types';
 import colors from '../config/colors';
 import settings from '../config/settings';
 import * as api from '../utils/api';
@@ -49,6 +43,7 @@ const MARK_AS_READ_AFTER_MS = 300;
 type Props = {
   navigation: NavigationScreenProp<*>,
   userData: UserData,
+  token: string,
 };
 
 type State = {
@@ -162,7 +157,7 @@ class ChatContainer extends Component<Props, State> {
           // coming from Product
           if (!productUuid) throw new Error('productUuid missing');
 
-          const { token } = this.props.userData;
+          const { token } = this.props;
 
           return api
             .createOrder(productUuid, token)
@@ -410,7 +405,7 @@ class ChatContainer extends Component<Props, State> {
           console.error(err);
         });
     } else {
-      const { token } = this.props.userData;
+      const { token } = this.props;
 
       this.setState({ uploadingImage: true });
       // Sending Images via Pusher
@@ -724,6 +719,7 @@ const st = StyleSheet.create({
 
 const mapStateToProps: any = (state: ReduxState) => ({
   userData: state.LoginReducer.data,
+  token: state.LoginReducer.token,
 });
 
 export const Chat = connect(mapStateToProps)(ChatContainer);

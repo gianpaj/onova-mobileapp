@@ -20,7 +20,6 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import Feather from 'react-native-vector-icons/Feather';
 
 import type { NavigationScreenProp } from 'react-navigation';
-// eslint-disable-next-line
 import type { UserData, ReduxState, Order, Room } from '../types';
 
 import I18n from '../i18n';
@@ -35,6 +34,7 @@ import { currentUser as pusherCurrentUser } from '../actions/actionCreator';
 type Props = {
   navigation: NavigationScreenProp<*>,
   userData: UserData,
+  token: string,
 };
 
 type State = {
@@ -87,7 +87,7 @@ class ChatContainer extends Component<Props, State> {
   getChatsAndTheirOrders(): Promise<Array<any>> {
     console.log('getChatsAndTheirOrders');
     let orders;
-    const { token } = this.props.userData;
+    const { token } = this.props;
     const { userData } = this.props;
     return new Promise((resolve, reject) => {
       if (!pusherCurrentUser) return reject();
@@ -468,6 +468,7 @@ const st = StyleSheet.create({
 
 const mapStateToProps: any = (state: ReduxState) => ({
   userData: state.LoginReducer.data,
+  token: state.LoginReducer.token,
 });
 
 export const ChatRooms = connect(mapStateToProps)(ChatContainer);

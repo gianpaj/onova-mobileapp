@@ -1,7 +1,6 @@
 // @flow
 
 import axios, { CancelTokenSource } from 'axios';
-// eslint-disable-next-line
 import type { Order, Product, UserData } from '../types';
 
 let config;
@@ -11,7 +10,7 @@ if (process.env.NODE_ENV == 'prod' || process.env.NODE_ENV == 'production') {
   config = require('../../config-dev.json');
 }
 
-if (!__TESTING__) console.debug(`connecting to ${config.API_URL}`);
+if (!global.__TESTING__) console.debug(`connecting to ${config.API_URL}`);
 
 axios.defaults.baseURL = config.API_URL;
 const TIMEOUT = 10000;

@@ -35,7 +35,6 @@ import * as api from '../utils/api';
 import * as ui from '../utils/ui';
 
 import type { NavigationScreenProp } from 'react-navigation';
-// eslint-disable-next-line
 import type { Order, UserData, ReduxState } from '../types';
 
 // const starIcon = Platform.OS == 'ios' ? 'ios-star' : 'md-star';
@@ -43,6 +42,7 @@ import type { Order, UserData, ReduxState } from '../types';
 type Props = {
   navigation: NavigationScreenProp<*>,
   userData: UserData,
+  token: string,
 };
 
 type State = {
@@ -59,7 +59,7 @@ export class AddReviewContainer extends Component<Props, State> {
   };
 
   async componentWillMount() {
-    const { token, _id } = this.props.userData;
+    const { token, _id } = this.props;
     let params = this.props.navigation.state.params;
     let { orderId } = params;
 
@@ -106,7 +106,7 @@ export class AddReviewContainer extends Component<Props, State> {
     trackingNumber: number,
   }) => {
     const { order } = this.state;
-    const { token } = this.props.userData;
+    const { token } = this.props;
 
     if (text && text.trim().length < settings.MIN_LENGTH_REVIEW) {
       return;
@@ -137,7 +137,7 @@ export class AddReviewContainer extends Component<Props, State> {
   };
 
   onArchive = () => {
-    const { token } = this.props.userData;
+    const { token } = this.props;
     ui.showConfirmAlert(
       I18n.t('add_review.alert_confirm_archive'),
       '',
@@ -360,6 +360,7 @@ export class AddReviewContainer extends Component<Props, State> {
 
 const mapStateToProps: any = (state: ReduxState) => ({
   userData: state.LoginReducer.data,
+  token: state.LoginReducer.token,
 });
 
 export const AddReview = connect(mapStateToProps)(AddReviewContainer);

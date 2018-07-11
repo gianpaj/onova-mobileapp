@@ -27,7 +27,6 @@ import I18n from '../i18n';
 import * as api from '../utils/api';
 import typography from '../config/typography';
 import colors from '../config/colors';
-import type { UserData } from '../types';
 
 const VIEWABILITY_CONFIG = {
   minimumViewTime: 3000,
@@ -40,7 +39,7 @@ const LIMIT = 48; // divisible by 3
 type Props = {
   terms: any,
   navigation?: NavigationScreenProp<*>,
-  userData: UserData,
+  token: string,
   emptyState?: React.Component<*>,
 };
 
@@ -78,7 +77,7 @@ class ImageGridComponent extends React.Component<Props, State> {
    */
   fetchItems({ tag, grp_1, grp_2 }): Promise<any> {
     this.setState({ isLoading: true });
-    const { token } = this.props.userData;
+    const { token } = this.props;
     const tagQuery = tag == '' ? '' : `tag=${tag}`;
     const categoryQuery = grp_1 == -1 ? '' : `&categoryIds=${grp_1}`;
     const typeQuery = grp_2 == -1 ? '' : `&typeIds=${grp_2}`;
@@ -130,7 +129,7 @@ class ImageGridComponent extends React.Component<Props, State> {
       clearTimeout(this.reqTimer);
     }
     this.setState({ isRefreshing: true }, async () => {
-      const { token } = this.props.userData;
+      const { token } = this.props;
       this.reqTimer = setTimeout(async () => {
         try {
           const { data } = await api.get(
@@ -286,7 +285,7 @@ class ImageGridComponent extends React.Component<Props, State> {
 }
 
 const mapStateToProps = (state: any) => ({
-  userData: state.LoginReducer.data,
+  token: state.LoginReducer.token,
 });
 
 export default connect(mapStateToProps)(ImageGridComponent);

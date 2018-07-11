@@ -25,9 +25,9 @@ import type { UserData, ReduxState, Review } from '../types';
 const { width } = Dimensions.get('window');
 
 type Props = {
-  navigation: NavigationScreenProp<*>,
-  userData: UserData,
   as: string,
+  navigation: NavigationScreenProp<*>,
+  token: string,
 };
 
 type State = {
@@ -52,7 +52,7 @@ class ReviewsTabContainer extends Component<Props, State> {
   }
 
   async getReviewsAndSetState(): Promise<void> {
-    const { token } = this.props.userData;
+    const { token } = this.props;
     // for development
     // (firstuser) on local server
     // let userId = '5a78d09e2d314a702698f957';
@@ -150,7 +150,7 @@ class ReviewsTabContainer extends Component<Props, State> {
 
 // Inject dispatch and userData
 const mapStateToProps: any = (state: ReduxState) => ({
-  userData: state.LoginReducer.data,
+  token: state.LoginReducer.token,
 });
 
 export const ReviewsTab = withNavigation(

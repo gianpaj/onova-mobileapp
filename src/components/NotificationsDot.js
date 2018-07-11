@@ -4,7 +4,6 @@ import React from 'react';
 import { View, PixelRatio, Platform, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
 
-// eslint-disable-next-line
 import type { ReduxState } from '../types';
 // // import colors from '../config/colors';
 import { Avatar } from '../components';

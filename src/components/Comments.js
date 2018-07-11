@@ -35,6 +35,7 @@ type Props = {
   uuid: string,
   userData: UserData,
   scrollView: Content,
+  token: string,
 };
 
 type State = {
@@ -77,7 +78,7 @@ class Comments extends React.Component<Props, State> {
 
   _getComments(uuid: string): Promise<ProductType> {
     return new Promise((resolve, reject) => {
-      const { token } = this.props.userData;
+      const { token } = this.props;
       api
         .get(`/api/products/${uuid}/comment`, { token })
         .then(({ data }) => resolve(data))
@@ -137,7 +138,7 @@ class Comments extends React.Component<Props, State> {
       uuid = 'SJWwox8LLG';
     }
 
-    const { token } = this.props.userData;
+    const { token } = this.props;
     api
       .del(`/api/products/${uuid}/comment/${comment._id}`, { token })
       .then(({ data }) => {
@@ -406,7 +407,7 @@ class Comments extends React.Component<Props, State> {
     // is the text empty or longer that the max
     if (text.length < 1 || text.length == settings.MAX_LENGTH_COMMENT) return;
 
-    const { token } = this.props.userData;
+    const { token } = this.props;
 
     api
       .post(`/api/products/${this.props.uuid}/comment`, { text }, { token })

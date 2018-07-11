@@ -51,6 +51,7 @@ type Props = {
   dispatch: Dispatch,
   navigation: NavigationScreenProp<*>,
   userData: UserData,
+  token: string,
 };
 
 type State = {
@@ -271,7 +272,7 @@ class CheckoutContainer extends Component<Props, State> {
   }
 
   createOrder(uuid: string): Promise<Order> {
-    const { token } = this.props.userData;
+    const { token } = this.props;
     return new Promise((resolve, reject) => {
       api
         .post('/api/orders', { product: uuid }, { token })
@@ -285,7 +286,7 @@ class CheckoutContainer extends Component<Props, State> {
   }
 
   // cancelOrder(): Promise<any> {
-  //   const { token } = this.props.userData;
+  //   const { token } = this.props;
   //   return new Promise((resolve, reject) => {
   //     api
   //       .put(
@@ -435,6 +436,7 @@ const styles = StyleSheet.create({
 
 const mapStateToProps: any = (state: ReduxState) => ({
   userData: state.LoginReducer.data,
+  token: state.LoginReducer.token,
 });
 
 export const Checkout = connect(mapStateToProps)(CheckoutContainer);

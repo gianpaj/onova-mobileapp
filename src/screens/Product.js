@@ -50,6 +50,7 @@ type Props = {
   navigation: NavigationScreenProp<*>,
   userData: UserData,
   dispatch: Dispatch,
+  token: string,
 };
 
 type State = {
@@ -184,7 +185,7 @@ export class ProductContainer extends React.Component<Props, State> {
   };
 
   onReport = async (text: string) => {
-    const { token } = this.props.userData;
+    const { token } = this.props;
     if (text.length < settings.MIN_LENGTH_REPORT) {
       ui.showToast(I18n.t('alerts.report_error'), 'warning', 'OK');
       return;
@@ -513,6 +514,7 @@ export class ProductContainer extends React.Component<Props, State> {
               <Comments
                 uuid={item.uuid}
                 userData={this.props.userData}
+                token={this.props.token}
                 scrollView={this.scrollView}
                 goToProfile={this.goToProfile}
               />
@@ -597,6 +599,7 @@ const styles = StyleSheet.create({
 
 const mapStateToProps: MapStateToProps<*, *, *> = (state: ReduxState) => ({
   userData: state.LoginReducer.data,
+  token: state.LoginReducer.token,
 });
 
 export const Product = connect(mapStateToProps)(ProductContainer);

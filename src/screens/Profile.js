@@ -43,7 +43,7 @@ import colors from '../config/colors';
 import settings from '../config/settings';
 import * as api from '../utils/api';
 import * as ui from '../utils/ui';
-// eslint-disable-next-line
+
 import type { UserData, Dispatch, ReduxState } from '../types';
 
 type Props = {
@@ -51,6 +51,7 @@ type Props = {
   navigation: NavigationScreenProp<*>,
   userData: UserData,
   imageGrid: any,
+  token: string,
 };
 
 type State = {
@@ -143,7 +144,7 @@ class ProfileScreen extends React.Component<Props, State> {
             reject(err);
             console.debug(err);
           });
-        const { token } = this.props.userData;
+        const { token } = this.props;
         api
           .get(`/api/users/${params._id}/follow`, { token })
           .then(res => {
@@ -354,7 +355,7 @@ class ProfileScreen extends React.Component<Props, State> {
   };
 
   onReport = async text => {
-    const { token } = this.props.userData;
+    const { token } = this.props;
     if (text.length < settings.MIN_LENGTH_REPORT) {
       ui.showToast(I18n.t('alerts.report_error'), 'warning', 'OK');
       return;
@@ -377,7 +378,7 @@ class ProfileScreen extends React.Component<Props, State> {
   };
 
   onBlock = async () => {
-    const { token } = this.props.userData;
+    const { token } = this.props;
     try {
       await api.post(
         '/api/block',
@@ -495,7 +496,7 @@ class ProfileScreen extends React.Component<Props, State> {
   };
 
   onFollowOrUnfollow() {
-    const { token } = this.props.userData;
+    const { token } = this.props;
     const followOrUnfollow = !this.state.isFollowing ? 'follow' : 'unfollow';
     api
       .post(`/api/users/${this.state._id}/${followOrUnfollow}`, {}, { token })
@@ -802,6 +803,7 @@ const styles = StyleSheet.create({
 
 const mapStateToProps: any = (state: ReduxState) => ({
   userData: state.LoginReducer.data,
+  token: state.LoginReducer.token,
 });
 
 export const Profile = connect(mapStateToProps)(ProfileScreen);

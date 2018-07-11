@@ -47,6 +47,7 @@ type Props = {
   dispatch: Dispatch,
   navigation: NavigationScreenProp<*>,
   userData: UserData,
+  token: string,
 };
 
 type State = {
@@ -74,7 +75,7 @@ class NotificationsContainer extends Component<Props, State> {
   }
 
   async getNotificationsAndSetState(): Promise<any> {
-    const { token } = this.props.userData;
+    const { token } = this.props;
 
     const { data } = await api.get('/api/users/notifications', { token });
 
@@ -104,7 +105,7 @@ class NotificationsContainer extends Component<Props, State> {
 
   loadMore = async () => {
     this.setState({ isRefreshing: true });
-    const { token } = this.props.userData;
+    const { token } = this.props;
     const res = await api.get(
       `/api/users/notifications?lastId=${this.state.lastId}`,
       {
@@ -265,6 +266,7 @@ class NotificationsContainer extends Component<Props, State> {
 // Inject dispatch and userData
 const mapStateToProps: any = (state: ReduxState) => ({
   userData: state.LoginReducer.data,
+  token: state.LoginReducer.token,
 });
 
 export const Notifications = withNavigation(

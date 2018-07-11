@@ -35,6 +35,7 @@ type Props = {
   dispatch: Dispatch,
   navigation: NavigationScreenProp<*>,
   userData: UserData,
+  token: string,
 };
 
 type State = {
@@ -62,7 +63,7 @@ class FollowersContainer extends Component<Props, State> {
   }
 
   async getFollowersAndSetState(): Promise<any> {
-    const { token } = this.props.userData;
+    const { token } = this.props;
     // for development
     let userId = '5ac5ebcd939b7f1712b92baf';
 
@@ -91,7 +92,7 @@ class FollowersContainer extends Component<Props, State> {
   };
 
   onFollowOrUnfollow(_id: string, amIAFollower: boolean) {
-    const { token } = this.props.userData;
+    const { token } = this.props;
     const followOrUnfollow = amIAFollower ? 'unfollow' : 'follow';
     api
       .post(`/api/users/${_id}/${followOrUnfollow}`, {}, { token })
@@ -237,6 +238,7 @@ class FollowersContainer extends Component<Props, State> {
 
 const mapStateToProps: any = (state: ReduxState) => ({
   userData: state.LoginReducer.data,
+  token: state.LoginReducer.token,
 });
 
 const Followers2 = withNavigation(connect(mapStateToProps)(FollowersContainer));

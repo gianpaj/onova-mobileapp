@@ -25,7 +25,7 @@ import type { UserData, Dispatch, ReduxState } from '../types';
 type Props = {
   dispatch: Dispatch,
   navigation: NavigationScreenProp<*>,
-  userData: UserData,
+  token: string,
 };
 
 type State = {
@@ -54,7 +54,7 @@ class SearchSellersTabContainer extends Component<Props, State> {
 
     this.search.blur();
 
-    const { token } = this.props.userData;
+    const { token } = this.props;
     api
       .get(`/api/users/?u=${this.state.text}`, { token })
       .then(data => this.setState({ data }))
@@ -216,7 +216,7 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps: any = (state: ReduxState) => ({
-  userData: state.LoginReducer.data,
+  token: state.LoginReducer.token,
 });
 
 export const SearchSellersTab = withNavigation(

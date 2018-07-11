@@ -59,6 +59,7 @@ type Props = {
   isFocused: boolean,
   navigation: NavigationScreenProp<*>,
   userData: UserData,
+  token: string,
 };
 
 type State = {
@@ -400,7 +401,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
   };
 
   uploadNewProduct = (uuid: string, formData: any): void => {
-    const { token } = this.props.userData;
+    const { token } = this.props;
     api
       .post('/api/products', formData, { token, timeout: 300000 })
       .then(res => {
@@ -420,7 +421,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
   };
 
   uploadEditedProduct = (uuid: string, formData: any): Promise<any> => {
-    const { token } = this.props.userData;
+    const { token } = this.props;
     return (
       api
         .put(`/api/products/${uuid}`, formData, {
@@ -868,6 +869,7 @@ const styles = StyleSheet.create({
 
 const mapStateToProps: any = (state: ReduxState) => ({
   userData: state.LoginReducer.data,
+  token: state.LoginReducer.token,
 });
 
 export const AddOrEditProduct = connect(mapStateToProps)(

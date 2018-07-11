@@ -1,32 +1,53 @@
 // @flow
 
 import React from 'react';
-import configureStore from 'redux-mock-store';
+// import configureStore from 'redux-mock-store';
 import { shallow } from 'enzyme';
-import isEmail from 'validator/lib/isEmail';
 
 import { LoginTabContainer } from '../../src/screens/LoginTab';
 
-const mockStore = configureStore([]);
-const initialState = {};
-
-__DEV__ == false;
+// const mockStore = configureStore([]);
+// const initialState = {};
 
 describe('LoginTab screen', () => {
-  const store = mockStore(initialState);
-
-  const wrapper = shallow(
-    <LoginTabContainer dispatch={store.dispatch} loading={false} />
-  );
-
-  describe('rendering', () => {
-    it('the Login should be disabled', () => {
-      const emailReset = wrapper.state('emailReset');
-      const loadingReset = wrapper.state('loadingReset');
-      // expect(!isEmail(emailReset) || loadingReset).toBe(true);
-      // console.log(wrapper.find('[testID="loginButton"]').debug());
+  describe('initial rendering', () => {
+    const wrapper = shallow(
+      <LoginTabContainer dispatch={() => {}} loading={false} />
+    );
+    it('at the beggining the Login button should be disabled', () => {
       expect(wrapper.find('[testID="loginButton"]').prop('disabled')).toBe(
         true
+      );
+    });
+  });
+
+  describe('email and password entered', () => {
+    const wrapper = shallow(
+      <LoginTabContainer dispatch={() => {}} loading={false} />
+    );
+    wrapper.setState({ emailAddress: 'asdf@gmail.com', password: 'ab' });
+
+    it('the Login button should be enabled', () => {
+      expect(wrapper.find('[testID="loginButton"]').prop('disabled')).toBe(
+        false
+      );
+    });
+  });
+
+  describe('password reset', () => {
+    const dispatch = jest.fn();
+    const wrapper = shallow(
+      <LoginTabContainer dispatch={dispatch} loading={false} />
+    );
+    wrapper.setState({ emailAddress: 'asdf@gmail.com' });
+
+    it('should be able to request a password reset if entering a valid email address', () => {
+      wrapper.find('[testID="openPwdResetModalButton"]').simulate('press');
+      expect(wrapper.find('[testID="PwdResetModal"]').prop('visible')).toBe(
+        true
+      );
+      expect(wrapper.find('[testID="ResetButton"]').prop('disabled')).toBe(
+        false
       );
     });
   });

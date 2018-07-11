@@ -292,6 +292,7 @@ export class LoginTabContainer extends React.Component<Props, State> {
               </Text>
             </NBButton>
             <TouchableOpacity
+              testID="openPwdResetModalButton"
               style={[styles.hr, { padding: 10, margin: 20 }]}
               onPress={() => this.setPwdResetModalVisible(true)}>
               <Text style={{ color: colors.grey4 }}>
@@ -349,6 +350,7 @@ export class LoginTabContainer extends React.Component<Props, State> {
 
     return (
       <Modal
+        testID="PwdResetModal"
         animationType="slide"
         visible={this.state.pwdResetModalVisible}
         onRequestClose={() => this.setPwdResetModalVisible(false)}>

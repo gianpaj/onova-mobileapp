@@ -3,7 +3,6 @@ import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import moxios from 'moxios';
 
-
 import { login } from '../../src/actions/actionCreator';
 
 const middlewares = [thunk];

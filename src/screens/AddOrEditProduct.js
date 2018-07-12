@@ -31,9 +31,9 @@ import {
 import Permissions from 'react-native-permissions';
 // import RNFetchBlob from 'rn-fetch-blob';
 let RNFetchBlob;
-let AndroidOpenSettings;
+let RNAndroidLocationEnabler;
 if (Platform.OS == 'android') {
-  AndroidOpenSettings = require('react-native-android-open-settings');
+  RNAndroidLocationEnabler = require('react-native-android-location-enabler');
   RNFetchBlob = require('rn-fetch-blob').default;
 }
 
@@ -168,9 +168,17 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
         }
       },
       err => {
-        // Location authorized but not enabled (only Android)
-        if (err.message === 'No location provider available.') {
-          return this.alertForPermission('notEnabled');
+        // Location authorized but not setting is not enabled (only Android)
+        if (
+          err.message === 'No location provider available.' &&
+          Platform.OS === 'android'
+        ) {
+          return RNAndroidLocationEnabler.promptForEnableLocationIfNeeded({
+            interval: 10000,
+            fastInterval: 5000,
+          })
+            .then(() => {})
+            .catch(() => this.closeModal());
         }
         console.error(err);
       },
@@ -200,13 +208,14 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
               text: I18n.t('add_or_edit_item.permission_alert_button_settings'),
               onPress: () => {
                 if (Platform.OS === 'android') {
-                  if (response === 'notEnabled') {
-                    AndroidOpenSettings.locationSourceSettings();
-                  } else {
-                    AndroidOpenSettings.appDetailsSettings();
-                  }
+                  RNAndroidLocationEnabler.promptForEnableLocationIfNeeded({
+                    interval: 10000,
+                    fastInterval: 5000,
+                  })
+                    .then(() => {})
+                    .catch(() => this.closeModal());
                 } else {
-                Permissions.openSettings();
+                  Permissions.openSettings();
                 }
                 this.closeModal();
               },

@@ -65,17 +65,9 @@
 	<string>Onova does not need this</string>
 	<key>NSCalendarsUsageDescription</key>
 	<string>Onova does not need this</string>
-	<key>NSCameraUsageDescription</key>
-	<string>Onova does not need this</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Onova does not need this</string>
-	<key>NSMainNibFile</key>
-	<string>LaunchScreen</string>
 	<key>NSMotionUsageDescription</key>
 	<string>Onova does not need this</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>Onova does not need this</string>
-	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Onova does not need this</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
 	<string>Onova does not need this</string>

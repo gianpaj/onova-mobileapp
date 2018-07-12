@@ -57,7 +57,6 @@ describe('Signup action', () => {
         })
       );
     } catch (error) {}
-    console.log(store.getActions());
     expect(store.getActions()).toMatchSnapshot();
   });
 

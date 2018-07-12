@@ -10,7 +10,7 @@ describe('SignupTab screen', () => {
     const wrapper = shallow(
       <SignUpTabContainer dispatch={() => {}} loading={false} />
     );
-    it('at the beggining the Signup button should NOT be enabled', () => {
+    it('at the beginning the Signup button should NOT be enabled', () => {
       expect(wrapper.find('[testID="signUpButton"]').prop('disabled')).toBe(
         true
       );

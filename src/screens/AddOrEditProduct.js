@@ -57,7 +57,7 @@ const IMAGE_HEIGHT = 1440;
 
 type Props = {
   isFocused: boolean,
-  navigation: NavigationScreenProp<*>,
+  navigation?: NavigationScreenProp<*>,
   userData: UserData,
   token: string,
 };
@@ -124,6 +124,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
         // show Modal explaining why
         this.alertForPermission(response);
       } else {
+        // authorized
         this.getLocationAndInitiate();
       }
     });
@@ -602,6 +603,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
           </Body>
           <Right>
             <NBButton
+              testID="addItemButton"
               transparent
               disabled={!this.addEnabled()}
               style={{ backgroundColor: colors.transparent }}

@@ -1,20 +1,16 @@
 // @flow
 
 import React from 'react';
-// import configureStore from 'redux-mock-store';
 import { shallow } from 'enzyme';
 
 import { LoginTabContainer } from '../../src/screens/LoginTab';
-
-// const mockStore = configureStore([]);
-// const initialState = {};
 
 describe('LoginTab screen', () => {
   describe('initial rendering', () => {
     const wrapper = shallow(
       <LoginTabContainer dispatch={() => {}} loading={false} />
     );
-    it('at the beggining the Login button should NOT be enabled', () => {
+    it('at the beginning the Login button should NOT be enabled', () => {
       expect(wrapper.find('[testID="loginButton"]').prop('disabled')).toBe(
         true
       );

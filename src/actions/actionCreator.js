@@ -421,6 +421,7 @@ const enableRefresh = () => ({ type: DO_REFRESH });
 
 const disableRefresh = () => ({ type: DONOT_REFRESH });
 
+/*
 const displayNotification = (notification: any) => (
   dispatch: Dispatch,
   getState: GetState
@@ -436,6 +437,7 @@ const displayNotification = (notification: any) => (
     firebase.notifications().displayNotification(notification);
   }
 };
+*/
 
 export {
   initializePusher,

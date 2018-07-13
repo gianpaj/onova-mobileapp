@@ -1,7 +1,12 @@
 // @flow
 
 import React, { Component } from 'react';
-import { ActivityIndicator, BackHandler, StyleSheet, View } from 'react-native';
+import {
+  ActivityIndicator,
+  BackHandler,
+  ImageBackground,
+  StyleSheet,
+} from 'react-native';
 import { connect } from 'react-redux';
 import { addNavigationHelpers, NavigationActions } from 'react-navigation';
 import { createReduxBoundAddListener } from 'react-navigation-redux-helpers';
@@ -56,9 +61,12 @@ class AppNavigation extends Component<Props, *> {
   };
 
   _renderLoading = () => (
-    <View style={styles.container}>
+    <ImageBackground
+      source={require('../assets/images/bg.png')}
+      resizeMode="repeat"
+      style={styles.container}>
       <ActivityIndicator size="large" />
-    </View>
+    </ImageBackground>
   );
 
   render() {
@@ -92,6 +100,8 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    width: '100%',
+    height: '100%',
   },
 });
 

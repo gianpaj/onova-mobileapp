@@ -1,22 +1,6 @@
 // @flow
 
-import React from 'react';
-
-const constants = {
-  Aspect: {},
-  BarCodeType: {},
-  Type: {},
-  CaptureMode: {},
-  CaptureTarget: {},
-  CaptureQuality: {},
-  Orientation: {},
-  FlashMode: {},
-  TorchMode: {},
-};
-
-class ImagePicker extends React.Component<*> {
-  static constants = constants;
-
+class ImagePicker {
   openPicker() {
     return new Promise((resolve, reject) => {
       resolve({
@@ -39,6 +23,4 @@ class ImagePicker extends React.Component<*> {
   }
 }
 
-ImagePicker.constants = constants;
-
-export default ImagePicker;
+export default new ImagePicker();

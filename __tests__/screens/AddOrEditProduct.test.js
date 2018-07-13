@@ -13,39 +13,50 @@ import { AddOrEditProductScreen } from '../../src/screens/AddOrEditProduct';
 describe('AddOrEditProduct screen', () => {
   describe('initial rendering', () => {
     const wrapper = shallow(
-      // $FlowExpectedError
       <AddOrEditProductScreen
         dispatch={() => {}}
         // $FlowExpectedError
+        navigation={{ state: {} }}
+        // $FlowExpectedError
         userData={{ accountStatus: 'verified' }}
         isFocused={false}
+        token=""
       />
     );
+
     it('at the beginning the Add Item button should NOT be enabled', () => {
       setTimeout(() => {
         expect(wrapper.state('location')).toEqual({
           longitude: 60,
           latitude: 60,
         });
+        expect(wrapper.state('images')).toEqual([{ id: 0, url: '' }]);
       }, 100);
       expect(wrapper.find('[testID="addItemButton"]').prop('disabled')).toBe(
         true
       );
     });
+
+    it.skip('should require a min length description', () => {
+      wrapper.setState(
+        {
+          description: 'a',
+          price: '123.45',
+          grp_1: 0,
+          grp_2: 0,
+        },
+        () => {
+          // console.log(wrapper.state());
+
+          // const state = wrapper.state();
+          // console.log(addEnabled(state));
+          expect(
+            wrapper.find('[testID="addItemButton"]').prop('disabled')
+          ).toBe(true);
+        }
+      );
+    });
   });
-
-  // describe('email and password entered', () => {
-  //   const wrapper = shallow(
-  //     <AddOrEditProductScreen dispatch={() => {}} loading={false} />
-  //   );
-  //   wrapper.setState({ emailAddress: 'asdf@gmail.com', password: 'ab' });
-
-  //   it('the Login button should be enabled', () => {
-  //     expect(wrapper.find('[testID="loginButton"]').prop('disabled')).toBe(
-  //       false
-  //     );
-  //   });
-  // });
 
   // describe('password reset', () => {
   //   const dispatch = jest.fn();

@@ -241,6 +241,12 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
   selectPhotoTapped = (i: number = 0) => {
     if (this.state.pending) return;
 
+    if (global.__TESTING__) {
+      return ImagePicker.openPicker()
+        .then(response => this.appendPhoto(response, i))
+        .catch(() => this.closeModalConditional());
+    }
+
     const imagePickerOptons = {
       width: IMAGE_WIDTH,
       height: IMAGE_HEIGHT,
@@ -530,9 +536,11 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
 
     // return true if all of these are true
     return (
-      // If images are added
+      // If there is at least one image
       this.state.images.length > 0 &&
-      // If the item is uploading is not in progress
+      // location
+      Object.keys(this.state.location).length > 0 &&
+      // If the item is uploading is NOT in progress
       !this.state.pending &&
       // If the price is not empty
       this.state.price !== '' &&

@@ -82,7 +82,7 @@ class CheckoutContainer extends Component<Props, State> {
     usernameError: false,
   };
 
-  componentWillMount() {
+  componentDidMount() {
     this.setState({ isLoading: true });
     this.cancelToken = axios.CancelToken.source();
     // this.props.dispatch(
@@ -164,9 +164,9 @@ class CheckoutContainer extends Component<Props, State> {
     //TODO: unreserve product and cancel order
   }
 
-  componentWillReceiveProps(nextProps) {
+  static getDerivedStateFromProps(props) {
     // fix error when logging out
-    if (!nextProps.userData) return;
+    if (!props.userData) return null;
   }
 
   onCheckout = () => {

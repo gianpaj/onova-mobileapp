@@ -72,7 +72,7 @@ export class ProductContainer extends React.Component<Props, State> {
     item: null,
   };
 
-  componentWillMount() {
+  componentDidMount() {
     this.refresh();
 
     // this.props.navigation.addListener('didFocus', () => {

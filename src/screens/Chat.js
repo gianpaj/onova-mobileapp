@@ -72,7 +72,7 @@ class ChatContainer extends Component<Props, State> {
     uploadingImage: false,
   };
 
-  componentWillMount() {
+  componentDidMount() {
     let { params } = this.props.navigation.state;
 
     // refresh after leaving a review or archiving an order
@@ -482,9 +482,9 @@ class ChatContainer extends Component<Props, State> {
     );
   }
 
-  componentWillReceiveProps(nextProps) {
+  static getDerivedStateFromProps(props) {
     // fix error when logging out
-    if (!nextProps.userData) return;
+    if (!props.userData) return null;
   }
 
   shouldComponentUpdate(nextProps) {

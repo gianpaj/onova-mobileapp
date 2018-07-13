@@ -106,7 +106,7 @@ class SettingsContainer extends Component<Props, State> {
     activeInputRef: null,
   };
 
-  componentWillMount() {
+  componentDidMount() {
     const CancelToken = axios.CancelToken;
     this.cancelToken = CancelToken.source();
     this.props.dispatch(
@@ -126,7 +126,7 @@ class SettingsContainer extends Component<Props, State> {
     this.cancelToken.cancel('operation_canceled');
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     // fix error when logging out
     if (!nextProps.userData) return;
 

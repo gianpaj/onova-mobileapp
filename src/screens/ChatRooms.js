@@ -54,7 +54,7 @@ class ChatContainer extends Component<Props, State> {
     ordersAndChats: [],
   };
 
-  componentWillMount() {
+  componentDidMount() {
     if (pusherCurrentUser) {
       this.getChatsAndTheirOrders()
         .then(ordersAndChats => {
@@ -168,9 +168,9 @@ class ChatContainer extends Component<Props, State> {
     });
   }
 
-  componentWillReceiveProps(nextProps) {
+  static getDerivedStateFromProps(props) {
     // fix error when logging out
-    if (!nextProps.userData) return;
+    if (!props.userData) return null;
   }
 
   shouldComponentUpdate(nextProps) {

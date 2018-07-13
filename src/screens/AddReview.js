@@ -58,7 +58,7 @@ export class AddReviewContainer extends Component<Props, State> {
     order: null,
   };
 
-  async componentWillMount() {
+  async componentDidMount() {
     const { token, _id } = this.props;
     let params = this.props.navigation.state.params;
     let { orderId } = params;

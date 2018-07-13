@@ -53,7 +53,7 @@ class FollowersContainer extends Component<Props, State> {
     itemHeight: -1,
   };
 
-  async componentWillMount() {
+  async componentDidMount() {
     try {
       await this.getFollowersAndSetState();
       this.setState({ isLoading: false });

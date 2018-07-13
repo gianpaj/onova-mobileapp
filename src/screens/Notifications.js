@@ -65,7 +65,7 @@ class NotificationsContainer extends Component<Props, State> {
     lastId: '',
   };
 
-  async componentWillMount() {
+  async componentDidMount() {
     try {
       await this.getNotificationsAndSetState();
       this.setState({ isLoading: false });

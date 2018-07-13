@@ -36,7 +36,7 @@ class SearchProductsResultsContainer extends Component<Props, State> {
     isLoading: true,
   };
 
-  componentWillMount() {
+  componentDidMount() {
     const { params } = this.props.navigation.state;
     let terms = params;
 

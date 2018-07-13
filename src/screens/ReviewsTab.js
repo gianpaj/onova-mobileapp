@@ -43,7 +43,7 @@ class ReviewsTabContainer extends Component<Props, State> {
     isRefreshing: false,
   };
 
-  async componentWillMount() {
+  async componentDidMount() {
     try {
       await this.getReviewsAndSetState();
     } catch (err) {

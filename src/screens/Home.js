@@ -109,10 +109,9 @@ export class Home extends PureComponent<Props, State> {
             <Title style={{ color: colors.black }}>ONOVA</Title>
           </Body>
           <Right>
-            <Button transparent>
+            <Button transparent onPress={this.onShare}>
               <Icon
                 style={{ color: colors.black }}
-                onPress={this.onShare}
                 android="md-person-add"
                 ios="ios-person-add"
               />

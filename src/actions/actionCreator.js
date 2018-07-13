@@ -82,7 +82,7 @@ const login = (data: LoginData) => (dispatch: Dispatch) => (
       }
       return userData;
     })
-    .then(userData => initializePusher(userData))
+    .then(userData => initializePusher(userData, token))
     .then(userData => {
       // FIXME: use `userData` key in payload
       dispatch({ type: LOGIN_SUCCESS, payload: userData });
@@ -107,7 +107,10 @@ const login = (data: LoginData) => (dispatch: Dispatch) => (
     })
 );
 
-const initializePusher = (userData: UserData): Promise<any | Error> => {
+const initializePusher = (
+  userData: UserData,
+  token: string
+): Promise<any | Error> => {
   return new Promise((resolve, reject) => {
     if (
       !(process.env.NODE_ENV == 'production' || process.env.NODE_ENV == 'prod')
@@ -128,7 +131,7 @@ const initializePusher = (userData: UserData): Promise<any | Error> => {
         tokenProvider: new TokenProvider({
           url: config.PUSHER_TOKEN_PROVIDER,
           headers: {
-            token: userData.token,
+            token: token,
             avatarURL: userData.profilePic,
             username: userData.username,
           },
@@ -240,7 +243,7 @@ const checkLogin = (userData: UserData, token: string) => (
         });
       }
     })
-    .then(() => initializePusher(userData))
+    .then(() => initializePusher(userData, token))
     .then(() => dispatch({ type: RELOAD_SUCCESS }))
     .catch(err => {
       console.debug(err);
@@ -308,15 +311,15 @@ const signup = (data: SignupData) => (dispatch: Dispatch) => (
     })
 );
 
-const getPersonalUserData = (userId: string, options?: any = {}) => (
+const getPersonalUserData = (options?: any = {}) => (
   dispatch: Dispatch,
   getState: GetState
 ) => {
-  const { token } = getState().LoginReducer;
+  const { token, data } = getState().LoginReducer;
   Toast.loading(I18n.t('alerts.loading_message'), 30);
   dispatch({ type: GETUSER_PENDING });
   return api
-    .get(`/api/users/${userId}/personal`, { ...options, token })
+    .get(`/api/users/${data._id}/personal`, { ...options, token })
     .then((res: UserData) => dispatch({ type: GETUSER_SUCCESS, payload: res }))
     .catch(err => dispatch(handleErrorWithAlert({ type: GETUSER_FAIL }, err)))
     .then(() => Toast.hide());

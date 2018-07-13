@@ -167,7 +167,7 @@ export class ProductContainer extends React.Component<Props, State> {
   }
 
   onSuccessfulShare = (): Promise<any> => {
-    const { userData } = this.props;
+    const { userData, token } = this.props;
     return new Promise(async (resolve, reject) => {
       try {
         const res = await api.put(
@@ -175,7 +175,7 @@ export class ProductContainer extends React.Component<Props, State> {
           {
             increaseShare: true,
           },
-          { token: userData.token }
+          { token }
         );
         resolve(res);
       } catch (err) {

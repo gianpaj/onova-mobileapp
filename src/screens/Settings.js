@@ -73,6 +73,7 @@ type Props = {
   dispatch: Dispatch,
   navigation?: NavigationScreenProp<*>,
   userData: UserData,
+  token: string,
 };
 
 type State = {
@@ -110,15 +111,18 @@ class SettingsContainer extends Component<Props, State> {
     const CancelToken = axios.CancelToken;
     this.cancelToken = CancelToken.source();
     this.props.dispatch(
-      getPersonalUserData(this.props.userData._id, {
-        cancelToken: this.cancelToken.token,
-      })
+      getPersonalUserData({ cancelToken: this.cancelToken.token })
     );
     // Instabug.startWithToken(
     //   settings.INSTABUG_TOKEN,
     //   Instabug.invocationEvent.none
     // );
     // Instabug.setPromptOptionsEnabled(false, true, true);
+
+    if (Platform.OS === 'android') {
+      UIManager.setLayoutAnimationEnabledExperimental &&
+        UIManager.setLayoutAnimationEnabledExperimental(true);
+    }
   }
 
   componentWillUnmount() {
@@ -152,13 +156,6 @@ class SettingsContainer extends Component<Props, State> {
     return nextProps[key] && !Object.is(nextProps[key], this.props[key]);
   }
 
-  componentDidMount() {
-    if (Platform.OS === 'android') {
-      UIManager.setLayoutAnimationEnabledExperimental &&
-        UIManager.setLayoutAnimationEnabledExperimental(true);
-    }
-  }
-
   /**
    * return true if there are any valid and unsaved changes to be able to save them
    */
@@ -186,7 +183,7 @@ class SettingsContainer extends Component<Props, State> {
   };
 
   onSave = () => {
-    const { userData } = this.props;
+    const { userData, token } = this.props;
     const {
       password,
       emailAddress,
@@ -228,7 +225,7 @@ class SettingsContainer extends Component<Props, State> {
     Toast.loading(I18n.t('alerts.loading_message'), 3);
 
     api
-      .put(`/api/users/${userData._id}`, data, { token: userData.token })
+      .put(`/api/users/${userData._id}`, data, { token })
       .then(data => {
         // console.log(res);
         // if we changed the email
@@ -600,6 +597,7 @@ const styles = StyleSheet.create({
 
 const mapStateToProps: any = (state: ReduxState) => ({
   userData: state.LoginReducer.data,
+  token: state.LoginReducer.token,
 });
 
 export const Settings = connect(mapStateToProps)(SettingsContainer);

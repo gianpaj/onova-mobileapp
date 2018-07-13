@@ -256,7 +256,7 @@ class ProfileScreen extends React.Component<Props, State> {
 
   onSave = () => {
     this.setState({ isSaving: true });
-    const { userData } = this.props;
+    const { userData, token } = this.props;
     const { bio, displayName, profilePic } = this.state;
     const formData = new FormData();
 
@@ -283,7 +283,7 @@ class ProfileScreen extends React.Component<Props, State> {
       .put(`/api/users/${userData._id}`, formData, {
         suppressRedBox: true,
         timeout: 30000,
-        token: userData.token,
+        token,
       })
       .then(res => {
         this.setState({ editing: false });

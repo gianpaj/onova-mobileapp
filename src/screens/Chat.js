@@ -285,11 +285,11 @@ class ChatContainer extends Component<Props, State> {
   }
 
   fetchOrders = (thisRoom: any) => {
-    const { userData } = this.props;
+    const { userData, token } = this.props;
     console.log('fetchOrders');
     return new Promise((resolve, reject) => {
       api
-        .getOrders(userData.token)
+        .getOrders(token)
         // show orders which are with the person I'm chatting with
         .then(orders =>
           orders.filter((o: Order) => getRoomName(o) == thisRoom.name)

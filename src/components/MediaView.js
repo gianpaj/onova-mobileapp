@@ -35,7 +35,7 @@ export default class MediaView extends React.Component<Props, State> {
     imageHeight: 0,
   };
 
-  componentWillMount() {
+  componentDidMount() {
     Image.getSize(this.props.source[0], (w, h) => {
       this.setState({ imageHeight: Math.floor(h * (width / w)) });
     });

@@ -15,7 +15,7 @@ import { checkLogin, logout } from '../actions/actionCreator';
 import NavigationStack from './navigationStack';
 import NavigationService from './NavigationService';
 
-import type { Dispatch, UserData, ReduxState } from '../types';
+import type { Dispatch, ReduxState } from '../types';
 import type { NavigationState } from '../types/navigationReducer';
 
 type Props = {
@@ -24,6 +24,7 @@ type Props = {
   isLoggedIn: boolean,
   navigationState: NavigationState,
   userData?: UserData,
+  token?: string,
 };
 
 // on Android, the URI prefix typically contains a host in addition to scheme
@@ -34,14 +35,14 @@ class AppNavigation extends Component<Props, *> {
 
   componentDidMount() {
     BackHandler.addEventListener('hardwareBackPress', this.onBackPress);
-    const { isLoggedIn, userData, dispatch } = this.props;
+    const { isLoggedIn, userData, token, dispatch } = this.props;
 
     // FIXME: horrible hack
     NavigationService.setDispatcher(dispatch);
 
-    if (isLoggedIn && userData) {
+    if (isLoggedIn && token) {
       // checking again if user is still logged in
-      dispatch(checkLogin(userData)).catch(e => {
+      dispatch(checkLogin(userData, token)).catch(e => {
         if (e.message == 'Invalid user') {
           dispatch(logout());
         }
@@ -106,10 +107,11 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps: any = (state: ReduxState) => ({
+  checkedLoggedIn: state.LoginReducer.checkedLoggedIn,
   isLoggedIn: state.LoginReducer.isLoggedIn,
   navigationState: state.NavigationReducer,
   userData: state.LoginReducer.data,
-  checkedLoggedIn: state.LoginReducer.checkedLoggedIn,
+  token: state.LoginReducer.token,
 });
 
 export default connect(mapStateToProps)(AppNavigation);

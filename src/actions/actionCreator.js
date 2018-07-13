@@ -88,7 +88,7 @@ const login = (data: LoginData) => (dispatch: Dispatch) => (
       dispatch({ type: LOGIN_SUCCESS, payload: userData });
       return registerPushNotifications()
         .then(pushToken => {
-          if (pushToken) return sendToken(pushToken, userData);
+          if (pushToken) return sendToken(pushToken, userData, token);
         })
         .catch(err => {
           console.warn(err);
@@ -216,16 +216,17 @@ const loginWithGoogle = () => (dispatch: Dispatch) => {
 };
 */
 
-const checkLogin = (userData: UserData) => (dispatch: Dispatch) => {
+const checkLogin = (userData: UserData, token: string) => (
+  dispatch: Dispatch
+) => {
   console.debug('checkLogin');
-  const { token } = userData;
   dispatch({ type: 'RELOAD_PENDING' });
   return api
     .get(`/api/users/${userData._id}/personal`, { token })
     .then(() => registerPushNotifications())
     .then(pushToken => {
       console.debug('Push notifications: initialized');
-      if (pushToken) return sendToken(pushToken, userData);
+      if (pushToken) return sendToken(pushToken, userData, token);
     })
     .then(() => {
       if (process.env.NODE_ENV == 'production') {
@@ -368,14 +369,18 @@ const logout = () => (dispatch: Dispatch) => {
   // }
 };
 
-const sendToken = (pushToken: string, userData: UserData): Promise<any> => {
+const sendToken = (
+  pushToken: string,
+  userData: UserData,
+  token: string
+): Promise<any> => {
   const data = {
     platform: Platform.OS,
     pushToken,
   };
 
   return api
-    .put(`/api/users/${userData._id}`, data, { token: userData.token })
+    .put(`/api/users/${userData._id}`, data, { token })
     .then(() => {
       console.debug('pushToken and platform sent');
       console.debug(data);

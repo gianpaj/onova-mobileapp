@@ -2,12 +2,12 @@
 
 import React from 'react';
 import {
-  View,
-  Image,
   Dimensions,
-  StyleSheet,
+  Image,
   Modal,
+  StyleSheet,
   TouchableWithoutFeedback,
+  View,
 } from 'react-native';
 import ImageViewer from 'react-native-image-zoom-viewer';
 // eslint-disable-next-line
@@ -78,6 +78,7 @@ export default class MediaView extends React.Component<Props, State> {
             transparent
             onRequestClose={() => this.setState({ isModalVisible: false })}>
             <ImageViewer
+              enableSwipeDown
               onCancel={() => this.setState({ isModalVisible: false })}
               imageUrls={images.map(i => ({ url: i }))}
               index={currentImageIndex}
@@ -107,6 +108,7 @@ export default class MediaView extends React.Component<Props, State> {
           transparent
           onRequestClose={() => this.setState({ isModalVisible: false })}>
           <ImageViewer
+            enableSwipeDown
             renderIndicator={() => null}
             onCancel={() => this.setState({ isModalVisible: false })}
             imageUrls={[{ url: source[0] }]}

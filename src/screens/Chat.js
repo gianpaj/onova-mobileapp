@@ -98,8 +98,6 @@ class ChatContainer extends Component<Props, State> {
       params = { roomId: 8086206 };
     }
 
-    // coming from Product, ChatRooms or Push Notification
-    // there is now `productUuid` from ChatRooms
     this.initialise(params.roomId, params.productUuid)
       .then(() => this.setState({ isLoading: false }))
       .catch(err => {
@@ -150,7 +148,7 @@ class ChatContainer extends Component<Props, State> {
               .then(partner => this.setState({ partner }))
               .catch(err => {
                 console.log('Error joining room ID:', roomId);
-                console.log(err);
+                reject(err);
               });
           }
 
@@ -159,18 +157,11 @@ class ChatContainer extends Component<Props, State> {
 
           const { token } = this.props;
 
-          return api
-            .createOrder(productUuid, token)
+          return this.createOrGetOrder(productUuid, token)
             .then(o => o)
-            .catch(({ message, data }) => {
-              if (
-                message == 'Duplicate order' &&
-                data.data &&
-                // TODO: check is 'paid' once payment is completed
-                data.data.status == 'pending'
-              ) {
-                return data.data;
-              }
+            .catch(data => {
+              if (data) return data;
+              reject();
             });
         })
         .then(o => {
@@ -230,11 +221,13 @@ class ChatContainer extends Component<Props, State> {
                 .then(() => api.getUser(o.seller))
                 .then(partner => this.setState({ partner }))
                 .catch(err => {
-                  console.log('Error creating room', err);
+                  console.log('Error creating room');
+                  reject(err);
                 });
             })
             .catch(err => {
-              console.log(`Error getting joinable rooms: ${err}`);
+              console.log('Error getting joinable rooms');
+              reject(err);
             });
         })
         .then(() => this.setState({ roomId }))
@@ -282,6 +275,22 @@ class ChatContainer extends Component<Props, State> {
         .then(() => resolve())
         .catch(err => reject(err));
     });
+  }
+
+  createOrGetOrder(productUuid: string, token: string): Promise<any> {
+    return api
+      .createOrder(productUuid, token)
+      .then(o => o)
+      .catch(({ message, data }) => {
+        if (
+          message == 'Duplicate order' &&
+          data.data &&
+          // TODO: check is 'paid' once payment is completed
+          data.data.status == 'pending'
+        ) {
+          return data.data;
+        }
+      });
   }
 
   fetchOrders = (thisRoom: any) => {

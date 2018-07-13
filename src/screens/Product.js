@@ -210,7 +210,7 @@ export class ProductContainer extends React.Component<Props, State> {
 
   deleteItem() {
     const { uuid } = this.props.navigation.state.params;
-    const { token } = this.props.userData;
+    const { token } = this.props;
     api
       .del(`/api/products/${uuid}`, { token })
       .then(() => {

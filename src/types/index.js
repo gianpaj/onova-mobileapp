@@ -209,12 +209,18 @@ export type Review = {
 type TriggeredType = 'User' | 'Product' | 'Order';
 
 export type Notification = {
-  notifI18n: string,
-  targetUser: string,
-  triggeredBy: string,
-  data: any,
-  triggeredType: TriggeredType,
+  data: ?{
+    commentId: ?string,
+    productUuid: ?string,
+    senderName: ?string,
+    text: ?string,
+  },
   dateCreated: Date,
+  notifI18n: string,
+  sourceUser: UserData,
+  targetUser: string,
+  triggeredBy: any,
+  triggeredType: TriggeredType,
 };
 
 export type ReduxState = {

@@ -33,7 +33,8 @@
   "env": {
     "jest": true,
     "es6": true,
-    "node": true
+    "node": true,
+    "react-native/react-native": true
   },
   "rules": {
     "no-unused-vars": "error",

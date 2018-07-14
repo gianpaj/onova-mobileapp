@@ -83,8 +83,10 @@ class ImageGridComponent extends React.PureComponent<Props, State> {
 
     this.props.navigation.addListener('didFocus', () => {
       if (this.props.shouldRefresh) {
-        this.fetchItems();
-        this.props.dispatch(disableRefresh());
+        setTimeout(() => {
+          this.fetchItems();
+          this.props.dispatch(disableRefresh());
+        }, 1000);
       }
     });
   }

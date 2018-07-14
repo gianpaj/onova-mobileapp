@@ -126,6 +126,7 @@ export default {
   profile: {
     reviews_label: 'відгуки',
     followers_label: 'контакти',
+    following_label: 'контакти',
     edit_profile_button: 'Редагувати профіль',
     save_profile_button: 'Зберегти',
     follow_button: 'додати',
@@ -165,6 +166,11 @@ export default {
   followers: {
     header: 'Контакти',
     empty_state_message_title: 'Жодних доданих користувачів',
+    empty_state_message_body: 'Хтось тобі по смаку десь там є точно - пошукай',
+  },
+  following: {
+    header: 'Магазини',
+    empty_state_message_title: 'У цього користувача немає контактів',
     empty_state_message_body: 'Хтось тобі по смаку десь там є точно - пошукай',
   },
   reviews: {

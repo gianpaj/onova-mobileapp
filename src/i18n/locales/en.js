@@ -126,6 +126,7 @@ export default {
   profile: {
     reviews_label: 'reviews',
     followers_label: 'followers',
+    following_label: 'following',
     edit_profile_button: 'Edit Profile',
     save_profile_button: 'Save',
     follow_button: 'Follow',
@@ -166,6 +167,11 @@ export default {
   followers: {
     header: 'Followers',
     empty_state_message_title: 'No followers yet',
+    empty_state_message_body: 'Somebody interesting is out there for sure',
+  },
+  following: {
+    header: 'Following',
+    empty_state_message_title: "This user doesn't have any followers",
     empty_state_message_body: 'Somebody interesting is out there for sure',
   },
   reviews: {

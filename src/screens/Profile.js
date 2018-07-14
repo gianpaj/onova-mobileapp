@@ -59,6 +59,7 @@ type State = {
   displayName: string,
   editing: boolean,
   followersCount: number,
+  followingCount: number,
   isFollowing: boolean,
   isSaving: boolean,
   isFetching: boolean,
@@ -75,6 +76,7 @@ const defaultState = {
   displayName: '',
   editing: false,
   followersCount: -1,
+  followingCount: -1,
   isFollowing: false,
   isRefreshing: false,
   isSaving: false,
@@ -83,7 +85,6 @@ const defaultState = {
   rateAvg: -1,
   reviewsCount: -1,
   username: '',
-  isPopoverVisible: true,
 };
 
 const { height } = Dimensions.get('window');
@@ -121,6 +122,7 @@ class ProfileScreen extends React.Component<Props, State> {
               profilePic,
               username,
               followersCount,
+              followingCount,
               ratingsTotal,
               reviewsCount,
             } = res;
@@ -131,6 +133,7 @@ class ProfileScreen extends React.Component<Props, State> {
               profilePic,
               username,
               followersCount,
+              followingCount,
               rateAvg:
                 ratingsTotal == 0 ? ratingsTotal : ratingsTotal / reviewsCount,
               reviewsCount,
@@ -175,11 +178,11 @@ class ProfileScreen extends React.Component<Props, State> {
     Promise.all(Promises).then(() => this.setState({ isRefreshing: false }));
   };
 
-  componentWillMount() {
+  componentDidMount() {
     this.refresh().then(() => this.setState({ isFetching: false }));
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     // fix error when logging out
     if (!nextProps.userData) return;
 
@@ -190,6 +193,7 @@ class ProfileScreen extends React.Component<Props, State> {
       profilePic,
       username,
       followersCount,
+      followingCount,
       ratingsTotal,
       reviewsCount,
     } = nextProps.userData;
@@ -198,6 +202,7 @@ class ProfileScreen extends React.Component<Props, State> {
       _id,
       username,
       followersCount,
+      followingCount,
       rateAvg: ratingsTotal == 0 ? ratingsTotal : ratingsTotal / reviewsCount,
       reviewsCount,
       isFetching: false,
@@ -420,30 +425,42 @@ class ProfileScreen extends React.Component<Props, State> {
     return this.props.userData.accountStatus == 'notverified';
   }
 
-  goToReviews() {
+  goToReviews = () => {
+    const { _id } = this.state;
+    // $FlowFixMe
     this.props.navigation.navigate({
       routeName: 'reviews',
-      params: { userId: this.state._id },
-      key: `reviews-${this.state._id}`,
+      params: { userId: _id },
+      key: `reviews-${_id}`,
     });
-  }
+  };
 
-  goToFollowers() {
+  goToFollowers = () => {
+    const { _id } = this.state;
+    // $FlowFixMe
     this.props.navigation.navigate({
       routeName: 'followers',
-      params: { userId: this.state._id },
-      key: `followers-${this.state._id}`,
+      params: { userId: _id },
+      key: `followers-${_id}`,
     });
-  }
+  };
+
+  goToFollowing = () => {
+    const { _id } = this.state;
+    // $FlowFixMe
+    this.props.navigation.navigate({
+      routeName: 'following',
+      params: { userId: _id },
+      key: `following-${_id}`,
+    });
+  };
 
   renderUserNumbers = () => {
     return (
       <View style={styles.userNumbers}>
-        <TouchableOpacity
-          onPress={() => this.goToReviews()}
-          style={styles.alignCenter}>
+        <TouchableOpacity onPress={this.goToReviews} style={styles.alignCenter}>
           <Text style={styles.numbers}>{this.state.reviewsCount}</Text>
-          <Text>{I18n.t('profile.reviews_label')}</Text>
+          <Text style={styles.label}>{I18n.t('profile.reviews_label')}</Text>
           {/* <StarRating
             // eslint-disable-next-line
             buttonStyle={{ paddingHorizontal: 0 }}
@@ -462,10 +479,16 @@ class ProfileScreen extends React.Component<Props, State> {
           /> */}
         </TouchableOpacity>
         <TouchableOpacity
-          onPress={() => this.goToFollowers()}
+          onPress={this.goToFollowers}
           style={styles.alignCenter}>
           <Text style={styles.numbers}>{this.state.followersCount}</Text>
-          <Text>{I18n.t('profile.followers_label')}</Text>
+          <Text style={styles.label}>{I18n.t('profile.followers_label')}</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={this.goToFollowing}
+          style={styles.alignCenter}>
+          <Text style={styles.numbers}>{this.state.followingCount}</Text>
+          <Text style={styles.label}>{I18n.t('profile.following_label')}</Text>
         </TouchableOpacity>
       </View>
     );
@@ -742,6 +765,10 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     textAlign: 'center',
+  },
+  label: {
+    color: colors.grey2,
+    fontSize: 14,
   },
   editOrFollowButton: {
     marginRight: 20,

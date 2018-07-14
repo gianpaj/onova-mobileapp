@@ -9,6 +9,7 @@ import { Chat } from '../screens/Chat';
 import { Product } from '../screens/Product';
 import { Profile } from '../screens/Profile';
 import { Followers } from '../screens/Followers';
+import { Following } from '../screens/Following';
 import { Reviews } from '../screens/Reviews';
 import { Notifications } from '../screens/Notifications';
 import { Settings } from '../screens/Settings';
@@ -26,6 +27,7 @@ export {
   Product,
   Profile,
   Followers,
+  Following,
   Reviews,
   Notifications,
   Settings,

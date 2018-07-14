@@ -14,6 +14,7 @@ import {
   Reviews,
   Notifications,
   Followers,
+  Following,
   Settings,
   Search,
   SearchProductsResults,
@@ -43,6 +44,7 @@ export const StackNav = StackNavigator(
     notifications: { screen: Notifications },
     settings: { screen: Settings },
     followers: { screen: Followers },
+    following: { screen: Following },
     search: { screen: Search },
     searchProductsResults: { screen: SearchProductsResults },
     profileInStack: {

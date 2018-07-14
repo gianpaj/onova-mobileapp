@@ -50,7 +50,7 @@ type Props = {
   navigation?: NavigationScreenProp<*>,
   userData?: UserData,
   emptyState?: React.Component<*>,
-  shouldRefresh: boolean,
+  shouldRefresh?: boolean,
 };
 
 type State = {

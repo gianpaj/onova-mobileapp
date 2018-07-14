@@ -33,6 +33,12 @@ export default {
     other_tab: 'Інше',
     share:
       'Android: https://play.google.com/store/apps/details?id=com.onova.app&hl=uk - Apple Store: https://itunes.apple.com/ua/app/onova/id1365771422?mt=8',
+    alert_info_title: 'Information',
+    alert_info_body: `1. На головній сторінці видно лише речі від продавців які в тебе в контактах. Чим більше продавців додаватимеш в контакти, тим більше речей будеш бачити.
+
+    2. Щоб завантажити багато речей одночасно з комп'ютера, використовуй onova.co/uploader.
+
+    3. Якщо є якісь питання, пиши на акаунт @onova`,
   },
   image_grid: {
     error: 'Помилка завантаження інформації оголошення',

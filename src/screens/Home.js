@@ -2,9 +2,17 @@
 import colors from '../config/colors';
 
 import React, { PureComponent } from 'react';
-import { Dimensions, Share, Platform, StyleSheet, View } from 'react-native';
+import {
+  Alert,
+  Dimensions,
+  Share,
+  Platform,
+  StyleSheet,
+  View,
+} from 'react-native';
 import { Body, Button, Icon, Left, Right, Title } from 'native-base';
 import { TabViewAnimated, TabBar, SceneMap } from 'react-native-tab-view';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import I18n from '../i18n';
 import { Header, ImageGrid } from '../components';
@@ -76,12 +84,27 @@ export class Home extends PureComponent<Props, State> {
     Share.share({ message: I18n.t('home.share'), title: 'Share' });
   }
 
+  onInfoIcon() {
+    Alert.alert(
+      I18n.t('home.alert_info_title'),
+      I18n.t('home.alert_info_body')
+    );
+  }
+
   render() {
     return (
       <View testID="Home" style={{ flex: 1 }}>
         {/* <View style={styles.statusBarUnderlay} /> */}
         <Header hasTabs>
-          <Left style={styles.container} />
+          <Left style={styles.container}>
+            <Button
+              transparent
+              dark
+              style={{ marginLeft: 5 }}
+              onPress={this.onInfoIcon}>
+              <MaterialCommunityIcons name="information-outline" size={18} />
+            </Button>
+          </Left>
           <Body style={styles.container}>
             <Title style={{ color: colors.black }}>ONOVA</Title>
           </Body>

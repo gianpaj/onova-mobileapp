@@ -33,6 +33,12 @@ export default {
     other_tab: 'Other',
     share:
       'Android: https://play.google.com/store/apps/details?id=com.onova.app&hl=uk - Apple Store: https://itunes.apple.com/ua/app/onova/id1365771422?mt=8',
+    alert_info_title: 'Information',
+    alert_info_body: `1. On the homepage you see only the items from the sellers you follow The more sellers you follow, the more items you can see.
+
+    2. To upload your items faster and from the computer use onova.co/uploader
+
+    3. If you have any questions please contact @onova user.`,
   },
   image_grid: {
     error: 'Error fetching listing',

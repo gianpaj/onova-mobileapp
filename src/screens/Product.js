@@ -543,9 +543,7 @@ const styles = StyleSheet.create({
     color: colors.black,
   },
   location: {
-    // height: 20,
-    // lineHeight: 20,
-    // flex: 1,
+    marginTop: -2,
   },
   price: {
     alignSelf: 'center',

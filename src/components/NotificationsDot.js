@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, PixelRatio, Platform, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
 
 // eslint-disable-next-line
@@ -68,6 +68,10 @@ const st = StyleSheet.create({
   avatarContainer: {
     height: 25,
     width: 25,
+    borderRadius: Platform.select({
+      ios: 25 / PixelRatio.get(),
+      android: 20,
+    }),
   },
 });
 

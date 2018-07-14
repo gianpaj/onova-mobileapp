@@ -40,7 +40,7 @@ class AppNavigation extends Component<Props, *> {
     // FIXME: horrible hack
     NavigationService.setDispatcher(dispatch);
 
-    if (isLoggedIn && token) {
+    if (isLoggedIn && userData && token) {
       // checking again if user is still logged in
       dispatch(checkLogin(userData, token)).catch(e => {
         if (e.message == 'Invalid user') {

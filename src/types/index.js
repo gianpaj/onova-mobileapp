@@ -18,7 +18,7 @@ export type Product = {
   seller: UserData,
   status: string,
   tags?: Array<string>,
-  typeIds?: Array<number>,
+  typeIds: Array<number>,
   uuid: string,
 };
 

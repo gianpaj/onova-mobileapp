@@ -44,7 +44,7 @@ import colors from '../config/colors';
 import settings from '../config/settings';
 import * as api from '../utils/api';
 import * as ui from '../utils/ui';
-import type { UserData, ReduxState, Product } from '../types';
+import type { Dispatch, UserData, ReduxState, Product } from '../types';
 
 import type { NavigationScreenProp } from 'react-navigation';
 
@@ -56,6 +56,7 @@ const IMAGE_WIDTH = 1440;
 const IMAGE_HEIGHT = 1440;
 
 type Props = {
+  dispatch: Dispatch,
   isFocused: boolean,
   navigation?: NavigationScreenProp<*>,
   userData: UserData,
@@ -64,22 +65,21 @@ type Props = {
 
 type State = {
   description: string,
+  grp_1: number,
+  grp_2: number,
   images: any,
+  inEditMode: boolean,
+  isLoading: boolean,
+  location: ?{
+    longitude: number,
+    latitude: number,
+  },
+  numberOfBrands: number,
+  pending: boolean,
   price: string,
   tags: Array<string>,
   tagsText: string,
-  grp_1: number,
-  grp_2: number,
-  pending: boolean,
-  numberOfBrands: number,
-  inEditMode: boolean,
   uuid: string,
-  location:
-    | {
-        longitude: number,
-        latitude: number,
-      }
-    | {},
 };
 
 export class AddOrEditProductScreen extends React.Component<Props, State> {
@@ -99,40 +99,68 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
 
   state = {
     description: '',
-    price: '',
-    tags: [],
-    tagsText: '',
     grp_1: -1,
     grp_2: -1,
     images: [],
-    pending: false,
-    numberOfBrands: 0,
     inEditMode: false,
+    isLoading: true,
+    location: null,
+    numberOfBrands: 0,
+    pending: false,
+    price: '',
+    tags: [],
+    tagsText: '',
     uuid: '',
-    location: {},
   };
 
   componentDidMount() {
-    Permissions.check('location').then(response => {
-      // Response is one of: 'authorized', 'denied', 'restricted', or 'undetermined'
-      console.log(response);
-      if (response === 'restricted' || response === 'denied') {
-        // show error
-        this.alertForPermission(response);
-        this.closeModal();
-      } else if (response === 'undetermined') {
-        // show Modal explaining why
-        this.alertForPermission(response);
-      } else {
-        // authorized
-        this.getLocationAndInitiate();
+    const { params } = this.props.navigation.state;
+    if (params && params.item) {
+      this.setState({ inEditMode: true, isLoading: false });
+      const { item }: { item: Product } = params;
+      let images = [];
+      for (let i = 0; i < item.photoURIs.length; i++) {
+        images.push({
+          url: item.photoURIs[i],
+          id: i,
+        });
       }
-    });
+      return this.setState({
+        images,
+        description: item.description,
+        price: item.price,
+        tags: item.tags,
+        grp_1: item.categoryIds[0],
+        grp_2: item.typeIds[0],
+        uuid: item.uuid,
+      });
+    }
+
+    Toast.loading(I18n.t('alerts.loading_message'), 20);
+    Permissions.check('location')
+      .then(response => {
+        // Response is one of: 'authorized', 'denied', 'restricted', or 'undetermined'
+        console.log(response);
+        if (response === 'restricted' || response === 'denied') {
+          // show error
+          this.alertForPermission(response);
+          this.closeModal();
+        } else if (response === 'undetermined') {
+          // show Modal explaining why
+          this.alertForPermission(response);
+        } else {
+          // authorized
+          this.getLocationAndInitiate();
+        }
+      })
+      .catch(e => console.error(e))
+      .then(() => {
+        this.setState({ isLoading: false });
+        Toast.hide();
+      });
   }
 
   getLocationAndInitiate = () => {
-    // $FlowFixMe
-    // navigator.geolocation.requestAuthorization();
     navigator.geolocation.getCurrentPosition(
       position => {
         const { coords } = position;
@@ -143,30 +171,8 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
             latitude: coords.latitude,
           },
         });
-        const { params } = this.props.navigation.state;
-        // if editing
-        if (params && params.item) {
-          const { item }: { item: Product } = params;
-          let images = [];
-          for (let i = 0; i < item.photoURIs.length; i++) {
-            images.push({
-              url: item.photoURIs[i],
-              id: i,
-            });
-          }
-          this.setState({
-            inEditMode: true,
-            images,
-            description: item.description,
-            price: item.price,
-            tags: item.tags,
-            grp_1: item.categoryIds[0],
-            grp_2: item.typeIds[0],
-            uuid: item.uuid,
-          });
-        } else if (this.state.images.length == 0) {
-          this.selectPhotoTapped(0);
-        }
+        // not editing
+        this.selectPhotoTapped(0);
       },
       err => {
         // Location authorized but not setting is not enabled (only Android)
@@ -183,7 +189,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
         }
         console.error(err);
       },
-      { enableHighAccuracy: true, timeout: 20000, maximumAge: 10000 }
+      { enableHighAccuracy: true, timeout: 20 * 1000, maximumAge: 60 * 1000 }
     );
   };
 
@@ -402,6 +408,9 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
       //   .dispose()
       //   .then(() => console.log('cleaned'));
     } else {
+      if (!location) {
+        throw Error('location is required');
+      }
       formData.append('latitude', location.latitude.toString());
       formData.append('longitude', location.longitude.toString());
       images.forEach((image, i) => {
@@ -539,7 +548,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
       // If there is at least one image
       this.state.images.length > 0 &&
       // location
-      Object.keys(this.state.location).length > 0 &&
+      (this.state.inEditMode || this.state.location !== null) &&
       // If the item is uploading is NOT in progress
       !this.state.pending &&
       // If the price is not empty
@@ -590,9 +599,10 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
   }
 
   render() {
-    const { images, tags, inEditMode } = this.state;
+    const { images, tags, inEditMode, isLoading } = this.state;
 
     // if (images.length < 1 && !inEditMode) return null;
+    if (isLoading) return null;
 
     return (
       <Container>

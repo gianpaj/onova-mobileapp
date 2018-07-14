@@ -17,7 +17,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0.7</string>
+	<string>1.0.9</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
@@ -36,7 +36,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>107001</string>
+	<string>108000</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>LSRequiresIPhoneOS</key>
@@ -59,34 +59,26 @@
 			</dict>
 		</dict>
 	</dict>
-	<key>NSCameraUsageDescription</key>
-	<string>Onova is requesting access to your camera to add pictures to the item</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Onova uses your location to know where your shop is located.</string>
-	<key>NSMainNibFile</key>
-	<string>LaunchScreen</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Onova is requesting access to your photo library to add pictures to your item</string>
 	<key>NSAppleMusicUsageDescription</key>
 	<string>Onova does not need this</string>
-  <key>NSBluetoothPeripheralUsageDescription</key>
-  <string>Onova does not need this</string>
-  <key>NSCalendarsUsageDescription</key>
-  <string>Onova does not need this</string>
-  <key>NSCameraUsageDescription</key>
-  <string>Onova does not need this</string>
-  <key>NSLocationWhenInUseUsageDescription</key>
-  <string>Onova does not need this</string>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>Onova does not need this</string>
+	<key>NSCalendarsUsageDescription</key>
+	<string>Onova does not need this</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Onova does not need this</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Onova does not need this</string>
 	<key>NSMainNibFile</key>
 	<string>LaunchScreen</string>
 	<key>NSMotionUsageDescription</key>
 	<string>Onova does not need this</string>
-  <key>NSPhotoLibraryAddUsageDescription</key>
-  <string>Onova does not need this</string>
-  <key>NSPhotoLibraryUsageDescription</key>
-  <string>Onova does not need this</string>
-  <key>NSSpeechRecognitionUsageDescription</key>
-  <string>Onova does not need this</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Onova does not need this</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Onova does not need this</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>Onova does not need this</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Ionicons.ttf</string>

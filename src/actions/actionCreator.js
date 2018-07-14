@@ -82,13 +82,13 @@ const login = (data: LoginData) => (dispatch: Dispatch) => (
       }
       return userData;
     })
-    .then(userData => initializePusher(userData, token))
+    .then(userData => initializePusher(userData, userData.token))
     .then(userData => {
       // FIXME: use `userData` key in payload
       dispatch({ type: LOGIN_SUCCESS, payload: userData });
       return registerPushNotifications()
         .then(pushToken => {
-          if (pushToken) return sendToken(pushToken, userData, token);
+          if (pushToken) return sendToken(pushToken, userData, userData.token);
         })
         .catch(err => {
           console.warn(err);

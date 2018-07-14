@@ -173,11 +173,10 @@ class NotificationsContainer extends Component<Props, State> {
     return (
       <ListItem
         button
-        underlayColor={colors.red}
         style={{ marginLeft: 0 }}
         onPress={() => {
-          if (item.triggeredType == 'User') this.goToProfile(item.sourceUser);
-          if (item.triggeredType == 'Product')
+          if (item.triggeredType === 'User') this.goToProfile(item.sourceUser);
+          if (item.triggeredType === 'Product')
             this.goToProduct(item.triggeredBy);
           // if (item.triggeredType == 'Order')
           //   this.goToChat(item.triggeredBy);
@@ -185,7 +184,7 @@ class NotificationsContainer extends Component<Props, State> {
         {item.sourceUser && (
           <Avatar
             size={'verySmall'}
-            style={{ marginHorizontal: 10, top: -10 }}
+            style={styles.avatarContainer}
             uri={item.sourceUser.profilePic}
             placeholderText={item.data.senderName}
           />
@@ -294,7 +293,11 @@ const styles = StyleSheet.create({
   name: {
     color: colors.grey1,
     fontWeight: '800',
-    width: '55%',
+    width: '85%',
+  },
+  avatarContainer: {
+    marginHorizontal: 10,
+    top: -10,
   },
   time: {
     fontSize: 12,

@@ -57,7 +57,6 @@ const IMAGE_HEIGHT = 1440;
 
 type Props = {
   dispatch: Dispatch,
-  isFocused: boolean,
   navigation?: NavigationScreenProp<*>,
   userData: UserData,
   token: string,

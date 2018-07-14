@@ -10,7 +10,11 @@ jest.mock('react-native-permissions', () => mockPermissions);
 
 import { AddOrEditProductScreen } from '../../src/screens/AddOrEditProduct';
 
-describe('AddOrEditProduct screen', () => {
+const sleep = ms => {
+  return new Promise(resolve => setTimeout(resolve, ms));
+};
+
+describe('AddOrEditProduct screen (inEditMode false)', () => {
   describe('initial rendering', () => {
     const wrapper = shallow(
       <AddOrEditProductScreen
@@ -19,17 +23,17 @@ describe('AddOrEditProduct screen', () => {
         navigation={{ state: {} }}
         // $FlowExpectedError
         userData={{ accountStatus: 'verified' }}
-        isFocused={false}
         token=""
       />
     );
 
-    it('at the beginning the Add Item button should NOT be enabled', () => {
-      setTimeout(() => {
+    it('at the beginning the Add Item button should NOT be enabled', async () => {
+      await wrapper.instance().componentDidMount();
         expect(wrapper.state('location')).toEqual({
           longitude: 60,
           latitude: 60,
         });
+      await sleep(100);
         expect(wrapper.state('images')).toEqual([{ id: 0, url: '' }]);
       }, 100);
       expect(wrapper.find('[testID="addItemButton"]').prop('disabled')).toBe(

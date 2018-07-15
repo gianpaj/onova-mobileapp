@@ -36,9 +36,10 @@ export default {
     alert_info_title: 'Information',
     alert_info_body: `1. On the homepage you see only the items from the sellers you follow The more sellers you follow, the more items you can see.
 
-    2. To upload your items faster and from the computer use onova.co/uploader
+2. To upload your items faster and from the computer use:
+onova.co/uploader
 
-    3. If you have any questions please contact @onova user.`,
+3. If you have any questions please contact @onova user.`,
   },
   image_grid: {
     error: 'Error fetching listing',

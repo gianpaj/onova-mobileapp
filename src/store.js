@@ -42,6 +42,8 @@ if (__DEV__) {
   console.debug('__DEV__ mode on');
 }
 
+const middlewares = [thunk, reactNavigation /*, analytics */];
+
 function configureStore() {
   // $FlowFixMe
   const store = createStore(
@@ -49,16 +51,9 @@ function configureStore() {
     __DEV__ &&
       window.__REDUX_DEVTOOLS_EXTENSION__ &&
       window.__REDUX_DEVTOOLS_EXTENSION__(),
-    applyMiddleware(
-      thunk,
-      reactNavigation
-      // analytics,
-    )
+    applyMiddleware(...middlewares)
   );
-  const persistor = persistStore(store, {}, () => {
-    // console.warn('rehydrationComplete');
-    // store.dispatch(reloadUserAndInitialize());
-  });
+  const persistor = persistStore(store);
   // persistor.purge();
   return { persistor, store };
 }

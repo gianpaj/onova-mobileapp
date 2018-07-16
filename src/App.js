@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react';
-import { ActivityIndicator, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, ImageBackground, StyleSheet } from 'react-native';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/lib/integration/react';
 import { Root } from 'native-base';
@@ -9,6 +9,7 @@ import { Sentry } from 'react-native-sentry';
 
 import configureStore from './store';
 import AppNavigation from './navigation';
+import colors from './config/colors';
 
 const { store, persistor } = configureStore();
 
@@ -28,9 +29,12 @@ export default class App extends React.Component<*> {
   }
 
   _renderLoading = () => (
-    <View style={styles.container}>
-      <ActivityIndicator size="large" />
-    </View>
+    <ImageBackground
+      source={require('./assets/images/bg.png')}
+      resizeMode="repeat"
+      style={styles.container}>
+      <ActivityIndicator size="large" color={colors.black} />
+    </ImageBackground>
   );
 
   render() {

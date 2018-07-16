@@ -59,8 +59,9 @@ export class AddReviewContainer extends Component<Props, State> {
   };
 
   async componentDidMount() {
-    const { token, _id } = this.props;
-    let params = this.props.navigation.state.params;
+    const { token } = this.props;
+    const { _id } = this.props.userData;
+    const params = this.props.navigation.state.params;
     let { orderId } = params;
 
     // for development
@@ -70,8 +71,8 @@ export class AddReviewContainer extends Component<Props, State> {
 
     try {
       const order: Order = await api.getOrder(orderId, token);
-      const iAmTheSeller = _id.toString() == order.seller._id.toString();
-      const iAmTheBuyer = _id.toString() == order.buyer._id.toString();
+      const iAmTheSeller = _id.toString() === order.seller._id.toString();
+      const iAmTheBuyer = _id.toString() === order.buyer._id.toString();
       if (
         (iAmTheSeller && order.archivedBySeller) ||
         (iAmTheBuyer && order.archivedByBuyer)

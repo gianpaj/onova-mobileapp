@@ -122,7 +122,7 @@ onova.co/uploader
     select_photo_source_gallery: 'Gallery',
     select_photo_source_cancel: 'Cancel',
     permission_title: 'Can we access your location?',
-    permission_message: "Your items will show a city where you're located",
+    permission_message: 'Onova uses your location when adding a new item',
     permission_alert_button_settings: 'Open Settings',
   },
   profile: {

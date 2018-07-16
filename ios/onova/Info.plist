@@ -71,6 +71,12 @@
 	<string>Onova does not need this</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
 	<string>Onova does not need this</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Onova uses to your camera in order to add pictures when creating an item</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Onova uses your location when adding a new item</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Onova uses to your photo library in order to add pictures when creating an item</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Ionicons.ttf</string>

@@ -7,6 +7,7 @@ import {
   Image,
   FlatList,
   StyleSheet,
+  Text,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -541,7 +542,7 @@ class ChatContainer extends Component<Props, State> {
     );
   };
 
-  goToAddReviewOrCancel(orderId: string) {
+  goToAddReviewOrArchiveOrder(orderId: string) {
     // $FlowFixMe
     this.props.navigation.navigate({
       routeName: 'addReview',
@@ -554,7 +555,7 @@ class ChatContainer extends Component<Props, State> {
   _renderOrderSquare = ({ item }: { item: Order }) => (
     <TouchableOpacity
       style={st.orderSquare}
-      onPress={() => this.goToAddReviewOrCancel(item.id)}>
+      onPress={() => this.goToAddReviewOrArchiveOrder(item.id)}>
       <Image
         style={st.itemImage}
         source={{
@@ -572,6 +573,14 @@ class ChatContainer extends Component<Props, State> {
     const { navigation, userData } = this.props;
     const { messages, isLoading, partner, orders } = this.state;
 
+    if (isLoading) {
+      return (
+        <View style={st.container}>
+          <ActivityIndicator size="large" />
+        </View>
+      );
+    }
+
     return (
       <Container style={st.flex1}>
         <Header>
@@ -581,11 +590,8 @@ class ChatContainer extends Component<Props, State> {
             </NBButton>
           </Left>
           <Body style={st.containerHeader}>
-            {!isLoading &&
-              partner && (
-                <Title
-                  style={{ color: colors.black }}
-                  onPress={this.goToProfile}>
+            {partner && (
+              <Title style={{ color: colors.black }} onPress={this.goToProfile}>
                   @{partner.username}
                 </Title>
               )}
@@ -593,22 +599,18 @@ class ChatContainer extends Component<Props, State> {
           <Right />
         </Header>
         <View style={st.flex1}>
-          {isLoading ? (
-            <View style={st.container}>
-              <ActivityIndicator size="large" />
-            </View>
-          ) : (
             <View style={st.flex1}>
               <View style={st.orderSquaresContainer}>
-                {orders.length > 0 && (
                   <FlatList
                     data={orders}
                     keyExtractor={this._keyExtractor}
                     horizontal
                     ItemSeparatorComponent={this._renderSeparatorHorizontal}
                     renderItem={this._renderOrderSquare}
-                  />
+                ListEmptyComponent={() => (
+                  <Text style={st.noOrders}>no orders</Text>
                 )}
+              />
               </View>
               <GiftedChat
                 messages={messages}
@@ -638,7 +640,6 @@ class ChatContainer extends Component<Props, State> {
                 // renderAvatar={null}
               />
             </View>
-          )}
         </View>
       </Container>
     );
@@ -682,6 +683,9 @@ const st = StyleSheet.create({
     borderBottomWidth: 2,
     borderColor: colors.active,
     marginBottom: 3,
+  },
+  noOrders: {
+    alignSelf: 'center',
   },
   flex1: {
     flex: 1,

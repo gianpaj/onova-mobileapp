@@ -14,16 +14,10 @@ type Props = {
 };
 
 class NotificationsDot extends React.Component<Props, void> {
-  shouldComponentUpdate(nextProps) {
-    // fix error when logging out
-    if (!nextProps.userData) {
-      return false;
-    }
-    return true;
-  }
-
   render() {
     const { userData, focused } = this.props;
+
+    if (!userData) return null;
 
     return (
       <View style={st.iconContainer}>

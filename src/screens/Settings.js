@@ -285,14 +285,6 @@ class SettingsContainer extends Component<Props, State> {
   }
   */
 
-  shouldComponentUpdate(nextProps) {
-    // fix error when logging out
-    if (!nextProps.userData) {
-      return false;
-    }
-    return true;
-  }
-
   handleFocus(ref) {
     this.setState({
       nextFocusDisabled: ref === 7,
@@ -321,7 +313,7 @@ class SettingsContainer extends Component<Props, State> {
   }
 
   render() {
-    // const { userData } = this.props;
+    const { userData } = this.props;
     const {
       pending,
       isLoading,
@@ -332,7 +324,7 @@ class SettingsContainer extends Component<Props, State> {
       usernameError,
     } = this.state;
 
-    if (isLoading) return null;
+    if (isLoading || !userData) return null;
 
     return (
       <Container>

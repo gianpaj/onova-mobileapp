@@ -491,19 +491,6 @@ class ChatContainer extends Component<Props, State> {
     );
   }
 
-  static getDerivedStateFromProps(props) {
-    // fix error when logging out
-    if (!props.userData) return null;
-  }
-
-  shouldComponentUpdate(nextProps) {
-    // fix error when logging out
-    if (!nextProps.userData) {
-      return false;
-    }
-    return true;
-  }
-
   renderActions = (props: any) => (
     <ChatActions {...props} uploadingImage={this.state.uploadingImage} />
   );

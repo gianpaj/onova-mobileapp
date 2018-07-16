@@ -409,18 +409,11 @@ class ProfileScreen extends React.Component<Props, State> {
     this.props.navigation.state.params ? true : false;
 
   openNotifications = () =>
+    // $FlowFixMe
     this.props.navigation.navigate({
       routeName: 'notifications',
       key: `notifications`,
     });
-
-  shouldComponentUpdate(nextProps) {
-    // fix error when logging out
-    if (!nextProps.userData) {
-      return false;
-    }
-    return true;
-  }
 
   shouldShowNoticeBar() {
     return this.props.userData.accountStatus == 'notverified';
@@ -622,9 +615,9 @@ class ProfileScreen extends React.Component<Props, State> {
   render() {
     const { _id, username, isFetching } = this.state;
 
-    const { navigation } = this.props;
+    const { navigation, userData } = this.props;
 
-    if (isFetching) return null;
+    if (isFetching || !userData) return null;
 
     return (
       <Container>

@@ -164,11 +164,6 @@ class CheckoutContainer extends Component<Props, State> {
     //TODO: unreserve product and cancel order
   }
 
-  static getDerivedStateFromProps(props) {
-    // fix error when logging out
-    if (!props.userData) return null;
-  }
-
   onCheckout = () => {
     const { item, order } = this.state;
     // TODO: temp
@@ -321,14 +316,6 @@ class CheckoutContainer extends Component<Props, State> {
       expiry: `${paymentInfo.exp_month} / ${paymentInfo.exp_year}`,
       name: ' ',
     };
-  }
-
-  shouldComponentUpdate(nextProps) {
-    // fix error when logging out
-    if (!nextProps.userData) {
-      return false;
-    }
-    return true;
   }
 
   onCancel = () => {

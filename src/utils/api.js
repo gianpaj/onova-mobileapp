@@ -1,6 +1,9 @@
 // @flow
 
 import axios, { CancelTokenSource } from 'axios';
+
+import I18n from '../i18n';
+
 import type { Order, Product, UserData } from '../types';
 
 let config;
@@ -108,9 +111,11 @@ export async function request(
     if (!options.suppressRedBox) {
       logError(error, path, method);
     }
-    if (error.message == 'Network request failed') {
-      error.message =
-        'Please check your Internetz. Issue connecting with Onova servers';
+    if (
+      error.message === 'Network request failed' ||
+      error.message.includes('timeout')
+    ) {
+      error.message = I18n.t('alerts.network_error');
     }
     throw error;
   }

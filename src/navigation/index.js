@@ -15,8 +15,9 @@ import { checkLogin, logout } from '../actions/actionCreator';
 import NavigationStack from './navigationStack';
 import NavigationService from './NavigationService';
 
-import type { Dispatch, ReduxState } from '../types';
+import type { Dispatch, ReduxState, UserData } from '../types';
 import type { NavigationState } from '../types/navigationReducer';
+import colors from '../config/colors';
 
 type Props = {
   checkedLoggedIn: boolean,
@@ -48,6 +49,8 @@ class AppNavigation extends Component<Props, *> {
         }
         console.warn(e);
       });
+    } else {
+      dispatch(logout());
     }
   }
 
@@ -66,7 +69,7 @@ class AppNavigation extends Component<Props, *> {
       source={require('../assets/images/bg.png')}
       resizeMode="repeat"
       style={styles.container}>
-      <ActivityIndicator size="large" />
+      <ActivityIndicator size="large" color={colors.black} />
     </ImageBackground>
   );
 
@@ -110,8 +113,8 @@ const mapStateToProps: any = (state: ReduxState) => ({
   checkedLoggedIn: state.LoginReducer.checkedLoggedIn,
   isLoggedIn: state.LoginReducer.isLoggedIn,
   navigationState: state.NavigationReducer,
-  userData: state.LoginReducer.data,
   token: state.LoginReducer.token,
+  userData: state.LoginReducer.data,
 });
 
 export default connect(mapStateToProps)(AppNavigation);

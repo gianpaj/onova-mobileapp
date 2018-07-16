@@ -44,10 +44,10 @@ if (process.env.NODE_ENV == 'dev') {
   config = require('../../config-prod.json');
 }
 
-const login = (data: LoginData) => (dispatch: Dispatch) => (
-  dispatch({ type: LOGIN_PENDING }),
-  Toast.loading('', 30),
-  api
+const login = (data: LoginData) => (dispatch: Dispatch) => {
+  dispatch({ type: LOGIN_PENDING });
+  Toast.loading('', 30);
+  return api
     .post('/api/auth/login', {
       emailAddress: data.emailAddress,
       password: data.password,
@@ -99,13 +99,12 @@ const login = (data: LoginData) => (dispatch: Dispatch) => (
     .catch((err: api.APIError) => {
       Toast.hide();
       if (err.message !== 'NOT_VERIFIED') {
-        dispatch(handleErrorWithAlert({ type: LOGIN_FAIL }, err));
-      } else {
-        dispatch({ type: LOGIN_FAIL });
-        throw err;
+        return dispatch(handleErrorWithAlert({ type: LOGIN_FAIL }, err));
       }
-    })
-);
+      dispatch({ type: LOGIN_FAIL });
+      throw err;
+    });
+};
 
 const initializePusher = (
   userData: UserData,
@@ -398,28 +397,28 @@ const handleErrorWithAlert = (data: any, err: any) => {
   if (err.status == 400 || err.status == 500) {
     errorType = 'danger';
   } else if (err.status == 401) {
-    if (err.message == 'invalid password') {
-      err.message = I18n.t('alerts.password_error');
-    }
-    if (err.message == 'invalid email') {
-      err.message = I18n.t('alerts.email_error');
-    }
     // auth error
     errorType = 'warning';
+
+    if (err.message == 'invalid password') {
+      err.message = I18n.t('alerts.password_error');
+    } else if (err.message == 'invalid email') {
+      err.message = I18n.t('alerts.`email_error`');
+    }
   } else if (
     err.message.includes('timeout') ||
-    err.message == 'Network Error'
+    err.message === 'Network Error'
   ) {
-    err.message = I18n.t('alerts.network_error');
     errorType = 'danger';
-  } else if (err.message == 'operation_canceled') {
-    return {
-      type: data.type,
-    };
+    err.message = I18n.t('alerts.network_error');
+    // } else if (err.message == 'operation_canceled') {
+    //   return {
+    //     type: data.type,
+    //   };
   } else {
     console.error(err);
   }
-  if (!__TESTING__) ui.showToast(err.message, errorType || '');
+  if (!global.__TESTING__) ui.showToast(err.message, errorType || '');
   return {
     type: data.type,
   };

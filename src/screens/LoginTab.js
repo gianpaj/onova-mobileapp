@@ -105,8 +105,8 @@ export class LoginTabContainer extends React.Component<Props, State> {
   onLogin = () => {
     const { emailAddress, password } = this.state;
     if (!emailAddress || !password || this.props.loading) return;
-    this.props.dispatch(login({ emailAddress, password })).catch(() => {
-      this.setVerifyAccountVisible(true);
+    this.props.dispatch(login({ emailAddress, password })).catch(e => {
+      this.setState({ verifyAccountModalVisible: true });
     });
   };
 
@@ -123,10 +123,6 @@ export class LoginTabContainer extends React.Component<Props, State> {
         pwdResetModalVisible: visible,
       };
     });
-  }
-
-  setVerifyAccountVisible(visible: boolean) {
-    this.setState({ verifyAccountModalVisible: visible });
   }
 
   onResetPassword = () => {
@@ -312,7 +308,9 @@ export class LoginTabContainer extends React.Component<Props, State> {
       <Modal
         animationType="slide"
         visible={this.state.verifyAccountModalVisible}
-        onRequestClose={() => this.setVerifyAccountVisible(false)}>
+        onRequestClose={() =>
+          this.setState({ verifyAccountModalVisible: false })
+        }>
         <View>
           <Header noShadow style={{ backgroundColor: colors.transparent }}>
             <Left />
@@ -320,7 +318,9 @@ export class LoginTabContainer extends React.Component<Props, State> {
             <Right>
               <NBButton
                 transparent
-                onPress={() => this.setVerifyAccountVisible(false)}>
+                onPress={() =>
+                  this.setState({ verifyAccountModalVisible: false })
+                }>
                 <NBIcon name="close" style={{ color: colors.black }} />
               </NBButton>
             </Right>

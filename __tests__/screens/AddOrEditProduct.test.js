@@ -35,7 +35,6 @@ describe('AddOrEditProduct screen (inEditMode false)', () => {
         });
       await sleep(100);
         expect(wrapper.state('images')).toEqual([{ id: 0, url: '' }]);
-      }, 100);
       expect(wrapper.find('[testID="addItemButton"]').prop('disabled')).toBe(
         true
       );

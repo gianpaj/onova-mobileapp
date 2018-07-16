@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react';
-import { ActivityIndicator, AppState, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/lib/integration/react';
 import { Root } from 'native-base';
@@ -12,19 +12,11 @@ import AppNavigation from './navigation';
 
 const { store, persistor } = configureStore();
 
-type State = {
-  appState: AppState,
-};
-
-export default class App extends React.Component<*, State> {
-  state = {
-    appState: AppState.currentState,
-  };
-
+export default class App extends React.Component<*> {
   constructor() {
     super();
 
-    console.debug(`Running in ${process.env.NODE_ENV} environment`);
+    console.debug(`NODE_ENV = ${process.env.NODE_ENV}`);
 
     if (process.env.NODE_ENV == 'production') {
       const config = require('../config-prod.json');

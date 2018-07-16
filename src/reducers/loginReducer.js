@@ -84,7 +84,12 @@ export default function(
       return { ...state, hasError: false, checkedLoggedIn: true };
 
     case RELOAD_FAIL:
-      return { ...state, hasError: true, checkedLoggedIn: false };
+      return {
+        ...state,
+        hasError: true,
+        loading: false,
+        checkedLoggedIn: false,
+      };
 
     // case GOOGLE_LOGIN_PENDING:
     //   return {
@@ -101,7 +106,9 @@ export default function(
       return {
         ...state,
         data: null,
+        token: '',
         isLoggedIn: false,
+        loading: false,
         loadingGoogleLogin: false,
       };
 

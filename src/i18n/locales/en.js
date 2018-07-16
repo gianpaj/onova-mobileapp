@@ -69,7 +69,7 @@ onova.co/uploader
       'Please verify your email address to write a comment. Check your inbox',
   },
   alerts: {
-    email_error: 'The email address does not exist',
+    email_error: 'An account with that email address does not exist',
     password_error: 'The password is incorrect',
     loading_message: 'Loading...',
     network_error: 'Connectivity issue. Please check your internetz',

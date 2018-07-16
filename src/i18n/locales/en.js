@@ -14,7 +14,8 @@ export default {
       button: 'Email instructions',
     },
     verify_account: {
-      title: 'Only one step left! Check your inbox for a confirmation email.',
+      title:
+        'One step left! Check your inbox for a confirmation email and click on the link.',
     },
   },
   signup: {
@@ -34,12 +35,12 @@ export default {
     share:
       'Android: https://play.google.com/store/apps/details?id=com.onova.app&hl=uk - Apple Store: https://itunes.apple.com/ua/app/onova/id1365771422?mt=8',
     alert_info_title: 'Information',
-    alert_info_body: `1. On the homepage you see only the items from the sellers you follow The more sellers you follow, the more items you can see.
+    alert_info_body: `1. On the homepage, you see only the items from the sellers you follow The more sellers you follow, the more items you can see.
 
-2. To upload your items faster and from the computer use:
+2. To upload multiple items at once items or from a computer connect to:
 onova.co/uploader
 
-3. If you have any questions please contact @onova user.`,
+3. If you have any questions please chat to @onova user`,
   },
   image_grid: {
     error: 'Error fetching listing',
@@ -48,14 +49,14 @@ onova.co/uploader
     empty_state_button: 'Search',
   },
   image_grid_search: {
-    empty_state_title: 'We did not find anything like that',
-    empty_state_body: 'Try searching for some other things you like',
+    empty_state_title: "We couldn't find any items",
+    empty_state_body: 'Try searching with some other options',
   },
   product: {
     buy_button: 'Chat',
     alert_confirm_delete: 'Confirm deletion?',
     toast_warning_on_unverified_account:
-      'Please verify your email address to buy. Check your inbox',
+      'Please verify your email address to buy an item. Check your inbox',
     toast_warning_on_product_sold: 'This product is not longer for sale',
     toast_warning_ok_button: 'OK',
     alert_report_title: 'Report Item?',
@@ -113,7 +114,7 @@ onova.co/uploader
     price_placeholder: '123 UAH',
     description_label: 'Description:',
     description_placeholder:
-      'Please provide details such as brand, size, condition about the item',
+      'Please provide details such as brand, size and condition about the item',
     hashtags_label: '#tags:',
     hashtags_placeholder: 'adidas, summer',
     toast_uploading: 'Uploading...',
@@ -121,7 +122,7 @@ onova.co/uploader
     select_photo_source_gallery: 'Gallery',
     select_photo_source_cancel: 'Cancel',
     permission_title: 'Can we access your location?',
-    permission_message: 'We need access so items have a specific location.',
+    permission_message: "Your items will show a city where you're located",
     permission_alert_button_settings: 'Open Settings',
   },
   profile: {
@@ -204,8 +205,8 @@ onova.co/uploader
     text_placeholder: 'Text (optional)',
     rating_error: 'Please select a rating',
     button: 'Leave a review',
-    toast_msg_archived: 'You have already archived this order',
+    toast_msg_archived: 'This order is already archived',
     toast_msg_reviewed: 'You have already left a review',
-    alert_confirm_archive: 'Are you sure you want to archive the order?',
+    alert_confirm_archive: 'Are you sure you want to archive this order?',
   },
 };

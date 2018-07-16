@@ -142,6 +142,7 @@ const initializePusher = (
           debug: () => {},
           verbose: () => {},
         },
+        connectionTimeout: 30 * 1000,
       });
       chatManager
         .connect()

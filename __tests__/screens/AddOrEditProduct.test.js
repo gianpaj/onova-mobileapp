@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react';
-import { shallow } from 'enzyme';
+import renderer from 'react-test-renderer';
 
 import mockImagePicker from '../../__mocks__/react-native-image-crop-picker';
 jest.mock('react-native-image-crop-picker', () => mockImagePicker);
@@ -16,7 +16,7 @@ const sleep = ms => {
 
 describe('AddOrEditProduct screen (inEditMode false)', () => {
   describe('initial rendering', () => {
-    const wrapper = shallow(
+    const tree = renderer.create(
       <AddOrEditProductScreen
         dispatch={() => {}}
         // $FlowExpectedError
@@ -28,35 +28,34 @@ describe('AddOrEditProduct screen (inEditMode false)', () => {
     );
 
     it('at the beginning the Add Item button should NOT be enabled', async () => {
-      await wrapper.instance().componentDidMount();
-        expect(wrapper.state('location')).toEqual({
-          longitude: 60,
-          latitude: 60,
-        });
       await sleep(100);
-        expect(wrapper.state('images')).toEqual([{ id: 0, url: '' }]);
-      expect(wrapper.find('[testID="addItemButton"]').prop('disabled')).toBe(
-        true
-      );
+      const inst = tree.getInstance();
+      expect(inst.state.location).toEqual({
+        longitude: 60,
+        latitude: 60,
+      });
+      expect(inst.state.images).toEqual([{ id: 0, url: '' }]);
+      expect(
+        tree.root.findByProps({ testID: 'addItemButton' }).props.disabled
+      ).toBe(true);
     });
 
-    it.skip('should require a min length description', () => {
-      wrapper.setState(
-        {
-          description: 'a',
-          price: '123.45',
-          grp_1: 0,
-          grp_2: 0,
-        },
-        () => {
-          // console.log(wrapper.state());
-
-          // const state = wrapper.state();
-          // console.log(addEnabled(state));
-          expect(
-            wrapper.find('[testID="addItemButton"]').prop('disabled')
-          ).toBe(true);
-        }
+    it('should require a min length description', () => {
+      const { root } = tree;
+      expect(root.findByProps({ testID: 'addItemButton' }).props.disabled).toBe(
+        true
+      );
+      root.instance.setState({
+        description: 'a',
+        price: '123.45',
+        grp_1: 0,
+        grp_2: 0,
+      });
+      const desc = root.findByProps({ testID: 'description' });
+      expect(desc.props.value).toBe('a');
+      desc.props.onChangeText('this shoes rock');
+      expect(root.findByProps({ testID: 'addItemButton' }).props.disabled).toBe(
+        false
       );
     });
   });

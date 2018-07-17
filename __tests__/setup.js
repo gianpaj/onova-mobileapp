@@ -18,3 +18,5 @@ global.navigator = {
     watchPosition: jest.fn(),
   },
 };
+
+jest.mock('NativeAnimatedHelper');

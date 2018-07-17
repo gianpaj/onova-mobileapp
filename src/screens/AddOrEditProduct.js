@@ -689,6 +689,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
             /> */}
             <View style={{ paddingLeft: 6 }}>
               <InputItem
+                testID="price"
                 autoCorrect={false}
                 clearButtonMode="while-editing"
                 editable={!pending}
@@ -706,6 +707,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
               {I18n.t('add_or_edit_item.description_label')}
             </FormLabel>
             <TextareaItem
+              testID="description"
               editable={!pending}
               style={styles.inputContainerNew}
               last // to set borderBottomWidth=0

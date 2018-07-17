@@ -14,7 +14,7 @@ import {
   Right,
   Title,
 } from 'native-base';
-import { FormInput, FormLabel } from 'react-native-elements';
+import { FormLabel } from 'react-native-elements';
 import RadioForm, {
   RadioButton,
   RadioButtonInput,
@@ -22,10 +22,11 @@ import RadioForm, {
 } from 'react-native-simple-radio-button';
 import ImagePicker from 'react-native-image-crop-picker';
 import {
-  TextareaItem,
-  NoticeBar,
-  Toast,
   ImagePicker as AntImagePicker,
+  InputItem,
+  NoticeBar,
+  TextareaItem,
+  Toast,
   WingBlank,
 } from 'antd-mobile-rn';
 import Permissions from 'react-native-permissions';
@@ -64,6 +65,7 @@ type Props = {
 
 type State = {
   description: string,
+  descriptionFocused: boolean,
   grp_1: number,
   grp_2: number,
   images: any,
@@ -76,6 +78,7 @@ type State = {
   numberOfBrands: number,
   pending: boolean,
   price: string,
+  priceFocused: boolean,
   tags: Array<string>,
   tagsText: string,
   uuid: string,
@@ -98,6 +101,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
 
   state = {
     description: '',
+    descriptionFocused: false,
     grp_1: -1,
     grp_2: -1,
     images: [],
@@ -107,6 +111,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     numberOfBrands: 0,
     pending: false,
     price: '',
+    priceFocused: false,
     tags: [],
     tagsText: '',
     uuid: '',
@@ -533,7 +538,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
    */
   changePrice = (price: string) => {
     const pattern = /^(\b[\d]+[\.]?[\d]{0,2})$/;
-    if (pattern.test(price) || price == '') {
+    if (pattern.test(price) || price === '') {
       this.setState({ price });
     }
   };
@@ -598,7 +603,20 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
   }
 
   render() {
-    const { images, tags, inEditMode, isLoading } = this.state;
+    const {
+      description,
+      descriptionFocused,
+      grp_1,
+      grp_2,
+      images,
+      inEditMode,
+      isLoading,
+      pending,
+      price,
+      priceFocused,
+      tags,
+      tagsText,
+    } = this.state;
 
     // if (images.length < 1 && !inEditMode) return null;
     if (isLoading) return null;
@@ -657,34 +675,50 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
             <FormLabel labelStyle={styles.label}>
               {I18n.t('add_or_edit_item.price_label')}
             </FormLabel>
-            <FormInput
+            {/* <FormInput
               autoCorrect={false}
               clearButtonMode="while-editing"
               containerStyle={styles.inputContainer}
-              editable={!this.state.pending}
+              editable={!pending}
               inputStyle={styles.input}
               keyboardType="numeric"
               maxLength={8} // 10000.99
               onChangeText={this.changePrice}
               placeholder={I18n.t('add_or_edit_item.price_placeholder')}
-              value={this.state.price}
-            />
+              value={price}
+            /> */}
+            <View style={{ paddingLeft: 6 }}>
+              <InputItem
+                autoCorrect={false}
+                clearButtonMode="while-editing"
+                editable={!pending}
+                error={priceFocused && price.trim().length < 1}
+                last
+                maxLength={8} // 10000.99
+                onChange={this.changePrice}
+                onFocus={() => this.setState({ priceFocused: true })}
+                placeholder={I18n.t('add_or_edit_item.price_placeholder')}
+                type="number"
+                value={price}
+              />
+            </View>
             <FormLabel labelStyle={styles.label}>
               {I18n.t('add_or_edit_item.description_label')}
             </FormLabel>
             <TextareaItem
-              editable={!this.state.pending}
+              editable={!pending}
               style={styles.inputContainerNew}
               last // to set borderBottomWidth=0
               containerStyle={{ borderBottomWidth: 5, marginRight: 12 }}
               rows={3}
               count={settings.MAX_LENGTH_DESCRIPTION}
               onChangeText={this.onChangeDescription}
+              onFocus={() => this.setState({ descriptionFocused: true })}
               placeholder={I18n.t('add_or_edit_item.description_placeholder')}
-              value={this.state.description}
+              value={description}
               error={
-                this.state.description.trim().length <
-                settings.MIN_LENGTH_DESCRIPTION
+                descriptionFocused &&
+                description.trim().length < settings.MIN_LENGTH_DESCRIPTION
               }
             />
             <FormLabel labelStyle={styles.label}>
@@ -693,13 +727,13 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
             <TagInput
               inputDefaultWidth={140}
               maxHeight={2000}
-              editable={!this.state.pending}
+              editable={!pending}
               labelExtractor={tag => tag}
               onChange={this.changeTags}
               onChangeText={this.changeTagsTest}
               tagColor={colors.primary}
               tagTextColor="white"
-              text={this.state.tagsText}
+              text={tagsText}
               value={tags}
               inputProps={{
                 placeholder:
@@ -717,18 +751,14 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
                     labelHorizontal
                     obj={option}
                     index={i}
-                    onPress={grp_1 =>
-                      !this.state.pending && this.setState({ grp_1 })
-                    }
+                    onPress={grp_1 => !pending && this.setState({ grp_1 })}
                     labelStyle={styles.radioButtonLabel}
                   />
                   <RadioButtonInput
                     obj={option}
                     index={i}
-                    isSelected={this.state.grp_1 == i}
-                    onPress={grp_1 =>
-                      !this.state.pending && this.setState({ grp_1 })
-                    }
+                    isSelected={grp_1 == i}
+                    onPress={grp_1 => !pending && this.setState({ grp_1 })}
                     borderWidth={2}
                     buttonInnerColor={colors.black}
                     buttonOuterColor={colors.black}
@@ -749,18 +779,14 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
                     labelHorizontal
                     obj={option}
                     index={i}
-                    onPress={grp_2 =>
-                      !this.state.pending && this.setState({ grp_2 })
-                    }
+                    onPress={grp_2 => !pending && this.setState({ grp_2 })}
                     labelStyle={styles.radioButtonLabel}
                   />
                   <RadioButtonInput
                     obj={option}
                     index={i}
-                    isSelected={this.state.grp_2 == i}
-                    onPress={grp_2 =>
-                      !this.state.pending && this.setState({ grp_2 })
-                    }
+                    isSelected={grp_2 == i}
+                    onPress={grp_2 => !pending && this.setState({ grp_2 })}
                     borderWidth={2}
                     buttonInnerColor={colors.black}
                     buttonOuterColor={colors.black}
@@ -864,13 +890,6 @@ const styles = StyleSheet.create({
   label: {
     fontWeight: '600',
     color: colors.black,
-  },
-  input: {
-    color: colors.black,
-    width: '100%',
-  },
-  inputContainer: {
-    marginVertical: 0,
   },
   inputContainerNew: {
     backgroundColor: colors.transparent,

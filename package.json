@@ -113,6 +113,9 @@
     "react-native-touch-visualizer": "^0.1.0",
     "react-test-renderer": "16.4.1"
   },
+  "resolutions": {
+    "react-native-invertible-scroll-view": "1.1.1"
+  },
   "jest": {
     "cacheDirectory": "./.cache",
     "setupFiles": [

@@ -9146,9 +9146,9 @@ react-native-image-zoom-viewer@^2.2.13:
   dependencies:
     react-native-image-pan-zoom "^2.1.7"
 
-react-native-invertible-scroll-view@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/react-native-invertible-scroll-view/-/react-native-invertible-scroll-view-1.1.0.tgz#bfd50a3f5d66ca12639b7c7a9844ceddd1d16890"
+react-native-invertible-scroll-view@1.1.1, react-native-invertible-scroll-view@^1.1.0:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/react-native-invertible-scroll-view/-/react-native-invertible-scroll-view-1.1.1.tgz#43039037e6537dc8c4f29baae1cd1a223bc25d81"
   dependencies:
     create-react-class "^15.6.0"
     prop-types "^15.5.10"

@@ -81,23 +81,24 @@ describe('AddOrEditProduct screen (inEditMode false)', () => {
         false
       );
     });
+
+    it('should require a type', async () => {
+      await sleep(100);
+      expect(root.findByProps({ testID: 'addItemButton' }).props.disabled).toBe(
+        true
+      );
+      root.instance.setState({
+        description: 'this shoes rock',
+        price: '123.45',
+        grp_1: 0,
+      });
+      const grp_2_input_1 = root.findByProps({ testID: 'grp_2_input_1' });
+      expect(grp_2_input_1.props.isSelected).toBe(false);
+      grp_2_input_1.props.onPress(1);
+      expect(grp_2_input_1.props.isSelected).toBe(true);
+      expect(root.findByProps({ testID: 'addItemButton' }).props.disabled).toBe(
+        false
+      );
+    });
   });
-
-  // describe('password reset', () => {
-  //   const dispatch = jest.fn();
-  //   const wrapper = shallow(
-  //     <AddOrEditProductScreen dispatch={dispatch} loading={false} />
-  //   );
-  //   wrapper.setState({ emailAddress: 'asdf@gmail.com' });
-
-  //   it('should be able to request a password reset entering a valid email address', () => {
-  //     wrapper.find('[testID="openPwdResetModalButton"]').simulate('press');
-  //     expect(wrapper.find('[testID="PwdResetModal"]').prop('visible')).toBe(
-  //       true
-  //     );
-  //     expect(wrapper.find('[testID="ResetButton"]').prop('disabled')).toBe(
-  //       false
-  //     );
-  //   });
-  // });
 });

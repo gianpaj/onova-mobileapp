@@ -16,32 +16,36 @@ const sleep = ms => {
 
 describe('AddOrEditProduct screen (inEditMode false)', () => {
   describe('initial rendering', () => {
-    const tree = renderer.create(
-      <AddOrEditProductScreen
-        dispatch={() => {}}
-        // $FlowExpectedError
-        navigation={{ state: {} }}
-        // $FlowExpectedError
-        userData={{ accountStatus: 'verified' }}
-        token=""
-      />
-    );
+    let root, tree;
+    beforeEach(() => {
+      tree = renderer.create(
+        <AddOrEditProductScreen
+          dispatch={() => {}}
+          // $FlowExpectedError
+          navigation={{ state: {} }}
+          // $FlowExpectedError
+          userData={{ accountStatus: 'verified' }}
+          token=""
+        />
+      );
+      root = tree.root;
+    });
 
     it('at the beginning the Add Item button should NOT be enabled', async () => {
       await sleep(100);
-      const inst = tree.getInstance();
-      expect(inst.state.location).toEqual({
+      const { state } = tree.getInstance();
+      expect(state.location).toEqual({
         longitude: 60,
         latitude: 60,
       });
-      expect(inst.state.images).toEqual([{ id: 0, url: '' }]);
-      expect(
-        tree.root.findByProps({ testID: 'addItemButton' }).props.disabled
-      ).toBe(true);
+      expect(state.images).toEqual([{ id: 0, url: '' }]);
+      expect(root.findByProps({ testID: 'addItemButton' }).props.disabled).toBe(
+        true
+      );
     });
 
-    it('should require a min length description', () => {
-      const { root } = tree;
+    it('should require a min length description', async () => {
+      await sleep(100);
       expect(root.findByProps({ testID: 'addItemButton' }).props.disabled).toBe(
         true
       );
@@ -54,6 +58,25 @@ describe('AddOrEditProduct screen (inEditMode false)', () => {
       const desc = root.findByProps({ testID: 'description' });
       expect(desc.props.value).toBe('a');
       desc.props.onChangeText('this shoes rock');
+      expect(root.findByProps({ testID: 'addItemButton' }).props.disabled).toBe(
+        false
+      );
+    });
+
+    it('should require a category', async () => {
+      await sleep(100);
+      expect(root.findByProps({ testID: 'addItemButton' }).props.disabled).toBe(
+        true
+      );
+      root.instance.setState({
+        description: 'this shoes rock',
+        price: '123.45',
+        grp_2: 0,
+      });
+      const grp_1_input_1 = root.findByProps({ testID: 'grp_1_input_1' });
+      expect(grp_1_input_1.props.isSelected).toBe(false);
+      grp_1_input_1.props.onPress(1);
+      expect(grp_1_input_1.props.isSelected).toBe(true);
       expect(root.findByProps({ testID: 'addItemButton' }).props.disabled).toBe(
         false
       );

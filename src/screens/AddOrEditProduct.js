@@ -750,23 +750,24 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
               {ui.category_radio_grp_1.map((option, i) => (
                 <RadioButton labelHorizontal={false} key={i}>
                   <RadioButtonLabel
-                    labelHorizontal
-                    obj={option}
                     index={i}
-                    onPress={grp_1 => !pending && this.setState({ grp_1 })}
+                    labelHorizontal
                     labelStyle={styles.radioButtonLabel}
+                    obj={option}
+                    onPress={grp_1 => !pending && this.setState({ grp_1 })}
                   />
                   <RadioButtonInput
-                    obj={option}
-                    index={i}
-                    isSelected={grp_1 == i}
-                    onPress={grp_1 => !pending && this.setState({ grp_1 })}
+                    testID={`grp_1_input_${i}`}
                     borderWidth={2}
                     buttonInnerColor={colors.black}
                     buttonOuterColor={colors.black}
-                    buttonSize={19}
                     buttonOuterSize={19}
+                    buttonSize={19}
                     buttonWrapStyle={styles.radioButtonInput}
+                    index={i}
+                    isSelected={grp_1 === i}
+                    obj={option}
+                    onPress={grp_1 => !pending && this.setState({ grp_1 })}
                   />
                 </RadioButton>
               ))}
@@ -778,23 +779,24 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
               {ui.category_radio_grp_2.map((option, i) => (
                 <RadioButton labelHorizontal={false} key={i}>
                   <RadioButtonLabel
-                    labelHorizontal
-                    obj={option}
                     index={i}
-                    onPress={grp_2 => !pending && this.setState({ grp_2 })}
+                    labelHorizontal
                     labelStyle={styles.radioButtonLabel}
+                    obj={option}
+                    onPress={grp_2 => !pending && this.setState({ grp_2 })}
                   />
                   <RadioButtonInput
-                    obj={option}
-                    index={i}
-                    isSelected={grp_2 == i}
-                    onPress={grp_2 => !pending && this.setState({ grp_2 })}
+                    testID="grp_2_input"
                     borderWidth={2}
                     buttonInnerColor={colors.black}
                     buttonOuterColor={colors.black}
-                    buttonSize={19}
                     buttonOuterSize={19}
+                    buttonSize={19}
                     buttonWrapStyle={styles.radioButtonInput}
+                    index={i}
+                    isSelected={grp_2 == i}
+                    obj={option}
+                    onPress={grp_2 => !pending && this.setState({ grp_2 })}
                   />
                 </RadioButton>
               ))}

@@ -20,7 +20,7 @@ import {
   Left,
   Right,
 } from 'native-base';
-import { TextareaItem, Toast } from 'antd-mobile';
+import { TextareaItem, Toast } from 'antd-mobile-rn';
 import StarRating from 'react-native-star-rating';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Foect from 'foect';

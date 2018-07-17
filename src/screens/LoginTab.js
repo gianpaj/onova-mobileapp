@@ -21,7 +21,7 @@ import {
   Icon as NBIcon,
 } from 'native-base';
 import isEmail from 'validator/lib/isEmail';
-import { Toast } from 'antd-mobile';
+import { Toast } from 'antd-mobile-rn';
 import AnimButton from 'react-native-micro-animated-button';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import I18n from '../i18n';

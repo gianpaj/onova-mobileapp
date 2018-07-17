@@ -5,7 +5,7 @@
   ],
   "retainLines": true,
   "plugins": [
-    ["import", { "libraryName": "antd-mobile" }],
+    ["import", { "libraryName": "antd-mobile-rn" }],
     "@babel/plugin-transform-react-jsx-source"
   ],
   "env": {

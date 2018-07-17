@@ -26,7 +26,7 @@ import { FormInput, FormLabel } from 'react-native-elements';
 import type { NavigationScreenProp } from 'react-navigation';
 // import { CardView, LiteCreditCardInput } from 'react-native-credit-card-input';
 // import FlipCard from 'react-native-flip-card';
-import { Toast } from 'antd-mobile';
+import { Toast } from 'antd-mobile-rn';
 import axios from 'axios';
 import isEmail from 'validator/lib/isEmail';
 // import update from 'immutability-helper';

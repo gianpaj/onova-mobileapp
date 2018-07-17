@@ -25,7 +25,7 @@ import {
 import { NavigationActions } from 'react-navigation';
 import type { NavigationScreenProp } from 'react-navigation';
 // import { Button } from 'react-native-elements';
-import { Modal, NoticeBar, Toast } from 'antd-mobile';
+import { Modal, NoticeBar, Toast } from 'antd-mobile-rn';
 
 import I18n from '../i18n';
 import typography from '../config/typography';

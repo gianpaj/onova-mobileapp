@@ -24,7 +24,7 @@ import {
 } from 'native-base';
 import { Button } from 'react-native-elements';
 import ParsedText from 'react-native-parsed-text';
-import { Modal } from 'antd-mobile';
+import { Modal } from 'antd-mobile-rn';
 // import LottieView from 'lottie-react-native';
 
 import { Avatar, Header, MediaView, Comments } from '../components';

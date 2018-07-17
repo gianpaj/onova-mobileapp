@@ -1,7 +1,7 @@
 // @flow
 
 import { Platform } from 'react-native';
-import { Toast } from 'antd-mobile';
+import { Toast } from 'antd-mobile-rn';
 import { ChatManager, TokenProvider } from '@pusher/chatkit/react-native';
 import { Sentry } from 'react-native-sentry';
 

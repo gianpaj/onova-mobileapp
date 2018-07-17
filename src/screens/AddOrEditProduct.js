@@ -27,7 +27,7 @@ import {
   Toast,
   ImagePicker as AntImagePicker,
   WingBlank,
-} from 'antd-mobile';
+} from 'antd-mobile-rn';
 import Permissions from 'react-native-permissions';
 // import RNFetchBlob from 'rn-fetch-blob';
 let RNFetchBlob;

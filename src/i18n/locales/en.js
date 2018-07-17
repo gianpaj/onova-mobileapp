@@ -37,8 +37,8 @@ export default {
     alert_info_title: 'Information',
     alert_info_body: `1. On the homepage, you see only the items from the sellers you follow The more sellers you follow, the more items you can see.
 
-2. To upload multiple items at once items or from a computer connect to:
-onova.co/uploader
+2. To upload multiple items at once or from a computer use:
+http://onova.co/uploader
 
 3. If you have any questions please chat to @onova user`,
   },

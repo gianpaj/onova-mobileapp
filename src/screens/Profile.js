@@ -783,7 +783,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   editOrFollowButton: {
-    marginRight: 20,
     marginVertical: 10,
     backgroundColor: colors.bgDefault,
     borderColor: colors.greyOutline,

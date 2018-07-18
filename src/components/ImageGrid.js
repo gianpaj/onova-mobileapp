@@ -314,6 +314,7 @@ const styles = StyleSheet.create({
   },
   centerText: {
     marginTop: 5,
+    textAlign: 'center',
   },
   searchButton: {
     alignSelf: 'center',

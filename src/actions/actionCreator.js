@@ -404,7 +404,7 @@ const handleErrorWithAlert = (data: any, err: any) => {
     if (err.message == 'invalid password') {
       err.message = I18n.t('alerts.password_error');
     } else if (err.message == 'invalid email') {
-      err.message = I18n.t('alerts.`email_error`');
+      err.message = I18n.t('alerts.email_error');
     }
   } else if (
     err.message.includes('timeout') ||

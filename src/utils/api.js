@@ -221,6 +221,17 @@ export function getUser(userId: string): Promise<UserData> {
   });
 }
 
+export function getFollowers(
+  userId: string,
+  token: string
+): Promise<Array<UserData> | Error> {
+  return new Promise((resolve, reject) => {
+    get(`/api/users/${userId}/followers`, { token })
+      .then(res => resolve(res.data))
+      .catch(err => reject(err));
+  });
+}
+
 export function getProduct(uuid: string): Promise<Product> {
   return new Promise((resolve, reject) => {
     get(`/api/products/${uuid}`)

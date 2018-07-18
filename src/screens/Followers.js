@@ -55,14 +55,15 @@ class FollowersContainer extends Component<Props, State> {
 
   async componentDidMount() {
     try {
-      await this.getFollowersAndSetState();
-      this.setState({ isLoading: false });
+      const data = await this.getFollowers();
+      this.setState({ data });
     } catch (err) {
       console.error(err);
     }
+    this.setState({ isLoading: false });
   }
 
-  async getFollowersAndSetState(): Promise<any> {
+  async getFollowers(): Promise<any> {
     const { token } = this.props;
     // for development
     let userId = '5ac5ebcd939b7f1712b92baf';
@@ -71,14 +72,7 @@ class FollowersContainer extends Component<Props, State> {
       userId = this.props.navigation.state.params.userId;
     }
 
-    const res = await api.get(`/api/users/${userId}/followers`, {
-      token,
-    });
-    // get the first image size and then setState `data` for the FlatList
-    if (res.data && res.data.length) {
-      return this.setState({ data: res.data });
-    }
-    this.setState({ data: [] });
+    return api.getFollowers(userId, token);
   }
 
   goToProfile = (user: UserData) => {
@@ -91,19 +85,17 @@ class FollowersContainer extends Component<Props, State> {
     });
   };
 
-  onFollowOrUnfollow(_id: string, amIAFollower: boolean) {
+  async onFollowOrUnfollow(_id: string, amIAFollower: boolean) {
     const { token } = this.props;
     const followOrUnfollow = amIAFollower ? 'unfollow' : 'follow';
-    api
-      .post(`/api/users/${_id}/${followOrUnfollow}`, {}, { token })
-      .then(() => {
-        console.debug(followOrUnfollow, _id);
-        // this.setState({ isFollowing: followOrUnfollow == 'follow' });
-        this.refreshFollowers();
-      })
-      .catch(err => {
-        console.error(err);
-      });
+    try {
+      await api.post(`/api/users/${_id}/${followOrUnfollow}`, {}, { token });
+      console.debug(followOrUnfollow, _id);
+      // this.setState({ isFollowing: followOrUnfollow == 'follow' });
+      this.refreshFollowers();
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   _renderItem = ({ item: user }: { item: UserData }) => {
@@ -119,7 +111,7 @@ class FollowersContainer extends Component<Props, State> {
           <Avatar
             size={'medium'}
             withButton={shouldShowButton}
-            uri={user.profilePic}
+            uri={user.profilePic || ''}
             placeholderText={user.username}
             buttonActiveState={user.amIAFollower}
             onButtonPress={() =>
@@ -162,14 +154,15 @@ class FollowersContainer extends Component<Props, State> {
     );
   };
 
-  refreshFollowers = () => {
+  refreshFollowers = async () => {
     this.setState({ isRefreshing: true });
-    this.getFollowersAndSetState()
-      .catch(err => {
-        console.debug(err);
-        // this.setState({ hasError: true });
-      })
-      .then(() => this.setState({ isRefreshing: false }));
+    try {
+      const data = await this.getFollowers();
+      this.setState({ data });
+    } catch (err) {
+      console.error(err);
+    }
+    this.setState({ isRefreshing: false });
   };
 
   renderLoading = () => (

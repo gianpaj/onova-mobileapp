@@ -134,6 +134,7 @@ http://onova.co/uploader
     unfollow_button: 'видалити',
     display_name_placeholder: 'Назва твого профілю',
     bio_placeholder: 'Опис твого профілю',
+    empty_state_title: 'Немає речей на продаж',
     empty_state_message_others: 'Поки нічого не виставлено',
     empty_state_message_mine: 'Ти ще нічого не виставив ',
     empty_state_button_mine: 'Почати продавати',

@@ -151,12 +151,14 @@ class FollowingContainer extends Component<Props, State> {
           size={48}
           name={'account-multiple-plus'}
           color={colors.grey2}
-          style={{ alignSelf: 'center', marginBottom: 30 }}
+          style={styles.emptyStateIcon}
         />
         <Text style={styles.boldText}>
           {I18n.t('following.empty_state_message_title')}
         </Text>
-        <Text>{I18n.t('following.empty_state_message_body')}</Text>
+        <Text style={styles.centerText}>
+          {I18n.t('following.empty_state_message_body')}
+        </Text>
       </View>
     );
   };
@@ -258,8 +260,15 @@ const styles = StyleSheet.create({
   root: {
     flex: 1,
   },
+  emptyStateIcon: {
+    alignSelf: 'center',
+    marginBottom: 30,
+  },
   boldText: {
     fontWeight: 'bold',
+  },
+  centerText: {
+    marginTop: 5,
   },
   emptyContainer: {
     alignItems: 'center',

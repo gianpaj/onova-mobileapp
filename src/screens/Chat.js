@@ -111,14 +111,14 @@ class ChatContainer extends Component<Props, State> {
   }
 
   componentWillUnmount() {
-    // no longer receive events from the chat room
+    // stop receiving events from the chat room
     if (
       pusherCurrentUser &&
       pusherCurrentUser.roomSubscriptions[this.state.roomId]
     )
       pusherCurrentUser.roomSubscriptions[this.state.roomId].cancel();
 
-    // cancel initialise for when the Chat screen is openened and closed quickly
+    // cancel initialise(). i.e. when the Chat screen is opened and closed quickly
     if (this.rejectProm) {
       this.rejectProm();
       this.rejectProm = null;

@@ -309,17 +309,17 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
   },
-  centerText: {
-    textAlign: 'center',
-  },
   boldText: {
     fontWeight: 'bold',
   },
+  centerText: {
+    marginTop: 5,
+  },
   searchButton: {
-    backgroundColor: colors.primary,
     alignSelf: 'center',
+    backgroundColor: colors.primary,
     marginTop: 20,
-    width: 100,
+    minWidth: 260,
   },
   list: {
     flex: 1,

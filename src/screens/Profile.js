@@ -26,6 +26,7 @@ import { NavigationActions } from 'react-navigation';
 import type { NavigationScreenProp } from 'react-navigation';
 // import { Button } from 'react-native-elements';
 import { Modal, NoticeBar, Toast } from 'antd-mobile-rn';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import I18n from '../i18n';
 import typography from '../config/typography';
@@ -416,7 +417,7 @@ class ProfileScreen extends React.Component<Props, State> {
     });
 
   shouldShowNoticeBar() {
-    return this.props.userData.accountStatus == 'notverified';
+    return this.isMe() && this.props.userData.accountStatus == 'notverified';
   }
 
   goToReviews = () => {
@@ -669,14 +670,13 @@ class ProfileScreen extends React.Component<Props, State> {
             />
           }>
           <View>
-            {this.isMe() &&
-              this.shouldShowNoticeBar() && (
-                <NoticeBar
-                  marqueeProps={{ loop: false, style: styles.noticeBar }}
-                  icon={false}>
-                  {I18n.t('profile.notice_bar')}
-                </NoticeBar>
-              )}
+            {this.shouldShowNoticeBar() && (
+              <NoticeBar
+                marqueeProps={{ loop: false, style: styles.noticeBar }}
+                icon={false}>
+                {I18n.t('profile.notice_bar')}
+              </NoticeBar>
+            )}
             {this.renderProfileTop()}
           </View>
           {_id !== '' && (
@@ -688,7 +688,18 @@ class ProfileScreen extends React.Component<Props, State> {
                 <View style={styles.emptyContainer}>
                   {this.isMe() ? (
                     <View>
-                      <Text>{I18n.t('profile.empty_state_message_mine')}</Text>
+                      <MaterialCommunityIcons
+                        size={48}
+                        name={'cash-100'}
+                        color={colors.grey2}
+                        style={styles.emptyStateIcon}
+                      />
+                      <Text style={styles.boldText}>
+                        {I18n.t('profile.empty_state_title')}
+                      </Text>
+                      <Text style={styles.centerText}>
+                        {I18n.t('profile.empty_state_message_mine')}
+                      </Text>
                       <NBButton
                         block
                         dark
@@ -746,8 +757,15 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   profileTop: {
-    paddingLeft: 10,
+    backgroundColor: colors.white,
+    elevation: 2,
+    paddingHorizontal: 10,
     paddingTop: 10,
+    shadowColor: colors.black,
+    shadowOffset: { height: 0.5 },
+    shadowOpacity: 0.1,
+    shadowRadius: 0.5,
+    zIndex: 1,
   },
   userNumbers: {
     flexDirection: 'row',
@@ -785,9 +803,20 @@ const styles = StyleSheet.create({
   emptyContainer: {
     alignItems: 'center',
     flex: 1,
-    height: height - 250,
+    height: height - 350,
     justifyContent: 'center',
     padding: 20,
+  },
+  emptyStateIcon: {
+    alignSelf: 'center',
+    marginBottom: 30,
+  },
+  boldText: {
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  centerText: {
+    marginTop: 5,
   },
   searchButton: {
     marginTop: 20,

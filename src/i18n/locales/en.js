@@ -44,9 +44,9 @@ http://onova.co/uploader
   },
   image_grid: {
     error: 'Error fetching listing',
-    empty_state_title: 'There are no items to browse',
-    empty_state_body: 'Follow sellers to see items in your feed',
-    empty_state_button: 'Search',
+    empty_state_title: 'There are no items in your feed',
+    empty_state_body: 'Follow sellers to see items available for you to buy',
+    empty_state_button: 'Find Sellers to Follow',
   },
   image_grid_search: {
     empty_state_title: "We couldn't find any items",
@@ -57,7 +57,7 @@ http://onova.co/uploader
     alert_confirm_delete: 'Confirm deletion?',
     toast_warning_on_unverified_account:
       'Please verify your email address to buy an item. Check your inbox',
-    toast_warning_on_product_sold: 'This product is not longer for sale',
+    toast_warning_on_product_sold: 'This item is not longer for sale',
     toast_warning_ok_button: 'OK',
     alert_report_title: 'Report Item?',
     share_before: 'Invite your friends to chat on Onova',
@@ -135,9 +135,10 @@ http://onova.co/uploader
     unfollow_button: 'Unfollow',
     display_name_placeholder: 'Edit your shop name',
     bio_placeholder: 'Edit your profile description',
+    empty_state_title: 'Add your first product',
     empty_state_message_others: 'There no any items yet',
-    empty_state_message_mine: 'You did not add any items yet',
-    empty_state_button_mine: 'Sell something now',
+    empty_state_message_mine: 'Get closer to your first sale by adding items',
+    empty_state_button_mine: 'Sell an item',
     notice_bar:
       'Only one step left! Check your inbox for a confirmation email.',
     toast_saving: 'Loading...',

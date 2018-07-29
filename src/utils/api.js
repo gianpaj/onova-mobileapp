@@ -1,6 +1,7 @@
 // @flow
 
-import axios, { CancelTokenSource } from 'axios';
+import axios from 'axios';
+import type { CancelToken } from 'axios';
 
 import I18n from '../i18n';
 
@@ -18,9 +19,9 @@ if (!global.__TESTING__) console.debug(`connecting to ${config.API_URL}`);
 axios.defaults.baseURL = config.API_URL;
 const TIMEOUT = 10000;
 
-type Options = {
+export type Options = {
   suppressRedBox?: boolean, // If true, no warning is shown on failed request
-  cancelToken?: CancelTokenSource,
+  cancelToken?: CancelToken,
   timeout?: number,
   token?: string,
 };

@@ -105,7 +105,7 @@ export class LoginTabContainer extends React.Component<Props, State> {
   onLogin = () => {
     const { emailAddress, password } = this.state;
     if (!emailAddress || !password || this.props.loading) return;
-    this.props.dispatch(login({ emailAddress, password })).catch(e => {
+    this.props.dispatch(login({ emailAddress, password })).catch(() => {
       this.setState({ verifyAccountModalVisible: true });
     });
   };

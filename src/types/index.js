@@ -13,6 +13,7 @@ export type Product = {
   createdAt: string,
   currency: string,
   description: string,
+  locality: string,
   photoURIs: Array<string>,
   price: string,
   seller: UserData,

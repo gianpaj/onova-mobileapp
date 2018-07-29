@@ -30,6 +30,7 @@ import type {
   UserData,
   // PusherUser,
 } from '../types';
+import type { Options } from '../utils/api';
 
 import { registerPushNotifications } from '../utils/push';
 import * as api from '../utils/api';
@@ -311,7 +312,7 @@ const signup = (data: SignupData) => (dispatch: Dispatch) => (
     })
 );
 
-const getPersonalUserData = (options?: any = {}) => (
+const getPersonalUserData = (options?: Options = {}) => (
   dispatch: Dispatch,
   getState: GetState
 ) => {
@@ -325,7 +326,7 @@ const getPersonalUserData = (options?: any = {}) => (
     .then(() => Toast.hide());
 };
 
-const getUserData = (userId: string, options?: any = {}) => (
+const getUserData = (userId: string, options?: Options = {}) => (
   dispatch: Dispatch
 ) => (
   Toast.loading(I18n.t('alerts.loading_message'), 30),

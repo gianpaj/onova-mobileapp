@@ -144,8 +144,8 @@ class ProfileScreen extends React.Component<Props, State> {
             });
           })
           .catch(err => {
+            console.error(err);
             reject(err);
-            console.debug(err);
           });
         const { token } = this.props;
         api
@@ -158,7 +158,7 @@ class ProfileScreen extends React.Component<Props, State> {
             resolve();
           })
           .catch(err => {
-            console.debug(err);
+            console.error(err);
             if (err.message == 'Not following') {
               return resolve();
             }
@@ -166,8 +166,9 @@ class ProfileScreen extends React.Component<Props, State> {
           });
       } else {
         this.props
-          .dispatch(getPersonalUserData(userData._id))
-          .then(() => resolve());
+          .dispatch(getPersonalUserData())
+          .then(() => resolve())
+          .catch(e => reject(e));
       }
     });
   };
@@ -183,7 +184,9 @@ class ProfileScreen extends React.Component<Props, State> {
   };
 
   componentDidMount() {
-    this.refresh().then(() => this.setState({ isFetching: false }));
+    this.refresh()
+      .then(() => this.setState({ isFetching: false }))
+      .catch(e => console.error(e));
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {

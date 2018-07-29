@@ -428,7 +428,7 @@ export class ProductContainer extends React.Component<Props, State> {
                 <View style={[styles.avatar, styles.row]}>
                   <Avatar
                     size={'verySmall'}
-                    uri={item.seller.profilePic}
+                    uri={item.seller.profilePic || ''}
                     onPress={this.goToProfileOfSeller}
                     placeholderText={item.seller.username}
                   />
@@ -438,9 +438,9 @@ export class ProductContainer extends React.Component<Props, State> {
                         {item.seller.username}
                       </Text>
                     </TouchableOpacity>
-                    {item.locality && (
+                    {item.locality ? (
                       <Text style={styles.location}>{item.locality}</Text>
-                    )}
+                    ) : null}
                   </View>
                 </View>
                 <View style={styles.flex1} />

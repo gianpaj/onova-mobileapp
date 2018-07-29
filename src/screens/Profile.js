@@ -500,7 +500,7 @@ class ProfileScreen extends React.Component<Props, State> {
     api
       .post(`/api/users/${this.state._id}/${followOrUnfollow}`, {}, { token })
       .then(() => this.setState({ isFollowing: followOrUnfollow == 'follow' }))
-      .catch(err => console.error(err));
+      .catch(err => console.debug(err));
   }
 
   renderProfileTop() {

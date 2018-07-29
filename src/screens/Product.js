@@ -475,8 +475,12 @@ export class ProductContainer extends React.Component<Props, State> {
                   name="ios-text-outline"
                   style={styles.iconCommmentAndShare}
                 /> */}
-                  <NBButton transparent onPress={this.shareProduct}>
-                    <NBIcon ios="ios-share-outline" android="md-share" />
+                  <NBButton transparent dark onPress={this.shareProduct}>
+                    <NBIcon
+                      ios="ios-share-outline"
+                      android="md-share"
+                      style={styles.icon}
+                    />
                   </NBButton>
                   <View style={styles.flex1} />
                   <Button
@@ -573,6 +577,11 @@ const styles = StyleSheet.create({
   //   // marginLeft: 20,
   //   marginTop: 12,
   // },
+  icon: {
+    color: colors.grey1,
+    fontSize: 27,
+    marginTop: 12,
+  },
   buyButton: {
     backgroundColor: colors.red,
     borderRadius: 2,

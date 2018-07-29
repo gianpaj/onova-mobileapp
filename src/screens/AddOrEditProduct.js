@@ -431,21 +431,21 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
 
   uploadNewProduct = (uuid: string, formData: any): void => {
     const { token } = this.props;
-      api
-        .post('/api/products', formData, { token, timeout: 300000 })
-        .then(res => {
-          console.debug(res);
-          this.props.dispatch(enableRefresh());
-          this.closeModal();
-        })
-        .catch(err => {
-          console.debug(err);
-          ui.showToast(err.message, 'warning');
-        })
-        // final
-        .then(() => {
-          this.setState({ pending: false });
-          Toast.hide();
+    api
+      .post('/api/products', formData, { token, timeout: 300000 })
+      .then(res => {
+        console.debug(res);
+        this.props.dispatch(enableRefresh());
+        this.closeModal();
+      })
+      .catch(err => {
+        console.debug(err);
+        ui.showToast(err.message, 'warning');
+      })
+      // final
+      .then(() => {
+        this.setState({ pending: false });
+        Toast.hide();
       });
   };
 

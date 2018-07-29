@@ -35,6 +35,7 @@ type Props = {
   dispatch: Dispatch,
   navigation: NavigationScreenProp<*>,
   userData: UserData,
+  token: string,
 };
 
 type State = {
@@ -55,14 +56,14 @@ class FollowingContainer extends Component<Props, State> {
   async componentDidMount() {
     try {
       await this.getFollowingAndSetState();
-      this.setState({ isLoading: false });
     } catch (err) {
       console.error(err);
     }
+    this.setState({ isLoading: false });
   }
 
   async getFollowingAndSetState(): Promise<any> {
-    const { token } = this.props.userData;
+    const { token } = this.props;
     // for development
     let userId = '5ac5ebcd939b7f1712b92baf';
 
@@ -77,7 +78,6 @@ class FollowingContainer extends Component<Props, State> {
     if (res.data && res.data.length) {
       return this.setState({ data: res.data });
     }
-    this.setState({ data: [] });
   }
 
   goToProfile = (user: UserData) => {
@@ -91,7 +91,7 @@ class FollowingContainer extends Component<Props, State> {
   };
 
   onFollowOrUnfollow(_id: string, amIAFollower: boolean) {
-    const { token } = this.props.userData;
+    const { token } = this.props;
     const followOrUnfollow = amIAFollower ? 'unfollow' : 'follow';
     api
       .post(`/api/users/${_id}/${followOrUnfollow}`, {}, { token })
@@ -239,6 +239,7 @@ class FollowingContainer extends Component<Props, State> {
 
 const mapStateToProps: any = (state: ReduxState) => ({
   userData: state.LoginReducer.data,
+  token: state.LoginReducer.token,
 });
 
 export const Following = connect(mapStateToProps)(

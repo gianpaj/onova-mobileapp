@@ -22,7 +22,7 @@ export default class Accordion extends PureComponent<Props, void> {
     duration: 400,
   };
 
-  componentWillMount() {
+  componentDidMount() {
     this.animatedValue = new Animated.Value(0);
   }
 

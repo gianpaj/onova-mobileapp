@@ -2,9 +2,8 @@
   // Enable/disable JavaScript validation. (For Flow)
   "javascript.validate.enable": false,
   "eslint.enable": true,
-  "flowide.enable": true,
+  "deepscan.enable": true,
   "search.exclude": {
-    "**/node_modules": true,
     "**/coverage": true
   },
   "prettier.eslintIntegration": true

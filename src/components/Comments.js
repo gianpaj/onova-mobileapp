@@ -64,7 +64,7 @@ class Comments extends React.Component<Props, State> {
     text: '',
   };
 
-  componentWillMount() {
+  componentDidMount() {
     let { uuid } = this.props;
     // for development
     // if (!uuid) {

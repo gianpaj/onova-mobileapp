@@ -149,7 +149,7 @@ export class AddReviewContainer extends Component<Props, State> {
             { archive: true },
             { token }
           );
-          Toast.success('Done!', 3);
+          Toast.success('Archived!', 3);
           this.goBackAndRefresh();
         } catch (error) {
           console.error(error);

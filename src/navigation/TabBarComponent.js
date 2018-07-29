@@ -9,7 +9,7 @@ class TabBarComponent extends React.PureComponent {
     isVisible: true,
   };
 
-  componentWillMount() {
+  componentDidMount() {
     this.keyboardWillShowSub = Keyboard.addListener(
       'keyboardDidShow',
       this.keyboardWillShow

@@ -228,6 +228,7 @@ export class SignUpTabContainer extends Component<Props, State> {
             testID="EmailField"
             onChangeText={emailAddress => this.setState({ emailAddress })}
             accessibilityLabel="email address"
+            textContentType="username"
             underlineColorAndroid={
               hasFocusEmail ? colors.primary : colors.grey3
             }
@@ -244,6 +245,7 @@ export class SignUpTabContainer extends Component<Props, State> {
             value={this.state.password}
             onChangeText={password => this.setState({ password })}
             accessibilityLabel="password"
+            textContentType="password"
             underlineColorAndroid={hasFocusPass ? colors.primary : colors.grey3}
             {...this._inputProps}
           />

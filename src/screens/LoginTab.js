@@ -229,6 +229,8 @@ export class LoginTabContainer extends React.Component<Props, State> {
             onSubmitEditing={() => this.PwdInput && this.PwdInput.focus()}
             value={emailAddress}
             testID="EmailField"
+            textContentType="username"
+            accessibilityLabel="email address"
             onChangeText={text => this.setState({ emailAddress: text })}
             underlineColorAndroid={
               hasFocusEmail ? colors.primary : colors.grey3
@@ -245,6 +247,8 @@ export class LoginTabContainer extends React.Component<Props, State> {
             onSubmitEditing={this.onLogin}
             value={password}
             testID="PasswordField"
+            textContentType="password"
+            accessibilityLabel="password"
             onChangeText={password => this.setState({ password })}
             underlineColorAndroid={hasFocusPass ? colors.primary : colors.grey3}
             {...this._inputProps}

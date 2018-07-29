@@ -449,6 +449,13 @@ export class ProductContainer extends React.Component<Props, State> {
                 </Text>
               </View>
               <MediaView source={item.photoURIs} />
+              <NBButton transparent dark onPress={this.shareProduct}>
+                <NBIcon
+                  ios="ios-share-outline"
+                  android="md-share"
+                  style={styles.icon}
+                />
+              </NBButton>
               {!this.isMyProduct() && (
                 <View
                   style={[
@@ -475,13 +482,6 @@ export class ProductContainer extends React.Component<Props, State> {
                   name="ios-text-outline"
                   style={styles.iconCommmentAndShare}
                 /> */}
-                  <NBButton transparent dark onPress={this.shareProduct}>
-                    <NBIcon
-                      ios="ios-share-outline"
-                      android="md-share"
-                      style={styles.icon}
-                    />
-                  </NBButton>
                   <View style={styles.flex1} />
                   <Button
                     buttonStyle={styles.buyButton}
@@ -565,11 +565,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginRight: 15,
   },
-  bottomSection: {
-    height: 54,
-    flexDirection: 'row',
-    marginRight: 0,
-  },
   // iconSave: {
   //   marginTop: 12,
   // },
@@ -581,6 +576,7 @@ const styles = StyleSheet.create({
     color: colors.grey1,
     fontSize: 27,
     marginTop: 12,
+    marginLeft: 21,
   },
   buyButton: {
     backgroundColor: colors.red,
@@ -589,6 +585,11 @@ const styles = StyleSheet.create({
     paddingBottom: 8,
     paddingHorizontal: 22,
     paddingTop: 8,
+  },
+  bottomSection: {
+    height: 54,
+    flexDirection: 'row',
+    marginRight: 0,
   },
   bottomSectionAfter: {
     marginTop: 10,

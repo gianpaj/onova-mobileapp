@@ -4,8 +4,8 @@ import React from 'react';
 import renderer from 'react-test-renderer';
 
 import mockImagePicker from '../../__mocks__/react-native-image-crop-picker';
-jest.mock('react-native-image-crop-picker', () => mockImagePicker);
 import mockPermissions from '../../__mocks__/react-native-permissions';
+jest.mock('react-native-image-crop-picker', () => mockImagePicker);
 jest.mock('react-native-permissions', () => mockPermissions);
 
 import { AddOrEditProductScreen } from '../../src/screens/AddOrEditProduct';
@@ -99,6 +99,25 @@ describe('AddOrEditProduct screen (inEditMode false)', () => {
       expect(root.findByProps({ testID: 'addItemButton' }).props.disabled).toBe(
         false
       );
+    });
+
+    it.skip('should add a new item', async () => {
+      await sleep(100);
+      expect(root.findByProps({ testID: 'addItemButton' }).props.disabled).toBe(
+        true
+      );
+      root.instance.setState({
+        description: 'this shoes rock',
+        price: '123.45',
+        grp_1: 0,
+        grp_2: 0,
+      });
+      expect(root.findByProps({ testID: 'addItemButton' }).props.disabled).toBe(
+        false
+      );
+      jest.spyOn(root.instance, 'uploadNewProduct');
+      root.findByProps({ testID: 'addItemButton' }).props.onPress();
+      expect(root.instance.uploadNewProduct).toHaveBeenCalled();
     });
   });
 });

@@ -17,7 +17,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0.9</string>
+	<string>1.1.0</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
@@ -36,7 +36,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>108000</string>
+	<string>110000</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>LSRequiresIPhoneOS</key>
@@ -65,18 +65,18 @@
 	<string>Onova does not need this</string>
 	<key>NSCalendarsUsageDescription</key>
 	<string>Onova does not need this</string>
-	<key>NSMotionUsageDescription</key>
-	<string>Onova does not need this</string>
-	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>Onova does not need this</string>
-	<key>NSSpeechRecognitionUsageDescription</key>
-	<string>Onova does not need this</string>
 	<key>NSCameraUsageDescription</key>
 	<string>Onova uses to your camera in order to add pictures when creating an item</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Onova uses your location when adding a new item</string>
+	<key>NSMotionUsageDescription</key>
+	<string>Onova does not need this</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Onova does not need this</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Onova uses to your photo library in order to add pictures when creating an item</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>Onova does not need this</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Ionicons.ttf</string>

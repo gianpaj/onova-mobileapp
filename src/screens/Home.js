@@ -6,7 +6,7 @@ import {
   Alert,
   Dimensions,
   Share,
-  Platform,
+  // Platform,
   StyleSheet,
   View,
 } from 'react-native';

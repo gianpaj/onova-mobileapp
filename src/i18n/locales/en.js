@@ -161,6 +161,7 @@ http://onova.co/uploader
   },
   chat: {
     send_msg_placeholder: 'Type a message',
+    no_orders: 'No orders',
   },
   notifications: {
     header: 'Notifications',
@@ -209,5 +210,6 @@ http://onova.co/uploader
     toast_msg_archived: 'This order is already archived',
     toast_msg_reviewed: 'You have already left a review',
     alert_confirm_archive: 'Are you sure you want to archive this order?',
+    archived: 'Archived',
   },
 };

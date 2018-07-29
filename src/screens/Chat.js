@@ -592,54 +592,54 @@ class ChatContainer extends Component<Props, State> {
           <Body style={st.containerHeader}>
             {partner && (
               <Title style={{ color: colors.black }} onPress={this.goToProfile}>
-                  @{partner.username}
-                </Title>
-              )}
+                @{partner.username}
+              </Title>
+            )}
           </Body>
           <Right />
         </Header>
         <View style={st.flex1}>
-            <View style={st.flex1}>
-              <View style={st.orderSquaresContainer}>
-                  <FlatList
-                    data={orders}
-                    keyExtractor={this._keyExtractor}
-                    horizontal
-                    ItemSeparatorComponent={this._renderSeparatorHorizontal}
-                    renderItem={this._renderOrderSquare}
+          <View style={st.flex1}>
+            <View style={st.orderSquaresContainer}>
+              <FlatList
+                data={orders}
+                keyExtractor={this._keyExtractor}
+                horizontal
+                ItemSeparatorComponent={this._renderSeparatorHorizontal}
+                renderItem={this._renderOrderSquare}
                 ListEmptyComponent={() => (
-                  <Text style={st.noOrders}>no orders</Text>
+                  <Text style={st.noOrders}>{I18n.t('chat.no_orders')}</Text>
                 )}
               />
-              </View>
-              <GiftedChat
-                messages={messages}
-                onSend={this.onSend}
-                placeholder={I18n.t('chat.send_msg_placeholder')}
-                user={{
-                  _id: userData._id,
-                  name: userData.username,
-                  avatar: userData.profilePic,
-                }}
-                // locale=""
-                // timeformat="LT"
-                // dateformat="ll"
-                renderSend={this.renderSend}
-                renderSystemMessage={this.renderSystemMessage}
-                renderBubble={this.renderBubble}
-                renderMessageImage={props => <MessageImage {...props} />}
-                // parsePatterns={(linkStyle) => [
-                //   {type: 'url', style: linkStyle, onPress: this.onUrlPress},
-                //   {type: 'phone', style: linkStyle, onPress: this.onPhonePress},
-                //   {type: 'email', style: linkStyle, onPress: this.onEmailPress},
-                //   ]}
-                renderActions={this.renderActions}
-                // keyboardShouldPersistTaps="handled"
-                maxInputLength={settings.MAX_CHAT_INPUT_LENGTH}
-                // renderInputToolbar={this.renderInputToolbar}
-                // renderAvatar={null}
-              />
             </View>
+            <GiftedChat
+              messages={messages}
+              onSend={this.onSend}
+              placeholder={I18n.t('chat.send_msg_placeholder')}
+              user={{
+                _id: userData._id,
+                name: userData.username,
+                avatar: userData.profilePic,
+              }}
+              // locale=""
+              // timeformat="LT"
+              // dateformat="ll"
+              renderSend={this.renderSend}
+              renderSystemMessage={this.renderSystemMessage}
+              renderBubble={this.renderBubble}
+              renderMessageImage={props => <MessageImage {...props} />}
+              // parsePatterns={(linkStyle) => [
+              //   {type: 'url', style: linkStyle, onPress: this.onUrlPress},
+              //   {type: 'phone', style: linkStyle, onPress: this.onPhonePress},
+              //   {type: 'email', style: linkStyle, onPress: this.onEmailPress},
+              //   ]}
+              renderActions={this.renderActions}
+              // keyboardShouldPersistTaps="handled"
+              maxInputLength={settings.MAX_CHAT_INPUT_LENGTH}
+              // renderInputToolbar={this.renderInputToolbar}
+              // renderAvatar={null}
+            />
+          </View>
         </View>
       </Container>
     );

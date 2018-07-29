@@ -159,6 +159,7 @@ http://onova.co/uploader
   },
   chat: {
     send_msg_placeholder: 'Повідомлення',
+    no_orders: 'Немає замовлень',
   },
   notifications: {
     header: 'Сповіщення',
@@ -207,5 +208,6 @@ http://onova.co/uploader
     toast_msg_archived: 'Ти вже видалив це замовлення',
     toast_msg_reviewed: 'Ти вже залишив відгук',
     alert_confirm_archive: 'Видалити?',
+    archived: 'Переміщено в Архів',
   },
 };

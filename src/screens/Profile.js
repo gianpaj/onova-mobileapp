@@ -619,15 +619,9 @@ class ProfileScreen extends React.Component<Props, State> {
     const { username } = this.state;
 
     if (Platform.OS === 'ios') {
-      Share.share({
-        url: `https://onova.co/${username}`,
-        title: 'Share Shop',
-      });
+      Share.share({ url: `https://onova.co/${username}` });
     } else {
-      Share.share({
-        message: `https://onova.co/${username}`,
-        title: 'Share Shop',
-      });
+      Share.share({ message: `https://onova.co/${username}` });
     }
   };
 

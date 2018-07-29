@@ -148,12 +148,10 @@ export class ProductContainer extends React.Component<Props, State> {
     if (Platform.OS === 'ios') {
       Share.share({
         url: `https://onova.co/${item.seller.username}/${item.uuid}`,
-        title: 'Share item',
       });
     } else {
       Share.share({
         message: `https://onova.co/${item.seller.username}/${item.uuid}`,
-        title: 'Share item',
       });
     }
   };
@@ -413,9 +411,6 @@ export class ProductContainer extends React.Component<Props, State> {
           </Left>
           <Body />
           <Right>
-            <NBButton transparent dark onPress={this.shareProduct}>
-              <NBIcon ios="ios-share" android="md-share" />
-            </NBButton>
             <NBButton transparent dark onPress={this.showActionSheetForProduct}>
               <NBIcon ios="ios-more" android="md-more" />
             </NBButton>
@@ -480,12 +475,9 @@ export class ProductContainer extends React.Component<Props, State> {
                   name="ios-text-outline"
                   style={styles.iconCommmentAndShare}
                 /> */}
-                  {/* <NBIcon
-                  name="ios-share-outline"
-                  style={styles.iconCommmentAndShare}
-                  onPress={() => this.showShareActionSheet()}
-                /> */}
-
+                  <NBButton transparent onPress={this.shareProduct}>
+                    <NBIcon ios="ios-share-outline" android="md-share" />
+                  </NBButton>
                   <View style={styles.flex1} />
                   <Button
                     buttonStyle={styles.buyButton}

@@ -143,27 +143,40 @@ export class ProductContainer extends React.Component<Props, State> {
     );
   };
 
-  onShare(): Promise<any> {
-    return new Promise((resolve, reject) => {
-      Share.share({ message: I18n.t('home.share'), title: 'Share' })
-        .then(async res => {
-          // ios user shared it
-          // android probably user shared it
-          if (
-            (Platform.OS == 'ios' && res.action !== Share.dismissedAction) ||
-            Platform.OS !== 'ios'
-          ) {
-            await this.onSuccessfulShare();
-            resolve();
-          } else {
-            reject(new Error('not_shared'));
-          }
-        })
-        .catch(e => {
-          console.warn(e);
-          reject(e);
-        });
-    });
+  shareProduct = () => {
+    const { item } = this.state;
+    if (Platform.OS === 'ios') {
+      Share.share({
+        url: `https://onova.co/${item.seller.username}/${item.uuid}`,
+        title: 'Share item',
+      });
+    } else {
+      Share.share({
+        message: `https://onova.co/${item.seller.username}/${item.uuid}`,
+        title: 'Share item',
+      });
+    }
+  };
+
+  onMandatoryShare(): Promise<null | Error> {
+    return Share.share({ message: I18n.t('home.share'), title: 'Share' })
+      .then(async res => {
+        // ios user shared it
+        // android probably user shared it
+        if (
+          (Platform.OS == 'ios' && res.action !== Share.dismissedAction) ||
+          Platform.OS !== 'ios'
+        ) {
+          await this.onSuccessfulShare();
+          return null;
+        } else {
+          throw new Error('not_shared');
+        }
+      })
+      .catch(e => {
+        console.warn(e);
+        return e;
+      });
   }
 
   onSuccessfulShare = (): Promise<any> => {
@@ -300,7 +313,7 @@ export class ProductContainer extends React.Component<Props, State> {
               '',
               async () => {
                 try {
-                  await this.onShare();
+                  await this.onMandatoryShare();
                   resolve();
                 } catch (err) {
                   reject(err);
@@ -400,6 +413,9 @@ export class ProductContainer extends React.Component<Props, State> {
           </Left>
           <Body />
           <Right>
+            <NBButton transparent dark onPress={this.shareProduct}>
+              <NBIcon ios="ios-share" android="md-share" />
+            </NBButton>
             <NBButton transparent dark onPress={this.showActionSheetForProduct}>
               <NBIcon ios="ios-more" android="md-more" />
             </NBButton>

@@ -5,7 +5,9 @@ import { connect } from 'react-redux';
 import {
   Dimensions,
   Image,
+  Platform,
   RefreshControl,
+  Share,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -613,6 +615,22 @@ class ProfileScreen extends React.Component<Props, State> {
     );
   }
 
+  shareProfile = () => {
+    const { username } = this.state;
+
+    if (Platform.OS === 'ios') {
+      Share.share({
+        url: `https://onova.co/${username}`,
+        title: 'Share Shop',
+      });
+    } else {
+      Share.share({
+        message: `https://onova.co/${username}`,
+        title: 'Share Shop',
+      });
+    }
+  };
+
   render() {
     const { _id, username, isFetching } = this.state;
 
@@ -642,6 +660,9 @@ class ProfileScreen extends React.Component<Props, State> {
             <Title style={{ color: colors.black }}>@{username}</Title>
           </Body>
           <Right>
+            <NBButton transparent dark onPress={this.shareProfile}>
+              <NBIcon ios="ios-share" android="md-share" style={styles.icon} />
+            </NBButton>
             {!this.ifNavigatedFromProduct() &&
               this.isMe() && (
                 <NBButton transparent onPress={this.onGoToSettings}>

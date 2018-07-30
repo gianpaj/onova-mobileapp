@@ -776,7 +776,7 @@ const styles = StyleSheet.create({
   },
   profileTop: {
     backgroundColor: colors.white,
-    elevation: 2,
+    elevation: 0.5, // android
     paddingHorizontal: 10,
     paddingTop: 10,
     shadowColor: colors.black,

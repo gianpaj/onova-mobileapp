@@ -388,7 +388,7 @@ export class ProductContainer extends React.Component<Props, State> {
   };
 
   render() {
-    const { item, loading } = this.state;
+    const { item, loading, loadingBuy } = this.state;
 
     // join array of tags and add the `#` char for rendering
     let tags;
@@ -397,6 +397,8 @@ export class ProductContainer extends React.Component<Props, State> {
         .map(tag => `#${tag}`)
         .join(' ')
         .toString();
+
+    const thereIsACarousel = item && item.photoURIs.length > 1;
 
     return (
       <Container>
@@ -420,7 +422,7 @@ export class ProductContainer extends React.Component<Props, State> {
           ref={r => {
             this.scrollView = r;
           }}
-          style={styles.container}>
+          style={styles.flex1}>
           {loading && <ActivityIndicator size="large" />}
           {item && (
             <View>
@@ -449,87 +451,92 @@ export class ProductContainer extends React.Component<Props, State> {
                 </Text>
               </View>
               <MediaView source={item.photoURIs} />
-              <NBButton transparent dark onPress={this.shareProduct}>
-                <NBIcon
-                  ios="ios-share-outline"
-                  android="md-share"
-                  style={styles.icon}
-                />
-              </NBButton>
-              {!this.isMyProduct() && (
-                <View
-                  style={[
-                    styles.padder,
-                    styles.bottomSection,
-                    // negative margin for the carousel dots
-                    item.photoURIs.length > 1 && { marginTop: -35 },
-                  ]}>
-                  {/* <NBIcon name="ios-bookmark-outline" style={styles.iconSave} /> */}
-                  {/* <TouchableOpacity
-                  onPress={() => this.onPressLike()}
-                  underlayColor="transparent"
-                  // disabled={this.state.midAnimation}>
-                  <LottieView
-                    ref={c => {
-                      this.anim = c;
-                    }}
-                    // $FlowFixMe
-                    source={require('../assets/animations/favorite_black.json')}
-                    progress={this.state.likeAnimValue}
-                  />
-                </TouchableOpacity> */}
-                  {/* <NBIcon
-                  name="ios-text-outline"
-                  style={styles.iconCommmentAndShare}
-                /> */}
-                  <View style={styles.flex1} />
-                  <Button
-                    buttonStyle={styles.buyButton}
-                    onPress={() => this.onPressBuy()}
-                    textStyle={{ fontWeight: 'bold' }}
-                    title={I18n.t('product.buy_button')}
-                    loading={this.state.loadingBuy}
-                  />
-                </View>
-              )}
-              {/* <View style={styles.bottomSectionAfter}>
-                <Text style={styles.timeAgo}>{'X MINUTES AGO'}</Text>
-              </View> */}
               <View
                 style={[
-                  styles.bottomSectionAfter,
+                  styles.marginVertical,
+                  styles.padder,
                   // negative margin for the carousel dots
-                  this.isMyProduct() &&
-                    item.photoURIs.length > 1 && { marginTop: 15 },
+                  thereIsACarousel && { marginTop: -28 },
                 ]}>
-                <Text
-                  style={[
-                    styles.description,
-                    item.tags && { marginBottom: 10 },
-                  ]}>
-                  {item.description}
-                </Text>
-                {item.tags && (
-                  <ParsedText
-                    parse={[
-                      {
-                        pattern: /#(\S+)/,
-                        style: styles.hashtag,
-                        onPress: this.handleHashtagPress,
-                      },
+                <NBButton transparent dark onPress={this.shareProduct}>
+                  <NBIcon
+                    ios="ios-share-outline"
+                    android="md-share"
+                    style={[
+                      styles.shareIcon,
+                      // thereIsACarousel && { marginTop: 13 },
                     ]}
-                    childrenProps={{ allowFontScaling: false }}>
-                    {tags}
-                  </ParsedText>
+                  />
+                </NBButton>
+                {!this.isMyProduct() && (
+                  <View style={[styles.bottomSection, { marginTop: -40 }]}>
+                    {/* <NBIcon name="ios-bookmark-outline" style={styles.iconSave} /> */}
+                    {/* <TouchableOpacity
+                    onPress={() => this.onPressLike()}
+                    underlayColor="transparent"
+                    // disabled={this.state.midAnimation}>
+                    <LottieView
+                      ref={c => {
+                        this.anim = c;
+                      }}
+                      // $FlowFixMe
+                      source={require('../assets/animations/favorite_black.json')}
+                      progress={this.state.likeAnimValue}
+                    />
+                  </TouchableOpacity> */}
+                    {/* <NBIcon
+                    name="ios-text-outline"
+                    style={styles.iconCommmentAndShare}
+                  /> */}
+                    <View style={styles.flex1} />
+                    <Button
+                      buttonStyle={styles.buyButton}
+                      containerViewStyle={styles.buyButtonContainer}
+                      onPress={this.onPressBuy}
+                      textStyle={{ fontWeight: 'bold', paddingHorizontal: 10 }}
+                      title={I18n.t('product.buy_button')}
+                      loading={loadingBuy}
+                    />
+                  </View>
                 )}
+                {/* <View style={styles.bottomSectionAfter}>
+                  <Text style={styles.timeAgo}>{'X MINUTES AGO'}</Text>
+                </View> */}
+                <View
+                  style={[
+                    styles.marginVertical,
+                    // negative margin for the carousel dots
+                    thereIsACarousel && { marginTop: 15 },
+                  ]}>
+                  <Text
+                    style={[
+                      styles.description,
+                      item.tags && { marginBottom: 10 },
+                    ]}>
+                    {item.description}
+                  </Text>
+                  {item.tags && (
+                    <ParsedText
+                      parse={[
+                        {
+                          pattern: /#(\S+)/,
+                          style: styles.hashtag,
+                          onPress: this.handleHashtagPress,
+                        },
+                      ]}
+                      childrenProps={{ allowFontScaling: false }}>
+                      {tags}
+                    </ParsedText>
+                  )}
+                </View>
+                <Comments
+                  uuid={item.uuid}
+                  userData={this.props.userData}
+                  token={this.props.token}
+                  scrollView={this.scrollView}
+                  goToProfile={this.goToProfile}
+                />
               </View>
-              <Comments
-                uuid={item.uuid}
-                userData={this.props.userData}
-                token={this.props.token}
-                scrollView={this.scrollView}
-                goToProfile={this.goToProfile}
-              />
             </View>
           )}
         </Content>
@@ -539,9 +546,6 @@ export class ProductContainer extends React.Component<Props, State> {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   flex1: {
     flex: 1,
   },
@@ -572,29 +576,33 @@ const styles = StyleSheet.create({
   //   // marginLeft: 20,
   //   marginTop: 12,
   // },
-  icon: {
+  shareIcon: {
     color: colors.grey1,
     fontSize: 27,
-    marginTop: 12,
-    marginLeft: 21,
+    marginRight: 0,
+    marginLeft: 2,
+    paddingBottom: Platform.select({
+      ios: 5,
+      android: 0,
+    }),
   },
   buyButton: {
     backgroundColor: colors.red,
     borderRadius: 2,
-    marginTop: 9,
-    paddingBottom: 8,
-    paddingHorizontal: 22,
-    paddingTop: 8,
+    paddingVertical: 8,
+  },
+  buyButtonContainer: {
+    marginRight: 0,
+    marginLeft: 0,
   },
   bottomSection: {
     height: 54,
     flexDirection: 'row',
     marginRight: 0,
   },
-  bottomSectionAfter: {
+  marginVertical: {
     marginTop: 10,
     marginBottom: 20,
-    paddingHorizontal: 20,
   },
   padder: {
     paddingHorizontal: 10,

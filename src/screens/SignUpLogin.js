@@ -6,10 +6,6 @@ import { TabViewAnimated, TabBar, SceneMap } from 'react-native-tab-view';
 import { Container, Title } from 'native-base';
 import I18n from 'react-native-i18n';
 
-import type { NavigationScreenProp } from 'react-navigation';
-
-import type { Dispatch } from '../types';
-
 import { SignUpTab } from './SignUpTab';
 import { LoginTab } from './LoginTab';
 import colors from '../config/colors';
@@ -19,10 +15,7 @@ const initialLayout = {
   width: Dimensions.get('window').width,
 };
 
-type Props = {
-  dispatch: Dispatch,
-  navigation: NavigationScreenProp<*>,
-};
+type Props = {};
 
 type State = {
   index: number,

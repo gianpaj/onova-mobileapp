@@ -22,7 +22,7 @@ import RadioForm, {
 } from 'react-native-simple-radio-button';
 import ImagePicker from 'react-native-image-crop-picker';
 import {
-  ImagePicker as AntImagePicker,
+  // ImagePicker as AntImagePicker,
   InputItem,
   NoticeBar,
   TextareaItem,
@@ -39,6 +39,7 @@ if (Platform.OS == 'android') {
 }
 
 import { Header, HR, TagInput } from '../components';
+import AntImagePicker from '../components/ImagePicker';
 import { enableRefresh } from '../actions/actionCreator';
 import I18n from '../i18n';
 import colors from '../config/colors';
@@ -55,6 +56,29 @@ const brands = require('../assets/brands.json');
 
 const IMAGE_WIDTH = 1440;
 const IMAGE_HEIGHT = 1440;
+
+const imagePickerOptons = {
+  width: IMAGE_WIDTH,
+  height: IMAGE_HEIGHT,
+  compressImageMaxWidth: IMAGE_WIDTH,
+  compressImageMaxHeight: IMAGE_HEIGHT,
+  compressImageQuality: 0.7,
+  // cropping: true,
+  multiple: true,
+  mediaType: 'photo',
+  maxFiles: 6, // ios
+  cropperToolbarTitle: I18n.t('add_or_edit_item.cropper_toolbar_title'),
+  // ios
+  cropperChooseText: I18n.t('add_or_edit_item.cropper_choose_text'),
+  // ios
+  cropperCancelText: I18n.t('add_or_edit_item.cropper_cancel_text'),
+  // ios
+  loadingLabelText: I18n.t('add_or_edit_item.image_processing'),
+};
+
+const CAMERA = I18n.t('add_or_edit_item.select_photo_source_camera');
+const GALLERY = I18n.t('add_or_edit_item.select_photo_source_gallery');
+const CANCEL = I18n.t('add_or_edit_item.select_photo_source_cancel');
 
 type Props = {
   dispatch: Dispatch,
@@ -118,6 +142,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
   };
 
   componentDidMount() {
+    // $FlowFixMe
     const { params } = this.props.navigation.state;
     if (params && params.item) {
       this.setState({ inEditMode: true, isLoading: false });
@@ -257,24 +282,6 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
         .catch(() => this.closeModalConditional());
     }
 
-    const imagePickerOptons = {
-      width: IMAGE_WIDTH,
-      height: IMAGE_HEIGHT,
-      compressImageMaxWidth: IMAGE_WIDTH,
-      compressImageMaxHeight: IMAGE_HEIGHT,
-      compressImageQuality: 0.7,
-      // cropping: true,
-      mediaType: 'photo',
-      cropperToolbarTitle: I18n.t('add_or_edit_item.cropper_toolbar_title'),
-      // ios
-      cropperChooseText: I18n.t('add_or_edit_item.cropper_choose_text'),
-      // ios
-      cropperCancelText: I18n.t('add_or_edit_item.cropper_cancel_text'),
-    };
-
-    const CAMERA = I18n.t('add_or_edit_item.select_photo_source_camera');
-    const GALLERY = I18n.t('add_or_edit_item.select_photo_source_gallery');
-    const CANCEL = I18n.t('add_or_edit_item.select_photo_source_cancel');
     const BUTTONS = [CAMERA, GALLERY, CANCEL];
     ActionSheet.show(
       {

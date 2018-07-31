@@ -9,10 +9,7 @@ import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
-// import com.airbnb.android.react.lottie.LottiePackage;
 import com.AlexanderZaytsev.RNI18n.RNI18nPackage;
-// import com.dylanvann.fastimage.FastImageViewPackage;
-// import com.instabug.reactlibrary.RNInstabugReactnativePackage;
 import com.reactnative.ivpusic.imagepicker.PickerPackage;
 import io.invertase.firebase.RNFirebasePackage;
 import io.invertase.firebase.messaging.RNFirebaseMessagingPackage;
@@ -36,19 +33,11 @@ public class MainApplication extends Application implements ReactApplication {
           new MainReactPackage(),
             new RNAndroidLocationEnablerPackage(),
             new RNFetchBlobPackage(),
-            // new FastImageViewPackage(),
-            // new LottiePackage(),
             new PickerPackage(),
             new RNFirebasePackage(),
             new RNFirebaseMessagingPackage(),
             new RNFirebaseNotificationsPackage(),
             new RNI18nPackage(),
-            // new RNInstabugReactnativePackage.Builder("YOUR_ANDROID_APPLICATION_TOKEN",MainApplication.this)
-            //   .setInvocationEvent("shake")
-            //   .setPrimaryColor("#1D82DC")
-            //   .setFloatingEdge("left")
-            //   .setFloatingButtonOffsetFromTop(250)
-            //   .build(),
             new RNSentryPackage()
       );
     }

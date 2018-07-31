@@ -29,7 +29,7 @@ import type { NavigationScreenProp } from 'react-navigation';
 import axios from 'axios';
 import type { CancelTokenSource } from 'axios';
 
-import { Accordion, Header, HR } from '../components';
+import { Header, HR } from '../components';
 
 import colors from '../config/colors';
 // import settings from '../config/settings';

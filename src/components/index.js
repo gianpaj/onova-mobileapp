@@ -1,6 +1,6 @@
 // @flow
 
-import Accordion from './Accordion';
+// import Accordion from './Accordion';
 import Avatar from './Avatar';
 // import ChatActions from './ChatActions';
 import EditableText from './EditableText';
@@ -16,7 +16,7 @@ import Send from './Send';
 import TagInput from './TagInput';
 
 export {
-  Accordion,
+  // Accordion,
   Avatar,
   // ChatActions,
   EditableText,

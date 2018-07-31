@@ -16,6 +16,6 @@ export default {
   MAX_BRAND_TAGS: 1,
   USERNAME_REGEX: /^[a-zA-Z0-9\_\.]+$/,
   HASHTAG_REGEX: /^[a-zA-Z\u0400-\u04FF0-9]+$/,
-  INSTABUG_TOKEN: '***REMOVED***',
+  // INSTABUG_TOKEN: '***REMOVED***',
   // BRAINTREE_TOKENIZATION_KEY: 'sandbox_45rbtwk4_wpk6jkwxv5kpqp58',
 };

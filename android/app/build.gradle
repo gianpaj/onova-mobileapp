@@ -190,7 +190,6 @@ dependencies {
     implementation project(':react-native-android-location-enabler')
     implementation project(':rn-fetch-blob')
     implementation project(':react-native-i18n')
-    // compile project(':react-native-fast-image')
     // compile project(':lottie-react-native')
     // compile project(':instabug-reactnative')
     implementation project(':react-native-sentry')

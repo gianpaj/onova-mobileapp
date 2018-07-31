@@ -22,7 +22,7 @@ import {
 } from 'native-base';
 import isEmail from 'validator/lib/isEmail';
 import { Toast } from 'antd-mobile-rn';
-import AnimButton from 'react-native-micro-animated-button';
+// import AnimButton from 'react-native-micro-animated-button';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import I18n from '../i18n';
 
@@ -352,6 +352,9 @@ export class LoginTabContainer extends React.Component<Props, State> {
   renderPwdResetModal() {
     const { hasFocusEmailReset } = this.state;
 
+    const isDisabled =
+      !isEmail(this.state.emailReset) || this.state.loadingReset;
+
     return (
       <Modal
         testID="PwdResetModal"
@@ -396,26 +399,24 @@ export class LoginTabContainer extends React.Component<Props, State> {
             value={this.state.emailReset}
           />
 
-          <AnimButton
-            disabled={
-              !isEmail(this.state.emailReset) || this.state.loadingReset
-            }
-            foregroundColor={colors.white}
-            style={[
-              styles.PassResetButton,
-              {
-                backgroundColor:
-                  isEmail(this.state.emailReset) || this.state.loadingReset
-                    ? colors.primary
-                    : colors.grey4,
-              },
-            ]}
-            onPress={this.onResetPassword}
-            label={I18n.t('login.reset_password.button')}
-            labelStyle={{ color: colors.white }}
+          <NBButton
+            style={{ alignSelf: 'center', width: 200 }}
             testID="ResetButton"
-            noRadius
-          />
+            block
+            disabled={isDisabled}
+            dark={!isDisabled}
+            light={isDisabled}
+            // {...buttonProps}
+            onPress={this.onResetPassword}>
+            <Text
+              // eslint-disable-next-line
+              style={{
+                fontSize: 16,
+                color: isDisabled ? colors.black : colors.white,
+              }}>
+              {I18n.t('login.reset_password.button')}
+            </Text>
+          </NBButton>
         </View>
       </Modal>
     );

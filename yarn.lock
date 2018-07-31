@@ -8935,12 +8935,6 @@ react-native-elements@^0.19.0:
     opencollective "^1.0.3"
     prop-types "^15.5.8"
 
-react-native-fast-image@^2.2.4:
-  version "2.2.4"
-  resolved "https://registry.yarnpkg.com/react-native-fast-image/-/react-native-fast-image-2.2.4.tgz#bc240feed8019337e8289ea6acd5fdf6aeab1b6d"
-  dependencies:
-    prop-types "^15.5.10"
-
 react-native-firebase@^4.2.0:
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/react-native-firebase/-/react-native-firebase-4.2.0.tgz#d44b1e5b5149d65936045c0398e0acc2ebb4c7e9"
@@ -8949,7 +8943,7 @@ react-native-firebase@^4.2.0:
     postinstall-build "^5.0.1"
     prop-types "^15.6.1"
 
-react-native-flip-card@^3.4.1, react-native-flip-card@^3.5.2:
+react-native-flip-card@^3.4.1:
   version "3.5.2"
   resolved "https://registry.yarnpkg.com/react-native-flip-card/-/react-native-flip-card-3.5.2.tgz#6563f4a6d95b999c21e82deec9b2f502175847d6"
   dependencies:
@@ -9032,13 +9026,9 @@ react-native-menu@^0.23.0:
     prop-types "^15.5.10"
     react-timer-mixin "^0.13.3"
 
-react-native-micro-animated-button@^0.0.21:
-  version "0.0.21"
-  resolved "https://registry.yarnpkg.com/react-native-micro-animated-button/-/react-native-micro-animated-button-0.0.21.tgz#8e525c3fba99f2cb7a145b8775ff0ac0a47a1ef0"
-
-react-native-modal@^6.4.0:
-  version "6.4.0"
-  resolved "https://registry.yarnpkg.com/react-native-modal/-/react-native-modal-6.4.0.tgz#a6c2599b4c9d53ac99071bc658215367ee81e278"
+react-native-modal@^6.5.0:
+  version "6.5.0"
+  resolved "https://registry.yarnpkg.com/react-native-modal/-/react-native-modal-6.5.0.tgz#46220b2289a41597d344c1db17454611b426a758"
   dependencies:
     prop-types "^15.6.1"
     react-native-animatable "^1.2.4"

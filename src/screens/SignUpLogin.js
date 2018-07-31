@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Dimensions, StyleSheet, View } from 'react-native';
-import { TabViewAnimated, TabBar, SceneMap } from 'react-native-tab-view';
+import { TabView, TabBar, SceneMap } from 'react-native-tab-view';
 import { Container, Title } from 'native-base';
 import I18n from 'react-native-i18n';
 
@@ -33,7 +33,7 @@ class SignUpLoginContainer extends React.Component<Props, State> {
 
   _handleIndexChange = index => this.setState({ index });
 
-  _renderHeader = props => (
+  _renderTabBar = props => (
     <TabBar
       indicatorStyle={styles.indicator}
       labelStyle={styles.label}
@@ -53,10 +53,10 @@ class SignUpLoginContainer extends React.Component<Props, State> {
         <View style={styles.header}>
           <Title style={{ color: colors.black }}>ONOVA</Title>
         </View>
-        <TabViewAnimated
+        <TabView
           navigationState={this.state}
           renderScene={this._renderScene}
-          renderHeader={this._renderHeader}
+          renderTabBar={this._renderTabBar}
           onIndexChange={this._handleIndexChange}
           initialLayout={initialLayout}
           useNativeDriver

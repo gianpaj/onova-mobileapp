@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Alert, Dimensions, StyleSheet } from 'react-native';
 import { Body, Container, Title, Right, Left, Button, Icon } from 'native-base';
-import { TabViewAnimated, TabBar, SceneMap } from 'react-native-tab-view';
+import { TabView, TabBar, SceneMap } from 'react-native-tab-view';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import { ReviewsTab } from './ReviewsTab';
@@ -42,7 +42,7 @@ class ReviewsContainer extends Component<Props, State> {
 
   _handleIndexChange = index => this.setState({ index });
 
-  _renderHeader = props => (
+  _renderTabBar = props => (
     <TabBar
       indicatorStyle={styles.indicator}
       labelStyle={styles.label}
@@ -90,10 +90,10 @@ class ReviewsContainer extends Component<Props, State> {
             </Button>
           </Right>
         </Header>
-        <TabViewAnimated
+        <TabView
           navigationState={this.state}
           renderScene={this._renderScene}
-          renderHeader={this._renderHeader}
+          renderTabBar={this._renderTabBar}
           onIndexChange={this._handleIndexChange}
           initialLayout={initialLayout}
           useNativeDriver

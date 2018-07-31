@@ -11,14 +11,14 @@ import {
   View,
 } from 'react-native';
 import { Body, Button, Icon, Left, Right, Title } from 'native-base';
-import { TabViewAnimated, TabBar, SceneMap } from 'react-native-tab-view';
+import { TabView, TabBar, SceneMap } from 'react-native-tab-view';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import I18n from '../i18n';
 import { Header, ImageGrid } from '../components';
 
 import type { NavigationScreenProp } from 'react-navigation';
-import type { Route, NavigationState } from 'react-native-tab-view/types';
+import type { Route, NavigationState } from 'react-native-tab-view';
 
 const initialLayout = {
   height: 0,
@@ -48,7 +48,7 @@ export class Home extends PureComponent<Props, State> {
 
   _handleIndexChange = (index: number) => this.setState({ index });
 
-  _renderHeader = props => (
+  _renderTabBar = props => (
     <TabBar
       {...props}
       scrollEnabled
@@ -118,12 +118,12 @@ export class Home extends PureComponent<Props, State> {
             </Button>
           </Right>
         </Header>
-        <TabViewAnimated
+        <TabView
           testID="Tabs"
           style={styles.container}
           navigationState={this.state}
           renderScene={this._renderScene}
-          renderHeader={this._renderHeader}
+          renderTabBar={this._renderTabBar}
           onIndexChange={this._handleIndexChange}
           initialLayout={initialLayout}
           useNativeDriver

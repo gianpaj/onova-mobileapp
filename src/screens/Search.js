@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Dimensions, StyleSheet } from 'react-native';
 import { Body, Container, Title, Left, Right } from 'native-base';
-import { TabViewAnimated, TabBar, SceneMap } from 'react-native-tab-view';
+import { TabView, TabBar, SceneMap } from 'react-native-tab-view';
 
 import { SearchWithHasthagsTab } from './SearchWithHasthagsTab';
 import { SearchSellersTab } from './SearchSellersTab';
@@ -41,7 +41,7 @@ class SearchContainer extends Component<Props, State> {
 
   _handleIndexChange = index => this.setState({ index });
 
-  _renderHeader = props => (
+  _renderTabBar = props => (
     <TabBar
       indicatorStyle={styles.indicator}
       labelStyle={styles.label}
@@ -67,10 +67,10 @@ class SearchContainer extends Component<Props, State> {
           </Body>
           <Right />
         </Header>
-        <TabViewAnimated
+        <TabView
           navigationState={this.state}
           renderScene={this._renderScene}
-          renderHeader={this._renderHeader}
+          renderTabBar={this._renderTabBar}
           onIndexChange={this._handleIndexChange}
           initialLayout={initialLayout}
           useNativeDriver

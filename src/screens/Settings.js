@@ -581,10 +581,10 @@ const styles = StyleSheet.create({
     color: colors.grey4,
     paddingVertical: 10,
   },
-  secureText: {
-    color: colors.grey2,
-    paddingBottom: 0,
-  },
+  // secureText: {
+  //   color: colors.grey2,
+  //   paddingBottom: 0,
+  // },
 });
 
 const mapStateToProps: any = (state: ReduxState) => ({

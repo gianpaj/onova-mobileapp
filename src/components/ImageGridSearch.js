@@ -185,7 +185,7 @@ class ImageGridComponent extends React.Component<Props, State> {
   renderItem = ({ item }: any) => {
     const uri = item.photoURIs[0].replace('.jpg', '-thumb.jpg');
     return (
-      <View style={styles.imageContainer} id={item.uuid}>
+      <View style={styles.imageContainer} key={item.uuid}>
         <TouchableOpacity
           style={{ flex: 1 }}
           onPress={() => this.onItemPress(item)}>

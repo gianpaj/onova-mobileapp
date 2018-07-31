@@ -298,18 +298,21 @@ export class SignUpTabContainer extends Component<Props, State> {
               width: 320,
             }}>
             <Text style={{ color: colors.grey4 }}>
-              {I18n.t('signup.terms_text_1')}&nbsp;
+              {I18n.t('signup.terms_text_1')}
+              &nbsp;
             </Text>
             <TouchableOpacity onPress={this.openTerm}>
-              <Text style={[styles.linkText, styles.termsLink]}>
+              <Text style={styles.termsLink}>
                 {I18n.t('signup.terms_text_2')}
               </Text>
             </TouchableOpacity>
             <Text style={{ color: colors.grey4 }}>
-              &nbsp;{I18n.t('signup.terms_text_3')}&nbsp;
+              &nbsp;
+              {I18n.t('signup.terms_text_3')}
+              &nbsp;
             </Text>
             <TouchableOpacity onPress={this.openPolicy}>
-              <Text style={[styles.linkText, styles.termsLink]}>
+              <Text style={styles.termsLink}>
                 {I18n.t('signup.terms_text_4')}
               </Text>
             </TouchableOpacity>

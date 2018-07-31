@@ -15,7 +15,7 @@ import {
 import imagePickerStyle, { IImagePickerStyle } from './ImagePicker.styles';
 
 export type ImagePickerPropTypes = {
-  style?: {},
+  // style?: {},
   files?: Array<{}>,
   onChange?: (files: Array<{}>, operationType: string, index?: number) => void,
   onImageClick?: (index?: number, files?: Array<{}>) => void,
@@ -26,7 +26,7 @@ export type ImagePickerPropTypes = {
   // accept?: string, // UNUSED
 
   // export interface ImagePickerNativeProps extends ImagePickerPropTypes
-  styles?: IImagePickerStyle,
+  styles: IImagePickerStyle,
 };
 
 const imagePickerStyles = StyleSheet.create(imagePickerStyle);

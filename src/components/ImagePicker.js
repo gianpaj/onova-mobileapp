@@ -1,6 +1,6 @@
 // @flow
 
-// from https://github.com/ant-design/ant-design-mobile-rn/blob/7715f25a77557ac41f5e2e5889a73dfb4c47b66c/components/image-picker/index.native.tsx
+// originally from https://github.com/ant-design/ant-design-mobile-rn/blob/7715f25a77557ac41f5e2e5889a73dfb4c47b66c/components/image-picker/index.native.tsx
 
 import React from 'react';
 import {
@@ -13,15 +13,13 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-// import ImageRoll from './ImageRoll.native';
 import imagePickerStyle, { IImagePickerStyle } from './ImagePicker.styles';
 import SortableList from 'react-native-sortable-list';
-import colors from '../config/colors';
 
 export type Props = {
-  // style?: {},
-  files?: Array<{}>,
-  onChange?: (files: Array<{}>, operationType: string, index?: number) => void,
+  // style?: {}, // UNUSED
+  files: Array<{}>,
+  onChange: (files: Array<{}>, operationType?: string, index?: number) => void,
   onImageClick?: (index?: number, files?: Array<{}>) => void,
   onAddImageClick?: () => void,
   onChangeOrder: (Array<{}>) => void,
@@ -39,24 +37,22 @@ type State = {
   visible: boolean,
 };
 
-const imagePickerStyles = StyleSheet.create(imagePickerStyle);
-
 export default class ImagePicker extends React.Component<Props, State> {
   state = {
     visible: false,
   };
 
   static defaultProps = {
-    styles: imagePickerStyles,
+    styles: StyleSheet.create(imagePickerStyle),
     onChange() {},
     onFail() {},
     files: [],
     selectable: true,
   };
 
-  plusText: any;
-  plusWrap: any;
+  // plusWrap: any;
 
+  /*
   onPressIn = () => {
     const styles = this.props.styles;
     this.plusWrap.setNativeProps({
@@ -69,16 +65,12 @@ export default class ImagePicker extends React.Component<Props, State> {
     this.plusWrap.setNativeProps({
       style: [styles.item, styles.size, styles.plusWrapNormal],
     });
-  };
+  };*/
 
   showPicker = () => {
-    if (this.props.onAddImageClick) {
-      this.props.onAddImageClick();
-      return;
-    }
-    this.setState({
-      visible: true,
-    });
+    if (this.props.onAddImageClick) return this.props.onAddImageClick();
+
+    this.setState({ visible: true });
   };
 
   addImage(imageObj: any) {
@@ -94,16 +86,10 @@ export default class ImagePicker extends React.Component<Props, State> {
   }
 
   removeImage = (idx: number): void => {
-    const newImages: any[] = [];
-    const { files = [] } = this.props;
-    files.forEach((image, index) => {
-      if (index !== idx) {
-        newImages.push(image);
-      }
-    });
-    if (this.props.onChange) {
-      this.props.onChange(newImages, 'remove', idx);
-    }
+    const { files, onChange } = this.props;
+    const copy = [...files];
+    copy.splice(idx, 1);
+    if (onChange) onChange(copy);
   };
 
   // hideImageRoll = () => {
@@ -116,9 +102,8 @@ export default class ImagePicker extends React.Component<Props, State> {
   // };
 
   onImageClick(index: number) {
-    if (this.props.onImageClick) {
-      this.props.onImageClick(index, this.props.files);
-    }
+    const { onImageClick, files } = this.props;
+    if (onImageClick) onImageClick(index, files);
   }
 
   render() {
@@ -129,6 +114,7 @@ export default class ImagePicker extends React.Component<Props, State> {
       styles,
       onChangeOrder,
     } = this.props;
+    /*
     const filesView = files.map((item: any, index) => (
       <View key={index} style={[styles.item, styles.size]}>
         <TouchableOpacity
@@ -146,26 +132,18 @@ export default class ImagePicker extends React.Component<Props, State> {
           <Text style={styles.closeText}>×</Text>
         </TouchableOpacity>
       </View>
-    ));
+    ));*/
 
-    // const imageRollEl = (
-    //   <ImageRoll
-    //     onCancel={this.hideImageRoll}
-    //     onSelected={imgObj => this.addImage(imgObj)}
-    //   />
-    // );
     return (
-      <View style={localStyles.container}>
+      <View style={styles.container}>
         {/* {filesView} */}
         <SortableList
           horizontal
-          style={localStyles.list}
-          contentContainerStyle={localStyles.contentContainer}
           data={files}
           renderRow={this._renderRow}
           sortingEnabled={enabled}
-          scrollEnabled={enabled}
-          // onActivateRow={activatedRow => this.setState({ activatedRow })}
+          scrollEnabled={false}
+          showsHorizontalScrollIndicator={false}
           onPressRow={index => this.onImageClick(index)}
           onChangeOrder={onChangeOrder}
         />
@@ -175,7 +153,6 @@ export default class ImagePicker extends React.Component<Props, State> {
             onPressIn={this.onPressIn}
             onPressOut={this.onPressOut}>
             <View
-              ref={conponent => (this.plusWrap = conponent)}
               style={[
                 styles.item,
                 styles.size,
@@ -186,7 +163,6 @@ export default class ImagePicker extends React.Component<Props, State> {
             </View>
           </TouchableWithoutFeedback>
         )}
-        {/* {this.state.visible ? imageRollEl : null} */}
       </View>
     );
   }
@@ -197,24 +173,25 @@ export default class ImagePicker extends React.Component<Props, State> {
         active={active}
         data={data}
         index={index}
-        removeImage={() => this.removeImage(index)}
+        removeImage={() => {
+          if (this.props.enabled) this.removeImage(index);
+        }}
         styles={this.props.styles}
       />
     );
   };
 }
 
-type Props2 = {
+type RowProps = {
   active: boolean,
   data: {
     url: string,
   },
-  // key: number,
   removeImage: () => void,
   styles: IImagePickerStyle,
 };
 
-class Row extends React.Component<Props2> {
+class Row extends React.Component<RowProps> {
   _active = new Animated.Value(0);
   _style;
 
@@ -268,50 +245,11 @@ class Row extends React.Component<Props2> {
 }
 
 const localStyles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-
-    ...Platform.select({
-      ios: {
-        paddingTop: 0,
-      },
-    }),
-  },
-
-  list: {
-    height: 50,
-    // width: window.width,
-  },
-
-  contentContainer: {
-    paddingVertical: Platform.select({
-      // ios: 30,
-      android: 0,
-    }),
-  },
-
   row: {
     flexDirection: 'column',
     alignItems: 'center',
-    backgroundColor: colors.white,
-    paddingHorizontal: 5,
-    marginHorizontal: 10,
+    // paddingHorizontal: 5,
+    // marginHorizontal: 4,
     borderRadius: 4,
-    overflow: 'hidden',
-    width: 80,
-    height: 80,
-  },
-
-  image: {
-    width: 50,
-    height: 50,
-    marginBottom: 15,
-  },
-
-  text: {
-    fontSize: 18,
-    color: '#222222',
   },
 });

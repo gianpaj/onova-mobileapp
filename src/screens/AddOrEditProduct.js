@@ -21,14 +21,7 @@ import RadioForm, {
   RadioButtonLabel,
 } from 'react-native-simple-radio-button';
 import ImagePicker from 'react-native-image-crop-picker';
-import {
-  // ImagePicker as AntImagePicker,
-  InputItem,
-  NoticeBar,
-  TextareaItem,
-  Toast,
-  WingBlank,
-} from 'antd-mobile-rn';
+import { InputItem, NoticeBar, TextareaItem, Toast } from 'antd-mobile-rn';
 import Permissions from 'react-native-permissions';
 // import RNFetchBlob from 'rn-fetch-blob';
 let RNFetchBlob;
@@ -40,6 +33,7 @@ if (Platform.OS == 'android') {
 
 import { Header, HR, TagInput } from '../components';
 import AntImagePicker from '../components/ImagePicker';
+import { IImagePickerStyle } from '../components/ImagePicker.styles';
 import { enableRefresh } from '../actions/actionCreator';
 import I18n from '../i18n';
 import colors from '../config/colors';
@@ -49,8 +43,7 @@ import * as ui from '../utils/ui';
 import type { Dispatch, UserData, ReduxState, Product } from '../types';
 
 import type { NavigationScreenProp } from 'react-navigation';
-
-const width = Dimensions.get('window').width;
+const { width } = Dimensions.get('window');
 
 const brands = require('../assets/brands.json');
 
@@ -92,7 +85,7 @@ type State = {
   descriptionFocused: boolean,
   grp_1: number,
   grp_2: number,
-  images: any,
+  images: Array<any>,
   inEditMode: boolean,
   isLoading: boolean,
   location: ?{
@@ -601,8 +594,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
   }*/
 
   onImageChange = (images: Array<any>) => {
-    this.closeModalConditional();
-    this.setState({ images });
+    this.setState({ images }, () => this.closeModalConditional());
   };
 
   onChangeDescription = (t: string) => this.setState({ description: t });
@@ -668,22 +660,27 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
               {I18n.t('profile.notice_bar')}
             </NoticeBar>
           )}
-          <View style={{ flex: 1, flexDirection: 'row', paddingTop: 18 }}>
-            <WingBlank>
-              <AntImagePicker
-                files={images}
-                onChange={this.onImageChange}
-                onImageClick={i => this.selectPhotoTapped(i)}
-                onAddImageClick={() => this.selectPhotoTapped(images.length)}
-                selectable={images.length < 6}
-                styles={imagePickerStyles}
-                onChangeOrder={array => {
-                  this.setState({ order: array.map(e => parseInt(e)) });
-                }}
-              />
-            </WingBlank>
+          <View
+            style={{
+              alignItems: 'flex-start',
+              marginLeft: 17,
+              paddingTop: 18,
+              height: width / 6 + 10,
+            }}>
+            <AntImagePicker
+              files={images}
+              onImageClick={i => this.selectPhotoTapped(i)}
+              onAddImageClick={() => this.selectPhotoTapped(images.length)}
+              selectable={images.length < 6}
+              styles={imagePickerStyles}
+              enabled={!pending}
+              onChange={this.onImageChange}
+              onChangeOrder={array => {
+                this.setState({ order: array.map(e => parseInt(e)) });
+              }}
+            />
           </View>
-          <View style={{ paddingHorizontal: 12 }}>
+          <View>
             <FormLabel labelStyle={styles.label}>
               {I18n.t('add_or_edit_item.price_label')}
             </FormLabel>
@@ -785,7 +782,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
               ))}
             </RadioForm>
           </View>
-          <HR color={colors.grey6} />
+          <HR color={colors.grey5} />
           <View style={[styles.grps, { marginBottom: 20 }]}>
             <RadioForm animation formHorizontal>
               {ui.category_radio_grp_2.map((option, i) => (
@@ -820,19 +817,19 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
   }
 }
 
-// const { width } = Dimensions.get('window');
-
-const imagePickerStyles = {
+const imagePickerStyles: IImagePickerStyle = {
   container: {
     flexWrap: 'wrap',
     flexDirection: 'row',
+    height: width / 6,
   },
   size: {
-    width: width / 6 - 10,
-    height: width / 6 - 10,
+    width: width / 6 - 12,
+    height: width / 6 - 12,
+    margin: 5,
   },
   item: {
-    marginRight: 5,
+    // marginRight: 5,
     marginBottom: 6,
     overflow: 'hidden',
   },
@@ -843,11 +840,11 @@ const imagePickerStyles = {
   closeWrap: {
     width: 16,
     height: 16,
-    backgroundColor: '#999',
+    backgroundColor: colors.grey3,
     borderRadius: 8,
     position: 'absolute',
-    top: 4,
-    right: 4,
+    top: 4 + 5,
+    right: 4 + 5,
     justifyContent: 'center',
     alignItems: 'center',
     overflow: 'hidden',
@@ -868,17 +865,17 @@ const imagePickerStyles = {
   },
   plusWrapNormal: {
     backgroundColor: colors.white,
-    borderColor: '#dddddd',
+    borderColor: colors.grey3,
   },
   plusWrapHighlight: {
-    backgroundColor: '#dddddd',
-    borderColor: '#dddddd',
+    backgroundColor: colors.grey3,
+    borderColor: colors.grey3,
   },
   plusText: {
     fontSize: 32,
     backgroundColor: 'transparent',
     fontWeight: '100',
-    color: '#888888',
+    color: colors.grey2,
   },
 };
 

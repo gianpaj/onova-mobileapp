@@ -31,7 +31,7 @@ type Props = {
 // on Android, the URI prefix typically contains a host in addition to scheme
 // const prefix = Platform.OS == 'android' ? 'onova://onova/' : 'onova://';
 
-class AppNavigation extends Component<Props, *> {
+class AppNavigation extends React.PureComponent<Props> {
   notificationListener;
 
   componentDidMount() {

@@ -5,14 +5,12 @@
 import React from 'react';
 import {
   Animated,
-  Dimensions,
   Easing,
   Image,
   Platform,
   StyleSheet,
   Text,
   TouchableOpacity,
-  TouchableWithoutFeedback,
   View,
 } from 'react-native';
 // import ImageRoll from './ImageRoll.native';
@@ -20,14 +18,13 @@ import imagePickerStyle, { IImagePickerStyle } from './ImagePicker.styles';
 import SortableList from 'react-native-sortable-list';
 import colors from '../config/colors';
 
-const window = Dimensions.get('window');
-
 export type Props = {
   // style?: {},
   files?: Array<{}>,
   onChange?: (files: Array<{}>, operationType: string, index?: number) => void,
   onImageClick?: (index?: number, files?: Array<{}>) => void,
   onAddImageClick?: () => void,
+  onChangeOrder: (Array<{}>) => void,
   // onFail?: (msg: string) => void,
   selectable?: boolean,
   enabled: boolean,
@@ -125,7 +122,13 @@ export default class ImagePicker extends React.Component<Props, State> {
   }
 
   render() {
-    const { files = [], selectable, enabled, styles } = this.props;
+    const {
+      files = [],
+      selectable,
+      enabled,
+      styles,
+      onChangeOrder,
+    } = this.props;
     const filesView = files.map((item: any, index) => (
       <View key={index} style={[styles.item, styles.size]}>
         <TouchableOpacity
@@ -164,7 +167,7 @@ export default class ImagePicker extends React.Component<Props, State> {
           scrollEnabled={enabled}
           // onActivateRow={activatedRow => this.setState({ activatedRow })}
           onPressRow={index => this.onImageClick(index)}
-          onChangeOrder={nextOrder => console.log(nextOrder)}
+          onChangeOrder={onChangeOrder}
         />
         {selectable && (
           <TouchableWithoutFeedback
@@ -219,37 +222,21 @@ class Row extends React.Component<Props2> {
     super(props);
 
     this._style = {
-      ...Platform.select({
-        ios: {
-          transform: [
-            {
-              scale: this._active.interpolate({
-                inputRange: [0, 1],
-                outputRange: [1, 1.1],
-              }),
-            },
-          ],
-          shadowRadius: this._active.interpolate({
-            inputRange: [0, 1],
-            outputRange: [2, 10],
-          }),
-        },
+      transform: [
+        {
+          scale: Platform.select({
+            ios: this._active.interpolate({
+              inputRange: [0, 1],
+              outputRange: [1, 1.1],
+            }),
 
-        android: {
-          transform: [
-            {
-              scale: this._active.interpolate({
-                inputRange: [0, 1],
-                outputRange: [1, 1.07],
-              }),
-            },
-          ],
-          elevation: this._active.interpolate({
-            inputRange: [0, 1],
-            outputRange: [2, 6],
+            android: this._active.interpolate({
+              inputRange: [0, 1],
+              outputRange: [1, 1.07],
+            }),
           }),
         },
-      }),
+      ],
     };
   }
 
@@ -267,7 +254,7 @@ class Row extends React.Component<Props2> {
     const { data, styles, removeImage } = this.props;
 
     return (
-      <Animated.View style={[styles.item, styles.size]}>
+      <Animated.View style={[localStyles.row, this._style]}>
         <Image source={{ uri: data.url }} style={[styles.size, styles.image]} />
         <TouchableOpacity
           onPress={removeImage}
@@ -310,10 +297,11 @@ const localStyles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: colors.white,
     paddingHorizontal: 5,
-    width: 50,
-    height: 10,
     marginHorizontal: 10,
     borderRadius: 4,
+    overflow: 'hidden',
+    width: 80,
+    height: 80,
   },
 
   image: {

@@ -100,6 +100,7 @@ type State = {
     latitude: number,
   },
   numberOfBrands: number,
+  order: Array<number>,
   pending: boolean,
   price: string,
   priceFocused: boolean,
@@ -133,6 +134,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     isLoading: true,
     location: null,
     numberOfBrands: 0,
+    order: [],
     pending: false,
     price: '',
     priceFocused: false,
@@ -675,6 +677,9 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
                 onAddImageClick={() => this.selectPhotoTapped(images.length)}
                 selectable={images.length < 6}
                 styles={imagePickerStyles}
+                onChangeOrder={array => {
+                  this.setState({ order: array.map(e => parseInt(e)) });
+                }}
               />
             </WingBlank>
           </View>

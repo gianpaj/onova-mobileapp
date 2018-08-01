@@ -4,7 +4,11 @@
 
 import React from 'react';
 import {
+  Animated,
+  Dimensions,
+  Easing,
   Image,
+  Platform,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -13,8 +17,12 @@ import {
 } from 'react-native';
 // import ImageRoll from './ImageRoll.native';
 import imagePickerStyle, { IImagePickerStyle } from './ImagePicker.styles';
+import SortableList from 'react-native-sortable-list';
+import colors from '../config/colors';
 
-export type ImagePickerPropTypes = {
+const window = Dimensions.get('window');
+
+export type Props = {
   // style?: {},
   files?: Array<{}>,
   onChange?: (files: Array<{}>, operationType: string, index?: number) => void,
@@ -22,19 +30,25 @@ export type ImagePickerPropTypes = {
   onAddImageClick?: () => void,
   // onFail?: (msg: string) => void,
   selectable?: boolean,
+  enabled: boolean,
   // multiple?: boolean, // UNUSED
   // accept?: string, // UNUSED
 
-  // export interface ImagePickerNativeProps extends ImagePickerPropTypes
+  // export interface ImagePickerNativeProps extends Props
   styles: IImagePickerStyle,
+};
+
+type State = {
+  visible: boolean,
 };
 
 const imagePickerStyles = StyleSheet.create(imagePickerStyle);
 
-export default class ImagePicker extends React.Component<
-  ImagePickerPropTypes,
-  any
-> {
+export default class ImagePicker extends React.Component<Props, State> {
+  state = {
+    visible: false,
+  };
+
   static defaultProps = {
     styles: imagePickerStyles,
     onChange() {},
@@ -45,13 +59,6 @@ export default class ImagePicker extends React.Component<
 
   plusText: any;
   plusWrap: any;
-
-  constructor(props: ImagePickerPropTypes) {
-    super(props);
-    this.state = {
-      visible: false,
-    };
-  }
 
   onPressIn = () => {
     const styles = this.props.styles;
@@ -89,7 +96,7 @@ export default class ImagePicker extends React.Component<
     }
   }
 
-  removeImage(idx: number): void {
+  removeImage = (idx: number): void => {
     const newImages: any[] = [];
     const { files = [] } = this.props;
     files.forEach((image, index) => {
@@ -100,7 +107,7 @@ export default class ImagePicker extends React.Component<
     if (this.props.onChange) {
       this.props.onChange(newImages, 'remove', idx);
     }
-  }
+  };
 
   // hideImageRoll = () => {
   //   this.setState({
@@ -118,8 +125,7 @@ export default class ImagePicker extends React.Component<
   }
 
   render() {
-    const { files = [], selectable } = this.props;
-    const styles = this.props.styles;
+    const { files = [], selectable, enabled, styles } = this.props;
     const filesView = files.map((item: any, index) => (
       <View key={index} style={[styles.item, styles.size]}>
         <TouchableOpacity
@@ -146,8 +152,20 @@ export default class ImagePicker extends React.Component<
     //   />
     // );
     return (
-      <View style={styles.container}>
-        {filesView}
+      <View style={localStyles.container}>
+        {/* {filesView} */}
+        <SortableList
+          horizontal
+          style={localStyles.list}
+          contentContainerStyle={localStyles.contentContainer}
+          data={files}
+          renderRow={this._renderRow}
+          sortingEnabled={enabled}
+          scrollEnabled={enabled}
+          // onActivateRow={activatedRow => this.setState({ activatedRow })}
+          onPressRow={index => this.onImageClick(index)}
+          onChangeOrder={nextOrder => console.log(nextOrder)}
+        />
         {selectable && (
           <TouchableWithoutFeedback
             onPress={this.showPicker}
@@ -169,4 +187,143 @@ export default class ImagePicker extends React.Component<
       </View>
     );
   }
+
+  _renderRow = ({ data, active, index }) => {
+    return (
+      <Row
+        active={active}
+        data={data}
+        index={index}
+        removeImage={() => this.removeImage(index)}
+        styles={this.props.styles}
+      />
+    );
+  };
 }
+
+type Props2 = {
+  active: boolean,
+  data: {
+    url: string,
+  },
+  // key: number,
+  removeImage: () => void,
+  styles: IImagePickerStyle,
+};
+
+class Row extends React.Component<Props2> {
+  _active = new Animated.Value(0);
+  _style;
+
+  constructor(props) {
+    super(props);
+
+    this._style = {
+      ...Platform.select({
+        ios: {
+          transform: [
+            {
+              scale: this._active.interpolate({
+                inputRange: [0, 1],
+                outputRange: [1, 1.1],
+              }),
+            },
+          ],
+          shadowRadius: this._active.interpolate({
+            inputRange: [0, 1],
+            outputRange: [2, 10],
+          }),
+        },
+
+        android: {
+          transform: [
+            {
+              scale: this._active.interpolate({
+                inputRange: [0, 1],
+                outputRange: [1, 1.07],
+              }),
+            },
+          ],
+          elevation: this._active.interpolate({
+            inputRange: [0, 1],
+            outputRange: [2, 6],
+          }),
+        },
+      }),
+    };
+  }
+
+  UNSAFE_componentWillReceiveProps(nextProps) {
+    if (this.props.active !== nextProps.active) {
+      Animated.timing(this._active, {
+        duration: 300,
+        easing: Easing.bounce,
+        toValue: Number(nextProps.active),
+      }).start();
+    }
+  }
+
+  render() {
+    const { data, styles, removeImage } = this.props;
+
+    return (
+      <Animated.View style={[styles.item, styles.size]}>
+        <Image source={{ uri: data.url }} style={[styles.size, styles.image]} />
+        <TouchableOpacity
+          onPress={removeImage}
+          style={styles.closeWrap}
+          activeOpacity={0.6}>
+          <Text style={styles.closeText}>×</Text>
+        </TouchableOpacity>
+      </Animated.View>
+    );
+  }
+}
+
+const localStyles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+
+    ...Platform.select({
+      ios: {
+        paddingTop: 0,
+      },
+    }),
+  },
+
+  list: {
+    height: 50,
+    // width: window.width,
+  },
+
+  contentContainer: {
+    paddingVertical: Platform.select({
+      // ios: 30,
+      android: 0,
+    }),
+  },
+
+  row: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    backgroundColor: colors.white,
+    paddingHorizontal: 5,
+    width: 50,
+    height: 10,
+    marginHorizontal: 10,
+    borderRadius: 4,
+  },
+
+  image: {
+    width: 50,
+    height: 50,
+    marginBottom: 15,
+  },
+
+  text: {
+    fontSize: 18,
+    color: '#222222',
+  },
+});

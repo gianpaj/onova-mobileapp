@@ -24,6 +24,8 @@ export type Options = {
   cancelToken?: CancelToken,
   timeout?: number,
   token?: string,
+  data?: any,
+  onUploadProgress?: progressEvent => void,
 };
 
 /**
@@ -131,7 +133,7 @@ async function sendRequest(method, path, body, options) {
     if (options.token !== undefined) {
       headers = { ...headers, Authorization: options.token };
     }
-    const defaults = {
+    let allOptions: Options = {
       method,
       headers,
       url: path,
@@ -140,9 +142,10 @@ async function sendRequest(method, path, body, options) {
         return status >= 200 && status < 500;
       },
     };
-    // $FlowFixMe
-    defaults.cancelToken = options.cancelToken;
-    const allOptions = body ? { ...defaults, data: body } : defaults;
+    if (options.onUploadProgress)
+      allOptions.onUploadProgress = options.onUploadProgress;
+    if (options.cancelToken) allOptions.cancelToken = options.cancelToken;
+    if (body) allOptions.data = body;
 
     return axios(allOptions);
   } catch (e) {
@@ -273,6 +276,24 @@ export function sendChatPhoto(photo: any, token: string): Promise<any> {
     const fd = new FormData();
     fd.append('photo', photo);
     post('/api/photos/upload-chat-images', fd, { token })
+      .then(({ data }) => resolve(data))
+      .catch(err => reject(err));
+  });
+}
+
+export function uploadTempImage(
+  path: string,
+  token: string,
+  onUploadProgress?: any => void
+): Promise<any> {
+  return new Promise((resolve, reject) => {
+    const formData = new FormData();
+    formData.append('photo', {
+      uri: path,
+      type: 'image/jpeg',
+      name: 'image.jpg',
+    });
+    post('/api/photos/upload', formData, { token, onUploadProgress })
       .then(({ data }) => resolve(data))
       .catch(err => reject(err));
   });

@@ -19,4 +19,8 @@ global.navigator = {
   },
 };
 
+global.FormData = function() {
+  this.append = jest.fn();
+};
+
 jest.mock('NativeAnimatedHelper');

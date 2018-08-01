@@ -57,7 +57,6 @@ const imagePickerOptons = {
   compressImageMaxHeight: IMAGE_HEIGHT,
   compressImageQuality: 0.7,
   // cropping: true,
-  multiple: true,
   mediaType: 'photo',
   maxFiles: 6, // ios
   cropperToolbarTitle: I18n.t('add_or_edit_item.cropper_toolbar_title'),
@@ -88,6 +87,7 @@ type State = {
   images: Array<any>,
   inEditMode: boolean,
   isLoading: boolean,
+  isUploading: boolean,
   location: ?{
     longitude: number,
     latitude: number,
@@ -97,6 +97,7 @@ type State = {
   pending: boolean,
   price: string,
   priceFocused: boolean,
+  progress: number,
   tags: Array<string>,
   tagsText: string,
   uuid: string,
@@ -125,12 +126,14 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     images: [],
     inEditMode: false,
     isLoading: true,
+    isUploading: false,
     location: null,
     numberOfBrands: 0,
     order: [],
     pending: false,
     price: '',
     priceFocused: false,
+    progress: 0,
     tags: [],
     tagsText: '',
     uuid: '',
@@ -268,12 +271,16 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     });
   };
 
-  selectPhotoTapped = (i: number = 0) => {
+  selectPhotoTapped = (i: number = 0, multiple: boolean = true) => {
     if (this.state.pending) return;
 
     if (global.__TESTING__) {
       return ImagePicker.openPicker()
-        .then(response => this.appendPhoto(response, i))
+        .then(() => {
+          const url =
+            'https://storage.googleapis.com/temp-uploads.onova.co/1533146500579-.jpeg';
+          this.appendSinglePhoto(url, i);
+        })
         .catch(() => this.closeModalConditional());
     }
 
@@ -296,6 +303,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
           case 1:
             ImagePicker.openPicker({
               ...imagePickerOptons,
+              multiple,
               smartAlbums: [
                 'UserLibrary',
                 'PhotoStream',
@@ -316,9 +324,62 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     );
   };
 
-  appendPhoto(response: any, i: number) {
-    let image = {
-      url: response.path,
+  appendPhoto(response: Array<any> | any, i: number) {
+    if (response.length) {
+      if (response.length + this.state.images.length > 6) {
+        return console.error('too many images');
+      }
+      for (let j = 0; j < response.length; j++) {
+        // starts from i, increments with j
+        this.uploadImagesTemporarilyAndAppend(response[j], i + j);
+      }
+    } else {
+      this.uploadImagesTemporarilyAndAppend(response, i);
+    }
+  }
+
+  onUploadProgress = (progressEvent: any) => {
+    const progress = Math.round(
+      (progressEvent.loaded * 100) / progressEvent.total
+    );
+    console.log(progress);
+    this.setState({ progress });
+  };
+
+  async uploadImagesTemporarilyAndAppend(
+    response: Array<any> | any,
+    i: number
+  ) {
+    const { token } = this.props;
+
+    this.setState({ isUploading: true, progress: 100 });
+    try {
+      if (response.length) {
+        for (let i = 0; i < response.length; i++) {
+          const data = await api.uploadTempImage(
+            response[i].path,
+            token,
+            this.onUploadProgress
+          );
+          this.appendSinglePhoto(data['.jpeg'].path, i);
+        }
+      } else {
+        const data = await api.uploadTempImage(
+          response.path,
+          token,
+          this.onUploadProgress
+        );
+        this.appendSinglePhoto(data['.jpeg'].path, i);
+      }
+      this.setState({ isUploading: false, progress: 100 });
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  appendSinglePhoto(path: string, i: number) {
+    const image = {
+      url: path,
       id: i,
     };
 
@@ -669,7 +730,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
             }}>
             <AntImagePicker
               files={images}
-              onImageClick={i => this.selectPhotoTapped(i)}
+              onImageClick={i => this.selectPhotoTapped(i, false)}
               onAddImageClick={() => this.selectPhotoTapped(images.length)}
               selectable={images.length < 6}
               styles={imagePickerStyles}

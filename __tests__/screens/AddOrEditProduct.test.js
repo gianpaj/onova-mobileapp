@@ -38,7 +38,13 @@ describe('AddOrEditProduct screen (inEditMode false)', () => {
         longitude: 60,
         latitude: 60,
       });
-      expect(state.images).toEqual([{ id: 0, url: '' }]);
+      expect(state.images).toEqual([
+        {
+          id: 0,
+          url:
+            'https://storage.googleapis.com/temp-uploads.onova.co/1533146500579-.jpeg',
+        },
+      ]);
       expect(root.findByProps({ testID: 'addItemButton' }).props.disabled).toBe(
         true
       );

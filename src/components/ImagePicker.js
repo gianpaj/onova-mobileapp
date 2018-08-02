@@ -4,6 +4,7 @@
 
 import React from 'react';
 import {
+  ActivityIndicator,
   Animated,
   Easing,
   Image,
@@ -107,13 +108,7 @@ export default class ImagePicker extends React.Component<Props, State> {
   }
 
   render() {
-    const {
-      files = [],
-      selectable,
-      enabled,
-      styles,
-      onChangeOrder,
-    } = this.props;
+    const { files, selectable, enabled, styles, onChangeOrder } = this.props;
     /*
     const filesView = files.map((item: any, index) => (
       <View key={index} style={[styles.item, styles.size]}>
@@ -186,6 +181,7 @@ type RowProps = {
   active: boolean,
   data: {
     url: string,
+    isUploading: boolean,
   },
   removeImage: () => void,
   styles: IImagePickerStyle,

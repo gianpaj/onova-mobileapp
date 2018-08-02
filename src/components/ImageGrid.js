@@ -46,10 +46,11 @@ const LIMIT = 48; // divisible by 3
 
 type Props = {
   apiURL: string,
-  navigation?: NavigationScreenProp<*>,
-  token?: string,
   emptyState?: React.Component<*>,
+  focused: boolean,
+  navigation?: NavigationScreenProp<*>,
   shouldRefresh?: boolean,
+  token?: string,
 };
 
 type State = {
@@ -66,6 +67,7 @@ const { width, height } = Dimensions.get('window');
 
 class ImageGridComponent extends React.PureComponent<Props, State> {
   reqTimer = 0;
+  firstFocus = true;
   state = {
     // itemHeight: 0,
     hasError: false,
@@ -79,7 +81,10 @@ class ImageGridComponent extends React.PureComponent<Props, State> {
   componentDidMount() {
     // const defaultImageCacheManager = ImageCacheManager();
     // defaultImageCacheManager.clearCache();
-    this.fetchItems();
+    if (this.props.focused) {
+      this.firstFocus = false;
+      this.fetchItems();
+    }
 
     this.props.navigation.addListener('didFocus', () => {
       if (this.props.shouldRefresh) {
@@ -89,6 +94,13 @@ class ImageGridComponent extends React.PureComponent<Props, State> {
         }, 1000);
       }
     });
+  }
+
+  componentDidUpdate() {
+    if (this.firstFocus && this.props.focused) {
+      this.firstFocus = false;
+      this.fetchItems();
+    }
   }
 
   /**
@@ -216,6 +228,8 @@ class ImageGridComponent extends React.PureComponent<Props, State> {
 
   render() {
     const { hasError, isLoading, items } = this.state;
+
+    if (this.firstFocus) return null;
 
     if (!hasError && isLoading) return this.renderLoading();
 

@@ -381,6 +381,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     const image = {
       url: path,
       id: i,
+      isUploading: false,
     };
 
     this.setState(prevState => {

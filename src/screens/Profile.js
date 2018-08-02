@@ -158,7 +158,6 @@ class ProfileScreen extends React.Component<Props, State> {
             resolve();
           })
           .catch(err => {
-            console.error(err);
             if (err.message == 'Not following') {
               return resolve();
             }
@@ -295,7 +294,7 @@ class ProfileScreen extends React.Component<Props, State> {
         this.setState({ editing: false });
         console.debug(res);
         ui.showToast(I18n.t('profile.toast_updated'), 'success');
-        this.refresh();
+        return this.refresh();
       })
       .catch(err => {
         console.debug(err);
@@ -699,6 +698,7 @@ class ProfileScreen extends React.Component<Props, State> {
           </View>
           {_id !== '' && (
             <ImageGrid
+              focused
               ref={i => (this.imageGrid = i)}
               apiURL={`/api/products?userid=${_id}`}
               navigation={navigation}

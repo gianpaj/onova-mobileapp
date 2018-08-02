@@ -59,7 +59,38 @@ export class Home extends PureComponent<Props, State> {
     />
   );
 
-  _renderScene = SceneMap({
+  _renderScene = ({ route, navigationState }) => {
+    switch (route.key) {
+      case 'clothes':
+        return (
+          <ImageGrid
+            focused={navigationState.index === 0}
+            apiURL="/api/feed/flat/?categoryIds=0"
+            navigation={this.props.navigation}
+          />
+        );
+      case 'shoes':
+        return (
+          <ImageGrid
+            focused={navigationState.index === 1}
+            apiURL="/api/feed/flat/?categoryIds=1"
+            navigation={this.props.navigation}
+          />
+        );
+      case 'other':
+        return (
+          <ImageGrid
+            focused={navigationState.index === 2}
+            apiURL="/api/feed/flat/?categoryIds=2"
+            navigation={this.props.navigation}
+          />
+        );
+      default:
+        return null;
+    }
+  };
+
+  /*_renderScene = SceneMap({
     clothes: () => (
       <ImageGrid
         apiURL="/api/feed/flat/?categoryIds=0"
@@ -78,7 +109,7 @@ export class Home extends PureComponent<Props, State> {
         navigation={this.props.navigation}
       />
     ),
-  });
+  });*/
 
   onShare() {
     Share.share({ message: I18n.t('home.share'), title: 'Share' });

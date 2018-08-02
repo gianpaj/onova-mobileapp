@@ -24,8 +24,8 @@ export type Options = {
   cancelToken?: CancelToken,
   timeout?: number,
   token?: string,
-  data?: any,
-  onUploadProgress?: progressEvent => void,
+  data?: mixed,
+  onUploadProgress?: Event => void | mixed,
 };
 
 /**

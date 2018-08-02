@@ -12,6 +12,7 @@ import Button from './Button';
 import CenterView from './CenterView';
 import Welcome from './Welcome';
 import ReviewCard from './ReviewCard';
+import ImagePicker from './ImagePicker';
 
 import colors from '../../src/config/colors';
 import typography from '../../src/config/typography';
@@ -127,4 +128,39 @@ storiesOf('ReviewCard', module)
   ))
   .add('with NO review text', () => (
     <ReviewCard onPress={action('clicked-reviewee')} review={{ ...REVIEW }} />
+  ));
+
+storiesOf('ImagePicker', module)
+  .add('with no images', () => <ImagePicker enabled onChangeOrder={() => {}} />)
+  .add('with images from iPhone Simulator', () => (
+    <ImagePicker
+      files={[
+        {
+          url:
+            '/Users/gianfranco/Library/Developer/CoreSimulator/Devices/F1546411-8B1F-4DBE-A078-FD2993EEC45F/data/Containers/Data/Application/8C0EF2CA-EDC6-46D7-8DC8-22ED2D7294E8/tmp/react-native-image-crop-picker/15E541FD-64F6-4AE7-AAA3-359AD833D4BC.jpg',
+          id: 0,
+        },
+        {
+          url:
+            '/Users/gianfranco/Library/Developer/CoreSimulator/Devices/F1546411-8B1F-4DBE-A078-FD2993EEC45F/data/Containers/Data/Application/8C0EF2CA-EDC6-46D7-8DC8-22ED2D7294E8/tmp/react-native-image-crop-picker/2A8907D1-B705-46C7-BF68-86231E7B226C.jpg',
+          id: 1,
+        },
+      ]}
+      enabled
+      onChangeOrder={() => {}}
+    />
+  ))
+  .add('uploading images', () => (
+    <ImagePicker
+      files={[
+        {
+          isUploading: true,
+        },
+        {
+          isUploading: true,
+        },
+      ]}
+      enabled={false}
+      onChangeOrder={() => {}}
+    />
   ));

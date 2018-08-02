@@ -33,7 +33,6 @@ if (Platform.OS == 'android') {
 
 import { Header, HR, TagInput } from '../components';
 import AntImagePicker from '../components/ImagePicker';
-import { IImagePickerStyle } from '../components/ImagePicker.styles';
 import { enableRefresh } from '../actions/actionCreator';
 import I18n from '../i18n';
 import colors from '../config/colors';
@@ -356,6 +355,9 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     try {
       if (response.length) {
         for (let i = 0; i < response.length; i++) {
+          const image = { isUploading: true };
+
+          this.appendImageOrReplace(image, i);
           const data = await api.uploadTempImage(
             response[i].path,
             token,
@@ -364,6 +366,9 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
           this.appendSinglePhoto(data['.jpeg'].path, i);
         }
       } else {
+        const image = { isUploading: true };
+
+        this.appendImageOrReplace(image, i);
         const data = await api.uploadTempImage(
           response.path,
           token,
@@ -383,9 +388,12 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
       id: i,
       isUploading: false,
     };
+    this.appendImageOrReplace(image, i);
+  }
 
+  // if we want to replace an existing photo
+  appendImageOrReplace = (image: any, i: number) => {
     this.setState(prevState => {
-      // if we want to replace an existing photo
       if (prevState.images[i]) {
         const copy = [...prevState.images];
         copy[i] = image;
@@ -398,7 +406,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
         images: [...prevState.images, image],
       };
     });
-  }
+  };
 
   closeModal() {
     this.props.navigation.goBack();
@@ -734,7 +742,6 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
               onImageClick={i => this.selectPhotoTapped(i, false)}
               onAddImageClick={() => this.selectPhotoTapped(images.length)}
               selectable={images.length < 6}
-              styles={imagePickerStyles}
               enabled={!pending}
               onChange={this.onImageChange}
               onChangeOrder={array => {
@@ -878,68 +885,6 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     );
   }
 }
-
-const imagePickerStyles: IImagePickerStyle = {
-  container: {
-    flexWrap: 'wrap',
-    flexDirection: 'row',
-    height: width / 6,
-  },
-  size: {
-    width: width / 6 - 12,
-    height: width / 6 - 12,
-    margin: 5,
-  },
-  item: {
-    // marginRight: 5,
-    marginBottom: 6,
-    overflow: 'hidden',
-  },
-  image: {
-    overflow: 'hidden',
-    borderRadius: 3,
-  },
-  closeWrap: {
-    width: 16,
-    height: 16,
-    backgroundColor: colors.grey3,
-    borderRadius: 8,
-    position: 'absolute',
-    top: 4 + 5,
-    right: 4 + 5,
-    justifyContent: 'center',
-    alignItems: 'center',
-    overflow: 'hidden',
-  },
-  closeText: {
-    color: colors.white,
-    backgroundColor: 'transparent',
-    fontSize: 20,
-    height: 20,
-    marginTop: -8,
-    fontWeight: '300',
-  },
-  plusWrap: {
-    borderRadius: 3,
-    borderWidth: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  plusWrapNormal: {
-    backgroundColor: colors.white,
-    borderColor: colors.grey3,
-  },
-  plusWrapHighlight: {
-    backgroundColor: colors.grey3,
-    borderColor: colors.grey3,
-  },
-  plusText: {
-    fontSize: 32,
-    backgroundColor: 'transparent',
-    fontWeight: '100',
-    color: colors.grey2,
-  },
-};
 
 const styles = StyleSheet.create({
   // imageContainer: {

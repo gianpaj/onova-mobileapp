@@ -1,7 +1,11 @@
 // @flow
 
-import { ViewStyle, ImageStyle, TextStyle } from 'react-native';
+import { Dimensions, ViewStyle, ImageStyle, TextStyle } from 'react-native';
+
+import colors from '../config/colors';
 import varibles from './default.native';
+
+const { width } = Dimensions.get('window');
 
 export interface IImagePickerStyle {
   container: ViewStyle;
@@ -20,13 +24,15 @@ export default {
   container: {
     flexWrap: 'wrap',
     flexDirection: 'row',
+    height: width / 6,
   },
   size: {
-    width: 80,
-    height: 80,
+    width: width / 6 - 12,
+    height: width / 6 - 12,
+    margin: 5,
   },
   item: {
-    marginRight: varibles.h_spacing_sm,
+    // marginRight: varibles.h_spacing_sm,
     marginBottom: varibles.v_spacing_sm,
     overflow: 'hidden',
   },
@@ -37,18 +43,18 @@ export default {
   closeWrap: {
     width: 16,
     height: 16,
-    backgroundColor: '#999',
+    backgroundColor: colors.grey3,
     borderRadius: 8,
     position: 'absolute',
-    top: 4,
-    right: 4,
+    top: 4 + 5,
+    right: 4 + 5,
     justifyContent: 'center',
     alignItems: 'center',
     overflow: 'hidden',
   },
   closeText: {
-    color: varibles.color_text_base_inverse,
-    backgroundColor: 'transparent',
+    color: colors.white,
+    backgroundColor: colors.transparent,
     fontSize: 20,
     height: 20,
     marginTop: -8,
@@ -61,17 +67,17 @@ export default {
     alignItems: 'center',
   },
   plusWrapNormal: {
-    backgroundColor: varibles.fill_base,
-    borderColor: varibles.border_color_base,
+    backgroundColor: colors.white,
+    borderColor: colors.grey3,
   },
   plusWrapHighlight: {
-    backgroundColor: varibles.fill_tap,
-    borderColor: varibles.border_color_base,
+    backgroundColor: colors.grey3,
+    borderColor: colors.grey3,
   },
   plusText: {
-    fontSize: 64,
-    backgroundColor: 'transparent',
+    fontSize: 32,
+    backgroundColor: colors.transparent,
     fontWeight: '100',
-    color: varibles.color_text_caption,
+    color: colors.grey2,
   },
 };

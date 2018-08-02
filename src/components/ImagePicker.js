@@ -16,22 +16,17 @@ import {
 } from 'react-native';
 import imagePickerStyle, { IImagePickerStyle } from './ImagePicker.styles';
 import SortableList from 'react-native-sortable-list';
+import colors from '../config/colors';
 
 export type Props = {
-  // style?: {}, // UNUSED
-  files: Array<{}>,
-  onChange: (files: Array<{}>, operationType?: string, index?: number) => void,
-  onImageClick?: (index?: number, files?: Array<{}>) => void,
-  onAddImageClick?: () => void,
-  onChangeOrder: (Array<{}>) => void,
-  // onFail?: (msg: string) => void,
-  selectable?: boolean,
   enabled: boolean,
-  // multiple?: boolean, // UNUSED
-  // accept?: string, // UNUSED
-
-  // export interface ImagePickerNativeProps extends Props
-  styles: IImagePickerStyle,
+  files: Array<{}>,
+  onAddImageClick?: () => void,
+  onChange?: (files: Array<{}>, operationType?: string, index?: number) => void,
+  onChangeOrder: (Array<{}>) => void,
+  onImageClick?: (index?: number, files?: Array<{}>) => void,
+  selectable?: boolean,
+  styles?: IImagePickerStyle,
 };
 
 type State = {
@@ -44,29 +39,9 @@ export default class ImagePicker extends React.Component<Props, State> {
   };
 
   static defaultProps = {
-    styles: StyleSheet.create(imagePickerStyle),
-    onChange() {},
-    onFail() {},
-    files: [],
     selectable: true,
+    styles: StyleSheet.create(imagePickerStyle),
   };
-
-  // plusWrap: any;
-
-  /*
-  onPressIn = () => {
-    const styles = this.props.styles;
-    this.plusWrap.setNativeProps({
-      style: [styles.item, styles.size, styles.plusWrapHighlight],
-    });
-  };
-
-  onPressOut = () => {
-    const styles = this.props.styles;
-    this.plusWrap.setNativeProps({
-      style: [styles.item, styles.size, styles.plusWrapNormal],
-    });
-  };*/
 
   showPicker = () => {
     if (this.props.onAddImageClick) return this.props.onAddImageClick();
@@ -93,15 +68,6 @@ export default class ImagePicker extends React.Component<Props, State> {
     if (onChange) onChange(copy);
   };
 
-  // hideImageRoll = () => {
-  //   this.setState({
-  //     visible: false,
-  //   });
-  //   if (this.props.onFail) {
-  //     this.props.onFail('cancel image selection');
-  //   }
-  // };
-
   onImageClick(index: number) {
     const { onImageClick, files } = this.props;
     if (onImageClick) onImageClick(index, files);
@@ -109,29 +75,9 @@ export default class ImagePicker extends React.Component<Props, State> {
 
   render() {
     const { files, selectable, enabled, styles, onChangeOrder } = this.props;
-    /*
-    const filesView = files.map((item: any, index) => (
-      <View key={index} style={[styles.item, styles.size]}>
-        <TouchableOpacity
-          onPress={() => this.onImageClick(index)}
-          activeOpacity={0.6}>
-          <Image
-            source={{ uri: item.url }}
-            style={[styles.size, styles.image]}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => this.removeImage(index)}
-          style={styles.closeWrap}
-          activeOpacity={0.6}>
-          <Text style={styles.closeText}>×</Text>
-        </TouchableOpacity>
-      </View>
-    ));*/
 
     return (
       <View style={styles.container}>
-        {/* {filesView} */}
         <SortableList
           horizontal
           data={files}
@@ -143,20 +89,16 @@ export default class ImagePicker extends React.Component<Props, State> {
           onChangeOrder={onChangeOrder}
         />
         {selectable && (
-          <TouchableWithoutFeedback
+          <TouchableOpacity
             onPress={this.showPicker}
-            onPressIn={this.onPressIn}
-            onPressOut={this.onPressOut}>
-            <View
-              style={[
-                styles.item,
-                styles.size,
-                styles.plusWrap,
-                styles.plusWrapNormal,
-              ]}>
-              <Text style={[styles.plusText]}>+</Text>
-            </View>
-          </TouchableWithoutFeedback>
+            style={[
+              styles.item,
+              styles.size,
+              styles.plusWrap,
+              styles.plusWrapNormal,
+            ]}>
+            <Text style={[styles.plusText]}>+</Text>
+          </TouchableOpacity>
         )}
       </View>
     );
@@ -228,13 +170,25 @@ class Row extends React.Component<RowProps> {
 
     return (
       <Animated.View style={[localStyles.row, this._style]}>
-        <Image source={{ uri: data.url }} style={[styles.size, styles.image]} />
-        <TouchableOpacity
-          onPress={removeImage}
-          style={styles.closeWrap}
-          activeOpacity={0.6}>
-          <Text style={styles.closeText}>×</Text>
-        </TouchableOpacity>
+        {data.isUploading ? (
+          <ActivityIndicator
+            size="small"
+            style={[styles.size, styles.image, localStyles.loader]}
+          />
+        ) : (
+          <View>
+            <Image
+              source={{ uri: data.url }}
+              style={[styles.size, styles.image]}
+            />
+            <TouchableOpacity
+              onPress={removeImage}
+              style={styles.closeWrap}
+              activeOpacity={0.6}>
+              <Text style={styles.closeText}>×</Text>
+            </TouchableOpacity>
+          </View>
+        )}
       </Animated.View>
     );
   }
@@ -244,8 +198,10 @@ const localStyles = StyleSheet.create({
   row: {
     flexDirection: 'column',
     alignItems: 'center',
-    // paddingHorizontal: 5,
-    // marginHorizontal: 4,
     borderRadius: 4,
+  },
+  loader: {
+    borderWidth: 1,
+    borderColor: colors.grey5,
   },
 });

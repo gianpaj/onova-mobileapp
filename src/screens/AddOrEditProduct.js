@@ -421,13 +421,14 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     Toast.loading(I18n.t('add_or_edit_item.toast_uploading'), 30);
     const {
       description,
-      images,
-      price,
       grp_1,
       grp_2,
-      tags,
+      images,
       inEditMode,
       location,
+      order,
+      price,
+      tags,
       uuid,
     } = this.state;
 
@@ -613,6 +614,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
       images,
       inEditMode,
       isLoading,
+      isUploading,
       pending,
       price,
       priceFocused,
@@ -673,10 +675,16 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
               onImageClick={i => this.selectPhotoTapped(i, false)}
               onAddImageClick={() => this.selectPhotoTapped(images.length)}
               selectable={images.length < 6}
-              enabled={!pending}
+              enabled={!pending || isUploading}
               onChange={this.onImageChange}
               onChangeOrder={array => {
-                this.setState({ order: array.map(e => parseInt(e)) });
+                const order = array.map(e => parseInt(e));
+                const newOrder = [];
+                for (let i = 0; i < order.length; i++) {
+                  const o = order[i];
+                  newOrder.push(this.state.images[o]);
+                }
+                this.setState({ images: newOrder });
               }}
             />
           </View>

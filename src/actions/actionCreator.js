@@ -99,11 +99,11 @@ const login = (data: LoginData) => (dispatch: Dispatch) => {
     })
     .catch((err: api.APIError) => {
       Toast.hide();
-      if (err.message !== 'NOT_VERIFIED') {
-        return dispatch(handleErrorWithAlert({ type: LOGIN_FAIL }, err));
+      if (err.message === 'NOT_VERIFIED') {
+        dispatch({ type: LOGIN_FAIL });
+        throw err;
       }
-      dispatch({ type: LOGIN_FAIL });
-      throw err;
+      dispatch(handleErrorWithAlert({ type: LOGIN_FAIL }, err));
     });
 };
 
@@ -249,7 +249,7 @@ const checkLogin = (userData: UserData, token: string) => (
     .catch(err => {
       console.debug(err);
       dispatch({ type: RELOAD_FAIL });
-      ui.showToast(err.message, 'danger');
+      ui.showToast(err.message || JSON.stringify(err), 'danger');
       throw err;
     });
 };

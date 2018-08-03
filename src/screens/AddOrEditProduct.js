@@ -52,11 +52,11 @@ const imagePickerOptons = {
   // cropping: true,
   mediaType: 'photo',
   maxFiles: 6, // ios
-  cropperToolbarTitle: I18n.t('add_or_edit_item.cropper_toolbar_title'),
+  // cropperToolbarTitle: I18n.t('add_or_edit_item.cropper_toolbar_title'),
   // ios
-  cropperChooseText: I18n.t('add_or_edit_item.cropper_choose_text'),
+  // cropperChooseText: I18n.t('add_or_edit_item.cropper_choose_text'),
   // ios
-  cropperCancelText: I18n.t('add_or_edit_item.cropper_cancel_text'),
+  // cropperCancelText: I18n.t('add_or_edit_item.cropper_cancel_text'),
   // ios
   loadingLabelText: I18n.t('add_or_edit_item.image_processing'),
 };

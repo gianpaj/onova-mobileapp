@@ -10,7 +10,7 @@ import {
 import ImagePicker from 'react-native-image-crop-picker';
 import Icon from 'react-native-vector-icons/Feather';
 
-import I18n from '../i18n';
+// import I18n from '../i18n';
 import colors from '../config/colors';
 
 const PICKER_OPTIONS = {
@@ -19,7 +19,7 @@ const PICKER_OPTIONS = {
   compressImageQuality: 0.7,
   cropping: false,
   mediaType: 'photo',
-  cropper_toolbar_title: I18n.t('add_or_edit_item.cropper_toolbar_title'),
+  // cropper_toolbar_title: I18n.t('add_or_edit_item.cropper_toolbar_title'),
 };
 
 type State = {

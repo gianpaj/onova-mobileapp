@@ -44,9 +44,9 @@ class AppNavigation extends React.PureComponent<Props> {
     if (isLoggedIn && userData && token) {
       // checking again if user is still logged in
       dispatch(checkLogin(userData, token)).catch(e => {
-        if (e.message == 'Invalid user') {
-          dispatch(logout());
-        }
+        // if (e.message == 'Invalid user') {
+        // }
+        dispatch(logout());
         console.warn(e);
       });
     } else {

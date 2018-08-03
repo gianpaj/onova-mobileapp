@@ -22,6 +22,8 @@ const PICKER_OPTIONS = {
   maxWidth: 700,
   maxHeight: 700,
   cropping: true,
+  cropperCircleOverlay: true,
+  compressImageQuality: 0.7,
 };
 
 type Props = {

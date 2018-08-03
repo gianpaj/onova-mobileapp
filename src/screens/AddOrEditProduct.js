@@ -545,14 +545,15 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     }
   };
 
-  addEnabled(): boolean {
+  isButtonEnabled(): boolean {
     // const pricePattern = /^\d+(\.\d{2})?$/;
     // const tagsPattern = /^(\b[a-z][a-z0-9]*)$/i;
 
     // return true if all of these are true
     return (
       // If there is at least one image
-      this.state.images.length > 0 &&
+      this.state.images.filter((i: any) => i.isUploading === false).length >
+        0 &&
       // location
       (this.state.inEditMode || this.state.location !== null) &&
       // If the item is uploading is NOT in progress
@@ -639,14 +640,14 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
           </Body>
           <Right>
             <NBButton
-              testID="addItemButton"
+              testID="saveButton"
               transparent
-              disabled={!this.addEnabled()}
+              disabled={!this.isButtonEnabled()}
               style={{ backgroundColor: colors.transparent }}
               onPress={this.onAddOrEditItem}>
               <Icon
                 name="check"
-                style={!this.addEnabled() && { color: colors.grey4 }}
+                style={!this.isButtonEnabled() && { color: colors.grey4 }}
                 size={28}
               />
             </NBButton>

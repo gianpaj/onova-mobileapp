@@ -38,21 +38,15 @@ describe('AddOrEditProduct screen (inEditMode false)', () => {
         longitude: 60,
         latitude: 60,
       });
-      expect(state.images).toEqual([
-        {
-          id: 0,
-          url:
-            'https://storage.googleapis.com/temp-uploads.onova.co/1533146500579-.jpeg',
-        },
-      ]);
-      expect(root.findByProps({ testID: 'addItemButton' }).props.disabled).toBe(
+      expect(state.images).toMatchSnapshot();
+      expect(root.findByProps({ testID: 'saveButton' }).props.disabled).toBe(
         true
       );
     });
 
     it('should require a min length description', async () => {
       await sleep(100);
-      expect(root.findByProps({ testID: 'addItemButton' }).props.disabled).toBe(
+      expect(root.findByProps({ testID: 'saveButton' }).props.disabled).toBe(
         true
       );
       root.instance.setState({
@@ -64,14 +58,14 @@ describe('AddOrEditProduct screen (inEditMode false)', () => {
       const desc = root.findByProps({ testID: 'description' });
       expect(desc.props.value).toBe('a');
       desc.props.onChangeText('this shoes rock');
-      expect(root.findByProps({ testID: 'addItemButton' }).props.disabled).toBe(
+      expect(root.findByProps({ testID: 'saveButton' }).props.disabled).toBe(
         false
       );
     });
 
     it('should require a category', async () => {
       await sleep(100);
-      expect(root.findByProps({ testID: 'addItemButton' }).props.disabled).toBe(
+      expect(root.findByProps({ testID: 'saveButton' }).props.disabled).toBe(
         true
       );
       root.instance.setState({
@@ -83,14 +77,14 @@ describe('AddOrEditProduct screen (inEditMode false)', () => {
       expect(grp_1_input_1.props.isSelected).toBe(false);
       grp_1_input_1.props.onPress(1);
       expect(grp_1_input_1.props.isSelected).toBe(true);
-      expect(root.findByProps({ testID: 'addItemButton' }).props.disabled).toBe(
+      expect(root.findByProps({ testID: 'saveButton' }).props.disabled).toBe(
         false
       );
     });
 
     it('should require a type', async () => {
       await sleep(100);
-      expect(root.findByProps({ testID: 'addItemButton' }).props.disabled).toBe(
+      expect(root.findByProps({ testID: 'saveButton' }).props.disabled).toBe(
         true
       );
       root.instance.setState({
@@ -102,14 +96,14 @@ describe('AddOrEditProduct screen (inEditMode false)', () => {
       expect(grp_2_input_1.props.isSelected).toBe(false);
       grp_2_input_1.props.onPress(1);
       expect(grp_2_input_1.props.isSelected).toBe(true);
-      expect(root.findByProps({ testID: 'addItemButton' }).props.disabled).toBe(
+      expect(root.findByProps({ testID: 'saveButton' }).props.disabled).toBe(
         false
       );
     });
 
     it.skip('should add a new item', async () => {
       await sleep(100);
-      expect(root.findByProps({ testID: 'addItemButton' }).props.disabled).toBe(
+      expect(root.findByProps({ testID: 'saveButton' }).props.disabled).toBe(
         true
       );
       root.instance.setState({
@@ -118,11 +112,11 @@ describe('AddOrEditProduct screen (inEditMode false)', () => {
         grp_1: 0,
         grp_2: 0,
       });
-      expect(root.findByProps({ testID: 'addItemButton' }).props.disabled).toBe(
+      expect(root.findByProps({ testID: 'saveButton' }).props.disabled).toBe(
         false
       );
       jest.spyOn(root.instance, 'uploadNewProduct');
-      root.findByProps({ testID: 'addItemButton' }).props.onPress();
+      root.findByProps({ testID: 'saveButton' }).props.onPress();
       expect(root.instance.uploadNewProduct).toHaveBeenCalled();
     });
   });

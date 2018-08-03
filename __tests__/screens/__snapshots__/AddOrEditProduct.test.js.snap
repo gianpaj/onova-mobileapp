@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AddOrEditProduct screen (inEditMode false) initial rendering at the beginning the Add Item button should NOT be enabled 1`] = `
+Array [
+  Object {
+    "id": 0,
+    "isUploading": false,
+    "url": "https://storage.googleapis.com/temp-uploads.onova.co/1533146500579-.jpeg",
+  },
+]
+`;

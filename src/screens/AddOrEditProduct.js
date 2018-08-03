@@ -23,12 +23,10 @@ import RadioForm, {
 import ImagePicker from 'react-native-image-crop-picker';
 import { InputItem, NoticeBar, TextareaItem, Toast } from 'antd-mobile-rn';
 import Permissions from 'react-native-permissions';
-// import RNFetchBlob from 'rn-fetch-blob';
-let RNFetchBlob;
+
 let RNAndroidLocationEnabler;
 if (Platform.OS == 'android') {
   RNAndroidLocationEnabler = require('react-native-android-location-enabler');
-  RNFetchBlob = require('rn-fetch-blob').default;
 }
 
 import { Header, HR, TagInput } from '../components';
@@ -435,115 +433,47 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
 
     this.setState({ pending: true, tagsText: '' });
 
-    const formData = new FormData();
-    formData.append('description', description.trim());
-    formData.append('price', price);
-    formData.append('categoryIds', grp_1.toString());
-    formData.append('typeIds', grp_2.toString());
-    if (tags.length) formData.append('tags', JSON.stringify(tags));
+    const data: any = {
+      categoryIds: grp_1.toString(),
+      description: description.trim(),
+      photos: JSON.stringify(images.map(i => i.url)),
+      price: price,
+      typeIds: grp_2.toString(),
+    };
+    if (tags.length) data.tags = JSON.stringify(tags);
 
-    // const config = {
-    //   onUploadProgress: function(progressEvent) {
-    //     const percentCompleted = Math.round( (progressEvent.loaded * 100) / progressEvent.total );
-    //   },
-    // };
-
-    if (inEditMode) {
-      var todo = images.length;
-      if (!todo) return;
-      images.forEach(async (image, i) => {
-        // if remote file
-        if (Platform.OS == 'android' && image.url.startsWith('http')) {
-          RNFetchBlob.config({
-            fileCache: true,
-            session: 'edit',
-            appendExt: 'jpg',
-          })
-            .fetch('GET', image.url)
-            .then(res => {
-              // the temp file path
-              // console.log('The file saved to ', res.path());
-              formData.append('photos', {
-                uri: `file://${res.path()}`,
-                type: 'image/jpeg',
-                name: 'image' + i + '.jpg',
-              });
-              if (--todo === 0) return this.uploadEditedProduct(uuid, formData);
-            });
-        } else {
-          formData.append('photos', {
-            uri: image.url,
-            type: 'image/jpeg',
-            name: 'image' + i + '.jpg',
-          });
-          if (--todo === 0) return this.uploadEditedProduct(uuid, formData);
+    try {
+      let res;
+      if (inEditMode) {
+        res = await this.uploadEditedProduct(uuid, data);
+      } else {
+        if (!location) {
+          throw Error('location is required');
         }
-      });
+        data.latitude = location.latitude.toString();
+        data.longitude = location.longitude.toString();
 
-      // RNFetchBlob.session('edit')
-      //   .dispose()
-      //   .then(() => console.log('cleaned'));
-    } else {
-      if (!location) {
-        throw Error('location is required');
+        res = await this.uploadNewProduct(uuid, data);
       }
-      formData.append('latitude', location.latitude.toString());
-      formData.append('longitude', location.longitude.toString());
-      images.forEach((image, i) => {
-        // $FlowFixMe
-        formData.append('photos', {
-          uri: image.url,
-          type: 'image/jpeg',
-          name: 'image' + i + '.jpg',
-        });
-      });
-      this.uploadNewProduct(uuid, formData);
+      this.props.dispatch(enableRefresh());
+      this.closeModal();
+      console.debug(res);
+    } catch (err) {
+      console.debug(err);
+      ui.showToast(err.message, 'warning');
     }
+    this.setState({ pending: false });
+    Toast.hide();
   };
 
-  uploadNewProduct = (uuid: string, formData: any): void => {
+  uploadNewProduct = (uuid: string, data: any): Promise<any> => {
     const { token } = this.props;
-    api
-      .post('/api/products', formData, { token, timeout: 300000 })
-      .then(res => {
-        console.debug(res);
-        this.props.dispatch(enableRefresh());
-        this.closeModal();
-      })
-      .catch(err => {
-        console.debug(err);
-        ui.showToast(err.message, 'warning');
-      })
-      // final
-      .then(() => {
-        this.setState({ pending: false });
-        Toast.hide();
-      });
+    return api.post('/api/products', data, { token });
   };
 
-  uploadEditedProduct = (uuid: string, formData: any): Promise<any> => {
+  uploadEditedProduct = (uuid: string, data: any): Promise<any> => {
     const { token } = this.props;
-    return (
-      api
-        .put(`/api/products/${uuid}`, formData, {
-          token,
-          timeout: 30000,
-        })
-        .then(res => {
-          console.debug(res);
-          this.props.dispatch(enableRefresh());
-          this.closeModal();
-        })
-        .catch(err => {
-          console.debug(err);
-          ui.showToast(err.message, 'warning');
-        })
-        // final
-        .then(() => {
-          this.setState({ pending: false });
-          Toast.hide();
-        })
-    );
+    return api.put(`/api/products/${uuid}`, data, { token });
   };
 
   /**

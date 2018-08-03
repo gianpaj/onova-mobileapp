@@ -8788,9 +8788,9 @@ react-modal@^3.3.2:
     react-lifecycles-compat "^3.0.0"
     warning "^3.0.0"
 
-react-native-android-location-enabler@^1.0.8:
-  version "1.0.8"
-  resolved "https://registry.yarnpkg.com/react-native-android-location-enabler/-/react-native-android-location-enabler-1.0.8.tgz#faa42f8b14adc0099bdec5fb3ac1d92c9804e953"
+react-native-android-location-enabler@1.0.6:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/react-native-android-location-enabler/-/react-native-android-location-enabler-1.0.6.tgz#5775b90ac85a8eb5acbe472590cc92e726344feb"
 
 react-native-animatable@^1.2.4:
   version "1.2.4"

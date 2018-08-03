@@ -23,11 +23,7 @@ import RadioForm, {
 import ImagePicker from 'react-native-image-crop-picker';
 import { InputItem, NoticeBar, TextareaItem, Toast } from 'antd-mobile-rn';
 import Permissions from 'react-native-permissions';
-
-let RNAndroidLocationEnabler;
-if (Platform.OS == 'android') {
-  RNAndroidLocationEnabler = require('react-native-android-location-enabler');
-}
+import RNAndroidLocationEnabler from 'react-native-android-location-enabler';
 
 import { Header, HR, TagInput } from '../components';
 import AntImagePicker from '../components/ImagePicker';
@@ -185,6 +181,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
   }
 
   getLocationAndInitiate = () => {
+    const timeout = 20; // seconds
     navigator.geolocation.getCurrentPosition(
       position => {
         const { coords } = position;
@@ -213,7 +210,11 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
         }
         console.error(err);
       },
-      { enableHighAccuracy: true, timeout: 20 * 1000, maximumAge: 60 * 1000 }
+      {
+        enableHighAccuracy: false,
+        timeout: timeout * 1000,
+        maximumAge: 60 * 1000,
+      }
     );
   };
 
@@ -426,7 +427,6 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
       images,
       inEditMode,
       location,
-      order,
       price,
       tags,
       uuid,
@@ -469,12 +469,12 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
 
   uploadNewProduct = (uuid: string, data: any): Promise<any> => {
     const { token } = this.props;
-    return api.post('/api/products', data, { token });
+    return api.post('/api/products', data, { token, timeout: 30000 });
   };
 
   uploadEditedProduct = (uuid: string, data: any): Promise<any> => {
     const { token } = this.props;
-    return api.put(`/api/products/${uuid}`, data, { token });
+    return api.put(`/api/products/${uuid}`, data, { token, timeout: 30000 });
   };
 
   /**

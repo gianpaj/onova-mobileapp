@@ -39,7 +39,7 @@
     "native-base": "^2.7.2",
     "react": "16.4.1",
     "react-native": "0.56.0",
-    "react-native-android-location-enabler": "^1.0.8",
+    "react-native-android-location-enabler": "1.0.6",
     "react-native-elements": "^0.19.1",
     "react-native-firebase": "^4.2.0",
     "react-native-gifted-chat": "^0.4.3",

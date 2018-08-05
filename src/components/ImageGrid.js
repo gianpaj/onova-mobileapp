@@ -308,7 +308,7 @@ class ImageGridComponent extends React.PureComponent<Props, State> {
 
 const mapStateToProps = (state: any) => ({
   token: state.LoginReducer.token,
-  shouldRefresh: state.GenericReducer.shouldRefresh,
+  shouldRefresh: state.RefresherReducer.shouldRefresh,
 });
 
 export default connect(

@@ -8,7 +8,7 @@ import { createReactNavigationReduxMiddleware } from 'react-navigation-redux-hel
 
 import NavigationReducer from './reducers/navigationReducer';
 import loginReducer from './reducers/loginReducer';
-import GenericReducer from './reducers/genericReducer';
+import RefresherReducer from './reducers/screenRefreshReducer';
 
 import type { NavigationState } from './types/navigationReducer';
 import type { LoginState } from './types/loginReducer';
@@ -35,7 +35,7 @@ const LoginReducer = persistReducer(config1, loginReducer);
 const rootReducer = combineReducers({
   NavigationReducer,
   LoginReducer,
-  GenericReducer,
+  RefresherReducer,
 });
 
 if (__DEV__) {

@@ -2,6 +2,7 @@
 import type { Store as ReduxStore } from 'redux';
 // import type { Reducers } from '../reducers';
 import type { Action as LoginAction, LoginState } from './loginReducer';
+import type { ScreenRefreshState } from '../reducers/screenRefreshReducer';
 import type {
   Action as NavigationAction,
   NavigationState,
@@ -226,6 +227,7 @@ export type Notification = {
 
 export type ReduxState = {
   LoginReducer: LoginState,
+  RefresherReducer: ScreenRefreshState,
   NavigationReducer: NavigationState,
 };
 

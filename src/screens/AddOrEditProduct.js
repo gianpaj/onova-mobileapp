@@ -143,6 +143,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
         images.push({
           url: item.photoURIs[i],
           id: i,
+          isUploading: false,
         });
       }
       return this.setState({
@@ -550,11 +551,11 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     // const pricePattern = /^\d+(\.\d{2})?$/;
     // const tagsPattern = /^(\b[a-z][a-z0-9]*)$/i;
 
+    const imgs = this.state.images;
     // return true if all of these are true
     return (
-      // If there is at least one image
-      this.state.images.filter((i: any) => i.isUploading === false).length >
-        0 &&
+      // if all the images have been uploaded
+      imgs.filter((i: any) => i.isUploading === false).length === imgs.length &&
       // location
       (this.state.inEditMode || this.state.location !== null) &&
       // If the item is uploading is NOT in progress

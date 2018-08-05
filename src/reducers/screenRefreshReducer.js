@@ -3,7 +3,7 @@
 import { DO_REFRESH, DONOT_REFRESH } from '../actions/actionTypes';
 import type { Action } from '../types/loginReducer';
 
-type ScreenRefreshReducerState = {
+export type ScreenRefreshState = {
   shouldRefresh: boolean,
 };
 
@@ -12,7 +12,7 @@ const initialState = {
 };
 
 export default function(
-  state: ScreenRefreshReducerState = initialState,
+  state: ScreenRefreshState = initialState,
   action: Action
 ) {
   switch (action.type) {

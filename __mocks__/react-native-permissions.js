@@ -3,7 +3,7 @@
 type Status = 'authorized' | 'denied' | 'restricted' | 'undetermined';
 
 class Permissions {
-  check = (): Promise<Status> => {
+  check = (permission: string): Promise<Status> => {
     return Promise.resolve('authorized');
   };
 }

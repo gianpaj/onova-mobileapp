@@ -47,10 +47,11 @@ import type {
 } from '../types';
 
 type Props = {
-  navigation: NavigationScreenProp<*>,
-  userData: UserData,
   dispatch: Dispatch,
+  navigation: NavigationScreenProp<*>,
+  shouldRefresh: boolean,
   token: string,
+  userData: UserData,
 };
 
 type State = {
@@ -75,11 +76,13 @@ export class ProductContainer extends React.Component<Props, State> {
   componentDidMount() {
     this.refresh();
 
-    // this.props.navigation.addListener('didFocus', () => {
-    //   setTimeout(() => {
-    //     this.refresh();
-    //   }, 1000);
-    // });
+    this.props.navigation.addListener('didFocus', () => {
+      if (this.props.shouldRefresh) {
+        setTimeout(() => {
+          this.refresh();
+        }, 1000);
+      }
+    });
   }
 
   showActionSheetForProduct = () => {
@@ -624,8 +627,9 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps: MapStateToProps<*, *, *> = (state: ReduxState) => ({
-  userData: state.LoginReducer.data,
+  shouldRefresh: state.RefresherReducer.shouldRefresh,
   token: state.LoginReducer.token,
+  userData: state.LoginReducer.data,
 });
 
 export const Product = connect(mapStateToProps)(ProductContainer);

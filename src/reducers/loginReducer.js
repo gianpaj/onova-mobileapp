@@ -59,7 +59,7 @@ export default function(
         return {
           ...thisState,
           data: noToken,
-          token: action.payload ? token : '',
+          token: token,
         };
       } else {
         return {

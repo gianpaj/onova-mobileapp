@@ -108,6 +108,7 @@ http://onova.co/uploader
     cropper_toolbar_title: 'Кадрування',
     cropper_choose_text: 'Погодити',
     cropper_cancel_text: 'Відмінити',
+    image_processing: 'Фотографії завантажуються',
     edit_item_header: 'Редагувати',
     price_label: 'Ціна:',
     price_placeholder: '123 UAH',

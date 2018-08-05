@@ -109,6 +109,7 @@ http://onova.co/uploader
     cropper_toolbar_title: 'Edit Photo',
     cropper_choose_text: 'Choose',
     cropper_cancel_text: 'Cancel',
+    image_processing: 'Loading images',
     edit_item_header: 'Edit Item',
     price_label: 'Price:',
     price_placeholder: '123 UAH',

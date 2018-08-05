@@ -2,8 +2,6 @@
 
 // taken from https://github.com/jwohlfert23/react-native-tag-input/blob/9440e5b2bcb9e4923f52ff2045102b44544d087a/index.js
 
-import type { StyleObj } from 'react-native/Libraries/StyleSheet/StyleSheetTypes';
-
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import {
@@ -71,11 +69,11 @@ type OptionalProps = {
   /**
    * Styling override for container surrounding tag text
    */
-  tagContainerStyle?: StyleObj,
+  tagContainerStyle?: typeof ViewPropTypes,
   /**
    * Styling override for tag's text component
    */
-  tagTextStyle?: StyleObj,
+  tagTextStyle?: ViewPropTypes,
   /**
    * Width override for text input's default width when it's empty and showing placeholder
    */
@@ -365,8 +363,8 @@ type TagProps = {
   removeIndex: (index: number) => void,
   tagColor: string,
   tagTextColor: string,
-  tagContainerStyle?: StyleObj,
-  tagTextStyle?: StyleObj,
+  tagContainerStyle?: ViewPropTypes,
+  tagTextStyle?: ViewPropTypes,
 };
 class Tag extends React.PureComponent<TagProps> {
   props: TagProps;

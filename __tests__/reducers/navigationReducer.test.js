@@ -2,8 +2,9 @@
 
 import {
   LOGIN_SUCCESS,
-  SIGNUP_SUCCESS,
   LOGOUT,
+  RELOAD_SUCCESS,
+  SIGNUP_SUCCESS,
 } from '../../src/actions/actionTypes';
 
 import navigationReducer from '../../src/reducers/navigationReducer';
@@ -65,6 +66,19 @@ describe('Navigation reducer', () => {
     expect({
       stateForLoggedOut: {
         ...stateForLoggedOut,
+        routes: [route],
+      },
+    }).toMatchSnapshot();
+  });
+
+  it('should have an refresh state', () => {
+    const { stateForLoggedIn } = navigationReducer(undefined, {
+      type: RELOAD_SUCCESS,
+    });
+    const [{ key, ...route }] = stateForLoggedIn.routes;
+    expect({
+      stateForLoggedOut: {
+        ...stateForLoggedIn,
         routes: [route],
       },
     }).toMatchSnapshot();

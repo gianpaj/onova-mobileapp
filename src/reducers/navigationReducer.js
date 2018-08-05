@@ -2,7 +2,12 @@
 import { NavigationActions } from 'react-navigation';
 
 import NavigationStack from '../navigation/navigationStack';
-import { LOGIN_SUCCESS, SIGNUP_SUCCESS, LOGOUT } from '../actions/actionTypes';
+import {
+  LOGIN_SUCCESS,
+  LOGOUT,
+  RELOAD_SUCCESS,
+  SIGNUP_SUCCESS,
+} from '../actions/actionTypes';
 
 import type { Action, NavigationState } from '../types/navigationReducer';
 
@@ -30,6 +35,7 @@ const navigationReducer = (
 ): NavigationState => {
   switch (action.type) {
     case '@@redux/INIT':
+    case RELOAD_SUCCESS:
     case LOGIN_SUCCESS:
     case SIGNUP_SUCCESS:
       return {

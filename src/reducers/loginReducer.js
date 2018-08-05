@@ -54,7 +54,7 @@ export default function(
         isLoggedIn: true,
         loading: false,
       };
-      if (action && action.payload) {
+      if (action.payload) {
         const { token, ...noToken } = action.payload;
         return {
           ...thisState,

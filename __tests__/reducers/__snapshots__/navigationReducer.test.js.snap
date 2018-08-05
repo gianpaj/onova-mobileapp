@@ -91,6 +91,51 @@ Object {
 }
 `;
 
+exports[`Navigation reducer should have an refresh state 1`] = `
+Object {
+  "stateForLoggedOut": Object {
+    "index": 0,
+    "isTransitioning": false,
+    "key": "StackRouterRoot",
+    "routes": Array [
+      Object {
+        "index": 0,
+        "isTransitioning": false,
+        "params": undefined,
+        "routeName": "tabs",
+        "routes": Array [
+          Object {
+            "key": "home",
+            "params": undefined,
+            "routeName": "home",
+          },
+          Object {
+            "key": "search",
+            "params": undefined,
+            "routeName": "search",
+          },
+          Object {
+            "key": "new",
+            "params": undefined,
+            "routeName": "new",
+          },
+          Object {
+            "key": "orders",
+            "params": undefined,
+            "routeName": "orders",
+          },
+          Object {
+            "key": "profile",
+            "params": undefined,
+            "routeName": "profile",
+          },
+        ],
+      },
+    ],
+  },
+}
+`;
+
 exports[`Navigation reducer should have an signup success state 1`] = `
 Object {
   "stateForLoggedOut": Object {

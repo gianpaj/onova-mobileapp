@@ -440,9 +440,9 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
       description: description.trim(),
       photos: JSON.stringify(images.map(i => i.url)),
       price: price,
+      tags: JSON.stringify(tags),
       typeIds: grp_2.toString(),
     };
-    if (tags.length) data.tags = JSON.stringify(tags);
 
     try {
       let res;

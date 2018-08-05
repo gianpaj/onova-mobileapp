@@ -284,7 +284,8 @@ export function sendChatPhoto(photo: any, token: string): Promise<any> {
 export function uploadTempImage(
   path: string,
   token: string,
-  onUploadProgress?: any => void
+  onUploadProgress?: any => void,
+  timeout: number = 30000
 ): Promise<any> {
   return new Promise((resolve, reject) => {
     const formData = new FormData();
@@ -293,7 +294,7 @@ export function uploadTempImage(
       type: 'image/jpeg',
       name: 'image.jpg',
     });
-    post('/api/photos/upload', formData, { token, onUploadProgress })
+    post('/api/photos/upload', formData, { token, onUploadProgress, timeout })
       .then(({ data }) => resolve(data))
       .catch(err => reject(err));
   });

@@ -42,6 +42,7 @@ const brands = require('../assets/brands.json');
 
 const IMAGE_WIDTH = 1440;
 const IMAGE_HEIGHT = 1440;
+const MAX_IMAGES = 6;
 
 const imagePickerOptons = {
   width: IMAGE_WIDTH,
@@ -52,7 +53,7 @@ const imagePickerOptons = {
   cropping: false,
   cropperCircleOverlay: false,
   mediaType: 'photo',
-  maxFiles: 6, // ios
+  maxFiles: MAX_IMAGES, // ios
   // cropperToolbarTitle: I18n.t('add_or_edit_item.cropper_toolbar_title'),
   // ios
   // cropperChooseText: I18n.t('add_or_edit_item.cropper_choose_text'),
@@ -210,7 +211,9 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
             .then(() => {})
             .catch(() => this.closeModal());
         }
-        console.error(err);
+        Toast.fail(err.message || JSON.stringify(err));
+        this.closeModal();
+        console.debug(err);
       },
       {
         enableHighAccuracy: false,
@@ -326,8 +329,9 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
 
   appendPhoto(response: Array<any> | any, i: number) {
     if (response.length) {
-      if (response.length + this.state.images.length > 6) {
-        return console.error('too many images');
+      if (response.length + this.state.images.length > MAX_IMAGES) {
+        Toast.fail('An item can have up to 6 images');
+        return console.debug('too many images');
       }
       for (let j = 0; j < response.length; j++) {
         // starts from i, increments with j

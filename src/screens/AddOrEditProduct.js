@@ -49,7 +49,8 @@ const imagePickerOptons = {
   compressImageMaxWidth: IMAGE_WIDTH,
   compressImageMaxHeight: IMAGE_HEIGHT,
   compressImageQuality: 0.7,
-  // cropping: true,
+  cropping: false,
+  cropperCircleOverlay: false,
   mediaType: 'photo',
   maxFiles: 6, // ios
   // cropperToolbarTitle: I18n.t('add_or_edit_item.cropper_toolbar_title'),
@@ -676,7 +677,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
               onImageClick={i => this.selectPhotoTapped(i, false)}
               onAddImageClick={() => this.selectPhotoTapped(images.length)}
               selectable={images.length < 6}
-              enabled={!pending || isUploading}
+              enabled={!pending && !isUploading}
               onChange={this.onImageChange}
               onChangeOrder={array => {
                 const order = array.map(e => parseInt(e));

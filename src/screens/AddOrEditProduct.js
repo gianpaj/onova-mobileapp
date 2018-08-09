@@ -40,8 +40,8 @@ const { width } = Dimensions.get('window');
 
 const brands = require('../assets/brands.json');
 
-const IMAGE_WIDTH = 1440;
-const IMAGE_HEIGHT = 1440;
+const IMAGE_WIDTH = 2560;
+const IMAGE_HEIGHT = 2560;
 const MAX_IMAGES = 6;
 
 const imagePickerOptons = {
@@ -357,34 +357,22 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     const { token } = this.props;
 
     this.setState({ isUploading: true, progress: 100 });
+    const image = { isUploading: true };
+
     try {
-      if (response.length) {
-        for (let i = 0; i < response.length; i++) {
-          const image = { isUploading: true };
-
-          this.appendImageOrReplace(image, i);
-          const data = await api.uploadTempImage(
-            response[i].path,
-            token,
-            this.onUploadProgress
-          );
-          this.appendSinglePhoto(data['.jpeg'].path, i);
-        }
-      } else {
-        const image = { isUploading: true };
-
-        this.appendImageOrReplace(image, i);
-        const data = await api.uploadTempImage(
-          response.path,
-          token,
-          this.onUploadProgress
-        );
-        this.appendSinglePhoto(data['.jpeg'].path, i);
-      }
-      this.setState({ isUploading: false, progress: 100 });
+      this.appendImageOrReplace(image, i);
+      const data = await api.uploadTempImage(
+        response.path,
+        token,
+        this.onUploadProgress
+      );
+      this.appendSinglePhoto(data, i);
     } catch (err) {
-      console.error(err);
+      this.removeSinglePhoto(i);
+      ui.showToast(err.message || JSON.stringify(err), 'warning', '', 5);
+      console.debug(err);
     }
+    this.setState({ isUploading: false, progress: 100 });
   }
 
   appendSinglePhoto(path: string, i: number) {
@@ -395,6 +383,14 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     };
     this.appendImageOrReplace(image, i);
   }
+
+  removeSinglePhoto = (index: number) => {
+    this.setState(prevState => {
+      return {
+        images: prevState.images.filter((e, i) => i !== index),
+      };
+    });
+  };
 
   // if we want to replace an existing photo
   appendImageOrReplace = (image: any, i: number) => {

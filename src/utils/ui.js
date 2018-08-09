@@ -17,18 +17,20 @@ import {
  * @param message
  * @param type ['warning', 'success', 'danger', '']
  * @param buttonText text for the button to dismiss the Toast
+ * @param duration seconds
  */
 export function showToast(
   message: string,
   type: string = '',
-  buttonText: ?string
+  buttonText: ?string,
+  duration: number = 10
 ) {
   if (!buttonText && type == 'success')
     buttonText = I18n.t('product.toast_warning_ok_button');
   Toast.show({
     text: message,
     type: type,
-    duration: 10000,
+    duration: duration * 1000,
     position: 'top',
     textStyle: { textAlign: 'center' },
     buttonText,

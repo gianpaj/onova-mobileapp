@@ -178,7 +178,7 @@ class Row extends React.Component<RowProps> {
         ) : (
           <View>
             <Image
-              source={{ uri: data.url }}
+              source={{ uri: data.url.replace('.jpg', '-thumb.jpg') }}
               style={[styles.size, styles.image]}
             />
             <TouchableOpacity

@@ -39,10 +39,13 @@ import I18n from '../i18n';
 
 let config, currentUser: PusherUser;
 
-if (process.env.NODE_ENV == 'dev') {
-  config = require('../../config-dev.json');
-} else {
+const isProd =
+  process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'prod';
+
+if (isProd) {
   config = require('../../config-prod.json');
+} else {
+  config = require('../../config-dev.json');
 }
 
 const login = (data: LoginData) => (dispatch: Dispatch) => {
@@ -71,7 +74,7 @@ const login = (data: LoginData) => (dispatch: Dispatch) => {
     })
     .then(userData => {
       // TODO: send analytics login event
-      if (process.env.NODE_ENV == 'production') {
+      if (isProd) {
         Sentry.setUserContext({
           email: userData.emailAddress,
           userID: userData._id,
@@ -112,9 +115,7 @@ const initializePusher = (
   token: string
 ): Promise<any | Error> => {
   return new Promise((resolve, reject) => {
-    if (
-      !(process.env.NODE_ENV == 'production' || process.env.NODE_ENV == 'prod')
-    ) {
+    if (!isProd && process.env.NODE_ENV !== 'test') {
       console.log('%cskipping Pusher', 'color: green');
       return resolve(userData);
     }
@@ -233,7 +234,7 @@ const checkLogin = (userData: UserData, token: string) => (
       if (pushToken) return sendToken(pushToken, userData, token);
     })
     .then(() => {
-      if (process.env.NODE_ENV == 'production') {
+      if (isProd) {
         Sentry.setUserContext({
           email: userData.emailAddress,
           userID: userData._id,
@@ -287,7 +288,7 @@ const signup = (data: SignupData) => (dispatch: Dispatch) => (
         //     dispatch({ type: SIGNUP_FAIL });
         //     Toast.hide();
         //   });
-        // if (process.env.NODE_ENV == 'production') {
+        // if (isProd) {
         //   Sentry.setUserContext({
         //     email: userData.emailAddress,
         //     userID: userData._id,

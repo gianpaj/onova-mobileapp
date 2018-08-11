@@ -24,3 +24,11 @@ global.FormData = function() {
 };
 
 jest.mock('NativeAnimatedHelper');
+
+jest.mock('@pusher/chatkit/react-native', () => {
+  class ChatManager {
+    connect = jest.fn(() => Promise.resolve({}));
+  }
+  class TokenProvider {}
+  return { ChatManager, TokenProvider };
+});

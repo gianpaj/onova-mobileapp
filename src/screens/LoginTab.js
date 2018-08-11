@@ -81,7 +81,13 @@ type State = {
 };
 
 export class LoginTabContainer extends React.Component<Props, State> {
-  PwdInput: ?FormInput;
+  PwdInput: any;
+  constructor(props: Props) {
+    super(props);
+
+    this.PwdInput = React.createRef();
+  }
+
   // loginBtn;
   // animatedValue = new Animated.Value(__DEV__ ? 1 : 0);
   // backgroundColor = this.animatedValue.interpolate({
@@ -443,10 +449,10 @@ const styles = StyleSheet.create({
     color: colors.black,
     width: '100%',
   },
-  PassResetButton: {
-    alignSelf: 'center',
-    borderRadius: 5,
-  },
+  // PassResetButton: {
+  //   alignSelf: 'center',
+  //   borderRadius: 5,
+  // },
   hr: {
     alignSelf: 'center',
     margin: 10,

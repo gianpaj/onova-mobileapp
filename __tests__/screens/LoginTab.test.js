@@ -8,9 +8,10 @@ import { LoginTabContainer } from '../../src/screens/LoginTab';
 
 describe('LoginTab screen', () => {
   let wrapper;
+  const dispatch = jest.fn(() => Promise.resolve({}));
   beforeEach(() => {
     wrapper = shallow(
-      <LoginTabContainer dispatch={jest.fn()} loading={false} />
+      <LoginTabContainer dispatch={dispatch} loading={false} />
     );
   });
 
@@ -32,7 +33,10 @@ describe('LoginTab screen', () => {
   });
 
   it('should NOT login', () => {
-    wrapper.setState({ emailAddress: 'asdf@gmail.com', password: 'ab' });
+    wrapper.setState({
+      emailAddress: 'asdf@gmail.com',
+      password: 'ab',
+    });
     moxios.wait(() => {
       const request = moxios.requests.mostRecent();
       request.respondWith({
@@ -40,7 +44,12 @@ describe('LoginTab screen', () => {
         response: { ok: false },
       });
     });
-    wrapper.find('[testID="loginButton"]').simulate('onPress');
+    wrapper
+      .find('[testID="loginButton"]')
+      .props()
+      .onPress();
+    // console.log(store.getActions());
+    expect(dispatch).toHaveBeenCalled();
   });
 
   it('should be able to request a password reset entering a valid email address', () => {

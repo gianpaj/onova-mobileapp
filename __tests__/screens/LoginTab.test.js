@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { shallow } from 'enzyme';
+import moxios from 'moxios';
 
 import { LoginTabContainer } from '../../src/screens/LoginTab';
 
@@ -13,6 +14,14 @@ describe('LoginTab screen', () => {
     );
   });
 
+  beforeEach(() => {
+    moxios.install();
+  });
+
+  afterEach(() => {
+    moxios.uninstall();
+  });
+
   it('at the beginning the Login button should NOT be enabled', () => {
     expect(wrapper.find('[testID="loginButton"]').prop('disabled')).toBe(true);
   });
@@ -20,6 +29,18 @@ describe('LoginTab screen', () => {
   it('the Login button should be enabled after the email and password is entered', () => {
     wrapper.setState({ emailAddress: 'asdf@gmail.com', password: 'ab' });
     expect(wrapper.find('[testID="loginButton"]').prop('disabled')).toBe(false);
+  });
+
+  it('should NOT login', () => {
+    wrapper.setState({ emailAddress: 'asdf@gmail.com', password: 'ab' });
+    moxios.wait(() => {
+      const request = moxios.requests.mostRecent();
+      request.respondWith({
+        status: 401,
+        response: { ok: false },
+      });
+    });
+    wrapper.find('[testID="loginButton"]').simulate('onPress');
   });
 
   it('should be able to request a password reset entering a valid email address', () => {

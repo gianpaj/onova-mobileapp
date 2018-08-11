@@ -303,12 +303,12 @@ const signup = (data: SignupData) => (dispatch: Dispatch) => (
     })
     .catch((err: api.APIError) => {
       Toast.hide();
-      // if (err.message !== 'NOT_VERIFIED') {
-      dispatch(handleErrorWithAlert({ type: SIGNUP_FAIL }, err));
-      // } else {
-      //   dispatch({ type: SIGNUP_FAIL });
-      //   throw err;
-      // }
+      if (err.message !== 'NOT_VERIFIED') {
+        dispatch(handleErrorWithAlert({ type: SIGNUP_FAIL }, err));
+      } else {
+        dispatch({ type: SIGNUP_FAIL });
+        throw err;
+      }
     })
 );
 

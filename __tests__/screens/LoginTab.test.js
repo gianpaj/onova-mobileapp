@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { shallow } from 'enzyme';
-import moxios from 'moxios';
+// import moxios from 'moxios';
 
 import { LoginTabContainer } from '../../src/screens/LoginTab';
 
@@ -15,13 +15,13 @@ describe('LoginTab screen', () => {
     );
   });
 
-  beforeEach(() => {
-    moxios.install();
-  });
+  // beforeEach(() => {
+  //   moxios.install();
+  // });
 
-  afterEach(() => {
-    moxios.uninstall();
-  });
+  // afterEach(() => {
+  //   moxios.uninstall();
+  // });
 
   it('at the beginning the Login button should NOT be enabled', () => {
     expect(wrapper.find('[testID="loginButton"]').prop('disabled')).toBe(true);
@@ -37,13 +37,13 @@ describe('LoginTab screen', () => {
       emailAddress: 'asdf@gmail.com',
       password: 'ab',
     });
-    moxios.wait(() => {
-      const request = moxios.requests.mostRecent();
-      request.respondWith({
-        status: 401,
-        response: { ok: false },
-      });
-    });
+    // moxios.wait(() => {
+    //   const request = moxios.requests.mostRecent();
+    //   request.respondWith({
+    //     status: 401,
+    //     response: { ok: false },
+    //   });
+    // });
     wrapper
       .find('[testID="loginButton"]')
       .props()

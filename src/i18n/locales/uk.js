@@ -62,7 +62,6 @@ http://onova.co/uploader
     share_before: 'Запроси двох друзів щоб почати купувати на Онові',
   },
   comments: {
-    action_button_cancel: 'Відмінити',
     add_comment_placeholder: 'Прокоментувати',
     alert_confirm_deletion: 'Точно Видалити?',
     toast_warning_mention_not_found: 'Користувача не знайдено',

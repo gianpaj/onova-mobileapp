@@ -87,8 +87,8 @@ class Comments extends React.Component<Props, State> {
   }
 
   showActionSheetForComment = (comment: Comment) => {
-    const DELETE = I18n.t('alert.action_button_delete');
-    const CANCEL = I18n.t('alert.action_button_cancel');
+    const DELETE = I18n.t('alerts.action_button_delete');
+    const CANCEL = I18n.t('alerts.action_button_cancel');
     let BUTTONS;
     // if its my comment
     // if (comment.user._id == this.props.userData._id) {

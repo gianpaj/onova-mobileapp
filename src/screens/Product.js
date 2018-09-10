@@ -461,14 +461,15 @@ export class ProductContainer extends React.Component<Props, State> {
                   // negative margin for the carousel dots
                   thereIsACarousel && { marginTop: -28 },
                 ]}>
-                <NBButton transparent dark onPress={this.shareProduct}>
+                <NBButton
+                  transparent
+                  dark
+                  onPress={this.shareProduct}
+                  style={styles.shareIconButton}>
                   <NBIcon
-                    ios="ios-share-outline"
+                    ios="ios-share"
                     android="md-share"
-                    style={[
-                      styles.shareIcon,
-                      // thereIsACarousel && { marginTop: 13 },
-                    ]}
+                    style={styles.shareIcon}
                   />
                 </NBButton>
                 {!this.isMyProduct() && (
@@ -579,15 +580,20 @@ const styles = StyleSheet.create({
   //   // marginLeft: 20,
   //   marginTop: 12,
   // },
-  shareIcon: {
-    color: colors.grey1,
-    fontSize: 27,
-    marginRight: 0,
-    marginLeft: 2,
+  shareIconButton: {
     paddingBottom: Platform.select({
       ios: 5,
       android: 0,
     }),
+    marginLeft: -10,
+    paddingHorizontal: 10,
+    zIndex: 999,
+  },
+  shareIcon: {
+    color: colors.grey1,
+    fontSize: 27,
+    marginRight: 0,
+    marginLeft: 0,
   },
   buyButton: {
     backgroundColor: colors.red,

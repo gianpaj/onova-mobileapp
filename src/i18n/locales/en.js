@@ -3,7 +3,7 @@ export default {
     skip: 'Skip',
     next: 'Next',
     step_1: {
-      title: 'Information',
+      title: 'Follow shops',
       subtitle:
         'Add other shops to see their items. On the Main page, you see items of the shops that are in your contacts. The more shops you add, the more items you see',
     },
@@ -13,7 +13,7 @@ export default {
         'Use onova.co/uploader to upload items faster from your computer',
     },
     step_3: {
-      title: 'Follow shops',
+      title: 'Information',
       subtitle: 'If you have any questions, contact @onova user',
     },
   },

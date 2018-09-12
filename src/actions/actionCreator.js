@@ -48,6 +48,11 @@ if (isProd) {
   config = require('../../config-dev.json');
 }
 
+const intro = () => (dispatch: Dispatch) => {
+  dispatch(logout());
+  dispatch({ type: 'INTRO' });
+};
+
 const login = (data: LoginData) => (dispatch: Dispatch) => {
   dispatch({ type: LOGIN_PENDING });
   Toast.loading('', 30);
@@ -452,6 +457,7 @@ const displayNotification = (notification: any) => (
 export {
   initializePusher,
   login,
+  intro,
   // loginWithGoogle,
   checkLogin,
   signup,

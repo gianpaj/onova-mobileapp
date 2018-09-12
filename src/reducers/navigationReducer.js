@@ -56,6 +56,13 @@ const navigationReducer = (
         ),
       };
 
+    case 'INTRO':
+      return {
+        stateForLoggedOut: NavigationStack.router.getStateForAction(
+          NavigationActions.navigate({ routeName: 'introScreens' })
+        ),
+      };
+
     default:
       return {
         ...state,

@@ -35,7 +35,7 @@ import { KeyboardAccessoryNavigation } from 'react-native-keyboard-accessory';
 
 import { Header } from '../components';
 
-import { getPersonalUserData, logout } from '../actions/actionCreator';
+import { getPersonalUserData, intro } from '../actions/actionCreator';
 
 import I18n from '../i18n';
 import colors from '../config/colors';
@@ -271,7 +271,7 @@ class SettingsContainer extends Component<Props, State> {
     return this.setState({ username: u });
   };
 
-  onSignout = () => this.props.dispatch(logout());
+  onSignout = () => this.props.dispatch(intro());
 
   /*
   formatCardInfo() {

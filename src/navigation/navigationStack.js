@@ -9,6 +9,7 @@ import {
   // Checkout,
   ChatRooms,
   Chat,
+  IntroScreens,
   Product,
   Profile,
   Reviews,
@@ -28,6 +29,7 @@ export const StackNav = StackNavigator(
     signuplogin: {
       screen: SignUpLogin,
     },
+    introScreens: { screen: IntroScreens },
     product: {
       screen: Product,
       path: 'product/:productUUID',

@@ -6,6 +6,7 @@ import { AddReview } from '../screens/AddReview';
 import { Home } from '../screens/Home';
 import { ChatRooms } from '../screens/ChatRooms';
 import { Chat } from '../screens/Chat';
+import IntroScreens from '../screens/IntroScreens';
 import { Product } from '../screens/Product';
 import { Profile } from '../screens/Profile';
 import { Followers } from '../screens/Followers';
@@ -24,6 +25,7 @@ export {
   Home,
   ChatRooms,
   Chat,
+  IntroScreens,
   Product,
   Profile,
   Followers,

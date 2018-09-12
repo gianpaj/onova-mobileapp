@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Component } from 'react';
+import React from 'react';
 import {
   ActivityIndicator,
   BackHandler,
@@ -9,9 +9,12 @@ import {
 } from 'react-native';
 import { connect } from 'react-redux';
 import { addNavigationHelpers, NavigationActions } from 'react-navigation';
-import { createReduxBoundAddListener } from 'react-navigation-redux-helpers';
+import {
+  initializeListeners,
+  createReduxBoundAddListener,
+} from 'react-navigation-redux-helpers';
 
-import { checkLogin, logout } from '../actions/actionCreator';
+import { checkLogin, intro } from '../actions/actionCreator';
 import NavigationStack from './navigationStack';
 import NavigationService from './NavigationService';
 
@@ -26,15 +29,20 @@ type Props = {
   navigationState: NavigationState,
   userData?: UserData,
   token?: string,
+  nav: Object,
 };
 
 // on Android, the URI prefix typically contains a host in addition to scheme
 // const prefix = Platform.OS == 'android' ? 'onova://onova/' : 'onova://';
 
+const addListener = createReduxBoundAddListener('root');
+
 class AppNavigation extends React.PureComponent<Props> {
   notificationListener;
 
   componentDidMount() {
+    initializeListeners('root', this.props.nav);
+
     BackHandler.addEventListener('hardwareBackPress', this.onBackPress);
     const { isLoggedIn, userData, token, dispatch } = this.props;
 
@@ -46,11 +54,11 @@ class AppNavigation extends React.PureComponent<Props> {
       dispatch(checkLogin(userData, token)).catch(e => {
         // if (e.message == 'Invalid user') {
         // }
-        dispatch(logout());
+        dispatch(intro());
         console.warn(e);
       });
     } else {
-      dispatch(logout());
+      dispatch(intro());
     }
   }
 
@@ -92,7 +100,7 @@ class AppNavigation extends React.PureComponent<Props> {
         navigation={addNavigationHelpers({
           dispatch,
           state,
-          addListener: createReduxBoundAddListener('root'),
+          addListener,
         })}
       />
     );

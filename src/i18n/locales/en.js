@@ -1,4 +1,22 @@
 export default {
+  intro: {
+    skip: 'Skip',
+    next: 'Next',
+    step_1: {
+      title: 'Information',
+      subtitle:
+        'Add other shops to see their items. On the Main page, you see items of the shops that are in your contacts. The more shops you add, the more items you see',
+    },
+    step_2: {
+      title: 'Add Items',
+      subtitle:
+        'Use onova.co/uploader to upload items faster from your computer',
+    },
+    step_3: {
+      title: 'Follow shops',
+      subtitle: 'If you have any questions, contact @onova user',
+    },
+  },
   sign_up_login_tabs: {
     signup: 'SIGNUP',
     login: 'LOGIN',

@@ -3,7 +3,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Onboarding from 'react-native-onboarding-swiper';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 import { logout } from '../actions/actionCreator';
 import type { Dispatch } from '../types';
@@ -28,19 +28,19 @@ class IntroScreens extends Component<Props> {
         pages={[
           {
             backgroundColor: colors.white,
-            image: <Icon name="account-search" size={48} />,
+            image: <Icon name="md-information-circle" size={48} />,
             title: I18n.t('intro.step_1.title'),
             subtitle: I18n.t('intro.step_1.subtitle'),
           },
           {
             backgroundColor: colors.white,
-            image: <Icon name="camera" size={48} />,
+            image: <Icon name="md-camera" size={48} />,
             title: I18n.t('intro.step_2.title'),
             subtitle: I18n.t('intro.step_2.subtitle'),
           },
           {
             backgroundColor: colors.white,
-            image: <Icon name="help" size={48} />,
+            image: <Icon name="md-person-add" size={48} />,
             title: I18n.t('intro.step_3.title'),
             subtitle: I18n.t('intro.step_3.subtitle'),
           },

@@ -54,7 +54,7 @@
     "react-native-onboarding-swiper": "^0.7.1",
     "react-native-parsed-text": "^0.0.20",
     "react-native-permissions": "^1.1.1",
-    "react-native-sentry": "^0.38.1",
+    "react-native-sentry": "^0.39.0",
     "react-native-simple-radio-button": "^2.7.2",
     "react-native-sortable-list": "^0.0.22",
     "react-native-star-rating": "^1.0.9",

@@ -28,6 +28,7 @@ allprojects {
         // for react-native-image-crop-picker - jitpack repo is necessary to fetch ucrop dependency
         maven { url "https://jitpack.io" }
 
+        // Required for Firebase
         maven {
             url 'https://maven.google.com/'
             name 'Google'

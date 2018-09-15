@@ -11,7 +11,7 @@ import {
   View,
 } from 'react-native';
 import { Body, Button, Icon, Left, Right, Title } from 'native-base';
-import { TabView, TabBar, SceneMap } from 'react-native-tab-view';
+import { TabView, TabBar } from 'react-native-tab-view';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import I18n from '../i18n';
@@ -89,27 +89,6 @@ export class Home extends PureComponent<Props, State> {
         return null;
     }
   };
-
-  /*_renderScene = SceneMap({
-    clothes: () => (
-      <ImageGrid
-        apiURL="/api/feed/flat/?categoryIds=0"
-        navigation={this.props.navigation}
-      />
-    ),
-    shoes: () => (
-      <ImageGrid
-        apiURL="/api/feed/flat/?categoryIds=1"
-        navigation={this.props.navigation}
-      />
-    ),
-    other: () => (
-      <ImageGrid
-        apiURL="/api/feed/flat/?categoryIds=2"
-        navigation={this.props.navigation}
-      />
-    ),
-  });*/
 
   onShare() {
     Share.share({ message: I18n.t('home.share'), title: 'Share' });

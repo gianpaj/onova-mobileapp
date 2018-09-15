@@ -4,6 +4,7 @@ import { Platform } from 'react-native';
 import { Toast } from 'antd-mobile-rn';
 import { ChatManager, TokenProvider } from '@pusher/chatkit/react-native';
 import { Sentry } from 'react-native-sentry';
+import Analytics from 'react-native-analytics-segment-io';
 
 import type { PusherUser } from '@pusher/chatkit';
 import {
@@ -78,16 +79,9 @@ const login = (data: LoginData) => (dispatch: Dispatch) => {
       throw new Error(res);
     })
     .then(userData => {
-      // TODO: send analytics login event
       if (isProd) {
-        Sentry.setUserContext({
-          email: userData.emailAddress,
-          userID: userData._id,
-          username: userData.username,
-          extra: {
-            accountStatus: userData.accountStatus,
-          },
-        });
+        trackUser(userData);
+        Analytics.track('login');
       }
       return userData;
     })
@@ -226,6 +220,21 @@ const loginWithGoogle = () => (dispatch: Dispatch) => {
 };
 */
 
+function trackUser(userData: UserData) {
+  Analytics.identify(userData._id, {
+    email: userData.emailAddress,
+    username: userData.username,
+  });
+  Sentry.setUserContext({
+    email: userData.emailAddress,
+    userID: userData._id,
+    username: userData.username,
+    extra: {
+      accountStatus: userData.accountStatus,
+    },
+  });
+}
+
 const checkLogin = (userData: UserData, token: string) => (
   dispatch: Dispatch
 ) => {
@@ -240,14 +249,8 @@ const checkLogin = (userData: UserData, token: string) => (
     })
     .then(() => {
       if (isProd) {
-        Sentry.setUserContext({
-          email: userData.emailAddress,
-          userID: userData._id,
-          username: userData.username,
-          extra: {
-            accountStatus: userData.accountStatus,
-          },
-        });
+        trackUser(userData);
+        Analytics.track('reload_login');
       }
     })
     .then(() => initializePusher(userData, token))
@@ -293,16 +296,7 @@ const signup = (data: SignupData) => (dispatch: Dispatch) => (
         //     dispatch({ type: SIGNUP_FAIL });
         //     Toast.hide();
         //   });
-        // if (isProd) {
-        //   Sentry.setUserContext({
-        //     email: userData.emailAddress,
-        //     userID: userData._id,
-        //     username: userData.username,
-        //     extra: {
-        //       accountStatus: userData.accountStatus,
-        //     },
-        //   });
-        // }
+        // if (isProd) trackUser(userData)
       }
       // console.warn(res);
       // dispatch({ type: SIGNUP_FAIL });
@@ -312,6 +306,7 @@ const signup = (data: SignupData) => (dispatch: Dispatch) => (
       if (err.message !== 'NOT_VERIFIED') {
         dispatch(handleErrorWithAlert({ type: SIGNUP_FAIL }, err));
       } else {
+        Analytics.track('signup');
         dispatch({ type: SIGNUP_FAIL });
         throw err;
       }
@@ -366,6 +361,8 @@ const logout = () => (dispatch: Dispatch) => {
     currentUser.disconnect();
     console.log('disconnected from Pusher');
   }
+  Analytics.flush();
+  Analytics.reset();
 
   return dispatch({ type: LOGOUT });
 

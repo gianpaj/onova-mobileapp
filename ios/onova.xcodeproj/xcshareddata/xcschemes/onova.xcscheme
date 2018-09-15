@@ -28,6 +28,34 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
+               BlueprintIdentifier = "668B59D9CC7AE5629DF94E4E96B73052"
+               BuildableName = "libPods-onova.a"
+               BlueprintName = "Pods-onova"
+               ReferencedContainer = "container:Pods/Pods.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "EE249F831F0BC5B200AC5C78"
+               BuildableName = "libRNAnalyticsSegmentIO.a"
+               BlueprintName = "RNAnalyticsSegmentIO"
+               ReferencedContainer = "container:../node_modules/react-native-analytics-segment-io/ios/RNAnalyticsSegmentIO.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
                BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
                BuildableName = "onova.app"
                BlueprintName = "onova"

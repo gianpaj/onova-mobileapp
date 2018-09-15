@@ -8806,6 +8806,10 @@ react-modal@^3.3.2:
     react-lifecycles-compat "^3.0.0"
     warning "^3.0.0"
 
+react-native-analytics-segment-io@^3.1.3:
+  version "3.1.3"
+  resolved "https://registry.yarnpkg.com/react-native-analytics-segment-io/-/react-native-analytics-segment-io-3.1.3.tgz#5823f70245acb45365404f4ff2425d4b2b1651e4"
+
 react-native-android-location-enabler@1.0.6:
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/react-native-android-location-enabler/-/react-native-android-location-enabler-1.0.6.tgz#5775b90ac85a8eb5acbe472590cc92e726344feb"

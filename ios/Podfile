@@ -48,6 +48,8 @@ target 'onova' do
 
   pod 'Firebase/Core'
   pod 'Firebase/Messaging'
+  pod 'Analytics' # segment.com
+  pod 'Segment-Mixpanel' # Device-based integration
 
   target 'onovaTests' do
     inherit! :search_paths

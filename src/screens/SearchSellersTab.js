@@ -56,7 +56,8 @@ class SearchSellersTabContainer extends Component<Props, State> {
 
     this.setState({ isLoading: true });
 
-    this.search.blur();
+    // $FlowFixMe
+    this.search.current.blur();
 
     const { token } = this.props;
     api

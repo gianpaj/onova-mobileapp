@@ -88,9 +88,9 @@ export default class MediaView extends React.Component<Props, State> {
               index={currentImageIndex}
               onChange={toIndex => {
                 if (currentImageIndex < toIndex) {
-                  return this._swiper.scrollBy(1, false);
+                  return this._swiper.current.scrollBy(1, false);
                 }
-                this._swiper.scrollBy(-1, false);
+                this._swiper.current.scrollBy(-1, false);
               }}
             />
           </Modal>

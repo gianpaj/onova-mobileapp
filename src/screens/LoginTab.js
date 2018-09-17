@@ -232,7 +232,9 @@ export class LoginTabContainer extends React.Component<Props, State> {
             returnKeyType="next"
             onBlur={this._onBlurEmail}
             onFocus={this._onFocusEmail}
-            onSubmitEditing={() => this.PwdInput && this.PwdInput.focus()}
+            onSubmitEditing={() =>
+              this.PwdInput && this.PwdInput.current.focus()
+            }
             value={emailAddress}
             testID="EmailField"
             textContentType="username"

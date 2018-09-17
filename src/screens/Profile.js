@@ -179,8 +179,8 @@ class ProfileScreen extends React.Component<Props, State> {
 
     let Promises = [];
     Promises.push(this.refresh());
-    if (this.imageGrid && this.imageGrid.getWrappedInstance)
-      Promises.push(this.imageGrid.getWrappedInstance().fetchItems());
+    if (this.imageGrid && this.imageGrid.current.getWrappedInstance)
+      Promises.push(this.imageGrid.current.getWrappedInstance().fetchItems());
     Promise.all(Promises).then(() => this.setState({ isRefreshing: false }));
   };
 

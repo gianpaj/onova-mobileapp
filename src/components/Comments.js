@@ -337,7 +337,7 @@ class Comments extends React.Component<Props, State> {
               keyword !== '@' && (
                 <View
                   // eslint-disable-next-line
-                style={{
+                  style={{
                     flex: 1,
                     width,
                     justifyContent: 'center',
@@ -425,7 +425,7 @@ class Comments extends React.Component<Props, State> {
         });
         // Keyboard.dismiss();
         setTimeout(() => {
-          this.props.scrollView._root.scrollToEnd({ animated: true });
+          this.props.scrollView.current._root.scrollToEnd({ animated: true });
         }, 300);
       })
       .catch(e => {

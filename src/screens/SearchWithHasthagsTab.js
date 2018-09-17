@@ -51,7 +51,7 @@ class SearchWithHasthagsTabContainer extends Component<Props, State> {
 
     const { text, grp_1, grp_2 } = this.state;
 
-    this.search.blur();
+    this.search.current.blur();
 
     // this.setState({ isLoading: true });
     // TODO: check verify tags/items exists

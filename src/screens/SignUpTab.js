@@ -215,7 +215,9 @@ export class SignUpTabContainer extends Component<Props, State> {
             returnKeyType="next"
             onBlur={this._onBlurUser}
             onFocus={this._onFocusUser}
-            onSubmitEditing={() => this.EmailInput && this.EmailInput.focus()}
+            onSubmitEditing={() =>
+              this.EmailInput && this.EmailInput.current.focus()
+            }
             value={this.state.username}
             onChangeText={t => this.onUserChange(t)}
             accessibilityLabel="username"
@@ -229,7 +231,9 @@ export class SignUpTabContainer extends Component<Props, State> {
             returnKeyType="next"
             onBlur={this._onBlurEmail}
             onFocus={this._onFocusEmail}
-            onSubmitEditing={() => this.PwdInput && this.PwdInput.focus()}
+            onSubmitEditing={() =>
+              this.PwdInput && this.PwdInput.current.focus()
+            }
             value={this.state.emailAddress}
             testID="EmailField"
             onChangeText={emailAddress => this.setState({ emailAddress })}

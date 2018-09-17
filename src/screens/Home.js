@@ -17,6 +17,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 
 import I18n from '../i18n';
 import { Header, ImageGrid } from '../components';
+import * as api from '../utils/api';
 
 import type { NavigationScreenProp } from 'react-navigation';
 import type { Route, NavigationState } from 'react-native-tab-view';
@@ -36,6 +37,8 @@ type State = NavigationState<
     title: string,
   }>
 >;
+
+const { isProd } = api;
 
 export class Home extends PureComponent<Props, State> {
   state = {
@@ -93,7 +96,7 @@ export class Home extends PureComponent<Props, State> {
 
   onShare() {
     Share.share({ message: I18n.t('home.share'), title: 'Share' });
-    Analytics.track('press_share_invite');
+    if (isProd) Analytics.track('press_share_invite');
   }
 
   onInfoIcon() {

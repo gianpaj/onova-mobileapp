@@ -29,6 +29,7 @@ export default class App extends React.Component<*> {
       const config = require('../config-prod.json');
       Sentry.config(config.SENTRY_URL).install();
       console.debug('SENTRY is enabled');
+      this.enableSegmentCom();
     } else {
       console.debug('SENTRY is not enabled');
       console.debug('Segment.com is not enabled');

@@ -93,6 +93,7 @@ const defaultState = {
 };
 
 const { height } = Dimensions.get('window');
+const { isProd } = api;
 
 class ProfileScreen extends React.Component<Props, State> {
   state = { ...defaultState };
@@ -626,7 +627,7 @@ class ProfileScreen extends React.Component<Props, State> {
     } else {
       Share.share({ message: `https://onova.co/${username}` });
     }
-    Analytics.track('press_share_profile');
+    if (isProd) Analytics.track('press_share_profile');
   };
 
   render() {

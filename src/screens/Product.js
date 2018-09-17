@@ -62,6 +62,8 @@ type State = {
   // likeAnimValue: number,
 };
 
+const { isProd } = api;
+
 export class ProductContainer extends React.Component<Props, State> {
   anim: ?React$Element<*>;
   scrollView: Content;
@@ -340,7 +342,7 @@ export class ProductContainer extends React.Component<Props, State> {
         if (product.status !== 'forsale') {
           throw Error(I18n.t('product.toast_warning_on_product_sold'));
         }
-        Analytics.track('press_buy', { uuid: product.uuid });
+        if (isProd) Analytics.track('press_buy', { uuid: product.uuid });
 
         // $FlowFixMe
         this.props.navigation.navigate({

@@ -8,11 +8,15 @@ import I18n from '../i18n';
 import type { Order, Product, UserData } from '../types';
 
 let config;
-if (process.env.NODE_ENV == 'prod' || process.env.NODE_ENV == 'production') {
+let isProd = false;
+if (process.env.NODE_ENV === 'prod' || process.env.NODE_ENV === 'production') {
+  isProd = true;
   config = require('../../config-prod.json');
 } else {
   config = require('../../config-dev.json');
 }
+
+export { isProd };
 
 if (!global.__TESTING__) console.debug(`connecting to ${config.API_URL}`);
 

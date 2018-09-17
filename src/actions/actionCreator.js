@@ -31,7 +31,7 @@ import type {
   UserData,
   // PusherUser,
 } from '../types';
-import type { Options } from '../utils/api';
+import type { Options, APIError } from '../utils/api';
 
 import { registerPushNotifications } from '../utils/push';
 import * as api from '../utils/api';
@@ -40,8 +40,7 @@ import I18n from '../i18n';
 
 let config, currentUser: PusherUser;
 
-const isProd =
-  process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'prod';
+const { isProd } = api;
 
 if (isProd) {
   config = require('../../config-prod.json');
@@ -99,12 +98,13 @@ const login = (data: LoginData) => (dispatch: Dispatch) => {
         })
         .then(() => Toast.hide());
     })
-    .catch((err: api.APIError) => {
+    .catch((err: APIError) => {
       Toast.hide();
       if (err.message === 'NOT_VERIFIED') {
         dispatch({ type: LOGIN_FAIL });
         throw err;
       }
+      console.debug(err);
       dispatch(handleErrorWithAlert({ type: LOGIN_FAIL }, err));
     });
 };
@@ -301,12 +301,12 @@ const signup = (data: SignupData) => (dispatch: Dispatch) => (
       // console.warn(res);
       // dispatch({ type: SIGNUP_FAIL });
     })
-    .catch((err: api.APIError) => {
+    .catch((err: APIError) => {
       Toast.hide();
       if (err.message !== 'NOT_VERIFIED') {
         dispatch(handleErrorWithAlert({ type: SIGNUP_FAIL }, err));
       } else {
-        Analytics.track('signup');
+        if (isProd) Analytics.track('signup');
         dispatch({ type: SIGNUP_FAIL });
         throw err;
       }
@@ -361,8 +361,10 @@ const logout = () => (dispatch: Dispatch) => {
     currentUser.disconnect();
     console.log('disconnected from Pusher');
   }
-  Analytics.flush();
-  Analytics.reset();
+  if (isProd) {
+    Analytics.flush();
+    Analytics.reset();
+  }
 
   return dispatch({ type: LOGOUT });
 

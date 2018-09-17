@@ -25,6 +25,7 @@ import {
 import { Button } from 'react-native-elements';
 import ParsedText from 'react-native-parsed-text';
 import { Modal } from 'antd-mobile-rn';
+import Analytics from 'react-native-analytics-segment-io';
 // import LottieView from 'lottie-react-native';
 
 import { Avatar, Header, MediaView, Comments } from '../components';
@@ -157,6 +158,7 @@ export class ProductContainer extends React.Component<Props, State> {
         message: `https://onova.co/${item.seller.username}/${item.uuid}`,
       });
     }
+    Analytics.track('press_share_product');
   };
 
   onMandatoryShare(): Promise<null | Error> {
@@ -165,7 +167,7 @@ export class ProductContainer extends React.Component<Props, State> {
         // ios user shared it
         // android probably user shared it
         if (
-          (Platform.OS == 'ios' && res.action !== Share.dismissedAction) ||
+          (Platform.OS === 'ios' && res.action !== Share.dismissedAction) ||
           Platform.OS !== 'ios'
         ) {
           await this.onSuccessfulShare();
@@ -333,6 +335,8 @@ export class ProductContainer extends React.Component<Props, State> {
         if (product.status !== 'forsale') {
           throw Error(I18n.t('product.toast_warning_on_product_sold'));
         }
+        Analytics.track('press_buy', { uuid: product.uuid });
+
         // $FlowFixMe
         this.props.navigation.navigate({
           routeName: 'chat',

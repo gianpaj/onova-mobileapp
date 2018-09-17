@@ -456,7 +456,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
         data.latitude = location.latitude.toString();
         data.longitude = location.longitude.toString();
 
-        res = await this.uploadNewProduct(uuid, data);
+        res = await this.uploadNewProduct(data);
       }
       this.props.dispatch(enableRefresh());
       this.closeModal();
@@ -469,7 +469,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     Toast.hide();
   };
 
-  uploadNewProduct = (uuid: string, data: any): Promise<any> => {
+  uploadNewProduct = (data: any): Promise<any> => {
     const { token } = this.props;
     return api.post('/api/products', data, { token, timeout: 30000 });
   };

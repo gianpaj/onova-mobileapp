@@ -28,6 +28,7 @@ import { NavigationActions } from 'react-navigation';
 import type { NavigationScreenProp } from 'react-navigation';
 // import { Button } from 'react-native-elements';
 import { Modal, NoticeBar, Toast } from 'antd-mobile-rn';
+import Analytics from 'react-native-analytics-segment-io';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import I18n from '../i18n';
@@ -625,6 +626,7 @@ class ProfileScreen extends React.Component<Props, State> {
     } else {
       Share.share({ message: `https://onova.co/${username}` });
     }
+    Analytics.track('press_share_profile');
   };
 
   render() {

@@ -49,6 +49,7 @@ export type UserData = {
   emailAddress: string,
   followersCount: number,
   followingCount: number,
+  sharedCount: number,
   // mobileNumber: ?string;
   // password: string;
   paymentInfo?: {

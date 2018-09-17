@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import { Body, Button, Icon, Left, Right, Title } from 'native-base';
 import { TabView, TabBar } from 'react-native-tab-view';
+import Analytics from 'react-native-analytics-segment-io';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import I18n from '../i18n';
@@ -92,6 +93,7 @@ export class Home extends PureComponent<Props, State> {
 
   onShare() {
     Share.share({ message: I18n.t('home.share'), title: 'Share' });
+    Analytics.track('press_share_invite');
   }
 
   onInfoIcon() {

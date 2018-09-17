@@ -56,13 +56,19 @@ type State = {
 
 export class SignUpTabContainer extends Component<Props, State> {
   EmailInput: ?FormInput;
-  // signupBtn;
   PwdInput: ?FormInput;
+  // signupBtn;
   // animatedValue = new Animated.Value(0);
   // backgroundColor = this.animatedValue.interpolate({
   //   inputRange: [0, 1],
   //   outputRange: [colors.grey4, colors.primary],
   // });
+
+  constructor(props: Props) {
+    super(props);
+    this.EmailInput = React.createRef();
+    this.PwdInput = React.createRef();
+  }
 
   state = {
     // username: 'gianfranco',
@@ -217,7 +223,7 @@ export class SignUpTabContainer extends Component<Props, State> {
             {...this._inputProps}
           />
           <FormInput
-            ref={c => (this.EmailInput = c)}
+            ref={this.EmailInput}
             placeholder={I18n.t('signup.email_placeholder')}
             keyboardType="email-address"
             returnKeyType="next"
@@ -235,7 +241,7 @@ export class SignUpTabContainer extends Component<Props, State> {
             {...this._inputProps}
           />
           <FormInput
-            ref={c => (this.PwdInput = c)}
+            ref={this.PwdInput}
             secureTextEntry
             placeholder={I18n.t('signup.password_placeholder')}
             returnKeyType="go"

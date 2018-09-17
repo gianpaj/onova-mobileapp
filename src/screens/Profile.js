@@ -96,7 +96,7 @@ const { height } = Dimensions.get('window');
 
 class ProfileScreen extends React.Component<Props, State> {
   state = { ...defaultState };
-  imageGrid: any;
+  imageGrid;
 
   constructor(props) {
     super(props);
@@ -701,7 +701,7 @@ class ProfileScreen extends React.Component<Props, State> {
           {_id !== '' && (
             <ImageGrid
               focused
-              ref={i => (this.imageGrid = i)}
+              ref={this.imageGrid}
               apiURL={`/api/products?userid=${_id}`}
               navigation={navigation}
               emptyState={

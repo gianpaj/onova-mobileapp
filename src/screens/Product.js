@@ -67,6 +67,11 @@ export class ProductContainer extends React.Component<Props, State> {
   scrollView: Content;
   reqTimer = 0;
 
+  constructor(props: Props) {
+    super(props);
+    this.scrollView = React.createRef();
+  }
+
   state = {
     loading: true,
     loadingBuy: false,
@@ -425,11 +430,7 @@ export class ProductContainer extends React.Component<Props, State> {
             </NBButton>
           </Right>
         </Header>
-        <Content
-          ref={r => {
-            this.scrollView = r;
-          }}
-          style={styles.flex1}>
+        <Content ref={this.scrollView} style={styles.flex1}>
           {loading && <ActivityIndicator size="large" />}
           {item && (
             <View>

@@ -37,7 +37,11 @@ type State = {
 };
 
 class SearchSellersTabContainer extends Component<Props, State> {
-  search = React.createRef();
+  search;
+  constructor(props: Props) {
+    super(props);
+    this.search = React.createRef();
+  }
 
   state = {
     data: [],
@@ -143,7 +147,7 @@ class SearchSellersTabContainer extends Component<Props, State> {
                 width: 280,
               }}>
               <SearchBar
-                ref={r => (this.search = r)}
+                ref={this.search}
                 autoCapitalize="none"
                 autoCorrect={false}
                 blurOnSubmit={false}

@@ -33,7 +33,11 @@ type State = {
 };
 
 class SearchWithHasthagsTabContainer extends Component<Props, State> {
-  search = React.createRef();
+  search;
+  constructor(props: Props) {
+    super(props);
+    this.search = React.createRef();
+  }
 
   state = {
     isLoading: false,
@@ -112,7 +116,7 @@ class SearchWithHasthagsTabContainer extends Component<Props, State> {
               width: 280,
             }}>
             <SearchBar
-              ref={r => (this.search = r)}
+              ref={this.search}
               autoCapitalize="none"
               autoCorrect={false}
               blurOnSubmit={false}

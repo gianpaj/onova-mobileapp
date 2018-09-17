@@ -28,6 +28,10 @@ type State = {
 
 export default class MediaView extends React.Component<Props, State> {
   _swiper;
+  constructor(props: Props) {
+    super(props);
+    this._swiper = React.createRef();
+  }
 
   state = {
     currentImageIndex: 0,
@@ -54,7 +58,7 @@ export default class MediaView extends React.Component<Props, State> {
       return (
         <View style={[styles.container, { height: imageHeight + 35 }]}>
           <Swiper
-            ref={ref => (this._swiper = ref)}
+            ref={this._swiper}
             autoplay={false}
             loop={false}
             bounces

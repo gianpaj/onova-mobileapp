@@ -244,7 +244,7 @@ export class LoginTabContainer extends React.Component<Props, State> {
             {...this._inputProps}
           />
           <FormInput
-            ref={c => (this.PwdInput = c)}
+            ref={this.PwdInput}
             secureTextEntry
             placeholder={I18n.t('login.password_placeholder')}
             returnKeyType="go"

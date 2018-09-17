@@ -9,12 +9,16 @@ export default {
     },
     step_2: {
       title: 'Add Items',
-      subtitle:
-        'Use onova.co/uploader to upload items faster from your computer',
+      subtitle: `Use onova.co/uploader to upload items faster from your computer
+
+ `,
     },
     step_3: {
       title: 'Information',
-      subtitle: 'If you have any questions, contact @onova user',
+      subtitle: `If you have any questions, contact @onova user
+
+
+ `,
     },
   },
   sign_up_login_tabs: {

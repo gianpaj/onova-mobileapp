@@ -4,6 +4,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Onboarding from 'react-native-onboarding-swiper';
 import Icon from 'react-native-vector-icons/Ionicons';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 import { logout } from '../actions/actionCreator';
 import type { Dispatch } from '../types';
@@ -25,10 +26,13 @@ class IntroScreens extends Component<Props> {
         onSkip={this.onFinish}
         onDone={this.onFinish}
         imageContainerStyles={{ marginTop: -36, paddingBottom: 36 }}
+        DoneButtonComponent={() => (
+          <MaterialIcons name="check" size={36} style={{ left: -10 }} />
+        )}
         pages={[
           {
             backgroundColor: colors.white,
-            image: <Icon name="md-information-circle" size={48} />,
+            image: <Icon name="md-person-add" size={48} />,
             title: I18n.t('intro.step_1.title'),
             subtitle: I18n.t('intro.step_1.subtitle'),
           },
@@ -40,7 +44,7 @@ class IntroScreens extends Component<Props> {
           },
           {
             backgroundColor: colors.white,
-            image: <Icon name="md-person-add" size={48} />,
+            image: <Icon name="md-information-circle" size={48} />,
             title: I18n.t('intro.step_3.title'),
             subtitle: I18n.t('intro.step_3.subtitle'),
           },

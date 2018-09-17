@@ -24,10 +24,14 @@ class IntroScreens extends Component<Props> {
         skipLabel="Skip"
         nextLabel="Next"
         onSkip={this.onFinish}
-        onDone={this.onFinish}
         imageContainerStyles={{ marginTop: -36, paddingBottom: 36 }}
         DoneButtonComponent={() => (
-          <MaterialIcons name="check" size={36} style={{ left: -10 }} />
+          <MaterialIcons
+            name="check"
+            size={36}
+            style={{ left: -10 }}
+            onPress={this.onFinish}
+          />
         )}
         pages={[
           {

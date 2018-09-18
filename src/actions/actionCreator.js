@@ -38,15 +38,9 @@ import * as api from '../utils/api';
 import * as ui from '../utils/ui';
 import I18n from '../i18n';
 
-let config, currentUser: PusherUser;
+let currentUser: PusherUser;
 
-const { isProd } = api;
-
-if (isProd) {
-  config = require('../../config-prod.json');
-} else {
-  config = require('../../config-dev.json');
-}
+const { isProd, config } = api;
 
 const intro = () => (dispatch: Dispatch) => {
   dispatch(logout());
@@ -114,7 +108,8 @@ const initializePusher = (
   token: string
 ): Promise<any | Error> => {
   return new Promise((resolve, reject) => {
-    if (!isProd && process.env.NODE_ENV !== 'test') {
+    // if (!isProd && process.env.NODE_ENV !== 'test') {
+    if (!isProd) {
       console.log('%cskipping Pusher', 'color: green');
       return resolve(userData);
     }

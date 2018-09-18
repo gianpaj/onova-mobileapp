@@ -37,10 +37,7 @@ import typography from '../config/typography';
 import type { Dispatch, ReduxState } from '../types';
 
 let defaultState = {};
-let isProd = false;
-if (process.env.NODE_ENV == 'prod' || process.env.NODE_ENV == 'production') {
-  isProd = true;
-}
+const { isProd } = api;
 
 if (__DEV__ && !global.__TESTING__) {
   defaultState = {

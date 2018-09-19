@@ -3,7 +3,7 @@
 import { Dimensions, ViewStyle, ImageStyle, TextStyle } from 'react-native';
 
 import colors from '../config/colors';
-import varibles from './default.native';
+import variables from './default.native';
 
 const { width } = Dimensions.get('window');
 
@@ -32,13 +32,13 @@ export default {
     margin: 5,
   },
   item: {
-    // marginRight: varibles.h_spacing_sm,
-    marginBottom: varibles.v_spacing_sm,
+    // marginRight: variables.h_spacing_sm,
+    marginBottom: variables.v_spacing_sm,
     overflow: 'hidden',
   },
   image: {
     overflow: 'hidden',
-    borderRadius: varibles.radius_sm,
+    borderRadius: variables.radius_sm,
   },
   closeWrap: {
     width: 16,
@@ -61,7 +61,7 @@ export default {
     fontWeight: '300',
   },
   plusWrap: {
-    borderRadius: varibles.radius_sm,
+    borderRadius: variables.radius_sm,
     borderWidth: 1,
     justifyContent: 'center',
     alignItems: 'center',

@@ -631,7 +631,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
       <Container>
         <Header>
           <Left style={styles.container}>
-            <NBButton transparent onPress={() => this.closeModal()}>
+            <NBButton transparent onPress={this.closeModal}>
               <Icon name="close" size={28} />
             </NBButton>
           </Left>

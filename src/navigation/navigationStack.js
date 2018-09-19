@@ -9,6 +9,7 @@ import {
   // Checkout,
   ChatRooms,
   Chat,
+  CreateDrop,
   IntroScreens,
   Product,
   Profile,
@@ -40,6 +41,9 @@ export const StackNav = StackNavigator(
       navigationOptions: {
         gesturesEnabled: false,
       },
+    },
+    createDrop: {
+      screen: CreateDrop,
     },
     addReview: { screen: AddReview },
     reviews: { screen: Reviews },

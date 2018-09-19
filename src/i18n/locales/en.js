@@ -148,6 +148,13 @@ http://onova.co/uploader
     permission_message: 'Onova uses your location when adding a new item',
     permission_alert_button_settings: 'Open Settings',
   },
+  create_drop: {
+    title: 'Create Drop',
+    select_datetime: 'Select Date and Time',
+    ok: 'OK',
+    cancel: 'Cancel',
+    select: 'Select',
+  },
   profile: {
     reviews_label: 'reviews',
     followers_label: 'followers',

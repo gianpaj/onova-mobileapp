@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { connect } from 'react-redux';
-import { Alert, Dimensions, StyleSheet, Platform, View } from 'react-native';
+import { Dimensions, StyleSheet, View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {
   ActionSheet,
@@ -22,8 +22,6 @@ import RadioForm, {
 } from 'react-native-simple-radio-button';
 import ImagePicker from 'react-native-image-crop-picker';
 import { InputItem, NoticeBar, TextareaItem, Toast } from 'antd-mobile-rn';
-import Permissions from 'react-native-permissions';
-import RNAndroidLocationEnabler from 'react-native-android-location-enabler';
 
 import { Header, HR, TagInput } from '../components';
 import AntImagePicker from '../components/ImagePicker';
@@ -81,12 +79,7 @@ type State = {
   grp_2: number,
   images: Array<any>,
   inEditMode: boolean,
-  isLoading: boolean,
   isUploading: boolean,
-  location: ?{
-    longitude: number,
-    latitude: number,
-  },
   numberOfBrands: number,
   order: Array<number>,
   pending: boolean,
@@ -99,20 +92,6 @@ type State = {
 };
 
 export class AddOrEditProductScreen extends React.Component<Props, State> {
-  static navigationOptions = (props: any) => {
-    return {
-      // navigate to the screen instead of showing as a normal tab screen
-      tabBarOnPress: ({ scene }: any) => {
-        if (!scene.focused) {
-          props.navigation.navigate({
-            routeName: 'addOrEditProduct',
-            key: `addOrEditProduct`,
-          });
-        }
-      },
-    };
-  };
-
   state = {
     description: '',
     descriptionFocused: false,
@@ -120,9 +99,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     grp_2: -1,
     images: [],
     inEditMode: false,
-    isLoading: true,
     isUploading: false,
-    location: null,
     numberOfBrands: 0,
     order: [],
     pending: false,
@@ -138,7 +115,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     // $FlowFixMe
     const { params } = this.props.navigation.state;
     if (params && params.item) {
-      this.setState({ inEditMode: true, isLoading: false });
+      this.setState({ inEditMode: true });
       const { item }: { item: Product } = params;
       let images = [];
       for (let i = 0; i < item.photoURIs.length; i++) {
@@ -158,121 +135,8 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
         uuid: item.uuid,
       });
     }
-
-    Toast.loading(I18n.t('alerts.loading_message'), 20);
-    Permissions.check('location')
-      .then(response => {
-        // Response is one of: 'authorized', 'denied', 'restricted', or 'undetermined'
-        console.log(response);
-        if (response === 'restricted' || response === 'denied') {
-          // show error
-          this.alertForPermission(response);
-          this.closeModal();
-        } else if (response === 'undetermined') {
-          // show Modal explaining why
-          this.alertForPermission(response);
-        } else {
-          // authorized
-          this.getLocationAndInitiate();
-        }
-      })
-      .catch(e => console.error(e))
-      .then(() => {
-        this.setState({ isLoading: false });
-        Toast.hide();
-      });
+    // this.selectPhotoTapped(0);
   }
-
-  getLocationAndInitiate = () => {
-    const timeout = 20; // seconds
-    navigator.geolocation.getCurrentPosition(
-      position => {
-        const { coords } = position;
-        console.log(coords);
-        this.setState({
-          location: {
-            longitude: coords.longitude,
-            latitude: coords.latitude,
-          },
-        });
-        // not editing
-        this.selectPhotoTapped(0);
-      },
-      err => {
-        // Location authorized but not setting is not enabled (only Android)
-        if (
-          err.message === 'No location provider available.' &&
-          Platform.OS === 'android'
-        ) {
-          return RNAndroidLocationEnabler.promptForEnableLocationIfNeeded({
-            interval: 10000,
-            fastInterval: 5000,
-          })
-            .then(() => {})
-            .catch(() => this.closeModal());
-        }
-        Toast.fail(err.message || JSON.stringify(err));
-        this.closeModal();
-        console.debug(err);
-      },
-      {
-        enableHighAccuracy: false,
-        timeout: timeout * 1000,
-        maximumAge: 60 * 1000,
-      }
-    );
-  };
-
-  alertForPermission(response: string) {
-    Alert.alert(
-      I18n.t('add_or_edit_item.permission_title'),
-      I18n.t('add_or_edit_item.permission_message'),
-      [
-        {
-          text: I18n.t('profile.alert_unsaved_changes_button_cancel'),
-          onPress: () => {
-            console.log('Permission denied');
-            this.closeModal();
-          },
-          style: 'cancel',
-        },
-        response === 'undetermined'
-          ? {
-              text: I18n.t('profile.alert_unsaved_changes_button_confirm'),
-              onPress: this.requestPermission,
-            }
-          : {
-              text: I18n.t('add_or_edit_item.permission_alert_button_settings'),
-              onPress: () => {
-                if (Platform.OS === 'android') {
-                  RNAndroidLocationEnabler.promptForEnableLocationIfNeeded({
-                    interval: 10000,
-                    fastInterval: 5000,
-                  })
-                    .then(() => {})
-                    .catch(() => this.closeModal());
-                } else {
-                  Permissions.openSettings();
-                }
-                this.closeModal();
-              },
-            },
-      ]
-    );
-  }
-
-  requestPermission = () => {
-    Permissions.request('location').then(response => {
-      // Returns once the user has chosen to 'allow' or to 'not allow' access
-      // Response is one of: 'authorized', 'denied', 'restricted', or 'undetermined'
-      if (response !== 'authorized') {
-        // show error
-        this.closeModal();
-      } else {
-        this.getLocationAndInitiate();
-      }
-    });
-  };
 
   selectPhotoTapped = (i: number = 0, multiple: boolean = true) => {
     if (this.state.pending) return;
@@ -409,9 +273,9 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     });
   };
 
-  closeModal() {
+  closeModal = () => {
     this.props.navigation.goBack();
-  }
+  };
 
   closeModalConditional = () => {
     const { inEditMode, images } = this.state;
@@ -428,7 +292,6 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
       grp_2,
       images,
       inEditMode,
-      location,
       price,
       tags,
       uuid,
@@ -615,7 +478,6 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
       grp_2,
       images,
       inEditMode,
-      isLoading,
       isUploading,
       pending,
       price,
@@ -625,7 +487,6 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     } = this.state;
 
     // if (images.length < 1 && !inEditMode) return null;
-    if (isLoading) return null;
 
     return (
       <Container>

@@ -150,10 +150,9 @@ http://onova.co/uploader
   },
   create_drop: {
     title: 'Create Drop',
-    select_datetime: 'Select Date and Time',
     ok: 'OK',
     cancel: 'Cancel',
-    select: 'Select',
+    select: 'Select a date when you want the drop',
   },
   profile: {
     reviews_label: 'reviews',

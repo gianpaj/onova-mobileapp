@@ -289,6 +289,16 @@ export class CreateDropScreen extends React.Component<Props, State> {
 
   _handleDatePicked;
 
+  removeImage = (key: string) => {
+    // show alert prompt
+    // if confirmed
+    this.setState(prevState => {
+      return {
+        products: prevState.products.filter(product => product.key !== key),
+      };
+    });
+  };
+
   render() {
     let {
       products,
@@ -303,7 +313,12 @@ export class CreateDropScreen extends React.Component<Props, State> {
     if (products.length < 9) {
       const emptyToAdd = 9 - products.length;
       let emptyProducts = [];
-      for (let i = 0; i < emptyToAdd; i++) {
+      emptyProducts.push({
+        uploaded: false,
+        key: products.length + 1,
+        next: true,
+      });
+      for (let i = 0; i < emptyToAdd - 1; i++) {
         emptyProducts.push({ uploaded: false, key: products.length + i });
       }
       products = [...products, ...emptyProducts];
@@ -390,13 +405,13 @@ export class CreateDropScreen extends React.Component<Props, State> {
             style={[styles.size, styles.image]}
           />
           <TouchableOpacity
-            // onPress={removeImage}
+            onPress={() => this.removeImage(product.key)}
             style={styles.closeWrap}
             activeOpacity={0.6}>
             <Text style={styles.closeText}>×</Text>
           </TouchableOpacity>
         </View>
-      ) : (
+      ) : product.next ? (
         <TouchableOpacity
           onPress={this.onNewItem}
           style={[
@@ -407,6 +422,17 @@ export class CreateDropScreen extends React.Component<Props, State> {
           ]}>
           <Text style={imagePickerStyle.plusText}>+</Text>
         </TouchableOpacity>
+      ) : (
+        <View
+          style={[
+            imagePickerStyle.item,
+            styles.size,
+            imagePickerStyle.plusWrap,
+            imagePickerStyle.plusWrapNormal,
+            // { borderColor: colors.grey3 },
+          ]}>
+          <Text style={imagePickerStyle.plusText}>.</Text>
+        </View>
       )}
     </View>
   );

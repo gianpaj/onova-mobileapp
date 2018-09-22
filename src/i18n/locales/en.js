@@ -153,6 +153,7 @@ http://onova.co/uploader
     ok: 'OK',
     cancel: 'Cancel',
     select: 'Select a date when you want the drop',
+    success: 'Your dropped items have been scheduled!',
   },
   profile: {
     reviews_label: 'reviews',

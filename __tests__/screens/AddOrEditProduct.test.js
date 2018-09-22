@@ -34,10 +34,6 @@ describe('AddOrEditProduct screen (inEditMode false)', () => {
     it('at the beginning the Add Item button should NOT be enabled', async () => {
       await sleep(100);
       const { state } = tree.getInstance();
-      expect(state.location).toEqual({
-        longitude: 60,
-        latitude: 60,
-      });
       expect(state.images).toMatchSnapshot();
       expect(root.findByProps({ testID: 'saveButton' }).props.disabled).toBe(
         true

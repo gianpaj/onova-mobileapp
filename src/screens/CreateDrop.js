@@ -33,6 +33,8 @@ import colors from '../config/colors';
 import { Header } from '../components';
 import imagePickerStyle from '../components/ImagePicker.styles';
 import I18n from '../i18n';
+import * as api from '../utils/api';
+import * as ui from '../utils/ui';
 
 import type { Dispatch, UserData, ReduxState, Product } from '../types';
 
@@ -75,19 +77,19 @@ const pickerProps = {
 };
 
 export class CreateDropScreen extends React.Component<Props, State> {
-  // static navigationOptions = (props: any) => {
-  //   return {
-  //     // navigate to the screen instead of showing as a normal tab screen
-  //     tabBarOnPress: ({ scene }: any) => {
-  //       if (!scene.focused) {
-  //         props.navigation.navigate({
-  //           routeName: 'createDrop',
-  //           key: `createDrop`,
-  //         });
-  //       }
-  //     },
-  //   };
-  // };
+  static navigationOptions = (props: any) => {
+    return {
+      // navigate to the screen instead of showing as a normal tab screen
+      tabBarOnPress: ({ scene }: any) => {
+        if (!scene.focused) {
+          props.navigation.navigate({
+            routeName: 'createDrop',
+            key: `createDrop`,
+          });
+        }
+      },
+    };
+  };
 
   state = {
     datetime: new Date(),
@@ -219,18 +221,69 @@ export class CreateDropScreen extends React.Component<Props, State> {
     const { products, location } = this.state;
     return (
       // if any products have been uploaded
-      products.filter((i: any) => i.uploaded === false).length ===
-        products.length && location !== null
+      products.filter((i: any) => i.uploaded === true).length > 0 &&
+      location !== null
     );
   }
 
-  closeModal() {
+  closeModal = () => {
     this.props.navigation.goBack();
+  };
+
+  hasUnsavedChanges(): boolean {
+    return this.state.products.filter(i => i.uploaded === true).length > 0;
   }
 
-  onSendDrop = () => {
+  closeModalConditional = () => {
+    if (this.hasUnsavedChanges()) {
+      ui.showConfirmAlert(
+        I18n.t('profile.alert_unsaved_changes_title'),
+        I18n.t('profile.alert_unsaved_changes_body'),
+        () => {
+          // on continue
+          this.closeModal();
+        },
+        () => {},
+        I18n.t('profile.alert_unsaved_changes_button_cancel'),
+        I18n.t('profile.alert_unsaved_changes_button_confirm')
+      );
+    } else {
+      this.closeModal();
+    }
+  };
+
+  onSendDrop = async () => {
+    const { datetime, products, location } = this.state;
+    const { token } = this.props;
     Toast.loading(I18n.t('add_or_edit_item.toast_uploading'), 30);
     this.setState({ pending: true });
+
+    const productsReady = products.filter(i => i.uploaded === true);
+
+    const promises = productsReady.map(product => {
+      let formData = {
+        ...product,
+        date: datetime,
+        latitude: location.latitude.toString(),
+        longitude: location.longitude.toString(),
+      };
+      delete formData.key;
+      delete formData.uploaded;
+      return api.post('/api/schedule', formData, {
+        token,
+        timeout: 20000,
+      });
+    });
+
+    try {
+      await Promise.all(promises);
+      Toast.hide();
+      Toast.success(I18n.t('create_drop.success'), 5);
+      this.closeModal();
+    } catch (err) {
+      Toast.hide();
+      ui.showToast(err.message, 'warning');
+    }
   };
 
   setDate = (date: Date) => {
@@ -265,6 +318,7 @@ export class CreateDropScreen extends React.Component<Props, State> {
   };
 
   onNewItem = () => {
+    if (this.state.pending) return;
     // $FlowFixMe
     this.props.navigation.navigate({
       routeName: 'addOrEditProduct',
@@ -286,8 +340,6 @@ export class CreateDropScreen extends React.Component<Props, State> {
 
   _toggleTimePicker = () =>
     this.setState({ isTimePickerVisible: !this.state.isTimePickerVisible });
-
-  _handleDatePicked;
 
   removeImage = (key: string) => {
     // show alert prompt
@@ -328,7 +380,7 @@ export class CreateDropScreen extends React.Component<Props, State> {
       <Container>
         <Header>
           <Left style={styles.container}>
-            <NBButton transparent onPress={this.closeModal}>
+            <NBButton transparent onPress={this.closeModalConditional}>
               <Icon name="close" size={28} />
             </NBButton>
           </Left>
@@ -339,7 +391,7 @@ export class CreateDropScreen extends React.Component<Props, State> {
           </Body>
           <Right>
             <NBButton
-              testID="saveButton"
+              testID="sendDropButton"
               transparent
               disabled={!this.isButtonEnabled()}
               style={{ backgroundColor: colors.transparent }}
@@ -355,7 +407,7 @@ export class CreateDropScreen extends React.Component<Props, State> {
         <View>
           <List>
             <List.Item
-              // arrow="horizontal"
+              // thumb={"http://calendar_icon_here.png"}
               extra={
                 <Text onPress={this._toggleTimePicker}>
                   {format(datetime, 'HH:mm')}
@@ -405,7 +457,7 @@ export class CreateDropScreen extends React.Component<Props, State> {
             style={[styles.size, styles.image]}
           />
           <TouchableOpacity
-            onPress={() => this.removeImage(product.key)}
+            onPress={() => !this.state.pending && this.removeImage(product.key)}
             style={styles.closeWrap}
             activeOpacity={0.6}>
             <Text style={styles.closeText}>×</Text>
@@ -441,16 +493,6 @@ export class CreateDropScreen extends React.Component<Props, State> {
 const MARGIN = 1;
 
 const styles = StyleSheet.create({
-  // imageContainer: {
-  //   borderColor: colors.grey3,
-  //   borderWidth: 3 / PixelRatio.get(),
-  //   justifyContent: 'center',
-  //   alignItems: 'center',
-  // },
-  // image: {
-  //   width: width / 6,
-  //   height: width / 6,
-  // },
   closeWrap: {
     width: 16,
     height: 16,

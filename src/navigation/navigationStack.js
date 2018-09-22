@@ -44,6 +44,9 @@ export const StackNav = StackNavigator(
     },
     createDrop: {
       screen: CreateDrop,
+      navigationOptions: {
+        gesturesEnabled: false,
+      },
     },
     addReview: { screen: AddReview },
     reviews: { screen: Reviews },

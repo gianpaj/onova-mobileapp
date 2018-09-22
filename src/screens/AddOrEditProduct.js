@@ -65,6 +65,12 @@ const CAMERA = I18n.t('add_or_edit_item.select_photo_source_camera');
 const GALLERY = I18n.t('add_or_edit_item.select_photo_source_gallery');
 const CANCEL = I18n.t('add_or_edit_item.select_photo_source_cancel');
 
+type Image = {
+  url: string,
+  id: number,
+  isUploading: boolean,
+};
+
 type Props = {
   dispatch: Dispatch,
   navigation?: NavigationScreenProp<*>,
@@ -77,12 +83,11 @@ type State = {
   descriptionFocused: boolean,
   grp_1: number,
   grp_2: number,
-  images: Array<any>,
+  images: Array<Image>,
   inEditMode: boolean,
   isUploading: boolean,
   numberOfBrands: number,
   order: Array<number>,
-  pending: boolean,
   price: string,
   priceFocused: boolean,
   progress: number,
@@ -102,7 +107,6 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     isUploading: false,
     numberOfBrands: 0,
     order: [],
-    pending: false,
     price: '',
     priceFocused: false,
     progress: 0,
@@ -135,17 +139,15 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
         uuid: item.uuid,
       });
     }
-    // this.selectPhotoTapped(0);
+    this.selectPhotoTapped(0);
   }
 
   selectPhotoTapped = (i: number = 0, multiple: boolean = true) => {
-    if (this.state.pending) return;
-
     if (global.__TESTING__) {
       return ImagePicker.openPicker()
         .then(() => {
           const url =
-            'https://storage.googleapis.com/temp-uploads.onova.co/1533146500579-.jpeg';
+            'https://storage.googleapis.com/temp-uploads.onova.co/1537607915827.jpg';
           this.appendSinglePhoto(url, i);
         })
         .catch(() => this.closeModalConditional());
@@ -273,14 +275,41 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     });
   };
 
+  hasUnsavedChanges(): boolean {
+    const { description, images, price, tags } = this.state;
+    if (
+      description.length > 0 ||
+      images.length > 0 ||
+      price.length > 0 ||
+      tags.length > 0
+    ) {
+      return true;
+    }
+    return false;
+  }
+
   closeModal = () => {
     this.props.navigation.goBack();
   };
 
   closeModalConditional = () => {
-    const { inEditMode, images } = this.state;
-    if (!inEditMode && images.length === 0 /* && fields.touched() */) {
-      this.props.navigation.goBack();
+    const { inEditMode } = this.state;
+    if (!inEditMode /* && fields.touched() */) {
+      if (this.hasUnsavedChanges()) {
+        ui.showConfirmAlert(
+          I18n.t('profile.alert_unsaved_changes_title'),
+          I18n.t('profile.alert_unsaved_changes_body'),
+          () => {
+            // on continue
+            this.closeModal();
+          },
+          () => {},
+          I18n.t('profile.alert_unsaved_changes_button_cancel'),
+          I18n.t('profile.alert_unsaved_changes_button_confirm')
+        );
+      } else {
+        this.closeModal();
+      }
     }
   };
 
@@ -297,12 +326,10 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
       uuid,
     } = this.state;
 
-    this.setState({ pending: true, tagsText: '' });
-
     const data: any = {
       categoryIds: grp_1.toString(),
       description: description.trim(),
-      photos: JSON.stringify(images.map(i => i.url)),
+      photos: images.map(i => i.url),
       price: price,
       tags: JSON.stringify(tags),
       typeIds: grp_2.toString(),
@@ -313,13 +340,8 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
       if (inEditMode) {
         res = await this.uploadEditedProduct(uuid, data);
       } else {
-        if (!location) {
-          throw Error('location is required');
-        }
-        data.latitude = location.latitude.toString();
-        data.longitude = location.longitude.toString();
 
-        res = await this.uploadNewProduct(data);
+        this.props.navigation.state.params.returnData(data);
       }
       this.props.dispatch(enableRefresh());
       this.closeModal();
@@ -328,13 +350,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
       console.debug(err);
       ui.showToast(err.message, 'warning');
     }
-    this.setState({ pending: false });
     Toast.hide();
-  };
-
-  uploadNewProduct = (data: any): Promise<any> => {
-    const { token } = this.props;
-    return api.post('/api/products', data, { token, timeout: 30000 });
   };
 
   uploadEditedProduct = (uuid: string, data: any): Promise<any> => {
@@ -415,15 +431,12 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     // const pricePattern = /^\d+(\.\d{2})?$/;
     // const tagsPattern = /^(\b[a-z][a-z0-9]*)$/i;
 
-    const imgs = this.state.images;
+    const { images } = this.state;
     // return true if all of these are true
     return (
       // if all the images have been uploaded
-      imgs.filter((i: any) => i.isUploading === false).length === imgs.length &&
-      // location
-      (this.state.inEditMode || this.state.location !== null) &&
-      // If the item is uploading is NOT in progress
-      !this.state.pending &&
+      images.filter((i: any) => i.isUploading === false).length ===
+        images.length &&
       // If the price is not empty
       this.state.price !== '' &&
       // if the description doesn't exceed the maximum length
@@ -437,29 +450,6 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     );
   }
 
-  /*renderSquare(e, i) {
-    const uri = this.state.images[i];
-
-    return (
-      <TouchableOpacity
-        key={i}
-        onPress={() => !this.state.pending && this.selectPhotoTapped(i)}>
-        <View
-          style={[
-            styles.image,
-            styles.imageContainer,
-            { marginBottom: 20, borderRightWidth: 0 },
-          ]}>
-          {uri ? (
-            <Image style={styles.image} source={{ uri }} />
-          ) : (
-            <Text>Select a Photo</Text>
-          )}
-        </View>
-      </TouchableOpacity>
-    );
-  }*/
-
   onImageChange = (images: Array<any>) => {
     this.setState({ images }, () => this.closeModalConditional());
   };
@@ -467,7 +457,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
   onChangeDescription = (t: string) => this.setState({ description: t });
 
   shouldShowNoticeBar() {
-    return this.props.userData.accountStatus == 'notverified';
+    return this.props.userData.accountStatus === 'notverified';
   }
 
   render() {
@@ -479,7 +469,6 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
       images,
       inEditMode,
       isUploading,
-      pending,
       price,
       priceFocused,
       tags,
@@ -492,7 +481,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
       <Container>
         <Header>
           <Left style={styles.container}>
-            <NBButton transparent onPress={this.closeModal}>
+            <NBButton transparent onPress={this.closeModalConditional}>
               <Icon name="close" size={28} />
             </NBButton>
           </Left>
@@ -538,7 +527,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
               onImageClick={i => this.selectPhotoTapped(i, false)}
               onAddImageClick={() => this.selectPhotoTapped(images.length)}
               selectable={images.length < 6}
-              enabled={!pending && !isUploading}
+              enabled={!isUploading}
               onChange={this.onImageChange}
               onChangeOrder={array => {
                 const order = array.map(e => parseInt(e));
@@ -559,7 +548,6 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
               autoCorrect={false}
               clearButtonMode="while-editing"
               containerStyle={styles.inputContainer}
-              editable={!pending}
               inputStyle={styles.input}
               keyboardType="numeric"
               maxLength={8} // 10000.99
@@ -572,7 +560,6 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
                 testID="price"
                 autoCorrect={false}
                 clearButtonMode="while-editing"
-                editable={!pending}
                 error={priceFocused && price.trim().length < 1}
                 last
                 maxLength={8} // 10000.99
@@ -588,7 +575,6 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
             </FormLabel>
             <TextareaItem
               testID="description"
-              editable={!pending}
               style={styles.inputContainerNew}
               last // to set borderBottomWidth=0
               containerStyle={{ borderBottomWidth: 5, marginRight: 12 }}
@@ -609,7 +595,6 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
             <TagInput
               inputDefaultWidth={140}
               maxHeight={2000}
-              editable={!pending}
               labelExtractor={tag => tag}
               onChange={this.changeTags}
               onChangeText={this.changeTagsTest}
@@ -634,7 +619,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
                     labelHorizontal
                     labelStyle={styles.radioButtonLabel}
                     obj={option}
-                    onPress={grp_1 => !pending && this.setState({ grp_1 })}
+                    onPress={grp_1 => this.setState({ grp_1 })}
                   />
                   <RadioButtonInput
                     testID={`grp_1_input_${i}`}
@@ -647,7 +632,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
                     index={i}
                     isSelected={grp_1 === i}
                     obj={option}
-                    onPress={grp_1 => !pending && this.setState({ grp_1 })}
+                    onPress={grp_1 => this.setState({ grp_1 })}
                   />
                 </RadioButton>
               ))}
@@ -663,7 +648,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
                     labelHorizontal
                     labelStyle={styles.radioButtonLabel}
                     obj={option}
-                    onPress={grp_2 => !pending && this.setState({ grp_2 })}
+                    onPress={grp_2 => this.setState({ grp_2 })}
                   />
                   <RadioButtonInput
                     testID={`grp_2_input_${i}`}
@@ -676,7 +661,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
                     index={i}
                     isSelected={grp_2 == i}
                     obj={option}
-                    onPress={grp_2 => !pending && this.setState({ grp_2 })}
+                    onPress={grp_2 => this.setState({ grp_2 })}
                   />
                 </RadioButton>
               ))}
@@ -689,16 +674,6 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
 }
 
 const styles = StyleSheet.create({
-  // imageContainer: {
-  //   borderColor: colors.grey3,
-  //   borderWidth: 3 / PixelRatio.get(),
-  //   justifyContent: 'center',
-  //   alignItems: 'center',
-  // },
-  // image: {
-  //   width: width / 6,
-  //   height: width / 6,
-  // },
   noticeBar: {
     color: colors.grey2,
     textAlign: 'center',

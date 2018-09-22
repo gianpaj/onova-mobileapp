@@ -5,7 +5,7 @@ import { Platform } from 'react-native';
 import { TabNavigator } from 'react-navigation';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-import { Home, AddOrEditProduct, ChatRooms, Profile, Search } from '../screens';
+import { Home, CreateDrop, ChatRooms, Profile, Search } from '../screens';
 import colors from '../config/colors';
 
 import TabBarComponent from './TabBarComponent';
@@ -15,7 +15,7 @@ const isiOS = Platform.OS === 'ios';
 const routeConfiguration = {
   home: { screen: Home },
   search: { screen: Search },
-  new: { screen: AddOrEditProduct },
+  new: { screen: CreateDrop },
   orders: { screen: ChatRooms },
   profile: { screen: Profile },
 };

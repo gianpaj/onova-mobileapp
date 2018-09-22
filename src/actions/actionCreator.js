@@ -258,9 +258,9 @@ const checkLogin = (userData: UserData, token: string) => (
     });
 };
 
-const signup = (data: SignupData) => (dispatch: Dispatch) => (
-  dispatch({ type: SIGNUP_PENDING }),
-  Toast.loading('', 30),
+const signup = (data: SignupData) => (dispatch: Dispatch) => {
+  dispatch({ type: SIGNUP_PENDING });
+  Toast.loading('', 30);
   api
     .post('/api/users', {
       username: data.username,
@@ -305,8 +305,8 @@ const signup = (data: SignupData) => (dispatch: Dispatch) => (
         dispatch({ type: SIGNUP_FAIL });
         throw err;
       }
-    })
-);
+    });
+};
 
 const getPersonalUserData = (options?: Options = {}) => (
   dispatch: Dispatch,

@@ -363,15 +363,16 @@ export class CreateDropScreen extends React.Component<Props, State> {
 
     if (isLoading) return null;
 
-    if (products.length < 9) {
-      let emptyProducts = [];
-      emptyProducts.push({
+    // if (products.length < 9) {
+    const next = [
+      {
         uploaded: false,
         key: products.length + 1,
         next: true,
-      });
-      products = [...products, ...emptyProducts];
-    }
+      },
+    ];
+    products = [...products, ...next];
+    // }
 
     return (
       <Container>
@@ -403,17 +404,32 @@ export class CreateDropScreen extends React.Component<Props, State> {
         </Header>
         <View>
           <List>
-            <List.Item
-              // thumb={"http://calendar_icon_here.png"}
-              extra={
-                <Text onPress={this._toggleTimePicker}>
-                  {format(datetime, 'HH:mm')}
-                </Text>
-              }>
-              <Text style={{ width: '40%' }} onPress={this._toggleDatePicker}>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'center',
+                marginTop: 10,
+                paddingVertical: 25,
+              }}>
+              <Text
+                style={{
+                  color: colors.black,
+                  paddingHorizontal: 20,
+                  fontSize: 18,
+                }}
+                onPress={this._toggleDatePicker}>
                 {format(datetime, 'D MMM')}
               </Text>
-            </List.Item>
+              <Text
+                style={{
+                  color: colors.black,
+                  paddingHorizontal: 20,
+                  fontSize: 18,
+                }}
+                onPress={this._toggleTimePicker}>
+                {format(datetime, 'HH:mm')}
+              </Text>
+            </View>
             <DateTimePicker
               mode="date"
               isVisible={isDatePickerVisible}
@@ -450,38 +466,31 @@ export class CreateDropScreen extends React.Component<Props, State> {
       {product.uploaded ? (
         <View>
           <Image
-            source={{ uri: product.photos[0].replace('.jpg', '-thumb.jpg') }}
-            style={[styles.size, styles.image]}
+            source={{
+              uri: product.photos[0].replace('.jpg', '-thumb.jpg'),
+            }}
+            style={[styles.size, imagePickerStyle.image]}
           />
           <TouchableOpacity
             onPress={() => !this.state.pending && this.removeImage(product.key)}
             style={styles.closeWrap}
             activeOpacity={0.6}>
-            <Text style={styles.closeText}>×</Text>
+            <Text style={imagePickerStyle.closeText}>×</Text>
           </TouchableOpacity>
         </View>
-      ) : product.next ? (
-        <TouchableOpacity
-          onPress={this.onNewItem}
-          style={[
-            imagePickerStyle.item,
-            styles.size,
-            imagePickerStyle.plusWrap,
-            imagePickerStyle.plusWrapNormal,
-          ]}>
-          <Text style={imagePickerStyle.plusText}>+</Text>
-        </TouchableOpacity>
       ) : (
-        <View
-          style={[
-            imagePickerStyle.item,
-            styles.size,
-            imagePickerStyle.plusWrap,
-            imagePickerStyle.plusWrapNormal,
-            // { borderColor: colors.grey3 },
-          ]}>
-          <Text style={imagePickerStyle.plusText}>.</Text>
-        </View>
+        product.next && (
+          <TouchableOpacity
+            onPress={this.onNewItem}
+            style={[
+              imagePickerStyle.item,
+              styles.size,
+              imagePickerStyle.plusWrap,
+              imagePickerStyle.plusWrapNormal,
+            ]}>
+            <Text style={imagePickerStyle.plusText}>+</Text>
+          </TouchableOpacity>
+        )
       )}
     </View>
   );
@@ -493,11 +502,11 @@ const styles = StyleSheet.create({
   closeWrap: {
     width: 16,
     height: 16,
-    backgroundColor: colors.grey3,
+    backgroundColor: colors.grey2,
     borderRadius: 8,
     position: 'absolute',
-    top: 4 + 5,
-    right: 4 + 5,
+    top: 4 + 7,
+    right: 4 + 7,
     justifyContent: 'center',
     alignItems: 'center',
     overflow: 'hidden',

@@ -26,7 +26,6 @@ export type Props = {
   onChangeOrder: (Array<{}>) => void,
   onImageClick?: (index?: number, files?: Array<{}>) => void,
   selectable?: boolean,
-  styles?: IImagePickerStyle,
 };
 
 type State = {
@@ -40,7 +39,6 @@ export default class ImagePicker extends React.Component<Props, State> {
 
   static defaultProps = {
     selectable: true,
-    styles: StyleSheet.create(imagePickerStyle),
   };
 
   showPicker = () => {
@@ -74,7 +72,7 @@ export default class ImagePicker extends React.Component<Props, State> {
   }
 
   render() {
-    const { files, selectable, enabled, styles, onChangeOrder } = this.props;
+    const { files, selectable, enabled, onChangeOrder } = this.props;
 
     return (
       <View style={styles.container}>
@@ -113,7 +111,7 @@ export default class ImagePicker extends React.Component<Props, State> {
         removeImage={() => {
           if (this.props.enabled) this.removeImage(index);
         }}
-        styles={this.props.styles}
+        styles={styles}
       />
     );
   };
@@ -169,11 +167,11 @@ class Row extends React.Component<RowProps> {
     const { data, styles, removeImage } = this.props;
 
     return (
-      <Animated.View style={[localStyles.row, this._style]}>
+      <Animated.View style={[styles.row, this._style]}>
         {data.isUploading ? (
           <ActivityIndicator
             size="small"
-            style={[styles.size, styles.image, localStyles.loader]}
+            style={[styles.size, styles.image, styles.loader]}
           />
         ) : (
           <View>
@@ -194,7 +192,8 @@ class Row extends React.Component<RowProps> {
   }
 }
 
-const localStyles = StyleSheet.create({
+const styles = StyleSheet.create({
+  ...imagePickerStyle,
   row: {
     flexDirection: 'column',
     alignItems: 'center',

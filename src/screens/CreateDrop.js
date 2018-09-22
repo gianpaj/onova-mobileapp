@@ -14,7 +14,8 @@ import {
   View,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { List, Toast } from 'antd-mobile-rn';
+import { Toast } from 'antd-mobile-rn';
+import { List, ListItem } from 'native-base';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import Permissions from 'react-native-permissions';
 import RNAndroidLocationEnabler from 'react-native-android-location-enabler';
@@ -27,7 +28,7 @@ import {
   Right,
   Title,
 } from 'native-base';
-import { format, setHours, setDate, setDay } from 'date-fns';
+import { format } from 'date-fns';
 
 import colors from '../config/colors';
 import { Header } from '../components';
@@ -128,8 +129,8 @@ export class CreateDropScreen extends React.Component<Props, State> {
 
   alertForPermission(response: string) {
     Alert.alert(
-      I18n.t('add_or_edit_item.permission_title'),
-      I18n.t('add_or_edit_item.permission_message'),
+      I18n.t('create_drop.permission_title'),
+      I18n.t('create_drop.permission_message'),
       [
         {
           text: I18n.t('profile.alert_unsaved_changes_button_cancel'),
@@ -145,7 +146,7 @@ export class CreateDropScreen extends React.Component<Props, State> {
               onPress: this.requestPermission,
             }
           : {
-              text: I18n.t('add_or_edit_item.permission_alert_button_settings'),
+              text: I18n.t('create_drop.permission_alert_button_settings'),
               onPress: () => {
                 if (Platform.OS === 'android') {
                   RNAndroidLocationEnabler.promptForEnableLocationIfNeeded({
@@ -255,7 +256,7 @@ export class CreateDropScreen extends React.Component<Props, State> {
   onSendDrop = async () => {
     const { datetime, products, location } = this.state;
     const { token } = this.props;
-    Toast.loading(I18n.t('add_or_edit_item.toast_uploading'), 30);
+    Toast.loading(I18n.t('alerts.toast_uploading'), 30);
     this.setState({ pending: true });
 
     const productsReady = products.filter(i => i.uploaded === true);
@@ -363,16 +364,12 @@ export class CreateDropScreen extends React.Component<Props, State> {
     if (isLoading) return null;
 
     if (products.length < 9) {
-      const emptyToAdd = 9 - products.length;
       let emptyProducts = [];
       emptyProducts.push({
         uploaded: false,
         key: products.length + 1,
         next: true,
       });
-      for (let i = 0; i < emptyToAdd - 1; i++) {
-        emptyProducts.push({ uploaded: false, key: products.length + i });
-      }
       products = [...products, ...emptyProducts];
     }
 
@@ -381,7 +378,7 @@ export class CreateDropScreen extends React.Component<Props, State> {
         <Header>
           <Left style={styles.container}>
             <NBButton transparent onPress={this.closeModalConditional}>
-              <Icon name="close" size={28} />
+              <Icon color={colors.black} name="close" size={28} />
             </NBButton>
           </Left>
           <Body style={styles.container}>
@@ -392,13 +389,13 @@ export class CreateDropScreen extends React.Component<Props, State> {
           <Right>
             <NBButton
               testID="sendDropButton"
-              transparent
               disabled={!this.isButtonEnabled()}
               style={{ backgroundColor: colors.transparent }}
+              transparent
               onPress={this.onSendDrop}>
               <Icon
                 name="check"
-                style={!this.isButtonEnabled() && { color: colors.grey4 }}
+                color={this.isButtonEnabled() ? colors.black : colors.grey4}
                 size={28}
               />
             </NBButton>
@@ -414,7 +411,7 @@ export class CreateDropScreen extends React.Component<Props, State> {
                 </Text>
               }>
               <Text style={{ width: '40%' }} onPress={this._toggleDatePicker}>
-                {format(datetime, 'D MMM YYYY')}
+                {format(datetime, 'D MMM')}
               </Text>
             </List.Item>
             <DateTimePicker

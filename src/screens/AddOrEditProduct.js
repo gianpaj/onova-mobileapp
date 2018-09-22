@@ -196,7 +196,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
   appendPhoto(response: Array<any> | any, i: number) {
     if (response.length) {
       if (response.length + this.state.images.length > MAX_IMAGES) {
-        Toast.fail('An item can have up to 6 images');
+        Toast.fail(I18n.t('add_or_edit_item.too_many_images'));
         return console.debug('too many images');
       }
       for (let j = 0; j < response.length; j++) {
@@ -314,7 +314,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
   };
 
   onAddOrEditItem = async () => {
-    Toast.loading(I18n.t('add_or_edit_item.toast_uploading'), 30);
+    Toast.loading(I18n.t('alerts.toast_uploading'), 30);
     const {
       description,
       grp_1,
@@ -340,7 +340,6 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
       if (inEditMode) {
         res = await this.uploadEditedProduct(uuid, data);
       } else {
-
         this.props.navigation.state.params.returnData(data);
       }
       this.props.dispatch(enableRefresh());
@@ -482,7 +481,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
         <Header>
           <Left style={styles.container}>
             <NBButton transparent onPress={this.closeModalConditional}>
-              <Icon name="close" size={28} />
+              <Icon color={colors.black} name="close" size={28} />
             </NBButton>
           </Left>
           <Body style={styles.container}>
@@ -501,7 +500,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
               onPress={this.onAddOrEditItem}>
               <Icon
                 name="check"
-                style={!this.isButtonEnabled() && { color: colors.grey4 }}
+                color={this.isButtonEnabled() ? colors.black : colors.grey4}
                 size={28}
               />
             </NBButton>

@@ -289,9 +289,11 @@ export class CreateDropScreen extends React.Component<Props, State> {
 
   setDate = (date: Date) => {
     this.setState(prevState => {
-      let datetime = new Date(prevState.datetime).setDate(date.getDate());
-      datetime = new Date(datetime).setMonth(date.getMonth());
-      datetime = new Date(datetime).setFullYear(date.getFullYear());
+      const datetime = new Date(prevState.datetime).setFullYear(
+        date.getFullYear(),
+        date.getMonth(),
+        date.getDate()
+      );
       return { datetime: new Date(datetime) };
     });
     this._toggleDatePicker();
@@ -299,8 +301,10 @@ export class CreateDropScreen extends React.Component<Props, State> {
 
   setTime = (time: Date) => {
     this.setState(prevState => {
-      let datetime = new Date(prevState.datetime).setMinutes(time.getMinutes());
-      datetime = new Date(datetime).setHours(time.getHours());
+      const datetime = new Date(prevState.datetime).setHours(
+        time.getHours(),
+        time.getMinutes()
+      );
       return { datetime: new Date(datetime) };
     });
     this._toggleTimePicker();

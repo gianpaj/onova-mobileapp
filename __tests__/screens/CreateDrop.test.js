@@ -12,7 +12,7 @@ const sleep = ms => {
   return new Promise(resolve => setTimeout(resolve, ms));
 };
 
-describe('CreateDrop screen (inEditMode false)', () => {
+describe('CreateDrop screen', () => {
   describe('initial rendering', () => {
     let root, tree;
     beforeEach(() => {
@@ -29,7 +29,7 @@ describe('CreateDrop screen (inEditMode false)', () => {
       root = tree.root;
     });
 
-    it('at the beginning the Add Item button should NOT be enabled', async () => {
+    it('at the beginning the Create Drop button should NOT be enabled', async () => {
       await sleep(100);
       // $FlowExpectedError
       const { state } = tree.getInstance();

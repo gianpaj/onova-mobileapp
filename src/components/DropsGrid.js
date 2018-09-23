@@ -10,15 +10,15 @@ import {
   FlatList,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
 } from 'react-native';
-import { NavigationActions } from 'react-navigation';
-import { Button } from 'native-base';
+import { Button, List } from 'native-base';
+import { format } from 'date-fns';
 
 import type { NavigationScreenProp } from 'react-navigation';
 
 import { disableRefresh } from '../actions/actionCreator';
+import type { Schedule } from '../types';
 
 import I18n from '../i18n';
 import * as api from '../utils/api';
@@ -37,12 +37,12 @@ type State = {
   hasError: boolean,
   isLoading: boolean,
   isRefreshing: boolean,
-  items: Array<any>,
+  items: Array<Schedule>,
 };
 
 const { width, height } = Dimensions.get('window');
 
-class ImageGridComponent extends React.PureComponent<Props, State> {
+class DropsGridComponent extends React.PureComponent<Props, State> {
   reqTimer = 0;
   firstFocus = true;
   state = {
@@ -103,29 +103,34 @@ class ImageGridComponent extends React.PureComponent<Props, State> {
     return { length: itemHeight, offset: itemHeight * index, index };
   }
 
-  onItemPress(item: any) {
-    const navigateToProduct = NavigationActions.navigate({
-      routeName: 'product',
-      key: `product-${item.uuid}`,
-      params: item,
-    });
-
-    if (this.props.navigation)
-      this.props.navigation.dispatch(navigateToProduct);
-  }
-
   renderItem = ({ item }: any) => {
     const uri = item.photoURIs[0].replace('.jpg', '-thumb.jpg');
     return (
       <View style={styles.imageContainer} key={item.uuid}>
-        <TouchableOpacity
-          style={{ flex: 1 }}
-          onPress={() => this.onItemPress(item)}>
-          <Image style={styles.image} source={{ uri }} />
-        </TouchableOpacity>
+        <Image style={styles.image} source={{ uri }} />
       </View>
     );
   };
+
+  renderDropGrid = ({ item }: any) => (
+    <View>
+      <List>
+        <Text style={styles.dateStrings}>
+          {format(item.products[0].nextRunAt, 'D MMM HH:mm')}
+        </Text>
+      </List>
+      <FlatList
+        data={item.products}
+        columnWrapperStyle={[styles.columnWrapper, { height: width / 3 }]}
+        keyExtractor={this._keyExtractorDrop}
+        getItemLayout={this.getItemLayout}
+        numColumns={3}
+        // $FlowFixMe
+        renderItem={this.renderItem}
+        horizontal={false}
+      />
+    </View>
+  );
 
   renderFooter = () => {
     if (!this.state.isRefreshing) return null;
@@ -147,26 +152,19 @@ class ImageGridComponent extends React.PureComponent<Props, State> {
     return (
       <View style={styles.container}>
         <FlatList
-          columnWrapperStyle={[styles.columnWrapper, { height: width / 3 }]}
           data={items}
-          getItemLayout={this.getItemLayout}
-          initialNumToRender={6}
-          keyExtractor={this._keyExtractor}
           ListEmptyComponent={this.renderEmptyState}
-          numColumns={3}
+          ListFooterComponent={this.renderFooter}
+          // $FlowFixMe
           onRefresh={this.fetchItems}
           refreshing={isLoading}
-          ListFooterComponent={this.renderFooter}
-          renderItem={this.renderItem}
-          style={styles.list}
-          viewabilityConfig={VIEWABILITY_CONFIG}
-          windowSize={6}
+          renderItem={this.renderDropGrid}
         />
       </View>
     );
   }
 
-  _keyExtractor = (item): string => item.uuid;
+  _keyExtractorDrop = (item): string => item.uuid;
 
   renderEmptyState = () => {
     if (this.state.items.length > 1) return null;
@@ -218,7 +216,7 @@ const mapStateToProps = (state: any) => ({
   shouldRefresh: state.RefresherReducer.shouldRefresh,
 });
 
-export default connect(mapStateToProps)(ImageGridComponent);
+export default connect(mapStateToProps)(DropsGridComponent);
 
 const MARGIN = 1;
 
@@ -241,10 +239,6 @@ const styles = StyleSheet.create({
     marginTop: 20,
     minWidth: 260,
   },
-  list: {
-    flex: 1,
-    marginTop: -1,
-  },
   columnWrapper: {
     flex: 1,
     flexDirection: 'row',
@@ -264,5 +258,10 @@ const styles = StyleSheet.create({
     height: height - 250,
     justifyContent: 'center',
     padding: 20,
+  },
+  dateStrings: {
+    color: colors.black,
+    paddingHorizontal: 20,
+    fontSize: 18,
   },
 });

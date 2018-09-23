@@ -209,6 +209,10 @@ export type Review = {
   createdAt: Date,
 };
 
+export type Schedule = {
+  products: Array<Product>,
+};
+
 type TriggeredType = 'User' | 'Product' | 'Order';
 
 export type Notification = {

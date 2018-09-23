@@ -176,10 +176,7 @@ class ImageGridComponent extends React.PureComponent<Props, State> {
     });
   };
 
-  // onLayout = () => this.setState({ itemHeight: width / 3 });
-
   getItemLayout = (data: any, index: number) => {
-    // const { itemHeight } = this.state;
     const itemHeight = width / 3;
     return { length: itemHeight, offset: itemHeight * index, index };
   };

@@ -254,6 +254,7 @@ class ImageGridComponent extends React.PureComponent<Props, State> {
           windowSize={6}
           onEndReached={this.loadMore}
           onEndReachedThreshold={0.1}
+          horizontal={false}
         />
       </View>
     );

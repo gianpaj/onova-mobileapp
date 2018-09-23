@@ -24,12 +24,6 @@ import I18n from '../i18n';
 import * as api from '../utils/api';
 import colors from '../config/colors';
 
-const VIEWABILITY_CONFIG = {
-  minimumViewTime: 3000,
-  viewAreaCoveragePercentThreshold: 100,
-  waitForInteraction: true,
-};
-
 type Props = {
   username: string,
   emptyState?: React.Component<*>,
@@ -44,8 +38,6 @@ type State = {
   isLoading: boolean,
   isRefreshing: boolean,
   items: Array<any>,
-  lastId: string,
-  theEnd: boolean,
 };
 
 const { width, height } = Dimensions.get('window');
@@ -58,8 +50,6 @@ class ImageGridComponent extends React.PureComponent<Props, State> {
     isLoading: false,
     isRefreshing: false,
     items: [],
-    lastId: '',
-    theEnd: false,
   };
 
   componentDidMount() {
@@ -97,21 +87,15 @@ class ImageGridComponent extends React.PureComponent<Props, State> {
       const { data } = await api.get(`/api/products?username=${username}`, {
         token,
       });
-      const lastItem = data[data.length - 1];
-      this.setState({
-        items: data,
-        isLoading: false,
-        isRefreshing: false,
-        lastId: data.length > 0 ? lastItem._id : '',
-      });
+      this.setState({ items: data });
     } catch (err) {
-      this.setState({
-        hasError: true,
-        isLoading: false,
-        isRefreshing: false,
-      });
+      this.setState({ hasError: true });
       console.error(err);
     }
+    this.setState({
+      isLoading: false,
+      isRefreshing: false,
+    });
   };
 
   getItemLayout(data: any, index: number) {
@@ -234,12 +218,7 @@ const mapStateToProps = (state: any) => ({
   shouldRefresh: state.RefresherReducer.shouldRefresh,
 });
 
-export default connect(
-  mapStateToProps,
-  null,
-  null,
-  { withRef: true }
-)(ImageGridComponent);
+export default connect(mapStateToProps)(ImageGridComponent);
 
 const MARGIN = 1;
 

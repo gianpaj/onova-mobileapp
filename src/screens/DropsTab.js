@@ -66,7 +66,7 @@ class DropsTabContainer extends React.Component<Props, {}> {
                     block
                     dark
                     style={styles.searchButton}
-                    onPress={() => navigation.navigate('addOrEditProduct')}>
+                    onPress={() => navigation.navigate('createDrop')}>
                     <Text
                       // eslint-disable-next-line
                       style={{

@@ -620,7 +620,7 @@ class ProfileScreen extends React.Component<Props, State> {
       case 'shop':
         return (
           <ShopTab
-          userid={navigationState._id}
+            userid={navigationState._id}
             navigation={this.props.navigation}
           />
         );

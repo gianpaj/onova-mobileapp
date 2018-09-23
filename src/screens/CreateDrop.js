@@ -15,7 +15,6 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { Toast } from 'antd-mobile-rn';
-import { List, ListItem } from 'native-base';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import Permissions from 'react-native-permissions';
 import RNAndroidLocationEnabler from 'react-native-android-location-enabler';
@@ -25,6 +24,7 @@ import {
   Container,
   Content,
   Left,
+  List,
   Right,
   Title,
 } from 'native-base';
@@ -255,6 +255,9 @@ export class CreateDropScreen extends React.Component<Props, State> {
 
   onSendDrop = async () => {
     const { datetime, products, location } = this.state;
+    if (!location) {
+      return this.alertForPermission('denied');
+    }
     const { token } = this.props;
     Toast.loading(I18n.t('alerts.toast_uploading'), 30);
     this.setState({ pending: true });
@@ -408,29 +411,11 @@ export class CreateDropScreen extends React.Component<Props, State> {
         </Header>
         <View>
           <List>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'center',
-                marginTop: 10,
-                paddingVertical: 25,
-              }}>
-              <Text
-                style={{
-                  color: colors.black,
-                  paddingHorizontal: 20,
-                  fontSize: 18,
-                }}
-                onPress={this._toggleDatePicker}>
+            <View style={styles.datesContainer}>
+              <Text style={styles.dateStrings} onPress={this._toggleDatePicker}>
                 {format(datetime, 'D MMM')}
               </Text>
-              <Text
-                style={{
-                  color: colors.black,
-                  paddingHorizontal: 20,
-                  fontSize: 18,
-                }}
-                onPress={this._toggleTimePicker}>
+              <Text style={styles.dateStrings} onPress={this._toggleTimePicker}>
                 {format(datetime, 'HH:mm')}
               </Text>
             </View>
@@ -534,6 +519,17 @@ const styles = StyleSheet.create({
   list: {
     flex: 1,
     marginTop: -1,
+  },
+  datesContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginTop: 10,
+    paddingVertical: 25,
+  },
+  dateStrings: {
+    color: colors.black,
+    paddingHorizontal: 20,
+    fontSize: 18,
   },
   size: {
     width: width / 3 - 20,

@@ -5,7 +5,7 @@ import { Dimensions, StyleSheet, Text, View } from 'react-native';
 import { Button as NBButton } from 'native-base';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import { ImageGrid } from '../components';
+import { DropsGrid } from '../components';
 import colors from '../config/colors';
 import I18n from '../i18n';
 
@@ -16,10 +16,10 @@ const { height } = Dimensions.get('window');
 type Props = {
   userData: UserData,
   navigation: NavigationScreenProp<*>,
-  userid: string,
+  username: string,
 };
 
-class ShopTabContainer extends React.Component<Props, {}> {
+class DropsTabContainer extends React.Component<Props, {}> {
   imageGrid;
 
   constructor(props) {
@@ -37,14 +37,14 @@ class ShopTabContainer extends React.Component<Props, {}> {
   }
 
   render() {
-    const { navigation, userid } = this.props;
+    const { navigation, username } = this.props;
 
     return (
       <View style={styles.flex1}>
-        <ImageGrid
+        <DropsGrid
           focused
           ref={this.imageGrid}
-          apiURL={`/api/products?userid=${userid}`}
+          username={username}
           navigation={navigation}
           emptyState={
             <View style={styles.emptyContainer}>
@@ -119,4 +119,4 @@ const mapStateToProps: any = (state: ReduxState) => ({
   userData: state.LoginReducer.data,
 });
 
-export default connect(mapStateToProps)(ShopTabContainer);
+export default connect(mapStateToProps)(DropsTabContainer);

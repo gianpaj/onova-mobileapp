@@ -34,6 +34,7 @@ import I18n from '../i18n';
 
 import { Avatar, EditableText, Header, NotificationsDot } from '../components';
 import ShopTab from './ShopTab';
+import DropsTab from './DropsTab';
 import { getPersonalUserData, enableRefresh } from '../actions/actionCreator';
 
 import typography from '../config/typography';
@@ -614,10 +615,31 @@ class ProfileScreen extends React.Component<Props, State> {
     />
   );
 
+  _renderScene = ({ route, navigationState }) => {
+    switch (route.key) {
+      case 'shop':
+        return (
+          <ShopTab
+          userid={navigationState._id}
+            navigation={this.props.navigation}
+          />
+        );
+      case 'drops':
+        return (
+          <DropsTab
+            username={navigationState.username}
+            navigation={this.props.navigation}
+          />
+        );
+      default:
+        return null;
+    }
+  };
+
   _handleIndexChange = index => this.setState({ index });
 
   render() {
-    const { _id, username, isFetching } = this.state;
+    const { username, isFetching } = this.state;
 
     const { navigation, userData } = this.props;
 

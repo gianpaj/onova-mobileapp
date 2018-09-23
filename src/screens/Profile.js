@@ -18,37 +18,36 @@ import {
   Body,
   Button as NBButton,
   Container,
-  Content,
   Icon as NBIcon,
   Left,
   Right,
   Title,
 } from 'native-base';
 import { NavigationActions } from 'react-navigation';
+import { TabView, TabBar } from 'react-native-tab-view';
 import type { NavigationScreenProp } from 'react-navigation';
 // import { Button } from 'react-native-elements';
 import { Modal, NoticeBar, Toast } from 'antd-mobile-rn';
 import Analytics from 'react-native-analytics-segment-io';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import I18n from '../i18n';
-import typography from '../config/typography';
 
-import {
-  Avatar,
-  EditableText,
-  Header,
-  ImageGrid,
-  NotificationsDot,
-} from '../components';
+import { Avatar, EditableText, Header, NotificationsDot } from '../components';
+import ShopTab from './ShopTab';
 import { getPersonalUserData, enableRefresh } from '../actions/actionCreator';
 
+import typography from '../config/typography';
 import colors from '../config/colors';
 import settings from '../config/settings';
 import * as api from '../utils/api';
 import * as ui from '../utils/ui';
 
 import type { UserData, Dispatch, ReduxState } from '../types';
+
+const initialLayout = {
+  height: 0,
+  width: Dimensions.get('window').width,
+};
 
 type Props = {
   dispatch: Dispatch,
@@ -73,6 +72,8 @@ type State = {
   rateAvg: number,
   reviewsCount: number,
   username: string,
+  index: number,
+  routes: Array<any>,
 };
 
 const defaultState = {
@@ -90,19 +91,17 @@ const defaultState = {
   rateAvg: -1,
   reviewsCount: -1,
   username: '',
+  index: 0,
+  routes: [
+    { key: 'shop', title: I18n.t('profile.shop_tab') },
+    { key: 'drops', title: I18n.t('profile.drops_tab') },
+  ],
 };
 
-const { height } = Dimensions.get('window');
 const { isProd } = api;
 
 class ProfileScreen extends React.Component<Props, State> {
   state = { ...defaultState };
-  imageGrid;
-
-  constructor(props) {
-    super(props);
-    this.imageGrid = React.createRef();
-  }
 
   static navigationOptions = () => ({
     tabBarIcon: (props: any) => <NotificationsDot {...props} />,
@@ -172,16 +171,6 @@ class ProfileScreen extends React.Component<Props, State> {
           .catch(e => reject(e));
       }
     });
-  };
-
-  onRefresh = () => {
-    this.setState({ isRefreshing: true });
-
-    let Promises = [];
-    Promises.push(this.refresh());
-    if (this.imageGrid && this.imageGrid.current.getWrappedInstance)
-      Promises.push(this.imageGrid.current.getWrappedInstance().fetchItems());
-    Promise.all(Promises).then(() => this.setState({ isRefreshing: false }));
   };
 
   componentDidMount() {
@@ -462,22 +451,6 @@ class ProfileScreen extends React.Component<Props, State> {
         <TouchableOpacity onPress={this.goToReviews} style={styles.alignCenter}>
           <Text style={styles.numbers}>{this.state.reviewsCount}</Text>
           <Text style={styles.label}>{I18n.t('profile.reviews_label')}</Text>
-          {/* <StarRating
-            // eslint-disable-next-line
-            buttonStyle={{ paddingHorizontal: 0 }}
-            // eslint-disable-next-line
-            containerStyle={{ alignSelf: 'center' }}
-            disabled
-            emptyStar={
-              Platform.OS == 'ios' ? 'ios-star-outline' : 'md-star-outline'
-            }
-            emptyStarColor={colors.yellow}
-            fullStar={Platform.OS == 'ios' ? 'ios-star' : 'md-star'}
-            fullStarColor={colors.yellow}
-            iconSet="Ionicons"
-            rating={this.state.rateAvg}
-            starSize={25}
-          /> */}
         </TouchableOpacity>
         <TouchableOpacity
           onPress={this.goToFollowers}
@@ -630,6 +603,19 @@ class ProfileScreen extends React.Component<Props, State> {
     if (isProd) Analytics.track('press_share_profile');
   };
 
+  _renderTabBar = props => (
+    <TabBar
+      {...props}
+      // scrollEnabled
+      indicatorStyle={styles.indicator}
+      style={styles.tabbar}
+      // tabStyle={styles.tab}
+      labelStyle={styles.tabBarlabel}
+    />
+  );
+
+  _handleIndexChange = index => this.setState({ index });
+
   render() {
     const { _id, username, isFetching } = this.state;
 
@@ -682,68 +668,25 @@ class ProfileScreen extends React.Component<Props, State> {
             )}
           </Right>
         </Header>
-        <Content
-          refreshControl={
-            <RefreshControl
-              refreshing={this.state.isRefreshing}
-              onRefresh={this.onRefresh}
-            />
-          }>
-          <View>
-            {this.shouldShowNoticeBar() && (
-              <NoticeBar
-                marqueeProps={{ loop: false, style: styles.noticeBar }}
-                icon={false}>
-                {I18n.t('profile.notice_bar')}
-              </NoticeBar>
-            )}
-            {this.renderProfileTop()}
-          </View>
-          {_id !== '' && (
-            <ImageGrid
-              focused
-              ref={this.imageGrid}
-              apiURL={`/api/products?userid=${_id}`}
-              navigation={navigation}
-              emptyState={
-                <View style={styles.emptyContainer}>
-                  {this.isMe() ? (
-                    <View>
-                      <MaterialCommunityIcons
-                        size={48}
-                        name={'cash-100'}
-                        color={colors.grey2}
-                        style={styles.emptyStateIcon}
-                      />
-                      <Text style={styles.boldText}>
-                        {I18n.t('profile.empty_state_title')}
-                      </Text>
-                      <Text style={styles.centerText}>
-                        {I18n.t('profile.empty_state_message_mine')}
-                      </Text>
-                      <NBButton
-                        block
-                        dark
-                        style={styles.searchButton}
-                        onPress={() => navigation.navigate('addOrEditProduct')}>
-                        <Text
-                          // eslint-disable-next-line
-                          style={{
-                            fontSize: 16,
-                            color: colors.white,
-                          }}>
-                          {I18n.t('profile.empty_state_button_mine')}
-                        </Text>
-                      </NBButton>
-                    </View>
-                  ) : (
-                    <Text>{I18n.t('profile.empty_state_message_others')}</Text>
-                  )}
-                </View>
-              }
-            />
+        <View>
+          {this.shouldShowNoticeBar() && (
+            <NoticeBar
+              marqueeProps={{ loop: false, style: styles.noticeBar }}
+              icon={false}>
+              {I18n.t('profile.notice_bar')}
+            </NoticeBar>
           )}
-        </Content>
+          {this.renderProfileTop()}
+        </View>
+        <TabView
+          testID="Tabs"
+          navigationState={this.state}
+          renderScene={this._renderScene}
+          renderTabBar={this._renderTabBar}
+          onIndexChange={this._handleIndexChange}
+          initialLayout={initialLayout}
+          useNativeDriver
+        />
       </Container>
     );
   }
@@ -820,26 +763,15 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     width: '34.5%',
   },
-  emptyContainer: {
-    alignItems: 'center',
-    flex: 1,
-    height: height - 350,
-    justifyContent: 'center',
-    padding: 20,
+  indicator: {
+    backgroundColor: colors.primary,
   },
-  emptyStateIcon: {
-    alignSelf: 'center',
-    marginBottom: 30,
+  tabBarlabel: {
+    color: colors.black,
+    fontWeight: '400',
   },
-  boldText: {
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  centerText: {
-    marginTop: 5,
-  },
-  searchButton: {
-    marginTop: 20,
+  tabbar: {
+    backgroundColor: colors.white,
   },
 });
 

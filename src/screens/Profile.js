@@ -745,10 +745,10 @@ const styles = StyleSheet.create({
     // elevation: 0.5, // android
     paddingHorizontal: 10,
     paddingTop: 10,
-    shadowColor: colors.black,
-    shadowOffset: { height: 0.5 },
-    shadowOpacity: 0.1,
-    shadowRadius: 0.5,
+    // shadowColor: colors.black,
+    // shadowOffset: { height: 0.5 },
+    // shadowOpacity: 0.1,
+    // shadowRadius: 0.5,
     zIndex: 1,
   },
   userNumbers: {

@@ -28,6 +28,7 @@ class IntroScreens extends Component<Props> {
         bottomBarHighlight={false}
         DoneButtonComponent={() => (
           <MaterialIcons
+            color={colors.black}
             name="check"
             size={36}
             style={{ left: -10 }}

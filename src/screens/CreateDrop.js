@@ -317,12 +317,11 @@ export class CreateDropScreen extends React.Component<Props, State> {
   };
 
   returnData = (product: Product) => {
-    console.log(product);
     this.setState(prevState => {
       return {
         products: [
-          { ...product, uploaded: true, key: prevState.products.length + 1 },
           ...prevState.products,
+          { ...product, uploaded: true, key: prevState.products.length + 1 },
         ],
       };
     });

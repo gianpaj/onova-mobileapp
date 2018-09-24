@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import { connect } from 'react-redux';
-import { Dimensions, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import { Button as NBButton } from 'native-base';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -10,8 +10,6 @@ import colors from '../config/colors';
 import I18n from '../i18n';
 
 import type { UserData, ReduxState } from '../types';
-
-const { height } = Dimensions.get('window');
 
 type Props = {
   userData: UserData,
@@ -95,9 +93,8 @@ const styles = StyleSheet.create({
   emptyContainer: {
     alignItems: 'center',
     flex: 1,
-    height: height - 350,
     justifyContent: 'center',
-    padding: 20,
+    padding: 40,
   },
   emptyStateIcon: {
     alignSelf: 'center',

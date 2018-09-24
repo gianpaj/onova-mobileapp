@@ -57,10 +57,10 @@ class DropsTabContainer extends React.Component<Props, {}> {
                     style={styles.emptyStateIcon}
                   />
                   <Text style={styles.boldText}>
-                    {I18n.t('profile.empty_state_title')}
+                    {I18n.t('drops_grid.empty_state_title')}
                   </Text>
                   <Text style={styles.centerText}>
-                    {I18n.t('profile.empty_state_message_mine')}
+                    {I18n.t('drops_grid.empty_state_message_mine')}
                   </Text>
                   <NBButton
                     block
@@ -73,12 +73,12 @@ class DropsTabContainer extends React.Component<Props, {}> {
                         fontSize: 16,
                         color: colors.white,
                       }}>
-                      {I18n.t('profile.empty_state_button_mine')}
+                      {I18n.t('drops_grid.empty_state_button_mine')}
                     </Text>
                   </NBButton>
                 </View>
               ) : (
-                <Text>{I18n.t('profile.empty_state_message_others')}</Text>
+                <Text>{I18n.t('drops_grid.empty_state_message_others')}</Text>
               )}
             </View>
           }
@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
   },
   emptyStateIcon: {
     alignSelf: 'center',
-    marginBottom: 30,
+    marginBottom: 15,
   },
   boldText: {
     fontWeight: 'bold',

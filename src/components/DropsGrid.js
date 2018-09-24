@@ -18,19 +18,19 @@ import { format } from 'date-fns';
 import type { NavigationScreenProp } from 'react-navigation';
 
 import { disableRefresh } from '../actions/actionCreator';
-import type { Schedule } from '../types';
+import type { Schedule, Product } from '../types';
 
 import I18n from '../i18n';
 import * as api from '../utils/api';
 import colors from '../config/colors';
 
 type Props = {
-  username: string,
-  emptyState?: React.Component<*>,
+  emptyState: React.Node,
   focused: boolean,
   navigation?: NavigationScreenProp<*>,
   shouldRefresh?: boolean,
   token?: string,
+  username: string,
 };
 
 type State = {
@@ -103,7 +103,7 @@ class DropsGridComponent extends React.PureComponent<Props, State> {
     return { length: itemHeight, offset: itemHeight * index, index };
   }
 
-  renderItem = ({ item }: any) => {
+  renderItem = ({ item }: { item: Product }) => {
     const uri = item.photoURIs[0].replace('.jpg', '-thumb.jpg');
     return (
       <View style={styles.imageContainer} key={item.uuid}>
@@ -177,31 +177,7 @@ class DropsGridComponent extends React.PureComponent<Props, State> {
       );
     }
 
-    if (this.props.emptyState) return this.props.emptyState;
-
-    return (
-      <View style={styles.emptyContainer}>
-        <Text style={styles.boldText}>
-          {I18n.t('image_grid.empty_state_title')}
-        </Text>
-        <Text style={styles.centerText}>
-          {I18n.t('image_grid.empty_state_body')}
-        </Text>
-        <Button
-          block
-          style={styles.searchButton}
-          onPress={() => this.props.navigation.navigate('search')}>
-          <Text
-            // eslint-disable-next-line
-            style={{
-              fontSize: 16,
-              color: colors.white,
-            }}>
-            {I18n.t('image_grid.empty_state_button')}
-          </Text>
-        </Button>
-      </View>
-    );
+    return this.props.emptyState;
   };
 
   renderLoading = () => (
@@ -226,18 +202,9 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
   },
-  boldText: {
-    fontWeight: 'bold',
-  },
   centerText: {
     marginTop: 5,
     textAlign: 'center',
-  },
-  searchButton: {
-    alignSelf: 'center',
-    backgroundColor: colors.primary,
-    marginTop: 20,
-    minWidth: 260,
   },
   columnWrapper: {
     flex: 1,
@@ -252,12 +219,6 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     alignItems: 'stretch',
-  },
-  emptyContainer: {
-    alignItems: 'center',
-    height: height - 250,
-    justifyContent: 'center',
-    padding: 20,
   },
   dateStrings: {
     color: colors.black,

@@ -46,7 +46,7 @@ const LIMIT = 48; // divisible by 3
 
 type Props = {
   apiURL: string,
-  emptyState?: React.Component<*>,
+  emptyState?: React.Node,
   focused: boolean,
   navigation?: NavigationScreenProp<*>,
   shouldRefresh?: boolean,

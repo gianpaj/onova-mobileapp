@@ -10,13 +10,11 @@ export default {
     step_2: {
       title: 'Add Items',
       subtitle: `Use onova.co/uploader to upload items faster from your computer
-
  `,
     },
     step_3: {
       title: 'Information',
       subtitle: `If you have any questions, contact @onova user
-
 
  `,
     },
@@ -107,6 +105,7 @@ http://onova.co/uploader
     action_button_delete: 'Delete',
     action_button_edit: 'Edit',
     action_button_report: 'Report',
+    toast_uploading: 'Uploading...',
   },
   search: {
     header: 'Search',
@@ -134,19 +133,33 @@ http://onova.co/uploader
     image_processing: 'Loading images',
     edit_item_header: 'Edit Item',
     price_label: 'Price:',
-    price_placeholder: '123 UAH',
+    price_placeholder: '0 UAH',
     description_label: 'Description:',
     description_placeholder:
       'Please provide details such as brand, size and condition about the item',
     hashtags_label: '#tags:',
-    hashtags_placeholder: 'adidas, summer',
-    toast_uploading: 'Uploading...',
+    hashtags_placeholder: 'adidas, 43',
     select_photo_source_camera: 'Camera',
     select_photo_source_gallery: 'Gallery',
     select_photo_source_cancel: 'Cancel',
+    too_many_images: 'An item can have up to 6 images',
+  },
+  create_drop: {
+    title: 'Create Drop',
+    ok: 'OK',
+    cancel: 'Cancel',
+    select: 'Select a date when you want the drop',
+    success: 'Your drop has been scheduled!',
     permission_title: 'Can we access your location?',
     permission_message: 'Onova uses your location when adding a new item',
     permission_alert_button_settings: 'Open Settings',
+  },
+  drops_grid: {
+    empty_state_title: 'Make a Drop',
+    empty_state_message_mine:
+      'Schedule multiple items to be posted at the same time to create demand',
+    empty_state_button_mine: 'Make a Drop',
+    empty_state_message_others: 'There are no drops yet',
   },
   profile: {
     reviews_label: 'reviews',
@@ -166,7 +179,7 @@ http://onova.co/uploader
       'Only one step left! Check your inbox for a confirmation email.',
     toast_saving: 'Loading...',
     toast_updated: 'Your profile has been updated',
-    alert_unsaved_changes_title: 'Unsaved Changes',
+    alert_unsaved_changes_title: 'Unsaved changes',
     alert_unsaved_changes_body: 'Are you sure you want to Cancel?',
     alert_unsaved_changes_button_cancel: 'NO',
     alert_unsaved_changes_button_confirm: 'YES',
@@ -175,6 +188,8 @@ http://onova.co/uploader
     alert_block_subtitle:
       "They won't be able to find your profile or items. Onova won't let them know you blocked them",
     alert_block_success: 'User blocked',
+    shop_tab: 'Shop',
+    drops_tab: 'Drops',
   },
   chat_rooms: {
     header: 'Chats',

@@ -106,6 +106,7 @@ http://onova.co/uploader
     action_button_delete: 'Видалити',
     action_button_edit: 'Редагувати',
     action_button_report: 'Поскаржитись',
+    toast_uploading: 'Завантажуємо зображення...',
   },
   search: {
     header: 'Пошук',
@@ -133,19 +134,33 @@ http://onova.co/uploader
     image_processing: 'Фотографії завантажуються',
     edit_item_header: 'Редагувати',
     price_label: 'Ціна:',
-    price_placeholder: '123 UAH',
+    price_placeholder: '0 UAH',
     description_label: 'Опис:',
     description_placeholder:
       'В якому стані річ, якого розміру, бренду і тому подібне',
     hashtags_label: '#tags:',
     hashtags_placeholder: 'adidas, 43',
-    toast_uploading: 'Завантажуємо зображення...',
     select_photo_source_camera: 'Камера',
     select_photo_source_gallery: 'Галерея',
     select_photo_source_cancel: 'Відмінити',
+    too_many_images: 'Дозвелоно максимум 6 зображень',
+  },
+  create_drop: {
+    title: 'Створити Дроп',
+    ok: 'OK',
+    cancel: 'Скасувати',
+    select: 'Оберіть час завантаження Дропу',
+    success: 'Ваш дроп успішно заплановано!',
     permission_title: 'Доступ до місцезнаходження',
     permission_message: 'Нам потрібно відображати де знаходяться речі.',
     permission_alert_button_settings: 'Відкрити налаштування',
+  },
+  drops_grid: {
+    empty_state_title: 'Створити дроп',
+    empty_state_message_mine:
+      'Завантаж кілька речей для одночасного виставлення у вказаний час',
+    empty_state_button_mine: 'Створити дроп',
+    empty_state_message_others: 'Жодних запланованих Дропів',
   },
   profile: {
     reviews_label: 'відгуки',
@@ -173,6 +188,8 @@ http://onova.co/uploader
     alert_block_subtitle:
       'Тепер ви не будете бачити речей цього користувача, він не буде бачити ваших',
     alert_block_success: 'User blocked',
+    shop_tab: 'Магазин',
+    drops_tab: 'Дропи',
   },
   chat_rooms: {
     header: 'Чати',

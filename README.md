@@ -2,8 +2,8 @@
 
 # Onova mobile app
 
-* Android app: [link](https://play.google.com/store/apps/details?id=com.onova.app&hl=uk)
-* iOS app: [link](https://itunes.apple.com/ua/app/onova/id1365771422?mt=8)
+- Android app: [link](https://play.google.com/store/apps/details?id=com.onova.app&hl=uk)
+- iOS app: [link](https://itunes.apple.com/ua/app/onova/id1365771422?mt=8)
 
 > Created using React Native CLI (`react-native`), not the Create React Native App (CRNA) or Expo client.
 
@@ -19,7 +19,7 @@ Follow [these instructions](https://facebook.github.io/react-native/docs/getting
 
     Note: `localhost` works with the iOS Simulator but not for the Android Emulator.
 
-3.  Install `npm -g flow-typed`. It's automatically executed after running `yarn`.
+3.  Install `npm -g flow-typed` or `yarn global add flow-typed`. It's automatically executed after running `yarn`.
 
 ```bash
 yarn
@@ -88,13 +88,13 @@ Currently supporting `Android 8.0 (SDK 27)` – for react-native-firebase
 
 #### Build Android 🤖
 
-* Build release APK
+- Build release APK
 
   This builds and uploads the source code to Sentry.io 🎉
 
       yarn run build-android
 
-* Build release for internal testing ONLY
+- Build release for internal testing ONLY
 
   This builds and skip uploading the source code to Sentry.io
 
@@ -128,7 +128,7 @@ Using [react-native-bundle-visualizer](https://github.com/IjzerenHein/react-nati
 
 ## Troubleshooting 🔫
 
-* Issue with JS packager (Metro bundler)
+- Issue with JS packager (Metro bundler)
 
   ```
   error: bundling failed: ambiguous resolution: module `.../onova/mobileapp/index.js` tries to require `react-native`, but there are several files providing this module. You can delete or fix them:
@@ -136,15 +136,15 @@ Using [react-native-bundle-visualizer](https://github.com/IjzerenHein/react-nati
 
       yarn start --reset-cache
 
-* iOS is just being a b\*tch
+- iOS is just being a b\*tch
 
       yarn nuke-ios
 
-* Android is just being a b\*tch
+- Android is just being a b\*tch
 
       yarn nuke-android
 
-* Issues with Redux Store
+- Issues with Redux Store
 
   1.  To delete all the store, uncomment `// persistor.purge();` in `store.js`
   2.  Refresh the App

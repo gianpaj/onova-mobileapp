@@ -25,8 +25,10 @@ class IntroScreens extends Component<Props> {
         nextLabel="Next"
         onSkip={this.onFinish}
         imageContainerStyles={{ marginTop: -36, paddingBottom: 36 }}
+        bottomBarHighlight={false}
         DoneButtonComponent={() => (
           <MaterialIcons
+            color={colors.black}
             name="check"
             size={36}
             style={{ left: -10 }}
@@ -36,19 +38,25 @@ class IntroScreens extends Component<Props> {
         pages={[
           {
             backgroundColor: colors.white,
-            image: <Icon name="md-person-add" size={48} />,
+            image: <Icon color={colors.black} name="md-person-add" size={48} />,
             title: I18n.t('intro.step_1.title'),
             subtitle: I18n.t('intro.step_1.subtitle'),
           },
           {
             backgroundColor: colors.white,
-            image: <Icon name="md-camera" size={48} />,
+            image: <Icon color={colors.black} name="md-camera" size={48} />,
             title: I18n.t('intro.step_2.title'),
             subtitle: I18n.t('intro.step_2.subtitle'),
           },
           {
             backgroundColor: colors.white,
-            image: <Icon name="md-information-circle" size={48} />,
+            image: (
+              <Icon
+                color={colors.black}
+                name="md-information-circle"
+                size={48}
+              />
+            ),
             title: I18n.t('intro.step_3.title'),
             subtitle: I18n.t('intro.step_3.subtitle'),
           },

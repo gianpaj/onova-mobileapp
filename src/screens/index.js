@@ -5,6 +5,7 @@ import { AddReview } from '../screens/AddReview';
 // import { Checkout } from '../screens/Checkout';
 import { Home } from '../screens/Home';
 import { ChatRooms } from '../screens/ChatRooms';
+import { CreateDrop } from '../screens/CreateDrop';
 import { Chat } from '../screens/Chat';
 import IntroScreens from '../screens/IntroScreens';
 import { Product } from '../screens/Product';
@@ -22,6 +23,7 @@ export {
   AddOrEditProduct,
   AddReview,
   // Checkout,
+  CreateDrop,
   Home,
   ChatRooms,
   Chat,

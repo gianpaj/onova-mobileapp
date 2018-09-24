@@ -46,7 +46,7 @@ const LIMIT = 48; // divisible by 3
 
 type Props = {
   apiURL: string,
-  emptyState?: React.Component<*>,
+  emptyState?: React.Node,
   focused: boolean,
   navigation?: NavigationScreenProp<*>,
   shouldRefresh?: boolean,
@@ -176,10 +176,7 @@ class ImageGridComponent extends React.PureComponent<Props, State> {
     });
   };
 
-  // onLayout = () => this.setState({ itemHeight: width / 3 });
-
   getItemLayout = (data: any, index: number) => {
-    // const { itemHeight } = this.state;
     const itemHeight = width / 3;
     return { length: itemHeight, offset: itemHeight * index, index };
   };
@@ -254,6 +251,7 @@ class ImageGridComponent extends React.PureComponent<Props, State> {
           windowSize={6}
           onEndReached={this.loadMore}
           onEndReachedThreshold={0.1}
+          horizontal={false}
         />
       </View>
     );

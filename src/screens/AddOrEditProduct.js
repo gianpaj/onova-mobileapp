@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { connect } from 'react-redux';
-import { Alert, Dimensions, StyleSheet, Platform, View } from 'react-native';
+import { Dimensions, StyleSheet, View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {
   ActionSheet,
@@ -22,8 +22,6 @@ import RadioForm, {
 } from 'react-native-simple-radio-button';
 import ImagePicker from 'react-native-image-crop-picker';
 import { InputItem, NoticeBar, TextareaItem, Toast } from 'antd-mobile-rn';
-import Permissions from 'react-native-permissions';
-import RNAndroidLocationEnabler from 'react-native-android-location-enabler';
 
 import { Header, HR, TagInput } from '../components';
 import AntImagePicker from '../components/ImagePicker';
@@ -67,6 +65,12 @@ const CAMERA = I18n.t('add_or_edit_item.select_photo_source_camera');
 const GALLERY = I18n.t('add_or_edit_item.select_photo_source_gallery');
 const CANCEL = I18n.t('add_or_edit_item.select_photo_source_cancel');
 
+type Image = {
+  url: string,
+  id: number,
+  isUploading: boolean,
+};
+
 type Props = {
   dispatch: Dispatch,
   navigation?: NavigationScreenProp<*>,
@@ -79,17 +83,11 @@ type State = {
   descriptionFocused: boolean,
   grp_1: number,
   grp_2: number,
-  images: Array<any>,
+  images: Array<Image>,
   inEditMode: boolean,
-  isLoading: boolean,
   isUploading: boolean,
-  location: ?{
-    longitude: number,
-    latitude: number,
-  },
   numberOfBrands: number,
   order: Array<number>,
-  pending: boolean,
   price: string,
   priceFocused: boolean,
   progress: number,
@@ -99,20 +97,6 @@ type State = {
 };
 
 export class AddOrEditProductScreen extends React.Component<Props, State> {
-  static navigationOptions = (props: any) => {
-    return {
-      // navigate to the screen instead of showing as a normal tab screen
-      tabBarOnPress: ({ scene }: any) => {
-        if (!scene.focused) {
-          props.navigation.navigate({
-            routeName: 'addOrEditProduct',
-            key: `addOrEditProduct`,
-          });
-        }
-      },
-    };
-  };
-
   state = {
     description: '',
     descriptionFocused: false,
@@ -120,12 +104,9 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     grp_2: -1,
     images: [],
     inEditMode: false,
-    isLoading: true,
     isUploading: false,
-    location: null,
     numberOfBrands: 0,
     order: [],
-    pending: false,
     price: '',
     priceFocused: false,
     progress: 0,
@@ -138,7 +119,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     // $FlowFixMe
     const { params } = this.props.navigation.state;
     if (params && params.item) {
-      this.setState({ inEditMode: true, isLoading: false });
+      this.setState({ inEditMode: true });
       const { item }: { item: Product } = params;
       let images = [];
       for (let i = 0; i < item.photoURIs.length; i++) {
@@ -158,130 +139,15 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
         uuid: item.uuid,
       });
     }
-
-    Toast.loading(I18n.t('alerts.loading_message'), 20);
-    Permissions.check('location')
-      .then(response => {
-        // Response is one of: 'authorized', 'denied', 'restricted', or 'undetermined'
-        console.log(response);
-        if (response === 'restricted' || response === 'denied') {
-          // show error
-          this.alertForPermission(response);
-          this.closeModal();
-        } else if (response === 'undetermined') {
-          // show Modal explaining why
-          this.alertForPermission(response);
-        } else {
-          // authorized
-          this.getLocationAndInitiate();
-        }
-      })
-      .catch(e => console.error(e))
-      .then(() => {
-        this.setState({ isLoading: false });
-        Toast.hide();
-      });
+    this.selectPhotoTapped(0);
   }
-
-  getLocationAndInitiate = () => {
-    const timeout = 20; // seconds
-    navigator.geolocation.getCurrentPosition(
-      position => {
-        const { coords } = position;
-        console.log(coords);
-        this.setState({
-          location: {
-            longitude: coords.longitude,
-            latitude: coords.latitude,
-          },
-        });
-        // not editing
-        this.selectPhotoTapped(0);
-      },
-      err => {
-        // Location authorized but not setting is not enabled (only Android)
-        if (
-          err.message === 'No location provider available.' &&
-          Platform.OS === 'android'
-        ) {
-          return RNAndroidLocationEnabler.promptForEnableLocationIfNeeded({
-            interval: 10000,
-            fastInterval: 5000,
-          })
-            .then(() => {})
-            .catch(() => this.closeModal());
-        }
-        Toast.fail(err.message || JSON.stringify(err));
-        this.closeModal();
-        console.debug(err);
-      },
-      {
-        enableHighAccuracy: false,
-        timeout: timeout * 1000,
-        maximumAge: 60 * 1000,
-      }
-    );
-  };
-
-  alertForPermission(response: string) {
-    Alert.alert(
-      I18n.t('add_or_edit_item.permission_title'),
-      I18n.t('add_or_edit_item.permission_message'),
-      [
-        {
-          text: I18n.t('profile.alert_unsaved_changes_button_cancel'),
-          onPress: () => {
-            console.log('Permission denied');
-            this.closeModal();
-          },
-          style: 'cancel',
-        },
-        response === 'undetermined'
-          ? {
-              text: I18n.t('profile.alert_unsaved_changes_button_confirm'),
-              onPress: this.requestPermission,
-            }
-          : {
-              text: I18n.t('add_or_edit_item.permission_alert_button_settings'),
-              onPress: () => {
-                if (Platform.OS === 'android') {
-                  RNAndroidLocationEnabler.promptForEnableLocationIfNeeded({
-                    interval: 10000,
-                    fastInterval: 5000,
-                  })
-                    .then(() => {})
-                    .catch(() => this.closeModal());
-                } else {
-                  Permissions.openSettings();
-                }
-                this.closeModal();
-              },
-            },
-      ]
-    );
-  }
-
-  requestPermission = () => {
-    Permissions.request('location').then(response => {
-      // Returns once the user has chosen to 'allow' or to 'not allow' access
-      // Response is one of: 'authorized', 'denied', 'restricted', or 'undetermined'
-      if (response !== 'authorized') {
-        // show error
-        this.closeModal();
-      } else {
-        this.getLocationAndInitiate();
-      }
-    });
-  };
 
   selectPhotoTapped = (i: number = 0, multiple: boolean = true) => {
-    if (this.state.pending) return;
-
     if (global.__TESTING__) {
       return ImagePicker.openPicker()
         .then(() => {
           const url =
-            'https://storage.googleapis.com/temp-uploads.onova.co/1533146500579-.jpeg';
+            'https://storage.googleapis.com/temp-uploads.onova.co/1537607915827.jpg';
           this.appendSinglePhoto(url, i);
         })
         .catch(() => this.closeModalConditional());
@@ -330,7 +196,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
   appendPhoto(response: Array<any> | any, i: number) {
     if (response.length) {
       if (response.length + this.state.images.length > MAX_IMAGES) {
-        Toast.fail('An item can have up to 6 images');
+        Toast.fail(I18n.t('add_or_edit_item.too_many_images'));
         return console.debug('too many images');
       }
       for (let j = 0; j < response.length; j++) {
@@ -409,37 +275,61 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     });
   };
 
-  closeModal() {
-    this.props.navigation.goBack();
+  hasUnsavedChanges(): boolean {
+    const { description, images, price, tags } = this.state;
+    if (
+      description.length > 0 ||
+      images.length > 0 ||
+      price.length > 0 ||
+      tags.length > 0
+    ) {
+      return true;
+    }
+    return false;
   }
 
+  closeModal = () => {
+    this.props.navigation.goBack();
+  };
+
   closeModalConditional = () => {
-    const { inEditMode, images } = this.state;
-    if (!inEditMode && images.length === 0 /* && fields.touched() */) {
-      this.props.navigation.goBack();
+    const { inEditMode } = this.state;
+    if (!inEditMode /* && fields.touched() */) {
+      if (this.hasUnsavedChanges()) {
+        ui.showConfirmAlert(
+          I18n.t('profile.alert_unsaved_changes_title'),
+          I18n.t('profile.alert_unsaved_changes_body'),
+          () => {
+            // on continue
+            this.closeModal();
+          },
+          () => {},
+          I18n.t('profile.alert_unsaved_changes_button_cancel'),
+          I18n.t('profile.alert_unsaved_changes_button_confirm')
+        );
+      } else {
+        this.closeModal();
+      }
     }
   };
 
   onAddOrEditItem = async () => {
-    Toast.loading(I18n.t('add_or_edit_item.toast_uploading'), 30);
+    Toast.loading(I18n.t('alerts.toast_uploading'), 30);
     const {
       description,
       grp_1,
       grp_2,
       images,
       inEditMode,
-      location,
       price,
       tags,
       uuid,
     } = this.state;
 
-    this.setState({ pending: true, tagsText: '' });
-
     const data: any = {
       categoryIds: grp_1.toString(),
       description: description.trim(),
-      photos: JSON.stringify(images.map(i => i.url)),
+      photos: images.map(i => i.url),
       price: price,
       tags: JSON.stringify(tags),
       typeIds: grp_2.toString(),
@@ -450,13 +340,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
       if (inEditMode) {
         res = await this.uploadEditedProduct(uuid, data);
       } else {
-        if (!location) {
-          throw Error('location is required');
-        }
-        data.latitude = location.latitude.toString();
-        data.longitude = location.longitude.toString();
-
-        res = await this.uploadNewProduct(data);
+        this.props.navigation.state.params.returnData(data);
       }
       this.props.dispatch(enableRefresh());
       this.closeModal();
@@ -465,13 +349,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
       console.debug(err);
       ui.showToast(err.message, 'warning');
     }
-    this.setState({ pending: false });
     Toast.hide();
-  };
-
-  uploadNewProduct = (data: any): Promise<any> => {
-    const { token } = this.props;
-    return api.post('/api/products', data, { token, timeout: 30000 });
   };
 
   uploadEditedProduct = (uuid: string, data: any): Promise<any> => {
@@ -552,15 +430,12 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     // const pricePattern = /^\d+(\.\d{2})?$/;
     // const tagsPattern = /^(\b[a-z][a-z0-9]*)$/i;
 
-    const imgs = this.state.images;
+    const { images } = this.state;
     // return true if all of these are true
     return (
       // if all the images have been uploaded
-      imgs.filter((i: any) => i.isUploading === false).length === imgs.length &&
-      // location
-      (this.state.inEditMode || this.state.location !== null) &&
-      // If the item is uploading is NOT in progress
-      !this.state.pending &&
+      images.filter((i: any) => i.isUploading === false).length ===
+        images.length &&
       // If the price is not empty
       this.state.price !== '' &&
       // if the description doesn't exceed the maximum length
@@ -574,29 +449,6 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     );
   }
 
-  /*renderSquare(e, i) {
-    const uri = this.state.images[i];
-
-    return (
-      <TouchableOpacity
-        key={i}
-        onPress={() => !this.state.pending && this.selectPhotoTapped(i)}>
-        <View
-          style={[
-            styles.image,
-            styles.imageContainer,
-            { marginBottom: 20, borderRightWidth: 0 },
-          ]}>
-          {uri ? (
-            <Image style={styles.image} source={{ uri }} />
-          ) : (
-            <Text>Select a Photo</Text>
-          )}
-        </View>
-      </TouchableOpacity>
-    );
-  }*/
-
   onImageChange = (images: Array<any>) => {
     this.setState({ images }, () => this.closeModalConditional());
   };
@@ -604,7 +456,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
   onChangeDescription = (t: string) => this.setState({ description: t });
 
   shouldShowNoticeBar() {
-    return this.props.userData.accountStatus == 'notverified';
+    return this.props.userData.accountStatus === 'notverified';
   }
 
   render() {
@@ -615,9 +467,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
       grp_2,
       images,
       inEditMode,
-      isLoading,
       isUploading,
-      pending,
       price,
       priceFocused,
       tags,
@@ -625,14 +475,13 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     } = this.state;
 
     // if (images.length < 1 && !inEditMode) return null;
-    if (isLoading) return null;
 
     return (
       <Container>
         <Header>
           <Left style={styles.container}>
-            <NBButton transparent onPress={() => this.closeModal()}>
-              <Icon name="close" size={28} />
+            <NBButton transparent onPress={this.closeModalConditional}>
+              <Icon color={colors.black} name="close" size={28} />
             </NBButton>
           </Left>
           <Body style={styles.container}>
@@ -651,7 +500,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
               onPress={this.onAddOrEditItem}>
               <Icon
                 name="check"
-                style={!this.isButtonEnabled() && { color: colors.grey4 }}
+                color={this.isButtonEnabled() ? colors.black : colors.grey4}
                 size={28}
               />
             </NBButton>
@@ -677,7 +526,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
               onImageClick={i => this.selectPhotoTapped(i, false)}
               onAddImageClick={() => this.selectPhotoTapped(images.length)}
               selectable={images.length < 6}
-              enabled={!pending && !isUploading}
+              enabled={!isUploading}
               onChange={this.onImageChange}
               onChangeOrder={array => {
                 const order = array.map(e => parseInt(e));
@@ -698,7 +547,6 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
               autoCorrect={false}
               clearButtonMode="while-editing"
               containerStyle={styles.inputContainer}
-              editable={!pending}
               inputStyle={styles.input}
               keyboardType="numeric"
               maxLength={8} // 10000.99
@@ -711,7 +559,6 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
                 testID="price"
                 autoCorrect={false}
                 clearButtonMode="while-editing"
-                editable={!pending}
                 error={priceFocused && price.trim().length < 1}
                 last
                 maxLength={8} // 10000.99
@@ -727,7 +574,6 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
             </FormLabel>
             <TextareaItem
               testID="description"
-              editable={!pending}
               style={styles.inputContainerNew}
               last // to set borderBottomWidth=0
               containerStyle={{ borderBottomWidth: 5, marginRight: 12 }}
@@ -748,7 +594,6 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
             <TagInput
               inputDefaultWidth={140}
               maxHeight={2000}
-              editable={!pending}
               labelExtractor={tag => tag}
               onChange={this.changeTags}
               onChangeText={this.changeTagsTest}
@@ -773,7 +618,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
                     labelHorizontal
                     labelStyle={styles.radioButtonLabel}
                     obj={option}
-                    onPress={grp_1 => !pending && this.setState({ grp_1 })}
+                    onPress={grp_1 => this.setState({ grp_1 })}
                   />
                   <RadioButtonInput
                     testID={`grp_1_input_${i}`}
@@ -786,7 +631,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
                     index={i}
                     isSelected={grp_1 === i}
                     obj={option}
-                    onPress={grp_1 => !pending && this.setState({ grp_1 })}
+                    onPress={grp_1 => this.setState({ grp_1 })}
                   />
                 </RadioButton>
               ))}
@@ -802,7 +647,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
                     labelHorizontal
                     labelStyle={styles.radioButtonLabel}
                     obj={option}
-                    onPress={grp_2 => !pending && this.setState({ grp_2 })}
+                    onPress={grp_2 => this.setState({ grp_2 })}
                   />
                   <RadioButtonInput
                     testID={`grp_2_input_${i}`}
@@ -815,7 +660,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
                     index={i}
                     isSelected={grp_2 == i}
                     obj={option}
-                    onPress={grp_2 => !pending && this.setState({ grp_2 })}
+                    onPress={grp_2 => this.setState({ grp_2 })}
                   />
                 </RadioButton>
               ))}
@@ -828,16 +673,6 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
 }
 
 const styles = StyleSheet.create({
-  // imageContainer: {
-  //   borderColor: colors.grey3,
-  //   borderWidth: 3 / PixelRatio.get(),
-  //   justifyContent: 'center',
-  //   alignItems: 'center',
-  // },
-  // image: {
-  //   width: width / 6,
-  //   height: width / 6,
-  // },
   noticeBar: {
     color: colors.grey2,
     textAlign: 'center',

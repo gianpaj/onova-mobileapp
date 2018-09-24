@@ -6,7 +6,6 @@ import {
   Dimensions,
   Image,
   Platform,
-  RefreshControl,
   Share,
   StyleSheet,
   Text,

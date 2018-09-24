@@ -155,6 +155,13 @@ http://onova.co/uploader
     permission_message: 'Нам потрібно відображати де знаходяться речі.',
     permission_alert_button_settings: 'Відкрити налаштування',
   },
+  drops_grid: {
+    empty_state_title: 'Створити дроп',
+    empty_state_message_mine:
+      'Завантаж кілька речей для одночасного виставлення у вказаний час',
+    empty_state_button_mine: 'Створити дроп',
+    empty_state_message_others: 'Жодних запланованих Дропів',
+  },
   profile: {
     reviews_label: 'відгуки',
     followers_label: 'контакти',
@@ -181,6 +188,8 @@ http://onova.co/uploader
     alert_block_subtitle:
       'Тепер ви не будете бачити речей цього користувача, він не буде бачити ваших',
     alert_block_success: 'User blocked',
+    shop_tab: 'Магазин',
+    drops_tab: 'Дропи',
   },
   chat_rooms: {
     header: 'Чати',

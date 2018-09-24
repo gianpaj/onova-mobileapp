@@ -1,6 +1,6 @@
 // @flow
 
-import React from 'react';
+import * as React from 'react';
 import { connect } from 'react-redux';
 
 import {
@@ -12,7 +12,7 @@ import {
   Text,
   View,
 } from 'react-native';
-import { Button, List } from 'native-base';
+import { List } from 'native-base';
 import { format } from 'date-fns';
 
 import type { NavigationScreenProp } from 'react-navigation';
@@ -22,6 +22,7 @@ import type { Schedule, Product } from '../types';
 
 import I18n from '../i18n';
 import * as api from '../utils/api';
+import typography from '../config/typography';
 import colors from '../config/colors';
 
 type Props = {
@@ -83,11 +84,14 @@ class DropsGridComponent extends React.PureComponent<Props, State> {
     const { token, username } = this.props;
 
     try {
-      // &limit=${LIMIT}
-      const { data } = await api.get(`/api/products?username=${username}`, {
+      const { data } = await api.get(`/api/schedule?username=${username}`, {
         token,
       });
-      this.setState({ items: data });
+      let arrayOfDrops = [];
+      for (const key in data) {
+        arrayOfDrops.push({ products: data[key], key });
+      }
+      this.setState({ items: arrayOfDrops });
     } catch (err) {
       this.setState({ hasError: true });
       console.error(err);
@@ -159,10 +163,13 @@ class DropsGridComponent extends React.PureComponent<Props, State> {
           onRefresh={this.fetchItems}
           refreshing={isLoading}
           renderItem={this.renderDropGrid}
+          ItemSeparatorComponent={this.renderSeparator}
         />
       </View>
     );
   }
+
+  renderSeparator = () => <View style={styles.separator} />;
 
   _keyExtractorDrop = (item): string => item.uuid;
 
@@ -223,6 +230,11 @@ const styles = StyleSheet.create({
   dateStrings: {
     color: colors.black,
     paddingHorizontal: 20,
-    fontSize: 18,
+    paddingVertical: 15,
+    fontSize: typography.font_body_size,
+  },
+  separator: {
+    height: StyleSheet.hairlineWidth,
+    backgroundColor: colors.grey5,
   },
 });

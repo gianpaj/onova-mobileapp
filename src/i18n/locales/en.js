@@ -154,6 +154,13 @@ http://onova.co/uploader
     permission_message: 'Onova uses your location when adding a new item',
     permission_alert_button_settings: 'Open Settings',
   },
+  drops_grid: {
+    empty_state_title: 'Make a Drop',
+    empty_state_message_mine:
+      'Schedule multiple items to be posted at the same time to create demand',
+    empty_state_button_mine: 'Make a Drop',
+    empty_state_message_others: 'There are no drops yet',
+  },
   profile: {
     reviews_label: 'reviews',
     followers_label: 'followers',
@@ -181,6 +188,8 @@ http://onova.co/uploader
     alert_block_subtitle:
       "They won't be able to find your profile or items. Onova won't let them know you blocked them",
     alert_block_success: 'User blocked',
+    shop_tab: 'Shop',
+    drops_tab: 'Drops',
   },
   chat_rooms: {
     header: 'Chats',

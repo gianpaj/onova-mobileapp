@@ -52,7 +52,7 @@ class DropsTabContainer extends React.Component<Props, {}> {
                 <View>
                   <MaterialCommunityIcons
                     size={48}
-                    name={'cash-100'}
+                    name="clock"
                     color={colors.grey2}
                     style={styles.emptyStateIcon}
                   />

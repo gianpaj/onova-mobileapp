@@ -29,6 +29,7 @@ import {
   Title,
 } from 'native-base';
 import { format } from 'date-fns';
+import ObjectID from 'bson-objectid';
 
 import colors from '../config/colors';
 import { Header } from '../components';
@@ -264,10 +265,12 @@ export class CreateDropScreen extends React.Component<Props, State> {
 
     const productsReady = products.filter(i => i.uploaded === true);
 
+    const dropId = ObjectID();
     const promises = productsReady.map(product => {
       let formData = {
         ...product,
         date: datetime,
+        dropId,
         latitude: location.latitude.toString(),
         longitude: location.longitude.toString(),
       };

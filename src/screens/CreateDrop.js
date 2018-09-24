@@ -285,7 +285,7 @@ export class CreateDropScreen extends React.Component<Props, State> {
     try {
       await Promise.all(promises);
       Toast.hide();
-      Toast.success(I18n.t('create_drop.success'), 5);
+      ui.showToast(I18n.t('create_drop.success'), 'success');
       this.closeModal();
     } catch (err) {
       Toast.hide();

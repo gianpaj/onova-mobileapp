@@ -609,7 +609,6 @@ class ProfileScreen extends React.Component<Props, State> {
       // scrollEnabled
       indicatorStyle={styles.indicator}
       style={styles.tabbar}
-      // tabStyle={styles.tab}
       labelStyle={styles.tabBarlabel}
     />
   );
@@ -742,8 +741,8 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   profileTop: {
-    backgroundColor: colors.white,
-    elevation: 0.5, // android
+    backgroundColor: colors.bgDefault,
+    // elevation: 0.5, // android
     paddingHorizontal: 10,
     paddingTop: 10,
     shadowColor: colors.black,
@@ -792,7 +791,8 @@ const styles = StyleSheet.create({
     fontWeight: '400',
   },
   tabbar: {
-    backgroundColor: colors.white,
+    backgroundColor: colors.bgDefault,
+    elevation: 2,
   },
 });
 

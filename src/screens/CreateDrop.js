@@ -386,12 +386,12 @@ export class CreateDropScreen extends React.Component<Props, State> {
     return (
       <Container>
         <Header>
-          <Left style={styles.container}>
+          <Left style={styles.flex1}>
             <NBButton transparent onPress={this.closeModalConditional}>
               <Icon color={colors.black} name="close" size={28} />
             </NBButton>
           </Left>
-          <Body style={styles.container}>
+          <Body style={styles.flex2AndCenter}>
             <Title style={{ color: colors.black }}>
               {I18n.t('create_drop.title')}
             </Title>
@@ -490,6 +490,13 @@ export class CreateDropScreen extends React.Component<Props, State> {
 const MARGIN = 1;
 
 const styles = StyleSheet.create({
+  flex1: {
+    flex: 1,
+  },
+  flex2AndCenter: {
+    flex: 2,
+    alignItems: 'center',
+  },
   closeWrap: {
     width: 16,
     height: 16,
@@ -501,11 +508,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     overflow: 'hidden',
-  },
-  container: {
-    alignItems: 'stretch',
-    flex: 1,
-    justifyContent: 'center',
   },
   row: {
     flexDirection: 'column',

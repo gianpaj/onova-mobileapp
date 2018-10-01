@@ -261,7 +261,7 @@ const checkLogin = (userData: UserData, token: string) => (
 const signup = (data: SignupData) => (dispatch: Dispatch) => {
   dispatch({ type: SIGNUP_PENDING });
   Toast.loading('', 30);
-  api
+  return api
     .post('/api/users', {
       username: data.username,
       emailAddress: data.emailAddress,

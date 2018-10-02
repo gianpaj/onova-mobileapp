@@ -616,19 +616,23 @@ class ProfileScreen extends React.Component<Props, State> {
   _renderScene = ({ route, navigationState }) => {
     switch (route.key) {
       case 'shop':
-        return (
-          <ShopTab
-            userid={navigationState._id}
-            navigation={this.props.navigation}
-          />
-        );
+        if (navigationState._id)
+          return (
+            <ShopTab
+              userid={navigationState._id}
+              navigation={this.props.navigation}
+            />
+          );
+        break;
       case 'drops':
-        return (
-          <DropsTab
-            username={navigationState.username}
-            navigation={this.props.navigation}
-          />
-        );
+        if (navigationState.username)
+          return (
+            <DropsTab
+              username={navigationState.username}
+              navigation={this.props.navigation}
+            />
+          );
+        break;
       default:
         return null;
     }

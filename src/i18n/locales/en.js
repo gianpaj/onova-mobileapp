@@ -73,7 +73,9 @@ http://onova.co/uploader
     empty_state_body: 'Try searching with some other options',
   },
   product: {
-    buy_button: 'Chat',
+    buy_button: 'Buy',
+    reserved_button: 'Reserved',
+    reserved_message: 'Check in 15 mins. It might be available again',
     alert_confirm_delete: 'Confirm deletion?',
     toast_warning_on_unverified_account:
       'Please verify your email address to buy an item. Check your inbox',

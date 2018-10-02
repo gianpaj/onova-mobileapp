@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import {
   ActivityIndicator,
   StyleSheet,
-  Platform,
+  // Platform,
   Text,
   View,
 } from 'react-native';

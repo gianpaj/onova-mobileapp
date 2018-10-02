@@ -260,7 +260,7 @@ export class ProductContainer extends React.Component<Props, State> {
     api
       .getProduct(uuid)
       .then(data => {
-        if (data.status !== 'forsale') {
+        if (data.status !== 'forsale' && data.status !== 'reserved') {
           return this.props.navigation.goBack();
         }
         this.setState({
@@ -307,6 +307,14 @@ export class ProductContainer extends React.Component<Props, State> {
     });
   }
 
+  onPressReserved() {
+    ui.showToast(
+      I18n.t('product.reserved_message'),
+      'warning',
+      I18n.t('product.toast_warning_ok_button')
+    );
+  }
+
   onPressBuy = () => {
     const { item } = this.state;
     if (this.state.loadingBuy || !item) return;
@@ -338,7 +346,8 @@ export class ProductContainer extends React.Component<Props, State> {
       })
       .then(() => api.getProduct(item.uuid))
       .then((product: ProductType) => {
-        // TODO: if product status is 'reserved' say you can try again later...
+        // TODO: if the product is reserved to me open the checkout (e.g. i closed the app and want to finish paying)
+        // TODO: if product status is 'reserved' say you can try again later... (in the case when you're looking at an item and second person clicks buy faster)
         if (product.status !== 'forsale') {
           throw Error(I18n.t('product.toast_warning_on_product_sold'));
         }
@@ -500,14 +509,31 @@ export class ProductContainer extends React.Component<Props, State> {
                     style={styles.iconCommmentAndShare}
                   /> */}
                     <View style={styles.flex1} />
-                    <Button
-                      buttonStyle={styles.buyButton}
-                      containerViewStyle={styles.buyButtonContainer}
-                      onPress={this.onPressBuy}
-                      textStyle={{ fontWeight: 'bold', paddingHorizontal: 10 }}
-                      title={I18n.t('product.buy_button')}
-                      loading={loadingBuy}
-                    />
+                    {item.status === 'forsale' ? (
+                      <Button
+                        buttonStyle={styles.buyButton}
+                        containerViewStyle={styles.buyButtonContainer}
+                        onPress={this.onPressBuy}
+                        textStyle={{
+                          fontWeight: 'bold',
+                          paddingHorizontal: 10,
+                        }}
+                        title={I18n.t('product.buy_button')}
+                        loading={loadingBuy}
+                      />
+                    ) : (
+                      <Button
+                        buttonStyle={styles.reservedButton}
+                        containerViewStyle={styles.buyButtonContainer}
+                        onPress={this.onPressReserved}
+                        rightIcon={{
+                          name: 'timer-sand',
+                          type: 'material-community',
+                        }}
+                        textStyle={{ paddingLeft: 10 }}
+                        title={I18n.t('product.reserved_button')}
+                      />
+                    )}
                   </View>
                 )}
                 {/* <View style={styles.bottomSectionAfter}>
@@ -605,6 +631,12 @@ const styles = StyleSheet.create({
   buyButton: {
     backgroundColor: colors.red,
     borderRadius: 2,
+    paddingVertical: 8,
+  },
+  reservedButton: {
+    backgroundColor: colors.secondary,
+    borderRadius: 2,
+    paddingHorizontal: 4,
     paddingVertical: 8,
   },
   buyButtonContainer: {

@@ -8,6 +8,13 @@ import type {
   NavigationState,
 } from './navigationReducer';
 
+export type ProductStatus =
+  | 'forsale'
+  | 'reserved'
+  | 'sold'
+  | 'banned'
+  | 'deleted';
+
 export type Product = {
   categoryIds: Array<number>,
   comments?: Array<Comment>,
@@ -18,7 +25,7 @@ export type Product = {
   photoURIs: Array<string>,
   price: string,
   seller: UserData,
-  status: string,
+  status: ProductStatus,
   tags?: Array<string>,
   typeIds: Array<number>,
   uuid: string,

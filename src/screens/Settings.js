@@ -226,7 +226,7 @@ class SettingsContainer extends Component<Props, State> {
 
     api
       .put(`/api/users/${userData._id}`, data, { token })
-      .then(data => {
+      .then(() => {
         // console.log(res);
         // if we changed the email
         if (data.emailAddress) {

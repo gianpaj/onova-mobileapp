@@ -175,8 +175,7 @@ http://onova.co/uploader
     empty_state_message_others: 'There no any items yet',
     empty_state_message_mine: 'Get closer to your first sale by adding items',
     empty_state_button_mine: 'Sell an item',
-    notice_bar:
-      'Only one step left! Check your inbox for a confirmation email.',
+    notice_bar: 'Check your inbox for a confirmation email.',
     toast_saving: 'Loading...',
     toast_updated: 'Your profile has been updated',
     alert_unsaved_changes_title: 'Unsaved changes',

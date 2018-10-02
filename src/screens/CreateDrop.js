@@ -14,7 +14,7 @@ import {
   View,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { Toast } from 'antd-mobile-rn';
+import { NoticeBar, Toast } from 'antd-mobile-rn';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import Permissions from 'react-native-permissions';
 import RNAndroidLocationEnabler from 'react-native-android-location-enabler';
@@ -361,6 +361,10 @@ export class CreateDropScreen extends React.Component<Props, State> {
     });
   };
 
+  shouldShowNoticeBar() {
+    return this.props.userData.accountStatus === 'notverified';
+  }
+
   render() {
     let {
       products,
@@ -412,6 +416,13 @@ export class CreateDropScreen extends React.Component<Props, State> {
           </Right>
         </Header>
         <View>
+          {this.shouldShowNoticeBar() && (
+            <NoticeBar
+              marqueeProps={{ loop: false, style: styles.noticeBar }}
+              icon={false}>
+              {I18n.t('profile.notice_bar')}
+            </NoticeBar>
+          )}
           <List>
             <View style={styles.datesContainer}>
               <Text style={styles.dateStrings} onPress={this._toggleDatePicker}>
@@ -519,6 +530,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginHorizontal: -MARGIN * 2,
     marginBottom: 0,
+  },
+  noticeBar: {
+    color: colors.grey2,
+    textAlign: 'center',
+    width: '34.5%',
   },
   list: {
     flex: 1,

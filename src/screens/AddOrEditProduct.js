@@ -21,7 +21,7 @@ import RadioForm, {
   RadioButtonLabel,
 } from 'react-native-simple-radio-button';
 import ImagePicker from 'react-native-image-crop-picker';
-import { InputItem, NoticeBar, TextareaItem, Toast } from 'antd-mobile-rn';
+import { InputItem, TextareaItem, Toast } from 'antd-mobile-rn';
 
 import { Header, HR, TagInput } from '../components';
 import AntImagePicker from '../components/ImagePicker';
@@ -455,10 +455,6 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
 
   onChangeDescription = (t: string) => this.setState({ description: t });
 
-  shouldShowNoticeBar() {
-    return this.props.userData.accountStatus === 'notverified';
-  }
-
   render() {
     const {
       description,
@@ -507,13 +503,6 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
           </Right>
         </Header>
         <Content>
-          {this.shouldShowNoticeBar() && (
-            <NoticeBar
-              marqueeProps={{ loop: false, style: styles.noticeBar }}
-              icon={false}>
-              {I18n.t('profile.notice_bar')}
-            </NoticeBar>
-          )}
           <View
             style={{
               alignItems: 'flex-start',
@@ -673,11 +662,6 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
 }
 
 const styles = StyleSheet.create({
-  noticeBar: {
-    color: colors.grey2,
-    textAlign: 'center',
-    width: '34.5%',
-  },
   container: {
     alignItems: 'stretch',
     flex: 1,

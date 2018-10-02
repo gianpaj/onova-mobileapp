@@ -1,6 +1,6 @@
 // @flow
 
-// import Accordion from './Accordion';
+import Accordion from './Accordion';
 import Avatar from './Avatar';
 // import ChatActions from './ChatActions';
 import Comments from './Comments';
@@ -17,7 +17,7 @@ import TagInput from './TagInput';
 import Title from './Title';
 
 export {
-  // Accordion,
+  Accordion,
   Avatar,
   // ChatActions,
   DropsGrid,

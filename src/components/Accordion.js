@@ -15,24 +15,34 @@ type Props = {
   values: Array<any>,
 };
 
-export default class Accordion extends PureComponent<Props, void> {
+type State = {
+  activeSections: Array<number>,
+};
+
+export default class Accordion extends PureComponent<Props, State> {
   animatedValue: Animated.Value;
+
+  state = {
+    activeSections: [],
+  };
 
   static defaultProps = {
     duration: 400,
   };
 
-  componentDidMount() {
+  constructor(props: Props) {
+    super(props);
     this.animatedValue = new Animated.Value(0);
   }
 
-  toggle(i: any) {
+  toggle = (i: Array<number>) => {
+    this.setState({ activeSections: i });
     Animated.timing(this.animatedValue, {
-      toValue: i === false ? 0 : 1,
+      toValue: i[0] === 0 ? 1 : 0,
       duration: this.props.duration,
       useNativeDriver: true,
     }).start();
-  }
+  };
 
   render() {
     const interpolateRotation = this.animatedValue.interpolate({
@@ -44,7 +54,8 @@ export default class Accordion extends PureComponent<Props, void> {
     };
     return (
       <CollapsibleAccordion
-        onChange={i => this.toggle(i)}
+        activeSections={this.state.activeSections}
+        onChange={this.toggle}
         touchableProps={{ underlayColor: 'transparent' }}
         sections={this.props.values}
         renderHeader={() => (

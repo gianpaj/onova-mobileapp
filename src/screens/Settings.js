@@ -29,11 +29,11 @@ import type { NavigationScreenProp } from 'react-navigation';
 import { Toast } from 'antd-mobile-rn';
 import axios from 'axios';
 import isEmail from 'validator/lib/isEmail';
-// import update from 'immutability-helper';
+import update from 'immutability-helper';
 // import Instabug from 'instabug-reactnative';
 import { KeyboardAccessoryNavigation } from 'react-native-keyboard-accessory';
 
-import { Header } from '../components';
+import { Accordion, Header } from '../components';
 
 import { getPersonalUserData, intro } from '../actions/actionCreator';
 
@@ -134,12 +134,11 @@ class SettingsContainer extends Component<Props, State> {
     // fix error when logging out
     if (!nextProps.userData) return;
 
-    const { emailAddress, /*shippingAddress,*/ username } = nextProps.userData;
+    const { emailAddress, shippingAddress, username } = nextProps.userData;
 
-    /*
     if (this.hasStateDifferedFromProps(nextProps.userData, 'shippingAddress')) {
       this.setState({ shippingAddress });
-    }*/
+    }
 
     if (this.hasStateDifferedFromProps(nextProps.userData, 'username')) {
       this.setState({ username });
@@ -188,7 +187,7 @@ class SettingsContainer extends Component<Props, State> {
       password,
       emailAddress,
       // paymentInfo,
-      // shippingAddress,
+      shippingAddress,
       username,
     } = this.state;
     const data = {};
@@ -215,10 +214,10 @@ class SettingsContainer extends Component<Props, State> {
       data.exp_month = values.expiry.split('/')[0];
       data.exp_year = values.expiry.split('/')[0];
     }
-
+    */
     if (validShippingAddress(shippingAddress)) {
       data.shippingAddress = shippingAddress;
-    }*/
+    }
 
     // console.log(data);
 
@@ -319,7 +318,7 @@ class SettingsContainer extends Component<Props, State> {
       isLoading,
       password,
       emailAddress,
-      // shippingAddress,
+      shippingAddress,
       username,
       usernameError,
     } = this.state;
@@ -359,8 +358,8 @@ class SettingsContainer extends Component<Props, State> {
           </Right>
         </Header>
         <Content>
-          {/* <View style={styles.padder}> */}
-          {/* <Accordion
+          <View style={styles.padder}>
+            <Accordion
               headerText="Shipping Address:"
               values={[
                 {
@@ -425,6 +424,7 @@ class SettingsContainer extends Component<Props, State> {
                 },
               ]}
             />
+            {/*
             <FormLabel labelStyle={[styles.label, { paddingBottom: 10 }]}>
               Payment Info:
             </FormLabel>
@@ -448,13 +448,13 @@ class SettingsContainer extends Component<Props, State> {
                 <LiteCreditCardInput onChange={this.onCCChange} />
               </View>
             </FlipCard> */}
-          {/* <View style={styles.padder}> */}
-          {/* <Text style={[styles.padder, styles.secureText]}> */}
-          {/* Your data is secured with a 2048-bit encryption SSL certificate */}
-          {/* for More info please refer to the FAQ */}
-          {/* </Text> */}
-          {/* </View> */}
-          {/* </View> */}
+            {/* <View style={styles.padder}> */}
+            {/* <Text style={[styles.padder, styles.secureText]}> */}
+            {/* Your data is secured with a 2048-bit encryption SSL certificate */}
+            {/* for More info please refer to the FAQ */}
+            {/* </Text> */}
+            {/* </View> */}
+          </View>
           <View style={styles.padder}>
             <FormLabel labelStyle={styles.label}>
               {I18n.t('settings.username_label')}

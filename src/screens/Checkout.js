@@ -29,7 +29,9 @@ import type { NavigationScreenProp } from 'react-navigation';
 import axios from 'axios';
 import type { CancelTokenSource } from 'axios';
 
-import { Header, HR } from '../components';
+import { getPersonalUserData } from '../actions/actionCreator';
+
+import { Accordion, Header, HR } from '../components';
 
 import colors from '../config/colors';
 // import settings from '../config/settings';
@@ -62,53 +64,55 @@ type State = {
   password: string,
   paymentInfo: PaymentInfo,
   pending: boolean,
-  shippingAddress: ShippingAddress | {},
+  shippingAddress: ?ShippingAddress,
   username: string,
   usernameError: boolean,
 };
 
 class CheckoutContainer extends Component<Props, State> {
+  inputs = [];
   cancelToken: CancelTokenSource;
   state = {
     emailAddress: '',
-    isLoading: false,
+    isLoading: true,
     item: {},
     order: {},
     password: '',
     paymentInfo: {},
     pending: false,
-    shippingAddress: {},
+    shippingAddress: null,
     username: '',
     usernameError: false,
   };
 
   componentDidMount() {
-    this.setState({ isLoading: true });
-    this.cancelToken = axios.CancelToken.source();
-    // this.props.dispatch(
-    //   getPersonalUserData(this.props.userData._id, {
-    //     cancelToken: this.cancelToken.token,
-    //   })
-    // );
+    const CancelToken = axios.CancelToken;
+    this.cancelToken = CancelToken.source();
+    this.props.dispatch(
+      getPersonalUserData({ cancelToken: this.cancelToken.token })
+    );
 
+    const { token } = this.props;
     let { params: item } = this.props.navigation.state;
     console.log(item);
 
     // for development
     if (!item) {
       item = {
+        _id: '5b67489ec8a64827b95e4292',
         seller: {
-          username: 'firstperson',
-          id: '5a78d09d2d314a702698f955',
+          username: 'iosuser',
+          _id: '5acdbcfb570a687a50318881',
         },
-        price: '30',
-        uuid: 'SJewilLU8z',
+        price: '11111',
+        uuid: 'rkwjO64B7',
         status: 'forsale',
         currency: 'UAH',
       };
     }
 
-    this.createOrder(item.uuid)
+    return api
+      .createOrder(item.uuid, token)
       .then((order: Order) => {
         this.setState({
           item,
@@ -129,15 +133,14 @@ class CheckoutContainer extends Component<Props, State> {
         console.log(err);
         if (
           err.message == 'Duplicate order' &&
-          err.data.data &&
-          // TODO: set to 'paid' once payment is completed
-          err.data.data.status == 'pending'
+          err.data && // deepscan-disable-line
+          err.data.data && // deepscan-disable-line
+          err.data.data.status == 'paid'
         ) {
           // $FlowFixMe
-          return this.goToChat(err.data.data.id, item);
-        }
-        // TODO: set to 'pending' once payment is completed
-        if (err.data.data.status == 'TODO') {
+          this.goToChat(err.data.data.id, item);
+        } else if (err.data.data.status == 'pending') {
+          console.log('pending');
           this.setState({
             item,
             isLoading: false,
@@ -162,6 +165,19 @@ class CheckoutContainer extends Component<Props, State> {
     this.cancelToken.cancel('operation_canceled');
 
     //TODO: unreserve product and cancel order
+  }
+
+  handleFocus(ref) {
+    this.setState({
+      nextFocusDisabled: ref === 7,
+      previousFocusDisabled: ref === 5,
+      activeInputRef: ref,
+    });
+  }
+  static getDerivedStateFromProps(props, state) {
+    const { shippingAddress } = props.userData;
+
+    return { ...state, shippingAddress };
   }
 
   onCheckout = () => {
@@ -266,20 +282,6 @@ class CheckoutContainer extends Component<Props, State> {
     });
   }
 
-  createOrder(uuid: string): Promise<Order> {
-    const { token } = this.props;
-    return new Promise((resolve, reject) => {
-      api
-        .post('/api/orders', { product: uuid }, { token })
-        .then(res => {
-          resolve(res.data);
-        })
-        .catch(err => {
-          reject(err);
-        });
-    });
-  }
-
   // cancelOrder(): Promise<any> {
   //   const { token } = this.props;
   //   return new Promise((resolve, reject) => {
@@ -332,7 +334,7 @@ class CheckoutContainer extends Component<Props, State> {
       <Container>
         <Header>
           <Left>
-            <NBButton transparent dark onPress={() => this.onCancel()}>
+            <NBButton transparent dark onPress={this.onCancel}>
               <NBIcon ios="ios-arrow-back" android="md-arrow-back" />
             </NBButton>
           </Left>
@@ -360,9 +362,71 @@ class CheckoutContainer extends Component<Props, State> {
                 </Text>
               </View>
               <HR full />
-              <View style={styles.padder}>
-                <Text>asd</Text>
-              </View>
+              <Accordion
+                headerText="Shipping Address:"
+                values={[
+                  {
+                    content: [
+                      {
+                        ref: el => {
+                          this.inputs[0] = el;
+                        },
+                        placeholder: 'Address line 1',
+                        value: shippingAddress.line1,
+                        onFocus: this.handleFocus.bind(this, 0),
+                        onChangeValue: t =>
+                          this.setState(
+                            update(this.state, {
+                              shippingAddress: { line1: { $set: t } },
+                            })
+                          ),
+                      },
+                      {
+                        ref: el => {
+                          this.inputs[1] = el;
+                        },
+                        placeholder: 'Address line 2',
+                        value: shippingAddress.line2,
+                        onFocus: this.handleFocus.bind(this, 1),
+                        onChangeValue: t =>
+                          this.setState(
+                            update(this.state, {
+                              shippingAddress: { line2: { $set: t } },
+                            })
+                          ),
+                      },
+                      {
+                        ref: el => {
+                          this.inputs[2] = el;
+                        },
+                        placeholder: 'City',
+                        value: shippingAddress.city,
+                        onFocus: this.handleFocus.bind(this, 2),
+                        onChangeValue: t =>
+                          this.setState(
+                            update(this.state, {
+                              shippingAddress: { city: { $set: t } },
+                            })
+                          ),
+                      },
+                      {
+                        ref: el => {
+                          this.inputs[3] = el;
+                        },
+                        placeholder: 'State',
+                        value: shippingAddress.state,
+                        onFocus: this.handleFocus.bind(this, 3),
+                        onChangeValue: t =>
+                          this.setState(
+                            update(this.state, {
+                              shippingAddress: { state: { $set: t } },
+                            })
+                          ),
+                      },
+                    ],
+                  },
+                ]}
+              />
               <HR full />
             </Content>
             <Footer>

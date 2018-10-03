@@ -346,7 +346,7 @@ export class ProductContainer extends React.Component<Props, State> {
       })
       .then(() => api.getProduct(item.uuid))
       .then((product: ProductType) => {
-        // TODO: if the product is reserved to me open the checkout (e.g. i closed the app and want to finish paying)
+        // TODO: if the product is reserved to me open the checkout (e.g. if closed the app and want to finish paying)
         // TODO: if product status is 'reserved' say you can try again later... (in the case when you're looking at an item and second person clicks buy faster)
         if (product.status !== 'forsale') {
           throw Error(I18n.t('product.toast_warning_on_product_sold'));
@@ -354,19 +354,19 @@ export class ProductContainer extends React.Component<Props, State> {
         if (isProd) Analytics.track('press_buy', { uuid: product.uuid });
 
         // $FlowFixMe
-        this.props.navigation.navigate({
-          routeName: 'chat',
-          params: {
-            productUuid: product.uuid,
-            roomId: -1,
-            userId: product.seller.id,
-          },
-        });
         // this.props.navigation.navigate({
-        //   routeName: 'checkout',
-        //   params: item,
-        //   key: `checkout-${product.uuid}`,
+        //   routeName: 'chat',
+        //   params: {
+        //     productUuid: product.uuid,
+        //     roomId: -1,
+        //     userId: product.seller.id,
+        //   },
         // });
+        this.props.navigation.navigate({
+          routeName: 'checkout',
+          params: product,
+          key: `checkout-${product.uuid}`,
+        });
       })
       .catch(err => {
         if (err.message === 'not_shared')

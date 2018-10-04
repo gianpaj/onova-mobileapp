@@ -24,8 +24,7 @@ import {
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { FormInput, FormLabel } from 'react-native-elements';
 import type { NavigationScreenProp } from 'react-navigation';
-// import { CardView, LiteCreditCardInput } from 'react-native-credit-card-input';
-// import FlipCard from 'react-native-flip-card';
+import { CardView } from 'react-native-credit-card-input';
 import { Toast } from 'antd-mobile-rn';
 import axios from 'axios';
 import isEmail from 'validator/lib/isEmail';
@@ -35,7 +34,11 @@ import { KeyboardAccessoryNavigation } from 'react-native-keyboard-accessory';
 
 import { Accordion, Header } from '../components';
 
-import { getPersonalUserData, intro } from '../actions/actionCreator';
+import {
+  disableRefresh,
+  getPersonalUserData,
+  intro,
+} from '../actions/actionCreator';
 
 import I18n from '../i18n';
 import colors from '../config/colors';
@@ -74,6 +77,7 @@ type Props = {
   navigation?: NavigationScreenProp<*>,
   userData: UserData,
   token: string,
+  shouldRefresh?: boolean,
 };
 
 type State = {
@@ -84,7 +88,6 @@ type State = {
   username: string,
   usernameError: boolean,
   shippingAddress: ?ShippingAddress,
-  paymentInfo: ?PaymentInfo,
   nextFocusDisabled: boolean,
   previousFocusDisabled: boolean,
   activeInputRef: any,
@@ -98,7 +101,6 @@ class SettingsContainer extends Component<Props, State> {
     pending: false,
     isLoading: true,
     password: '',
-    paymentInfo: null,
     shippingAddress: null,
     username: '',
     usernameError: false,
@@ -108,11 +110,14 @@ class SettingsContainer extends Component<Props, State> {
   };
 
   componentDidMount() {
-    const CancelToken = axios.CancelToken;
-    this.cancelToken = CancelToken.source();
-    this.props.dispatch(
-      getPersonalUserData({ cancelToken: this.cancelToken.token })
-    );
+    this.refresh();
+
+    this.props.navigation.addListener('didFocus', () => {
+      if (this.props.shouldRefresh) {
+        this.refresh();
+        this.props.dispatch(disableRefresh());
+      }
+    });
     // Instabug.startWithToken(
     //   settings.INSTABUG_TOKEN,
     //   Instabug.invocationEvent.none
@@ -124,6 +129,14 @@ class SettingsContainer extends Component<Props, State> {
         UIManager.setLayoutAnimationEnabledExperimental(true);
     }
   }
+
+  refresh = () => {
+    const CancelToken = axios.CancelToken;
+    this.cancelToken = CancelToken.source();
+    this.props.dispatch(
+      getPersonalUserData({ cancelToken: this.cancelToken.token })
+    );
+  };
 
   componentWillUnmount() {
     // trigger Axios to reject the request
@@ -164,7 +177,6 @@ class SettingsContainer extends Component<Props, State> {
       pending,
       password,
       emailAddress,
-      paymentInfo,
       shippingAddress,
       username,
     } = this.state;
@@ -174,7 +186,6 @@ class SettingsContainer extends Component<Props, State> {
       ((shippingAddress &&
         (validShippingAddress(shippingAddress) &&
           !Object.is(shippingAddress, userData.shippingAddress))) ||
-        (paymentInfo && paymentInfo.valid) ||
         validPassword(password) ||
         (isEmail(emailAddress) && emailAddress !== userData.emailAddress) ||
         (username !== '' && username !== userData.username))
@@ -183,13 +194,7 @@ class SettingsContainer extends Component<Props, State> {
 
   onSave = () => {
     const { userData, token } = this.props;
-    const {
-      password,
-      emailAddress,
-      // paymentInfo,
-      shippingAddress,
-      username,
-    } = this.state;
+    const { password, emailAddress, shippingAddress, username } = this.state;
     const data = {};
 
     this.setState({ pending: true });
@@ -206,15 +211,6 @@ class SettingsContainer extends Component<Props, State> {
       data.emailAddress = emailAddress;
     }
 
-    /*
-    if (paymentInfo.valid) {
-      const { values } = paymentInfo;
-
-      data.last_four = values.number.slice(-4);
-      data.exp_month = values.expiry.split('/')[0];
-      data.exp_year = values.expiry.split('/')[0];
-    }
-    */
     if (validShippingAddress(shippingAddress)) {
       data.shippingAddress = shippingAddress;
     }
@@ -249,15 +245,6 @@ class SettingsContainer extends Component<Props, State> {
       });
   };
 
-  onCCChange = form => {
-    this.setState({
-      paymentInfo: {
-        valid: form.valid,
-        values: form.values,
-      },
-    });
-  };
-
   onUserChange = (u: string) => {
     if (!settings.USERNAME_REGEX.test(u)) {
       this.setState({ usernameError: true });
@@ -272,17 +259,16 @@ class SettingsContainer extends Component<Props, State> {
 
   onSignout = () => this.props.dispatch(intro());
 
-  /*
   formatCardInfo() {
-    const { paymentInfo } = this.props.userData;
+    const { paymentInfo }: { paymentInfo: PaymentInfo } = this.props.userData;
 
     return {
       number: `**** **** **** ${paymentInfo.last_four}`,
-      expiry: `${paymentInfo.exp_month} / ${paymentInfo.exp_year}`,
+      expiry: '',
       name: ' ',
+      scale: 0.5,
     };
   }
-  */
 
   handleFocus(ref) {
     this.setState({
@@ -431,30 +417,18 @@ class SettingsContainer extends Component<Props, State> {
                 },
               ]}
             />
-            {/*
             <FormLabel labelStyle={[styles.label, { paddingBottom: 10 }]}>
               Payment Info:
             </FormLabel>
-            <FlipCard
-              perspective={1000}
-              clickable={
-                userData.paymentInfo &&
-                Object.keys(userData.paymentInfo).length > 0
-              }
-              style={{ borderWidth: 0 }}
-              flip={
-                !userData.paymentInfo ||
-                Object.keys(userData.paymentInfo).length == 0
-              }>
-              <View style={{ alignSelf: 'center' }}>
-                {userData.paymentInfo && (
+            <View style={{ alignSelf: 'center' }}>
+              <TouchableOpacity onPress={this.enterPaymentInfo}>
+                {Object.keys(userData.paymentInfo).length ? (
                   <CardView {...this.formatCardInfo()} />
+                ) : (
+                  <CardView {...this.formatCardInfo()} number="" expiry="" />
                 )}
-              </View>
-              <View style={{ paddingLeft: 10 }}>
-                <LiteCreditCardInput onChange={this.onCCChange} />
-              </View>
-            </FlipCard> */}
+              </TouchableOpacity>
+            </View>
             {/* <View style={styles.padder}> */}
             {/* <Text style={[styles.padder, styles.secureText]}> */}
             {/* Your data is secured with a 2048-bit encryption SSL certificate */}
@@ -597,6 +571,7 @@ const styles = StyleSheet.create({
 const mapStateToProps: any = (state: ReduxState) => ({
   userData: state.LoginReducer.data,
   token: state.LoginReducer.token,
+  shouldRefresh: state.RefresherReducer.shouldRefresh,
 });
 
 export const Settings = connect(mapStateToProps)(SettingsContainer);

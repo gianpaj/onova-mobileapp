@@ -191,7 +191,6 @@ class CheckoutContainer extends Component<Props, State> {
       return this.goToChat(order.id, item);
     }
 
-    // const self = this;
     const { userData } = this.props;
     const { emailAddress, paymentInfo, shippingAddress, username } = this.state;
     const data = {};

@@ -311,6 +311,13 @@ class SettingsContainer extends Component<Props, State> {
     );
   }
 
+  enterPaymentInfo = () => {
+    this.props.navigation.navigate({
+      routeName: 'getCardId',
+      key: 'getCardId',
+    });
+  };
+
   render() {
     const { userData } = this.props;
     const {
@@ -512,7 +519,7 @@ class SettingsContainer extends Component<Props, State> {
               onFocus={this.handleFocus.bind(this, 7)}
             />
           </View>
-          {/* Notifications switch */}
+          {/* TODO: add Notifications switch */}
           {/* You only get notifications for messages and status updates in your sales or purchases.
             We won't distract when you get new followers and other non-important matters */}
           <View style={[styles.padder, { alignItems: 'center' }]}>

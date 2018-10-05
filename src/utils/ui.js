@@ -16,13 +16,13 @@ import {
  *
  * @param message
  * @param type ['warning', 'success', 'danger', '']
- * @param buttonText text for the button to dismiss the Toast
- * @param duration seconds
+ * @param buttonText text for the button to dismiss the Toast ('OK' default for both EN and UK)
+ * @param duration seconds (default is 10)
  */
 export function showToast(
   message: string,
   type: string = '',
-  buttonText: ?string,
+  buttonText?: string,
   duration: number = 10
 ) {
   if (!buttonText && type == 'success')

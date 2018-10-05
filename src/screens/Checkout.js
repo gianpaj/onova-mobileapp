@@ -137,8 +137,11 @@ class CheckoutContainer extends Component<Props, State> {
         ) {
           // $FlowFixMe
           this.goToChat(err.data.data.id, item);
-        } else if (err.data.data.status == 'pending') {
-          console.log('pending');
+        } else if (
+          err.data.data.status == 'pending' ||
+          err.data.data.status == 'cancelled'
+        ) {
+          console.log('order is: pending or cancelled');
           this.setState({
             item,
             isLoading: false,
@@ -269,24 +272,24 @@ class CheckoutContainer extends Component<Props, State> {
     });
   }
 
-  // cancelOrder(): Promise<any> {
-  //   const { token } = this.props;
-  //   return new Promise((resolve, reject) => {
-  //     api
-  //       .put(
-  //         `/api/orders/${this.state.order.id}`,
-  //         { status: 'cancelled' },
-  //         { token }
-  //       )
-  //       .then(res => {
-  //         console.debug('order cancelled');
-  //         resolve(res.data);
-  //       })
-  //       .catch(err => {
-  //         reject(err);
-  //       });
-  //   });
-  // }
+  cancelOrder(): Promise<any> {
+    const { token } = this.props;
+    return new Promise((resolve, reject) => {
+      api
+        .put(
+          `/api/orders/${this.state.order.id}`,
+          { status: 'cancelled' },
+          { token }
+        )
+        .then(() => {
+          console.debug('order cancelled');
+          resolve();
+        })
+        .catch(err => {
+          reject(err);
+        });
+    });
+  }
 
   formatCardInfo() {
     const { paymentInfo }: { paymentInfo: PaymentInfo } = this.props.userData;
@@ -299,10 +302,14 @@ class CheckoutContainer extends Component<Props, State> {
     };
   }
 
-  onCancel = () => {
-    this.props.navigation.goBack();
-    // this.cancelOrder().then(co => {
-    // });
+  onCancel = async () => {
+    try {
+      await this.cancelOrder();
+      this.props.navigation.goBack();
+    } catch (error) {
+      ui.showToast(error.message, 'danger');
+    }
+  };
 
   goToEnterPaymentInfo = async () => {
     await this.updateShippingInfo();

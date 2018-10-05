@@ -243,7 +243,7 @@ export class ProductContainer extends React.Component<Props, State> {
       .catch(e => console.error(e));
   }
 
-  refresh() {
+  refresh(): Promise<any> {
     const { params }: { params: ProductType } = this.props.navigation.state;
     let uuid;
 
@@ -257,7 +257,7 @@ export class ProductContainer extends React.Component<Props, State> {
       uuid = params.uuid;
     }
     console.debug('product uuid:', uuid);
-    api
+    return api
       .getProduct(uuid)
       .then(data => {
         if (data.status !== 'forsale' && data.status !== 'reserved') {
@@ -267,6 +267,7 @@ export class ProductContainer extends React.Component<Props, State> {
           item: data,
           loading: false,
         });
+        return data;
       })
       .catch(e => {
         console.error(e);
@@ -307,13 +308,16 @@ export class ProductContainer extends React.Component<Props, State> {
     });
   }
 
-  onPressReserved() {
-    ui.showToast(
-      I18n.t('product.reserved_message'),
-      'warning',
-      I18n.t('product.toast_warning_ok_button')
-    );
-  }
+  onPressReserved = async () => {
+    const { status } = await this.refresh();
+    if (status === 'reserved') {
+      ui.showToast(
+        I18n.t('product.reserved_message'),
+        'warning',
+        I18n.t('product.toast_warning_ok_button')
+      );
+    }
+  };
 
   onPressBuy = () => {
     const { item } = this.state;
@@ -346,9 +350,13 @@ export class ProductContainer extends React.Component<Props, State> {
       })
       .then(() => api.getProduct(item.uuid))
       .then((product: ProductType) => {
-        // TODO: if the product is reserved to me open the checkout (e.g. if closed the app and want to finish paying)
-        // TODO: if product status is 'reserved' say you can try again later... (in the case when you're looking at an item and second person clicks buy faster)
+        // TODO: if the product is reserved to me open the checkout (e.g. if closed the app and want to finish paying) - not visible at the moment
+        // if product status is not longer for sale while looking at an item (ie. a second person presses buy faster)
         if (product.status !== 'forsale') {
+          this.refresh();
+          if (product.status === 'reserved') {
+            throw Error(I18n.t('product.reserved_message'));
+          }
           throw Error(I18n.t('product.toast_warning_on_product_sold'));
         }
         if (isProd) Analytics.track('press_buy', { uuid: product.uuid });
@@ -509,7 +517,7 @@ export class ProductContainer extends React.Component<Props, State> {
                     style={styles.iconCommmentAndShare}
                   /> */}
                     <View style={styles.flex1} />
-                    {item.status === 'forsale' ? (
+                    {item.status === 'forsale' && (
                       <Button
                         buttonStyle={styles.buyButton}
                         containerViewStyle={styles.buyButtonContainer}
@@ -521,7 +529,8 @@ export class ProductContainer extends React.Component<Props, State> {
                         title={I18n.t('product.buy_button')}
                         loading={loadingBuy}
                       />
-                    ) : (
+                    )}
+                    {item.status === 'reserved' && (
                       <Button
                         buttonStyle={styles.reservedButton}
                         containerViewStyle={styles.buyButtonContainer}

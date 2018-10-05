@@ -22,14 +22,16 @@ import {
   Right,
   Title,
 } from 'native-base';
+import { Toast } from 'antd-mobile-rn';
 // import { FormInput, FormLabel } from 'react-native-elements';
 import type { NavigationScreenProp } from 'react-navigation';
 // import { CardView, LiteCreditCardInput } from 'react-native-credit-card-input';
 // import BTClient from 'react-native-braintree-xplat';
+import update from 'immutability-helper';
 import axios from 'axios';
 import type { CancelTokenSource } from 'axios';
 
-import { getPersonalUserData } from '../actions/actionCreator';
+import { disableRefresh, getPersonalUserData } from '../actions/actionCreator';
 
 import { Accordion, Header, HR } from '../components';
 
@@ -37,7 +39,7 @@ import colors from '../config/colors';
 // import settings from '../config/settings';
 import { validShippingAddress } from '../utils/validators';
 import * as api from '../utils/api';
-// import * as ui from '../utils/ui';
+import * as ui from '../utils/ui';
 
 import type {
   UserData,
@@ -52,37 +54,30 @@ import type {
 type Props = {
   dispatch: Dispatch,
   navigation: NavigationScreenProp<*>,
-  userData: UserData,
+  shouldRefresh?: boolean,
   token: string,
+  userData: UserData,
 };
 
 type State = {
-  emailAddress: string,
   isLoading: boolean,
   item: Product | {},
   order: Order | {},
-  password: string,
   paymentInfo: PaymentInfo,
   pending: boolean,
   shippingAddress: ?ShippingAddress,
-  username: string,
-  usernameError: boolean,
 };
 
 class CheckoutContainer extends Component<Props, State> {
   inputs = [];
   cancelToken: CancelTokenSource;
   state = {
-    emailAddress: '',
     isLoading: true,
     item: {},
     order: {},
-    password: '',
     paymentInfo: {},
     pending: false,
     shippingAddress: null,
-    username: '',
-    usernameError: false,
   };
 
   componentDidMount() {
@@ -91,6 +86,13 @@ class CheckoutContainer extends Component<Props, State> {
     this.props.dispatch(
       getPersonalUserData({ cancelToken: this.cancelToken.token })
     );
+
+    this.props.navigation.addListener('didFocus', () => {
+      if (this.props.shouldRefresh) {
+        this.refresh();
+        this.props.dispatch(disableRefresh());
+      }
+    });
 
     const { token } = this.props;
     let { params: item } = this.props.navigation.state;
@@ -174,16 +176,18 @@ class CheckoutContainer extends Component<Props, State> {
       activeInputRef: ref,
     });
   }
-  static getDerivedStateFromProps(props, state) {
-    const { shippingAddress } = props.userData;
 
-    return { ...state, shippingAddress };
+
+  UNSAFE_componentWillReceiveProps(nextProps) {
+    console.log('UNSAFE_componentWillReceiveProps');
+    const { shippingAddress } = nextProps.userData;
+    this.setState({ shippingAddress });
   }
 
-  onCheckout = () => {
+  onCheckout = async () => {
     const { item, order } = this.state;
     // TODO: temp
-    const SKIP_PAY = true;
+    const SKIP_PAY = false;
     if (SKIP_PAY && item) {
       console.log(order);
       console.warn('payment skipped');
@@ -191,19 +195,11 @@ class CheckoutContainer extends Component<Props, State> {
       return this.goToChat(order.id, item);
     }
 
-    const { userData } = this.props;
-    const { emailAddress, paymentInfo, shippingAddress, username } = this.state;
+    const { paymentInfo } = this.state;
     const data = {};
 
+    Toast.loading('Loading...', 3);
     this.setState({ pending: true });
-
-    if (username !== '') {
-      data.username = username;
-    }
-
-    if (emailAddress !== userData.emailAddress) {
-      data.emailAddress = emailAddress;
-    }
 
     if (paymentInfo.valid !== undefined) {
       const { values } = paymentInfo;
@@ -213,58 +209,35 @@ class CheckoutContainer extends Component<Props, State> {
       data.exp_year = values.expiry.split('/')[0];
     }
 
-    if (validShippingAddress(shippingAddress)) {
-      data.shippingAddress = shippingAddress;
-    }
-
     console.log(data);
 
-    // Toast.loading('Loading...', 3);
+    await this.updateShippingInfo();
 
-    // BTClient.showPayPalViewController()
-    //   // BTClient.showPaymentViewController(options)
-    //   .then(nonce => {
-    //     // TODO: payment succeeded, pass nonce to server
-    //     console.warn(nonce);
-    //   })
-    //   .then(() => {
-    //     const { order, item } = self.state;
-    //     console.log(order);
-    // $FlowFixMe
-    this.goToChat(order.id, item);
-    //   })
-    //   .catch(err => {
-    //     if (err == 'USER_CANCELLATION' || err == null) {
-    //       return;
-    //     }
-    //     console.error(err);
-    //   });
+    Toast.hide();
+    this.setState({ pending: false });
+    // TODO: send payment request to API
 
-    // api
-    //   .put(`/api/users/${userData._id}`, data)
-    //   .then(res => {
-    //     console.log(res);
-    //     // if we changed the email
-    //     if (data.emailAddress) {
-    //       ui.showToast(
-    //         'The new email address requires to be valided. Please check your inbox',
-    //         'success'
-    //       );
-    //     } else {
-    //       ui.showToast('Your settings have been updated', 'success');
-    //     }
-    //     this.props.navigation && this.props.navigation.goBack();
-    //   })
-    //   .catch(err => {
-    //     console.debug(err);
-    //     ui.showToast(err.message, 'danger');
-    //   })
-    //   .then(() => {
-    //     // final
-    //     Toast.hide();
-    //     this.setState({ pending: false });
-    //   });
+    // TODO: show success Toast
+    // this.goToChat(order.id, item);
   };
+
+  updateShippingInfo(): Promise<any> {
+    const { userData, token } = this.props;
+    const { shippingAddress } = this.state;
+    const data = {};
+    // if (validShippingAddress(shippingAddress)) {
+    data.shippingAddress = shippingAddress;
+    // }
+    return api
+      .put(`/api/users/${userData._id}`, data, { token })
+      .then(res => {
+        console.log(res);
+      })
+      .catch(err => {
+        console.debug(err);
+        ui.showToast(err.message, 'danger');
+      });
+  }
 
   goToChat(orderId: string, item: Product) {
     // $FlowFixMe
@@ -300,22 +273,14 @@ class CheckoutContainer extends Component<Props, State> {
   //   });
   // }
 
-  onCCChange = form => {
-    this.setState({
-      paymentInfo: {
-        valid: form.valid,
-        values: form.values,
-      },
-    });
-  };
-
   formatCardInfo() {
-    const { paymentInfo } = this.props.userData;
+    const { paymentInfo }: { paymentInfo: PaymentInfo } = this.props.userData;
 
     return {
       number: `**** **** **** ${paymentInfo.last_four}`,
-      expiry: `${paymentInfo.exp_month} / ${paymentInfo.exp_year}`,
+      expiry: '',
       name: ' ',
+      scale: 0.5,
     };
   }
 
@@ -323,6 +288,19 @@ class CheckoutContainer extends Component<Props, State> {
     this.props.navigation.goBack();
     // this.cancelOrder().then(co => {
     // });
+  isDisabled = () => {
+    const { pending, shippingAddress } = this.state;
+    const { paymentInfo } = this.props.userData;
+    if (
+      !pending &&
+      paymentInfo.last_four &&
+      paymentInfo.method &&
+      shippingAddress.line1 &&
+      shippingAddress.city
+    ) {
+      return false;
+    }
+    return true;
   };
 
   render() {
@@ -430,8 +408,12 @@ class CheckoutContainer extends Component<Props, State> {
             </Content>
             <Footer>
               <FooterTab>
-                <NBButton onPress={this.onCheckout} full dark>
-                  <Text style={styles.buyButtonText}>Make Payment</Text>
+                <NBButton
+                  disabled={this.isDisabled()}
+                  dark={!this.isDisabled()}
+                  onPress={this.onCheckout}
+                  full>
+                  <Text style={styles.payButtonText}>Make Payment</Text>
                 </NBButton>
               </FooterTab>
             </Footer>
@@ -451,7 +433,7 @@ const styles = StyleSheet.create({
   flex1: {
     flex: 1,
   },
-  buyButtonText: {
+  payButtonText: {
     color: colors.white,
   },
   // label: {
@@ -487,6 +469,7 @@ const styles = StyleSheet.create({
 const mapStateToProps: any = (state: ReduxState) => ({
   userData: state.LoginReducer.data,
   token: state.LoginReducer.token,
+  shouldRefresh: state.RefresherReducer.shouldRefresh,
 });
 
 export const Checkout = connect(mapStateToProps)(CheckoutContainer);

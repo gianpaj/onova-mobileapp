@@ -5,8 +5,8 @@ import { connect } from 'react-redux';
 import {
   ActivityIndicator,
   StyleSheet,
-  // Platform,
   Text,
+  TouchableOpacity,
   View,
 } from 'react-native';
 import {
@@ -23,9 +23,9 @@ import {
   Title,
 } from 'native-base';
 import { Toast } from 'antd-mobile-rn';
-// import { FormInput, FormLabel } from 'react-native-elements';
+import { FormLabel } from 'react-native-elements';
 import type { NavigationScreenProp } from 'react-navigation';
-// import { CardView, LiteCreditCardInput } from 'react-native-credit-card-input';
+import { CardView } from 'react-native-credit-card-input';
 // import BTClient from 'react-native-braintree-xplat';
 import update from 'immutability-helper';
 import axios from 'axios';
@@ -81,11 +81,7 @@ class CheckoutContainer extends Component<Props, State> {
   };
 
   componentDidMount() {
-    const CancelToken = axios.CancelToken;
-    this.cancelToken = CancelToken.source();
-    this.props.dispatch(
-      getPersonalUserData({ cancelToken: this.cancelToken.token })
-    );
+    this.refresh();
 
     this.props.navigation.addListener('didFocus', () => {
       if (this.props.shouldRefresh) {
@@ -169,6 +165,14 @@ class CheckoutContainer extends Component<Props, State> {
     //TODO: unreserve product and cancel order
   }
 
+  refresh = () => {
+    const CancelToken = axios.CancelToken;
+    this.cancelToken = CancelToken.source();
+    this.props.dispatch(
+      getPersonalUserData({ cancelToken: this.cancelToken.token })
+    );
+  };
+
   handleFocus(ref) {
     this.setState({
       nextFocusDisabled: ref === 7,
@@ -185,6 +189,18 @@ class CheckoutContainer extends Component<Props, State> {
   }
 
   onCheckout = async () => {
+    const { shippingAddress } = this.state;
+    const { paymentInfo } = this.props.userData;
+    if (this.isDisabled()) {
+      let missing;
+      if (!paymentInfo.last_four || !paymentInfo.method) {
+        missing = 'Payment information';
+      }
+      if (!shippingAddress.line1 || !shippingAddress.city) {
+        missing = 'Shipping address';
+      }
+      return ui.showToast(`${missing} is missing`, 'warning', null, 5);
+    }
     const { item, order } = this.state;
     // TODO: temp
     const SKIP_PAY = false;
@@ -195,7 +211,6 @@ class CheckoutContainer extends Component<Props, State> {
       return this.goToChat(order.id, item);
     }
 
-    const { paymentInfo } = this.state;
     const data = {};
 
     Toast.loading('Loading...', 3);
@@ -288,6 +303,15 @@ class CheckoutContainer extends Component<Props, State> {
     this.props.navigation.goBack();
     // this.cancelOrder().then(co => {
     // });
+
+  goToEnterPaymentInfo = async () => {
+    await this.updateShippingInfo();
+    this.props.navigation.navigate({
+      routeName: 'getCardId',
+      key: 'getCardId',
+    });
+  };
+
   isDisabled = () => {
     const { pending, shippingAddress } = this.state;
     const { paymentInfo } = this.props.userData;
@@ -304,7 +328,7 @@ class CheckoutContainer extends Component<Props, State> {
   };
 
   render() {
-    // const { userData } = this.props;
+    const { userData } = this.props;
     const { pending, shippingAddress, item, isLoading } = this.state;
 
     return (
@@ -404,21 +428,46 @@ class CheckoutContainer extends Component<Props, State> {
                   },
                 ]}
               />
-              <HR full />
+              <FormLabel labelStyle={[styles.label, { paddingBottom: 10 }]}>
+                Payment Info:
+              </FormLabel>
+              <View style={{ alignSelf: 'center' }}>
+                <TouchableOpacity onPress={this.goToEnterPaymentInfo}>
+                  {Object.keys(userData.paymentInfo).length ? (
+                    <CardView {...this.formatCardInfo()} />
+                  ) : (
+                    <CardView {...this.formatCardInfo()} number="" expiry="" />
+                  )}
+                </TouchableOpacity>
+              </View>
             </Content>
             <Footer>
               <FooterTab>
                 <NBButton
-                  disabled={this.isDisabled()}
                   dark={!this.isDisabled()}
+                  style={[
+                    this.isDisabled()
+                      ? { backgroundColor: colors.grey4 }
+                      : null,
+                  ]}
                   onPress={this.onCheckout}
                   full>
-                  <Text style={styles.payButtonText}>Make Payment</Text>
+                  <Text style={[this.isDisabled() ? {} : styles.payButtonText]}>
+                    Make Payment
+                  </Text>
                 </NBButton>
               </FooterTab>
             </Footer>
           </View>
         )}
+        {/* {Platform.OS == 'ios' && (
+          <KeyboardAccessoryNavigation
+            nextDisabled={this.state.nextFocusDisabled}
+            previousDisabled={this.state.previousFocusDisabled}
+            onNext={this.changeInputFocus.bind(this, 1)}
+            onPrevious={this.changeInputFocus.bind(this, -1)}
+          />
+        )} */}
       </Container>
     );
   }
@@ -436,14 +485,10 @@ const styles = StyleSheet.create({
   payButtonText: {
     color: colors.white,
   },
-  // label: {
-  //   color: colors.black,
-  //   fontWeight: '600',
-  // },
-  // input: {
-  //   color: colors.black,
-  //   width: '100%',
-  // },
+  label: {
+    color: colors.black,
+    fontWeight: '600',
+  },
   padder: {
     padding: 10,
   },
@@ -456,14 +501,6 @@ const styles = StyleSheet.create({
     color: colors.grey2,
     alignSelf: 'center',
   },
-  // inputContainer: {
-  //   borderBottomWidth: 0,
-  //   marginVertical: 10,
-  // },
-  // centerText: {
-  //   color: colors.grey4,
-  //   paddingVertical: 10,
-  // },
 });
 
 const mapStateToProps: any = (state: ReduxState) => ({

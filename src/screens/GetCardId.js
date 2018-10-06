@@ -86,7 +86,10 @@ class GetCardId extends Component {
           injectedJavaScript={`(${JStoInject.toString()}());`}
           onMessage={event => this.onFinished(event.nativeEvent.data)}
         />
-        <Button title="go back" onPress={this.props.navigation.goBack} />
+        <Button
+          title="go back"
+          onPress={() => this.props.navigation.goBack()}
+        />
       </View>
     );
   }

@@ -2,13 +2,32 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Button, View, WebView } from 'react-native';
+import { Button, View } from 'react-native';
+import { WebView } from 'react-native-webview';
 
 import { enableRefresh } from '../actions/actionCreator';
 
 import * as api from '../utils/api';
+import * as ui from '../utils/ui';
 
 import type { ReduxState } from '../types';
+
+function JStoInject() {
+  // alert('injected');
+  var iframe = document.getElementById('uapayFrame').contentWindow;
+
+  var button = document.getElementsByTagName('button')[0];
+  button.addEventListener('click', function() {
+    iframe.postMessage('Submit', '*');
+  });
+
+  function listener(event) {
+    if (event.data) {
+      window.postMessage(JSON.stringify(event.data));
+    }
+  }
+  window.addEventListener('message', listener, false);
+}
 class GetCardId extends Component {
   state = {
     tokenForCardIFrame: null,
@@ -29,20 +48,22 @@ class GetCardId extends Component {
     return data;
   }
 
-  onFinished = async () => {
+  onFinished = async data => {
     const { userData, token } = this.props;
-    const paymentInfoPayload =
-      'QtDZHvcnhTowyjo6xfLCL591hEm3h8QjNspRq7k5n5VhNN3H9waMRRqhK5DVV1hUkKQF5aTn18a9Rjk47eR8trEvWsr7CrofJ';
     try {
+      data = JSON.parse(data);
+      // TODO: if TIMEOUT_ERROR reload
+      if (data.name === 'Error') throw Error(JSON.stringify(data));
       await api.put(
         `/api/users/${userData._id}`,
-        { paymentInfoPayload },
+        { paymentInfoPayload: data.payload },
         { token }
       );
       this.props.dispatch(enableRefresh());
       // return to previous screen (Settings or Checkout)
       this.props.navigation.goBack();
     } catch (error) {
+      ui.showToast(error.message, 'danger');
       console.error(error);
     }
   };
@@ -52,29 +73,20 @@ class GetCardId extends Component {
     return (
       <View style={{ flex: 1, marginTop: 20 }}>
         <WebView
-          originWhitelist={['*']}
           source={{
-            // uri: `https://api.demo.uapay.ua/api/iframe/${
-            //   this.state.tokenForCardIFrame
-            // }`,
-            html: `<iframe id="uapayFrame" style="height: 50%; width: 100%" src="https://api.demo.uapay.ua/api/iframe/${
-              this.state.tokenForCardIFrame
-            }"></iframe><button id="btnSubmit">Створити картку</button>`,
+            html: `<html>
+              <head><meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0"></head>
+              <body>
+                <iframe id="uapayFrame" style="border: 0; height: 200px; width: 100%" src="https://api.demo.uapay.ua/api/iframe/${
+                  this.state.tokenForCardIFrame
+                }"></iframe>
+                <button id="btnSubmit">Створити картку</button>
+              </body></html>`,
           }}
-          injectedJavaScript={`
-            (function(){
-              var iframe = document.getElementById("uapayFrame").contentWindow;
-              var button = document.getElementById("btnSubmit");
-              button.addEventListener("click", function(e) {
-                console.log('click')
-                iframe.postMessage("Submit", "*");
-              });
-            }());`}
-          // injectedJavaScript={'(function(){return "Send me back!"}());'}
-          // onMessage={event => alert(event.nativeEvent.data)}
-          onNavigationStateChange={event => console.log(event)}
+          injectedJavaScript={`(${JStoInject.toString()}());`}
+          onMessage={event => this.onFinished(event.nativeEvent.data)}
         />
-        <Button title="go back" onPress={this.onFinished} />
+        <Button title="go back" onPress={this.props.navigation.goBack} />
       </View>
     );
   }

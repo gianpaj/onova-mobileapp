@@ -5397,7 +5397,7 @@ fbjs@^0.6.1:
     ua-parser-js "^0.7.9"
     whatwg-fetch "^0.9.0"
 
-fbjs@^0.8.12:
+fbjs@^0.8.12, fbjs@^0.8.17:
   version "0.8.17"
   resolved "https://registry.yarnpkg.com/fbjs/-/fbjs-0.8.17.tgz#c4d598ead6949112653d6588b01a5cdcd9f90fdd"
   integrity sha1-xNWY6taUkRJlPWWIsBpc3Nn5D90=
@@ -10650,6 +10650,13 @@ react-native-vector-icons@4.6.0, react-native-vector-icons@^4.5.0, react-native-
     lodash "^4.0.0"
     prop-types "^15.5.10"
     yargs "^8.0.2"
+
+"react-native-webview@https://github.com/react-native-community/react-native-webview":
+  version "0.1.0"
+  resolved "https://github.com/react-native-community/react-native-webview#336cdc85592c8d936e42bb15eda39781bd4f397b"
+  dependencies:
+    escape-string-regexp "^1.0.5"
+    fbjs "^0.8.17"
 
 react-native@0.56.0:
   version "0.56.0"

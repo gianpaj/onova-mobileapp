@@ -115,8 +115,9 @@ class SettingsContainer extends Component<Props, State> {
     usernameError: false,
   };
 
-  componentDidMount() {
-    this.refresh();
+  async componentDidMount() {
+    await this.refresh();
+    this.setState({ isLoading: false });
 
     this.props.navigation.addListener('didFocus', () => {
       if (this.props.shouldRefresh) {
@@ -139,7 +140,7 @@ class SettingsContainer extends Component<Props, State> {
   refresh = () => {
     const CancelToken = axios.CancelToken;
     this.cancelToken = CancelToken.source();
-    this.props.dispatch(
+    return this.props.dispatch(
       getPersonalUserData({ cancelToken: this.cancelToken.token })
     );
   };
@@ -149,38 +150,18 @@ class SettingsContainer extends Component<Props, State> {
     this.cancelToken.cancel('operation_canceled');
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    // fix error when logging out
-    if (!nextProps.userData) return;
-
-    const {
-      emailAddress,
-      mobileNumber,
-      shippingAddress,
-      username,
-    } = nextProps.userData;
-
-    if (this.hasStateDifferedFromProps(nextProps.userData, 'shippingAddress')) {
-      this.setState({ shippingAddress });
+  static getDerivedStateFromProps(props, state) {
+    if (state.isLoading) {
+      return {
+        shippingAddress: props.userData.shippingAddress,
+        username: props.userData.username,
+        emailAddress: props.userData.emailAddress,
+        mobileNumber: props.userData.mobileNumber,
+      };
     }
 
-    if (this.hasStateDifferedFromProps(nextProps.userData, 'username')) {
-      this.setState({ username });
-    }
-
-    if (this.hasStateDifferedFromProps(nextProps.userData, 'emailAddress')) {
-      this.setState({ emailAddress });
-    }
-
-    if (this.hasStateDifferedFromProps(nextProps.userData, 'mobileNumber')) {
-      this.setState({ mobileNumber });
-    }
-
-    this.setState({ isLoading: false });
-  }
-
-  hasStateDifferedFromProps(nextProps: any, key: string): boolean {
-    return nextProps[key] && !Object.is(nextProps[key], this.props[key]);
+    // Return null to indicate no change to state.
+    return null;
   }
 
   /**

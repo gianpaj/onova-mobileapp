@@ -199,10 +199,16 @@ class CheckoutContainer extends Component<Props, State> {
     const focusingRef = this.state.activeInputRef + direction;
     this.inputs[focusingRef] && this.inputs[focusingRef].focus();
   }
+  static getDerivedStateFromProps(props, state) {
+    if (state.isLoading) {
+      return {
+        shippingAddress: props.userData.shippingAddress,
+        mobileNumber: props.userData.mobileNumber,
+      };
+    }
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    const { shippingAddress, mobileNumber } = nextProps.userData;
-    this.setState({ shippingAddress, mobileNumber });
+    // Return null to indicate no change to state.
+    return null;
   }
 
   onCheckout = async () => {

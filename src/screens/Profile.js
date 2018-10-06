@@ -179,47 +179,27 @@ class ProfileScreen extends React.Component<Props, State> {
       .catch(e => console.error(e));
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    // fix error when logging out
-    if (!nextProps.userData) return;
-
-    const {
-      _id,
-      bio,
-      displayName,
-      profilePic,
-      username,
-      followersCount,
-      followingCount,
-      ratingsTotal,
-      reviewsCount,
-    } = nextProps.userData;
-
-    this.setState({
-      _id,
-      username,
-      followersCount,
-      followingCount,
-      rateAvg: ratingsTotal == 0 ? ratingsTotal : ratingsTotal / reviewsCount,
-      reviewsCount,
-      isFetching: false,
-    });
-
-    if (this.hasStateDifferedFromProps(nextProps.userData, 'bio')) {
-      this.setState({ bio });
+  static getDerivedStateFromProps(props, state) {
+    if (state.isFetching) {
+      const { ratingsTotal, reviewsCount } = props.userData;
+      return {
+        _id: props.userData._id,
+        bio: props.userData.bio,
+        displayName: props.userData.displayName,
+        emailAddress: props.userData.emailAddress,
+        followersCount: props.userData.followersCount,
+        followingCount: props.userData.followingCount,
+        mobileNumber: props.userData.mobileNumber,
+        profilePic: props.userData.profilePic,
+        rateAvg: ratingsTotal == 0 ? ratingsTotal : ratingsTotal / reviewsCount,
+        ratingsTotal,
+        reviewsCount,
+        username: props.userData.username,
+      };
     }
 
-    if (this.hasStateDifferedFromProps(nextProps.userData, 'displayName')) {
-      this.setState({ displayName });
-    }
-
-    if (this.hasStateDifferedFromProps(nextProps.userData, 'profilePic')) {
-      this.setState({ profilePic });
-    }
-  }
-
-  hasStateDifferedFromProps(nextProps: any, key: string): boolean {
-    return nextProps[key] && !Object.is(nextProps[key], this.props[key]);
+    // Return null to indicate no change to state.
+    return null;
   }
 
   onGoToSettings = () => {

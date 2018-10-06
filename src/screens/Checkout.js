@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import {
   ActivityIndicator,
   StyleSheet,
+  Platform,
   Text,
   TouchableOpacity,
   View,
@@ -27,6 +28,7 @@ import { FormLabel } from 'react-native-elements';
 import type { NavigationScreenProp } from 'react-navigation';
 import { CardView } from 'react-native-credit-card-input';
 // import BTClient from 'react-native-braintree-xplat';
+import { KeyboardAccessoryNavigation } from 'react-native-keyboard-accessory';
 import update from 'immutability-helper';
 import axios from 'axios';
 import type { CancelTokenSource } from 'axios';
@@ -37,7 +39,7 @@ import { Accordion, Header, HR } from '../components';
 
 import colors from '../config/colors';
 // import settings from '../config/settings';
-import { validShippingAddress } from '../utils/validators';
+import { validShippingAddress, isPhoneNumberValid } from '../utils/validators';
 import * as api from '../utils/api';
 import * as ui from '../utils/ui';
 
@@ -62,6 +64,7 @@ type Props = {
 type State = {
   isLoading: boolean,
   item: Product | {},
+  mobileNumber: string,
   order: Order | {},
   paymentInfo: PaymentInfo,
   pending: boolean,
@@ -74,6 +77,7 @@ class CheckoutContainer extends Component<Props, State> {
   state = {
     isLoading: true,
     item: {},
+    mobileNumber: '',
     order: {},
     paymentInfo: {},
     pending: false,
@@ -178,17 +182,27 @@ class CheckoutContainer extends Component<Props, State> {
 
   handleFocus(ref) {
     this.setState({
-      nextFocusDisabled: ref === 7,
-      previousFocusDisabled: ref === 5,
       activeInputRef: ref,
+      previousFocusDisabled: ref === 0,
+      nextFocusDisabled: ref === 4,
     });
   }
 
+  changeInputFocus(direction = 1) {
+    if (
+      (this.state.nextFocusDisabled && direction === 1) ||
+      (this.state.previousFocusDisabled && direction === -1)
+    ) {
+      return;
+    }
+
+    const focusingRef = this.state.activeInputRef + direction;
+    this.inputs[focusingRef] && this.inputs[focusingRef].focus();
+  }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
-    console.log('UNSAFE_componentWillReceiveProps');
-    const { shippingAddress } = nextProps.userData;
-    this.setState({ shippingAddress });
+    const { shippingAddress, mobileNumber } = nextProps.userData;
+    this.setState({ shippingAddress, mobileNumber });
   }
 
   onCheckout = async () => {
@@ -219,14 +233,6 @@ class CheckoutContainer extends Component<Props, State> {
     Toast.loading('Loading...', 3);
     this.setState({ pending: true });
 
-    if (paymentInfo.valid !== undefined) {
-      const { values } = paymentInfo;
-
-      data.last_four = values.number.slice(-4);
-      data.exp_month = values.expiry.split('/')[0];
-      data.exp_year = values.expiry.split('/')[0];
-    }
-
     console.log(data);
 
     await this.updateShippingInfo();
@@ -241,10 +247,14 @@ class CheckoutContainer extends Component<Props, State> {
 
   updateShippingInfo(): Promise<any> {
     const { userData, token } = this.props;
-    const { shippingAddress } = this.state;
+    const { mobileNumber, shippingAddress } = this.state;
     const data = {};
     // if (validShippingAddress(shippingAddress)) {
     data.shippingAddress = shippingAddress;
+
+    // FIXME: state should be the number unformatted. useful also when comparing if number has been changed
+    data.mobileNumber = mobileNumber.replace(/\D/g, '');
+
     // }
     return api
       .put(`/api/users/${userData._id}`, data, { token })
@@ -320,14 +330,15 @@ class CheckoutContainer extends Component<Props, State> {
   };
 
   isDisabled = () => {
-    const { pending, shippingAddress } = this.state;
+    const { mobileNumber, pending, shippingAddress } = this.state;
     const { paymentInfo } = this.props.userData;
     if (
       !pending &&
       paymentInfo.last_four &&
       paymentInfo.method &&
       shippingAddress.line1 &&
-      shippingAddress.city
+      shippingAddress.city &&
+      isPhoneNumberValid(mobileNumber)
     ) {
       return false;
     }
@@ -336,7 +347,13 @@ class CheckoutContainer extends Component<Props, State> {
 
   render() {
     const { userData } = this.props;
-    const { pending, shippingAddress, item, isLoading } = this.state;
+    const {
+      isLoading,
+      item,
+      mobileNumber,
+      pending,
+      shippingAddress,
+    } = this.state;
 
     return (
       <Container>
@@ -374,64 +391,69 @@ class CheckoutContainer extends Component<Props, State> {
                 headerText="Shipping Address:"
                 values={[
                   {
-                    content: [
-                      {
-                        ref: el => {
-                          this.inputs[0] = el;
-                        },
-                        placeholder: 'Address line 1',
-                        value: shippingAddress.line1,
-                        onFocus: this.handleFocus.bind(this, 0),
-                        onChangeValue: t =>
-                          this.setState(
-                            update(this.state, {
-                              shippingAddress: { line1: { $set: t } },
-                            })
-                          ),
-                      },
-                      {
-                        ref: el => {
-                          this.inputs[1] = el;
-                        },
-                        placeholder: 'Address line 2',
-                        value: shippingAddress.line2,
-                        onFocus: this.handleFocus.bind(this, 1),
-                        onChangeValue: t =>
-                          this.setState(
-                            update(this.state, {
-                              shippingAddress: { line2: { $set: t } },
-                            })
-                          ),
-                      },
-                      {
-                        ref: el => {
-                          this.inputs[2] = el;
-                        },
-                        placeholder: 'City',
-                        value: shippingAddress.city,
-                        onFocus: this.handleFocus.bind(this, 2),
-                        onChangeValue: t =>
-                          this.setState(
-                            update(this.state, {
-                              shippingAddress: { city: { $set: t } },
-                            })
-                          ),
-                      },
-                      {
-                        ref: el => {
-                          this.inputs[3] = el;
-                        },
-                        placeholder: 'State',
-                        value: shippingAddress.state,
-                        onFocus: this.handleFocus.bind(this, 3),
-                        onChangeValue: t =>
-                          this.setState(
-                            update(this.state, {
-                              shippingAddress: { state: { $set: t } },
-                            })
-                          ),
-                      },
-                    ],
+                    ref: el => {
+                      this.inputs[0] = el;
+                    },
+                    placeholder: 'Address line 1',
+                    value: shippingAddress.line1,
+                    onFocus: this.handleFocus.bind(this, 0),
+                    onChangeValue: t =>
+                      this.setState(
+                        update(this.state, {
+                          shippingAddress: { line1: { $set: t } },
+                        })
+                      ),
+                  },
+                  {
+                    ref: el => {
+                      this.inputs[1] = el;
+                    },
+                    placeholder: 'Address line 2',
+                    value: shippingAddress.line2,
+                    onFocus: this.handleFocus.bind(this, 1),
+                    onChangeValue: t =>
+                      this.setState(
+                        update(this.state, {
+                          shippingAddress: { line2: { $set: t } },
+                        })
+                      ),
+                  },
+                  {
+                    ref: el => {
+                      this.inputs[2] = el;
+                    },
+                    placeholder: 'City',
+                    value: shippingAddress.city,
+                    onFocus: this.handleFocus.bind(this, 2),
+                    onChangeValue: t =>
+                      this.setState(
+                        update(this.state, {
+                          shippingAddress: { city: { $set: t } },
+                        })
+                      ),
+                  },
+                  {
+                    ref: el => {
+                      this.inputs[3] = el;
+                    },
+                    placeholder: 'State',
+                    value: shippingAddress.state,
+                    onFocus: this.handleFocus.bind(this, 3),
+                    onChangeValue: t =>
+                      this.setState(
+                        update(this.state, {
+                          shippingAddress: { state: { $set: t } },
+                        })
+                      ),
+                  },
+                  {
+                    ref: el => (this.inputs[4] = el),
+                    placeholder: 'Mobile number',
+                    value: ui.formatPhoneNumber(mobileNumber),
+                    onFocus: this.handleFocus.bind(this, 4),
+                    onChangeValue: t => this.setState({ mobileNumber: t }),
+                    type: 'phone',
+                    validation: isPhoneNumberValid,
                   },
                 ]}
               />
@@ -467,14 +489,14 @@ class CheckoutContainer extends Component<Props, State> {
             </Footer>
           </View>
         )}
-        {/* {Platform.OS == 'ios' && (
+        {Platform.OS == 'ios' && (
           <KeyboardAccessoryNavigation
             nextDisabled={this.state.nextFocusDisabled}
             previousDisabled={this.state.previousFocusDisabled}
             onNext={this.changeInputFocus.bind(this, 1)}
             onPrevious={this.changeInputFocus.bind(this, -1)}
           />
-        )} */}
+        )}
       </Container>
     );
   }

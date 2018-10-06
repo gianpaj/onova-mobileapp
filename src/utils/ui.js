@@ -74,6 +74,15 @@ export function formatTime(createdAt: Date): string {
   return format(createdAt, 'D MMM');
 }
 
+export function formatPhoneNumber(value: string): string {
+  value = value.replace(/\D/g, '');
+  if (value.length > 3)
+    value =
+      `(${value.substr(0, 3)}) ${value.substr(3, 3)} ` +
+      `${value.substr(6, 2)} ${value.substr(8)}`;
+  return value.trim();
+}
+
 export const category_radio_grp_1 = [
   { label: I18n.t('categories.clothes'), value: 0 },
   { label: I18n.t('categories.shoes'), value: 1 },

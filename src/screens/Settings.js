@@ -31,8 +31,6 @@ import isEmail from 'validator/lib/isEmail';
 import update from 'immutability-helper';
 // import Instabug from 'instabug-reactnative';
 import { KeyboardAccessoryNavigation } from 'react-native-keyboard-accessory';
-import libphonenumber from 'google-libphonenumber';
-const PhoneUtil = libphonenumber.PhoneNumberUtil.getInstance();
 
 import { Accordion, Header } from '../components';
 
@@ -45,7 +43,11 @@ import {
 import I18n from '../i18n';
 import colors from '../config/colors';
 import settings from '../config/settings';
-import { validPassword, validShippingAddress } from '../utils/validators';
+import {
+  validPassword,
+  validShippingAddress,
+  isPhoneNumberValid,
+} from '../utils/validators';
 import * as api from '../utils/api';
 import * as ui from '../utils/ui';
 import * as linking from '../utils/linking';
@@ -201,8 +203,11 @@ class SettingsContainer extends Component<Props, State> {
         (validShippingAddress(shippingAddress) &&
           !Object.is(shippingAddress, userData.shippingAddress))) ||
         validPassword(password) ||
-        (this.isPhoneNumberValid(mobileNumber) &&
-          mobileNumber !== userData.mobileNumber) ||
+        // allow to delete the mobile number
+        (mobileNumber
+          ? isPhoneNumberValid(mobileNumber) &&
+            mobileNumber !== userData.mobileNumber
+          : true) ||
         (isEmail(emailAddress) && emailAddress !== userData.emailAddress) ||
         (username !== '' && username !== userData.username))
     );
@@ -329,26 +334,6 @@ class SettingsContainer extends Component<Props, State> {
     });
   };
 
-  formatPhoneNumber(value: string): string {
-    value = value.replace(/\D/g, '');
-    if (value.length > 3)
-      value =
-        `(${value.substr(0, 3)}) ${value.substr(3, 3)} ` +
-        `${value.substr(6, 2)} ${value.substr(8)}`;
-    return value.trim();
-  }
-
-  isPhoneNumberValid(value: string): boolean {
-    if (!value) return;
-    try {
-      const number = PhoneUtil.parseAndKeepRawInput(value, 'UA');
-
-      return PhoneUtil.isValidNumberForRegion(number, 'UA');
-    } catch (error) {
-      return false;
-    }
-  }
-
   render() {
     const { userData } = this.props;
     const {
@@ -452,11 +437,11 @@ class SettingsContainer extends Component<Props, State> {
                 {
                   ref: el => (this.inputs[4] = el),
                   placeholder: 'Mobile number',
-                  value: this.formatPhoneNumber(mobileNumber),
+                  value: ui.formatPhoneNumber(mobileNumber),
                   onFocus: this.handleFocus.bind(this, 4),
                   onChangeValue: t => this.setState({ mobileNumber: t }),
                   type: 'phone',
-                  validation: this.isPhoneNumberValid,
+                  validation: isPhoneNumberValid,
                 },
               ]}
             />

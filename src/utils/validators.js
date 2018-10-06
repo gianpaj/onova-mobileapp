@@ -1,4 +1,6 @@
 // @flow
+import libphonenumber from 'google-libphonenumber';
+const PhoneUtil = libphonenumber.PhoneNumberUtil.getInstance();
 
 import type { ShippingAddress } from '../types';
 
@@ -8,6 +10,7 @@ function validPassword(password: string) {
 
 /**
  * If any of the fields is not empty
+ * TODO: determine business logic.
  */
 function validShippingAddress(stateShippingInfo: ShippingAddress) {
   return (
@@ -18,4 +21,15 @@ function validShippingAddress(stateShippingInfo: ShippingAddress) {
   );
 }
 
-export { validPassword, validShippingAddress };
+function isPhoneNumberValid(value: string): boolean {
+  if (!value) return;
+  try {
+    const number = PhoneUtil.parseAndKeepRawInput(value, 'UA');
+
+    return PhoneUtil.isValidNumberForRegion(number, 'UA');
+  } catch (error) {
+    return false;
+  }
+}
+
+export { validPassword, validShippingAddress, isPhoneNumberValid };

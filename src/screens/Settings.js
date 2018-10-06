@@ -31,6 +31,8 @@ import isEmail from 'validator/lib/isEmail';
 import update from 'immutability-helper';
 // import Instabug from 'instabug-reactnative';
 import { KeyboardAccessoryNavigation } from 'react-native-keyboard-accessory';
+import libphonenumber from 'google-libphonenumber';
+const PhoneUtil = libphonenumber.PhoneNumberUtil.getInstance();
 
 import { Accordion, Header } from '../components';
 
@@ -81,32 +83,34 @@ type Props = {
 };
 
 type State = {
+  activeInputRef: any,
   emailAddress: string,
-  pending: boolean,
   isLoading: boolean,
+  mobileNumber: string,
+  nextFocusDisabled: boolean,
   password: string,
+  pending: boolean,
+  previousFocusDisabled: boolean,
+  shippingAddress: ?ShippingAddress,
   username: string,
   usernameError: boolean,
-  shippingAddress: ?ShippingAddress,
-  nextFocusDisabled: boolean,
-  previousFocusDisabled: boolean,
-  activeInputRef: any,
 };
 
 class SettingsContainer extends Component<Props, State> {
   cancelToken;
   inputs = [];
   state = {
+    activeInputRef: null,
     emailAddress: '',
-    pending: false,
     isLoading: true,
+    mobileNumber: '',
+    nextFocusDisabled: false,
     password: '',
+    pending: false,
+    previousFocusDisabled: false,
     shippingAddress: null,
     username: '',
     usernameError: false,
-    nextFocusDisabled: false,
-    previousFocusDisabled: false,
-    activeInputRef: null,
   };
 
   componentDidMount() {
@@ -147,7 +151,12 @@ class SettingsContainer extends Component<Props, State> {
     // fix error when logging out
     if (!nextProps.userData) return;
 
-    const { emailAddress, shippingAddress, username } = nextProps.userData;
+    const {
+      emailAddress,
+      mobileNumber,
+      shippingAddress,
+      username,
+    } = nextProps.userData;
 
     if (this.hasStateDifferedFromProps(nextProps.userData, 'shippingAddress')) {
       this.setState({ shippingAddress });
@@ -159,6 +168,10 @@ class SettingsContainer extends Component<Props, State> {
 
     if (this.hasStateDifferedFromProps(nextProps.userData, 'emailAddress')) {
       this.setState({ emailAddress });
+    }
+
+    if (this.hasStateDifferedFromProps(nextProps.userData, 'mobileNumber')) {
+      this.setState({ mobileNumber });
     }
 
     this.setState({ isLoading: false });
@@ -174,9 +187,10 @@ class SettingsContainer extends Component<Props, State> {
   hasUnsavedChanges = (): boolean => {
     const { userData } = this.props;
     const {
-      pending,
-      password,
       emailAddress,
+      mobileNumber,
+      password,
+      pending,
       shippingAddress,
       username,
     } = this.state;
@@ -187,6 +201,8 @@ class SettingsContainer extends Component<Props, State> {
         (validShippingAddress(shippingAddress) &&
           !Object.is(shippingAddress, userData.shippingAddress))) ||
         validPassword(password) ||
+        (this.isPhoneNumberValid(mobileNumber) &&
+          mobileNumber !== userData.mobileNumber) ||
         (isEmail(emailAddress) && emailAddress !== userData.emailAddress) ||
         (username !== '' && username !== userData.username))
     );
@@ -194,7 +210,13 @@ class SettingsContainer extends Component<Props, State> {
 
   onSave = () => {
     const { userData, token } = this.props;
-    const { password, emailAddress, shippingAddress, username } = this.state;
+    const {
+      password,
+      emailAddress,
+      mobileNumber,
+      shippingAddress,
+      username,
+    } = this.state;
     const data = {};
 
     this.setState({ pending: true });
@@ -214,6 +236,9 @@ class SettingsContainer extends Component<Props, State> {
     if (validShippingAddress(shippingAddress)) {
       data.shippingAddress = shippingAddress;
     }
+
+    // FIXME: state should be the number unformatted. useful also when comparing if number has been changed
+    data.mobileNumber = mobileNumber.replace(/\D/g, '');
 
     // console.log(data);
 
@@ -272,9 +297,9 @@ class SettingsContainer extends Component<Props, State> {
 
   handleFocus(ref) {
     this.setState({
-      nextFocusDisabled: ref === 7,
-      previousFocusDisabled: ref === 5,
       activeInputRef: ref,
+      previousFocusDisabled: ref === 0,
+      nextFocusDisabled: ref === 7,
     });
   }
 
@@ -304,13 +329,34 @@ class SettingsContainer extends Component<Props, State> {
     });
   };
 
+  formatPhoneNumber(value: string): string {
+    value = value.replace(/\D/g, '');
+    if (value.length > 3)
+      value =
+        `(${value.substr(0, 3)}) ${value.substr(3, 3)} ` +
+        `${value.substr(6, 2)} ${value.substr(8)}`;
+    return value.trim();
+  }
+
+  isPhoneNumberValid(value: string): boolean {
+    if (!value) return;
+    try {
+      const number = PhoneUtil.parseAndKeepRawInput(value, 'UA');
+
+      return PhoneUtil.isValidNumberForRegion(number, 'UA');
+    } catch (error) {
+      return false;
+    }
+  }
+
   render() {
     const { userData } = this.props;
     const {
-      pending,
-      isLoading,
-      password,
       emailAddress,
+      isLoading,
+      mobileNumber,
+      password,
+      pending,
       shippingAddress,
       username,
       usernameError,
@@ -356,64 +402,61 @@ class SettingsContainer extends Component<Props, State> {
               headerText="Shipping Address:"
               values={[
                 {
-                  content: [
-                    {
-                      ref: el => {
-                        this.inputs[0] = el;
-                      },
-                      placeholder: 'Address line 1',
-                      value: shippingAddress.line1,
-                      onFocus: this.handleFocus.bind(this, 0),
-                      onChangeValue: t =>
-                        this.setState(
-                          update(this.state, {
-                            shippingAddress: { line1: { $set: t } },
-                          })
-                        ),
-                    },
-                    {
-                      ref: el => {
-                        this.inputs[1] = el;
-                      },
-                      placeholder: 'Address line 2',
-                      value: shippingAddress.line2,
-                      onFocus: this.handleFocus.bind(this, 1),
-                      onChangeValue: t =>
-                        this.setState(
-                          update(this.state, {
-                            shippingAddress: { line2: { $set: t } },
-                          })
-                        ),
-                    },
-                    {
-                      ref: el => {
-                        this.inputs[2] = el;
-                      },
-                      placeholder: 'City',
-                      value: shippingAddress.city,
-                      onFocus: this.handleFocus.bind(this, 2),
-                      onChangeValue: t =>
-                        this.setState(
-                          update(this.state, {
-                            shippingAddress: { city: { $set: t } },
-                          })
-                        ),
-                    },
-                    {
-                      ref: el => {
-                        this.inputs[3] = el;
-                      },
-                      placeholder: 'State',
-                      value: shippingAddress.state,
-                      onFocus: this.handleFocus.bind(this, 3),
-                      onChangeValue: t =>
-                        this.setState(
-                          update(this.state, {
-                            shippingAddress: { state: { $set: t } },
-                          })
-                        ),
-                    },
-                  ],
+                  ref: el => (this.inputs[0] = el),
+                  placeholder: 'Address line 1',
+                  value: shippingAddress.line1,
+                  onFocus: this.handleFocus.bind(this, 0),
+                  onChangeValue: t =>
+                    this.setState(
+                      update(this.state, {
+                        shippingAddress: { line1: { $set: t } },
+                      })
+                    ),
+                },
+                {
+                  ref: el => (this.inputs[1] = el),
+                  placeholder: 'Address line 2',
+                  value: shippingAddress.line2,
+                  onFocus: this.handleFocus.bind(this, 1),
+                  onChangeValue: t =>
+                    this.setState(
+                      update(this.state, {
+                        shippingAddress: { line2: { $set: t } },
+                      })
+                    ),
+                },
+                {
+                  ref: el => (this.inputs[2] = el),
+                  placeholder: 'City',
+                  value: shippingAddress.city,
+                  onFocus: this.handleFocus.bind(this, 2),
+                  onChangeValue: t =>
+                    this.setState(
+                      update(this.state, {
+                        shippingAddress: { city: { $set: t } },
+                      })
+                    ),
+                },
+                {
+                  ref: el => (this.inputs[3] = el),
+                  placeholder: 'State',
+                  value: shippingAddress.state,
+                  onFocus: this.handleFocus.bind(this, 3),
+                  onChangeValue: t =>
+                    this.setState(
+                      update(this.state, {
+                        shippingAddress: { state: { $set: t } },
+                      })
+                    ),
+                },
+                {
+                  ref: el => (this.inputs[4] = el),
+                  placeholder: 'Mobile number',
+                  value: this.formatPhoneNumber(mobileNumber),
+                  onFocus: this.handleFocus.bind(this, 4),
+                  onChangeValue: t => this.setState({ mobileNumber: t }),
+                  type: 'phone',
+                  validation: this.isPhoneNumberValid,
                 },
               ]}
             />

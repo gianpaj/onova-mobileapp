@@ -4,15 +4,25 @@ import React, { PureComponent } from 'react';
 import { Animated, StyleSheet, View } from 'react-native';
 import CollapsibleAccordion from 'react-native-collapsible/Accordion';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { FormInput, FormLabel } from 'react-native-elements';
+import { FormLabel } from 'react-native-elements';
+import { InputItem } from 'antd-mobile-rn';
 import * as Animatable from 'react-native-animatable';
 
 import colors from '../config/colors';
 
+type Field = {
+  ref: el => void,
+  placeholder: string,
+  value: string,
+  onFocus: () => void,
+  onChangeValue: value => void,
+  type?: string,
+};
+
 type Props = {
   duration: number,
   headerText: string,
-  values: Array<any>,
+  values: Array<Field>,
 };
 
 type State = {
@@ -57,7 +67,7 @@ export default class Accordion extends PureComponent<Props, State> {
         activeSections={this.state.activeSections}
         onChange={this.toggle}
         touchableProps={{ underlayColor: 'transparent' }}
-        sections={this.props.values}
+        sections={[{ content: this.props.values }]}
         renderHeader={() => (
           <View style={styles.header}>
             <FormLabel labelStyle={[styles.label, { paddingBottom: 10 }]}>
@@ -70,7 +80,7 @@ export default class Accordion extends PureComponent<Props, State> {
         )}
         renderContent={section =>
           section.content.map((c, i) => (
-            <FormInput
+            <InputItem
               key={i}
               ref={el => {
                 c.input = el;
@@ -79,16 +89,19 @@ export default class Accordion extends PureComponent<Props, State> {
               autoCorrect={false}
               blurOnSubmit={false}
               clearButtonMode="while-editing"
-              containerStyle={styles.inputContainer}
-              inputStyle={styles.input}
-              onChangeText={t => c.onChangeValue(t)}
-              onFocus={t => c.onFocus(t)}
+              // containerStyle={styles.inputContainer}
+              // inputStyle={styles.input}
+              onChangeText={c.onChangeValue}
+              onFocus={c.onFocus}
               placeholder={c.placeholder}
               onSubmitEditing={() =>
                 section.content[i + 1] && section.content[i + 1].input.focus()
               }
+              type={c.type}
               returnKeyType="next"
               value={c.value}
+              last
+              error={c.validation && c.value ? !c.validation(c.value) : false}
             />
           ))
         }

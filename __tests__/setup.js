@@ -32,3 +32,5 @@ jest.mock('@pusher/chatkit/react-native', () => {
   class TokenProvider {}
   return { ChatManager, TokenProvider };
 });
+
+jest.mock('react-native-modal-datetime-picker');

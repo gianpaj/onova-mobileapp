@@ -408,6 +408,7 @@ export class CheckoutContainer extends Component<Props, State> {
                           shippingAddress: { line1: { $set: t } },
                         })
                       ),
+                    textContentType: 'streetAddressLine1',
                   },
                   {
                     ref: el => {
@@ -422,6 +423,7 @@ export class CheckoutContainer extends Component<Props, State> {
                           shippingAddress: { line2: { $set: t } },
                         })
                       ),
+                    textContentType: 'streetAddressLine2',
                   },
                   {
                     ref: el => {
@@ -436,6 +438,7 @@ export class CheckoutContainer extends Component<Props, State> {
                           shippingAddress: { city: { $set: t } },
                         })
                       ),
+                    textContentType: 'addressCity',
                   },
                   {
                     ref: el => {
@@ -450,6 +453,7 @@ export class CheckoutContainer extends Component<Props, State> {
                           shippingAddress: { state: { $set: t } },
                         })
                       ),
+                    textContentType: 'addressState',
                   },
                   {
                     ref: el => (this.inputs[4] = el),
@@ -459,6 +463,7 @@ export class CheckoutContainer extends Component<Props, State> {
                     onChangeValue: t => this.setState({ mobileNumber: t }),
                     type: 'phone',
                     validation: isPhoneNumberValid,
+                    textContentType: 'telephoneNumber',
                   },
                 ]}
               />

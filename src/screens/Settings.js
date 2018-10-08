@@ -377,6 +377,7 @@ class SettingsContainer extends Component<Props, State> {
                         shippingAddress: { line1: { $set: t } },
                       })
                     ),
+                  textContentType: 'streetAddressLine1',
                 },
                 {
                   ref: el => (this.inputs[1] = el),
@@ -389,6 +390,7 @@ class SettingsContainer extends Component<Props, State> {
                         shippingAddress: { line2: { $set: t } },
                       })
                     ),
+                  textContentType: 'streetAddressLine2',
                 },
                 {
                   ref: el => (this.inputs[2] = el),
@@ -401,6 +403,7 @@ class SettingsContainer extends Component<Props, State> {
                         shippingAddress: { city: { $set: t } },
                       })
                     ),
+                  textContentType: 'addressCity',
                 },
                 {
                   ref: el => (this.inputs[3] = el),
@@ -413,6 +416,7 @@ class SettingsContainer extends Component<Props, State> {
                         shippingAddress: { state: { $set: t } },
                       })
                     ),
+                  textContentType: 'addressState',
                 },
                 {
                   ref: el => (this.inputs[4] = el),
@@ -422,6 +426,7 @@ class SettingsContainer extends Component<Props, State> {
                   onChangeValue: t => this.setState({ mobileNumber: t }),
                   type: 'phone',
                   validation: isPhoneNumberValid,
+                  textContentType: 'telephoneNumber',
                 },
               ]}
             />

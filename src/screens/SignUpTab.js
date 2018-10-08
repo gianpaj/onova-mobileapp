@@ -221,6 +221,7 @@ export class SignUpTabContainer extends Component<Props, State> {
             value={this.state.username}
             onChangeText={t => this.onUserChange(t)}
             accessibilityLabel="username"
+            textContentType="username"
             underlineColorAndroid={hasFocusUser ? colors.primary : colors.grey3}
             {...this._inputProps}
           />
@@ -238,7 +239,7 @@ export class SignUpTabContainer extends Component<Props, State> {
             testID="EmailField"
             onChangeText={emailAddress => this.setState({ emailAddress })}
             accessibilityLabel="email address"
-            textContentType="username"
+            textContentType="emailAddress"
             underlineColorAndroid={
               hasFocusEmail ? colors.primary : colors.grey3
             }

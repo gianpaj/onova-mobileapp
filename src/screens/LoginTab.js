@@ -234,7 +234,7 @@ export class LoginTabContainer extends React.Component<Props, State> {
             }
             value={emailAddress}
             testID="EmailField"
-            textContentType="username"
+            textContentType="emailAddress"
             accessibilityLabel="email address"
             onChangeText={text => this.setState({ emailAddress: text })}
             underlineColorAndroid={

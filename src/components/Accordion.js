@@ -91,17 +91,13 @@ export default class Accordion extends PureComponent<Props, State> {
               clearButtonMode="while-editing"
               // containerStyle={styles.inputContainer}
               // inputStyle={styles.input}
-              onChangeText={c.onChangeValue}
-              onFocus={c.onFocus}
-              placeholder={c.placeholder}
               onSubmitEditing={() =>
                 section.content[i + 1] && section.content[i + 1].input.focus()
               }
-              type={c.type}
               returnKeyType="next"
-              value={c.value}
               last
               error={c.validation && c.value ? !c.validation(c.value) : false}
+              {...c}
             />
           ))
         }

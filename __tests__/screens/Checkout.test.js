@@ -5,6 +5,8 @@ import { shallow } from 'enzyme';
 
 import { CheckoutContainer } from '../../src/screens/Checkout';
 
+// FIXME: test actually entering text in the input fields for the shippingAddress and mobileNumber
+
 describe('Checkout screen', () => {
   describe('initial rendering', () => {
     let wrapper, spy;
@@ -50,6 +52,34 @@ describe('Checkout screen', () => {
         shippingAddress: {
           line1: 'a',
           city: 'lviv',
+        },
+      });
+      wrapper.find('[testID="payButton"]').simulate('press');
+      expect(spy).toHaveBeenCalled();
+      spy.mockClear();
+    });
+
+    it('should require the payment info', () => {
+      // onCheckout function continued until the end
+      spy = jest.spyOn(CheckoutContainer.prototype, 'updateShippingInfo');
+      wrapper.setState({
+        isLoading: false,
+        mobileNumber: '0979878977',
+        shippingAddress: {
+          line1: 'a',
+          city: 'lviv',
+        },
+        paymentInfo: {},
+      });
+      expect(wrapper.find('[testID="payButton"]')).toHaveLength(1);
+      wrapper.find('[testID="payButton"]').simulate('press');
+      expect(spy).not.toHaveBeenCalled();
+      wrapper.setProps({
+        userData: {
+          paymentInfo: {
+            last_four: '1234',
+            method: 'uapay',
+          },
         },
       });
       wrapper.find('[testID="payButton"]').simulate('press');

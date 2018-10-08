@@ -24,7 +24,6 @@ import {
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { FormInput, FormLabel } from 'react-native-elements';
 import type { NavigationScreenProp } from 'react-navigation';
-import { CardView } from 'react-native-credit-card-input';
 import { Toast } from 'antd-mobile-rn';
 import axios from 'axios';
 import isEmail from 'validator/lib/isEmail';
@@ -32,7 +31,7 @@ import update from 'immutability-helper';
 // import Instabug from 'instabug-reactnative';
 import { KeyboardAccessoryNavigation } from 'react-native-keyboard-accessory';
 
-import { Accordion, Header } from '../components';
+import { Accordion, Header, CardView } from '../components';
 
 import {
   disableRefresh,

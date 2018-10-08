@@ -26,7 +26,6 @@ import {
 import { Toast } from 'antd-mobile-rn';
 import { FormLabel } from 'react-native-elements';
 import type { NavigationScreenProp } from 'react-navigation';
-import { CardView } from 'react-native-credit-card-input';
 // import BTClient from 'react-native-braintree-xplat';
 import { KeyboardAccessoryNavigation } from 'react-native-keyboard-accessory';
 import update from 'immutability-helper';
@@ -35,7 +34,7 @@ import type { CancelTokenSource } from 'axios';
 
 import { disableRefresh, getPersonalUserData } from '../actions/actionCreator';
 
-import { Accordion, Header, HR } from '../components';
+import { Accordion, CardView, Header, HR } from '../components';
 
 import colors from '../config/colors';
 // import settings from '../config/settings';

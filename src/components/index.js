@@ -3,6 +3,7 @@
 import Accordion from './Accordion';
 import Avatar from './Avatar';
 // import ChatActions from './ChatActions';
+import CardView from './CardView';
 import Comments from './Comments';
 import DropsGrid from './DropsGrid';
 import EditableText from './EditableText';
@@ -19,6 +20,7 @@ import Title from './Title';
 export {
   Accordion,
   Avatar,
+  CardView,
   // ChatActions,
   DropsGrid,
   EditableText,

@@ -468,7 +468,7 @@ export class CheckoutContainer extends Component<Props, State> {
               <View style={{ alignSelf: 'center' }}>
                 <TouchableOpacity onPress={this.goToEnterPaymentInfo}>
                   {Object.keys(userData.paymentInfo).length ? (
-                    <CardView {...this.formatCardInfo()} />
+                    <CardView focused="number" {...this.formatCardInfo()} />
                   ) : (
                     <CardView {...this.formatCardInfo()} number="" expiry="" />
                   )}

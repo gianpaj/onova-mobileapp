@@ -1,69 +1,60 @@
 // @flow
 
 import React from 'react';
-import renderer from 'react-test-renderer';
+import { shallow } from 'enzyme';
 
 import { CheckoutContainer } from '../../src/screens/Checkout';
 
-const sleep = ms => {
-  return new Promise(resolve => setTimeout(resolve, ms));
-};
-
 describe('Checkout screen', () => {
   describe('initial rendering', () => {
-    let root, tree;
+    let wrapper, spy;
     beforeEach(() => {
-      tree = renderer.create(
+      wrapper = shallow(
         <CheckoutContainer
-          dispatch={() => { }}
-          // $FlowExpectedError
+          dispatch={() => {}}
           navigation={{ state: {}, addListener: () => null }}
-          // $FlowExpectedError
-          userData={{ accountStatus: 'verified' }}
+          userData={{
+            mobileNumber: '',
+            paymentInfo: {},
+            shippingAddress: {},
+          }}
           token=""
         />
       );
-      root = tree.root;
     });
 
-    it('at the beginning the Make Payments button should NOT appear', async () => {
-      await sleep(100);
-      expect(() => root.findByProps({ testID: 'payButton' })).toThrow('No instances found with props: {"testID":"payButton"}');
+    it('at the beginning the Make Payments button should NOT appear', () => {
+      expect(wrapper.find('[testID="payButton"]')).toHaveLength(0);
     });
 
-    it('should require a min length description', async () => {
-      await sleep(100);
-      expect(root.findByProps({ testID: 'payButton' }).props.disabled).toBe(
-        true
-      );
-      root.instance.setState({
-        description: 'a',
+    it('should require the shipping address', () => {
+      // onCheckout function continued until the end
+      spy = jest.spyOn(CheckoutContainer.prototype, 'updateShippingInfo');
+      wrapper.setProps({
+        userData: {
+          paymentInfo: {
+            last_four: '1234',
+            method: 'uapay',
+          },
+        },
       });
-      const desc = root.findByProps({ testID: 'description' });
-      expect(desc.props.value).toBe('a');
-      desc.props.onChangeText('this shoes rock');
-      expect(root.findByProps({ testID: 'payButton' }).props.disabled).toBe(
-        false
-      );
-    });
-
-    it.skip('should add a new item', async () => {
-      await sleep(100);
-      expect(root.findByProps({ testID: 'payButton' }).props.disabled).toBe(
-        true
-      );
-      root.instance.setState({
-        description: 'this shoes rock',
-        price: '123.45',
-        grp_1: 0,
-        grp_2: 0,
+      wrapper.setState({
+        isLoading: false,
+        shippingAddress: {},
       });
-      expect(root.findByProps({ testID: 'payButton' }).props.disabled).toBe(
-        false
-      );
-      jest.spyOn(root.instance, 'uploadNewProduct');
-      root.findByProps({ testID: 'payButton' }).props.onPress();
-      expect(root.instance.uploadNewProduct).toHaveBeenCalled();
+      expect(wrapper.find('[testID="payButton"]')).toHaveLength(1);
+      wrapper.find('[testID="payButton"]').simulate('press');
+      expect(spy).not.toHaveBeenCalled();
+      wrapper.setState({
+        mobileNumber: '0979878977',
+        shippingAddress: {
+          line1: 'a',
+          city: 'lviv',
+        },
+      });
+      wrapper.find('[testID="payButton"]').simulate('press');
+      expect(spy).toHaveBeenCalled();
+      spy.mockClear();
     });
   });
 });

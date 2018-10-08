@@ -233,12 +233,12 @@ export class CheckoutContainer extends Component<Props, State> {
       return this.goToChat(order.id, item);
     }
 
-    const data = {};
+    // const data = {};
 
     Toast.loading('Loading...', 3);
     this.setState({ pending: true });
 
-    console.log(data);
+    // console.log(data);
 
     await this.updateShippingInfo();
 

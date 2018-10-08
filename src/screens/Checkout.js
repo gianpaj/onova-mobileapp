@@ -70,7 +70,7 @@ type State = {
   shippingAddress: ?ShippingAddress,
 };
 
-class CheckoutContainer extends Component<Props, State> {
+export class CheckoutContainer extends Component<Props, State> {
   inputs = [];
   cancelToken: CancelTokenSource;
   state = {
@@ -478,6 +478,7 @@ class CheckoutContainer extends Component<Props, State> {
             <Footer>
               <FooterTab>
                 <NBButton
+                  testID="payButton"
                   dark={!this.isDisabled()}
                   style={[
                     this.isDisabled()

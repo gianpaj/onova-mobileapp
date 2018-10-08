@@ -226,8 +226,6 @@ class ProfileScreen extends React.Component<Props, State> {
       key: 'settings',
     });
     this.props.navigation.dispatch(navigateToSettings);
-    // reset state
-    this.setState(defaultState);
   };
 
   onSave = () => {

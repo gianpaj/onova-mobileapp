@@ -407,31 +407,40 @@ export class CheckoutContainer extends Component<Props, State> {
         ) : (
           <>
             <Content>
-              <View style={[styles.padder]}>
-                <View style={styles.priceContainer}>
+              <View style={styles.pricesContainer}>
+                <View style={styles.row}>
                   {/* $FlowFixMe */}
-                  {/* TODO: format price to show decimals */}
-                  <H1>{ui.formatCurrency(order.priceOfItem)} </H1>
-                  {/* $FlowFixMe */}
-                  <Text>{item.currency}</Text>
+                  <Text style={{ color: colors.black }}>Total: </Text>
+                  <View style={styles.innerRow}>
+                    <H1>{ui.formatCurrency(order.total)} </H1>
+                    {/* $FlowFixMe */}
+                    <Text>{item.currency}</Text>
+                  </View>
                 </View>
-                <View style={styles.priceContainer}>
-                  {/* $FlowFixMe */}
-                  {/* TODO: format price to show decimals */}
-                  <H3>{ui.formatCurrency(order.transactionFee)} </H3>
-                  {/* $FlowFixMe */}
-                  <Text>{item.currency}</Text>
+                <View style={styles.row}>
+                  <Text>Item: </Text>
+                  <View style={styles.innerRow}>
+                    <H3>{ui.formatCurrency(order.priceOfItem)} </H3>
+                    <Text>{item.currency}</Text>
+                  </View>
                 </View>
-                <View style={styles.priceContainer}>
-                  {/* $FlowFixMe */}
-                  {/* TODO: format price to show decimals */}
-                  <H3>{ui.formatCurrency(order.shippingFee)} </H3>
-                  {/* $FlowFixMe */}
-                  <Text>{item.currency}</Text>
+                <View style={styles.row}>
+                  <Text>Fees: </Text>
+                  <View style={styles.innerRow}>
+                    <H3>{ui.formatCurrency(order.transactionFee)} </H3>
+                    <Text>{item.currency}</Text>
+                  </View>
                 </View>
-                <Text style={styles.priceTransaction}>
+                <View style={styles.row}>
+                  <Text>Shipping cost: </Text>
+                  <View style={styles.innerRow}>
+                    <H3>{ui.formatCurrency(order.shippingFee)} </H3>
+                    <Text>{item.currency}</Text>
+                  </View>
+                </View>
+                {/* <Text style={styles.priceTransaction}>
                   (including x transaction fee)
-                </Text>
+                </Text> */}
               </View>
               <HR full />
               <Accordion
@@ -564,9 +573,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
   },
-  flex1: {
-    flex: 1,
-  },
   payButtonText: {
     color: colors.white,
   },
@@ -574,13 +580,21 @@ const styles = StyleSheet.create({
     color: colors.black,
     fontWeight: '600',
   },
-  padder: {
+  pricesContainer: {
+    alignItems: 'flex-end',
+    alignSelf: 'center',
     padding: 10,
   },
-  priceContainer: {
+  row: {
     alignItems: 'baseline',
     flexDirection: 'row',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
+  },
+  innerRow: {
+    alignItems: 'baseline',
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    minWidth: 180,
   },
   priceTransaction: {
     color: colors.grey2,

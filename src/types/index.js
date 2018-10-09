@@ -200,8 +200,9 @@ export type Order = {
   // taxAmount: ?number;
   trackingNumber: ?string,
   transactionId: ?string,
-  transactionFee: ?number,
+  transactionFee: number,
   transactionStatus: ?string,
+  total: number,
   shippingFee: ?number,
   shippingProvider: ?string,
   // shippingStatus: string,

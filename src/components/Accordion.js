@@ -12,11 +12,12 @@ import colors from '../config/colors';
 
 type Field = {
   ref: el => void,
-  placeholder: string,
-  value: string,
-  onFocus: () => void,
+  error: boolean,
   onChangeText: value => void,
+  onFocus: () => void,
+  placeholder: string,
   type?: string,
+  value: string,
 };
 
 type Props = {

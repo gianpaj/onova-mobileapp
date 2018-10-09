@@ -427,7 +427,7 @@ export class CheckoutContainer extends Component<Props, State> {
                     placeholder: 'Address line 1',
                     value: shippingAddress.line1,
                     onFocus: this.handleFocus.bind(this, 0),
-                    onChangeValue: t =>
+                    onChangeText: t =>
                       this.setState(
                         update(this.state, {
                           shippingAddress: { line1: { $set: t } },
@@ -442,7 +442,7 @@ export class CheckoutContainer extends Component<Props, State> {
                     placeholder: 'Address line 2',
                     value: shippingAddress.line2,
                     onFocus: this.handleFocus.bind(this, 1),
-                    onChangeValue: t =>
+                    onChangeText: t =>
                       this.setState(
                         update(this.state, {
                           shippingAddress: { line2: { $set: t } },
@@ -457,7 +457,7 @@ export class CheckoutContainer extends Component<Props, State> {
                     placeholder: 'City',
                     value: shippingAddress.city,
                     onFocus: this.handleFocus.bind(this, 2),
-                    onChangeValue: t =>
+                    onChangeText: t =>
                       this.setState(
                         update(this.state, {
                           shippingAddress: { city: { $set: t } },
@@ -472,7 +472,7 @@ export class CheckoutContainer extends Component<Props, State> {
                     placeholder: 'State',
                     value: shippingAddress.state,
                     onFocus: this.handleFocus.bind(this, 3),
-                    onChangeValue: t =>
+                    onChangeText: t =>
                       this.setState(
                         update(this.state, {
                           shippingAddress: { state: { $set: t } },
@@ -485,7 +485,7 @@ export class CheckoutContainer extends Component<Props, State> {
                     placeholder: 'Mobile number',
                     value: ui.formatPhoneNumber(mobileNumber),
                     onFocus: this.handleFocus.bind(this, 4),
-                    onChangeValue: t => this.setState({ mobileNumber: t }),
+                    onChangeText: t => this.setState({ mobileNumber: t }),
                     type: 'phone',
                     validation: isPhoneNumberValid,
                     textContentType: 'telephoneNumber',

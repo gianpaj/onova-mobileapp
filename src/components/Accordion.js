@@ -15,7 +15,7 @@ type Field = {
   placeholder: string,
   value: string,
   onFocus: () => void,
-  onChangeValue: value => void,
+  onChangeText: value => void,
   type?: string,
 };
 

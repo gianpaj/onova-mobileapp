@@ -10,6 +10,8 @@ import { enableRefresh } from '../actions/actionCreator';
 import * as api from '../utils/api';
 import * as ui from '../utils/ui';
 
+const URL_BASE = 'https://api.demo.uapay.ua';
+
 import type { ReduxState } from '../types';
 
 function JStoInject() {
@@ -77,9 +79,9 @@ class GetCardId extends Component {
             html: `<html>
               <head><meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0"></head>
               <body>
-                <iframe id="uapayFrame" style="border: 0; height: 200px; width: 100%" src="https://api.demo.uapay.ua/api/iframe/${
-                  this.state.tokenForCardIFrame
-                }"></iframe>
+                <iframe id="uapayFrame" style="border: 0; height: 220px; width: 100%" src="${URL_BASE}/api/iframe/${
+              this.state.tokenForCardIFrame
+            }"></iframe>
                 <button id="btnSubmit">Створити картку</button>
               </body></html>`,
           }}

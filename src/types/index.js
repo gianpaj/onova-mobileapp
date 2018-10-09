@@ -159,29 +159,32 @@ export type Room = {
   order: any,
 };
 
+type UserDataShorter = {
+  _id: string,
+  accountStatus: string,
+  id: string,
+  profilePic: string,
+  username: string,
+};
+
 export type Order = {
   archivedBySeller: boolean,
   archivedByBuyer: boolean,
   id: string,
-  buyer: {
-    _id: string,
-    accountStatus: string,
-    id: string,
-    profilePic: string,
-    username: string,
-  },
+  buyer: UserDataShorter,
   citySender: string,
   cityRecipient: string,
   currency: string,
   dateCancelled: ?Date,
   dateCompleted: ?Date,
+  dateConfirmed: ?Date,
   dateDelivered: ?Date,
-  datePending: Date,
   datePaid: ?Date,
+  datePending: Date,
   dateShipped: ?Date,
-  dateReadyforShipment: ?Date,
-  priceOfItem: number,
   onovaFee: number,
+  paymentMethod: ?string,
+  priceOfItem: number,
   product: {
     currency: string,
     photoURIs: Array<string>,
@@ -189,20 +192,19 @@ export type Order = {
     status: string,
     uuid: string,
   },
-  seller: {
-    _id: string,
-    accountStatus: string,
-    id: string,
-    profilePic: string,
-    username: string,
-  },
-  status: string,
-  transationFee: ?number,
-  trackingNumber: ?string,
+  // reason: ?string,
   reviewFromBuyer: ?string,
   reviewFromSeller: ?string,
-  // lastMessage: Message,
-  // unreadMessageCount: number,
+  seller: UserDataShorter,
+  status: string,
+  // taxAmount: ?number;
+  trackingNumber: ?string,
+  transationFee: ?number,
+  transactionId: ?string,
+  transactionStatus: ?string,
+  shippingFee: ?number,
+  shippingProvider: ?string,
+  // shippingStatus: string,
 };
 
 export type Review = {

@@ -38,6 +38,7 @@
     "foect": "^0.1.5",
     "google-libphonenumber": "^3.1.14",
     "immutability-helper": "^2.6.4",
+    "intl": "^1.2.5",
     "native-base": "^2.7.2",
     "react": "16.4.1",
     "react-native": "0.56.0",

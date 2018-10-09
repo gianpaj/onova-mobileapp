@@ -17,6 +17,7 @@ import {
   Container,
   Content,
   H1,
+  H3,
   Icon as NBIcon,
   Left,
   Footer,
@@ -380,6 +381,7 @@ export class CheckoutContainer extends Component<Props, State> {
       isLoading,
       item,
       mobileNumber,
+      order,
       pending,
       shippingAddress,
       showFooter,
@@ -408,7 +410,22 @@ export class CheckoutContainer extends Component<Props, State> {
               <View style={[styles.padder]}>
                 <View style={styles.priceContainer}>
                   {/* $FlowFixMe */}
-                  <H1>{item.price}</H1>
+                  {/* TODO: format price to show decimals */}
+                  <H1>{ui.formatCurrency(order.priceOfItem)} </H1>
+                  {/* $FlowFixMe */}
+                  <Text>{item.currency}</Text>
+                </View>
+                <View style={styles.priceContainer}>
+                  {/* $FlowFixMe */}
+                  {/* TODO: format price to show decimals */}
+                  <H3>{ui.formatCurrency(order.transactionFee)} </H3>
+                  {/* $FlowFixMe */}
+                  <Text>{item.currency}</Text>
+                </View>
+                <View style={styles.priceContainer}>
+                  {/* $FlowFixMe */}
+                  {/* TODO: format price to show decimals */}
+                  <H3>{ui.formatCurrency(order.shippingFee)} </H3>
                   {/* $FlowFixMe */}
                   <Text>{item.currency}</Text>
                 </View>

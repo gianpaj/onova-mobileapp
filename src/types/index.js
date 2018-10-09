@@ -199,8 +199,8 @@ export type Order = {
   status: string,
   // taxAmount: ?number;
   trackingNumber: ?string,
-  transationFee: ?number,
   transactionId: ?string,
+  transactionFee: ?number,
   transactionStatus: ?string,
   shippingFee: ?number,
   shippingProvider: ?string,

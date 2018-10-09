@@ -2,6 +2,9 @@
 
 import { Alert } from 'react-native';
 import { Toast } from 'native-base';
+global.Intl = require('intl');
+require('intl/locale-data/jsonp/ru-UA.js');
+
 import I18n from '../i18n';
 
 // prettier-ignore
@@ -81,6 +84,12 @@ export function formatPhoneNumber(value: string): string {
       `(${value.substr(0, 3)}) ${value.substr(3, 3)} ` +
       `${value.substr(6, 2)} ${value.substr(8)}`;
   return value.trim();
+}
+
+export function formatCurrency(value: string): string {
+  return new Intl.NumberFormat('ua-UA', {
+    minimumFractionDigits: 2,
+  }).format(value);
 }
 
 export const category_radio_grp_1 = [

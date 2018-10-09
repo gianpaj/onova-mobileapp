@@ -4,8 +4,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import {
   ActivityIndicator,
-  StyleSheet,
+  Keyboard,
   Platform,
+  StyleSheet,
   Text,
   TouchableOpacity,
   View,
@@ -68,6 +69,7 @@ type State = {
   paymentInfo: PaymentInfo,
   pending: boolean,
   shippingAddress: ?ShippingAddress,
+  showFooter: boolean,
 };
 
 export class CheckoutContainer extends Component<Props, State> {
@@ -81,19 +83,13 @@ export class CheckoutContainer extends Component<Props, State> {
     paymentInfo: {},
     pending: false,
     shippingAddress: null,
+    showFooter: true,
   };
 
   componentDidMount() {
     this.refresh();
+    this.initializeListeners();
 
-    this.props.navigation.addListener('didFocus', () => {
-      if (this.props.shouldRefresh) {
-        this.refresh();
-        this.props.dispatch(disableRefresh());
-      }
-    });
-
-    const { token } = this.props;
     let { params: item } = this.props.navigation.state;
     console.log(item);
 
@@ -111,7 +107,20 @@ export class CheckoutContainer extends Component<Props, State> {
         currency: 'UAH',
       };
     }
+    this.initialilizeOrder(item);
+  }
 
+  componentWillUnmount() {
+    this.keyboardDidShowListener.remove();
+    this.keyboardDidHideListener.remove();
+    // trigger Axios to reject the request
+    this.cancelToken.cancel('operation_canceled');
+
+    //TODO: unreserve product and cancel order
+  }
+
+  initialilizeOrder(item) {
+    const { token } = this.props;
     return api
       .createOrder(item.uuid, token)
       .then((order: Order) => {
@@ -164,12 +173,27 @@ export class CheckoutContainer extends Component<Props, State> {
       });
   }
 
-  componentWillUnmount() {
-    // trigger Axios to reject the request
-    this.cancelToken.cancel('operation_canceled');
+  initializeListeners() {
+    this.props.navigation.addListener('didFocus', () => {
+      if (this.props.shouldRefresh) {
+        this.refresh();
+        this.props.dispatch(disableRefresh());
+      }
+    });
 
-    //TODO: unreserve product and cancel order
+    this.keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      this._keyboardDidShow
+    );
+    this.keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      this._keyboardDidHide
+    );
   }
+
+  _keyboardDidShow = () => this.setState({ showFooter: false });
+
+  _keyboardDidHide = () => this.setState({ showFooter: true });
 
   refresh = () => {
     const CancelToken = axios.CancelToken;
@@ -358,6 +382,7 @@ export class CheckoutContainer extends Component<Props, State> {
       mobileNumber,
       pending,
       shippingAddress,
+      showFooter,
     } = this.state;
 
     return (
@@ -378,7 +403,7 @@ export class CheckoutContainer extends Component<Props, State> {
             <ActivityIndicator size="large" />
           </View>
         ) : (
-          <View style={styles.flex1}>
+          <>
             <Content>
               <View style={[styles.padder]}>
                 <View style={styles.priceContainer}>
@@ -480,25 +505,28 @@ export class CheckoutContainer extends Component<Props, State> {
                 </TouchableOpacity>
               </View>
             </Content>
-            <Footer>
-              <FooterTab>
-                <NBButton
-                  testID="payButton"
-                  dark={!this.isDisabled()}
-                  style={[
-                    this.isDisabled()
-                      ? { backgroundColor: colors.grey4 }
-                      : null,
-                  ]}
-                  onPress={this.onCheckout}
-                  full>
-                  <Text style={[this.isDisabled() ? {} : styles.payButtonText]}>
-                    Make Payment
-                  </Text>
-                </NBButton>
-              </FooterTab>
-            </Footer>
-          </View>
+            {showFooter && (
+              <Footer>
+                <FooterTab>
+                  <NBButton
+                    testID="payButton"
+                    dark={!this.isDisabled()}
+                    style={[
+                      this.isDisabled()
+                        ? { backgroundColor: colors.grey4 }
+                        : null,
+                    ]}
+                    onPress={this.onCheckout}
+                    full>
+                    <Text
+                      style={[this.isDisabled() ? {} : styles.payButtonText]}>
+                      Make Payment
+                    </Text>
+                  </NBButton>
+                </FooterTab>
+              </Footer>
+            )}
+          </>
         )}
         {Platform.OS == 'ios' && (
           <KeyboardAccessoryNavigation

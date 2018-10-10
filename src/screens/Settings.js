@@ -42,11 +42,7 @@ import {
 import I18n from '../i18n';
 import colors from '../config/colors';
 import settings from '../config/settings';
-import {
-  validPassword,
-  validShippingAddress,
-  isPhoneNumberValid,
-} from '../utils/validators';
+import { validPassword, isPhoneNumberValid } from '../utils/validators';
 import * as api from '../utils/api';
 import * as ui from '../utils/ui';
 import * as linking from '../utils/linking';
@@ -180,8 +176,7 @@ class SettingsContainer extends Component<Props, State> {
     return (
       !pending &&
       ((shippingAddress &&
-        (validShippingAddress(shippingAddress) &&
-          !Object.is(shippingAddress, userData.shippingAddress))) ||
+        !Object.is(shippingAddress, userData.shippingAddress)) ||
         validPassword(password) ||
         // allow to delete the mobile number
         // FIXME: the logic should not return true if both the state.mobileNumber and userData.mobileNumber are empty

@@ -16,6 +16,7 @@ type Field = {
   onChangeText: value => void,
   onFocus: () => void,
   placeholder: string,
+  render: (props: any) => React.Node,
   type?: string,
   value: string,
 };
@@ -24,6 +25,7 @@ type Props = {
   duration: number,
   headerText: string,
   values: Array<Field>,
+  expanded: boolean,
 };
 
 type State = {
@@ -44,6 +46,10 @@ export default class Accordion extends PureComponent<Props, State> {
   constructor(props: Props) {
     super(props);
     this.animatedValue = new Animated.Value(0);
+  }
+
+  componentDidMount() {
+    if (this.props.expanded) this.toggle([0]);
   }
 
   toggle = (i: Array<number>) => {
@@ -80,27 +86,41 @@ export default class Accordion extends PureComponent<Props, State> {
           </View>
         )}
         renderContent={section =>
-          section.content.map((c, i) => (
-            <InputItem
-              key={i}
-              ref={el => {
+          section.content.map((c, i) => {
+            const props = {
+              key: i,
+              ref: el => {
                 c.input = el;
                 c.ref(el);
-              }}
-              autoCorrect={false}
-              blurOnSubmit={false}
-              clearButtonMode="while-editing"
-              // containerStyle={styles.inputContainer}
-              // inputStyle={styles.input}
-              onSubmitEditing={() =>
-                section.content[i + 1] && section.content[i + 1].input.focus()
-              }
-              returnKeyType="next"
-              last
-              error={c.validation ? !c.validation() : false}
-              {...c}
-            />
-          ))
+              },
+              autoCorrect: false,
+              blurOnSubmit: false,
+              clearButtonMode: 'while-editing',
+              // containerStyle: styles.inputContainer,
+              // inputStyle: styles.input,
+              onSubmitEditing: () => {
+                // section.content[i + 1];
+                // debugger;
+                section.content[i + 1] && section.content[i + 1].input.focus();
+              },
+              onFocus: t => c.onFocus(t),
+              returnKeyType: 'next',
+              last: true,
+              error: c.validation ? !c.validation() : false,
+              ...c,
+            };
+            return c.render ? (
+              c.render({ ...props })
+            ) : (
+              <InputItem
+                {...props}
+                ref={el => {
+                  c.input = el;
+                  c.ref(el);
+                }}
+              />
+            );
+          })
         }
       />
     );
@@ -125,13 +145,5 @@ const styles = StyleSheet.create({
   icon: {
     marginTop: -5,
     top: 5,
-  },
-  inputContainer: {
-    borderBottomWidth: 0,
-    marginVertical: 10,
-  },
-  input: {
-    color: colors.black,
-    width: '100%',
   },
 });

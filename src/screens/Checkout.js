@@ -40,7 +40,7 @@ import { Accordion, CardView, Header, HR } from '../components';
 
 import colors from '../config/colors';
 // import settings from '../config/settings';
-import { validShippingAddress, isPhoneNumberValid } from '../utils/validators';
+import { isPhoneNumberValid, validShippingAddress } from '../utils/validators';
 import * as api from '../utils/api';
 import * as ui from '../utils/ui';
 
@@ -444,6 +444,7 @@ export class CheckoutContainer extends Component<Props, State> {
               </View>
               <HR full />
               <Accordion
+                expanded
                 headerText="Shipping Address:"
                 values={[
                   {
@@ -522,7 +523,7 @@ export class CheckoutContainer extends Component<Props, State> {
               <FormLabel labelStyle={[styles.label, { paddingBottom: 10 }]}>
                 Payment Info:
               </FormLabel>
-              <View style={{ alignSelf: 'center' }}>
+              <View style={{ alignSelf: 'center', paddingBottom: 10 }}>
                 <TouchableOpacity onPress={this.goToEnterPaymentInfo}>
                   {Object.keys(userData.paymentInfo).length ? (
                     <CardView focused="number" {...this.formatCardInfo()} />
@@ -597,9 +598,10 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     minWidth: 180,
   },
-  priceTransaction: {
-    color: colors.grey2,
-    alignSelf: 'center',
+  // priceTransaction: {
+  //   color: colors.grey2,
+  //   alignSelf: 'center',
+  // },
   },
 });
 

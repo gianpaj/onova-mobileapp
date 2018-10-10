@@ -184,10 +184,10 @@ class SettingsContainer extends Component<Props, State> {
           !Object.is(shippingAddress, userData.shippingAddress))) ||
         validPassword(password) ||
         // allow to delete the mobile number
-        (mobileNumber
-          ? isPhoneNumberValid(mobileNumber) &&
-            mobileNumber !== userData.mobileNumber
-          : true) ||
+        // FIXME: the logic should not return true if both the state.mobileNumber and userData.mobileNumber are empty
+        (!mobileNumber && mobileNumber !== userData.mobileNumber
+          ? isPhoneNumberValid(mobileNumber)
+          : false) ||
         (isEmail(emailAddress) && emailAddress !== userData.emailAddress) ||
         (username !== '' && username !== userData.username))
     );
@@ -425,7 +425,10 @@ class SettingsContainer extends Component<Props, State> {
                   onFocus: this.handleFocus.bind(this, 4),
                   onChangeText: t => this.setState({ mobileNumber: t }),
                   type: 'phone',
-                  validation: isPhoneNumberValid,
+                  validation: () => {
+                    if (!mobileNumber) return true;
+                    return isPhoneNumberValid(mobileNumber);
+                  },
                   textContentType: 'telephoneNumber',
                 },
               ]}

@@ -22,7 +22,7 @@ function validShippingAddress(stateShippingInfo: ShippingAddress) {
 }
 
 function isPhoneNumberValid(value: string): boolean {
-  if (!value) return;
+  if (!value) return false;
   try {
     const number = PhoneUtil.parseAndKeepRawInput(value, 'UA');
 

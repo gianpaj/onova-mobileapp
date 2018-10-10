@@ -97,7 +97,7 @@ export default class Accordion extends PureComponent<Props, State> {
               }
               returnKeyType="next"
               last
-              error={c.validation && c.value ? !c.validation(c.value) : false}
+              error={c.validation ? !c.validation() : false}
               {...c}
             />
           ))

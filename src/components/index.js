@@ -13,6 +13,7 @@ import ImageGrid from './ImageGrid';
 import ImageGridSearch from './ImageGridSearch';
 import MediaView from './MediaView';
 import NotificationsDot from './NotificationsDot';
+import SearchableDropdown from './SearchableDropdown';
 import Send from './Send';
 import TagInput from './TagInput';
 import Title from './Title';
@@ -32,6 +33,7 @@ export {
   ImageGridSearch,
   MediaView,
   NotificationsDot,
+  SearchableDropdown,
   Send,
   TagInput,
 };

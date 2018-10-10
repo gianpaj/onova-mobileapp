@@ -50,14 +50,13 @@ export type SignupData = LoginData & {
 export type UserData = {
   _id: string,
   accountStatus: string,
-  // billingAddress: ?any;
   bio?: string,
   displayName?: string,
   emailAddress: string,
   followersCount: number,
   followingCount: number,
   sharedCount: number,
-  // mobileNumber: ?string;
+  mobileNumber: ?string,
   // password: string;
   paymentInfo?: {
     last_four: string,
@@ -89,12 +88,7 @@ export type ShippingAddress = {
   lastName: string,
   fathersName: string,
   departmentNovaposhta: string,
-  // line1: string,
-  // line2: string,
   city: string,
-  // state: string,
-  // country: string,
-  // postcode: string,
 };
 
 // export type Message = {

@@ -20,9 +20,10 @@
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "storybook": "storybook start -p 7007",
     "test": "jest --verbose",
-    "DISABLED:test:e2e:android": "detox test -c android.emu.debug --loglevel verbose",
-    "DISABLED:test:e2e:ios": "detox test -c ios.sim.debug",
-    "DISABLED:test:e2e:build:ios": "detox build -c ios.sim.debug",
+    "test:e2e:android": "detox test -c android.emu.debug --loglevel verbose",
+    "test:e2e:android:build": "detox build -c android.emu.debug",
+    "test:e2e:ios": "detox test -c ios.sim.debug",
+    "test:e2e:ios:build": "detox build -c ios.sim.debug",
     "test:coverage": "jest --coverage --verbose",
     "test:lint": "eslint src --quiet",
     "test:watch": "jest __tests__ --verbose --watch"
@@ -34,6 +35,7 @@
     "babel-plugin-transform-remove-console": "^6.9.4",
     "bson-objectid": "^1.2.3",
     "date-fns": "^1.29.0",
+    "detox": "^9.0.4",
     "firebase": "^4.8.1",
     "foect": "^0.1.5",
     "google-libphonenumber": "^3.1.14",
@@ -151,13 +153,13 @@
         "name": "iPhone 6"
       },
       "android.emu.debug": {
-        "binaryPath": "android/app/build/outputs/apk/app-debug.apk",
+        "binaryPath": "android/app/build/outputs/apk/debug/app-debug.apk",
         "build": "pushd android && ./gradlew assembleDebug assembleAndroidTest -DtestBuildType=debug && popd",
         "type": "android.emulator",
         "name": "Nexus_5X_API_25_7.1.1_"
       },
       "android.emu.release": {
-        "binaryPath": "android/app/build/outputs/apk/app-debug.apk",
+        "binaryPath": "android/app/build/outputs/apk/release/app-release.apk",
         "build": "pushd android && ./gradlew assembleRelease assembleAndroidTest -DtestBuildType=release && popd",
         "type": "android.emulator",
         "name": "Nexus_5X_API_25_7.1.1_"

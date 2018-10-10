@@ -50,8 +50,9 @@ describe('Checkout screen', () => {
       wrapper.setState({
         mobileNumber: '0979878977',
         shippingAddress: {
-          line1: 'a',
-          city: 'lviv',
+          firstName: 'Джанфранко',
+          lastName: 'Палумбо',
+          city: 'Львів',
         },
       });
       wrapper.find('[testID="payButton"]').simulate('press');
@@ -66,8 +67,9 @@ describe('Checkout screen', () => {
         isLoading: false,
         mobileNumber: '0979878977',
         shippingAddress: {
-          line1: 'a',
-          city: 'lviv',
+          firstName: 'Джанфранко',
+          lastName: 'Палумбо',
+          city: 'Львів',
         },
         paymentInfo: {},
       });

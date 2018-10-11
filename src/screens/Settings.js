@@ -363,26 +363,26 @@ class SettingsContainer extends Component<Props, State> {
               values={[
                 {
                   ref: el => (this.inputs[0] = el),
-                  placeholder: 'Address line 1',
-                  value: shippingAddress.line1,
+                  placeholder: 'First name',
+                  value: shippingAddress.firstName,
                   onFocus: this.handleFocus.bind(this, 0),
                   onChangeText: t =>
                     this.setState(
                       update(this.state, {
-                        shippingAddress: { line1: { $set: t } },
+                        shippingAddress: { firstName: { $set: t } },
                       })
                     ),
-                  textContentType: 'streetAddressLine1',
+                  textContentType: 'givenName',
                 },
                 {
                   ref: el => (this.inputs[1] = el),
-                  placeholder: 'Address line 2',
-                  value: shippingAddress.line2,
+                  placeholder: 'Last name',
+                  value: shippingAddress.lastName,
                   onFocus: this.handleFocus.bind(this, 1),
                   onChangeText: t =>
                     this.setState(
                       update(this.state, {
-                        shippingAddress: { line2: { $set: t } },
+                        shippingAddress: { lastName: { $set: t } },
                       })
                     ),
                   textContentType: 'streetAddressLine2',

@@ -77,7 +77,7 @@ export default class Accordion extends PureComponent<Props, State> {
         sections={[{ content: this.props.values }]}
         renderHeader={() => (
           <View style={styles.header}>
-            <FormLabel labelStyle={[styles.label, { paddingBottom: 10 }]}>
+            <FormLabel labelStyle={styles.label}>
               {this.props.headerText}
             </FormLabel>
             <Animatable.View style={[styles.arrow, animatedStyle]}>
@@ -98,11 +98,8 @@ export default class Accordion extends PureComponent<Props, State> {
               clearButtonMode: 'while-editing',
               // containerStyle: styles.inputContainer,
               // inputStyle: styles.input,
-              onSubmitEditing: () => {
-                // section.content[i + 1];
-                // debugger;
-                section.content[i + 1] && section.content[i + 1].input.focus();
-              },
+              onSubmitEditing: () =>
+                section.content[i + 1] && section.content[i + 1].input.focus(),
               onFocus: t => c.onFocus(t),
               returnKeyType: 'next',
               last: true,
@@ -137,6 +134,7 @@ const styles = StyleSheet.create({
   label: {
     color: colors.black,
     fontWeight: '600',
+    paddingBottom: 10,
   },
   arrow: {
     marginTop: 13,

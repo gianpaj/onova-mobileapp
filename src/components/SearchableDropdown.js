@@ -34,7 +34,7 @@ export default class SearchableDropDown extends Component {
     if (this.state.focus) {
       return (
         <ListView
-          style={{ ...this.props.itemsContainerStyle }}
+          style={this.props.itemsContainerStyle}
           keyboardShouldPersistTaps="always"
           dataSource={ds.cloneWithRows(this.state.items)}
           renderRow={this.renderItems}
@@ -74,13 +74,13 @@ export default class SearchableDropDown extends Component {
 
   renderItems = item => (
     <TouchableOpacity
-      style={{ ...this.props.itemStyle }}
+      style={this.props.itemStyle}
       onPress={() => {
         this.setState({ item, focus: false });
         Keyboard.dismiss();
         setTimeout(() => this.props.onItemSelect(item), 0);
       }}>
-      <Text style={{ ...this.props.itemTextStyle }}>{item.name}</Text>
+      <Text style={this.props.itemTextStyle}>{item.name}</Text>
     </TouchableOpacity>
   );
 

@@ -223,6 +223,7 @@ export class CheckoutContainer extends Component<Props, State> {
     const focusingRef = this.state.activeInputRef + direction;
     this.inputs[focusingRef] && this.inputs[focusingRef].focus();
   }
+
   static getDerivedStateFromProps(props, state) {
     if (state.isLoading) {
       return {
@@ -243,7 +244,7 @@ export class CheckoutContainer extends Component<Props, State> {
       if (!paymentInfo.last_four || !paymentInfo.method) {
         missing = 'Payment information';
       }
-      if (!shippingAddress.line1 || !shippingAddress.city) {
+      if (!shippingAddress.departmentNovaposhta || !shippingAddress.city) {
         missing = 'Shipping address';
       }
       return ui.showToast(`${missing} is missing`, 'warning', null, 5);
@@ -278,9 +279,7 @@ export class CheckoutContainer extends Component<Props, State> {
   updateShippingInfo(): Promise<any> {
     const { userData, token } = this.props;
     const { mobileNumber, shippingAddress } = this.state;
-    const data = {};
-    // if (validShippingAddress(shippingAddress)) {
-    data.shippingAddress = shippingAddress;
+    const data = { shippingAddress };
 
     // FIXME: state should be the number unformatted. useful also when comparing if number has been changed
     data.mobileNumber = mobileNumber.replace(/\D/g, '');
@@ -332,10 +331,8 @@ export class CheckoutContainer extends Component<Props, State> {
   }
 
   formatCardInfo() {
-    const { paymentInfo }: { paymentInfo: PaymentInfo } = this.props.userData;
-
     return {
-      number: `**** **** **** ${paymentInfo.last_four}`,
+      number: `**** **** **** ${this.props.userData.paymentInfo.last_four}`,
       expiry: '',
       name: ' ',
       scale: 0.5,
@@ -448,34 +445,32 @@ export class CheckoutContainer extends Component<Props, State> {
                 headerText="Shipping Address:"
                 values={[
                   {
-                    ref: el => {
-                      this.inputs[0] = el;
-                    },
-                    placeholder: 'Address line 1',
-                    value: shippingAddress.line1,
+                    ref: el => (this.inputs[0] = el),
+                    placeholder: 'First name',
+                    value: shippingAddress.firstName,
                     onFocus: this.handleFocus.bind(this, 0),
                     onChangeText: t =>
                       this.setState(
                         update(this.state, {
-                          shippingAddress: { line1: { $set: t } },
+                          shippingAddress: { firstName: { $set: t } },
                         })
                       ),
-                    textContentType: 'streetAddressLine1',
+                    textContentType: 'givenName',
+                    error: !shippingAddress.firstName,
                   },
                   {
-                    ref: el => {
-                      this.inputs[1] = el;
-                    },
-                    placeholder: 'Address line 2',
-                    value: shippingAddress.line2,
+                    ref: el => (this.inputs[1] = el),
+                    placeholder: 'Last name',
+                    value: shippingAddress.lastName,
                     onFocus: this.handleFocus.bind(this, 1),
                     onChangeText: t =>
                       this.setState(
                         update(this.state, {
-                          shippingAddress: { line2: { $set: t } },
+                          shippingAddress: { lastName: { $set: t } },
                         })
                       ),
-                    textContentType: 'streetAddressLine2',
+                    textContentType: 'familyName',
+                    error: !shippingAddress.lastName,
                   },
                   {
                     ref: el => {
@@ -602,6 +597,24 @@ const styles = StyleSheet.create({
   //   color: colors.grey2,
   //   alignSelf: 'center',
   // },
+  autocompleteContainer: {
+    flex: 1,
+    left: 0,
+    position: 'absolute',
+    right: 0,
+    top: 0,
+    zIndex: 1,
+  },
+  titleText: {
+    fontSize: 18,
+    fontWeight: '500',
+    marginBottom: 10,
+    marginTop: 10,
+    textAlign: 'center',
+  },
+  itemText: {
+    fontSize: 15,
+    margin: 2,
   },
 });
 

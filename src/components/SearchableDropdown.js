@@ -6,22 +6,32 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {
   Keyboard,
-  ListView,
+  FlatList,
   Text,
-  TextInput,
+  // TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
+import { InputItem } from 'antd-mobile-rn';
 
-const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
-
+const cyrillic = /[\u0400-\u04FF]+/;
 export default class SearchableDropDown extends Component {
   static propTypes = {
     containerStyle: PropTypes.object,
+    items: PropTypes.array.isRequired,
+    itemsContainerStyle: PropTypes.object,
+    itemStyle: PropTypes.object,
+    itemTextStyle: PropTypes.object,
+    onItemSelect: PropTypes.func,
+    onTextChange: PropTypes.func,
     placeholder: PropTypes.string,
     placeholderTextColor: PropTypes.string,
-    // textInputStyle,
-    // underlineColorAndroid,
+    textInputStyle: PropTypes.object,
+    underlineColorAndroid: PropTypes.string,
+    value: PropTypes.shape({
+      uk: PropTypes.string,
+      id: PropTypes.string,
+    }),
   };
 
   state = {
@@ -30,49 +40,55 @@ export default class SearchableDropDown extends Component {
     focus: false,
   };
 
+  _keyExtractor = item => item.id;
+
   renderList = () => {
     if (this.state.focus) {
       return (
-        <ListView
-          style={this.props.itemsContainerStyle}
+        <FlatList
+          // style={this.props.itemsContainerStyle}
           keyboardShouldPersistTaps="always"
-          dataSource={ds.cloneWithRows(this.state.items)}
-          renderRow={this.renderItems}
+          data={this.state.items}
+          keyExtractor={this._keyExtractor}
+          renderItem={this.renderItems}
         />
       );
     }
   };
 
   componentDidMount() {
-    const { items, defaultIndex } = this.props;
-    if (defaultIndex && items.length > defaultIndex) {
-      return this.setState({
-        items,
-        item: items[defaultIndex],
-      });
+    const { items, value } = this.props;
+    if (value) {
+      this.setState({ item: value });
     }
     this.setState({ items });
   }
 
-  searchedItems = searchedText => {
+  onChangeText = searchedText => {
     const { onTextChange, items } = this.props;
-    const filteredItems = items.filter(
-      item => item.name.toLowerCase().indexOf(searchedText.toLowerCase()) > -1
-    );
+    if (!searchedText) {
+      // reset when field is cleared
+      return this.setState({ item: { uk: '', id: -1 }, items });
+      // only allow cyrillic characters
+    } else if (!cyrillic.test(searchedText)) return;
+
+    const regex = new RegExp(`^${searchedText.trim()}`, 'i');
+    const filteredItems = items.filter(city => regex.test(city.uk));
+    filteredItems.sort((a, b) => a > b);
     const item = {
       id: -1,
-      name: searchedText,
+      uk: searchedText,
     };
-    this.setState({ listItems: filteredItems, item });
+    this.setState({ items: filteredItems, item });
 
-    if (onTextChange && typeof onTextChange === 'function') {
+    if (onTextChange) {
       setTimeout(() => {
         onTextChange(searchedText);
       }, 0);
     }
   };
 
-  renderItems = item => (
+  renderItems = ({ item }) => (
     <TouchableOpacity
       style={this.props.itemStyle}
       onPress={() => {
@@ -80,20 +96,12 @@ export default class SearchableDropDown extends Component {
         Keyboard.dismiss();
         setTimeout(() => this.props.onItemSelect(item), 0);
       }}>
-      <Text style={this.props.itemTextStyle}>{item.name}</Text>
+      <Text style={this.props.itemTextStyle}>{item.uk}</Text>
     </TouchableOpacity>
   );
 
   _onBlur = () => this.setState({ focus: false });
-  _onFocus = () =>
-    this.setState({
-      focus: true,
-      item: {
-        name: '',
-        id: 0,
-      },
-      listItems: this.state.items,
-    });
+  _onFocus = () => this.setState({ focus: true });
 
   render() {
     const {
@@ -106,16 +114,18 @@ export default class SearchableDropDown extends Component {
 
     return (
       <View keyboardShouldpersist="always" style={containerStyle}>
-        <TextInput
+        <InputItem
+          autoCorrect={false}
+          clearButtonMode="while-editing"
           ref={e => (this.input = e)}
           onBlur={this._onBlur}
-          onChangeText={this.searchedItems}
+          onChangeText={this.onChangeText}
           onFocus={this._onFocus}
           placeholder={placeholder}
           placeholderTextColor={placeholderTextColor}
-          // style={textInputStyle}
+          style={textInputStyle}
           underlineColorAndroid={underlineColorAndroid}
-          value={this.state.item.name}
+          value={this.state.item.uk}
         />
         {this.renderList()}
       </View>

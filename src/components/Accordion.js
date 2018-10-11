@@ -91,7 +91,7 @@ export default class Accordion extends PureComponent<Props, State> {
               key: i,
               ref: el => {
                 c.input = el;
-                c.ref(el);
+                c.ref && c.ref(el);
               },
               autoCorrect: false,
               blurOnSubmit: false,

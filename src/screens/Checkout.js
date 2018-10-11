@@ -8,6 +8,7 @@ import {
   Platform,
   StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -36,7 +37,13 @@ import type { CancelTokenSource } from 'axios';
 
 import { disableRefresh, getPersonalUserData } from '../actions/actionCreator';
 
-import { Accordion, CardView, Header, HR } from '../components';
+import {
+  Accordion,
+  CardView,
+  Header,
+  HR,
+  SearchableDropdown,
+} from '../components';
 
 import colors from '../config/colors';
 // import settings from '../config/settings';
@@ -54,6 +61,16 @@ import type {
   ReduxState,
 } from '../types';
 
+type City = {
+  id: string,
+  uk: string,
+};
+
+type Department = {
+  id: string,
+  uk: string,
+};
+
 type Props = {
   dispatch: Dispatch,
   navigation: NavigationScreenProp<*>,
@@ -63,6 +80,8 @@ type Props = {
 };
 
 type State = {
+  cities: Array<City>,
+  departments: Array<Department>,
   isLoading: boolean,
   item: Product | {},
   mobileNumber: string,
@@ -77,12 +96,14 @@ export class CheckoutContainer extends Component<Props, State> {
   inputs = [];
   cancelToken: CancelTokenSource;
   state = {
+    cities: [],
     isLoading: true,
     item: {},
     mobileNumber: '',
     order: {},
     paymentInfo: {},
     pending: false,
+    query: '',
     shippingAddress: null,
     showFooter: true,
   };
@@ -109,6 +130,7 @@ export class CheckoutContainer extends Component<Props, State> {
       };
     }
     this.initialilizeOrder(item);
+    this.getCities();
   }
 
   componentWillUnmount() {
@@ -116,8 +138,6 @@ export class CheckoutContainer extends Component<Props, State> {
     this.keyboardDidHideListener.remove();
     // trigger Axios to reject the request
     this.cancelToken.cancel('operation_canceled');
-
-    //TODO: unreserve product and cancel order
   }
 
   initialilizeOrder(item) {
@@ -130,15 +150,6 @@ export class CheckoutContainer extends Component<Props, State> {
           isLoading: false,
           order,
         });
-
-        // if (Platform.OS === 'ios') {
-        //   BTClient.setupWithURLScheme(
-        //     settings.BRAINTREE_TOKENIZATION_KEY,
-        //     'com.onova.app.payments'
-        //   );
-        // } else {
-        //   BTClient.setup(settings.BRAINTREE_TOKENIZATION_KEY);
-        // }
       })
       .catch(err => {
         console.log(err);
@@ -160,14 +171,6 @@ export class CheckoutContainer extends Component<Props, State> {
             isLoading: false,
             order: err.data.data,
           });
-          // if (Platform.OS === 'ios') {
-          //   BTClient.setupWithURLScheme(
-          //     settings.BRAINTREE_TOKENIZATION_KEY,
-          //     'com.onova.app.payments'
-          //   );
-          // } else {
-          //   BTClient.setup(settings.BRAINTREE_TOKENIZATION_KEY);
-          // }
         } else {
           console.error(err);
         }
@@ -202,6 +205,16 @@ export class CheckoutContainer extends Component<Props, State> {
     this.props.dispatch(
       getPersonalUserData({ cancelToken: this.cancelToken.token })
     );
+  };
+
+  getCities = async () => {
+    try {
+      const { data } = await api.get('/api/shipping/cities');
+      this.setState({ cities: data });
+    } catch (error) {
+      console.error(error);
+      ui.showToast(err.message, 'danger');
+    }
   };
 
   handleFocus(ref) {
@@ -363,8 +376,8 @@ export class CheckoutContainer extends Component<Props, State> {
       !pending &&
       paymentInfo.last_four &&
       paymentInfo.method &&
-      shippingAddress.line1 &&
-      shippingAddress.city &&
+      // TODO: only be able to select from the list of cities
+      validShippingAddress(shippingAddress) &&
       isPhoneNumberValid(mobileNumber)
     ) {
       return false;
@@ -375,6 +388,7 @@ export class CheckoutContainer extends Component<Props, State> {
   render() {
     const { userData } = this.props;
     const {
+      cities,
       isLoading,
       item,
       mobileNumber,
@@ -473,34 +487,63 @@ export class CheckoutContainer extends Component<Props, State> {
                     error: !shippingAddress.lastName,
                   },
                   {
-                    ref: el => {
-                      this.inputs[2] = el;
-                    },
                     placeholder: 'City',
-                    value: shippingAddress.city,
-                    onFocus: this.handleFocus.bind(this, 2),
-                    onChangeText: t =>
-                      this.setState(
-                        update(this.state, {
-                          shippingAddress: { city: { $set: t } },
-                        })
-                      ),
+                    // value: shippingAddress.city,
+                    // onFocus: this.handleFocus.bind(this, 2),
+                    // onChangeText: t =>
+                    //   this.setState(
+                    //     update(this.state, {
+                    //       shippingAddress: { city: { $set: t } },
+                    //     })
+                    //   ),
                     textContentType: 'addressCity',
+                    // error: !shippingAddress.city,
+                    render: props => (
+                      <SearchableDropdown
+                        // ref={el => (this.inputs[2] = el)}
+                        onItemSelect={({ id }) =>
+                          this.setState(
+                            update(this.state, {
+                              shippingAddress: { city: { $set: id } },
+                            })
+                          )
+                        }
+                        itemStyle={{
+                          padding: 10,
+                          marginTop: 2,
+                          backgroundColor: colors.grey5,
+                          borderColor: colors.grey4,
+                          borderWidth: 1,
+                          borderRadius: 3,
+                        }}
+                        // TODO: color in red if !cities.indexOf(query)
+                        itemTextStyle={{ color: colors.black }}
+                        itemsContainerStyle={{ maxHeight: 240 }}
+                        items={cities}
+                        resetValue={false}
+                        underlineColorAndroid="transparent"
+                        value={cities.find(
+                          city => city.id === shippingAddress.city
+                        )}
+                        {...props}
+                      />
+                    ),
                   },
                   {
-                    ref: el => {
-                      this.inputs[3] = el;
-                    },
-                    placeholder: 'State',
-                    value: shippingAddress.state,
+                    ref: el => (this.inputs[3] = el),
+                    placeholder: 'Novaposhta department',
+                    value: shippingAddress.departmentNovaposhta,
                     onFocus: this.handleFocus.bind(this, 3),
                     onChangeText: t =>
                       this.setState(
                         update(this.state, {
-                          shippingAddress: { state: { $set: t } },
+                          shippingAddress: {
+                            departmentNovaposhta: { $set: t },
+                          },
                         })
                       ),
-                    textContentType: 'addressState',
+                    // TODO: disable until selected city is one of the list
+                    render: props => <TextInput {...props} />,
                   },
                   {
                     ref: el => (this.inputs[4] = el),

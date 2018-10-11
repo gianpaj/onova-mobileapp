@@ -12,12 +12,13 @@ function validPassword(password: string) {
  * If any of the fields is not empty
  * TODO: determine business logic.
  */
-function validShippingAddress(stateShippingInfo: ShippingAddress) {
+function validShippingAddress(s: ShippingAddress) {
   return (
-    stateShippingInfo.line1 !== '' ||
-    stateShippingInfo.line2 !== '' ||
-    stateShippingInfo.city !== '' ||
-    stateShippingInfo.state !== ''
+    s.firstName !== '' &&
+    s.lastName !== '' &&
+    // s.fathersName !== '' && // TODO: is it mandatory?
+    s.city !== '' &&
+    s.departmentNovaposhta !== ''
   );
 }
 

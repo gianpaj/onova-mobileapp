@@ -219,6 +219,7 @@ function trackUser(userData: UserData) {
   Analytics.identify(userData._id, {
     email: userData.emailAddress,
     username: userData.username,
+    accountStatus: userData.accountStatus,
   });
   Sentry.setUserContext({
     email: userData.emailAddress,

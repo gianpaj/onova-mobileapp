@@ -17,6 +17,7 @@ type Field = {
   onFocus: () => void,
   placeholder: string,
   render: (props: any) => React.Node,
+  input: React.Node, // used to store the ref and later be able to focus on next input field when the Next button is pressed on the keyboard
   type?: string,
   value: string,
 };
@@ -89,10 +90,6 @@ export default class Accordion extends PureComponent<Props, State> {
           section.content.map((c, i) => {
             const props = {
               key: i,
-              ref: el => {
-                c.input = el;
-                c.ref && c.ref(el);
-              },
               autoCorrect: false,
               blurOnSubmit: false,
               clearButtonMode: 'while-editing',

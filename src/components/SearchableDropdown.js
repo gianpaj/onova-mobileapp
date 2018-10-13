@@ -26,6 +26,7 @@ export default class SearchableDropDown extends Component {
     // itemsContainerStyle: PropTypes.object,
     itemStyle: PropTypes.object,
     itemTextStyle: PropTypes.object,
+    onFocus: PropTypes.func,
     onItemSelect: PropTypes.func,
     onTextChange: PropTypes.func,
     placeholder: PropTypes.string,
@@ -105,7 +106,10 @@ export default class SearchableDropDown extends Component {
   );
 
   _onBlur = () => this.setState({ focus: false });
-  _onFocus = () => this.setState({ focus: true });
+  _onFocus = () => {
+    this.setState({ focus: true });
+    this.props.onFocus();
+  };
 
   render() {
     const {

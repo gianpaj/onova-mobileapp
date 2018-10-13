@@ -385,6 +385,29 @@ export class CheckoutContainer extends Component<Props, State> {
     return true;
   };
 
+  _renderCityAutoComplete = props => {
+    const { cities } = this.state;
+    return (
+      <SearchableDropdown
+        onItemSelect={({ id }) =>
+          this.setState(
+            update(this.state, {
+              shippingAddress: { city: { $set: id } },
+            })
+          )
+        }
+        itemStyle={styles.cityAutocompleteInput}
+        // TODO: color in red if !cities.indexOf(query)
+        itemTextStyle={{ color: colors.black }}
+        itemsContainerStyle={styles.cityAutocompleteContainer}
+        items={cities}
+        resetValue={false}
+        underlineColorAndroid="transparent"
+        {...props}
+      />
+    );
+  };
+
   render() {
     const { userData } = this.props;
     const {
@@ -487,47 +510,15 @@ export class CheckoutContainer extends Component<Props, State> {
                     error: !shippingAddress.lastName,
                   },
                   {
+                    // ref: el => (this.inputs[2] = el),
                     placeholder: 'City',
-                    // value: shippingAddress.city,
+                    value: cities.find(
+                      city => city.id === shippingAddress.city
+                    ),
                     // onFocus: this.handleFocus.bind(this, 2),
-                    // onChangeText: t =>
-                    //   this.setState(
-                    //     update(this.state, {
-                    //       shippingAddress: { city: { $set: t } },
-                    //     })
-                    //   ),
                     textContentType: 'addressCity',
                     // error: !shippingAddress.city,
-                    render: props => (
-                      <SearchableDropdown
-                        // ref={el => (this.inputs[2] = el)}
-                        onItemSelect={({ id }) =>
-                          this.setState(
-                            update(this.state, {
-                              shippingAddress: { city: { $set: id } },
-                            })
-                          )
-                        }
-                        itemStyle={{
-                          padding: 10,
-                          marginTop: 2,
-                          backgroundColor: colors.grey5,
-                          borderColor: colors.grey4,
-                          borderWidth: 1,
-                          borderRadius: 3,
-                        }}
-                        // TODO: color in red if !cities.indexOf(query)
-                        itemTextStyle={{ color: colors.black }}
-                        itemsContainerStyle={{ maxHeight: 240 }}
-                        items={cities}
-                        resetValue={false}
-                        underlineColorAndroid="transparent"
-                        value={cities.find(
-                          city => city.id === shippingAddress.city
-                        )}
-                        {...props}
-                      />
-                    ),
+                    render: this._renderCityAutoComplete,
                   },
                   {
                     ref: el => (this.inputs[3] = el),
@@ -658,6 +649,17 @@ const styles = StyleSheet.create({
   itemText: {
     fontSize: 15,
     margin: 2,
+  },
+  cityAutocompleteInput: {
+    padding: 10,
+    marginTop: 2,
+    backgroundColor: colors.grey5,
+    borderColor: colors.grey4,
+    borderWidth: 1,
+    borderRadius: 3,
+  },
+  cityAutocompleteContainer: {
+    maxHeight: 240,
   },
 });
 

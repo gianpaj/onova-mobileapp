@@ -276,6 +276,11 @@ const signup = (data: SignupData) => (dispatch: Dispatch) => {
         //   ...{ token: res.token, provider: 'email' },
         // };
 
+        if (isProd) {
+          trackUser(res.data);
+          Analytics.track('signup');
+        }
+
         // if (userData.accountStatus !== 'verified') {
         throw new Error('NOT_VERIFIED');
         // }
@@ -301,7 +306,6 @@ const signup = (data: SignupData) => (dispatch: Dispatch) => {
       if (err.message !== 'NOT_VERIFIED') {
         dispatch(handleErrorWithAlert({ type: SIGNUP_FAIL }, err));
       } else {
-        if (isProd) Analytics.track('signup');
         dispatch({ type: SIGNUP_FAIL });
         throw err;
       }

@@ -97,9 +97,11 @@ export default class Accordion extends PureComponent<Props, State> {
               // inputStyle: styles.input,
               onSubmitEditing: () =>
                 section.content[i + 1] && section.content[i + 1].input.focus(),
-              onFocus: t => c.onFocus(t),
+              onFocus: t => {
+                c.onFocus && c.onFocus(t);
+              },
               returnKeyType: 'next',
-              last: true,
+              last: true, // remove borderBottomWidth
               error: c.validation ? !c.validation() : false,
               ...c,
             };

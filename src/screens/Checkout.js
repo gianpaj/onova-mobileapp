@@ -96,7 +96,8 @@ export class CheckoutContainer extends Component<Props, State> {
   inputs = [];
   cancelToken: CancelTokenSource;
   state = {
-    cities: [],
+    cities: null,
+    departments: null,
     isLoading: true,
     item: {},
     mobileNumber: '',
@@ -131,6 +132,9 @@ export class CheckoutContainer extends Component<Props, State> {
     }
     this.initialilizeOrder(item);
     this.getCities();
+
+    if (this.state.shippingAddress.city)
+      this.getDeparments(this.state.shippingAddress.city);
   }
 
   componentWillUnmount() {
@@ -211,6 +215,17 @@ export class CheckoutContainer extends Component<Props, State> {
     try {
       const { data } = await api.get('/api/shipping/cities');
       this.setState({ cities: data });
+    } catch (error) {
+      console.error(error);
+      ui.showToast(err.message, 'danger');
+    }
+  };
+
+  getDeparments = async (cityID: string) => {
+    try {
+      const { data } = await api.get(`/api/shipping/departments/${cityID}`);
+      console.warn(data[0]);
+      this.setState({ departments: data });
     } catch (error) {
       console.error(error);
       ui.showToast(err.message, 'danger');
@@ -387,22 +402,48 @@ export class CheckoutContainer extends Component<Props, State> {
 
   _renderCityAutoComplete = props => {
     const { cities } = this.state;
+
+    return (
+      <SearchableDropdown
+        onItemSelect={({ id }) => {
+          if (!id) this.setState({ departments: null, department: '' });
+          else this.getDeparments(id);
+
+          this.setState(
+            update(this.state, {
+              shippingAddress: { city: { $set: id } },
+            })
+          );
+        }}
+        // itemStyle={styles.autocompleteInputs}
+        // TODO: color in red if !cities.indexOf(query)
+        style={styles.autocompleteContainers}
+        items={cities}
+        regexToMatch={/[\u0400-\u04FF]+/}
+        {...props}
+      />
+    );
+  };
+
+  _renderDepartmentAutoComplete = props => {
+    const { shippingAddress, departments, cities } = this.state;
+
+    const city = cities.find(city => city.id === shippingAddress.city);
     return (
       <SearchableDropdown
         onItemSelect={({ id }) =>
           this.setState(
             update(this.state, {
-              shippingAddress: { city: { $set: id } },
+              shippingAddress: { departmentNovaposhta: { $set: id } },
             })
           )
         }
-        itemStyle={styles.cityAutocompleteInput}
-        // TODO: color in red if !cities.indexOf(query)
-        itemTextStyle={{ color: colors.black }}
-        itemsContainerStyle={styles.cityAutocompleteContainer}
-        items={cities}
-        resetValue={false}
-        underlineColorAndroid="transparent"
+        disabled={!departments}
+        // itemStyle={styles.autocompleteInputs}
+        // TODO: color in red if !department.indexOf(query)
+        style={styles.autocompleteContainers}
+        items={departments}
+        extra={!city && <Text>Pick a city</Text>}
         {...props}
       />
     );
@@ -412,6 +453,7 @@ export class CheckoutContainer extends Component<Props, State> {
     const { userData } = this.props;
     const {
       cities,
+      departments,
       isLoading,
       item,
       mobileNumber,
@@ -477,78 +519,75 @@ export class CheckoutContainer extends Component<Props, State> {
                 </Text> */}
               </View>
               <HR full />
-              <Accordion
-                expanded
-                headerText="Shipping Address:"
-                values={[
-                  {
-                    ref: el => (this.inputs[0] = el),
-                    placeholder: 'First name',
-                    value: shippingAddress.firstName,
-                    onFocus: this.handleFocus.bind(this, 0),
-                    onChangeText: t =>
-                      this.setState(
-                        update(this.state, {
-                          shippingAddress: { firstName: { $set: t } },
-                        })
-                      ),
-                    textContentType: 'givenName',
-                    error: !shippingAddress.firstName,
-                  },
-                  {
-                    ref: el => (this.inputs[1] = el),
-                    placeholder: 'Last name',
-                    value: shippingAddress.lastName,
-                    onFocus: this.handleFocus.bind(this, 1),
-                    onChangeText: t =>
-                      this.setState(
-                        update(this.state, {
-                          shippingAddress: { lastName: { $set: t } },
-                        })
-                      ),
-                    textContentType: 'familyName',
-                    error: !shippingAddress.lastName,
-                  },
-                  {
-                    // ref: el => (this.inputs[2] = el),
-                    placeholder: 'City',
-                    value: cities.find(
-                      city => city.id === shippingAddress.city
-                    ),
-                    // onFocus: this.handleFocus.bind(this, 2),
-                    textContentType: 'addressCity',
-                    // error: !shippingAddress.city,
-                    render: this._renderCityAutoComplete,
-                  },
-                  {
-                    ref: el => (this.inputs[3] = el),
-                    placeholder: 'Novaposhta department',
-                    value: shippingAddress.departmentNovaposhta,
-                    onFocus: this.handleFocus.bind(this, 3),
-                    onChangeText: t =>
-                      this.setState(
-                        update(this.state, {
-                          shippingAddress: {
-                            departmentNovaposhta: { $set: t },
-                          },
-                        })
-                      ),
-                    // TODO: disable until selected city is one of the list
-                    render: props => <TextInput {...props} />,
-                  },
-                  {
-                    ref: el => (this.inputs[4] = el),
-                    placeholder: 'Mobile number',
-                    value: ui.formatPhoneNumber(mobileNumber),
-                    onFocus: this.handleFocus.bind(this, 4),
-                    onChangeText: t => this.setState({ mobileNumber: t }),
-                    type: 'phone',
-                    validation: () =>
-                      isPhoneNumberValid(mobileNumber.replace(/\D/g, '')),
-                    textContentType: 'telephoneNumber',
-                  },
-                ]}
-              />
+              {cities && (
+                <Accordion
+                  expanded
+                  headerText="Shipping Address:"
+                  values={[
+                    {
+                      ref: el => (this.inputs[0] = el),
+                      placeholder: 'First name',
+                      value: shippingAddress.firstName,
+                      onFocus: this.handleFocus.bind(this, 0),
+                      onChangeText: t =>
+                        this.setState(
+                          update(this.state, {
+                            shippingAddress: { firstName: { $set: t } },
+                          })
+                        ),
+                      textContentType: 'givenName',
+                      error: !shippingAddress.firstName,
+                    },
+                    {
+                      ref: el => (this.inputs[1] = el),
+                      placeholder: 'Last name',
+                      value: shippingAddress.lastName,
+                      onFocus: this.handleFocus.bind(this, 1),
+                      onChangeText: t =>
+                        this.setState(
+                          update(this.state, {
+                            shippingAddress: { lastName: { $set: t } },
+                          })
+                        ),
+                      textContentType: 'familyName',
+                      error: !shippingAddress.lastName,
+                    },
+                    {
+                      // ref: el => (this.inputs[2] = el),
+                      placeholder: 'City',
+                      value:
+                        cities &&
+                        cities.find(city => city.id === shippingAddress.city),
+                      // onFocus: this.handleFocus.bind(this, 2),
+                      textContentType: 'addressCity',
+                      // error: !shippingAddress.city,
+                      render: this._renderCityAutoComplete,
+                    },
+                    {
+                      // ref: el => (this.inputs[3] = el),
+                      placeholder: 'Novaposhta department',
+                      value:
+                        departments &&
+                        departments.find(
+                          d => d.id === shippingAddress.departmentNovaposhta
+                        ),
+                      // onFocus: this.handleFocus.bind(this, 3),
+                      render: this._renderDepartmentAutoComplete,
+                    },
+                    {
+                      ref: el => (this.inputs[4] = el),
+                      placeholder: 'Mobile number',
+                      value: ui.formatPhoneNumber(mobileNumber),
+                      onFocus: this.handleFocus.bind(this, 4),
+                      onChangeText: t => this.setState({ mobileNumber: t }),
+                      type: 'phone',
+                      validation: () =>
+                        isPhoneNumberValid(mobileNumber.replace(/\D/g, '')),
+                      textContentType: 'telephoneNumber',
+                    },
+                  ]}
+                />
+              )}
               <FormLabel labelStyle={[styles.label, { paddingBottom: 10 }]}>
                 Payment Info:
               </FormLabel>
@@ -569,14 +608,11 @@ export class CheckoutContainer extends Component<Props, State> {
                     testID="payButton"
                     dark={!this.isDisabled()}
                     style={[
-                      this.isDisabled()
-                        ? { backgroundColor: colors.grey4 }
-                        : null,
+                      this.isDisabled() && { backgroundColor: colors.grey4 },
                     ]}
                     onPress={this.onCheckout}
                     full>
-                    <Text
-                      style={[this.isDisabled() ? {} : styles.payButtonText]}>
+                    <Text style={[!this.isDisabled() && styles.payButtonText]}>
                       Make Payment
                     </Text>
                   </NBButton>
@@ -585,7 +621,7 @@ export class CheckoutContainer extends Component<Props, State> {
             )}
           </>
         )}
-        {Platform.OS == 'ios' && (
+        {Platform.OS === 'ios' && (
           <KeyboardAccessoryNavigation
             nextDisabled={this.state.nextFocusDisabled}
             previousDisabled={this.state.previousFocusDisabled}
@@ -631,35 +667,8 @@ const styles = StyleSheet.create({
   //   color: colors.grey2,
   //   alignSelf: 'center',
   // },
-  autocompleteContainer: {
-    flex: 1,
-    left: 0,
-    position: 'absolute',
-    right: 0,
-    top: 0,
-    zIndex: 1,
-  },
-  titleText: {
-    fontSize: 18,
-    fontWeight: '500',
-    marginBottom: 10,
-    marginTop: 10,
-    textAlign: 'center',
-  },
-  itemText: {
-    fontSize: 15,
-    margin: 2,
-  },
-  cityAutocompleteInput: {
-    padding: 10,
-    marginTop: 2,
-    backgroundColor: colors.grey5,
-    borderColor: colors.grey4,
-    borderWidth: 1,
-    borderRadius: 3,
-  },
-  cityAutocompleteContainer: {
-    maxHeight: 240,
+  autocompleteContainers: {
+    borderBottomWidth: 5,
   },
 });
 

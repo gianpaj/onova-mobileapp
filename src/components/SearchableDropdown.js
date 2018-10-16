@@ -14,7 +14,6 @@ import {
 } from 'react-native';
 import { InputItem } from 'antd-mobile-rn';
 
-const cyrillic = /[\u0400-\u04FF]+/;
 const LIMIT_BY = 20;
 
 const emptyItem = { uk: '', id: '' };
@@ -22,21 +21,24 @@ const emptyItem = { uk: '', id: '' };
 export default class SearchableDropDown extends Component {
   static propTypes = {
     containerStyle: PropTypes.object,
-    items: PropTypes.array.isRequired,
+    disabled: PropTypes.bool,
+    items: PropTypes.array,
     // itemsContainerStyle: PropTypes.object,
     itemStyle: PropTypes.object,
     itemTextStyle: PropTypes.object,
     onFocus: PropTypes.func,
-    onItemSelect: PropTypes.func,
+    onItemSelect: PropTypes.func.isRequired,
     onTextChange: PropTypes.func,
     placeholder: PropTypes.string,
     placeholderTextColor: PropTypes.string,
+    // e.g. only allow cyrillic characters
+    regexToMatch: PropTypes.instanceOf(RegExp),
     textInputStyle: PropTypes.object,
     underlineColorAndroid: PropTypes.string,
     value: PropTypes.shape({
       uk: PropTypes.string,
       id: PropTypes.string,
-    }),
+    }), // FIXME: .isRequired,
   };
 
   state = {
@@ -63,14 +65,19 @@ export default class SearchableDropDown extends Component {
 
   componentDidMount() {
     const { items, value } = this.props;
-    if (value) {
-      this.setState({ item: value });
-    }
-    this.setState({ items: items.slice(0, LIMIT_BY) });
+    if (value) this.setState({ item: value });
+    if (items) this.setState({ items: items.slice(0, LIMIT_BY) });
   }
 
   onChangeText = searchedText => {
-    const { onTextChange, items, onItemSelect } = this.props;
+    const {
+      disabled,
+      items,
+      onItemSelect,
+      onTextChange,
+      regexToMatch,
+    } = this.props;
+    if (disabled) return;
     if (!searchedText) {
       onItemSelect(emptyItem);
       // reset when field is cleared
@@ -78,20 +85,37 @@ export default class SearchableDropDown extends Component {
         item: emptyItem,
         items: items.slice(0, LIMIT_BY),
       });
-      // only allow cyrillic characters
-    } else if (!cyrillic.test(searchedText)) return;
+      // e.g. only allow cyrillic characters
+    } else if (regexToMatch && !regexToMatch.test(searchedText)) {
+      // console.warn('no regexToMatch');
+      return;
+    }
 
     const regex = new RegExp(`^${searchedText.trim()}`, 'i');
-    const filteredItems = items.filter(city => regex.test(city.uk));
+    const filteredItems = items.filter(item => regex.test(item.uk));
     filteredItems.sort((a, b) => a > b);
-    this.setState({ items: filteredItems.slice(0, LIMIT_BY), item: emptyItem });
+    this.setState({
+      items: filteredItems.slice(0, LIMIT_BY),
+      item: { uk: searchedText, id: -1 },
+    });
 
     if (onTextChange) {
-      setTimeout(() => {
-        onTextChange(searchedText);
-      }, 0);
+      // setTimeout(() => {
+      // onTextChange(searchedText);
+      // }, 0);
     }
   };
+
+  static getDerivedStateFromProps(props, state) {
+    if (props.items) {
+      return {
+        items: props.items,
+      };
+    }
+
+    // Return null to indicate no change to state.
+    return null;
+  }
 
   renderItems = ({ item }) => (
     <TouchableOpacity
@@ -99,7 +123,8 @@ export default class SearchableDropDown extends Component {
       onPress={() => {
         this.setState({ item, focus: false });
         Keyboard.dismiss();
-        setTimeout(() => this.props.onItemSelect(item), 0);
+        this.props.onItemSelect(item);
+        // setTimeout(() => this.props.onItemSelect(item), 0);
       }}>
       <Text style={this.props.itemTextStyle}>{item.uk}</Text>
     </TouchableOpacity>
@@ -114,10 +139,10 @@ export default class SearchableDropDown extends Component {
   render() {
     const {
       containerStyle,
+      extra,
       placeholder,
       placeholderTextColor,
       textInputStyle,
-      underlineColorAndroid,
     } = this.props;
 
     return (
@@ -125,6 +150,7 @@ export default class SearchableDropDown extends Component {
         <InputItem
           autoCorrect={false}
           clearButtonMode="while-editing"
+          extra={extra}
           ref={e => (this.input = e)}
           onBlur={this._onBlur}
           onChangeText={this.onChangeText}
@@ -132,7 +158,6 @@ export default class SearchableDropDown extends Component {
           placeholder={placeholder}
           placeholderTextColor={placeholderTextColor}
           style={textInputStyle}
-          underlineColorAndroid={underlineColorAndroid}
           value={this.state.item.uk}
         />
         {this.renderList()}

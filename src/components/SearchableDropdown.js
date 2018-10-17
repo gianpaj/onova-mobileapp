@@ -33,7 +33,7 @@ export default class SearchableDropDown extends Component {
     placeholderTextColor: PropTypes.string,
     // e.g. only allow cyrillic characters
     regexToMatch: PropTypes.instanceOf(RegExp),
-    textInputStyle: PropTypes.object,
+    inputContainerStyle: PropTypes.object,
     underlineColorAndroid: PropTypes.string,
     value: PropTypes.shape({
       uk: PropTypes.string,
@@ -142,7 +142,7 @@ export default class SearchableDropDown extends Component {
       extra,
       placeholder,
       placeholderTextColor,
-      textInputStyle,
+      inputContainerStyle,
     } = this.props;
 
     return (
@@ -157,7 +157,7 @@ export default class SearchableDropDown extends Component {
           onFocus={this._onFocus}
           placeholder={placeholder}
           placeholderTextColor={placeholderTextColor}
-          style={textInputStyle}
+          style={inputContainerStyle}
           value={this.state.item.uk}
         />
         {this.renderList()}

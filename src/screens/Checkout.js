@@ -221,15 +221,18 @@ export class CheckoutContainer extends Component<Props, State> {
     }
   };
 
-  getDeparments = async (cityID: string) => {
-    try {
-      const { data } = await api.get(`/api/shipping/departments/${cityID}`);
-      console.warn(data[0]);
-      this.setState({ departments: data });
-    } catch (error) {
-      console.error(error);
-      ui.showToast(err.message, 'danger');
-    }
+  getDeparments = (cityID: string): Promise<null> => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const { data } = await api.get(`/api/shipping/departments/${cityID}`);
+        this.setState({ departments: data });
+        return resolve();
+      } catch (error) {
+        console.error(error);
+        ui.showToast(err.message, 'danger');
+        reject(error);
+      }
+    });
   };
 
   handleFocus(ref) {
@@ -267,7 +270,7 @@ export class CheckoutContainer extends Component<Props, State> {
   onCheckout = async () => {
     const { shippingAddress } = this.state;
     const { paymentInfo } = this.props.userData;
-    if (this.isDisabled()) {
+    if (this.canMakePayment()) {
       let missing;
       if (!paymentInfo.last_four || !paymentInfo.method) {
         missing = 'Payment information';
@@ -384,15 +387,21 @@ export class CheckoutContainer extends Component<Props, State> {
     });
   };
 
-  isDisabled = () => {
-    const { mobileNumber, pending, shippingAddress } = this.state;
+  canMakePayment = () => {
+    const {
+      cities,
+      departments,
+      mobileNumber,
+      pending,
+      shippingAddress,
+    } = this.state;
     const { paymentInfo } = this.props.userData;
     if (
       !pending &&
       paymentInfo.last_four &&
       paymentInfo.method &&
       // TODO: only be able to select from the list of cities
-      validShippingAddress(shippingAddress) &&
+      validShippingAddress(shippingAddress, cities, departments) &&
       isPhoneNumberValid(mobileNumber)
     ) {
       return false;
@@ -407,7 +416,14 @@ export class CheckoutContainer extends Component<Props, State> {
       <SearchableDropdown
         onItemSelect={({ id }) => {
           if (!id) this.setState({ departments: null, department: '' });
-          else this.getDeparments(id);
+          else {
+            // TODO: Automatically focus on Deparment field
+            // try {
+            // } catch (error) {
+            //   throw new Error(error);
+            // }
+            this.getDeparments(id);
+          }
 
           this.setState(
             update(this.state, {
@@ -417,7 +433,7 @@ export class CheckoutContainer extends Component<Props, State> {
         }}
         // itemStyle={styles.autocompleteInputs}
         // TODO: color in red if !cities.indexOf(query)
-        style={styles.autocompleteContainers}
+        inputContainerStyle={styles.autocompleteContainers}
         items={cities}
         regexToMatch={/[\u0400-\u04FF]+/}
         {...props}
@@ -441,7 +457,7 @@ export class CheckoutContainer extends Component<Props, State> {
         disabled={!departments}
         // itemStyle={styles.autocompleteInputs}
         // TODO: color in red if !department.indexOf(query)
-        style={styles.autocompleteContainers}
+        inputContainerStyle={styles.autocompleteContainers}
         items={departments}
         extra={!city && <Text>Pick a city</Text>}
         {...props}
@@ -612,13 +628,16 @@ export class CheckoutContainer extends Component<Props, State> {
                 <FooterTab>
                   <NBButton
                     testID="payButton"
-                    dark={!this.isDisabled()}
+                    dark={!this.canMakePayment()}
                     style={[
-                      this.isDisabled() && { backgroundColor: colors.grey4 },
+                      this.canMakePayment() && {
+                        backgroundColor: colors.grey4,
+                      },
                     ]}
                     onPress={this.onCheckout}
                     full>
-                    <Text style={[!this.isDisabled() && styles.payButtonText]}>
+                    <Text
+                      style={[!this.canMakePayment() && styles.payButtonText]}>
                       Make Payment
                     </Text>
                   </NBButton>
@@ -674,7 +693,7 @@ const styles = StyleSheet.create({
   //   alignSelf: 'center',
   // },
   autocompleteContainers: {
-    borderBottomWidth: 5,
+    borderBottomWidth: 0,
   },
 });
 

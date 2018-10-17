@@ -12,13 +12,17 @@ function validPassword(password: string) {
  * If any of the fields is not empty
  * TODO: determine business logic.
  */
-function validShippingAddress(s: ShippingAddress) {
+function validShippingAddress(
+  s: ShippingAddress,
+  cities: Array<City>,
+  deparments: Array<Deparment>
+) {
   return (
     s.firstName !== '' &&
     s.lastName !== '' &&
     // s.fathersName !== '' && // TODO: is it mandatory?
-    s.city !== '' &&
-    s.departmentNovaposhta !== ''
+    cities.find(city => city.id === s.city) &&
+    deparments.find(d => d.id === s.departmentNovaposhta)
   );
 }
 

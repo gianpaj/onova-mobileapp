@@ -8,7 +8,6 @@ import {
   Platform,
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -53,6 +52,8 @@ import * as ui from '../utils/ui';
 import I18n from '../i18n';
 
 import type {
+  City,
+  Department,
   UserData,
   Dispatch,
   PaymentInfo,
@@ -61,16 +62,6 @@ import type {
   ShippingAddress,
   ReduxState,
 } from '../types';
-
-type City = {
-  id: string,
-  uk: string,
-};
-
-type Department = {
-  id: string,
-  uk: string,
-};
 
 type Props = {
   dispatch: Dispatch,
@@ -110,7 +101,7 @@ export class CheckoutContainer extends Component<Props, State> {
     showFooter: true,
   };
 
-  componentDidMount() {
+  async componentDidMount() {
     this.refresh();
     this.initializeListeners();
 
@@ -131,11 +122,18 @@ export class CheckoutContainer extends Component<Props, State> {
         currency: 'UAH',
       };
     }
-    this.initialilizeOrder(item);
-    this.getCities();
+    await this.initialilizeOrder(item);
 
-    if (this.state.shippingAddress && this.state.shippingAddress.city)
-      this.getDeparments(this.state.shippingAddress.city);
+    const cities = await api.getCities(this.props.token);
+    this.setState({ cities });
+
+    if (this.state.shippingAddress && this.state.shippingAddress.city) {
+      const departments = await api.getDepartments(
+        this.state.shippingAddress.city
+      );
+      this.setState({ departments });
+    }
+    this.setState({ isLoading: false });
   }
 
   componentWillUnmount() {
@@ -152,7 +150,6 @@ export class CheckoutContainer extends Component<Props, State> {
       .then((order: Order) => {
         this.setState({
           item,
-          isLoading: false,
           order,
         });
       })
@@ -173,7 +170,6 @@ export class CheckoutContainer extends Component<Props, State> {
           console.log('order is: pending or cancelled');
           this.setState({
             item,
-            isLoading: false,
             order: err.data.data,
           });
         } else {
@@ -210,30 +206,6 @@ export class CheckoutContainer extends Component<Props, State> {
     this.props.dispatch(
       getPersonalUserData({ cancelToken: this.cancelToken.token })
     );
-  };
-
-  getCities = async () => {
-    try {
-      const { data } = await api.get('/api/shipping/cities');
-      this.setState({ cities: data });
-    } catch (error) {
-      console.error(error);
-      ui.showToast(err.message, 'danger');
-    }
-  };
-
-  getDeparments = (cityID: string): Promise<null> => {
-    return new Promise(async (resolve, reject) => {
-      try {
-        const { data } = await api.get(`/api/shipping/departments/${cityID}`);
-        this.setState({ departments: data });
-        return resolve();
-      } catch (error) {
-        console.error(error);
-        ui.showToast(err.message, 'danger');
-        reject(error);
-      }
-    });
   };
 
   handleFocus(ref) {
@@ -410,20 +382,21 @@ export class CheckoutContainer extends Component<Props, State> {
     return true;
   };
 
-  _renderCityAutoComplete = props => {
+  _renderCityAutocomplete = props => {
     const { cities } = this.state;
 
     return (
       <SearchableDropdown
-        onItemSelect={({ id }) => {
-          if (!id) this.setState({ departments: null, department: '' });
+        onItemSelect={async ({ id }) => {
+          if (!id) this.setState({ departments: [] });
           else {
             // TODO: Automatically focus on Deparment field
             // try {
             // } catch (error) {
             //   throw new Error(error);
             // }
-            this.getDeparments(id);
+            const departments = await api.getDepartments(id);
+            this.setState({ departments });
           }
 
           this.setState(
@@ -443,7 +416,7 @@ export class CheckoutContainer extends Component<Props, State> {
     );
   };
 
-  _renderDepartmentAutoComplete = props => {
+  _renderDepartmentAutocomplete = props => {
     const { shippingAddress, departments, cities } = this.state;
 
     const city = cities.find(city => city.id === shippingAddress.city);
@@ -544,75 +517,74 @@ export class CheckoutContainer extends Component<Props, State> {
             <Content>
               {this.renderPricingContainer()}
               <HR full />
-              {cities && (
-                <Accordion
-                  expanded
-                  headerText="Shipping Address:"
-                  values={[
-                    {
-                      ref: el => (this.inputs[0] = el),
-                      placeholder: 'First name',
-                      value: shippingAddress.firstName,
-                      onFocus: this.handleFocus.bind(this, 0),
-                      onChangeText: t =>
-                        this.setState(
-                          update(this.state, {
-                            shippingAddress: { firstName: { $set: t } },
-                          })
-                        ),
-                      textContentType: 'givenName',
-                      error: !shippingAddress.firstName,
-                    },
-                    {
-                      ref: el => (this.inputs[1] = el),
-                      placeholder: 'Last name',
-                      value: shippingAddress.lastName,
-                      onFocus: this.handleFocus.bind(this, 1),
-                      onChangeText: t =>
-                        this.setState(
-                          update(this.state, {
-                            shippingAddress: { lastName: { $set: t } },
-                          })
-                        ),
-                      textContentType: 'familyName',
-                      error: !shippingAddress.lastName,
-                    },
-                    {
-                      // ref: el => (this.inputs[2] = el),
-                      placeholder: 'City',
-                      value: cities.find(
-                        city => city.id === shippingAddress.city
+              <Accordion
+                expanded
+                headerText="Shipping Address:"
+                values={[
+                  {
+                    ref: el => (this.inputs[0] = el),
+                    placeholder: 'First name',
+                    value: shippingAddress.firstName,
+                    onFocus: this.handleFocus.bind(this, 0),
+                    onChangeText: t =>
+                      this.setState(
+                        update(this.state, {
+                          shippingAddress: { firstName: { $set: t } },
+                        })
                       ),
-                      // onFocus: this.handleFocus.bind(this, 2),
-                      textContentType: 'addressCity',
-                      // error: !shippingAddress.city,
-                      render: this._renderCityAutoComplete,
-                    },
-                    {
-                      // ref: el => (this.inputs[3] = el),
-                      placeholder: 'Novaposhta department',
-                      value:
-                        departments &&
-                        departments.find(
-                          d => d.id === shippingAddress.departmentNovaposhta
-                        ),
-                      // onFocus: this.handleFocus.bind(this, 3),
-                      render: this._renderDepartmentAutoComplete,
-                    },
-                    {
-                      ref: el => (this.inputs[4] = el),
-                      placeholder: 'Mobile number',
-                      value: ui.formatPhoneNumber(mobileNumber),
-                      onFocus: this.handleFocus.bind(this, 4),
-                      onChangeText: t => this.setState({ mobileNumber: t }),
-                      type: 'phone',
-                      validation: () =>
-                        isPhoneNumberValid(mobileNumber.replace(/\D/g, '')),
-                      textContentType: 'telephoneNumber',
-                    },
-                  ]}
-                />
-              )}
+                    textContentType: 'givenName',
+                    error: !shippingAddress.firstName,
+                  },
+                  {
+                    ref: el => (this.inputs[1] = el),
+                    placeholder: 'Last name',
+                    value: shippingAddress.lastName,
+                    onFocus: this.handleFocus.bind(this, 1),
+                    onChangeText: t =>
+                      this.setState(
+                        update(this.state, {
+                          shippingAddress: { lastName: { $set: t } },
+                        })
+                      ),
+                    textContentType: 'familyName',
+                    error: !shippingAddress.lastName,
+                  },
+                  {
+                    // ref: el => (this.inputs[2] = el),
+                    placeholder: 'City',
+                    value: cities.find(
+                      city => city.id === shippingAddress.city
+                    ),
+                    // onFocus: this.handleFocus.bind(this, 2),
+                    // textContentType: 'addressCity',
+                    error: !shippingAddress.city,
+                    render: this._renderCityAutocomplete,
+                  },
+                  {
+                    // ref: el => (this.inputs[3] = el),
+                    placeholder: 'Novaposhta department',
+                    value:
+                      departments &&
+                      departments.find(
+                        d => d.id === shippingAddress.departmentNovaposhta
+                      ),
+                    // onFocus: this.handleFocus.bind(this, 3),
+                    error: !shippingAddress.departmentNovaposhta,
+                    render: this._renderDepartmentAutocomplete,
+                  },
+                  {
+                    ref: el => (this.inputs[4] = el),
+                    placeholder: 'Mobile number',
+                    value: ui.formatPhoneNumber(mobileNumber),
+                    onFocus: this.handleFocus.bind(this, 4),
+                    onChangeText: t => this.setState({ mobileNumber: t }),
+                    type: 'phone',
+                    validation: () =>
+                      isPhoneNumberValid(mobileNumber.replace(/\D/g, '')),
+                    textContentType: 'telephoneNumber',
+                  },
+                ]}
+              />
               <FormLabel labelStyle={[styles.label, { paddingBottom: 10 }]}>
                 Payment Info:
               </FormLabel>

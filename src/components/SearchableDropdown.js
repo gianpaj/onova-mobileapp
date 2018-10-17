@@ -26,6 +26,8 @@ export default class SearchableDropDown extends Component {
     containerStyle: PropTypes.object,
     disabled: PropTypes.bool,
     inputContainerStyle: PropTypes.object,
+    extra: PropTypes.node,
+    error: PropTypes.bool,
     items: PropTypes.array,
     itemsContainerStyle: PropTypes.object,
     itemStyle: PropTypes.object,
@@ -44,7 +46,7 @@ export default class SearchableDropDown extends Component {
   };
 
   state = {
-    item: {},
+    // item: {},
     items: [],
     focus: false,
   };
@@ -52,7 +54,7 @@ export default class SearchableDropDown extends Component {
   _keyExtractor = item => item.id;
 
   renderList = () => {
-    if (this.state.focus) {
+    if (this.state.focus && this.state.items.length) {
       return (
         <FlatList
           style={this.props.itemsContainerStyle}
@@ -67,8 +69,8 @@ export default class SearchableDropDown extends Component {
   };
 
   componentDidMount() {
-    const { items, value } = this.props;
-    if (value) this.setState({ item: value });
+    const { items } = this.props;
+    // if (value) this.setState({ item: value });
     if (items) this.setState({ items: items.slice(0, LIMIT_BY) });
   }
 
@@ -82,10 +84,12 @@ export default class SearchableDropDown extends Component {
     } = this.props;
     if (disabled) return;
     if (!searchedText) {
-      onItemSelect(emptyItem);
+      setTimeout(() => {
+        onItemSelect(emptyItem);
+      }, 0);
       // reset when field is cleared
       return this.setState({
-        item: emptyItem,
+        // item: emptyItem,
         items: items.slice(0, LIMIT_BY),
       });
       // e.g. only allow cyrillic characters
@@ -93,24 +97,28 @@ export default class SearchableDropDown extends Component {
       // console.warn('no regexToMatch');
       return;
     }
-
-    const regex = new RegExp(`^${searchedText.trim()}`, 'i');
+    // https://stackoverflow.com/a/3561711/728287
+    const cleanText = searchedText
+      .trim()
+      .replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+    const regex = new RegExp(cleanText, 'i');
     const filteredItems = items.filter(item => regex.test(item.uk));
     filteredItems.sort((a, b) => a > b);
     this.setState({
       items: filteredItems.slice(0, LIMIT_BY),
-      item: { uk: searchedText, id: -1 },
+      // item: { uk: searchedText, id: -1 },
     });
 
     if (onTextChange) {
       // setTimeout(() => {
-      // onTextChange(searchedText);
+      //   onTextChange(searchedText);
       // }, 0);
     }
   };
 
   static getDerivedStateFromProps(props, state) {
-    if (props.items) {
+    if (!props.items) return null;
+    if (!props.items.length || props.items.length !== state.items.length) {
       return {
         items: props.items,
       };
@@ -124,7 +132,7 @@ export default class SearchableDropDown extends Component {
     <TouchableOpacity
       style={this.props.itemStyle}
       onPress={() => {
-        this.setState({ item, focus: false });
+        this.setState({ focus: false });
         Keyboard.dismiss();
         this.props.onItemSelect(item);
         // setTimeout(() => this.props.onItemSelect(item), 0);
@@ -142,7 +150,9 @@ export default class SearchableDropDown extends Component {
   render() {
     const {
       containerStyle,
+      error,
       extra,
+      value,
       placeholder,
       placeholderTextColor,
       inputContainerStyle,
@@ -161,7 +171,8 @@ export default class SearchableDropDown extends Component {
           placeholder={placeholder}
           placeholderTextColor={placeholderTextColor}
           style={inputContainerStyle}
-          value={this.state.item.uk}
+          value={value ? value.uk : ''}
+          error={error}
         />
         {this.renderList()}
       </View>

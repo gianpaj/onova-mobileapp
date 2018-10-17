@@ -2,7 +2,7 @@
 import libphonenumber from 'google-libphonenumber';
 const PhoneUtil = libphonenumber.PhoneNumberUtil.getInstance();
 
-import type { ShippingAddress } from '../types';
+import type { City, Department, ShippingAddress } from '../types';
 
 function validPassword(password: string) {
   return password.length > 7 && password.length < 51;
@@ -15,7 +15,7 @@ function validPassword(password: string) {
 function validShippingAddress(
   s: ShippingAddress,
   cities: Array<City>,
-  deparments: Array<Deparment>
+  departments: Array<Department>
 ) {
   return (
     s.firstName !== '' &&
@@ -23,7 +23,8 @@ function validShippingAddress(
     // s.fathersName !== '' && // TODO: is it mandatory?
     cities &&
     cities.find(city => city.id === s.city) &&
-    deparments.find(d => d.id === s.departmentNovaposhta)
+    departments &&
+    departments.find(d => d.id === s.departmentNovaposhta)
   );
 }
 

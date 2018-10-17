@@ -5,7 +5,7 @@ import type { CancelToken } from 'axios';
 
 import I18n from '../i18n';
 
-import type { Order, Product, UserData } from '../types';
+import type { City, Department, Order, Product, UserData } from '../types';
 
 let config;
 let isProd = false;
@@ -259,6 +259,25 @@ export function getOrders(token: string): Promise<Array<Order>> {
 export function getOrder(orderId: string, token: string): Promise<Order> {
   return new Promise((resolve, reject) => {
     get(`/api/orders/${orderId}`, { token })
+      .then(({ data }) => resolve(data))
+      .catch(err => reject(err));
+  });
+}
+
+export function getCities(token: string): Promise<Array<City>> {
+  return new Promise((resolve, reject) => {
+    get('/api/shipping/cities', { token })
+      .then(({ data }) => resolve(data))
+      .catch(err => reject(err));
+  });
+}
+
+export function getDepartments(
+  cityID: stringm,
+  token: string
+): Promise<Array<Department>> {
+  return new Promise((resolve, reject) => {
+    get(`/api/shipping/departments/${cityID}`, { token })
       .then(({ data }) => resolve(data))
       .catch(err => reject(err));
   });

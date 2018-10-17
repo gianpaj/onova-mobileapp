@@ -31,7 +31,7 @@ import update from 'immutability-helper';
 // import Instabug from 'instabug-reactnative';
 import { KeyboardAccessoryNavigation } from 'react-native-keyboard-accessory';
 
-import { Accordion, Header, CardView } from '../components';
+import { Accordion, CardView, Header, SearchableDropdown } from '../components';
 
 import {
   disableRefresh,
@@ -42,7 +42,11 @@ import {
 import I18n from '../i18n';
 import colors from '../config/colors';
 import settings from '../config/settings';
-import { validPassword, isPhoneNumberValid } from '../utils/validators';
+import {
+  validPassword,
+  validShippingAddress,
+  isPhoneNumberValid,
+} from '../utils/validators';
 import * as api from '../utils/api';
 import * as ui from '../utils/ui';
 import * as linking from '../utils/linking';
@@ -64,6 +68,8 @@ if (!Object.is) {
 }
 
 import type {
+  City,
+  Department,
   UserData,
   Dispatch,
   PaymentInfo,
@@ -81,6 +87,8 @@ type Props = {
 
 type State = {
   activeInputRef: any,
+  cities: Array<City>,
+  departments: Array<Department>,
   emailAddress: string,
   isLoading: boolean,
   mobileNumber: string,
@@ -99,6 +107,8 @@ class SettingsContainer extends Component<Props, State> {
   state = {
     activeInputRef: null,
     emailAddress: '',
+    cities: null,
+    departments: null,
     isLoading: true,
     mobileNumber: '',
     nextFocusDisabled: false,
@@ -112,7 +122,6 @@ class SettingsContainer extends Component<Props, State> {
 
   async componentDidMount() {
     await this.refresh();
-    this.setState({ isLoading: false });
 
     this.props.navigation.addListener('didFocus', () => {
       if (this.props.shouldRefresh) {
@@ -125,6 +134,17 @@ class SettingsContainer extends Component<Props, State> {
     //   Instabug.invocationEvent.none
     // );
     // Instabug.setPromptOptionsEnabled(false, true, true);
+
+    const cities = await api.getCities(this.props.token);
+    this.setState({ cities });
+
+    if (this.state.shippingAddress && this.state.shippingAddress.city) {
+      const departments = await api.getDepartments(
+        this.state.shippingAddress.city
+      );
+      this.setState({ departments });
+    }
+    this.setState({ isLoading: false });
 
     if (Platform.OS === 'android') {
       UIManager.setLayoutAnimationEnabledExperimental &&
@@ -165,6 +185,8 @@ class SettingsContainer extends Component<Props, State> {
   hasUnsavedChanges = (): boolean => {
     const { userData } = this.props;
     const {
+      cities,
+      departments,
       emailAddress,
       mobileNumber,
       password,
@@ -176,7 +198,9 @@ class SettingsContainer extends Component<Props, State> {
     return (
       !pending &&
       ((shippingAddress &&
-        !Object.is(shippingAddress, userData.shippingAddress)) ||
+        shippingAddress.city &&
+        cities &&
+        validShippingAddress(shippingAddress, cities, departments)) ||
         validPassword(password) ||
         // allow to delete the mobile number
         // FIXME: the logic should not return true if both the state.mobileNumber and userData.mobileNumber are empty
@@ -213,9 +237,9 @@ class SettingsContainer extends Component<Props, State> {
       data.emailAddress = emailAddress;
     }
 
-    if (validShippingAddress(shippingAddress)) {
-      data.shippingAddress = shippingAddress;
-    }
+    // if (validShippingAddress(shippingAddress)) {
+    data.shippingAddress = shippingAddress;
+    // }
 
     // FIXME: state should be the number unformatted. useful also when comparing if number has been changed
     data.mobileNumber = mobileNumber.replace(/\D/g, '');
@@ -302,16 +326,76 @@ class SettingsContainer extends Component<Props, State> {
     );
   }
 
-  enterPaymentInfo = () => {
+  enterPaymentInfo = () =>
     this.props.navigation.navigate({
       routeName: 'getCardId',
       key: 'getCardId',
     });
+
+  _renderCityAutocomplete = props => {
+    const { cities } = this.state;
+
+    return (
+      <SearchableDropdown
+        onItemSelect={async ({ id }) => {
+          if (!id) this.setState({ departments: [] });
+          else {
+            // TODO: Automatically focus on Department field
+            // try {
+            // } catch (error) {
+            //   throw new Error(error);
+            // }
+            const departments = await api.getDepartments(id);
+            this.setState({ departments });
+          }
+
+          this.setState(
+            update(this.state, {
+              shippingAddress: { city: { $set: id } },
+            })
+          );
+        }}
+        itemsContainerStyle={styles.autocompleteItemContainers}
+        itemStyle={styles.autocompleteItems}
+        // TODO: color in red if !cities.indexOf(query)
+        inputContainerStyle={styles.autocompleteContainers}
+        items={cities}
+        regexToMatch={/[\u0400-\u04FF]+/}
+        {...props}
+      />
+    );
+  };
+
+  _renderDepartmentAutocomplete = props => {
+    const { shippingAddress, departments, cities } = this.state;
+
+    const city = cities.find(city => city.id === shippingAddress.city);
+    return (
+      <SearchableDropdown
+        onItemSelect={({ id }) =>
+          this.setState(
+            update(this.state, {
+              shippingAddress: { departmentNovaposhta: { $set: id } },
+            })
+          )
+        }
+        disabled={!departments}
+        // TODO: color in red if !department.indexOf(query)
+        inputContainerStyle={styles.autocompleteContainers}
+        itemsContainerStyle={styles.autocompleteItemContainers}
+        itemStyle={styles.autocompleteItems}
+        items={departments}
+        extra={!city && <Text>Pick a city</Text>}
+        {...props}
+      />
+    );
   };
 
   render() {
     const { userData } = this.props;
     const {
+      cities,
+      departments,
       emailAddress,
       isLoading,
       mobileNumber,
@@ -359,6 +443,7 @@ class SettingsContainer extends Component<Props, State> {
         <Content>
           <View style={styles.padder}>
             <Accordion
+              // TODO: auto expand if the shipping address fields are invalid or not valid
               headerText="Shipping Address:"
               values={[
                 {
@@ -388,30 +473,23 @@ class SettingsContainer extends Component<Props, State> {
                   textContentType: 'streetAddressLine2',
                 },
                 {
-                  ref: el => (this.inputs[2] = el),
+                  // ref: el => (this.inputs[2] = el),
                   placeholder: 'City',
-                  value: shippingAddress.city,
-                  onFocus: this.handleFocus.bind(this, 2),
-                  onChangeText: t =>
-                    this.setState(
-                      update(this.state, {
-                        shippingAddress: { city: { $set: t } },
-                      })
-                    ),
-                  textContentType: 'addressCity',
+                  value: cities.find(city => city.id === shippingAddress.city),
+                  // onFocus: this.handleFocus.bind(this, 2),
+                  // textContentType: 'addressCity',
+                  render: this._renderCityAutocomplete,
                 },
                 {
-                  ref: el => (this.inputs[3] = el),
-                  placeholder: 'State',
-                  value: shippingAddress.state,
-                  onFocus: this.handleFocus.bind(this, 3),
-                  onChangeText: t =>
-                    this.setState(
-                      update(this.state, {
-                        shippingAddress: { state: { $set: t } },
-                      })
+                  // ref: el => (this.inputs[3] = el),
+                  placeholder: 'Novaposhta department',
+                  value:
+                    departments &&
+                    departments.find(
+                      d => d.id === shippingAddress.departmentNovaposhta
                     ),
-                  textContentType: 'addressState',
+                  // onFocus: this.handleFocus.bind(this, 3),
+                  render: this._renderDepartmentAutocomplete,
                 },
                 {
                   ref: el => (this.inputs[4] = el),
@@ -577,6 +655,26 @@ const styles = StyleSheet.create({
   //   color: colors.grey2,
   //   paddingBottom: 0,
   // },
+  autocompleteItemContainers: {
+    // top: -30,
+    // backgroundColor: colors.white,
+    // zIndex: 10,
+    alignSelf: 'center',
+    borderColor: colors.grey4,
+    borderWidth: 1,
+    borderRadius: 2,
+    width: 323,
+  },
+  autocompleteItems: {
+    paddingVertical: 10,
+    paddingHorizontal: 5,
+    marginTop: 2,
+    marginHorizontal: 10,
+    // backgroundColor: colors.grey6,
+  },
+  autocompleteContainers: {
+    borderBottomWidth: 0,
+  },
 });
 
 const mapStateToProps: any = (state: ReduxState) => ({

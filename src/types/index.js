@@ -234,6 +234,16 @@ export type Notification = {
   triggeredType: TriggeredType,
 };
 
+export type City = {
+  id: string,
+  uk: string,
+};
+
+export type Department = {
+  id: string,
+  uk: string,
+};
+
 export type ReduxState = {
   LoginReducer: LoginState,
   RefresherReducer: ScreenRefreshState,

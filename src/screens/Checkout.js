@@ -50,6 +50,7 @@ import colors from '../config/colors';
 import { isPhoneNumberValid, validShippingAddress } from '../utils/validators';
 import * as api from '../utils/api';
 import * as ui from '../utils/ui';
+import I18n from '../i18n';
 
 import type {
   UserData,

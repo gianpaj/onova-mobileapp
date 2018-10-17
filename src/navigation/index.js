@@ -6,6 +6,7 @@ import {
   BackHandler,
   ImageBackground,
   StyleSheet,
+  Text,
 } from 'react-native';
 import { connect } from 'react-redux';
 import { addNavigationHelpers, NavigationActions } from 'react-navigation';
@@ -13,6 +14,7 @@ import {
   initializeListeners,
   createReduxBoundAddListener,
 } from 'react-navigation-redux-helpers';
+import { Button } from 'react-native-elements';
 
 import { checkLogin, intro } from '../actions/actionCreator';
 import NavigationStack from './navigationStack';
@@ -21,6 +23,7 @@ import NavigationService from './NavigationService';
 import type { Dispatch, ReduxState, UserData } from '../types';
 import type { NavigationState } from '../types/navigationReducer';
 import colors from '../config/colors';
+import I18n from '../i18n';
 
 type Props = {
   checkedLoggedIn: boolean,
@@ -37,30 +40,43 @@ type Props = {
 
 const addListener = createReduxBoundAddListener('root');
 
-class AppNavigation extends React.PureComponent<Props> {
+class AppNavigation extends React.PureComponent<Props, *> {
   notificationListener;
+
+  state = {
+    canReload: false,
+  };
 
   componentDidMount() {
     initializeListeners('root', this.props.nav);
 
     BackHandler.addEventListener('hardwareBackPress', this.onBackPress);
-    const { isLoggedIn, userData, token, dispatch } = this.props;
 
     // FIXME: horrible hack
-    NavigationService.setDispatcher(dispatch);
+    NavigationService.setDispatcher(this.props.dispatch);
+
+    this.onCheckLogin();
+  }
+
+  onCheckLogin = () => {
+    const { dispatch, isLoggedIn, userData, token } = this.props;
 
     if (isLoggedIn && userData && token) {
       // checking again if user is still logged in
-      dispatch(checkLogin(userData, token)).catch(e => {
-        // if (e.message == 'Invalid user') {
-        // }
-        dispatch(intro());
-        console.warn(e);
-      });
+      dispatch(checkLogin(userData, token))
+        .then(() => this.setState({ canReload: false }))
+        .catch(e => {
+          if (e.message === 'Invalid user') {
+            dispatch(intro());
+          } else {
+            this.setState({ canReload: true });
+          }
+          console.debug(e);
+        });
     } else {
       dispatch(intro());
     }
-  }
+  };
 
   componentWillUnmount() {
     BackHandler.removeEventListener('hardwareBackPress', this.onBackPress);
@@ -81,6 +97,25 @@ class AppNavigation extends React.PureComponent<Props> {
     </ImageBackground>
   );
 
+  _renderRetry = () => (
+    <ImageBackground
+      source={require('../assets/images/bg.png')}
+      resizeMode="repeat"
+      style={styles.container}>
+      {/* cloud with stricking line Icon */}
+      {/* You're not connected to the Internet */}
+      <Button
+        buttonStyle={styles.tryAgainButton}
+        onPress={this.onCheckLogin}
+        textStyle={{
+          fontSize: 16,
+          color: colors.white,
+        }}
+        title={I18n.t('login.retry')}
+      />
+    </ImageBackground>
+  );
+
   render() {
     const {
       dispatch,
@@ -93,6 +128,7 @@ class AppNavigation extends React.PureComponent<Props> {
         ? navigationState.stateForLoggedIn
         : navigationState.stateForLoggedOut;
 
+    if (this.state.canReload) return this._renderRetry();
     if (isLoggedIn && !checkedLoggedIn) return this._renderLoading();
 
     return (
@@ -112,8 +148,10 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    width: '100%',
-    height: '100%',
+  },
+  tryAgainButton: {
+    backgroundColor: colors.primary,
+    minWidth: 160,
   },
 });
 

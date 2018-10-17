@@ -254,7 +254,7 @@ const checkLogin = (userData: UserData, token: string) => (
     .catch(err => {
       console.debug(err);
       dispatch({ type: RELOAD_FAIL });
-      ui.showToast(err.message || JSON.stringify(err), 'danger');
+      ui.showToast(err.message || JSON.stringify(err), 'danger', 'OK', 5);
       throw err;
     });
 };

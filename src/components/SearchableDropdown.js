@@ -9,13 +9,13 @@ import {
   FlatList,
   Text,
   // TextInput,
-  StyleSheet,
+  // StyleSheet,
   TouchableOpacity,
   View,
 } from 'react-native';
 import { InputItem } from 'antd-mobile-rn';
 
-import colors from '../config/colors';
+// import colors from '../config/colors';
 
 const LIMIT_BY = 20;
 
@@ -169,9 +169,9 @@ export default class SearchableDropDown extends Component {
   }
 }
 
-const styles = StyleSheet.create({
-  separator: {
-    height: StyleSheet.hairlineWidth,
-    backgroundColor: colors.grey5,
-  },
-});
+// const styles = StyleSheet.create({
+//   separator: {
+//     height: StyleSheet.hairlineWidth,
+//     backgroundColor: colors.grey5,
+//   },
+// });

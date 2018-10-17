@@ -9,10 +9,13 @@ import {
   FlatList,
   Text,
   // TextInput,
+  StyleSheet,
   TouchableOpacity,
   View,
 } from 'react-native';
 import { InputItem } from 'antd-mobile-rn';
+
+import colors from '../config/colors';
 
 const LIMIT_BY = 20;
 
@@ -22,8 +25,9 @@ export default class SearchableDropDown extends Component {
   static propTypes = {
     containerStyle: PropTypes.object,
     disabled: PropTypes.bool,
+    inputContainerStyle: PropTypes.object,
     items: PropTypes.array,
-    // itemsContainerStyle: PropTypes.object,
+    itemsContainerStyle: PropTypes.object,
     itemStyle: PropTypes.object,
     itemTextStyle: PropTypes.object,
     onFocus: PropTypes.func,
@@ -33,8 +37,6 @@ export default class SearchableDropDown extends Component {
     placeholderTextColor: PropTypes.string,
     // e.g. only allow cyrillic characters
     regexToMatch: PropTypes.instanceOf(RegExp),
-    inputContainerStyle: PropTypes.object,
-    underlineColorAndroid: PropTypes.string,
     value: PropTypes.shape({
       uk: PropTypes.string,
       id: PropTypes.string,
@@ -53,11 +55,12 @@ export default class SearchableDropDown extends Component {
     if (this.state.focus) {
       return (
         <FlatList
-          // style={this.props.itemsContainerStyle}
+          style={this.props.itemsContainerStyle}
           keyboardShouldPersistTaps="always"
           data={this.state.items}
           keyExtractor={this._keyExtractor}
           renderItem={this.renderItems}
+          // ItemSeparatorComponent={() => <View style={styles.separator} />}
         />
       );
     }
@@ -165,3 +168,10 @@ export default class SearchableDropDown extends Component {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  separator: {
+    height: StyleSheet.hairlineWidth,
+    backgroundColor: colors.grey5,
+  },
+});

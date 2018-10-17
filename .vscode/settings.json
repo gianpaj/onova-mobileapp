@@ -4,7 +4,8 @@
   "eslint.enable": true,
   "deepscan.enable": true,
   "search.exclude": {
-    "**/coverage": true
+    "**/coverage": true,
+    "**/*.js.snap": true
   },
   "prettier.eslintIntegration": true
 }

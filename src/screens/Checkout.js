@@ -431,7 +431,8 @@ export class CheckoutContainer extends Component<Props, State> {
             })
           );
         }}
-        // itemStyle={styles.autocompleteInputs}
+        itemsContainerStyle={styles.autocompleteItemContainers}
+        itemStyle={styles.autocompleteItems}
         // TODO: color in red if !cities.indexOf(query)
         inputContainerStyle={styles.autocompleteContainers}
         items={cities}
@@ -455,9 +456,10 @@ export class CheckoutContainer extends Component<Props, State> {
           )
         }
         disabled={!departments}
-        // itemStyle={styles.autocompleteInputs}
         // TODO: color in red if !department.indexOf(query)
         inputContainerStyle={styles.autocompleteContainers}
+        itemsContainerStyle={styles.autocompleteItemContainers}
+        itemStyle={styles.autocompleteItems}
         items={departments}
         extra={!city && <Text>Pick a city</Text>}
         {...props}
@@ -577,9 +579,9 @@ export class CheckoutContainer extends Component<Props, State> {
                     {
                       // ref: el => (this.inputs[2] = el),
                       placeholder: 'City',
-                      value:
-                        cities &&
-                        cities.find(city => city.id === shippingAddress.city),
+                      value: cities.find(
+                        city => city.id === shippingAddress.city
+                      ),
                       // onFocus: this.handleFocus.bind(this, 2),
                       textContentType: 'addressCity',
                       // error: !shippingAddress.city,
@@ -688,10 +690,23 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     minWidth: 180,
   },
-  // priceTransaction: {
-  //   color: colors.grey2,
-  //   alignSelf: 'center',
-  // },
+  autocompleteItemContainers: {
+    // top: -30,
+    // backgroundColor: colors.white,
+    // zIndex: 10,
+    alignSelf: 'center',
+    borderColor: colors.grey4,
+    borderWidth: 1,
+    borderRadius: 2,
+    width: 323,
+  },
+  autocompleteItems: {
+    paddingVertical: 10,
+    paddingHorizontal: 5,
+    marginTop: 2,
+    marginHorizontal: 10,
+    // backgroundColor: colors.grey6,
+  },
   autocompleteContainers: {
     borderBottomWidth: 0,
   },

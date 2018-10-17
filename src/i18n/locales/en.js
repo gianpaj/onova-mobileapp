@@ -37,6 +37,7 @@ export default {
       title:
         'One step left! Check your inbox for a confirmation email and click on the link.',
     },
+    retry: 'Try again',
   },
   signup: {
     username_placeholder: 'Username',

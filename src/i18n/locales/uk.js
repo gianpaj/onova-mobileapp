@@ -39,6 +39,7 @@ export default {
     verify_account: {
       title: 'Ми надіслали вам підтвердження на пошту!',
     },
+    retry: 'Спробуй ще раз',
   },
   signup: {
     username_placeholder: 'Username',

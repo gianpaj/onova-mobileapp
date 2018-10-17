@@ -133,7 +133,7 @@ export class CheckoutContainer extends Component<Props, State> {
     this.initialilizeOrder(item);
     this.getCities();
 
-    if (this.state.shippingAddress.city)
+    if (this.state.shippingAddress && this.state.shippingAddress.city)
       this.getDeparments(this.state.shippingAddress.city);
   }
 
@@ -449,15 +449,55 @@ export class CheckoutContainer extends Component<Props, State> {
     );
   };
 
+  renderPricingContainer() {
+    const { item, order } = this.state;
+
+    return (
+      <View style={styles.pricesContainer}>
+        <View style={styles.row}>
+          {/* $FlowFixMe */}
+          <Text style={{ color: colors.black }}>Total: </Text>
+          <View style={styles.innerRow}>
+            <H1>{ui.formatCurrency(order.total)} </H1>
+            {/* $FlowFixMe */}
+            <Text>{item.currency}</Text>
+          </View>
+        </View>
+        <View style={styles.row}>
+          <Text>Item: </Text>
+          <View style={styles.innerRow}>
+            <H3>{ui.formatCurrency(order.priceOfItem)} </H3>
+            <Text>{item.currency}</Text>
+          </View>
+        </View>
+        <View style={styles.row}>
+          <Text>Fees: </Text>
+          <View style={styles.innerRow}>
+            <H3>{ui.formatCurrency(order.transactionFee)} </H3>
+            <Text>{item.currency}</Text>
+          </View>
+        </View>
+        <View style={styles.row}>
+          <Text>Shipping cost: </Text>
+          <View style={styles.innerRow}>
+            <H3>{ui.formatCurrency(order.shippingFee)} </H3>
+            <Text>{item.currency}</Text>
+          </View>
+        </View>
+        {/* <Text style={styles.priceTransaction}>
+        (including x transaction fee)
+      </Text> */}
+      </View>
+    );
+  }
+
   render() {
     const { userData } = this.props;
     const {
       cities,
       departments,
       isLoading,
-      item,
       mobileNumber,
-      order,
       pending,
       shippingAddress,
       showFooter,
@@ -483,41 +523,7 @@ export class CheckoutContainer extends Component<Props, State> {
         ) : (
           <>
             <Content>
-              <View style={styles.pricesContainer}>
-                <View style={styles.row}>
-                  {/* $FlowFixMe */}
-                  <Text style={{ color: colors.black }}>Total: </Text>
-                  <View style={styles.innerRow}>
-                    <H1>{ui.formatCurrency(order.total)} </H1>
-                    {/* $FlowFixMe */}
-                    <Text>{item.currency}</Text>
-                  </View>
-                </View>
-                <View style={styles.row}>
-                  <Text>Item: </Text>
-                  <View style={styles.innerRow}>
-                    <H3>{ui.formatCurrency(order.priceOfItem)} </H3>
-                    <Text>{item.currency}</Text>
-                  </View>
-                </View>
-                <View style={styles.row}>
-                  <Text>Fees: </Text>
-                  <View style={styles.innerRow}>
-                    <H3>{ui.formatCurrency(order.transactionFee)} </H3>
-                    <Text>{item.currency}</Text>
-                  </View>
-                </View>
-                <View style={styles.row}>
-                  <Text>Shipping cost: </Text>
-                  <View style={styles.innerRow}>
-                    <H3>{ui.formatCurrency(order.shippingFee)} </H3>
-                    <Text>{item.currency}</Text>
-                  </View>
-                </View>
-                {/* <Text style={styles.priceTransaction}>
-                  (including x transaction fee)
-                </Text> */}
-              </View>
+              {this.renderPricingContainer()}
               <HR full />
               {cities && (
                 <Accordion

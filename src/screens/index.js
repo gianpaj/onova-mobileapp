@@ -12,6 +12,7 @@ import { Followers } from '../screens/Followers';
 import { Following } from '../screens/Following';
 import GetCardId from '../screens/GetCardId';
 import { Notifications } from '../screens/Notifications';
+import PaymentView from '../screens/PaymentView';
 import { Product } from '../screens/Product';
 import { Profile } from '../screens/Profile';
 import { Reviews } from '../screens/Reviews';
@@ -33,6 +34,7 @@ export {
   Home,
   IntroScreens,
   Notifications,
+  PaymentView,
   Product,
   Profile,
   Reviews,

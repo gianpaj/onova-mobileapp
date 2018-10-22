@@ -273,7 +273,9 @@ export class CheckoutContainer extends Component<Props, State> {
     await this.updateShippingInfo();
 
     Toast.hide();
-    this.setState({ pending: false });
+    this.goToPay(order.id);
+
+    // this.setState({ pending: false });
     // TODO: send payment request to API
 
     // TODO: show success Toast
@@ -307,7 +309,7 @@ export class CheckoutContainer extends Component<Props, State> {
       type: 'ReplaceCurrentScreen',
       routeName: 'chat',
       params: {
-        orderId: orderId,
+        orderId,
         productUuid: item.uuid,
         roomId: -1,
         userId: item.seller.id,
@@ -357,6 +359,14 @@ export class CheckoutContainer extends Component<Props, State> {
     this.props.navigation.navigate({
       routeName: 'getCardId',
       key: 'getCardId',
+    });
+  };
+
+  goToPay = async (orderId: string) => {
+    this.props.navigation.navigate({
+      routeName: 'paymentView',
+      key: 'paymentView',
+      params: { orderId },
     });
   };
 

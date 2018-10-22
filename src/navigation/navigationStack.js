@@ -15,6 +15,7 @@ import {
   GetCardId,
   IntroScreens,
   Notifications,
+  PaymentView,
   Product,
   Profile,
   Reviews,
@@ -67,6 +68,7 @@ export const StackNav = StackNavigator(
     },
     checkout: { screen: Checkout },
     getCardId: { screen: GetCardId },
+    paymentView: { screen: PaymentView },
   },
   {
     headerMode: 'none',

@@ -32,15 +32,14 @@ class PaymentView extends Component {
 
   async componentDidMount() {
     try {
-      const { params } = this.props.navigation.state;
-      // const payment = await this.createPayment(params.orderId);
-      let payment = {
-        PaReq:
-          'eJxVUttOwzAMfd5fVHxAc+ttUxZpsAcm0WlAeUZVZ7ECy0rSAvt77HSbRqSoto/t9BxbVzsHsHyGZnBgdAne128Qtdv5zWbxBF+vIk245KlKRSKTGzPRIWwmE/0NzrcHa0TMY6nZ2UWkq61JRVbkaa4ypXimZK4ZRREswTW72vZoT3TdfN2u1iaV2TQTmp1cQvbgVkvDxyPHD2aMYUqw9R5MBb6Pzh2jqvYPrf2INAsgZTWHwfbuaAqeaHZ2CBjcp9n1fTdjTMgcKfBYzBQeVm5W7Al8d7AeNu7QoCStfYvffacZVWExuyKhNwPZfnzvt92asnrh5XL1s65KUVaPx/Vy8VOOd64ZZVDmtu7BSC4KwaWMhJol05lAhiEetNnT7xrBs5hz1GZ0CenoxcUFJvQ6FHgPzoFtjmZaIHrxCIJfpAaYh0O72ETqioi+uz/Np+lRb8VzIWWukrSgIYXYqVWLekrJVejVBnE1o2rsFzaFxApLhda/ZfsDipm53Q==',
-        redirectUrl:
-          'https://api.escrowbox.stage.uapay.ua/api/payments/1297/confirmations',
-      };
-      console.log(payment);
+      const { status } = await this.getPaymentStatus();
+      console.debug(status);
+      if (status === 'ua-finished') {
+        ui.showToast('Payment has been already completed', 'danger');
+        return this.props.navigation.goBack();
+      }
+      const payment = await this.createPayment();
+      console.debug(payment);
       this.setState({ payment, isLoading: false });
     } catch (error) {
       console.error(error);
@@ -48,11 +47,12 @@ class PaymentView extends Component {
     }
   }
 
-  createPayment(orderId: string): Promise<any> {
+  createPayment(): Promise<any> {
     const { token } = this.props;
+    const { params } = this.props.navigation.state;
     return new Promise((resolve, reject) => {
       api
-        .post(`/api/orders/${orderId}/pay`, null, { token })
+        .post(`/api/orders/${params.orderId}/pay`, null, { token })
         .then(({ data }) => {
           console.debug(data);
           resolve(data.payment);
@@ -63,16 +63,30 @@ class PaymentView extends Component {
     });
   }
 
-  onFinished = async () => {
-    const { userData, token } = this.props;
+  async getPaymentStatus() {
+    const { token } = this.props;
     const { params } = this.props.navigation.state;
+    const { data } = await api.get(
+      `/api/orders/${params.orderId}/paymentStatus`,
+      { token }
+    );
+    return data;
+  }
+
+  onFinished = async () => {
     try {
-      // await api.put(`/api/orders/${params.orderId}/check`, null, { token });
+      // Toast.loading('', 30);
+      // TODO: retry for 15/30 seconds (or x amount of times) until payment status is finished
+      // if it should be
+      const data = await this.getPaymentStatus();
+
+      console.warn(data);
 
       // TODO: handle transaction has been already 'paid'
       // if error.code == 'NOT_ALLOWED'
       // return to previous screen (Checkout)
       // TODO: run goToChat() on Checkout or ReplaceCurrentScreen (2 screens)
+      // if (data.status === 'FINISHED')
       this.props.navigation.goBack();
     } catch (error) {
       ui.showToast(error.message, 'danger');
@@ -104,8 +118,9 @@ class PaymentView extends Component {
               </body></html>`,
           }}
           injectedJavaScript={`(${JStoInject.toString()}());`}
-          onNavigationStateChange={e => {
+          onNavigationStateChange={async e => {
             if (e.url.indexOf('/api/payments/') > -1) {
+              await sleep(3000); // TODO: remove after testing
               this.onFinished();
               console.warn(e);
             }
@@ -119,6 +134,10 @@ class PaymentView extends Component {
     );
   }
 }
+
+const sleep = ms => {
+  return new Promise(resolve => setTimeout(resolve, ms));
+};
 
 const mapStateToProps: any = (state: ReduxState) => ({
   userData: state.LoginReducer.data,

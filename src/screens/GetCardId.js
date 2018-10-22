@@ -46,7 +46,7 @@ class GetCardId extends Component {
   }
 
   async generateTokenForIFrame() {
-    const { data } = await api.get(`/api/auth/get-token`);
+    const { data } = await api.get('/api/auth/get-token');
     return data;
   }
 

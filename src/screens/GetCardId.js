@@ -10,7 +10,7 @@ import { enableRefresh } from '../actions/actionCreator';
 import * as api from '../utils/api';
 import * as ui from '../utils/ui';
 
-const URL_BASE = 'https://api.stage.uapay.ua';
+const URL_BASE = 'https://api.demo.uapay.ua';
 
 import type { ReduxState } from '../types';
 

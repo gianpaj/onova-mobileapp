@@ -4,8 +4,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Button, View } from 'react-native';
 import { WebView } from 'react-native-webview';
-
-import { enableRefresh } from '../actions/actionCreator';
+import { Toast } from 'antd-mobile-rn';
 
 import * as api from '../utils/api';
 import * as ui from '../utils/ui';
@@ -52,7 +51,11 @@ class PaymentView extends Component {
     const { params } = this.props.navigation.state;
     return new Promise((resolve, reject) => {
       api
-        .post(`/api/orders/${params.orderId}/pay`, null, { token })
+        .post(
+          `/api/orders/${params.orderId}/pay`,
+          { cvc: params.cvc },
+          { token }
+        )
         .then(({ data }) => {
           console.debug(data);
           resolve(data.payment);
@@ -75,18 +78,32 @@ class PaymentView extends Component {
 
   onFinished = async () => {
     try {
-      // Toast.loading('', 30);
-      // TODO: retry for 15/30 seconds (or x amount of times) until payment status is finished
-      // if it should be
-      const data = await this.getPaymentStatus();
+      Toast.loading('', 30);
 
-      console.warn(data);
+      // retry for x amount of times with 1 sec in between until payment status is finished
+      let retryNum = 0;
+      let transactionStatus;
+      do {
+        retryNum++;
+        let { status } = await this.getPaymentStatus();
+        transactionStatus = status;
+        // console.debug(status);
+        await sleep(1000);
+      } while (transactionStatus !== 'ua-finished' || retryNum > 4);
+      // if it should be
+
+      // console.debug(transactionStatus);
+      Toast.hide();
 
       // TODO: handle transaction has been already 'paid'
       // if error.code == 'NOT_ALLOWED'
       // return to previous screen (Checkout)
       // TODO: run goToChat() on Checkout or ReplaceCurrentScreen (2 screens)
-      // if (data.status === 'FINISHED')
+      if (transactionStatus !== 'ua-finished') {
+        // ui.showToast('Timeout', 'warning', 'OK', 4);
+        // retry?
+        throw new Error('Timeout issue confirming payment finished');
+      }
       this.props.navigation.goBack();
     } catch (error) {
       ui.showToast(error.message, 'danger');
@@ -119,7 +136,10 @@ class PaymentView extends Component {
           }}
           injectedJavaScript={`(${JStoInject.toString()}());`}
           onNavigationStateChange={async e => {
-            if (e.url.indexOf('/api/payments/') > -1) {
+            if (
+              !e.url.startsWith('data:text/html') &&
+              e.url.indexOf('/api/payments/') > -1
+            ) {
               await sleep(3000); // TODO: remove after testing
               this.onFinished();
               console.warn(e);

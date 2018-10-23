@@ -25,7 +25,7 @@ import {
   Right,
   Title,
 } from 'native-base';
-import { Toast } from 'antd-mobile-rn';
+import { Toast, InputItem } from 'antd-mobile-rn';
 import { FormLabel } from 'react-native-elements';
 import type { NavigationScreenProp } from 'react-navigation';
 // import BTClient from 'react-native-braintree-xplat';
@@ -72,6 +72,7 @@ type Props = {
 };
 
 type State = {
+  cvc: string,
   cities: Array<City>,
   departments: Array<Department>,
   isLoading: boolean,
@@ -88,6 +89,7 @@ export class CheckoutContainer extends Component<Props, State> {
   inputs = [];
   cancelToken: CancelTokenSource;
   state = {
+    cvc: '',
     cities: null,
     departments: null,
     isLoading: true,
@@ -117,7 +119,7 @@ export class CheckoutContainer extends Component<Props, State> {
           _id: '5acdbcfb570a687a50318881',
         },
         price: '11111',
-        uuid: 'rkwjO64B7',
+        uuid: 'ZnE96_uds',
         status: 'forsale',
         currency: 'UAH',
       };
@@ -253,7 +255,7 @@ export class CheckoutContainer extends Component<Props, State> {
       }
       return ui.showToast(`${missing} is missing`, 'warning', null, 5);
     }
-    const { item, order } = this.state;
+    const { item, order, cvc } = this.state;
     // TODO: temp
     const SKIP_PAY = false;
     if (SKIP_PAY && item) {
@@ -273,7 +275,7 @@ export class CheckoutContainer extends Component<Props, State> {
     await this.updateShippingInfo();
 
     Toast.hide();
-    this.goToPay(order.id);
+    this.goToPay(order.id, cvc);
 
     // this.setState({ pending: false });
     // TODO: send payment request to API
@@ -362,11 +364,11 @@ export class CheckoutContainer extends Component<Props, State> {
     });
   };
 
-  goToPay = async (orderId: string) => {
+  goToPay = async (orderId: string, cvc: string) => {
     this.props.navigation.navigate({
       routeName: 'paymentView',
       key: 'paymentView',
-      params: { orderId },
+      params: { orderId, cvc },
     });
   };
 
@@ -377,12 +379,14 @@ export class CheckoutContainer extends Component<Props, State> {
       mobileNumber,
       pending,
       shippingAddress,
+      cvc,
     } = this.state;
     const { paymentInfo } = this.props.userData;
     if (
       !pending &&
       paymentInfo.last_four &&
       paymentInfo.method &&
+      cvc.length === 3 &&
       // TODO: only be able to select from the list of cities
       validShippingAddress(shippingAddress, cities, departments) &&
       isPhoneNumberValid(mobileNumber)
@@ -493,9 +497,14 @@ export class CheckoutContainer extends Component<Props, State> {
     );
   }
 
+  changeCVC = (t: string) => {
+    if (t.length <= 3) this.setState({ cvc: t.replace(/\D/g, '') });
+  };
+
   render() {
     const { userData } = this.props;
     const {
+      cvc,
       cities,
       departments,
       isLoading,
@@ -606,6 +615,16 @@ export class CheckoutContainer extends Component<Props, State> {
                     <CardView {...this.formatCardInfo()} number="" expiry="" />
                   )}
                 </TouchableOpacity>
+                <InputItem
+                  autoCorrect={false}
+                  error={cvc.length !== 3}
+                  last
+                  onChange={this.changeCVC}
+                  placeholder="CVC"
+                  type="number"
+                  value={cvc}
+                  // onFocus={this.handleFocus.bind(this, 4)}
+                />
               </View>
             </Content>
             {showFooter && (

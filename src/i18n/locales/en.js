@@ -157,6 +157,10 @@ http://onova.co/uploader
     permission_message: 'Onova uses your location when adding a new item',
     permission_alert_button_settings: 'Open Settings',
   },
+  confirm_order: {
+    header: 'Confirm order',
+    confirm: 'Confirm',
+  },
   drops_grid: {
     empty_state_title: 'Make a Drop',
     empty_state_message_mine:

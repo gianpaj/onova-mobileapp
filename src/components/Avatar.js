@@ -152,8 +152,8 @@ export default class Avatar extends PureComponent<Props, State> {
       );
     }
 
-    if (this.props.withButton == false) {
-      return <View>{Avatar}</View>;
+    if (!this.props.withButton) {
+      return Avatar;
     }
 
     const { buttonActiveState } = this.props;
@@ -251,10 +251,10 @@ const styles = StyleSheet.create({
     }),
   },
   miniAvatarPlaceHolderText: {
-    fontSize: 20
+    fontSize: 20,
   },
   verySmallAvatarPlaceHolderText: {
-    fontSize: 23
+    fontSize: 23,
   },
   smallAvatarPlaceHolderText: {
     fontSize: 40,

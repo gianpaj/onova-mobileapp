@@ -6,6 +6,7 @@ import { Chat } from '../screens/Chat';
 import { ChatRooms } from '../screens/ChatRooms';
 import { Checkout } from '../screens/Checkout';
 import { CreateDrop } from '../screens/CreateDrop';
+import { ConfirmOrder } from '../screens/ConfirmOrder';
 import { Home } from '../screens/Home';
 import IntroScreens from '../screens/IntroScreens';
 import { Followers } from '../screens/Followers';
@@ -28,6 +29,7 @@ export {
   ChatRooms,
   Checkout,
   CreateDrop,
+  ConfirmOrder,
   Followers,
   Following,
   GetCardId,

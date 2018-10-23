@@ -159,6 +159,15 @@ class NotificationsContainer extends Component<Props, State> {
     });
   };
 
+  goToConfirmOrder = (order: Order) => {
+    // $FlowFixMe
+    this.props.navigation.navigate({
+      routeName: 'confirmOrder',
+      key: 'confirmOrder',
+      params: order,
+    });
+  };
+
   refreshNotifications = () => {
     this.setState({ isRefreshing: true });
     this.getNotificationsAndSetState()

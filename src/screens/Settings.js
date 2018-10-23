@@ -493,7 +493,7 @@ class SettingsContainer extends Component<Props, State> {
                 },
                 {
                   ref: el => (this.inputs[4] = el),
-                  placeholder: 'Mobile number',
+                  placeholder: '09712344569 Mobile number',
                   value: ui.formatPhoneNumber(mobileNumber),
                   onFocus: this.handleFocus.bind(this, 4),
                   onChangeText: t => this.setState({ mobileNumber: t }),

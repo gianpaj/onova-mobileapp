@@ -184,11 +184,21 @@ class NotificationsContainer extends Component<Props, State> {
         button
         style={{ marginLeft: 0 }}
         onPress={() => {
-          if (item.triggeredType === 'User') this.goToProfile(item.sourceUser);
-          if (item.triggeredType === 'Product')
-            this.goToProduct(item.triggeredBy);
-          // if (item.triggeredType == 'Order')
-          //   this.goToChat(item.triggeredBy);
+          switch (item.triggeredType) {
+            case 'User':
+              this.goToProfile(item.sourceUser);
+              break;
+            case 'Product':
+              this.goToProduct(item.triggeredBy);
+              break;
+            case 'Order':
+              // or the ConfirmOrder screen should check if it can be confirmed ('paid' and not 'confirmed')
+              if (item.data.status === 'paid')
+                this.goToConfirmOrder(item.triggeredBy);
+              break;
+            default:
+              break;
+          }
         }}>
         {item.sourceUser && (
           <Avatar

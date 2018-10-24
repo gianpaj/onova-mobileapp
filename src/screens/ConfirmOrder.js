@@ -148,7 +148,7 @@ export class ConfirmOrderContainer extends Component<Props, State> {
     return (
       <Container>
         <Header>
-          <Left style={styles.container}>
+          <Left>
             <Button
               transparent
               dark
@@ -156,7 +156,7 @@ export class ConfirmOrderContainer extends Component<Props, State> {
               <Icon ios="ios-arrow-back" android="md-arrow-back" />
             </Button>
           </Left>
-          <Body style={styles.container}>
+          <Body style={[styles.container, { flex: 4 }]}>
             <Title>{I18n.t('confirm_order.header')}</Title>
           </Body>
           <Right />

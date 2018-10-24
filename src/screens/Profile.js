@@ -69,7 +69,7 @@ type State = {
   isFetching: boolean,
   isRefreshing: boolean,
   profilePic: string | Image,
-  rateAvg: number,
+  // rateAvg: number,
   reviewsCount: number,
   username: string,
   index: number,
@@ -88,7 +88,7 @@ const defaultState = {
   isSaving: false,
   isFetching: true,
   profilePic: '',
-  rateAvg: -1,
+  // rateAvg: -1,
   reviewsCount: -1,
   username: '',
   index: 0,
@@ -128,7 +128,7 @@ class ProfileScreen extends React.Component<Props, State> {
               username,
               followersCount,
               followingCount,
-              ratingsTotal,
+              // ratingsTotal,
               reviewsCount,
             } = res;
             this.setState({
@@ -139,8 +139,8 @@ class ProfileScreen extends React.Component<Props, State> {
               username,
               followersCount,
               followingCount,
-              rateAvg:
-                ratingsTotal == 0 ? ratingsTotal : ratingsTotal / reviewsCount,
+              // rateAvg:
+              //   ratingsTotal == 0 ? ratingsTotal : ratingsTotal / reviewsCount,
               reviewsCount,
             });
           })
@@ -191,7 +191,7 @@ class ProfileScreen extends React.Component<Props, State> {
         followingCount: props.userData.followingCount,
         mobileNumber: props.userData.mobileNumber,
         profilePic: props.userData.profilePic,
-        rateAvg: ratingsTotal == 0 ? ratingsTotal : ratingsTotal / reviewsCount,
+        // rateAvg: ratingsTotal == 0 ? ratingsTotal : ratingsTotal / reviewsCount,
         ratingsTotal,
         reviewsCount,
         username: props.userData.username,

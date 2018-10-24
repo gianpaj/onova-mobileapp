@@ -5,8 +5,11 @@ import { connect } from 'react-redux';
 import {
   Dimensions,
   Image,
+  Modal,
   StyleSheet,
   Text,
+  TextInput,
+  KeyboardAvoidingView,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -22,11 +25,12 @@ import {
 } from 'native-base';
 import { Toast } from 'antd-mobile-rn';
 import StarRating from 'react-native-star-rating';
+import Foect from 'foect';
 
 import { Avatar, Header, Title } from '../components';
 
 import I18n from '../i18n';
-import colors from '../config/colors';
+import colors, { convertHex } from '../config/colors';
 import typography from '../config/typography';
 import * as api from '../utils/api';
 import * as ui from '../utils/ui';
@@ -70,6 +74,10 @@ export class ConfirmOrderContainer extends Component<Props, State> {
 
     try {
       const order: Order = await api.getOrder(orderId, token);
+      if (order.status !== 'paid') {
+        console.warn('order.status', order.status);
+        throw new Error(`Order has already been ${order.status}`);
+      }
       const buyer: Order = await api.getUser(order.buyer._id);
       console.debug(order);
       // const iAmTheSeller = _id.toString() === order.seller._id.toString();
@@ -78,9 +86,31 @@ export class ConfirmOrderContainer extends Component<Props, State> {
     } catch (err) {
       console.log(err);
       Toast.fail(err.message, 5);
-      // this.goBackAndRefresh();
+      this.goBackAndRefresh();
     }
   }
+
+  showModal = async () => {
+    this.setState({ showModal: true });
+  };
+
+  onCancelSubmit = async ({ reason }: { reason: string }) => {
+    const { token } = this.props;
+    try {
+      await api.put(
+        `/api/orders/${this.state.order.id}`,
+        { reason, status: 'cancelled' },
+        { token }
+      );
+      console.warn('cancelled', this.state.order.id, reason);
+      Toast.info('The order has been cancelled');
+      this.setState({ showModal: false });
+      this.props.navigation.goBack();
+    } catch (err) {
+      console.log(err);
+      Toast.fail(err.message, 5);
+    }
+  };
 
   onConfirm = async () => {
     const { order } = this.state;
@@ -110,7 +140,7 @@ export class ConfirmOrderContainer extends Component<Props, State> {
   };
 
   goBackAndRefresh() {
-    this.props.navigation.state.params.shouldRefresh(true);
+    // this.props.navigation.state.params.shouldRefresh(true);
     this.props.navigation.goBack();
   }
 
@@ -196,8 +226,8 @@ export class ConfirmOrderContainer extends Component<Props, State> {
             />
             <View
               style={{
-                padding: 5,
                 alignItems: 'center',
+                padding: 5,
                 flexDirection: 'row',
               }}>
               <StarRating
@@ -205,6 +235,7 @@ export class ConfirmOrderContainer extends Component<Props, State> {
                 containerStyle={{
                   justifyContent: 'space-between',
                   width: 108,
+                  marginRight: 5,
                 }}
                 // disabled={isLoading}
                 emptyStar="md-star-outline"
@@ -220,9 +251,7 @@ export class ConfirmOrderContainer extends Component<Props, State> {
             </View>
             <TouchableOpacity
               onPress={() => this.goToProfile(buyer)}
-              style={{
-                alignItems: 'center',
-              }}>
+              style={{ alignItems: 'center' }}>
               <Text style={styles.name}>
                 {buyerInfo.firstName} {buyerInfo.lastName}
               </Text>
@@ -255,7 +284,7 @@ export class ConfirmOrderContainer extends Component<Props, State> {
                   marginTop: 15,
                   width: widthButtons,
                 }}
-                onPress={this.onCancel}>
+                onPress={this.showModal}>
                 <Text style={[styles.buttonText, { color: colors.black }]}>
                   {I18n.t('alerts.action_button_cancel')}
                 </Text>
@@ -263,8 +292,119 @@ export class ConfirmOrderContainer extends Component<Props, State> {
             </View>
           </View>
         </Content>
-        {/* <Footer /> */}
+        {this.renderCancelModal()}
       </Container>
+    );
+  }
+
+  renderCancelModal() {
+    return (
+      <Modal
+        // animationType="slide"
+        visible={this.state.showModal}
+        transparent
+        onRequestClose={() => this.setState({ showModal: false })}>
+        <KeyboardAvoidingView
+          behavior="padding"
+          enabled
+          style={{
+            alignItems: 'center',
+            backgroundColor: convertHex('#000000', 32),
+            flex: 1,
+            flexDirection: 'column',
+            justifyContent: 'center',
+          }}>
+          <View
+            style={{
+              alignSelf: 'center',
+              height: 250,
+              width: '90%',
+              backgroundColor: colors.white,
+              borderWidth: StyleSheet.hairlineWidth,
+              borderRadius: 10,
+              paddingHorizontal: 5,
+            }}>
+            <Header
+              noShadow
+              style={{
+                backgroundColor: colors.transparent,
+                borderBottomWidth: 0,
+                paddingTop: 0,
+              }}>
+              <Right>
+                <Button
+                  transparent
+                  onPress={() => this.setState({ showModal: false })}>
+                  <Icon name="close" style={{ color: colors.black }} />
+                </Button>
+              </Right>
+            </Header>
+            <Foect.Form onValidSubmit={this.onCancelSubmit}>
+              {form => (
+                <View style={{ margin: 20, flex: 1 }}>
+                  <Foect.Control
+                    name="reason"
+                    required
+                    minLength={10}
+                    maxLength={300}>
+                    {control => {
+                      const hasError =
+                        (control.isTouched || form.isSubmitted) &&
+                        control.isInvalid;
+                      return (
+                        <View style={{ flex: 1 }}>
+                          <TextInput
+                            autoCorrect
+                            style={{
+                              fontSize: typography.font_body_size,
+                              // width: widthFields,
+                              borderColor: hasError
+                                ? colors.red
+                                : colors.transparent,
+                            }}
+                            onBlur={control.markAsTouched}
+                            onChangeText={text => control.onChange(text)}
+                            multiline
+                            underlineColorAndroid={
+                              hasError ? colors.red : colors.black
+                            }
+                            placeholder={I18n.t(
+                              'confirm_order.reason_placeholder'
+                            )}
+                            value={control.value}
+                          />
+                          <Text
+                            style={{
+                              color: colors.red,
+                              textAlign: 'center',
+                            }}>
+                            {form.isSubmitted && control.isInvalid
+                              ? I18n.t('confirm_order.reason_is_mandatory')
+                              : ' '}
+                          </Text>
+                        </View>
+                      );
+                    }}
+                  </Foect.Control>
+                  <Button
+                    dark
+                    block
+                    style={{
+                      alignSelf: 'center',
+                      marginTop: 15,
+                      width: 100,
+                    }}
+                    onPress={() => form.submit()}>
+                    <Text style={styles.buttonText}>
+                      {I18n.t('alerts.confirm_alert_button_confirm')}
+                    </Text>
+                  </Button>
+                </View>
+              )}
+            </Foect.Form>
+          </View>
+        </KeyboardAvoidingView>
+      </Modal>
     );
   }
 }

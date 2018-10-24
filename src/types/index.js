@@ -86,7 +86,7 @@ export type PaymentInfo =
 export type ShippingAddress = {
   firstName: string,
   lastName: string,
-  fathersName: string,
+  fathersName?: string,
   departmentNovaposhta: string,
   city: string,
 };
@@ -156,6 +156,8 @@ export type Room = {
 type UserDataShorter = {
   _id: string,
   accountStatus: string,
+  displayName: string,
+  shippingAddress?: string,
   id: string,
   profilePic: string,
   username: string,

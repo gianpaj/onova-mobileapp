@@ -156,6 +156,11 @@ http://onova.co/uploader
     permission_message: 'Нам потрібно відображати де знаходяться речі.',
     permission_alert_button_settings: 'Відкрити налаштування',
   },
+  confirm_order: {
+    header: 'Підтвердити замовлення',
+    confirm: 'Підтвердити',
+    buying_item_text: 'Хоче придбати твою річ',
+  },
   drops_grid: {
     empty_state_title: 'Створити дроп',
     empty_state_message_mine:

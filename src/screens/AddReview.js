@@ -37,8 +37,6 @@ import * as ui from '../utils/ui';
 import type { NavigationScreenProp } from 'react-navigation';
 import type { Order, UserData, ReduxState } from '../types';
 
-// const starIcon = Platform.OS == 'ios' ? 'ios-star' : 'md-star';
-
 type Props = {
   navigation: NavigationScreenProp<*>,
   userData: UserData,

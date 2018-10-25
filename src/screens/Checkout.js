@@ -163,7 +163,7 @@ export class CheckoutContainer extends Component<Props, State> {
           err.message == 'Duplicate order' &&
           err.data && // deepscan-disable-line
           err.data.data && // deepscan-disable-line
-          err.data.data.status == 'paid'
+          err.data.data.status == 'confirmed'
         ) {
           // $FlowFixMe
           this.goToChat(err.data.data.id, item);
@@ -257,33 +257,16 @@ export class CheckoutContainer extends Component<Props, State> {
       }
       return ui.showToast(`${missing} is missing`, 'warning', null, 5);
     }
-    const { item, order, cvc } = this.state;
-    // TODO: temp
-    const SKIP_PAY = false;
-    if (SKIP_PAY && item) {
-      console.log(order);
-      console.warn('payment skipped');
-      // $FlowFixMe
-      return this.goToChat(order.id, item);
-    }
-
-    // const data = {};
+    const { order, cvc } = this.state;
+    // console.log(order);
 
     Toast.loading('Loading...', 3);
     this.setState({ pending: true });
-
-    // console.log(data);
 
     await this.updateShippingInfo();
 
     Toast.hide();
     this.goToPay(order.id, cvc);
-
-    // this.setState({ pending: false });
-    // TODO: send payment request to API
-
-    // TODO: show success Toast
-    // this.goToChat(order.id, item);
   };
 
   updateShippingInfo(): Promise<any> {

@@ -8,6 +8,7 @@ import { Toast } from 'antd-mobile-rn';
 
 import * as api from '../utils/api';
 import * as ui from '../utils/ui';
+import I18n from '../i18n';
 
 import type { ReduxState } from '../types';
 
@@ -104,11 +105,17 @@ class PaymentView extends Component {
         // retry?
         throw new Error('Timeout issue confirming payment finished');
       }
-      this.props.navigation.goBack();
+      this.onSuccess();
     } catch (error) {
       ui.showToast(error.message, 'danger');
       console.error(error);
     }
+  };
+
+  onSuccess = () => {
+    Toast.success(I18n.t('checkout.success_msg'), 5);
+    // go back to home page
+    this.props.navigation.popToTop();
   };
 
   render() {

@@ -142,7 +142,7 @@ class PaymentView extends Component {
             ) {
               await sleep(3000); // TODO: remove after testing
               this.onFinished();
-              console.warn(e);
+              // console.warn(e);
             }
           }}
         />

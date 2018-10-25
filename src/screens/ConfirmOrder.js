@@ -100,7 +100,7 @@ export class ConfirmOrderContainer extends Component<Props, State> {
         { reason, status: 'cancelled' },
         { token }
       );
-      console.warn('cancelled', this.state.order.id, reason);
+      // console.warn('cancelled', this.state.order.id, reason);
       Toast.info('The order has been cancelled');
       this.setState({ showModal: false });
       this.props.navigation.goBack();
@@ -112,23 +112,17 @@ export class ConfirmOrderContainer extends Component<Props, State> {
   };
 
   onConfirm = async () => {
-    const { order } = this.state;
     const { token } = this.props;
 
-    let body = {
-      orderId: order.id,
-    };
     try {
-      const { data } = await api.post(
-        `/api/users/${this.props.userData._id}/reviews`,
-        body,
-        {
-          token,
-        }
+      const { data } = await api.put(
+        `/api/orders/${this.state.order.id}`,
+        { status: 'confirmed' },
+        { token }
       );
       console.debug(data);
       Toast.success(
-        "Awesome let's continue and get you the tracking number!",
+        "Awesome! Let's continue and get you the tracking number",
         5
       );
       this.goBackAndRefresh();
@@ -268,7 +262,7 @@ export class ConfirmOrderContainer extends Component<Props, State> {
                 dark
                 style={{
                   marginTop: 15,
-                  marginHorizontal: 15,
+                  marginRight: 15,
                   width: widthButtons,
                 }}
                 onPress={this.onConfirm}>

@@ -28,7 +28,7 @@ import Foect from 'foect';
 import { Avatar, Header, Title } from '../components';
 
 import I18n from '../i18n';
-import colors, { convertHex } from '../config/colors';
+import colors from '../config/colors';
 import typography from '../config/typography';
 import * as api from '../utils/api';
 import * as ui from '../utils/ui';
@@ -40,12 +40,12 @@ const { width } = Dimensions.get('window');
 
 type Props = {
   navigation: NavigationScreenProp<*>,
-  userData: UserData,
   token: string,
 };
 
 type State = {
   isLoading: boolean,
+  isPending: boolean,
   showModal: boolean,
   order: Order,
   buyer: User,
@@ -54,6 +54,7 @@ type State = {
 export class ConfirmOrderContainer extends Component<Props, State> {
   state = {
     isLoading: true,
+    isPending: false,
     showModal: false,
     order: null,
     buyer: null,
@@ -64,7 +65,7 @@ export class ConfirmOrderContainer extends Component<Props, State> {
 
     const params = this.props.navigation.state.params;
     // for development
-    let orderId = '5bd0836552512e1c9763c60d';
+    let orderId = '5bd1e36e97a6745fbd9643b2';
 
     if (params) {
       orderId = params.id;
@@ -88,12 +89,14 @@ export class ConfirmOrderContainer extends Component<Props, State> {
     }
   }
 
-  showModal = async () => {
+  showModal = () => {
     this.setState({ showModal: true });
   };
 
   onCancelSubmit = async ({ reason }: { reason: string }) => {
     const { token } = this.props;
+
+    this.setState({ isPending: true });
     try {
       await api.put(
         `/api/orders/${this.state.order.id}`,
@@ -109,11 +112,13 @@ export class ConfirmOrderContainer extends Component<Props, State> {
       this.setState({ showModal: false });
       Toast.fail(err.message, 5);
     }
+    this.setState({ isPending: false });
   };
 
   onConfirm = async () => {
     const { token } = this.props;
 
+    this.setState({ isPending: true });
     try {
       const { data } = await api.put(
         `/api/orders/${this.state.order.id}`,
@@ -130,6 +135,7 @@ export class ConfirmOrderContainer extends Component<Props, State> {
       Toast.fail(err.message, 3);
       console.log(err);
     }
+    this.setState({ isPending: false });
   };
 
   goBackAndRefresh() {
@@ -157,7 +163,7 @@ export class ConfirmOrderContainer extends Component<Props, State> {
   };
 
   render() {
-    const { isLoading, order, buyer } = this.state;
+    const { isLoading, order, buyer, isPending } = this.state;
     if (isLoading || !order) return null;
 
     const uri = order.product.photoURIs[0].replace('.jpg', '-thumb.jpg');
@@ -260,6 +266,7 @@ export class ConfirmOrderContainer extends Component<Props, State> {
               <Button
                 block
                 dark
+                disabled={isPending}
                 style={{
                   marginTop: 15,
                   marginRight: 15,
@@ -273,6 +280,7 @@ export class ConfirmOrderContainer extends Component<Props, State> {
               <Button
                 light
                 block
+                disabled={isPending}
                 style={{
                   marginTop: 15,
                   width: widthButtons,
@@ -291,9 +299,10 @@ export class ConfirmOrderContainer extends Component<Props, State> {
   }
 
   renderCancelDialog = () => {
+    const { showModal, isPending } = this.state;
     let thisForm;
     return (
-      <Dialog.Container visible={this.state.showModal}>
+      <Dialog.Container visible={showModal}>
         <Dialog.Title style={{ color: colors.black }}>
           {I18n.t('confirm_order.dialog_title')}
         </Dialog.Title>
@@ -342,12 +351,14 @@ export class ConfirmOrderContainer extends Component<Props, State> {
           }}
         </Foect.Form>
         <Dialog.Button
+          disabled={isPending}
           color={Platform.OS === 'ios' ? '#007ff9' : colors.grey2}
           label={I18n.t('alerts.action_button_close')}
           onPress={() => this.setState({ showModal: false })}
         />
         <Dialog.Button
           bold
+          disabled={isPending}
           color={colors.red}
           label={I18n.t('confirm_order.button_cancel_order')}
           onPress={() => thisForm.submit()}
@@ -358,7 +369,6 @@ export class ConfirmOrderContainer extends Component<Props, State> {
 }
 
 const mapStateToProps: any = (state: ReduxState) => ({
-  userData: state.LoginReducer.data,
   token: state.LoginReducer.token,
 });
 

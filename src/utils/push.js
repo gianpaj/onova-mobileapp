@@ -146,6 +146,7 @@ async function navigate(notif) {
   firebase.notifications().removeDeliveredNotification(notif.notificationId);
   if (notif.data && notif.data.triggeredType) {
     const { triggeredType, triggeredBy, productUuid } = notif.data;
+    const extra = JSON.parse(notif.data.extra);
     console.debug('should navigate to:', triggeredType);
 
     // TODO: show Toast error cannot navigate
@@ -176,6 +177,17 @@ async function navigate(notif) {
         { roomId: parseInt(triggeredBy) },
         `chat-${triggeredBy}`
       );
+    }
+    if (triggeredType === 'Order') {
+      console.debug(triggeredBy);
+      console.debug(extra);
+      // order needs confirmation
+      if (extra.status == 'paid')
+        return NavigationService.navigate(
+          'confirmOrder',
+          { id: triggeredBy },
+          'confirmOrder'
+        );
     }
   }
 }

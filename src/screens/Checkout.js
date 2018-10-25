@@ -212,13 +212,13 @@ export class CheckoutContainer extends Component<Props, State> {
     );
   };
 
-  handleFocus(ref) {
+  handleFocus = (ref: number) => {
     this.setState({
       activeInputRef: ref,
       previousFocusDisabled: ref === 0,
-      nextFocusDisabled: ref === 4,
+      nextFocusDisabled: ref === 5,
     });
-  }
+  };
 
   changeInputFocus(direction = 1) {
     if (
@@ -546,7 +546,7 @@ export class CheckoutContainer extends Component<Props, State> {
                     ref: el => (this.inputs[0] = el),
                     placeholder: 'First name',
                     value: shippingAddress.firstName,
-                    onFocus: this.handleFocus.bind(this, 0),
+                    onFocus: () => this.handleFocus(0),
                     onChangeText: t =>
                       this.setState(
                         update(this.state, {
@@ -560,7 +560,7 @@ export class CheckoutContainer extends Component<Props, State> {
                     ref: el => (this.inputs[1] = el),
                     placeholder: 'Last name',
                     value: shippingAddress.lastName,
-                    onFocus: this.handleFocus.bind(this, 1),
+                    onFocus: () => this.handleFocus(1),
                     onChangeText: t =>
                       this.setState(
                         update(this.state, {
@@ -597,7 +597,7 @@ export class CheckoutContainer extends Component<Props, State> {
                     ref: el => (this.inputs[4] = el),
                     placeholder: '09712344569 Mobile number',
                     value: ui.formatPhoneNumber(mobileNumber),
-                    onFocus: this.handleFocus.bind(this, 4),
+                    onFocus: () => this.handleFocus(4),
                     onChangeText: t => this.setState({ mobileNumber: t }),
                     type: 'phone',
                     validation: () =>
@@ -618,6 +618,7 @@ export class CheckoutContainer extends Component<Props, State> {
                   )}
                 </TouchableOpacity>
                 <InputItem
+                  ref={el => (this.inputs[5] = el)}
                   autoCorrect={false}
                   error={cvc.length !== 3}
                   last
@@ -625,7 +626,7 @@ export class CheckoutContainer extends Component<Props, State> {
                   placeholder="CVC"
                   type="number"
                   value={cvc}
-                  // onFocus={this.handleFocus.bind(this, 4)}
+                  onFocus={() => this.handleFocus(5)}
                 />
               </View>
             </Content>

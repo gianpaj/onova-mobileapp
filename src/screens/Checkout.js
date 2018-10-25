@@ -139,6 +139,8 @@ export class CheckoutContainer extends Component<Props, State> {
   }
 
   componentWillUnmount() {
+    // cancel order when going back with Backbutton
+    this.onCancel();
     this.keyboardDidShowListener.remove();
     this.keyboardDidHideListener.remove();
     // trigger Axios to reject the request

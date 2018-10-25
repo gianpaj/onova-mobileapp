@@ -106,6 +106,7 @@ export class ConfirmOrderContainer extends Component<Props, State> {
       this.props.navigation.goBack();
     } catch (err) {
       console.log(err);
+      this.setState({ showModal: false });
       Toast.fail(err.message, 5);
     }
   };

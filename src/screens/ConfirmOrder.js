@@ -5,11 +5,9 @@ import { connect } from 'react-redux';
 import {
   Dimensions,
   Image,
-  Modal,
   StyleSheet,
+  Platform,
   Text,
-  TextInput,
-  KeyboardAvoidingView,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -17,12 +15,12 @@ import {
   Body,
   Button,
   Container,
-  Content,
   Icon,
   Left,
   ListItem,
   Right,
 } from 'native-base';
+import Dialog from 'react-native-dialog';
 import { Toast } from 'antd-mobile-rn';
 import StarRating from 'react-native-star-rating';
 import Foect from 'foect';
@@ -66,7 +64,7 @@ export class ConfirmOrderContainer extends Component<Props, State> {
 
     const params = this.props.navigation.state.params;
     // for development
-    let orderId = '5bceeb77d9777b1b05089c9f';
+    let orderId = '5bd0836552512e1c9763c60d';
 
     if (params) {
       orderId = params.id;
@@ -178,7 +176,7 @@ export class ConfirmOrderContainer extends Component<Props, State> {
     return (
       <Container>
         <Header>
-          <Left>
+          <Left style={styles.container}>
             <Button
               transparent
               dark
@@ -191,7 +189,7 @@ export class ConfirmOrderContainer extends Component<Props, State> {
           </Body>
           <Right />
         </Header>
-        <Content>
+        <View>
           <ListItem style={{ marginLeft: 0, paddingTop: 0, paddingBottom: 0 }}>
             <TouchableOpacity
               onPress={() => this.goToProduct(order.product)}
@@ -291,122 +289,77 @@ export class ConfirmOrderContainer extends Component<Props, State> {
               </Button>
             </View>
           </View>
-        </Content>
-        {this.renderCancelModal()}
+        </View>
+        {this.renderCancelDialog()}
       </Container>
     );
   }
 
-  renderCancelModal() {
+  renderCancelDialog = () => {
+    let thisForm;
     return (
-      <Modal
-        // animationType="slide"
-        visible={this.state.showModal}
-        transparent
-        onRequestClose={() => this.setState({ showModal: false })}>
-        <KeyboardAvoidingView
-          behavior="padding"
-          enabled
-          style={{
-            alignItems: 'center',
-            backgroundColor: convertHex('#000000', 32),
-            flex: 1,
-            flexDirection: 'column',
-            justifyContent: 'center',
-          }}>
-          <View
-            style={{
-              alignSelf: 'center',
-              height: 250,
-              width: '90%',
-              backgroundColor: colors.white,
-              borderWidth: StyleSheet.hairlineWidth,
-              borderRadius: 10,
-              paddingHorizontal: 5,
-            }}>
-            <Header
-              noShadow
-              style={{
-                backgroundColor: colors.transparent,
-                borderBottomWidth: 0,
-                paddingTop: 0,
-              }}>
-              <Right>
-                <Button
-                  transparent
-                  onPress={() => this.setState({ showModal: false })}>
-                  <Icon name="close" style={{ color: colors.black }} />
-                </Button>
-              </Right>
-            </Header>
-            <Foect.Form onValidSubmit={this.onCancelSubmit}>
-              {form => (
-                <View style={{ margin: 20, flex: 1 }}>
-                  <Foect.Control
-                    name="reason"
-                    required
-                    minLength={10}
-                    maxLength={300}>
-                    {control => {
-                      const hasError =
-                        (control.isTouched || form.isSubmitted) &&
-                        control.isInvalid;
-                      return (
-                        <View style={{ flex: 1 }}>
-                          <TextInput
-                            autoCorrect
-                            style={{
-                              fontSize: typography.font_body_size,
-                              // width: widthFields,
-                              borderColor: hasError
-                                ? colors.red
-                                : colors.transparent,
-                            }}
-                            onBlur={control.markAsTouched}
-                            onChangeText={text => control.onChange(text)}
-                            multiline
-                            underlineColorAndroid={
-                              hasError ? colors.red : colors.black
-                            }
-                            placeholder={I18n.t(
-                              'confirm_order.reason_placeholder'
-                            )}
-                            value={control.value}
-                          />
-                          <Text
-                            style={{
-                              color: colors.red,
-                              textAlign: 'center',
-                            }}>
-                            {form.isSubmitted && control.isInvalid
-                              ? I18n.t('confirm_order.reason_is_mandatory')
-                              : ' '}
-                          </Text>
-                        </View>
-                      );
-                    }}
-                  </Foect.Control>
-                  <Button
-                    dark
-                    block
-                    style={{
-                      alignSelf: 'center',
-                      marginTop: 15,
-                      width: 100,
-                    }}
-                    onPress={() => form.submit()}>
-                    <Text style={styles.buttonText}>
-                      {I18n.t('alerts.confirm_alert_button_confirm')}
-                    </Text>
-                  </Button>
-                </View>
-              )}
-            </Foect.Form>
-          </View>
-        </KeyboardAvoidingView>
-      </Modal>
+      <Dialog.Container visible={this.state.showModal}>
+        <Dialog.Title style={{ color: colors.black }}>
+          {I18n.t('confirm_order.dialog_title')}
+        </Dialog.Title>
+        <Foect.Form onValidSubmit={this.onCancelSubmit}>
+          {form => {
+            // FIXME: :'(
+            thisForm = form;
+            return (
+              <Foect.Control
+                name="reason"
+                required
+                minLength={10}
+                maxLength={300}>
+                {control => {
+                  const hasError =
+                    (control.isTouched || form.isSubmitted) &&
+                    control.isInvalid;
+                  return (
+                    <View>
+                      <Dialog.Input
+                        autoCorrect
+                        onBlur={control.markAsTouched}
+                        onChangeText={text => control.onChange(text)}
+                        multiline
+                        numberOfLines={2}
+                        underlineColorAndroid={
+                          hasError ? colors.red : colors.black
+                        }
+                        placeholder={I18n.t('confirm_order.reason_placeholder')}
+                        value={control.value}
+                      />
+                      <Text
+                        style={{
+                          display: !hasError ? 'none' : 'flex',
+                          marginBottom: 15,
+                          color: colors.red,
+                          textAlign: 'center',
+                        }}>
+                        {I18n.t('confirm_order.error_reason_is_mandatory')}
+                      </Text>
+                    </View>
+                  );
+                }}
+              </Foect.Control>
+            );
+          }}
+        </Foect.Form>
+        <Dialog.Button
+          color={Platform.OS === 'ios' ? '#007ff9' : colors.grey2}
+          label={I18n.t('alerts.action_button_close')}
+          onPress={() => this.setState({ showModal: false })}
+        />
+        <Dialog.Button
+          bold
+          color={colors.red}
+          label={I18n.t('confirm_order.button_cancel_order')}
+          onPress={() => thisForm.submit()}
+        />
+      </Dialog.Container>
     );
-  }
+  };
 }
 
 const mapStateToProps: any = (state: ReduxState) => ({

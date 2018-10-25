@@ -159,8 +159,8 @@ http://onova.co/uploader
   },
   confirm_order: {
     header: 'Confirm order',
-    confirm: 'Confirm',
     buying_item_text: 'Wants to buy your item',
+    confirm: 'Confirm',
   },
   drops_grid: {
     empty_state_title: 'Make a Drop',

@@ -20,24 +20,24 @@ export function registerPushNotifications(): Promise<string | null> {
           // Instabug.setPushNotificationsEnabled(true);
           console.debug('push permissions granted');
           // user has permissions
-        } else {
-          // user doesn't have permission
-          return firebase
-            .messaging()
-            .requestPermission()
-            .then(() => {
-              // Instabug.setPushNotificationsEnabled(true);
-              console.debug('push permissions requested and granted');
-            })
-            .catch(err => {
-              console.debug('user rejected push permissions', err);
-              // TODO: handle
-            });
+          return;
         }
-      })
-      .then(() => {
-        // application has been opened from a notification
+        // user doesn't have permission
         return firebase
+          .messaging()
+          .requestPermission()
+          .then(() => {
+            // Instabug.setPushNotificationsEnabled(true);
+            console.debug('push permissions requested and granted');
+          })
+          .catch(err => {
+            console.debug('user rejected push permissions', err);
+            // TODO: handle
+          });
+      })
+      // application has been opened from a notification
+      .then(() =>
+        firebase
           .notifications()
           .getInitialNotification()
           .then((notificationOpen: NotificationOpen) => {
@@ -56,49 +56,67 @@ export function registerPushNotifications(): Promise<string | null> {
               console.log(action);
               navigate(notificationOpen.notification);
             }
+          })
+      )
+      .then(() => {
+        // if (onNotificationOpenedSubscription === undefined) {
+        return firebase
+          .notifications()
+          .onNotificationOpened((notificationOpen: NotificationOpen) => {
+            // TODO: Get the action triggered by the notification being opened
+            // const action = notificationOpen.action;
+            // console.log(action);
+            // Get information about the notification that was opened
+            const notification: Notification = notificationOpen.notification;
+            navigate(notification);
           });
+        // }
       })
-      .then(() => {
-        if (onNotificationOpenedSubscription == null) {
-          return firebase
-            .notifications()
-            .onNotificationOpened((notificationOpen: NotificationOpen) => {
-              // TODO: Get the action triggered by the notification being opened
-              // const action = notificationOpen.action;
-              // console.log(action);
-              // Get information about the notification that was opened
-              const notification: Notification = notificationOpen.notification;
-              navigate(notification);
-            });
-        }
-      })
-      .then(() => {
-        return firebase.messaging().onTokenRefresh((token: string) => {
+      .then(() =>
+        firebase.messaging().onTokenRefresh((token: string) => {
           console.log('onTokenRefresh');
           console.log(token);
           // registerPushToken(token);
-        });
-      })
+        })
+      )
       .then(() => {
+        // From Android 8.0 (API Level 26), notifications must specify a Notification Channel
+        const channel = new firebase.notifications.Android.Channel(
+          'channelId',
+          'Channel Name',
+          firebase.notifications.Android.Importance.Max
+        ).setDescription('A natural description of the channel');
+        firebase.notifications().android.createChannel(channel);
+
         // only subscribe for messages on one place to fix "no completion handler" error is iOS
         if (onMessageSubscription == null) {
           onMessageSubscription = firebase
             .notifications()
-            .onNotification((msg: Notification) => {
+            .onNotification(async (msg: Notification) => {
               console.log(msg);
               const notification = new firebase.notifications.Notification()
                 .setTitle(msg.title)
                 .setBody(msg.body)
                 .setData(msg.data)
+                .android.setPriority(
+                  parseInt(msg.data.priority) ||
+                    firebase.notifications.Android.Priority.High
+                )
                 .android.setSmallIcon('ic_stat_ic_notification')
                 .android.setChannelId('channelId');
               // You've received a notification that hasn't been displayed by the OS
               // To display it whilst the app is in the foreground, simply call the following
-              firebase.notifications().displayNotification(notification);
+              try {
+                await firebase
+                  .notifications()
+                  .displayNotification(notification);
+              } catch (error) {
+                console.error(error);
+              }
             });
         }
       })
-      .then(() => {
+      .then(() =>
         firebase
           .messaging()
           .getToken()
@@ -106,8 +124,8 @@ export function registerPushNotifications(): Promise<string | null> {
           //   return registerPushToken(token);
           // })
           .then(token => resolve(token))
-          .catch(() => reject());
-      });
+          .catch(() => reject())
+      );
   });
 }
 

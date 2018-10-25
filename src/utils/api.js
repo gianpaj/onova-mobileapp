@@ -21,7 +21,7 @@ export { isProd, config };
 if (!global.__TESTING__) console.debug(`connecting to ${config.API_URL}`);
 
 axios.defaults.baseURL = config.API_URL;
-const TIMEOUT = 10000;
+const TIMEOUT = 20000;
 
 export type Options = {
   suppressRedBox?: boolean, // If true, no warning is shown on failed request

@@ -82,7 +82,7 @@ class ChatContainer extends Component<Props, State> {
       // do not initiate twice at the beginning
       // OR
       // when it should not refresh (review hasn't been added or order archived)
-      if (roomId == -1 || !shouldRefresh) return;
+      if (!roomId || !shouldRefresh) return;
 
       // TODO: maybe only refresh the orders?
       // this.fetchOrders(thisRoom)
@@ -94,12 +94,13 @@ class ChatContainer extends Component<Props, State> {
       );
     });
 
-    // for development
+    // for development on 'onova' Pusher Instance
     if (!params) {
+      // for development on 'onova-test' Pusher Instance (local env)
       params = { roomId: 8086206 };
     }
 
-    this.initialise(params.roomId, params.productUuid)
+    this.initialise(params.roomId, params.orderId)
       .then(() => this.setState({ isLoading: false }))
       .catch(err => {
         if (err && err.message !== 'no partner') console.error(err);
@@ -125,17 +126,18 @@ class ChatContainer extends Component<Props, State> {
     }
   }
 
-  initialise(roomId: number, productUuid?: string) {
+  initialise(roomId: number, orderId?: string) {
     const { userData } = this.props;
     let thisRoom;
     return new Promise((resolve, reject) => {
       if (!pusherCurrentUser) return reject('no pusherCurrentUser');
+      if (!orderId && !roomId) return reject('orderId and roomId are missing');
       this.rejectProm = reject;
 
       this.connectToPusher()
         .then(() => {
           // coming from ChatRooms or Push Notification
-          if (roomId !== -1) {
+          if (roomId) {
             return pusherCurrentUser
               .joinRoom({ roomId })
               .then(room => {
@@ -153,25 +155,15 @@ class ChatContainer extends Component<Props, State> {
               });
           }
 
-          // coming from Product
-          if (!productUuid) throw new Error('productUuid missing');
-
           const { token } = this.props;
 
-          return this.createOrGetOrder(productUuid, token)
-            .then(o => o)
-            .catch(data => {
-              if (data) return data;
-              reject();
-            });
+          return api.getOrder(orderId, token);
         })
         .then(o => {
           // console.debug(o);
 
           // coming from ChatRooms
-          if (roomId !== -1) {
-            return;
-          }
+          if (roomId) return;
 
           // else join an existing room or create one
 
@@ -212,14 +204,14 @@ class ChatContainer extends Component<Props, State> {
                 .createRoom({
                   name: getRoomName(o),
                   private: true,
-                  addUserIds: [o.seller, userData._id],
+                  addUserIds: [o.seller._id, userData._id],
                 })
                 .then(room => {
                   roomId = room.id;
                   thisRoom = room;
                   console.debug('Created room id', roomId);
                 })
-                .then(() => api.getUser(o.seller))
+                .then(() => api.getUser(o.seller._id))
                 .then(partner => this.setState({ partner }))
                 .catch(err => {
                   console.log('Error creating room');
@@ -276,22 +268,6 @@ class ChatContainer extends Component<Props, State> {
         .then(() => resolve())
         .catch(err => reject(err));
     });
-  }
-
-  createOrGetOrder(productUuid: string, token: string): Promise<any> {
-    return api
-      .createOrder(productUuid, token)
-      .then(o => o)
-      .catch(({ message, data }) => {
-        if (
-          message == 'Duplicate order' &&
-          data.data &&
-          // TODO: check is 'paid' once payment is completed
-          data.data.status == 'pending'
-        ) {
-          return data.data;
-        }
-      });
   }
 
   fetchOrders = (thisRoom: any) => {

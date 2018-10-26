@@ -117,11 +117,12 @@ export class ConfirmOrderContainer extends Component<Props, State> {
 
   onConfirm = async () => {
     const { token } = this.props;
+    const { order } = this.state;
 
     this.setState({ isPending: true });
     try {
       const { data } = await api.put(
-        `/api/orders/${this.state.order.id}`,
+        `/api/orders/${order.id}`,
         { status: 'confirmed' },
         { token }
       );
@@ -130,17 +131,27 @@ export class ConfirmOrderContainer extends Component<Props, State> {
         "Awesome! Let's continue and get you the tracking number",
         5
       );
-      this.goBackAndRefresh();
+      this.goToChat(order.id);
     } catch (err) {
       Toast.fail(err.message, 3);
       console.log(err);
+      this.setState({ isPending: false });
     }
-    this.setState({ isPending: false });
   };
 
   goBackAndRefresh() {
     // this.props.navigation.state.params.shouldRefresh(true);
     this.props.navigation.goBack();
+  }
+
+  goToChat(orderId: string) {
+    // $FlowFixMe
+    this.props.navigation.dispatch({
+      key: `chat-${orderId}`,
+      type: 'ReplaceCurrentScreen',
+      routeName: 'chat',
+      params: { orderId },
+    });
   }
 
   goToProfile = (user: UserData) => {

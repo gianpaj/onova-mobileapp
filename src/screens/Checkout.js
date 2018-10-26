@@ -166,7 +166,7 @@ export class CheckoutContainer extends Component<Props, State> {
           err.data.data.status == 'confirmed'
         ) {
           // $FlowFixMe
-          this.goToChat(err.data.data.id, item);
+          this.goToChat(err.data.data.id);
         } else if (
           err.data.data.status == 'pending' ||
           err.data.data.status == 'cancelled'
@@ -289,18 +289,13 @@ export class CheckoutContainer extends Component<Props, State> {
       });
   }
 
-  goToChat(orderId: string, item: Product) {
+  goToChat(orderId: string) {
     // $FlowFixMe
     this.props.navigation.dispatch({
-      key: `chat-${item.uuid}`,
+      key: `chat-${orderId}`,
       type: 'ReplaceCurrentScreen',
       routeName: 'chat',
-      params: {
-        orderId,
-        productUuid: item.uuid,
-        roomId: -1,
-        userId: item.seller.id,
-      },
+      params: { orderId },
     });
   }
 

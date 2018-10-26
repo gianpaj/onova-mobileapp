@@ -4,8 +4,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import {
   ActivityIndicator,
-  Image,
   FlatList,
+  Image,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -40,6 +40,7 @@ import settings from '../config/settings';
 import * as api from '../utils/api';
 
 const MARK_AS_READ_AFTER_MS = 300;
+const ONOVA_BOT_ID = '5bd1f7af46c62e6cdee546d0';
 
 type Props = {
   navigation: NavigationScreenProp<*>,
@@ -97,7 +98,7 @@ class ChatContainer extends Component<Props, State> {
     // for development on 'onova' Pusher Instance
     if (!params) {
       // for development on 'onova-test' Pusher Instance (local env)
-      params = { roomId: 8086206 };
+      params = { roomId: 19372253 };
     }
 
     this.initialise(params.roomId, params.orderId)
@@ -146,7 +147,11 @@ class ChatContainer extends Component<Props, State> {
                 return room;
               })
               .then(room =>
-                api.getUser(room.userIds.find(id => id !== userData._id))
+                api.getUser(
+                  room.userIds
+                    .filter(id => id !== ONOVA_BOT_ID)
+                    .find(id => id !== userData._id)
+                )
               )
               .then(partner => this.setState({ partner }))
               .catch(err => {
@@ -160,7 +165,7 @@ class ChatContainer extends Component<Props, State> {
           return api.getOrder(orderId, token);
         })
         .then(o => {
-          // console.debug(o);
+          console.debug(o);
 
           // coming from ChatRooms
           if (roomId) return;
@@ -190,7 +195,11 @@ class ChatContainer extends Component<Props, State> {
                     return room;
                   })
                   .then(room =>
-                    api.getUser(room.userIds.find(id => id !== userData._id))
+                    api.getUser(
+                      room.userIds
+                        .filter(id => id !== ONOVA_BOT_ID)
+                        .find(id => id !== userData._id)
+                    )
                   )
                   .then(partner => this.setState({ partner }))
                   .catch(err => {
@@ -234,10 +243,7 @@ class ChatContainer extends Component<Props, State> {
         .then(async messages => {
           if (!this.state.partner) throw new Error('no partner');
 
-          let newMsgs = [];
-          for (let i = 0; i < messages.length; i++) {
-            newMsgs.push(await this.createGiftedMessage(messages[i]));
-          }
+          const newMsgs = messages.map(m => this.createGiftedMessage(m));
           this.setState({ messages: newMsgs.reverse() });
           return messages[messages.length - 1];
         })
@@ -301,8 +307,8 @@ class ChatContainer extends Component<Props, State> {
     });
   };
 
-  newMessage = async (m: PusherMessage) => {
-    const newMsg = await this.createGiftedMessage(m);
+  newMessage = (m: PusherMessage) => {
+    const newMsg = this.createGiftedMessage(m);
 
     setTimeout(() => {
       pusherCurrentUser
@@ -325,7 +331,7 @@ class ChatContainer extends Component<Props, State> {
         };
       });
     }
-    return this.setState({ messages: [newMsg] });
+    this.setState({ messages: [newMsg] });
   };
 
   getPartner(): { _id: string, name: string, avatar: string } {
@@ -343,8 +349,11 @@ class ChatContainer extends Component<Props, State> {
     });
   };
 
-  async createGiftedMessage(msg: PusherMessage): PusherMessage {
+  createGiftedMessage(msg: PusherMessage): PusherMessage {
     const { userData } = this.props;
+    if (msg.senderId === ONOVA_BOT_ID) {
+      return this.createGiftedSystemMessage(msg);
+    }
     const otherUser = this.getPartner();
     const user = msg.senderId == userData._id ? userData : otherUser;
     const message = {
@@ -373,7 +382,7 @@ class ChatContainer extends Component<Props, State> {
     return {
       _id: msg.id,
       createdAt: new Date(msg.createdAt),
-      text: msg.message,
+      text: msg.text,
       system: true,
     };
   }
@@ -604,11 +613,15 @@ class ChatContainer extends Component<Props, State> {
               renderSystemMessage={this.renderSystemMessage}
               renderBubble={this.renderBubble}
               renderMessageImage={props => <MessageImage {...props} />}
-              // parsePatterns={(linkStyle) => [
-              //   {type: 'url', style: linkStyle, onPress: this.onUrlPress},
-              //   {type: 'phone', style: linkStyle, onPress: this.onPhonePress},
-              //   {type: 'email', style: linkStyle, onPress: this.onEmailPress},
-              //   ]}
+              // parsePatterns={linkStyle => [
+              //   {
+              //     pattern: /: (\w+)/,
+              //     style: { ...linkStyle, color: 'darkorange' },
+              //     onPress: this.onUrlPress,
+              //   },
+              //   // {type: 'phone', style: linkStyle, onPress: this.onPhonePress},
+              //   // {type: 'email', style: linkStyle, onPress: this.onEmailPress},
+              // ]}
               renderActions={this.renderActions}
               // keyboardShouldPersistTaps="handled"
               maxInputLength={settings.MAX_CHAT_INPUT_LENGTH}

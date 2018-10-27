@@ -1,3 +1,5 @@
+import defaults from '../../utils/defaults';
+
 export default {
   intro: {
     skip: 'Skip',
@@ -103,6 +105,7 @@ http://onova.co/uploader
     report_subtitle: 'Enter reason (required)',
     report_error: 'Please give a longer reason. Min 7 characters',
     report_success: 'Thank you for helping keep the Onova community safe',
+    action_button_close: 'Close',
     action_button_block: 'Block',
     action_button_cancel: 'Cancel',
     action_button_delete: 'Delete',
@@ -161,6 +164,10 @@ http://onova.co/uploader
     header: 'Confirm order',
     buying_item_text: 'Wants to buy your item',
     confirm: 'Confirm',
+    button_cancel_order: 'Cancel order',
+    dialog_title: 'Are you sure to cancel the order?',
+    reason_placeholder: 'Write why you are cancelling the order',
+    error_reason_is_mandatory: 'Please enter a reason',
   },
   drops_grid: {
     empty_state_title: 'Make a Drop',
@@ -207,6 +214,12 @@ http://onova.co/uploader
   chat: {
     send_msg_placeholder: 'Type a message',
     no_orders: 'No orders',
+  },
+  checkout: {
+    success_msg: "Super! We'll now alert the seller. The confirmation should arrive within __time__ hours".replace(
+      '__time__',
+      defaults.numHoursSellerHasToConfirm
+    ),
   },
   notifications: {
     header: 'Notifications',

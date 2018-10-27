@@ -1,3 +1,5 @@
+import defaults from '../../utils/defaults';
+
 export default {
   intro: {
     skip: 'Пропустити',
@@ -102,6 +104,7 @@ http://onova.co/uploader
     report_subtitle: "Напишіть причину (обов'язково)",
     report_error: 'Мінімально 7 знаків',
     report_success: 'Дякую, що допомагаєте нам відсіювати поганих користувачів',
+    action_button_close: 'Закрити',
     action_button_block: 'Блокувати',
     action_button_cancel: 'Відмінити',
     action_button_delete: 'Видалити',
@@ -160,6 +163,10 @@ http://onova.co/uploader
     header: 'Підтвердити замовлення',
     confirm: 'Підтвердити',
     buying_item_text: 'Хоче придбати твою річ',
+    button_cancel_order: 'Скасувати замовлення',
+    dialog_title: 'Ти впевнений що хочеш скасувати замовлення?',
+    reason_placeholder: 'Напиши чому ти скасовуєш замовлення',
+    error_reason_is_mandatory: 'Будь ласка вкажи причину',
   },
   drops_grid: {
     empty_state_title: 'Створити дроп',
@@ -206,6 +213,12 @@ http://onova.co/uploader
   chat: {
     send_msg_placeholder: 'Повідомлення',
     no_orders: 'Немає замовлень',
+  },
+  checkout: {
+    success_msg: 'Ми надіслали замовлення продавцеві, чекай на підтвердження протягом __time__ годин'.replace(
+      '__time__',
+      defaults.numHoursSellerHasToConfirm
+    ),
   },
   notifications: {
     header: 'Сповіщення',

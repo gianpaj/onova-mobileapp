@@ -235,14 +235,9 @@ const checkLogin = (userData: UserData, token: string) => (
   dispatch: Dispatch
 ) => {
   console.debug('checkLogin');
-  dispatch({ type: 'RELOAD_PENDING' });
+  // dispatch({ type: 'RELOAD_PENDING' });
   return api
     .get(`/api/users/${userData._id}/personal`, { token })
-    .then(() => registerPushNotifications())
-    .then(pushToken => {
-      console.debug('Push notifications: initialized');
-      if (pushToken) return sendToken(pushToken, userData, token);
-    })
     .then(() => {
       if (isProd) {
         trackUser(userData);
@@ -251,6 +246,11 @@ const checkLogin = (userData: UserData, token: string) => (
     })
     .then(() => initializePusher(userData, token))
     .then(() => dispatch({ type: RELOAD_SUCCESS }))
+    .then(() => registerPushNotifications())
+    .then(pushToken => {
+      console.debug('Push notifications: initialized');
+      if (pushToken) return sendToken(pushToken, userData, token);
+    })
     .catch(err => {
       console.debug(err);
       dispatch({ type: RELOAD_FAIL });

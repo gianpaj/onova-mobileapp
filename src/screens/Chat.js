@@ -695,6 +695,7 @@ const st = StyleSheet.create({
     color: colors.white,
     fontSize: 15,
     fontWeight: '400',
+    textAlign: 'center',
   },
   separatorHorizontal: {
     width: 1,

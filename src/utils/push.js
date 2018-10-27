@@ -1,5 +1,6 @@
 // @flow
 
+import { AsyncStorage } from 'react-native';
 import firebase from 'react-native-firebase';
 import type { Notification, NotificationOpen } from 'react-native-firebase';
 // import Instabug from 'instabug-reactnative';
@@ -35,14 +36,14 @@ export function registerPushNotifications(): Promise<string | null> {
             // TODO: handle
           });
       })
-      // application has been opened from a notification
       .then(() =>
         firebase
           .notifications()
           .getInitialNotification()
-          .then((notificationOpen: NotificationOpen) => {
+          .then(async (notificationOpen: NotificationOpen) => {
             console.log('getInitialNotification');
             if (notificationOpen) {
+              // App was opened by a notification
               // if (
               //   Platform.OS == 'ios' &&
               //   Instabug.isInstabugNotification(notificationOpen)
@@ -50,27 +51,38 @@ export function registerPushNotifications(): Promise<string | null> {
               //   console.log('isInstabugNotification');
               // } else {
               // }
-              // App was opened by a notification (from background)
               // Get the action triggered by the notification being opened
-              const action = notificationOpen.action;
-              console.log(action);
-              navigate(notificationOpen.notification);
+              // const action = notificationOpen.action;
+              // console.log(action);
+              // Get information about the notification that was opened
+              const notification: Notification = notificationOpen.notification;
+              const lastNotification = await AsyncStorage.getItem(
+                'lastNotification'
+              );
+              if (lastNotification !== notification.notificationId) {
+                navigate(notification);
+                await AsyncStorage.setItem(
+                  'lastNotification',
+                  notification.notificationId
+                );
+              }
             }
           })
       )
       .then(() => {
-        // if (onNotificationOpenedSubscription === undefined) {
-        return firebase
-          .notifications()
-          .onNotificationOpened((notificationOpen: NotificationOpen) => {
-            // TODO: Get the action triggered by the notification being opened
-            // const action = notificationOpen.action;
-            // console.log(action);
-            // Get information about the notification that was opened
-            const notification: Notification = notificationOpen.notification;
-            navigate(notification);
-          });
-        // }
+        // App in Foreground and background
+        if (onNotificationOpenedSubscription === undefined) {
+          onNotificationOpenedSubscription = firebase
+            .notifications()
+            .onNotificationOpened((notificationOpen: NotificationOpen) => {
+              //  Get the action triggered by the notification being opened
+              // const action = notificationOpen.action;
+              // console.log(action);
+              // Get information about the notification that was opened
+              const notification: Notification = notificationOpen.notification;
+              navigate(notification);
+            });
+        }
       })
       .then(() =>
         firebase.messaging().onTokenRefresh((token: string) => {
@@ -146,7 +158,6 @@ async function navigate(notif) {
   firebase.notifications().removeDeliveredNotification(notif.notificationId);
   if (notif.data && notif.data.triggeredType) {
     const { triggeredType, triggeredBy, productUuid } = notif.data;
-    const extra = JSON.parse(notif.data.extra);
     console.debug('should navigate to:', triggeredType);
 
     // TODO: show Toast error cannot navigate
@@ -178,6 +189,7 @@ async function navigate(notif) {
         `chat-${triggeredBy}`
       );
     }
+    const extra = JSON.parse(notif.data.extra);
     if (triggeredType === 'Order') {
       console.debug(triggeredBy);
       console.debug(extra);

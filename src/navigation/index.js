@@ -6,7 +6,6 @@ import {
   BackHandler,
   ImageBackground,
   StyleSheet,
-  Text,
 } from 'react-native';
 import { connect } from 'react-redux';
 import { addNavigationHelpers, NavigationActions } from 'react-navigation';

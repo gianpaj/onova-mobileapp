@@ -61,17 +61,16 @@ class AppNavigation extends React.PureComponent<Props, *> {
     const { dispatch, isLoggedIn, userData, token } = this.props;
 
     if (isLoggedIn && userData && token) {
+      this.setState({ canReload: false });
       // checking again if user is still logged in
-      dispatch(checkLogin(userData, token))
-        .then(() => this.setState({ canReload: false }))
-        .catch(e => {
-          if (e.message === 'Invalid user') {
-            dispatch(intro());
-          } else {
-            this.setState({ canReload: true });
-          }
-          console.debug(e);
-        });
+      dispatch(checkLogin(userData, token)).catch(e => {
+        if (e.message === 'Invalid user') {
+          dispatch(intro());
+        } else {
+          this.setState({ canReload: true });
+        }
+        console.debug(e);
+      });
     } else {
       dispatch(intro());
     }

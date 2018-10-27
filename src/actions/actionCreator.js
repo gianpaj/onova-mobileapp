@@ -235,7 +235,7 @@ const checkLogin = (userData: UserData, token: string) => (
   dispatch: Dispatch
 ) => {
   console.debug('checkLogin');
-  // dispatch({ type: 'RELOAD_PENDING' });
+  dispatch({ type: 'RELOAD_PENDING' });
   return api
     .get(`/api/users/${userData._id}/personal`, { token })
     .then(() => {

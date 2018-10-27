@@ -80,6 +80,14 @@ export default function(
         token: '',
       };
 
+    case 'RELOAD_PENDING':
+      return {
+        ...state,
+        hasError: false,
+        loading: true,
+        checkedLoggedIn: false,
+      };
+
     case RELOAD_SUCCESS:
       return { ...state, hasError: false, checkedLoggedIn: true };
 

@@ -159,6 +159,8 @@ http://onova.co/uploader
     permission_title: 'Can we access your location?',
     permission_message: 'Onova uses your location when adding a new item',
     permission_alert_button_settings: 'Open Settings',
+    cannot_create_drop_alert:
+      'Please go to Settings first to enter your Shipping info, mobile number and card details',
   },
   confirm_order: {
     header: 'Confirm order',

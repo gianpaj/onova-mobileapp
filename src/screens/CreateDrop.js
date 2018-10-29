@@ -103,29 +103,56 @@ export class CreateDropScreen extends React.Component<Props, State> {
     products: [],
   };
 
-  componentDidMount() {
+  async componentDidMount() {
     Toast.loading(I18n.t('alerts.loading_message'), 20);
-    Permissions.check('location')
-      .then(response => {
-        // Response is one of: 'authorized', 'denied', 'restricted', or 'undetermined'
-        console.debug('location permission:', response);
-        if (response === 'restricted' || response === 'denied') {
-          // show error
-          this.alertForPermission(response);
-          this.closeModal();
-        } else if (response === 'undetermined') {
-          // show Modal explaining why
-          this.alertForPermission(response);
-        } else {
-          // authorized
-          this.getLocationAndInitiate();
-        }
-      })
-      .catch(e => console.error(e))
-      .then(() => {
-        this.setState({ isLoading: false });
-        Toast.hide();
-      });
+
+    try {
+      await this.props.dispatch(getPersonalUserData());
+      if (!this.canCreateDrop())
+        throw new Error(I18n.t('create_drop.cannot_create_drop_alert'));
+    } catch (error) {
+      Toast.hide();
+      ui.showToast(error.message, 'warning', null, 4);
+      return this.closeModal();
+    }
+
+    try {
+      const response = await Permissions.check('location');
+      // Response is one of: 'authorized', 'denied', 'restricted', or 'undetermined'
+      console.debug('location permission:', response);
+      if (response === 'restricted' || response === 'denied') {
+        // show error
+        this.alertForPermission(response);
+        this.closeModal();
+      } else if (response === 'undetermined') {
+        // show Modal explaining why
+        this.alertForPermission(response);
+      } else {
+        // authorized
+        this.getLocationAndInitiate();
+      }
+    } catch (error) {
+      console.error(e);
+    }
+    this.setState({ isLoading: false });
+    Toast.hide();
+  }
+
+  canCreateDrop() {
+    const {
+      mobileNumber,
+      paymentInfo: p,
+      shippingAddress: s,
+    } = this.props.userData;
+    return (
+      mobileNumber &&
+      p.last_four &&
+      p.method &&
+      s.firstName &&
+      s.lastName &&
+      s.city &&
+      s.departmentNovaposhta
+    );
   }
 
   alertForPermission(response: string) {
@@ -228,9 +255,7 @@ export class CreateDropScreen extends React.Component<Props, State> {
     );
   }
 
-  closeModal = () => {
-    this.props.navigation.goBack();
-  };
+  closeModal = () => this.props.navigation.goBack();
 
   hasUnsavedChanges(): boolean {
     return this.state.products.filter(i => i.uploaded === true).length > 0;

@@ -41,8 +41,12 @@ const { isProd } = api;
 
 if (__DEV__ && !global.__TESTING__) {
   defaultState = {
+    // firstperson
     emailAddress: 'gianpa+test@gmail.com',
     password: 'expressos',
+    // iosuser
+    // emailAddress: 'gianpa+test3@gmail.com',
+    // password: '***REMOVED***',
   };
 
   if (isProd) {
@@ -71,9 +75,9 @@ type State = {
   hasFocusEmailReset: boolean,
   hasFocusPass: boolean,
   loadingReset: boolean,
+  password: string,
   pwdResetModalVisible: boolean,
   verifyAccountModalVisible: boolean,
-  password: string,
 };
 
 export class LoginTabContainer extends React.Component<Props, State> {
@@ -98,9 +102,9 @@ export class LoginTabContainer extends React.Component<Props, State> {
     hasFocusEmailReset: false,
     hasFocusPass: false,
     loadingReset: false,
+    password: '',
     pwdResetModalVisible: false,
     verifyAccountModalVisible: false,
-    password: '',
     ...defaultState,
   };
 

@@ -158,6 +158,8 @@ http://onova.co/uploader
     permission_title: 'Доступ до місцезнаходження',
     permission_message: 'Нам потрібно відображати де знаходяться речі.',
     permission_alert_button_settings: 'Відкрити налаштування',
+    cannot_create_drop_alert:
+      'Додай в Налаштуваннях свою поштову інформації та куди мають надходити кошти',
   },
   confirm_order: {
     header: 'Підтвердити замовлення',

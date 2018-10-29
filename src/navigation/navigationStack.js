@@ -28,7 +28,7 @@ import {
 import colors from '../config/colors';
 import { TabsStack } from './navigationTabs';
 
-export const StackNav = StackNavigator(
+const StackNav = StackNavigator(
   {
     signuplogin: {
       screen: SignUpLogin,

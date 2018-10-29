@@ -60,7 +60,7 @@ export default {
     share:
       'Android: https://play.google.com/store/apps/details?id=com.onova.app&hl=uk - Apple Store: https://itunes.apple.com/ua/app/onova/id1365771422?mt=8',
     alert_info_title: 'Information',
-    alert_info_body: `1. На головній сторінці видно лише речі від продавців які в тебе в контактах. Чим більше продавців додаватимеш в контакти, тим більше речей будеш бачити.
+    alert_info_body: `1. На головній сторінці ти бачиш спочатку речі продавців яких додав в контакти, а потім решту.
 
 2. Щоб завантажити багато речей одночасно з комп'ютера, використовуй:
 http://onova.co/uploader

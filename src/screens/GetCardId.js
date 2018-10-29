@@ -87,6 +87,8 @@ class GetCardId extends Component {
           }}
           injectedJavaScript={`(${JStoInject.toString()}());`}
           onMessage={event => this.onFinished(event.nativeEvent.data)}
+          scrollEnabled={false} // ios
+          startInLoadingState
         />
         <Button
           title="go back"

@@ -147,7 +147,6 @@ class PaymentView extends Component {
               !e.url.startsWith('data:text/html') &&
               e.url.indexOf('/api/payments/') > -1
             ) {
-              await sleep(3000); // TODO: remove after testing
               this.onFinished();
               // console.warn(e);
             }
@@ -161,10 +160,6 @@ class PaymentView extends Component {
     );
   }
 }
-
-const sleep = ms => {
-  return new Promise(resolve => setTimeout(resolve, ms));
-};
 
 const mapStateToProps: any = (state: ReduxState) => ({
   userData: state.LoginReducer.data,

@@ -10779,9 +10779,10 @@ react-native-vector-icons@4.6.0, react-native-vector-icons@^4.5.0, react-native-
     prop-types "^15.5.10"
     yargs "^8.0.2"
 
-"react-native-webview@https://github.com/react-native-community/react-native-webview":
-  version "0.1.0"
-  resolved "https://github.com/react-native-community/react-native-webview#d3747b66236bf4604e6d93e90507826a864b4c77"
+react-native-webview@^2.5.0:
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/react-native-webview/-/react-native-webview-2.5.0.tgz#70d2a82f723c77e5ed8156e4f46f6721fb54092b"
+  integrity sha512-9FkDRxkHexw9pq8V8i4kj4DqjgB+O2FzY6rsBICShTDhEF0c0dn0NBsJ0qW4EOd4jhp/rVVEYbJXUbpAUr9EuA==
   dependencies:
     escape-string-regexp "^1.0.5"
     fbjs "^0.8.17"

@@ -209,11 +209,14 @@ class NotificationsContainer extends Component<Props, State> {
           />
         )}
         <Body>
-          <View style={styles.contentRow}>
-            <Text style={styles.name} numberOfLines={1}>
-              @{item.data.senderName}
-            </Text>
-          </View>
+          {/* Paid orders do not have a senderName (for now) */}
+          {item.data.senderName && (
+            <View style={styles.contentRow}>
+              <Text style={styles.name} numberOfLines={1}>
+                @{item.data.senderName}
+              </Text>
+            </View>
+          )}
           <Text style={styles.reviewText} numberOfLines={3}>
             {item.notifI18n}
             {/* for comment notifications */}

@@ -398,7 +398,7 @@ class SettingsContainer extends Component<Props, State> {
       departments,
       emailAddress,
       isLoading,
-      mobileNumber,
+      mobileNumber = '',
       password,
       pending,
       shippingAddress,

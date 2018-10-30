@@ -488,7 +488,7 @@ export class CheckoutContainer extends Component<Props, State> {
       cities,
       departments,
       isLoading,
-      mobileNumber,
+      mobileNumber = '',
       pending,
       shippingAddress,
       showFooter,

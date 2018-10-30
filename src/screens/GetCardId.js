@@ -15,6 +15,21 @@ const URL_BASE = 'https://api.demo.uapay.ua';
 import type { ReduxState } from '../types';
 
 function JStoInject() {
+  var originalPostMessage = window.postMessage;
+
+  var patchedPostMessage = function(message, targetOrigin, transfer) {
+    originalPostMessage(message, targetOrigin, transfer);
+  };
+
+  patchedPostMessage.toString = function() {
+    return String(Object.hasOwnProperty).replace(
+      'hasOwnProperty',
+      'postMessage'
+    );
+  };
+
+  window.postMessage = patchedPostMessage;
+
   // alert('injected');
   var iframe = document.getElementById('uapayFrame').contentWindow;
 
@@ -75,6 +90,7 @@ class GetCardId extends Component {
     return (
       <View style={{ flex: 1, marginTop: 20 }}>
         <WebView
+          useWebKit={false}
           source={{
             html: `<html>
               <head><meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0"></head>

@@ -245,19 +245,21 @@ export class CheckoutContainer extends Component<Props, State> {
   }
 
   onCheckout = async () => {
-    const { shippingAddress } = this.state;
+    const { cvc, mobileNumber, order, shippingAddress } = this.state;
     const { paymentInfo } = this.props.userData;
     if (this.canMakePayment()) {
       let missing;
-      if (!paymentInfo.last_four || !paymentInfo.method) {
-        missing = 'Payment information';
-      }
       if (!shippingAddress.departmentNovaposhta || !shippingAddress.city) {
         missing = 'Shipping address';
+      } else if (!mobileNumber) {
+        missing = 'Mobile number';
+      } else if (!paymentInfo.cvc) {
+        missing = 'Card CVC number';
+      } else if (!paymentInfo.last_four || !paymentInfo.method) {
+        missing = 'Card information';
       }
       return ui.showToast(`${missing} is missing`, 'warning', null, 5);
     }
-    const { order, cvc } = this.state;
     // console.log(order);
 
     Toast.loading('Loading...', 3);
@@ -330,7 +332,7 @@ export class CheckoutContainer extends Component<Props, State> {
   onCancel = async () => {
     try {
       await this.cancelOrder();
-      this.props.navigation.goBack();
+      // this.props.navigation.goBack();
     } catch (error) {
       ui.showToast(error.message, 'danger');
     }
@@ -498,7 +500,10 @@ export class CheckoutContainer extends Component<Props, State> {
       <Container>
         <Header>
           <Left>
-            <NBButton transparent dark onPress={this.onCancel}>
+            <NBButton
+              transparent
+              dark
+              onPress={() => this.props.navigation.goBack()}>
               <NBIcon ios="ios-arrow-back" android="md-arrow-back" />
             </NBButton>
           </Left>

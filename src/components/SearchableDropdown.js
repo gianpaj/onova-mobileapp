@@ -45,8 +45,13 @@ export default class SearchableDropDown extends Component {
     }), // FIXME: .isRequired,
   };
 
+  static defaultValue = {
+    value: emptyItem,
+  };
+
   state = {
     // item: {},
+    currentVal: emptyItem,
     items: [],
     focus: false,
   };
@@ -89,7 +94,7 @@ export default class SearchableDropDown extends Component {
       }, 0);
       // reset when field is cleared
       return this.setState({
-        // item: emptyItem,
+        currentVal: emptyItem,
         items: items.slice(0, LIMIT_BY),
       });
       // e.g. only allow cyrillic characters
@@ -104,9 +109,10 @@ export default class SearchableDropDown extends Component {
     const regex = new RegExp(cleanText, 'i');
     const filteredItems = items.filter(item => regex.test(item.uk));
     filteredItems.sort((a, b) => a > b);
+    const idResult = items.find(i => i.uk == searchedText);
     this.setState({
+      currentVal: { uk: searchedText, id: idResult || -1 }, // cleanText?
       items: filteredItems.slice(0, LIMIT_BY),
-      // item: { uk: searchedText, id: -1 },
     });
 
     if (onTextChange) {
@@ -118,7 +124,8 @@ export default class SearchableDropDown extends Component {
 
   static getDerivedStateFromProps(props, state) {
     if (!props.items) return null;
-    if (!props.items.length || props.items.length !== state.items.length) {
+    // if it's not focused, reset
+    if (!state.focus && props.items.length !== state.items.length) {
       return {
         items: props.items,
       };
@@ -133,6 +140,7 @@ export default class SearchableDropDown extends Component {
       style={this.props.itemStyle}
       onPress={() => {
         this.setState({ focus: false });
+        this.setState({ currentVal: item });
         Keyboard.dismiss();
         this.props.onItemSelect(item);
         // setTimeout(() => this.props.onItemSelect(item), 0);
@@ -141,8 +149,21 @@ export default class SearchableDropDown extends Component {
     </TouchableOpacity>
   );
 
-  _onBlur = () => this.setState({ focus: false });
+  _onBlur = () => {
+    const { value } = this.props;
+    const { currentVal } = this.state;
+
+    if (currentVal.uk && value && currentVal.uk !== value.uk)
+      this.props.onItemSelect(currentVal);
+    this.setState({ focus: false });
+  };
+
   _onFocus = () => {
+    const { value } = this.props;
+    const { currentVal } = this.state;
+
+    if (!currentVal.uk && value) this.setState({ currentVal: value });
+
     this.setState({ focus: true });
     this.props.onFocus();
   };
@@ -171,7 +192,9 @@ export default class SearchableDropDown extends Component {
           placeholder={placeholder}
           placeholderTextColor={placeholderTextColor}
           style={inputContainerStyle}
-          value={value ? value.uk : ''}
+          value={
+            this.state.focus ? this.state.currentVal.uk : value && value.uk
+          }
           error={error}
         />
         {this.renderList()}

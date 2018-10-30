@@ -340,14 +340,15 @@ class SettingsContainer extends Component<Props, State> {
         onItemSelect={async ({ id }) => {
           if (!id) this.setState({ departments: [] });
           else {
-            // TODO: Automatically focus on Department field
-            // try {
-            // } catch (error) {
-            //   throw new Error(error);
-            // }
             const departments = await api.getDepartments(id);
             this.setState({ departments });
+            // Automatically focus on Department field
+            this.inputs[3]._onFocus();
           }
+
+          // reset the department field after selecting a new city
+          if (this.state.shippingAddress.city !== id)
+            this.inputs[3].onChangeText('');
 
           this.setState(
             update(this.state, {
@@ -481,7 +482,7 @@ class SettingsContainer extends Component<Props, State> {
                   render: this._renderCityAutocomplete,
                 },
                 {
-                  // ref: el => (this.inputs[3] = el),
+                  ref: el => (this.inputs[3] = el),
                   placeholder: 'Novaposhta department',
                   value:
                     departments &&

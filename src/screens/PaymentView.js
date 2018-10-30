@@ -167,3 +167,7 @@ const mapStateToProps: any = (state: ReduxState) => ({
 });
 
 export default connect(mapStateToProps)(PaymentView);
+
+const sleep = ms => {
+  return new Promise(resolve => setTimeout(resolve, ms));
+};

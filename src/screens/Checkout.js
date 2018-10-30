@@ -253,7 +253,7 @@ export class CheckoutContainer extends Component<Props, State> {
         missing = 'Shipping address';
       } else if (!mobileNumber) {
         missing = 'Mobile number';
-      } else if (!paymentInfo.cvc) {
+      } else if (!cvc) {
         missing = 'Card CVC number';
       } else if (!paymentInfo.last_four || !paymentInfo.method) {
         missing = 'Card information';

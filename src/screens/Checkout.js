@@ -45,7 +45,6 @@ import {
 } from '../components';
 
 import colors from '../config/colors';
-// import settings from '../config/settings';
 import { isPhoneNumberValid, validShippingAddress } from '../utils/validators';
 import * as api from '../utils/api';
 import * as ui from '../utils/ui';
@@ -72,6 +71,7 @@ type Props = {
 };
 
 type State = {
+  areFeesLoading: boolean,
   cvc: string,
   cities: Array<City>,
   departments: Array<Department>,
@@ -82,6 +82,7 @@ type State = {
   paymentInfo: PaymentInfo,
   pending: boolean,
   shippingAddress: ?ShippingAddress,
+  shippingFee: string,
   showFooter: boolean,
 };
 
@@ -89,6 +90,7 @@ export class CheckoutContainer extends Component<Props, State> {
   inputs = [];
   cancelToken: CancelTokenSource;
   state = {
+    areFeesLoading: false,
     cvc: '',
     cities: null,
     departments: null,
@@ -100,15 +102,18 @@ export class CheckoutContainer extends Component<Props, State> {
     pending: false,
     query: '',
     shippingAddress: null,
+    shippingFee: 0,
     showFooter: true,
   };
 
   async componentDidMount() {
+    const { token } = this.props;
+    let { params: item } = this.props.navigation.state;
+
+    console.log(item);
+
     this.refresh();
     this.initializeListeners();
-
-    let { params: item } = this.props.navigation.state;
-    console.log(item);
 
     // for development
     if (!item) {
@@ -126,13 +131,25 @@ export class CheckoutContainer extends Component<Props, State> {
     }
     await this.initialilizeOrder(item);
 
-    const cities = await api.getCities(this.props.token);
+    const cities = await api.getCities(token);
     this.setState({ cities });
 
-    if (this.state.shippingAddress && this.state.shippingAddress.city) {
-      const departments = await api.getDepartments(
-        this.state.shippingAddress.city
-      );
+    const { shippingAddress, order } = this.state;
+
+    if (shippingAddress && shippingAddress.city) {
+      const departments = await api.getDepartments(shippingAddress.city);
+      if (shippingAddress.departmentNovaposhta) {
+        // console.warn(order);
+        const shippingFee = await api.getShippingCosts(
+          order.priceOfItem,
+          undefined,
+          order.id,
+          shippingAddress.departmentNovaposhta,
+          token
+        );
+        // console.warn(shippingFee);
+        this.setState({ shippingFee });
+      }
       this.setState({ departments });
     }
     this.setState({ isLoading: false });
@@ -155,30 +172,27 @@ export class CheckoutContainer extends Component<Props, State> {
         this.setState({
           item,
           order,
+          shippingFee: order.shippingFee,
         });
       })
       .catch(err => {
-        console.log(err);
-        if (
-          err.message == 'Duplicate order' &&
-          err.data && // deepscan-disable-line
-          err.data.data && // deepscan-disable-line
-          err.data.data.status == 'confirmed'
-        ) {
-          // $FlowFixMe
-          this.goToChat(err.data.data.id);
-        } else if (
-          err.data.data.status == 'pending' ||
-          err.data.data.status == 'cancelled'
-        ) {
-          console.log('order is: pending or cancelled');
-          this.setState({
-            item,
-            order: err.data.data,
-          });
-        } else {
-          console.error(err);
+        if (err.data && err.data.data) {
+          const { data } = err.data;
+          if (err.message == 'Duplicate order' && data.status == 'confirmed') {
+            // $FlowFixMe
+            return this.goToChat(err.data.data.id);
+          }
+
+          if (data.status == 'pending' || data.status == 'cancelled') {
+            console.log('order is: pending or cancelled');
+            return this.setState({
+              item,
+              order: data,
+              shippingFee: data.shippingFee,
+            });
+          }
         }
+        console.error(err);
       });
   }
 
@@ -212,13 +226,12 @@ export class CheckoutContainer extends Component<Props, State> {
     );
   };
 
-  handleFocus = (ref: number) => {
+  handleFocus = (ref: number) =>
     this.setState({
       activeInputRef: ref,
       previousFocusDisabled: ref === 0,
       nextFocusDisabled: ref === 5,
     });
-  };
 
   changeInputFocus(direction = 1) {
     if (
@@ -233,12 +246,11 @@ export class CheckoutContainer extends Component<Props, State> {
   }
 
   static getDerivedStateFromProps(props, state) {
-    if (state.isLoading) {
+    if (state.isLoading)
       return {
         shippingAddress: props.userData.shippingAddress,
         mobileNumber: props.userData.mobileNumber,
       };
-    }
 
     // Return null to indicate no change to state.
     return null;
@@ -279,7 +291,6 @@ export class CheckoutContainer extends Component<Props, State> {
     // FIXME: state should be the number unformatted. useful also when comparing if number has been changed
     data.mobileNumber = mobileNumber.replace(/\D/g, '');
 
-    // }
     return api
       .put(`/api/users/${userData._id}`, data, { token })
       .then(res => {
@@ -314,9 +325,7 @@ export class CheckoutContainer extends Component<Props, State> {
           console.debug('order cancelled');
           resolve();
         })
-        .catch(err => {
-          reject(err);
-        });
+        .catch(err => reject(err));
     });
   }
 
@@ -346,13 +355,12 @@ export class CheckoutContainer extends Component<Props, State> {
     });
   };
 
-  goToPay = async (orderId: string, cvc: string) => {
+  goToPay = async (orderId: string, cvc: string) =>
     this.props.navigation.navigate({
       routeName: 'paymentView',
       key: 'paymentView',
       params: { orderId, cvc },
     });
-  };
 
   canMakePayment = () => {
     const {
@@ -414,32 +422,60 @@ export class CheckoutContainer extends Component<Props, State> {
   };
 
   _renderDepartmentAutocomplete = props => {
-    const { shippingAddress, departments, cities } = this.state;
+    const { shippingAddress, departments, cities, order } = this.state;
 
     const city = cities.find(city => city.id === shippingAddress.city);
     return (
       <SearchableDropdown
-        onItemSelect={({ id }) =>
+        onItemSelect={async ({ id: department }) => {
+          const { token } = this.props;
           this.setState(
             update(this.state, {
-              shippingAddress: { departmentNovaposhta: { $set: id } },
+              shippingAddress: { departmentNovaposhta: { $set: department } },
             })
-          )
-        }
+          );
+          if (department) {
+            this.setState({ areFeesLoading: true });
+            const shippingFee = await api.getShippingCosts(
+              order.priceOfItem,
+              undefined,
+              order.id,
+              department,
+              token
+            );
+            this.setState({ areFeesLoading: false, shippingFee });
+          }
+        }}
         disabled={!departments}
         // TODO: color in red if !department.indexOf(query)
         inputContainerStyle={styles.autocompleteContainers}
         itemsContainerStyle={styles.autocompleteItemContainers}
         itemStyle={styles.autocompleteItems}
         items={departments}
-        extra={!city && <Text>Pick a city</Text>}
+        extra={
+          !city && (
+            <Text>{I18n.t('checkout.department_requirement_right')}</Text>
+          )
+        }
         {...props}
       />
     );
   };
 
   renderPricingContainer() {
-    const { item, order } = this.state;
+    const { areFeesLoading, item, order, shippingFee } = this.state;
+
+    if (areFeesLoading)
+      return (
+        <View style={{ flex: 1, paddingTop: 10 }}>
+          <ActivityIndicator />
+        </View>
+      );
+
+    const total =
+      parseFloat(order.transactionFee || 0) +
+      parseFloat(order.priceOfItem) +
+      parseFloat(shippingFee);
 
     return (
       <View style={styles.pricesContainer}>
@@ -447,7 +483,7 @@ export class CheckoutContainer extends Component<Props, State> {
           {/* $FlowFixMe */}
           <Text style={{ color: colors.black }}>Total: </Text>
           <View style={styles.innerRow}>
-            <H1>{ui.formatCurrency(order.total)} </H1>
+            <H1>{ui.formatCurrency(total)} </H1>
             {/* $FlowFixMe */}
             <Text>{item.currency}</Text>
           </View>
@@ -469,13 +505,10 @@ export class CheckoutContainer extends Component<Props, State> {
         <View style={styles.row}>
           <Text>Shipping cost: </Text>
           <View style={styles.innerRow}>
-            <H3>{ui.formatCurrency(order.shippingFee)} </H3>
+            <H3>{ui.formatCurrency(shippingFee)} </H3>
             <Text>{item.currency}</Text>
           </View>
         </View>
-        {/* <Text style={styles.priceTransaction}>
-        (including x transaction fee)
-      </Text> */}
       </View>
     );
   }

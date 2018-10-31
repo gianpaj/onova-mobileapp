@@ -37,6 +37,7 @@ import imagePickerStyle from '../components/ImagePicker.styles';
 import I18n from '../i18n';
 import * as api from '../utils/api';
 import * as ui from '../utils/ui';
+import { getPersonalUserData } from '../actions/actionCreator';
 
 import type { Dispatch, UserData, ReduxState, Product } from '../types';
 

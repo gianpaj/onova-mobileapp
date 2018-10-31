@@ -87,8 +87,11 @@ export function formatPhoneNumber(value: string): string {
 }
 
 export function formatCurrency(value: string): string {
+  if (!value) return 'n/a';
+
   return new Intl.NumberFormat('ua-UA', {
     minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
   }).format(value);
 }
 

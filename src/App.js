@@ -13,7 +13,7 @@ import Analytics, {
 import configureStore from './store';
 import AppNavigation from './navigation';
 import colors from './config/colors';
-import { isProd, config } from './utils/api';
+import { analyticsEnabled, config } from './utils/api';
 
 const { store, persistor } = configureStore();
 const segmentOptions = {
@@ -26,7 +26,7 @@ export default class App extends React.Component<*> {
 
     console.debug(`NODE_ENV = ${process.env.NODE_ENV}`);
 
-    if (isProd) {
+    if (analyticsEnabled) {
       Sentry.config(config.SENTRY_URL).install();
       console.debug('SENTRY is enabled');
       this.enableSegmentCom();
@@ -37,7 +37,7 @@ export default class App extends React.Component<*> {
   }
 
   enableSegmentCom() {
-    Analytics.setup('mwaeNhGqPtBvyA3wPZbvzvOLk3mRcrNG', segmentOptions);
+    Analytics.setup(config.SEGMENT_API, segmentOptions);
     console.debug('Segment.com is enabled');
   }
 

@@ -98,7 +98,7 @@ const defaultState = {
   ],
 };
 
-const { isProd } = api;
+const { analyticsEnabled } = api;
 
 class ProfileScreen extends React.Component<Props, State> {
   state = { ...defaultState };
@@ -577,7 +577,7 @@ class ProfileScreen extends React.Component<Props, State> {
     } else {
       Share.share({ message: `https://onova.co/${username}` });
     }
-    if (isProd) Analytics.track('press_share_profile');
+    if (analyticsEnabled) Analytics.track('press_share_profile');
   };
 
   _renderTabBar = props => (

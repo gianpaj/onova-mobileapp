@@ -16,7 +16,10 @@ if (process.env.NODE_ENV === 'prod' || process.env.NODE_ENV === 'production') {
   config = require('../../config-dev.json');
 }
 
-export { isProd, config };
+// const analyticsEnabled = isProd == true;
+const analyticsEnabled = false;
+
+export { isProd, analyticsEnabled, config };
 
 if (!global.__TESTING__) console.debug(`connecting to ${config.API_URL}`);
 

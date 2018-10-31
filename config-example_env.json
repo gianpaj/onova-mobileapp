@@ -1,6 +1,7 @@
 {
   "API_URL": "http://192.168.1.5:4040",
   "PUSHER_INSTANCE": "",
-  "PUSHER_TOKEN_PROVIDER" :"https://chat.onova.co/pusher/auth",
-  "SENTRY_URL": ""
+  "PUSHER_TOKEN_PROVIDER": "https://chat.onova.co/pusher/auth",
+  "SENTRY_URL": "",
+  "SEGMENT_API": "..."
 }

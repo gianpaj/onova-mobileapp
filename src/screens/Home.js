@@ -38,7 +38,7 @@ type State = NavigationState<
   }>
 >;
 
-const { isProd } = api;
+const { analyticsEnabled } = api;
 
 export class Home extends PureComponent<Props, State> {
   state = {
@@ -96,7 +96,7 @@ export class Home extends PureComponent<Props, State> {
 
   onShare() {
     Share.share({ message: I18n.t('home.share'), title: 'Share' });
-    if (isProd) Analytics.track('press_share_invite');
+    if (analyticsEnabled) Analytics.track('press_share_invite');
   }
 
   onInfoIcon() {

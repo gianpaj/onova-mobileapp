@@ -40,7 +40,7 @@ import I18n from '../i18n';
 
 let currentUser: PusherUser;
 
-const { isProd, config } = api;
+const { isProd, analyticsEnabled, config } = api;
 
 const intro = () => (dispatch: Dispatch) => {
   dispatch(logout());
@@ -72,7 +72,7 @@ const login = (data: LoginData) => (dispatch: Dispatch) => {
       throw new Error(res);
     })
     .then(userData => {
-      if (isProd) {
+      if (analyticsEnabled) {
         trackUser(userData);
         Analytics.track('login');
       }
@@ -239,7 +239,7 @@ const checkLogin = (userData: UserData, token: string) => (
   return api
     .get(`/api/users/${userData._id}/personal`, { token })
     .then(() => {
-      if (isProd) {
+      if (analyticsEnabled) {
         trackUser(userData);
         Analytics.track('reload_login');
       }
@@ -277,7 +277,7 @@ const signup = (data: SignupData) => (dispatch: Dispatch) => {
         //   ...{ token: res.token, provider: 'email' },
         // };
 
-        if (isProd) {
+        if (analyticsEnabled) {
           trackUser(res.data);
           Analytics.track('signup');
         }
@@ -297,7 +297,7 @@ const signup = (data: SignupData) => (dispatch: Dispatch) => {
         //     dispatch({ type: SIGNUP_FAIL });
         //     Toast.hide();
         //   });
-        // if (isProd) trackUser(userData)
+        // if (analyticsEnabled) trackUser(userData)
       }
       // console.warn(res);
       // dispatch({ type: SIGNUP_FAIL });
@@ -361,7 +361,7 @@ const logout = () => (dispatch: Dispatch) => {
     currentUser.disconnect();
     console.log('disconnected from Pusher');
   }
-  if (isProd) {
+  if (analyticsEnabled) {
     Analytics.flush();
     Analytics.reset();
   }

@@ -62,7 +62,7 @@ type State = {
   // likeAnimValue: number,
 };
 
-const { isProd } = api;
+const { analyticsEnabled } = api;
 
 export class ProductContainer extends React.Component<Props, State> {
   anim: ?React$Element<*>;
@@ -359,7 +359,8 @@ export class ProductContainer extends React.Component<Props, State> {
           }
           throw Error(I18n.t('product.toast_warning_on_product_sold'));
         }
-        if (isProd) Analytics.track('press_buy', { uuid: product.uuid });
+        if (analyticsEnabled)
+          Analytics.track('press_buy', { uuid: product.uuid });
 
         // $FlowFixMe
         // this.props.navigation.navigate({

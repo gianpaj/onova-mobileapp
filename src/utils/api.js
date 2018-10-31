@@ -143,7 +143,7 @@ async function sendRequest(method, path, body, options) {
       url: path,
       timeout: options.timeout !== undefined ? options.timeout : TIMEOUT,
       validateStatus: function(status) {
-        return status >= 200 && status < 500;
+        return status >= 200 && status <= 500;
       },
     };
     if (options.onUploadProgress)
@@ -162,24 +162,24 @@ async function sendRequest(method, path, body, options) {
  */
 async function handleResponse(path, response) {
   try {
-    const status = response.status;
+    const { status, data, headers } = response;
 
     // `axios` is configured to resolve even if HTTP status indicates failure.
     // Re-route promise flow control to interpret error responses as failures
     if (status >= 400) {
       // const error = new Error({status: status, message: message});
 
-      let error = { status, message: response.data.message };
-      if (Object.keys(response.data).length > 1) {
-        error = { ...error, data: response.data };
+      let error = { status, message: data.message };
+      if (Object.keys(data).length > 1) {
+        error = { ...error, data };
       }
       throw error;
     }
 
     return {
-      status: response.status,
-      headers: response.headers,
-      body: response.data,
+      status,
+      headers,
+      body: data,
     };
   } catch (e) {
     throw e;

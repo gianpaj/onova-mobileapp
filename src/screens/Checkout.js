@@ -117,47 +117,45 @@ export class CheckoutContainer extends Component<Props, State> {
 
     // for development
     if (!item) {
-      item = {
-        _id: '5b67489ec8a64827b95e4292',
-        seller: {
-          username: 'iosuser',
-          _id: '5acdbcfb570a687a50318881',
-        },
-        price: '11111',
-        uuid: 'ZnE96_uds',
-        status: 'forsale',
-        currency: 'UAH',
-      };
+      item = { uuid: 'ZnE96_uds' };
     }
-    await this.initialilizeOrder(item);
+    try {
+      await this.initialilizeOrder(item);
 
-    const cities = await api.getCities(token);
-    this.setState({ cities });
+      const cities = await api.getCities(token);
+      this.setState({ cities });
 
-    const { shippingAddress, order } = this.state;
+      const { shippingAddress, order } = this.state;
 
-    if (shippingAddress && shippingAddress.city) {
-      const departments = await api.getDepartments(shippingAddress.city);
-      if (shippingAddress.departmentNovaposhta) {
-        // console.warn(order);
-        const shippingFee = await api.getShippingCosts(
-          order.priceOfItem,
-          undefined,
-          order.id,
-          shippingAddress.departmentNovaposhta,
-          token
-        );
-        // console.warn(shippingFee);
-        this.setState({ shippingFee });
+      if (shippingAddress && shippingAddress.city) {
+        const departments = await api.getDepartments(shippingAddress.city);
+        if (shippingAddress.departmentNovaposhta && order.id) {
+          // console.warn(order);
+          const shippingFee = await api.getShippingCosts(
+            order.priceOfItem,
+            undefined,
+            order.id,
+            shippingAddress.departmentNovaposhta,
+            token
+          );
+          // console.warn(shippingFee);
+          this.setState({ shippingFee });
+        }
+        this.setState({ departments });
       }
-      this.setState({ departments });
+    } catch (error) {
+      console.debug(error);
+      if (error.message.startsWith('Seller is missing')) {
+        Toast.fail(error.message);
+        return this.props.navigation.goBack();
+      }
     }
     this.setState({ isLoading: false });
   }
 
   componentWillUnmount() {
     // cancel order when going back with Backbutton
-    this.onCancel();
+    if (this.state.order.id) this.onCancel();
     this.keyboardDidShowListener.remove();
     this.keyboardDidHideListener.remove();
     // trigger Axios to reject the request
@@ -180,7 +178,7 @@ export class CheckoutContainer extends Component<Props, State> {
           const { data } = err.data;
           if (err.message == 'Duplicate order' && data.status == 'confirmed') {
             // $FlowFixMe
-            return this.goToChat(err.data.data.id);
+            return this.goToChat(data.id);
           }
 
           if (data.status == 'pending' || data.status == 'cancelled') {
@@ -192,7 +190,7 @@ export class CheckoutContainer extends Component<Props, State> {
             });
           }
         }
-        console.error(err);
+        throw err;
       });
   }
 

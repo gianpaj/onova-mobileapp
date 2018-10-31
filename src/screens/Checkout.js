@@ -481,7 +481,7 @@ export class CheckoutContainer extends Component<Props, State> {
           {/* $FlowFixMe */}
           <Text style={{ color: colors.black }}>Total: </Text>
           <View style={styles.innerRow}>
-            <H1>{ui.formatCurrency(total)} </H1>
+            <H1 style={styles.fontFamilyMono}>{ui.formatCurrency(total)} </H1>
             {/* $FlowFixMe */}
             <Text>{item.currency}</Text>
           </View>
@@ -489,21 +489,27 @@ export class CheckoutContainer extends Component<Props, State> {
         <View style={styles.row}>
           <Text>Item: </Text>
           <View style={styles.innerRow}>
-            <H3>{ui.formatCurrency(order.priceOfItem)} </H3>
+            <H3 style={styles.fontFamilyMono}>
+              {ui.formatCurrency(order.priceOfItem)}{' '}
+            </H3>
             <Text>{item.currency}</Text>
           </View>
         </View>
         <View style={styles.row}>
           <Text>Fees: </Text>
           <View style={styles.innerRow}>
-            <H3>{ui.formatCurrency(order.transactionFee)} </H3>
+            <H3 style={styles.fontFamilyMono}>
+              {ui.formatCurrency(order.transactionFee)}{' '}
+            </H3>
             <Text>{item.currency}</Text>
           </View>
         </View>
         <View style={styles.row}>
           <Text>Shipping cost: </Text>
           <View style={styles.innerRow}>
-            <H3>{ui.formatCurrency(shippingFee)} </H3>
+            <H3 style={styles.fontFamilyMono}>
+              {ui.formatCurrency(shippingFee)}{' '}
+            </H3>
             <Text>{item.currency}</Text>
           </View>
         </View>
@@ -698,6 +704,12 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     alignSelf: 'center',
     padding: 10,
+  },
+  fontFamilyMono: {
+    fontFamily: Platform.select({
+      android: 'monospace',
+      ios: 'Helvetica Neue',
+    }),
   },
   row: {
     alignItems: 'baseline',

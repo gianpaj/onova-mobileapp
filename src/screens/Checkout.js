@@ -27,6 +27,8 @@ import {
 } from 'native-base';
 import { Toast, InputItem } from 'antd-mobile-rn';
 import { FormLabel } from 'react-native-elements';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+
 import type { NavigationScreenProp } from 'react-navigation';
 // import BTClient from 'react-native-braintree-xplat';
 import { KeyboardAccessoryNavigation } from 'react-native-keyboard-accessory';
@@ -112,8 +114,6 @@ export class CheckoutContainer extends Component<Props, State> {
     const { token } = this.props;
     let { params: item } = this.props.navigation.state;
 
-    console.log(item);
-
     this.refresh();
     this.initializeListeners();
 
@@ -121,6 +121,8 @@ export class CheckoutContainer extends Component<Props, State> {
     if (!item) {
       item = { uuid: 'ZnE96_uds' };
     }
+    console.log(item);
+
     try {
       await this.initialilizeOrder(item);
 
@@ -156,8 +158,15 @@ export class CheckoutContainer extends Component<Props, State> {
   }
 
   componentWillUnmount() {
+    const { shippingAddress, mobileNumber, cities, departments } = this.state;
     // cancel order when going back with Backbutton
     if (this.state.order.id) this.onCancel();
+    if (
+      isPhoneNumberValid(mobileNumber) &&
+      validShippingAddress(shippingAddress, cities, departments)
+    ) {
+      this.updateShippingInfo();
+    }
     this.keyboardDidShowListener.remove();
     this.keyboardDidHideListener.remove();
     // trigger Axios to reject the request
@@ -168,13 +177,13 @@ export class CheckoutContainer extends Component<Props, State> {
     const { token } = this.props;
     return api
       .createOrder(item.uuid, token)
-      .then((order: Order) => {
+      .then((order: Order) =>
         this.setState({
           item,
           order,
           shippingFee: order.shippingFee,
-        });
-      })
+        })
+      )
       .catch(err => {
         if (err.data && err.data.data) {
           const { data } = err.data;
@@ -261,16 +270,22 @@ export class CheckoutContainer extends Component<Props, State> {
     const { paymentInfo } = this.props.userData;
     if (this.canMakePayment()) {
       let missing;
+      let error = 'missing';
       if (!shippingAddress.departmentNovaposhta || !shippingAddress.city) {
         missing = 'Shipping address';
       } else if (!mobileNumber) {
         missing = 'Mobile number';
+        this.inputs[4].focus();
       } else if (!cvc) {
         missing = 'Card CVC number';
+        this.inputs[5].focus();
       } else if (!paymentInfo.last_four || !paymentInfo.method) {
         missing = 'Card information';
+      } else if (!isPhoneNumberValid(mobileNumber)) {
+        missing = 'Mobile number';
+        error = 'not valid';
       }
-      return ui.showToast(`${missing} is missing`, 'warning', null, 5);
+      return ui.showToast(`${missing} is ${error}`, 'warning', null, 5);
     }
     // console.log(order);
 
@@ -286,13 +301,18 @@ export class CheckoutContainer extends Component<Props, State> {
   updateShippingInfo(): Promise<any> {
     const { userData, token } = this.props;
     const { mobileNumber, shippingAddress } = this.state;
-    const data = { shippingAddress };
 
     // FIXME: state should be the number unformatted. useful also when comparing if number has been changed
-    data.mobileNumber = mobileNumber.replace(/\D/g, '');
 
     return api
-      .put(`/api/users/${userData._id}`, data, { token })
+      .put(
+        `/api/users/${userData._id}`,
+        {
+          shippingAddress,
+          mobileNumber: mobileNumber.replace(/\D/g, ''),
+        },
+        { token }
+      )
       .then(res => {
         console.log(res);
       })
@@ -550,7 +570,15 @@ export class CheckoutContainer extends Component<Props, State> {
           <Body>
             <Title>Checkout</Title>
           </Body>
-          <Right />
+          <Right>
+            {/* <NBButton
+              transparent
+              dark
+              style={{ marginLeft: 5 }}
+              onPress={this.onInfoIcon}>
+              <MaterialIcons name="live-help" size={18} />
+            </NBButton> */}
+          </Right>
         </Header>
         {isLoading ? (
           <View style={styles.loadingContainer}>
@@ -558,7 +586,7 @@ export class CheckoutContainer extends Component<Props, State> {
           </View>
         ) : (
           <>
-            <Content>
+            <Content ref={view => (this._scrollView = view)}>
               {this.renderPricingContainer()}
               <HR full />
               <Accordion

@@ -282,6 +282,10 @@ export class CheckoutContainer extends Component<Props, State> {
         } else if (!cvc) {
           missing = 'Card CVC number';
           this.inputs[5].focus();
+        } else if (cvc.length !== 3) {
+          missing = 'Card CVC number';
+          error = 'not valid';
+          this.inputs[5].focus();
         } else if (!paymentInfo.last_four || !paymentInfo.method) {
           missing = 'Card information';
         } else if (!isPhoneNumberValid(mobileNumber)) {

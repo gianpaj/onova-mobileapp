@@ -449,7 +449,7 @@ class SettingsContainer extends Component<Props, State> {
               values={[
                 {
                   ref: el => (this.inputs[0] = el),
-                  placeholder: 'First name',
+                  placeholder: I18n.t('userInfo.firstName'),
                   value: shippingAddress.firstName,
                   onFocus: this.handleFocus.bind(this, 0),
                   onChangeText: t =>
@@ -462,7 +462,7 @@ class SettingsContainer extends Component<Props, State> {
                 },
                 {
                   ref: el => (this.inputs[1] = el),
-                  placeholder: 'Last name',
+                  placeholder: I18n.t('userInfo.lastName'),
                   value: shippingAddress.lastName,
                   onFocus: this.handleFocus.bind(this, 1),
                   onChangeText: t =>
@@ -475,7 +475,7 @@ class SettingsContainer extends Component<Props, State> {
                 },
                 {
                   // ref: el => (this.inputs[2] = el),
-                  placeholder: 'City',
+                  placeholder: I18n.t('userInfo.city'),
                   value: cities.find(city => city.id === shippingAddress.city),
                   // onFocus: this.handleFocus.bind(this, 2),
                   // textContentType: 'addressCity',
@@ -483,7 +483,7 @@ class SettingsContainer extends Component<Props, State> {
                 },
                 {
                   ref: el => (this.inputs[3] = el),
-                  placeholder: 'Novaposhta department',
+                  placeholder: I18n.t('userInfo.department'),
                   value:
                     departments &&
                     departments.find(
@@ -494,7 +494,7 @@ class SettingsContainer extends Component<Props, State> {
                 },
                 {
                   ref: el => (this.inputs[4] = el),
-                  placeholder: '09712344569 Mobile number',
+                  placeholder: I18n.t('userInfo.mobileNumber'),
                   value: ui.formatPhoneNumber(mobileNumber),
                   onFocus: this.handleFocus.bind(this, 4),
                   onChangeText: t => this.setState({ mobileNumber: t }),

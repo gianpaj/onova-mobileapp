@@ -565,7 +565,7 @@ export class CheckoutContainer extends Component<Props, State> {
                 values={[
                   {
                     ref: el => (this.inputs[0] = el),
-                    placeholder: 'First name',
+                    placeholder: I18n.t('userInfo.firstName'),
                     value: shippingAddress.firstName,
                     onFocus: () => this.handleFocus(0),
                     onChangeText: t =>
@@ -579,7 +579,7 @@ export class CheckoutContainer extends Component<Props, State> {
                   },
                   {
                     ref: el => (this.inputs[1] = el),
-                    placeholder: 'Last name',
+                    placeholder: I18n.t('userInfo.lastName'),
                     value: shippingAddress.lastName,
                     onFocus: () => this.handleFocus(1),
                     onChangeText: t =>
@@ -593,7 +593,7 @@ export class CheckoutContainer extends Component<Props, State> {
                   },
                   {
                     // ref: el => (this.inputs[2] = el),
-                    placeholder: 'City',
+                    placeholder: I18n.t('userInfo.city'),
                     value: cities.find(
                       city => city.id === shippingAddress.city
                     ),
@@ -604,7 +604,7 @@ export class CheckoutContainer extends Component<Props, State> {
                   },
                   {
                     ref: el => (this.inputs[3] = el),
-                    placeholder: 'Novaposhta department',
+                    placeholder: I18n.t('userInfo.department'),
                     value:
                       departments &&
                       departments.find(
@@ -616,7 +616,7 @@ export class CheckoutContainer extends Component<Props, State> {
                   },
                   {
                     ref: el => (this.inputs[4] = el),
-                    placeholder: '09712344569 Mobile number',
+                    placeholder: I18n.t('userInfo.mobileNumber'),
                     value: ui.formatPhoneNumber(mobileNumber),
                     onFocus: () => this.handleFocus(4),
                     onChangeText: t => this.setState({ mobileNumber: t }),

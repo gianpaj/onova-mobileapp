@@ -53,11 +53,9 @@ if (__DEV__ && !global.__TESTING__) {
     defaultState = {
       // emailAddress: 'gianfranco_p@hotmail.com',
       // password: '***REMOVED***007',
-      emailAddress: 'gianpa+test@gmail.com',
-      password: 'expressos',
       // prod
-      // emailAddress: 'gianpa@gmail.com',
-      // password: '***REMOVED***',
+      emailAddress: 'gianpa@gmail.com',
+      password: '***REMOVED***',
     };
   }
 }

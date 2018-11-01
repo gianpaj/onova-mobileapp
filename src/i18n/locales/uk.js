@@ -79,7 +79,9 @@ http://onova.co/uploader
     empty_state_body: 'Спробуй пошукати щось інше',
   },
   product: {
-    buy_button: 'Чат',
+    buy_button: 'Придбати',
+    reserved_button: 'Зарезервовано',
+    reserved_message: 'Перевір через 15хв, товар може бути доступний',
     alert_confirm_delete: 'Точно видалити?',
     toast_warning_on_unverified_account: 'Підтвердіть ваш профіль в email...',
     toast_warning_on_product_sold: 'Цю річ вже продано',
@@ -221,6 +223,13 @@ http://onova.co/uploader
       '__time__',
       defaults.numHoursSellerHasToConfirm
     ),
+  },
+  userInfo: {
+    firstName: "Ім'я",
+    lastName: 'Прізвище',
+    city: 'Місто',
+    department: 'Відділення Нової Пошти',
+    mobileNumber: '09712344569 Мобільний телефон',
   },
   notifications: {
     header: 'Сповіщення',

@@ -222,6 +222,14 @@ http://onova.co/uploader
       '__time__',
       defaults.numHoursSellerHasToConfirm
     ),
+    department_requirement_right: 'Pick a city',
+  },
+  userInfo : {
+    firstName: 'First name (in Cyrillic)',
+    lastName: 'Last name (in Cyrillic)',
+    city: 'City',
+    department: 'Novaposhta department',
+    mobileNumber: '09712344569 Mobile number',
   },
   notifications: {
     header: 'Notifications',

@@ -569,13 +569,13 @@ class ProfileScreen extends React.Component<Props, State> {
     );
   }
 
-  shareProfile = () => {
+  shareProfile = async () => {
     const { username } = this.state;
 
     if (Platform.OS === 'ios') {
-      Share.share({ url: `https://onova.co/${username}` });
+      await Share.share({ url: `https://onova.co/${username}` });
     } else {
-      Share.share({ message: `https://onova.co/${username}` });
+      await Share.share({ message: `https://onova.co/${username}` });
     }
     if (analyticsEnabled) Analytics.track('press_share_profile');
   };

@@ -12,19 +12,9 @@ import I18n from '../i18n';
 
 import type { ReduxState } from '../types';
 
-function JStoInject() {
-  // alert('injected');
+// for development
+// const params = { orderId: '5bdb0ced6a7aef00de9da722', cvc: '111' };
 
-  var button = document.getElementsByTagName('button')[0];
-  button.click();
-
-  // function listener(event) {
-  //   if (event.data) {
-  //     window.postMessage(JSON.stringify(event.data));
-  //   }
-  // }
-  // window.addEventListener('message', listener, false);
-}
 class PaymentView extends Component {
   state = {
     isLoading: true,
@@ -140,11 +130,12 @@ class PaymentView extends Component {
                   <input name="PaReq" value="${
                     payment.PaReq
                   }" type="hidden" /><br>
-                  <button style="display: none;">Submit</button>
+                  <script>
+                    document.getElementsByTagName('form')[0].submit();
+                  </script>
                 </form>
               </body></html>`,
           }}
-          injectedJavaScript={`(${JStoInject.toString()}());`}
           onNavigationStateChange={async e => {
             if (
               !e.url.startsWith('data:text/html') &&

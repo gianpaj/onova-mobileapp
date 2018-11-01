@@ -190,8 +190,9 @@ http://onova.co/uploader
     bio_placeholder: 'Edit your profile description',
     empty_state_title: 'Add your first product',
     empty_state_message_others: 'There no any items yet',
-    empty_state_message_mine: 'Get closer to your first sale by adding items',
-    empty_state_button_mine: 'Sell an item',
+    empty_state_message_mine: `Get closer to your first sale by adding items
+`,
+    empty_state_button_mine: 'Make a Drop',
     notice_bar: 'Check your inbox for a confirmation email.',
     toast_saving: 'Loading...',
     toast_updated: 'Your profile has been updated',

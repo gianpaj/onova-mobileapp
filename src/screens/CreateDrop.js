@@ -87,7 +87,7 @@ export class CreateDropScreen extends React.Component<Props, State> {
         if (!scene.focused) {
           props.navigation.navigate({
             routeName: 'createDrop',
-            key: `createDrop`,
+            key: 'createDrop',
           });
         }
       },
@@ -115,6 +115,7 @@ export class CreateDropScreen extends React.Component<Props, State> {
       Toast.hide();
       ui.showToast(error.message, 'warning', null, 4);
       return this.closeModal();
+      // return this.props.navigation.navigate('profile');
     }
 
     try {

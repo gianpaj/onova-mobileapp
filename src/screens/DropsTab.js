@@ -46,7 +46,9 @@ class DropsTabContainer extends React.Component<Props, {}> {
           navigation={navigation}
           emptyState={
             <View style={styles.emptyContainer}>
-              {this.isMe() ? (
+              {!this.isMe() ? (
+                <Text>{I18n.t('drops_grid.empty_state_message_others')}</Text>
+              ) : (
                 <View>
                   <MaterialCommunityIcons
                     size={48}
@@ -75,8 +77,6 @@ class DropsTabContainer extends React.Component<Props, {}> {
                     </Text>
                   </NBButton>
                 </View>
-              ) : (
-                <Text>{I18n.t('drops_grid.empty_state_message_others')}</Text>
               )}
             </View>
           }

@@ -79,7 +79,6 @@ class SearchSellersTabContainer extends Component<Props, State> {
     this.state.text.length > 2 && this.state.isLoading == false;
 
   goToProfile = (user: UserData) => {
-    // console.log(user);
     // $FlowFixMe
     this.props.navigation.navigate({
       routeName: 'profileInStack',

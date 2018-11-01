@@ -627,7 +627,7 @@ export class CheckoutContainer extends Component<Props, State> {
                     onFocus: () => this.handleFocus(4),
                     onChangeText: t => this.setState({ mobileNumber: t }),
                     type: 'phone',
-                    validation: () =>
+                    shouldShowError: () =>
                       isPhoneNumberValid(mobileNumber.replace(/\D/g, '')),
                     textContentType: 'telephoneNumber',
                   },

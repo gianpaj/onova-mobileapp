@@ -192,7 +192,7 @@ http://onova.co/uploader
     empty_state_title: 'Немає речей на продаж',
     empty_state_message_others: 'Поки нічого не виставлено',
     empty_state_message_mine: 'Ти ще нічого не виставив ',
-    empty_state_button_mine: 'Почати продавати',
+    empty_state_button_mine: 'Створити дроп',
     notice_bar: 'Потрібно підтвердити свій профіль через email',
     toast_saving: 'Зберігаємо...',
     toast_updated: 'Твій профіль оновлено',

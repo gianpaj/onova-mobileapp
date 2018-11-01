@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import { connect } from 'react-redux';
-import { Dimensions, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import { Button as NBButton } from 'native-base';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -10,8 +10,6 @@ import colors from '../config/colors';
 import I18n from '../i18n';
 
 import type { UserData, ReduxState } from '../types';
-
-const { height } = Dimensions.get('window');
 
 type Props = {
   userData: UserData,
@@ -48,7 +46,9 @@ class ShopTabContainer extends React.Component<Props, {}> {
           navigation={navigation}
           emptyState={
             <View style={styles.emptyContainer}>
-              {this.isMe() ? (
+              {!this.isMe() ? (
+                <Text>{I18n.t('profile.empty_state_message_others')}</Text>
+              ) : (
                 <View>
                   <MaterialCommunityIcons
                     size={48}
@@ -66,7 +66,7 @@ class ShopTabContainer extends React.Component<Props, {}> {
                     block
                     dark
                     style={styles.searchButton}
-                    onPress={() => navigation.navigate('addOrEditProduct')}>
+                    onPress={() => navigation.navigate('createDrop')}>
                     <Text
                       // eslint-disable-next-line
                       style={{
@@ -77,8 +77,6 @@ class ShopTabContainer extends React.Component<Props, {}> {
                     </Text>
                   </NBButton>
                 </View>
-              ) : (
-                <Text>{I18n.t('profile.empty_state_message_others')}</Text>
               )}
             </View>
           }
@@ -95,13 +93,12 @@ const styles = StyleSheet.create({
   emptyContainer: {
     alignItems: 'center',
     flex: 1,
-    height: height - 350,
     justifyContent: 'center',
-    padding: 20,
+    padding: 40,
   },
   emptyStateIcon: {
     alignSelf: 'center',
-    marginBottom: 30,
+    marginBottom: 16,
   },
   boldText: {
     fontWeight: 'bold',

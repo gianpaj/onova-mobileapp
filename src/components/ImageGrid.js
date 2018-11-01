@@ -260,8 +260,6 @@ class ImageGridComponent extends React.PureComponent<Props, State> {
   _keyExtractor = (item): string => item.uuid;
 
   renderEmptyState = () => {
-    if (this.state.items.length > 1) return null;
-
     if (this.state.hasError) {
       return (
         <View style={[styles.container, { height: height - 150 }]}>

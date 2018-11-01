@@ -27,7 +27,7 @@ import {
 } from 'native-base';
 import { Toast, InputItem } from 'antd-mobile-rn';
 import { FormLabel } from 'react-native-elements';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+// import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 import type { NavigationScreenProp } from 'react-navigation';
 // import BTClient from 'react-native-braintree-xplat';
@@ -551,8 +551,15 @@ export class CheckoutContainer extends Component<Props, State> {
     );
   }
 
-  changeCVC = (t: string) => {
+  onCVCChange = (t: string) => {
     if (t.length <= 3) this.setState({ cvc: t.replace(/\D/g, '') });
+    if (!isNaN(parseInt(t)) && t.length === 3) {
+      // ui.hideToasts()
+      Keyboard.dismiss();
+      setTimeout(() => {
+        this._scrollView._root.scrollToEnd({ animated: false });
+      }, 600);
+    }
   };
 
   render() {
@@ -679,21 +686,21 @@ export class CheckoutContainer extends Component<Props, State> {
               <View style={{ alignSelf: 'center', paddingBottom: 10 }}>
                 <TouchableOpacity onPress={this.goToEnterPaymentInfo}>
                   {Object.keys(userData.paymentInfo).length ? (
-                    <CardView focused="number" {...this.formatCardInfo()} />
+                    <CardView {...this.formatCardInfo()} focused="number" />
                   ) : (
                     <CardView {...this.formatCardInfo()} number="" expiry="" />
                   )}
                 </TouchableOpacity>
                 <InputItem
-                  ref={el => (this.inputs[5] = el)}
                   autoCorrect={false}
                   error={cvc.length !== 3}
                   last
-                  onChange={this.changeCVC}
+                  onChange={this.onCVCChange}
+                  onFocus={() => this.handleFocus(5)}
                   placeholder="CVC"
+                  ref={el => (this.inputs[5] = el)}
                   type="number"
                   value={cvc}
-                  onFocus={() => this.handleFocus(5)}
                 />
               </View>
             </Content>

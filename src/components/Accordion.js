@@ -13,11 +13,12 @@ import colors from '../config/colors';
 type Field = {
   ref: el => void,
   error: boolean,
+  input: React.Node, // used to store the ref and later be able to focus on next input field when the Next button is pressed (on the keyboard)
   onChangeText: value => void,
   onFocus: () => void,
   placeholder: string,
   render: (props: any) => React.Node,
-  input: React.Node, // used to store the ref and later be able to focus on next input field when the Next button is pressed on the keyboard
+  shouldShowError: () => boolean,
   type?: string,
   value: string,
 };
@@ -93,16 +94,14 @@ export default class Accordion extends PureComponent<Props, State> {
               autoCorrect: false,
               blurOnSubmit: false,
               clearButtonMode: 'while-editing',
-              // containerStyle: styles.inputContainer,
-              // inputStyle: styles.input,
-              onSubmitEditing: () =>
-                section.content[i + 1] && section.content[i + 1].input.focus(),
+              error: c.shouldShowError ? !c.shouldShowError() : false,
+              last: true, // to remove borderBottomWidth
               onFocus: t => {
                 c.onFocus && c.onFocus(t);
               },
+              onSubmitEditing: () =>
+                section.content[i + 1] && section.content[i + 1].input.focus(),
               returnKeyType: 'next',
-              last: true, // remove borderBottomWidth
-              error: c.validation ? !c.validation() : false,
               ...c,
             };
             return c.render ? (

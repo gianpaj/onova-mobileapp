@@ -67,6 +67,10 @@ if (!Object.is) {
   };
 }
 
+// regexr.com/42aoo
+// allow empty string || cyrillic chars with whitespaces
+const cyrillicRegex = /^$|^[\u0400-\u04FF\s]+$/;
+
 import type {
   City,
   Department,
@@ -361,7 +365,7 @@ class SettingsContainer extends Component<Props, State> {
         // TODO: color in red if !cities.indexOf(query)
         inputContainerStyle={styles.autocompleteContainers}
         items={cities}
-        regexToMatch={/[\u0400-\u04FF]+/}
+        regexToMatch={cyrillicRegex}
         {...props}
       />
     );
@@ -452,12 +456,14 @@ class SettingsContainer extends Component<Props, State> {
                   placeholder: I18n.t('userInfo.firstName'),
                   value: shippingAddress.firstName,
                   onFocus: this.handleFocus.bind(this, 0),
-                  onChangeText: t =>
-                    this.setState(
-                      update(this.state, {
-                        shippingAddress: { firstName: { $set: t } },
-                      })
-                    ),
+                  onChangeText: t => {
+                    if (cyrillicRegex.test(t))
+                      this.setState(
+                        update(this.state, {
+                          shippingAddress: { firstName: { $set: t } },
+                        })
+                      );
+                  },
                   textContentType: 'givenName',
                 },
                 {
@@ -465,12 +471,14 @@ class SettingsContainer extends Component<Props, State> {
                   placeholder: I18n.t('userInfo.lastName'),
                   value: shippingAddress.lastName,
                   onFocus: this.handleFocus.bind(this, 1),
-                  onChangeText: t =>
-                    this.setState(
-                      update(this.state, {
-                        shippingAddress: { lastName: { $set: t } },
-                      })
-                    ),
+                  onChangeText: t => {
+                    if (cyrillicRegex.test(t))
+                      this.setState(
+                        update(this.state, {
+                          shippingAddress: { lastName: { $set: t } },
+                        })
+                      );
+                  },
                   textContentType: 'streetAddressLine2',
                 },
                 {
@@ -499,7 +507,7 @@ class SettingsContainer extends Component<Props, State> {
                   onFocus: this.handleFocus.bind(this, 4),
                   onChangeText: t => this.setState({ mobileNumber: t }),
                   type: 'phone',
-                  validation: () => {
+                  shouldShowError: () => {
                     if (!mobileNumber) return true;
                     return isPhoneNumberValid(mobileNumber);
                   },

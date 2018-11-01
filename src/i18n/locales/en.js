@@ -225,8 +225,8 @@ http://onova.co/uploader
     department_requirement_right: 'Pick a city',
   },
   userInfo: {
-    firstName: 'First name (in Cyrillic)',
-    lastName: 'Last name (in Cyrillic)',
+    firstName: "Ім'я",
+    lastName: 'Прізвище',
     city: 'City',
     department: 'Novaposhta department',
     mobileNumber: '09712344569 Mobile number',

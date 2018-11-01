@@ -86,6 +86,8 @@ type State = {
   showFooter: boolean,
 };
 
+const cyrillicRegex = /^$|^[\u0400-\u04FF\s]+$/;
+
 export class CheckoutContainer extends Component<Props, State> {
   inputs = [];
   cancelToken: CancelTokenSource;
@@ -413,7 +415,7 @@ export class CheckoutContainer extends Component<Props, State> {
         // TODO: color in red if !cities.indexOf(query)
         inputContainerStyle={styles.autocompleteContainers}
         items={cities}
-        regexToMatch={/[\u0400-\u04FF]+/}
+        regexToMatch={cyrillicRegex}
         {...props}
       />
     );
@@ -568,12 +570,14 @@ export class CheckoutContainer extends Component<Props, State> {
                     placeholder: I18n.t('userInfo.firstName'),
                     value: shippingAddress.firstName,
                     onFocus: () => this.handleFocus(0),
-                    onChangeText: t =>
-                      this.setState(
-                        update(this.state, {
-                          shippingAddress: { firstName: { $set: t } },
-                        })
-                      ),
+                    onChangeText: t => {
+                      if (cyrillicRegex.test(t))
+                        this.setState(
+                          update(this.state, {
+                            shippingAddress: { firstName: { $set: t } },
+                          })
+                        );
+                    },
                     textContentType: 'givenName',
                     error: !shippingAddress.firstName,
                   },
@@ -582,12 +586,14 @@ export class CheckoutContainer extends Component<Props, State> {
                     placeholder: I18n.t('userInfo.lastName'),
                     value: shippingAddress.lastName,
                     onFocus: () => this.handleFocus(1),
-                    onChangeText: t =>
-                      this.setState(
-                        update(this.state, {
-                          shippingAddress: { lastName: { $set: t } },
-                        })
-                      ),
+                    onChangeText: t => {
+                      if (cyrillicRegex.test(t))
+                        this.setState(
+                          update(this.state, {
+                            shippingAddress: { lastName: { $set: t } },
+                          })
+                        );
+                    },
                     textContentType: 'familyName',
                     error: !shippingAddress.lastName,
                   },

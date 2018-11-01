@@ -5,11 +5,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {
+  View,
   ImageBackground,
-  Platform,
-  ScrollView,
-  StyleSheet,
   Text,
+  StyleSheet,
+  Platform,
 } from 'react-native';
 import colors from '../config/colors';
 
@@ -128,9 +128,7 @@ export default class CardView extends Component {
     };
 
     return (
-      <ScrollView
-        style={[s.cardContainer, containerSize]}
-        keyboardShouldPersistTap="always">
+      <View style={[s.cardContainer, containerSize]}>
         <ImageBackground
           style={[BASE_SIZE, s.cardFace, transform]}
           source={imageFront}>
@@ -188,7 +186,7 @@ export default class CardView extends Component {
             </Text>
           )}
         </ImageBackground>
-      </ScrollView>
+      </View>
     );
   }
 }

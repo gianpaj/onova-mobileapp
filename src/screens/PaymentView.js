@@ -31,6 +31,7 @@ class PaymentView extends Component {
   };
 
   async componentDidMount() {
+    Toast.loading('', 30);
     try {
       const { status } = await this.getPaymentStatus();
       console.debug(status);
@@ -42,9 +43,11 @@ class PaymentView extends Component {
       console.debug(payment);
       this.setState({ payment, isLoading: false });
     } catch (error) {
-      console.error(error);
+      console.debug(error);
       ui.showToast(error.message, 'danger');
+      this.props.navigation.goBack();
     }
+    Toast.hide();
   }
 
   createPayment(): Promise<any> {

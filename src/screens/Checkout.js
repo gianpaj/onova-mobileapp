@@ -268,34 +268,42 @@ export class CheckoutContainer extends Component<Props, State> {
   onCheckout = async () => {
     const { cvc, mobileNumber, order, shippingAddress } = this.state;
     const { paymentInfo } = this.props.userData;
-    if (this.canMakePayment()) {
-      let missing;
-      let error = 'missing';
-      if (!shippingAddress.departmentNovaposhta || !shippingAddress.city) {
-        missing = 'Shipping address';
-      } else if (!mobileNumber) {
-        missing = 'Mobile number';
-        this.inputs[4].focus();
-      } else if (!cvc) {
-        missing = 'Card CVC number';
-        this.inputs[5].focus();
-      } else if (!paymentInfo.last_four || !paymentInfo.method) {
-        missing = 'Card information';
-      } else if (!isPhoneNumberValid(mobileNumber)) {
-        missing = 'Mobile number';
-        error = 'not valid';
+    let error = 'missing';
+
+    try {
+      // TODO: extract into checkPaymentErrorsOrThrow function
+      if (this.canMakePayment()) {
+        let missing;
+        if (!shippingAddress.departmentNovaposhta || !shippingAddress.city) {
+          missing = 'Shipping address';
+        } else if (!mobileNumber) {
+          missing = 'Mobile number';
+          this.inputs[4].focus();
+        } else if (!cvc) {
+          missing = 'Card CVC number';
+          this.inputs[5].focus();
+        } else if (!paymentInfo.last_four || !paymentInfo.method) {
+          missing = 'Card information';
+        } else if (!isPhoneNumberValid(mobileNumber)) {
+          missing = 'Mobile number';
+          error = 'not valid';
+        }
+        return ui.showToast(`${missing} is ${error}`, 'warning', null, 5);
       }
-      return ui.showToast(`${missing} is ${error}`, 'warning', null, 5);
+      // console.log(order);
+
+      Toast.loading('Loading...', 3);
+      this.setState({ pending: true });
+
+      await this.updateShippingInfo();
+
+      Toast.hide();
+      this.goToPay(order.id, cvc);
+    } catch (error) {
+      if (error.message.indexOf(error) > -1) return;
+      console.debug(error);
+      this.setState({ pending: false });
     }
-    // console.log(order);
-
-    Toast.loading('Loading...', 3);
-    this.setState({ pending: true });
-
-    await this.updateShippingInfo();
-
-    Toast.hide();
-    this.goToPay(order.id, cvc);
   };
 
   updateShippingInfo(): Promise<any> {

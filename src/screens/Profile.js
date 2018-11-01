@@ -101,105 +101,94 @@ const defaultState = {
 const { analyticsEnabled } = api;
 
 class ProfileScreen extends React.Component<Props, State> {
-  state = { ...defaultState };
+  constructor(props) {
+    super(props);
+    const { userData } = this.props;
+    const { params } = this.props.navigation.state;
+
+    // if we're not navigating and passing params or it's me
+    if (!params || params._id == userData._id) {
+      this.state = {
+        ...defaultState,
+        _id: userData._id,
+        bio: userData.bio,
+        displayName: userData.displayName,
+        emailAddress: userData.emailAddress,
+        followersCount: userData.followersCount,
+        followingCount: userData.followingCount,
+        mobileNumber: userData.mobileNumber,
+        profilePic: userData.profilePic,
+        // rateAvg: ratingsTotal == 0 ? ratingsTotal : ratingsTotal / reviewsCount,
+        reviewsCount: userData.reviewsCount,
+        username: userData.username,
+      };
+    } else {
+      this.state = defaultState;
+    }
+  }
 
   static navigationOptions = () => ({
     tabBarIcon: (props: any) => <NotificationsDot {...props} />,
   });
 
-  refresh = (): Promise<any> => {
+  refresh = async (): Promise<any> => {
     const { params } = this.props.navigation.state;
-    const { userData } = this.props;
+    const { userData, token } = this.props;
 
     // const CancelToken = axios.CancelToken;
     // this.cancelToken = CancelToken.source();
-
-    return new Promise((resolve, reject) => {
+    try {
       // if the screen navigated with an userID and it's not me
-      if (params && params._id && userData._id !== params._id) {
-        api
-          .get(`/api/users/${params._id}`)
-          .then((res: UserData) => {
-            const {
-              _id,
-              bio,
-              displayName,
-              profilePic,
-              username,
-              followersCount,
-              followingCount,
-              // ratingsTotal,
-              reviewsCount,
-            } = res;
-            this.setState({
-              _id,
-              bio,
-              displayName,
-              profilePic,
-              username,
-              followersCount,
-              followingCount,
-              // rateAvg:
-              //   ratingsTotal == 0 ? ratingsTotal : ratingsTotal / reviewsCount,
-              reviewsCount,
-            });
-          })
-          .catch(err => {
-            console.error(err);
-            reject(err);
+      if (params && params._id) {
+        const res: UserData = await api.get(`/api/users/${params._id}`);
+        const {
+          _id,
+          bio,
+          displayName,
+          profilePic,
+          username,
+          followersCount,
+          followingCount,
+          // ratingsTotal,
+          reviewsCount,
+        } = res;
+
+        this.setState({
+          _id,
+          bio,
+          displayName,
+          profilePic,
+          username,
+          followersCount,
+          followingCount,
+          // rateAvg:
+          //   ratingsTotal == 0 ? ratingsTotal : ratingsTotal / reviewsCount,
+          reviewsCount,
+        });
+
+        if (params._id !== userData._id) {
+          const { data } = await api.get(`/api/users/${params._id}/follow`, {
+            token,
           });
-        const { token } = this.props;
-        api
-          .get(`/api/users/${params._id}/follow`, { token })
-          .then(res => {
-            const { following } = res.data;
-            if (following == params._id) {
-              this.setState({ isFollowing: true });
-            }
-            resolve();
-          })
-          .catch(err => {
-            if (err.message == 'Not following') {
-              return resolve();
-            }
-            reject(err);
-          });
+          if (data.following == params._id) {
+            this.setState({ isFollowing: true });
+          }
+        }
       } else {
-        this.props
-          .dispatch(getPersonalUserData())
-          .then(() => resolve())
-          .catch(e => reject(e));
+        return this.props.dispatch(getPersonalUserData());
       }
-    });
+    } catch (err) {
+      if (err.message == 'Not following') {
+        return;
+      }
+      throw err;
+    }
   };
 
   componentDidMount() {
     this.refresh()
       .then(() => this.setState({ isFetching: false }))
       .catch(e => console.error(e));
-  }
-
-  static getDerivedStateFromProps(props, state) {
-    if (state.isFetching) {
-      const { ratingsTotal, reviewsCount } = props.userData;
-      return {
-        _id: props.userData._id,
-        bio: props.userData.bio,
-        displayName: props.userData.displayName,
-        emailAddress: props.userData.emailAddress,
-        followersCount: props.userData.followersCount,
-        followingCount: props.userData.followingCount,
-        mobileNumber: props.userData.mobileNumber,
-        profilePic: props.userData.profilePic,
-        // rateAvg: ratingsTotal == 0 ? ratingsTotal : ratingsTotal / reviewsCount,
-        ratingsTotal,
-        reviewsCount,
-        username: props.userData.username,
-      };
-    }
-
-    // Return null to indicate no change to state.
-    return null;
   }
 
   onGoToSettings = () => {

@@ -224,7 +224,7 @@ http://onova.co/uploader
     ),
     department_requirement_right: 'Pick a city',
   },
-  userInfo : {
+  userInfo: {
     firstName: 'First name (in Cyrillic)',
     lastName: 'Last name (in Cyrillic)',
     city: 'City',

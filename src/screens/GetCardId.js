@@ -39,7 +39,7 @@ function JStoInject() {
   });
 
   function listener(event) {
-    if (event.data) {
+    if (event.data && event.data.name !== 'Validation') {
       window.postMessage(JSON.stringify(event.data));
     }
   }
@@ -70,7 +70,8 @@ class GetCardId extends Component {
     try {
       data = JSON.parse(data);
       // TODO: if TIMEOUT_ERROR reload
-      if (data.name === 'Error') throw Error(JSON.stringify(data));
+      if (data.name !== 'Success') throw Error(error);
+
       await api.put(
         `/api/users/${userData._id}`,
         { paymentInfoPayload: data.payload },
@@ -81,7 +82,7 @@ class GetCardId extends Component {
       this.props.navigation.goBack();
     } catch (error) {
       ui.showToast(error.message, 'danger');
-      console.error(error);
+      console.error(JSON.stringify(error));
     }
   };
 

@@ -3,7 +3,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import {
-  // Animated,
+  Animated,
+  Keyboard,
   Modal,
   Platform,
   StyleSheet,
@@ -55,6 +56,9 @@ type State = {
   isVerifyAccountModalVisible: boolean,
 };
 
+const FORM_VERTICAL_PADDING_KEYBOARD_HIDDEN = 10;
+const FORM_VERTICAL_PADDING_KEYBOARD_VISIBLE = 40;
+
 export class SignUpTabContainer extends Component<Props, State> {
   UserNameInput: ?FormInput;
   EmailInput: ?FormInput;
@@ -62,6 +66,10 @@ export class SignUpTabContainer extends Component<Props, State> {
 
   constructor(props: Props) {
     super(props);
+
+    this.keyboardHeight = new Animated.Value(
+      FORM_VERTICAL_PADDING_KEYBOARD_VISIBLE
+    );
 
     this.UserNameInput = React.createRef();
     this.EmailInput = React.createRef();
@@ -79,9 +87,36 @@ export class SignUpTabContainer extends Component<Props, State> {
     };
   }
 
-
+  componentDidMount() {
+    this.keyboardWillShowSub = Keyboard.addListener(
+      'keyboardDidShow',
+      this.keyboardWillShow
+    );
+    this.keyboardWillHideSub = Keyboard.addListener(
+      'keyboardDidHide',
+      this.keyboardWillHide
+    );
   }
 
+  componentWillUnmount() {
+    this.keyboardWillShowSub.remove();
+    this.keyboardWillHideSub.remove();
+  }
+
+  keyboardWillShow = event =>
+    Animated.timing(this.keyboardHeight, {
+      duration: event ? event.duration : 250,
+      toValue: Platform.select({
+        ios: FORM_VERTICAL_PADDING_KEYBOARD_HIDDEN,
+        android: FORM_VERTICAL_PADDING_KEYBOARD_HIDDEN / 2,
+      }),
+    }).start();
+
+  keyboardWillHide = event =>
+    Animated.timing(this.keyboardHeight, {
+      duration: event ? event.duration : 250,
+      toValue: FORM_VERTICAL_PADDING_KEYBOARD_VISIBLE,
+    }).start();
 
   setVerifyAccountVisible = (visible: boolean) =>
     this.setState({ isVerifyAccountModalVisible: visible });
@@ -251,8 +286,8 @@ export class SignUpTabContainer extends Component<Props, State> {
 
     return (
       <Content testID="signup-form">
-        <View
-          style={{ flex: 1, width: '80%', alignSelf: 'center', marginTop: 40 }}>
+        <Animated.View
+          style={[styles.container, { paddingVertical: this.keyboardHeight }]}>
           <FormInput
             ref={this.UserNameInput}
             placeholder={I18n.t('signup.username_placeholder')}
@@ -311,7 +346,7 @@ export class SignUpTabContainer extends Component<Props, State> {
               <MaterialIcons
                 style={styles.pwdIcon}
                 name={isPasswordVisible ? 'visibility' : 'visibility-off'}
-                size={25}
+                size={Platform.select({ ios: 23, android: 25 })}
                 color={colors.grey1}
                 onPress={this.onPasswordToggle}
               />
@@ -385,7 +420,7 @@ export class SignUpTabContainer extends Component<Props, State> {
               </Text>
             </TouchableOpacity>
           </View>
-        </View>
+        </Animated.View>
         {this.renderVerifyAccountModal()}
       </Content>
     );
@@ -440,7 +475,12 @@ const buttonProps = {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, width: '80%', alignSelf: 'center' },
+  container: {
+    alignSelf: 'center',
+    flex: 1,
+    justifyContent: 'center',
+    width: '80%',
+  },
   input: {
     color: colors.black,
     width: '100%',

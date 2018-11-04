@@ -24,6 +24,7 @@ const initialState: LoginState = {
   fetchLoading: false,
   hasError: false,
   isLoggedIn: false,
+  isVerifyAccountModalVisible: false,
   loading: false,
   loadingGoogleLogin: false,
   token: '',
@@ -42,12 +43,14 @@ export default function(
         data: null,
         hasError: false,
         isLoggedIn: false,
+        isVerifyAccountModalVisible: false,
         loading: true,
-        // errorMsg: null,
       };
 
-    case LOGIN_SUCCESS:
     case SIGNUP_SUCCESS:
+      return { ...state, isVerifyAccountModalVisible: true };
+
+    case LOGIN_SUCCESS:
       const thisState = {
         ...state,
         checkedLoggedIn: true,
@@ -59,7 +62,7 @@ export default function(
         return {
           ...thisState,
           data: noToken,
-          token: token,
+          token,
         };
       } else {
         return {
@@ -75,6 +78,7 @@ export default function(
         data: null,
         hasError: true,
         isLoggedIn: false,
+        isVerifyAccountModalVisible: false,
         loading: false,
         loadingGoogleLogin: false,
         token: '',

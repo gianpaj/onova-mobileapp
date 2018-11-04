@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import {
   // Animated,
   Modal,
-  Linking,
   Platform,
   StyleSheet,
   Text,
@@ -22,8 +21,6 @@ import {
 } from 'native-base';
 import { FormInput } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-// $FlowFixMe
-// import AnimButton from 'react-native-micro-animated-button';
 import isEmail from 'validator/lib/isEmail';
 
 import I18n from '../i18n';
@@ -34,6 +31,8 @@ import type { Dispatch, ReduxState } from '../types';
 
 import { signup } from '../actions/actionCreator';
 import { validPassword } from '../utils/validators';
+import * as linking from '../utils/linking';
+import * as ui from '../utils/ui';
 import colors from '../config/colors';
 import settings from '../config/settings';
 import typography from '../config/typography';
@@ -42,6 +41,7 @@ type Props = {
   dispatch: Dispatch,
   loading: boolean,
   navigation?: NavigationScreenProp<*>,
+  isVerifyAccountModalVisible: boolean,
 };
 
 type State = {
@@ -51,37 +51,33 @@ type State = {
   hasFocusUser: boolean,
   hasFocusEmail: boolean,
   hasFocusPass: boolean,
-  verifyAccountModalVisible: boolean,
+  isVerifyAccountModalVisible: boolean,
 };
 
 export class SignUpTabContainer extends Component<Props, State> {
+  UserNameInput: ?FormInput;
   EmailInput: ?FormInput;
   PwdInput: ?FormInput;
-  // signupBtn;
-  // animatedValue = new Animated.Value(0);
-  // backgroundColor = this.animatedValue.interpolate({
-  //   inputRange: [0, 1],
-  //   outputRange: [colors.grey4, colors.primary],
-  // });
 
   constructor(props: Props) {
     super(props);
+
+    this.UserNameInput = React.createRef();
     this.EmailInput = React.createRef();
     this.PwdInput = React.createRef();
+
+    this.state = {
+      username: '',
+      emailAddress: '',
+      password: '',
+      hasFocusUser: false,
+      hasFocusEmail: false,
+      hasFocusPass: false,
+      isPasswordVisible: false,
+      isVerifyAccountModalVisible: props.isVerifyAccountModalVisible,
+    };
   }
 
-  state = {
-    // username: 'gianfranco',
-    // emailAddress: 'gianfranco_p@hotmail.com',
-    // password: '***REMOVED***',
-    username: '',
-    emailAddress: '',
-    password: '',
-    hasFocusUser: false,
-    hasFocusEmail: false,
-    hasFocusPass: false,
-    verifyAccountModalVisible: false,
-  };
 
   setVerifyAccountVisible(visible: boolean) {
     this.setState({ verifyAccountModalVisible: visible });
@@ -90,8 +86,47 @@ export class SignUpTabContainer extends Component<Props, State> {
   onSignup = () => {
     const { username, emailAddress, password } = this.state;
 
-    console.debug('onSignup()', username, emailAddress, password);
+    // console.debug('onSignup()', username, emailAddress, password);
 
+    if (username.trim() < 3) {
+      this.UserNameInput.current.shake();
+      return this.UserNameInput.current.focus();
+    } else if (username.trim().length < 3) {
+      this.UserNameInput.current.shake();
+      ui.showToast(
+        'Please enter a longer username (min 3 chars)',
+        'warning',
+        null,
+        2
+      );
+      return this.UserNameInput.current.focus();
+    } else if (username.trim().length > 50) {
+      this.UserNameInput.current.shake();
+      ui.showToast('Please enter a shorter username', 'warning', null, 2);
+      return this.UserNameInput.current.focus();
+    } else if (!settings.USERNAME_REGEX.test(username)) {
+      this.UserNameInput.current.shake();
+      ui.showToast('Please enter a valid username', 'warning', null, 2);
+      return this.UserNameInput.current.focus();
+    } else if (emailAddress.trim() < 1) {
+      this.EmailInput.current.shake();
+      return this.EmailInput.current.focus();
+    } else if (!isEmail(emailAddress)) {
+      this.EmailInput.current.shake();
+      ui.showToast('Email is not valid', 'warning', null, 2);
+      return this.EmailInput.current.focus();
+    } else if (!password.length) {
+      this.PwdInput.current.shake();
+      return this.PwdInput.current.focus();
+    } else if (password.length < 8) {
+      this.PwdInput.current.shake();
+      ui.showToast('Please enter a longer password', 'warning', null, 2);
+      return this.PwdInput.current.focus();
+    } else if (password.length > 50) {
+      this.PwdInput.current.shake();
+      ui.showToast('Please enter a shorter password', 'warning', null, 2);
+      return this.PwdInput.current.focus();
+    }
     // username min(3) max(30)
     // password min(8) max(50)
 
@@ -108,27 +143,25 @@ export class SignUpTabContainer extends Component<Props, State> {
 
     this.props
       .dispatch(signup({ username, emailAddress, password }))
-      .catch(() => {
-        this.setVerifyAccountVisible(true);
+      .then(() => this.setVerifyAccountVisible(true))
+      .catch(err => {
+        console.warn(err);
       });
   };
 
-  onUserChange = (u: string) => {
-    if (settings.USERNAME_REGEX.test(u) || u.length == 0) {
-      this.setState({ username: u });
-    }
+  onUserChange = (username: string) => {
+    if (settings.USERNAME_REGEX.test(username)) this.setState({ username });
   };
 
+  onEmailChange = (emailAddress: string) => this.setState({ emailAddress });
+  onPasswordChange = (password: string) => this.setState({ password });
+
   openTerm() {
-    Linking.openURL('https://onova.co/terms-and-condition.html').catch(err =>
-      console.error('An error occurred', err)
-    );
+    linking.openURL('https://onova.co/terms-and-condition.html');
   }
 
   openPolicy() {
-    Linking.openURL('https://onova.co/privacy-policy.html').catch(err =>
-      console.error('An error occurred', err)
-    );
+    linking.openURL('https://onova.co/privacy-policy.html');
   }
 
   /*
@@ -175,15 +208,12 @@ export class SignUpTabContainer extends Component<Props, State> {
 
   isDisabled() {
     const { emailAddress, password, username } = this.state;
-    if (
+    return (
       !isEmail(emailAddress) ||
       !validPassword(password) ||
       username.length < 3 ||
       this.props.loading
-    ) {
-      return true;
-    }
-    return false;
+    );
   }
 
   _inputProps = {
@@ -211,6 +241,7 @@ export class SignUpTabContainer extends Component<Props, State> {
         <View
           style={{ flex: 1, width: '80%', alignSelf: 'center', marginTop: 40 }}>
           <FormInput
+            ref={this.UserNameInput}
             placeholder={I18n.t('signup.username_placeholder')}
             returnKeyType="next"
             onBlur={this._onBlurUser}
@@ -219,7 +250,7 @@ export class SignUpTabContainer extends Component<Props, State> {
               this.EmailInput && this.EmailInput.current.focus()
             }
             value={this.state.username}
-            onChangeText={t => this.onUserChange(t)}
+            onChangeText={this.onUserChange}
             accessibilityLabel="username"
             textContentType="username"
             underlineColorAndroid={hasFocusUser ? colors.primary : colors.grey3}
@@ -237,7 +268,7 @@ export class SignUpTabContainer extends Component<Props, State> {
             }
             value={this.state.emailAddress}
             testID="EmailField"
-            onChangeText={emailAddress => this.setState({ emailAddress })}
+            onChangeText={this.onEmailChange}
             accessibilityLabel="email address"
             textContentType="emailAddress"
             underlineColorAndroid={
@@ -247,14 +278,14 @@ export class SignUpTabContainer extends Component<Props, State> {
           />
           <FormInput
             ref={this.PwdInput}
-            secureTextEntry
+            secureTextEntry={!isPasswordVisible}
             placeholder={I18n.t('signup.password_placeholder')}
             returnKeyType="go"
             onBlur={this._onBlurPass}
             onFocus={this._onFocusPass}
             onSubmitEditing={this.onSignup}
             value={this.state.password}
-            onChangeText={password => this.setState({ password })}
+            onChangeText={this.onPasswordChange}
             accessibilityLabel="password"
             textContentType="password"
             underlineColorAndroid={hasFocusPass ? colors.primary : colors.grey3}
@@ -281,8 +312,8 @@ export class SignUpTabContainer extends Component<Props, State> {
             <Button
               testID="signUpButton"
               block
-              disabled={this.isDisabled()}
-              dark={!this.isDisabled()}
+              disabled={this.props.loading}
+              dark
               // style={[
               //   {
               //     backgroundColor: this.backgroundColor,
@@ -338,7 +369,7 @@ export class SignUpTabContainer extends Component<Props, State> {
     return (
       <Modal
         animationType="slide"
-        visible={this.state.verifyAccountModalVisible}
+        visible={this.state.isVerifyAccountModalVisible}
         onRequestClose={() => this.setVerifyAccountVisible(false)}>
         <View>
           <Header noShadow style={{ backgroundColor: colors.transparent }}>
@@ -383,6 +414,7 @@ const buttonProps = {
 };
 
 const styles = StyleSheet.create({
+  container: { flex: 1, width: '80%', alignSelf: 'center' },
   input: {
     color: colors.black,
     width: '100%',
@@ -402,6 +434,7 @@ const styles = StyleSheet.create({
 
 const mapStateToProps: any = (state: ReduxState) => ({
   loading: state.LoginReducer.loading,
+  isVerifyAccountModalVisible: state.LoginReducer.isVerifyAccountModalVisible,
 });
 
 export const SignUpTab = connect(mapStateToProps)(SignUpTabContainer);

@@ -206,11 +206,12 @@ export class LoginTabContainer extends React.Component<Props, State> {
 
   isDisabled() {
     const { emailAddress, password } = this.state;
-    if (!emailAddress || !password || this.props.loading) {
-      return true;
-    }
-    return false;
+
+    return !emailAddress || !password || this.props.loading;
   }
+
+  onEmailChange = (emailAddress: string) => this.setState({ emailAddress });
+  onPasswordChange = (password: string) => this.setState({ password });
 
   render() {
     const { emailAddress, password, hasFocusEmail, hasFocusPass } = this.state;
@@ -237,7 +238,7 @@ export class LoginTabContainer extends React.Component<Props, State> {
             testID="EmailField"
             textContentType="emailAddress"
             accessibilityLabel="email address"
-            onChangeText={text => this.setState({ emailAddress: text })}
+            onChangeText={this.onEmailChange}
             underlineColorAndroid={
               hasFocusEmail ? colors.primary : colors.grey3
             }
@@ -255,7 +256,7 @@ export class LoginTabContainer extends React.Component<Props, State> {
             testID="PasswordField"
             textContentType="password"
             accessibilityLabel="password"
-            onChangeText={password => this.setState({ password })}
+            onChangeText={this.onPasswordChange}
             underlineColorAndroid={hasFocusPass ? colors.primary : colors.grey3}
             {...this._inputProps}
           />

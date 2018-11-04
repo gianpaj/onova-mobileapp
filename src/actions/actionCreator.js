@@ -12,7 +12,7 @@ import {
   LOGIN_FAIL,
   LOGIN_SUCCESS,
   SIGNUP_PENDING,
-  // SIGNUP_SUCCESS,
+  SIGNUP_SUCCESS,
   SIGNUP_FAIL,
   LOGOUT,
   GETUSER_PENDING,
@@ -282,8 +282,9 @@ const signup = (data: SignupData) => (dispatch: Dispatch) => {
           Analytics.track('signup');
         }
 
+        // console.warn(userData);
         // if (userData.accountStatus !== 'verified') {
-        throw new Error('NOT_VERIFIED');
+        return dispatch({ type: SIGNUP_SUCCESS });
         // }
 
         // initializePusher(userData)
@@ -299,18 +300,14 @@ const signup = (data: SignupData) => (dispatch: Dispatch) => {
         //   });
         // if (analyticsEnabled) trackUser(userData)
       }
-      // console.warn(res);
-      // dispatch({ type: SIGNUP_FAIL });
+      console.warn(res);
+      dispatch({ type: SIGNUP_FAIL });
     })
     .catch((err: APIError) => {
-      Toast.hide();
-      if (err.message !== 'NOT_VERIFIED') {
-        dispatch(handleErrorWithAlert({ type: SIGNUP_FAIL }, err));
-      } else {
-        dispatch({ type: SIGNUP_FAIL });
-        throw err;
-      }
-    });
+      dispatch(handleErrorWithAlert({ type: SIGNUP_FAIL }, err));
+      throw err;
+    })
+    .then(() => Toast.hide());
 };
 
 const getPersonalUserData = (options?: Options = {}) => (

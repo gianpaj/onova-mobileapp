@@ -75,6 +75,7 @@ type State = {
   loadingReset: boolean,
   password: string,
   pwdResetModalVisible: boolean,
+  isPasswordVisible: boolean,
   verifyAccountModalVisible: boolean,
 };
 
@@ -102,6 +103,7 @@ export class LoginTabContainer extends React.Component<Props, State> {
     loadingReset: false,
     password: '',
     pwdResetModalVisible: false,
+    isPasswordVisible: false,
     verifyAccountModalVisible: false,
     ...defaultState,
   };
@@ -214,7 +216,13 @@ export class LoginTabContainer extends React.Component<Props, State> {
   onPasswordChange = (password: string) => this.setState({ password });
 
   render() {
-    const { emailAddress, password, hasFocusEmail, hasFocusPass } = this.state;
+    const {
+      emailAddress,
+      hasFocusEmail,
+      hasFocusPass,
+      password,
+      isPasswordVisible,
+    } = this.state;
 
     return (
       <Content testID="login-form">

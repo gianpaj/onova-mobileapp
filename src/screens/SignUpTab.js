@@ -21,6 +21,7 @@ import {
 } from 'native-base';
 import { FormInput } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import isEmail from 'validator/lib/isEmail';
 
 import I18n from '../i18n';
@@ -79,9 +80,11 @@ export class SignUpTabContainer extends Component<Props, State> {
   }
 
 
-  setVerifyAccountVisible(visible: boolean) {
-    this.setState({ verifyAccountModalVisible: visible });
   }
+
+
+  setVerifyAccountVisible = (visible: boolean) =>
+    this.setState({ isVerifyAccountModalVisible: visible });
 
   onSignup = () => {
     const { username, emailAddress, password } = this.state;
@@ -155,6 +158,11 @@ export class SignUpTabContainer extends Component<Props, State> {
 
   onEmailChange = (emailAddress: string) => this.setState({ emailAddress });
   onPasswordChange = (password: string) => this.setState({ password });
+
+  onPasswordToggle = () =>
+    this.setState(prevState => ({
+      isPasswordVisible: !prevState.isPasswordVisible,
+    }));
 
   openTerm() {
     linking.openURL('https://onova.co/terms-and-condition.html');
@@ -234,7 +242,12 @@ export class SignUpTabContainer extends Component<Props, State> {
   _onFocusPass = () => this.setState({ hasFocusPass: true });
 
   render() {
-    const { hasFocusUser, hasFocusEmail, hasFocusPass } = this.state;
+    const {
+      hasFocusUser,
+      hasFocusEmail,
+      hasFocusPass,
+      isPasswordVisible,
+    } = this.state;
 
     return (
       <Content testID="signup-form">
@@ -276,21 +289,34 @@ export class SignUpTabContainer extends Component<Props, State> {
             }
             {...this._inputProps}
           />
-          <FormInput
-            ref={this.PwdInput}
-            secureTextEntry={!isPasswordVisible}
-            placeholder={I18n.t('signup.password_placeholder')}
-            returnKeyType="go"
-            onBlur={this._onBlurPass}
-            onFocus={this._onFocusPass}
-            onSubmitEditing={this.onSignup}
-            value={this.state.password}
-            onChangeText={this.onPasswordChange}
-            accessibilityLabel="password"
-            textContentType="password"
-            underlineColorAndroid={hasFocusPass ? colors.primary : colors.grey3}
-            {...this._inputProps}
-          />
+          <View>
+            <FormInput
+              ref={this.PwdInput}
+              secureTextEntry={!isPasswordVisible}
+              placeholder={I18n.t('signup.password_placeholder')}
+              returnKeyType="go"
+              onBlur={this._onBlurPass}
+              onFocus={this._onFocusPass}
+              onSubmitEditing={this.onSignup}
+              value={this.state.password}
+              onChangeText={this.onPasswordChange}
+              accessibilityLabel="password"
+              textContentType="password"
+              underlineColorAndroid={
+                hasFocusPass ? colors.primary : colors.grey3
+              }
+              {...this._inputProps}
+            />
+            {this.state.password.length > 0 && (
+              <MaterialIcons
+                style={styles.pwdIcon}
+                name={isPasswordVisible ? 'visibility' : 'visibility-off'}
+                size={25}
+                color={colors.grey1}
+                onPress={this.onPasswordToggle}
+              />
+            )}
+          </View>
           <View style={styles.mt15}>
             {/* <AnimButton
               ref={r => (this.signupBtn = r)}
@@ -419,11 +445,12 @@ const styles = StyleSheet.create({
     color: colors.black,
     width: '100%',
   },
-  // SignupButton: {
-  //   alignSelf: 'center',
-  //   borderWidth: 0,
-  //   borderRadius: 0,
-  // },
+  pwdIcon: {
+    position: 'absolute',
+    top: 7,
+    right: 20,
+    zIndex: 10,
+  },
   mt15: {
     marginTop: 15,
   },

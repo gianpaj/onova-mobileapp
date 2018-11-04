@@ -11,7 +11,9 @@ export const call = (phoneNumber: string): void => {
     })
     .catch(err => {
       console.log(err);
-      Alert.alert('Something went wrong during the redirection 😯…');
+      Alert.alert(
+        `Something went wrong opening this telephone link 😯: ${phoneNumber}`
+      );
     });
 };
 
@@ -24,6 +26,19 @@ export const email = (email: string): void => {
     })
     .catch(err => {
       console.log(err);
-      Alert.alert('Something went wrong during the redirection 😯…');
+      Alert.alert(`Something went wrong opening this mailto link 😯: ${email}`);
+    });
+};
+
+export const openURL = (url: string): void => {
+  Linking.canOpenURL(url)
+    .then(supported => {
+      return !supported
+        ? Alert.alert(`We can't open the following url 😯: ${url}`)
+        : Linking.openURL(url);
+    })
+    .catch(err => {
+      console.log(err);
+      Alert.alert(`Something went wrong opening this url 😯: ${url}`);
     });
 };

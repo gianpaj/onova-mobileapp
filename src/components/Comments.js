@@ -183,7 +183,6 @@ class Comments extends React.Component<Props, State> {
                 renderText: this.renderText,
               },
             ]}
-            childrenProps={{ allowFontScaling: false }}
             style={styles.commentText}>
             {c.text}
           </ParsedText>

@@ -158,8 +158,13 @@ export class CheckoutContainer extends Component<Props, State> {
   }
 
   componentWillUnmount() {
+    this.keyboardDidShowListener.remove();
+    this.keyboardDidHideListener.remove();
+    // trigger Axios to reject the request
+    this.cancelToken.cancel('operation_canceled');
+
     const { shippingAddress, mobileNumber, cities, departments } = this.state;
-    // cancel order when going back with Backbutton
+    // cancel order when going back with Back button
     if (this.state.order.id) this.onCancel();
     if (
       isPhoneNumberValid(mobileNumber) &&
@@ -167,10 +172,6 @@ export class CheckoutContainer extends Component<Props, State> {
     ) {
       this.updateShippingInfo();
     }
-    this.keyboardDidShowListener.remove();
-    this.keyboardDidHideListener.remove();
-    // trigger Axios to reject the request
-    this.cancelToken.cancel('operation_canceled');
   }
 
   initialilizeOrder(item) {
@@ -304,7 +305,6 @@ export class CheckoutContainer extends Component<Props, State> {
       Toast.hide();
       this.goToPay(order.id, cvc);
     } catch (error) {
-      if (error.message.indexOf(error) > -1) return;
       console.debug(error);
       this.setState({ pending: false });
     }
@@ -314,7 +314,7 @@ export class CheckoutContainer extends Component<Props, State> {
     const { userData, token } = this.props;
     const { mobileNumber, shippingAddress } = this.state;
 
-    // FIXME: state should be the number unformatted. useful also when comparing if number has been changed
+    // FIXME: state should be the mobileNumber unformatted. useful also to compare if number has been changed
 
     return api
       .put(
@@ -455,12 +455,12 @@ export class CheckoutContainer extends Component<Props, State> {
 
   _renderDepartmentAutocomplete = props => {
     const { shippingAddress, departments, cities, order } = this.state;
+    const { token } = this.props;
 
     const city = cities.find(city => city.id === shippingAddress.city);
     return (
       <SearchableDropdown
         onItemSelect={async ({ id: department }) => {
-          const { token } = this.props;
           this.setState(
             update(this.state, {
               shippingAddress: { departmentNovaposhta: { $set: department } },
@@ -553,6 +553,8 @@ export class CheckoutContainer extends Component<Props, State> {
 
   onCVCChange = (t: string) => {
     if (t.length <= 3) this.setState({ cvc: t.replace(/\D/g, '') });
+
+    // after 3 digits have been entered
     if (!isNaN(parseInt(t)) && t.length === 3) {
       // ui.hideToasts()
       Keyboard.dismiss();

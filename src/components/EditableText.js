@@ -5,12 +5,13 @@ import React, { PureComponent } from 'react';
 import {
   ActivityIndicator,
   StyleSheet,
-  Text,
   TextInput,
   View,
   type TextProps,
 } from 'react-native';
+import ParsedText from 'react-native-parsed-text';
 
+import * as linking from '../utils/linking';
 import colors from '../config/colors';
 
 type Props = {
@@ -31,12 +32,6 @@ type Props = {
 type State = {
   editing: boolean,
   text: string,
-};
-
-const styles = {
-  spinnerStyle: {
-    position: 'absolute',
-  },
 };
 
 class EditableText extends PureComponent<Props, State> {
@@ -68,11 +63,12 @@ class EditableText extends PureComponent<Props, State> {
     } = this.props;
 
     return (
-      <Text
+      <ParsedText
         {...textProps}
+        parse={[{ type: 'url', style: styles.url, onPress: linking.openURL }]}
         style={[style, !text && { color: placeholderColor }]}>
         {text || (showPlaceholder ? placeholder : '')}
-      </Text>
+      </ParsedText>
     );
   }
 
@@ -81,7 +77,7 @@ class EditableText extends PureComponent<Props, State> {
 
     return (
       <View>
-        <View style={st.textInputContainer}>
+        <View style={styles.textInputContainer}>
           <TextInput
             autoCorrect={autoCorrect}
             autoFocus={this.props.shouldAutoFocus}
@@ -121,10 +117,17 @@ class EditableText extends PureComponent<Props, State> {
   );
 }
 
-const st = StyleSheet.create({
+const styles = StyleSheet.create({
   textInputContainer: {
     // borderBottomWidth: StyleSheet.hairlineWidth,
     marginBottom: -StyleSheet.hairlineWidth,
+  },
+  spinnerStyle: {
+    position: 'absolute',
+  },
+  url: {
+    color: colors.active,
+    textDecorationLine: 'underline',
   },
 });
 

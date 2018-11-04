@@ -223,6 +223,7 @@ http://onova.co/uploader
       '__time__',
       defaults.numHoursSellerHasToConfirm
     ),
+    department_requirement_right: 'Обери місто',
   },
   userInfo: {
     firstName: "Ім'я",

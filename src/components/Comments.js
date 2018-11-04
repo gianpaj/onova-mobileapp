@@ -270,40 +270,34 @@ class Comments extends React.Component<Props, State> {
     });
   };
 
-  callback(keyword: string) {
-    if (this.reqTimer) {
-      clearTimeout(this.reqTimer);
-    }
+  onMention = (keyword: string) => {
+    if (this.reqTimer) clearTimeout(this.reqTimer);
+
+    // skip @ and min 3 chars (required by API)
+    if (keyword.slice(1).length < 3) return;
 
     // TODO: don't autosuggest until you type 1 character
     // TODO: don't autosuggest if you type multiple @ signs
     // if (keyword == '@') return;
     this.reqTimer = setTimeout(() => {
       this.getUserSuggestions(keyword)
-        .then(data => {
-          // TODO: don't autosuggest already mentioned usernames
+        // TODO: don't autosuggest already mentioned usernames
+        .then(data =>
           this.setState({
-            keyword: keyword,
+            keyword,
             usersToMention: [...data],
-          });
-        })
+          })
+        )
         .catch(err => {
           console.log(err);
         });
     }, 200);
-  }
+  };
 
   getUserSuggestions(username: string = ''): Promise<Array<any>> {
-    if (username == '@') return Promise.resolve([]);
-
     return api
       .get(`api/users?u=${username.replace('@', '')}`)
-      .then(res => {
-        // if (!res.ok) {
-        //   throw new Error('Went wrong');
-        // }
-        return res;
-      })
+      .then(res => res)
       .catch(e => console.error(e));
   }
 
@@ -379,7 +373,7 @@ class Comments extends React.Component<Props, State> {
             textInputMaxHeight={80}
             textInputMinHeight={isiOS ? 30 : 50}
             trigger={'@'}
-            triggerCallback={this.callback.bind(this)}
+            triggerCallback={this.onMention}
             triggerLocation={'anywhere'}
             value={text}
             underlineColorAndroid="transparent"

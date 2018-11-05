@@ -212,8 +212,9 @@ export class LoginTabContainer extends React.Component<Props, State> {
     return !emailAddress || !password || this.props.loading;
   }
 
-  onEmailChange = (emailAddress: string) => this.setState({ emailAddress });
-  onPasswordChange = (password: string) => this.setState({ password });
+  getHandler = (key: string) => (val: any) => {
+    this.setState({ [key]: val });
+  };
 
   render() {
     const {
@@ -246,7 +247,7 @@ export class LoginTabContainer extends React.Component<Props, State> {
             testID="EmailField"
             textContentType="emailAddress"
             accessibilityLabel="email address"
-            onChangeText={this.onEmailChange}
+            onChangeText={this.getHandler('emailAddress')}
             underlineColorAndroid={
               hasFocusEmail ? colors.primary : colors.grey3
             }
@@ -254,7 +255,7 @@ export class LoginTabContainer extends React.Component<Props, State> {
           />
           <FormInput
             ref={this.PwdInput}
-            secureTextEntry
+            secureTextEntry={!isPasswordVisible}
             placeholder={I18n.t('login.password_placeholder')}
             returnKeyType="go"
             onBlur={this._onBlurPass}
@@ -264,7 +265,7 @@ export class LoginTabContainer extends React.Component<Props, State> {
             testID="PasswordField"
             textContentType="password"
             accessibilityLabel="password"
-            onChangeText={this.onPasswordChange}
+            onChangeText={this.getHandler('password')}
             underlineColorAndroid={hasFocusPass ? colors.primary : colors.grey3}
             {...this._inputProps}
           />

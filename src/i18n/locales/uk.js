@@ -224,6 +224,7 @@ http://onova.co/uploader
       defaults.numHoursSellerHasToConfirm
     ),
     department_requirement_right: 'Обери місто',
+    payment_button: 'Придбати',
   },
   userInfo: {
     firstName: "Ім'я",
@@ -231,6 +232,8 @@ http://onova.co/uploader
     city: 'Місто',
     department: 'Відділення Нової Пошти',
     mobileNumber: '09712344569 Мобільний телефон',
+    shippingAddress: 'Адреса доставки:',
+    paymentInfo: 'Налаштування оплати:',
   },
   notifications: {
     header: 'Сповіщення',

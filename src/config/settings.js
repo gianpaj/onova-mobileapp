@@ -14,7 +14,7 @@ export default {
   MIN_TAGS: 0,
   MAX_TAGS: 30,
   MAX_BRAND_TAGS: 1,
-  USERNAME_REGEX: /^[a-zA-Z0-9\_\.]+$/,
+  USERNAME_REGEX: /^$|^[a-zA-Z0-9\_\.]+$/,
   // also match white space
   HASHTAG_REGEX: /^$|^[a-zA-Z\u0400-\u04FF0-9]+$/,
   // INSTABUG_TOKEN: '***REMOVED***',

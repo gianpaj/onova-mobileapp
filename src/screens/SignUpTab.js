@@ -191,8 +191,9 @@ export class SignUpTabContainer extends Component<Props, State> {
     if (settings.USERNAME_REGEX.test(username)) this.setState({ username });
   };
 
-  onEmailChange = (emailAddress: string) => this.setState({ emailAddress });
-  onPasswordChange = (password: string) => this.setState({ password });
+  getHandler = (key: string) => (val: any) => {
+    this.setState({ [key]: val });
+  };
 
   onPasswordToggle = () =>
     this.setState(prevState => ({
@@ -316,7 +317,7 @@ export class SignUpTabContainer extends Component<Props, State> {
             }
             value={this.state.emailAddress}
             testID="EmailField"
-            onChangeText={this.onEmailChange}
+            onChangeText={this.getHandler('emailAddress')}
             accessibilityLabel="email address"
             textContentType="emailAddress"
             underlineColorAndroid={
@@ -334,15 +335,16 @@ export class SignUpTabContainer extends Component<Props, State> {
               onFocus={this._onFocusPass}
               onSubmitEditing={this.onSignup}
               value={this.state.password}
-              onChangeText={this.onPasswordChange}
+              onChangeText={this.getHandler('password')}
               accessibilityLabel="password"
               textContentType="password"
               underlineColorAndroid={
                 hasFocusPass ? colors.primary : colors.grey3
               }
               {...this._inputProps}
+              clearButtonMode="unless-editing"
             />
-            {this.state.password.length > 0 && (
+            {this.state.hasFocusPass && (
               <MaterialIcons
                 style={styles.pwdIcon}
                 name={isPasswordVisible ? 'visibility' : 'visibility-off'}

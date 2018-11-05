@@ -612,7 +612,7 @@ export class CheckoutContainer extends Component<Props, State> {
               <HR full />
               <Accordion
                 expanded
-                headerText="Shipping Address:"
+                headerText={I18n.t('userInfo.shippingAddress')}
                 values={[
                   {
                     ref: el => (this.inputs[0] = el),
@@ -683,7 +683,7 @@ export class CheckoutContainer extends Component<Props, State> {
                 ]}
               />
               <FormLabel labelStyle={[styles.label, { paddingBottom: 10 }]}>
-                Payment Info:
+                {I18n.t('userInfo.paymentInfo')}
               </FormLabel>
               <View style={{ alignSelf: 'center', paddingBottom: 10 }}>
                 <TouchableOpacity onPress={this.goToEnterPaymentInfo}>
@@ -721,7 +721,7 @@ export class CheckoutContainer extends Component<Props, State> {
                     full>
                     <Text
                       style={[!this.canMakePayment() && styles.payButtonText]}>
-                      Make Payment
+                      {I18n.t('checkout.payment_button')}
                     </Text>
                   </NBButton>
                 </FooterTab>

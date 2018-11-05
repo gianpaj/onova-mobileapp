@@ -3,7 +3,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import {
-  Linking,
   Platform,
   StyleSheet,
   Text,
@@ -219,9 +218,9 @@ class SettingsContainer extends Component<Props, State> {
   onSave = () => {
     const { userData, token } = this.props;
     const {
-      password,
       emailAddress,
       mobileNumber,
+      password,
       shippingAddress,
       username,
     } = this.state;
@@ -229,13 +228,9 @@ class SettingsContainer extends Component<Props, State> {
 
     this.setState({ pending: true });
 
-    if (username !== '') {
-      data.username = username;
-    }
+    if (username !== '') data.username = username;
 
-    if (password !== '') {
-      data.password = password;
-    }
+    if (password !== '') data.password = password;
 
     if (emailAddress !== userData.emailAddress) {
       data.emailAddress = emailAddress;
@@ -278,8 +273,8 @@ class SettingsContainer extends Component<Props, State> {
       });
   };
 
-  onUserChange = (u: string) => {
-    if (!settings.USERNAME_REGEX.test(u)) {
+  onUserChange = (username: string) => {
+    if (!settings.USERNAME_REGEX.test(username)) {
       this.setState({ usernameError: true });
 
       setTimeout(() => {
@@ -287,7 +282,7 @@ class SettingsContainer extends Component<Props, State> {
       }, 100);
     }
 
-    return this.setState({ username: u });
+    return this.setState({ username });
   };
 
   onSignout = () => this.props.dispatch(intro());
@@ -303,13 +298,12 @@ class SettingsContainer extends Component<Props, State> {
     };
   }
 
-  handleFocus(ref) {
+  handleFocus = (ref: number) =>
     this.setState({
       activeInputRef: ref,
       previousFocusDisabled: ref === 0,
       nextFocusDisabled: ref === 7,
     });
-  }
 
   changeInputFocus(direction = 1) {
     if (
@@ -325,9 +319,7 @@ class SettingsContainer extends Component<Props, State> {
 
   onFAQ() {
     // in Ukrainian
-    Linking.openURL('https://onova.co/faq.html').catch(err =>
-      console.error('An error occurred', err)
-    );
+    linking.openURL('https://onova.co/faq.html');
   }
 
   enterPaymentInfo = () =>
@@ -449,7 +441,7 @@ class SettingsContainer extends Component<Props, State> {
           <View style={styles.padder}>
             <Accordion
               // TODO: auto expand if the shipping address fields are invalid or not valid
-              headerText="Shipping Address:"
+              headerText={I18n.t('userInfo.shippingAddress')}
               values={[
                 {
                   ref: el => (this.inputs[0] = el),
@@ -516,7 +508,7 @@ class SettingsContainer extends Component<Props, State> {
               ]}
             />
             <FormLabel labelStyle={[styles.label, { paddingBottom: 10 }]}>
-              Payment Info:
+              {I18n.t('userInfo.paymentInfo')}
             </FormLabel>
             <View style={{ alignSelf: 'center' }}>
               <TouchableOpacity onPress={this.enterPaymentInfo}>
@@ -539,9 +531,7 @@ class SettingsContainer extends Component<Props, State> {
               {I18n.t('settings.username_label')}
             </FormLabel>
             <FormInput
-              ref={el => {
-                this.inputs[5] = el;
-              }}
+              ref={el => (this.inputs[5] = el)}
               autoCorrect={false}
               containerStyle={styles.inputContainer}
               editable={!pending}
@@ -558,9 +548,7 @@ class SettingsContainer extends Component<Props, State> {
               {I18n.t('settings.email_label')}
             </FormLabel>
             <FormInput
-              ref={el => {
-                this.inputs[6] = el;
-              }}
+              ref={el => (this.inputs[6] = el)}
               autoCorrect={false}
               containerStyle={styles.inputContainer}
               editable={!pending}
@@ -576,9 +564,7 @@ class SettingsContainer extends Component<Props, State> {
               {I18n.t('settings.password_label')}
             </FormLabel>
             <FormInput
-              ref={el => {
-                this.inputs[7] = el;
-              }}
+              ref={el => (this.inputs[7] = el)}
               autoCorrect={false}
               containerStyle={styles.inputContainer}
               editable={!pending}

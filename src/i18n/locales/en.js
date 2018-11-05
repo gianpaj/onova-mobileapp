@@ -224,6 +224,7 @@ http://onova.co/uploader
       defaults.numHoursSellerHasToConfirm
     ),
     department_requirement_right: 'Pick a city',
+    payment_button: 'Make Payment',
   },
   userInfo: {
     firstName: "Ім'я",
@@ -231,6 +232,8 @@ http://onova.co/uploader
     city: 'City',
     department: 'Novaposhta department',
     mobileNumber: '09712344569 Mobile number',
+    shippingAddress: 'Shipping Address:',
+    paymentInfo: 'Payment Info:',
   },
   notifications: {
     header: 'Notifications',

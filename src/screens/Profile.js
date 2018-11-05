@@ -192,21 +192,20 @@ class ProfileScreen extends React.Component<Props, State> {
   }
 
   onGoToSettings = () => {
-    if (this.hasUnsavedChanges()) {
-      ui.showConfirmAlert(
-        I18n.t('profile.alert_unsaved_changes_title'),
-        I18n.t('profile.alert_unsaved_changes_body'),
-        () => {
-          // on continue
-          this.goToSettings();
-        },
-        () => {},
-        I18n.t('profile.alert_unsaved_changes_button_cancel'),
-        I18n.t('profile.alert_unsaved_changes_button_confirm')
-      );
-    } else {
-      this.goToSettings();
+    if (!this.hasUnsavedChanges()) {
+      return this.goToSettings();
     }
+    ui.showConfirmAlert(
+      I18n.t('profile.alert_unsaved_changes_title'),
+      I18n.t('profile.alert_unsaved_changes_body'),
+      () => {
+        // on continue
+        this.goToSettings();
+      },
+      () => {},
+      I18n.t('profile.alert_unsaved_changes_button_cancel'),
+      I18n.t('profile.alert_unsaved_changes_button_confirm')
+    );
   };
 
   goToSettings = () => {

@@ -2,14 +2,7 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import {
-  Alert,
-  Platform,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from 'react-native';
+import { Platform, StyleSheet, Text, View } from 'react-native';
 import {
   Body,
   Button,
@@ -57,14 +50,16 @@ export class AddReviewContainer extends Component<Props, State> {
   };
 
   async componentDidMount() {
-    const { token } = this.props;
-    const { _id } = this.props.userData;
-    const params = this.props.navigation.state.params;
-    let { orderId } = params;
+    const { token, userData, navigation } = this.props;
+    const { _id } = userData;
+    const params = navigation.state.params;
+    let orderId;
 
     // for development
     if (!params) {
-      orderId = '5aeae04049af190a21c80d17';
+      orderId = '5bdb16b06a7aef00de9da76b';
+    } else {
+      orderId = params.orderId;
     }
 
     try {
@@ -98,11 +93,9 @@ export class AddReviewContainer extends Component<Props, State> {
   onRate = async ({
     rateNumber,
     text,
-    trackingNumber,
   }: {
     rateNumber: number,
     text: string,
-    trackingNumber: number,
   }) => {
     const { order } = this.state;
     const { token } = this.props;
@@ -115,19 +108,16 @@ export class AddReviewContainer extends Component<Props, State> {
       orderId: order.id,
       rateNumber,
       lang: 'en',
-      trackingNumber,
     };
     if (text) body = { ...body, text };
     try {
       const { data } = await api.post(
         `/api/users/${this.props.userData._id}/reviews`,
         body,
-        {
-          token,
-        }
+        { token }
       );
       console.debug(data);
-      Toast.success('Thanks for the review!', 5);
+      Toast.success(I18n.t('add_review.success_message'), 5);
       this.goBackAndRefresh();
     } catch (err) {
       Toast.fail(err.message, 3);
@@ -159,13 +149,6 @@ export class AddReviewContainer extends Component<Props, State> {
   goBackAndRefresh() {
     this.props.navigation.state.params.shouldRefresh(true);
     this.props.navigation.goBack();
-  }
-
-  onTrackingInfo() {
-    Alert.alert(
-      'Tracking number',
-      'Please enter the tracking number of Nova Poshta from your package to leave a review. The tracking number is valid only for 7 days after the item has been delivered.'
-    );
   }
 
   render() {
@@ -209,77 +192,6 @@ export class AddReviewContainer extends Component<Props, State> {
           <Foect.Form onValidSubmit={this.onRate}>
             {form => (
               <View style={{ padding: 10 }}>
-                <View style={{ width: '100%', flexDirection: 'row' }}>
-                  <Foect.Control
-                    name="trackingNumber"
-                    required
-                    minLength={14}
-                    maxLength={14}>
-                    {control => {
-                      const hasError =
-                        (control.isTouched || form.isSubmitted) &&
-                        control.isInvalid;
-                      return (
-                        <View style={{ flex: 1, alignItems: 'center' }}>
-                          <View
-                            style={{
-                              alignItems: 'center',
-                              flexDirection: 'row',
-                              justifyContent: 'space-between',
-                              width: widthFields,
-                            }}>
-                            <Text
-                              style={{
-                                fontWeight: 'bold',
-                                color: colors.black,
-                              }}>
-                              {I18n.t('add_review.nova_poshta_tracking_num')}
-                            </Text>
-                            <Button
-                              transparent
-                              dark
-                              style={{ marginLeft: 10 }}
-                              onPress={this.onTrackingInfo}>
-                              <MaterialCommunityIcons
-                                name="information-outline"
-                                size={28}
-                              />
-                            </Button>
-                          </View>
-
-                          <TextInput
-                            autoCorrect={false}
-                            style={{
-                              fontSize: typography.font_body_size,
-                              width: widthFields,
-                              borderBottomWidth: Platform.select({
-                                ios: 1,
-                                android: 0,
-                              }),
-                              borderColor: hasError ? colors.red : colors.black,
-                            }}
-                            onBlur={control.markAsTouched}
-                            onChangeText={text =>
-                              control.onChange(text.replace(/[^0-9]/g, ''))
-                            }
-                            underlineColorAndroid={
-                              hasError ? colors.red : colors.black
-                            }
-                            value={control.value}
-                            keyboardType="numeric"
-                            maxLength={14}
-                          />
-
-                          {/* <Text style={{ color: colors.red }}>
-                            {hasError
-                              ? 'Please enter a valid tracking number.'
-                              : ' '}
-                          </Text> */}
-                        </View>
-                      );
-                    }}
-                  </Foect.Control>
-                </View>
                 <View style={{ flex: 1, marginTop: 5 }}>
                   <Foect.Control name="text">
                     {control => (
@@ -351,7 +263,6 @@ export class AddReviewContainer extends Component<Props, State> {
             )}
           </Foect.Form>
         </Content>
-        {/* <Footer /> */}
       </Container>
     );
   }

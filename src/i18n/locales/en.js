@@ -275,7 +275,7 @@ http://onova.co/uploader
   },
   add_review: {
     header: 'Review',
-    nova_poshta_tracking_num: 'Nova Poshta tracking number',
+    // nova_poshta_tracking_num: 'Nova Poshta tracking number',
     text_placeholder: 'Text (optional)',
     rating_error: 'Please select a rating',
     button: 'Leave a review',

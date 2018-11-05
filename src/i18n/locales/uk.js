@@ -275,7 +275,7 @@ http://onova.co/uploader
   },
   add_review: {
     header: 'Відгук',
-    nova_poshta_tracking_num: 'Номер накладної Нової Пошти',
+    // nova_poshta_tracking_num: 'Номер накладної Нової Пошти',
     text_placeholder: "Текст (не обов'язково)",
     rating_error: 'Обери якість від 1 до 5',
     button: 'Залишити відгук',

@@ -9,8 +9,8 @@ import I18n from '../i18n';
 
 // prettier-ignore
 import {
-  format,
   differenceInHours,
+  format,
   isYesterday,
 } from 'date-fns';
 
@@ -30,6 +30,7 @@ export function showToast(
 ) {
   if (!buttonText && type == 'success')
     buttonText = I18n.t('product.toast_warning_ok_button');
+
   Toast.show({
     text: message,
     type: type,

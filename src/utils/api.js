@@ -24,7 +24,7 @@ export { isProd, analyticsEnabled, config };
 if (!global.__TESTING__) console.debug(`connecting to ${config.API_URL}`);
 
 axios.defaults.baseURL = config.API_URL;
-const TIMEOUT = 20000;
+axios.defaults.timeout = 20000;
 
 export type Options = {
   suppressRedBox?: boolean, // If true, no warning is shown on failed request
@@ -140,11 +140,11 @@ async function sendRequest(method, path, body, options) {
     if (options.token !== undefined) {
       headers = { ...headers, Authorization: options.token };
     }
-    let allOptions: Options = {
+    const allOptions: Options = {
       method,
       headers,
       url: path,
-      timeout: options.timeout !== undefined ? options.timeout : TIMEOUT,
+      ...(options.timeout ? { timeout } : {}),
       validateStatus: function(status) {
         return status >= 200 && status <= 500;
       },

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { connect } from 'react-redux';
-import { Dimensions, StyleSheet, View } from 'react-native';
+import { Dimensions, StyleSheet, View, Text } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {
   ActionSheet,
@@ -22,6 +22,7 @@ import RadioForm, {
 } from 'react-native-simple-radio-button';
 import ImagePicker from 'react-native-image-crop-picker';
 import { InputItem, TextareaItem, Toast } from 'antd-mobile-rn';
+import Foect from 'foect';
 
 import { Header, HR, TagInput } from '../components';
 import AntImagePicker from '../components/ImagePicker';
@@ -31,7 +32,7 @@ import colors from '../config/colors';
 import settings from '../config/settings';
 import * as api from '../utils/api';
 import * as ui from '../utils/ui';
-import type { Dispatch, UserData, ReduxState, Product } from '../types';
+import type { Dispatch, ReduxState, Product } from '../types';
 
 import type { NavigationScreenProp } from 'react-navigation';
 const { width } = Dimensions.get('window');
@@ -74,7 +75,6 @@ type Image = {
 type Props = {
   dispatch: Dispatch,
   navigation?: NavigationScreenProp<*>,
-  userData: UserData,
   token: string,
 };
 
@@ -89,7 +89,6 @@ type State = {
   numberOfBrands: number,
   order: Array<number>,
   price: string,
-  priceFocused: boolean,
   progress: number,
   tags: Array<string>,
   tagsText: string,
@@ -97,6 +96,8 @@ type State = {
 };
 
 export class AddOrEditProductScreen extends React.Component<Props, State> {
+  priceControl;
+
   state = {
     description: '',
     descriptionFocused: false,
@@ -108,7 +109,6 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     numberOfBrands: 0,
     order: [],
     price: '',
-    priceFocused: false,
     progress: 0,
     tags: [],
     tagsText: '',
@@ -212,7 +212,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     const progress = Math.round(
       (progressEvent.loaded * 100) / progressEvent.total
     );
-    console.log(progress);
+    // console.log(progress);
     this.setState({ progress });
   };
 
@@ -250,13 +250,12 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     this.appendImageOrReplace(image, i);
   }
 
-  removeSinglePhoto = (index: number) => {
+  removeSinglePhoto = (index: number) =>
     this.setState(prevState => {
       return {
         images: prevState.images.filter((e, i) => i !== index),
       };
     });
-  };
 
   // if we want to replace an existing photo
   appendImageOrReplace = (image: any, i: number) => {
@@ -313,7 +312,9 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     }
   };
 
-  onAddOrEditItem = async () => {
+  onSave = async ({ price }) => {
+    if (!this.isButtonEnabled({ price })) return;
+
     Toast.loading(I18n.t('alerts.toast_uploading'), 30);
     const {
       description,
@@ -321,7 +322,6 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
       grp_2,
       images,
       inEditMode,
-      price,
       tags,
       uuid,
     } = this.state;
@@ -330,7 +330,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
       categoryIds: grp_1.toString(),
       description: description.trim(),
       photos: images.map(i => i.url),
-      price: price,
+      price,
       tags: JSON.stringify(tags),
       typeIds: grp_2.toString(),
     };
@@ -416,18 +416,9 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     return false;
   }
 
-  /**
-   * numbers only, one dot and 2 decimal points
-   */
-  changePrice = (price: string) => {
-    const pattern = /^(\b[\d]+[\.]?[\d]{0,2})$/;
-    if (pattern.test(price) || price === '') {
-      this.setState({ price });
-    }
-  };
+  // numbers only, one dot and 2 decimal points
 
-  isButtonEnabled(): boolean {
-    // const pricePattern = /^\d+(\.\d{2})?$/;
+  isButtonEnabled({ price }): boolean {
     // const tagsPattern = /^(\b[a-z][a-z0-9]*)$/i;
 
     const { images } = this.state;
@@ -437,7 +428,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
       images.filter((i: any) => i.isUploading === false).length ===
         images.length &&
       // If the price is not empty
-      this.state.price !== '' &&
+      price !== '' &&
       // if the description doesn't exceed the maximum length
       this.state.description.trim().length >= settings.MIN_LENGTH_DESCRIPTION &&
       // if there's the minimum required of tags
@@ -455,6 +446,13 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
 
   onChangeDescription = (t: string) => this.setState({ description: t });
 
+  onInvalidSubmit = (errors: any) => {
+    if (errors.price) {
+      this.priceInput.focus();
+      this.priceControl.markAsTouched();
+    }
+  };
+
   render() {
     const {
       description,
@@ -464,8 +462,6 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
       images,
       inEditMode,
       isUploading,
-      price,
-      priceFocused,
       tags,
       tagsText,
     } = this.state;
@@ -473,190 +469,208 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     // if (images.length < 1 && !inEditMode) return null;
 
     return (
-      <Container>
-        <Header>
-          <Left style={styles.container}>
-            <NBButton transparent onPress={this.closeModalConditional}>
-              <Icon color={colors.black} name="close" size={28} />
-            </NBButton>
-          </Left>
-          <Body style={styles.container}>
-            <Title style={{ color: colors.black }}>
-              {inEditMode
-                ? I18n.t('add_or_edit_item.edit_item_header')
-                : I18n.t('add_or_edit_item.add_item_header')}
-            </Title>
-          </Body>
-          <Right>
-            <NBButton
-              testID="saveButton"
-              transparent
-              disabled={!this.isButtonEnabled()}
-              style={{ backgroundColor: colors.transparent }}
-              onPress={this.onAddOrEditItem}>
-              <Icon
-                name="check"
-                color={this.isButtonEnabled() ? colors.black : colors.grey4}
-                size={28}
-              />
-            </NBButton>
-          </Right>
-        </Header>
-        <Content>
-          <View
-            style={{
-              alignItems: 'flex-start',
-              marginLeft: 17,
-              paddingTop: 18,
-              height: width / 6 + 10,
-            }}>
-            <AntImagePicker
-              files={images}
-              onImageClick={i => this.selectPhotoTapped(i, false)}
-              onAddImageClick={() => this.selectPhotoTapped(images.length)}
-              selectable={images.length < 6}
-              enabled={!isUploading}
-              onChange={this.onImageChange}
-              onChangeOrder={array => {
-                const order = array.map(e => parseInt(e));
-                const newOrder = [];
-                for (let i = 0; i < order.length; i++) {
-                  const o = order[i];
-                  newOrder.push(this.state.images[o]);
-                }
-                this.setState({ images: newOrder });
-              }}
-            />
-          </View>
-          <View>
-            <FormLabel labelStyle={styles.label}>
-              {I18n.t('add_or_edit_item.price_label')}
-            </FormLabel>
-            {/* <FormInput
-              autoCorrect={false}
-              clearButtonMode="while-editing"
-              containerStyle={styles.inputContainer}
-              inputStyle={styles.input}
-              keyboardType="numeric"
-              maxLength={8} // 10000.99
-              onChangeText={this.changePrice}
-              placeholder={I18n.t('add_or_edit_item.price_placeholder')}
-              value={price}
-            /> */}
-            <View style={{ paddingLeft: 6 }}>
-              <InputItem
-                testID="price"
-                autoCorrect={false}
-                clearButtonMode="while-editing"
-                error={priceFocused && price.trim().length < 1}
-                last
-                maxLength={8} // 10000.99
-                onChange={this.changePrice}
-                onFocus={() => this.setState({ priceFocused: true })}
-                placeholder={I18n.t('add_or_edit_item.price_placeholder')}
-                type="number"
-                value={price}
-              />
-            </View>
-            <FormLabel labelStyle={styles.label}>
-              {I18n.t('add_or_edit_item.description_label')}
-            </FormLabel>
-            <TextareaItem
-              testID="description"
-              style={styles.inputContainerNew}
-              last // to set borderBottomWidth=0
-              containerStyle={{ borderBottomWidth: 5, marginRight: 12 }}
-              rows={3}
-              count={settings.MAX_LENGTH_DESCRIPTION}
-              onChangeText={this.onChangeDescription}
-              onFocus={() => this.setState({ descriptionFocused: true })}
-              placeholder={I18n.t('add_or_edit_item.description_placeholder')}
-              value={description}
-              error={
-                descriptionFocused &&
-                description.trim().length < settings.MIN_LENGTH_DESCRIPTION
-              }
-            />
-            <FormLabel labelStyle={styles.label}>
-              {I18n.t('add_or_edit_item.hashtags_label')}
-            </FormLabel>
-            <TagInput
-              inputDefaultWidth={140}
-              maxHeight={2000}
-              labelExtractor={tag => tag}
-              onChange={this.changeTags}
-              onChangeText={this.changeTagsTest}
-              tagColor={colors.primary}
-              tagTextColor="white"
-              text={tagsText}
-              value={tags}
-              inputProps={{
-                placeholder:
-                  tags.length < 1
-                    ? I18n.t('add_or_edit_item.hashtags_placeholder')
-                    : '',
-              }}
-            />
-          </View>
-          <View style={styles.grps}>
-            <RadioForm animation formHorizontal>
-              {ui.category_radio_grp_1.map((option, i) => (
-                <RadioButton labelHorizontal={false} key={i}>
-                  <RadioButtonLabel
-                    index={i}
-                    labelHorizontal
-                    labelStyle={styles.radioButtonLabel}
-                    obj={option}
-                    onPress={grp_1 => this.setState({ grp_1 })}
-                  />
-                  <RadioButtonInput
-                    testID={`grp_1_input_${i}`}
-                    borderWidth={2}
-                    buttonInnerColor={colors.black}
-                    buttonOuterColor={colors.black}
-                    buttonOuterSize={19}
-                    buttonSize={19}
-                    buttonWrapStyle={styles.radioButtonInput}
-                    index={i}
-                    isSelected={grp_1 === i}
-                    obj={option}
-                    onPress={grp_1 => this.setState({ grp_1 })}
-                  />
-                </RadioButton>
-              ))}
-            </RadioForm>
-          </View>
-          <HR color={colors.grey5} />
-          <View style={[styles.grps, { marginBottom: 20 }]}>
-            <RadioForm animation formHorizontal>
-              {ui.category_radio_grp_2.map((option, i) => (
-                <RadioButton labelHorizontal={false} key={i}>
-                  <RadioButtonLabel
-                    index={i}
-                    labelHorizontal
-                    labelStyle={styles.radioButtonLabel}
-                    obj={option}
-                    onPress={grp_2 => this.setState({ grp_2 })}
-                  />
-                  <RadioButtonInput
-                    testID={`grp_2_input_${i}`}
-                    borderWidth={2}
-                    buttonInnerColor={colors.black}
-                    buttonOuterColor={colors.black}
-                    buttonOuterSize={19}
-                    buttonSize={19}
-                    buttonWrapStyle={styles.radioButtonInput}
-                    index={i}
-                    isSelected={grp_2 == i}
-                    obj={option}
-                    onPress={grp_2 => this.setState({ grp_2 })}
-                  />
-                </RadioButton>
-              ))}
-            </RadioForm>
-          </View>
-        </Content>
-      </Container>
+      <Foect.Form
+        onValidSubmit={this.onSave}
+        onInvalidSubmit={this.onInvalidSubmit}>
+        {form => (
+          <Container>
+            <Header>
+              <Left style={styles.container}>
+                <NBButton transparent onPress={this.closeModalConditional}>
+                  <Icon color={colors.black} name="close" size={28} />
+                </NBButton>
+              </Left>
+              <Body style={styles.container}>
+                <Title style={{ color: colors.black }}>
+                  {inEditMode
+                    ? I18n.t('add_or_edit_item.edit_item_header')
+                    : I18n.t('add_or_edit_item.add_item_header')}
+                </Title>
+              </Body>
+              <Right>
+                <NBButton
+                  testID="saveButton"
+                  transparent
+                  // disabled={!this.isButtonEnabled()}
+                  style={{ backgroundColor: colors.transparent }}
+                  onPress={() => form.submit()}>
+                  <Icon name="check" color={colors.black} size={28} />
+                </NBButton>
+              </Right>
+            </Header>
+            <Content>
+              <View
+                style={{
+                  alignItems: 'flex-start',
+                  marginLeft: 17,
+                  paddingTop: 18,
+                  height: width / 6 + 10,
+                }}>
+                <AntImagePicker
+                  files={images}
+                  onImageClick={i => this.selectPhotoTapped(i, false)}
+                  onAddImageClick={() => this.selectPhotoTapped(images.length)}
+                  selectable={images.length < 6}
+                  enabled={!isUploading}
+                  onChange={this.onImageChange}
+                  onChangeOrder={array => {
+                    const order = array.map(e => parseInt(e));
+                    const newOrder = [];
+                    for (let i = 0; i < order.length; i++) {
+                      const o = order[i];
+                      newOrder.push(this.state.images[o]);
+                    }
+                    this.setState({ images: newOrder });
+                  }}
+                />
+              </View>
+              <View>
+                <FormLabel labelStyle={styles.label}>
+                  {I18n.t('add_or_edit_item.price_label')}
+                </FormLabel>
+                <Foect.Control
+                  name="price"
+                  required
+                  maxLength={8}
+                  checkPrice={{}}>
+                  {/* you can use control for getting/setting it's value, checking/updating(control.isValid, control.markAsTouched(), ...) it's state, checking it's errors(control.errors.required) */}
+                  {control => {
+                    this.priceControl = control;
+                    return (
+                      <View style={{ paddingLeft: 6 }}>
+                        <InputItem
+                          testID="price"
+                          ref={input => (this.priceInput = input)}
+                          autoCorrect={false}
+                          clearButtonMode="while-editing"
+                          error={control.isTouched && control.isInvalid}
+                          // onErrorClick={ show toast with }
+                          last
+                          onBlur={control.markAsTouched}
+                          onChange={v => {
+                            settings.PRICE_REGEX.test(v) && control.onChange(v);
+                          }}
+                          placeholder={I18n.t(
+                            'add_or_edit_item.price_placeholder'
+                          )}
+                          type="number"
+                          value={control.value}
+                        />
+                        {control.isTouched &&
+                          control.isInvalid && (
+                            <Text style={styles.minPrice}>
+                              {`${I18n.t('add_or_edit_item.min_price')} ${
+                                settings.MIN_PRICE
+                              } UAH`}
+                            </Text>
+                          )}
+                      </View>
+                    );
+                  }}
+                </Foect.Control>
+                <FormLabel labelStyle={styles.label}>
+                  {I18n.t('add_or_edit_item.description_label')}
+                </FormLabel>
+                <TextareaItem
+                  testID="description"
+                  style={styles.inputContainerNew}
+                  last // to set borderBottomWidth=0
+                  containerStyle={{ borderBottomWidth: 5, marginRight: 12 }}
+                  rows={3}
+                  count={settings.MAX_LENGTH_DESCRIPTION}
+                  onChangeText={this.onChangeDescription}
+                  onFocus={() => this.setState({ descriptionFocused: true })}
+                  placeholder={I18n.t(
+                    'add_or_edit_item.description_placeholder'
+                  )}
+                  value={description}
+                  error={
+                    descriptionFocused &&
+                    description.trim().length < settings.MIN_LENGTH_DESCRIPTION
+                  }
+                />
+                <FormLabel labelStyle={styles.label}>
+                  {I18n.t('add_or_edit_item.hashtags_label')}
+                </FormLabel>
+                <TagInput
+                  inputDefaultWidth={140}
+                  maxHeight={2000}
+                  labelExtractor={tag => tag}
+                  onChange={this.changeTags}
+                  onChangeText={this.changeTagsTest}
+                  tagColor={colors.primary}
+                  tagTextColor="white"
+                  text={tagsText}
+                  value={tags}
+                  inputProps={{
+                    placeholder:
+                      tags.length < 1
+                        ? I18n.t('add_or_edit_item.hashtags_placeholder')
+                        : '',
+                  }}
+                />
+              </View>
+              <View style={styles.grps}>
+                <RadioForm animation formHorizontal>
+                  {ui.category_radio_grp_1.map((option, i) => (
+                    <RadioButton labelHorizontal={false} key={i}>
+                      <RadioButtonLabel
+                        index={i}
+                        labelHorizontal
+                        labelStyle={styles.radioButtonLabel}
+                        obj={option}
+                        onPress={grp_1 => this.setState({ grp_1 })}
+                      />
+                      <RadioButtonInput
+                        testID={`grp_1_input_${i}`}
+                        borderWidth={2}
+                        buttonInnerColor={colors.black}
+                        buttonOuterColor={colors.black}
+                        buttonOuterSize={19}
+                        buttonSize={19}
+                        buttonWrapStyle={styles.radioButtonInput}
+                        index={i}
+                        isSelected={grp_1 === i}
+                        obj={option}
+                        onPress={grp_1 => this.setState({ grp_1 })}
+                      />
+                    </RadioButton>
+                  ))}
+                </RadioForm>
+              </View>
+              <HR color={colors.grey5} />
+              <View style={[styles.grps, { marginBottom: 20 }]}>
+                <RadioForm animation formHorizontal>
+                  {ui.category_radio_grp_2.map((option, i) => (
+                    <RadioButton labelHorizontal={false} key={i}>
+                      <RadioButtonLabel
+                        index={i}
+                        labelHorizontal
+                        labelStyle={styles.radioButtonLabel}
+                        obj={option}
+                        onPress={grp_2 => this.setState({ grp_2 })}
+                      />
+                      <RadioButtonInput
+                        testID={`grp_2_input_${i}`}
+                        borderWidth={2}
+                        buttonInnerColor={colors.black}
+                        buttonOuterColor={colors.black}
+                        buttonOuterSize={19}
+                        buttonSize={19}
+                        buttonWrapStyle={styles.radioButtonInput}
+                        index={i}
+                        isSelected={grp_2 == i}
+                        obj={option}
+                        onPress={grp_2 => this.setState({ grp_2 })}
+                      />
+                    </RadioButton>
+                  ))}
+                </RadioForm>
+              </View>
+            </Content>
+          </Container>
+        )}
+      </Foect.Form>
     );
   }
 }
@@ -692,13 +706,24 @@ const styles = StyleSheet.create({
     marginHorizontal: '5%',
     width: 60,
   },
+  minPrice: {
+    color: colors.red,
+    paddingLeft: 12,
+  },
 });
 
 const mapStateToProps: any = (state: ReduxState) => ({
-  userData: state.LoginReducer.data,
   token: state.LoginReducer.token,
 });
 
 export const AddOrEditProduct = connect(mapStateToProps)(
   AddOrEditProductScreen
 );
+
+Foect.Validators.add('checkPrice', (val: any) => {
+  if (!val) return null;
+
+  if (parseFloat(val) < settings.MIN_PRICE) {
+    return { checkPrice: true };
+  } else return null;
+});

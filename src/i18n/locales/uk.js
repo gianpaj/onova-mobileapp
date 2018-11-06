@@ -140,7 +140,7 @@ http://onova.co/uploader
     image_processing: 'Фотографії завантажуються',
     edit_item_header: 'Редагувати',
     price_label: 'Ціна:',
-    price_placeholder: '0 UAH',
+    price_placeholder: 'min 150 UAH',
     description_label: 'Опис:',
     description_placeholder:
       'В якому стані річ, якого розміру, бренду і тому подібне',
@@ -275,6 +275,7 @@ http://onova.co/uploader
   },
   add_review: {
     header: 'Відгук',
+    // success_message: 'Thanks for the review!',
     // nova_poshta_tracking_num: 'Номер накладної Нової Пошти',
     text_placeholder: "Текст (не обов'язково)",
     rating_error: 'Обери якість від 1 до 5',

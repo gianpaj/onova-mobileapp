@@ -144,7 +144,7 @@ async function sendRequest(method, path, body, options) {
       method,
       headers,
       url: path,
-      ...(options.timeout ? { timeout } : {}),
+      ...(options.timeout ? { timeout: options.timeout } : {}),
       validateStatus: function(status) {
         return status >= 200 && status <= 500;
       },

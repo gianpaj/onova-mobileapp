@@ -139,7 +139,7 @@ http://onova.co/uploader
     image_processing: 'Loading images',
     edit_item_header: 'Edit Item',
     price_label: 'Price:',
-    price_placeholder: '0 UAH',
+    price_placeholder: 'min 150 UAH',
     description_label: 'Description:',
     description_placeholder:
       'Please provide details such as brand, size and condition about the item',
@@ -149,6 +149,7 @@ http://onova.co/uploader
     select_photo_source_gallery: 'Gallery',
     select_photo_source_cancel: 'Cancel',
     too_many_images: 'An item can have up to 6 images',
+    min_price: 'The minimum price is',
   },
   create_drop: {
     title: 'Create Drop',
@@ -275,6 +276,7 @@ http://onova.co/uploader
   },
   add_review: {
     header: 'Review',
+    success_message: 'The review has been saved!',
     // nova_poshta_tracking_num: 'Nova Poshta tracking number',
     text_placeholder: 'Text (optional)',
     rating_error: 'Please select a rating',

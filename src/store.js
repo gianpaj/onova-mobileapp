@@ -16,7 +16,7 @@ import type { LoginState } from './types/loginReducer';
 const config1 = {
   key: 'primary',
   storage,
-  blacklist: ['checkedLoggedIn'],
+  blacklist: ['checkedLoggedIn', 'isVerifyAccountModalVisible', 'loading'],
 };
 
 const reactNavigation = createReactNavigationReduxMiddleware(

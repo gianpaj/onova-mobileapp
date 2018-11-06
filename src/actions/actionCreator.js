@@ -304,7 +304,13 @@ const signup = (data: SignupData) => (dispatch: Dispatch) => {
       dispatch({ type: SIGNUP_FAIL });
     })
     .catch((err: APIError) => {
-      dispatch(handleErrorWithAlert({ type: SIGNUP_FAIL }, err));
+      dispatch(
+        handleErrorWithAlert(
+          { type: SIGNUP_FAIL },
+          err,
+          I18n.t('product.toast_warning_ok_button')
+        )
+      );
       Toast.hide();
       throw err;
     })
@@ -397,7 +403,7 @@ const sendToken = (
     });
 };
 
-const handleErrorWithAlert = (data: any, err: any) => {
+const handleErrorWithAlert = (data: any, err: any, buttonText?) => {
   let errorType;
   if (err.status == 400 || err.status == 500) {
     errorType = 'danger';
@@ -423,7 +429,9 @@ const handleErrorWithAlert = (data: any, err: any) => {
   } else {
     console.error(err);
   }
-  if (!global.__TESTING__) ui.showToast(err.message, errorType || '');
+  if (!global.__TESTING__) {
+    ui.showToast(err.message, errorType || '', buttonText);
+  }
   return {
     type: data.type,
   };

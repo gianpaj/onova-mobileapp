@@ -26,7 +26,7 @@ const initialState: LoginState = {
   isLoggedIn: false,
   isVerifyAccountModalVisible: false,
   loading: false,
-  loadingGoogleLogin: false,
+  // loadingGoogleLogin: false,
   token: '',
 };
 
@@ -80,7 +80,7 @@ export default function(
         isLoggedIn: false,
         isVerifyAccountModalVisible: false,
         loading: false,
-        loadingGoogleLogin: false,
+        // loadingGoogleLogin: false,
         token: '',
       };
 
@@ -103,6 +103,14 @@ export default function(
         checkedLoggedIn: false,
       };
 
+    case 'INTRO':
+      return {
+        ...state,
+        hasError: true,
+        loading: false,
+        isVerifyAccountModalVisible: false,
+      };
+
     // case GOOGLE_LOGIN_PENDING:
     //   return {
     //     ...state,
@@ -121,7 +129,7 @@ export default function(
         token: '',
         isLoggedIn: false,
         loading: false,
-        loadingGoogleLogin: false,
+        // loadingGoogleLogin: false,
       };
 
     case GETUSER_PENDING:

@@ -14,7 +14,8 @@ export type LoginState = {
   +hasError: boolean,
   +isLoggedIn: boolean,
   +loading: boolean,
-  +loadingGoogleLogin: boolean,
+  +isVerifyAccountModalVisible: false,
+  // +loadingGoogleLogin: boolean,
   +token: string,
-  // errorMsg: string | null,
+  // +errorMsg: string,
 };

@@ -107,7 +107,7 @@ export class AddReviewContainer extends Component<Props, State> {
     let body = {
       orderId: order.id,
       rateNumber,
-      lang: 'en',
+      lang: I18n.locale.slice(0, 2),
     };
     if (text) body = { ...body, text };
     try {
@@ -191,74 +191,71 @@ export class AddReviewContainer extends Component<Props, State> {
         <Content>
           <Foect.Form onValidSubmit={this.onRate}>
             {form => (
-              <View style={{ padding: 10 }}>
-                <View style={{ flex: 1, marginTop: 5 }}>
-                  <Foect.Control name="text">
-                    {control => (
-                      <TextareaItem
-                        style={styles.textInputContainer}
-                        last
-                        rows={3}
-                        count={settings.MAX_LENGTH_REVIEW}
-                        onChangeText={control.onChange}
-                        placeholder={I18n.t('add_review.text_placeholder')}
-                        value={control.value}
-                        error={
-                          control.value.length > 0 &&
-                          control.value.trim().length <
-                            settings.MIN_LENGTH_REVIEW
-                        }
+              <View style={{ padding: 10, flex: 1, marginTop: 15 }}>
+                <Foect.Control name="text">
+                  {control => (
+                    <TextareaItem
+                      count={settings.MAX_LENGTH_REVIEW}
+                      error={
+                        control.value.length > 0 &&
+                        control.value.trim().length < settings.MIN_LENGTH_REVIEW
+                      }
+                      last
+                      onChangeText={control.onChange}
+                      placeholder={I18n.t('add_review.text_placeholder')}
+                      rows={2}
+                      style={styles.textInputContainer}
+                      value={control.value}
+                    />
+                  )}
+                </Foect.Control>
+                <Foect.Control name="rateNumber" required>
+                  {control => (
+                    <View>
+                      <StarRating
+                        // eslint-disable-next-line
+                        containerStyle={{
+                          alignSelf: 'center',
+                          width: widthFields,
+                          justifyContent: 'space-between',
+                          marginTop: 10,
+                        }}
+                        // disabled={isLoading}
+                        emptyStar="md-star-outline"
+                        emptyStarColor={colors.black}
+                        fullStar="md-star"
+                        fullStarColor={colors.black}
+                        iconSet="Ionicons"
+                        maxStars={5}
+                        rating={parseInt(control.value)}
+                        selectedStar={control.onChange}
+                        starSize={35}
                       />
-                    )}
-                  </Foect.Control>
-                  <Foect.Control name="rateNumber" required>
-                    {control => (
-                      <View>
-                        <StarRating
-                          // eslint-disable-next-line
-                          containerStyle={{
-                            alignSelf: 'center',
-                            width: widthFields,
-                            justifyContent: 'space-between',
-                            marginTop: 10,
-                          }}
-                          // disabled={isLoading}
-                          emptyStar="md-star-outline"
-                          emptyStarColor={colors.black}
-                          fullStar="md-star"
-                          fullStarColor={colors.black}
-                          iconSet="Ionicons"
-                          maxStars={5}
-                          rating={parseInt(control.value)}
-                          selectedStar={control.onChange}
-                          starSize={35}
-                        />
-                        <Text
-                          style={{
-                            color: colors.red,
-                            textAlign: 'center',
-                          }}>
-                          {form.isSubmitted && control.isInvalid
-                            ? I18n.t('add_review.rating_error')
-                            : ' '}
-                        </Text>
-                      </View>
-                    )}
-                  </Foect.Control>
-                  <Button
-                    block
-                    dark
-                    style={{
-                      marginTop: 15,
-                      width: widthFields,
-                      alignSelf: 'center',
-                    }}
-                    onPress={() => form.submit()}>
-                    <Text style={styles.buttonText}>
-                      {I18n.t('add_review.button')}
-                    </Text>
-                  </Button>
-                </View>
+                      <Text
+                        style={{
+                          color: colors.red,
+                          textAlign: 'center',
+                        }}>
+                        {form.isSubmitted && control.isInvalid
+                          ? I18n.t('add_review.rating_error')
+                          : ' '}
+                      </Text>
+                    </View>
+                  )}
+                </Foect.Control>
+                <Button
+                  block
+                  dark
+                  style={{
+                    marginTop: 15,
+                    width: widthFields,
+                    alignSelf: 'center',
+                  }}
+                  onPress={() => form.submit()}>
+                  <Text style={styles.buttonText}>
+                    {I18n.t('add_review.button')}
+                  </Text>
+                </Button>
               </View>
             )}
           </Foect.Form>

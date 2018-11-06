@@ -8,7 +8,7 @@ const a = I18n.currentLocale();
 
 if (a.startsWith('ru')) {
   I18n.locale = 'uk-UA';
-  console.debug('Russian language detected fallbacked to Ukrainian');
+  console.debug('Russian language detected. Fallbacking to Ukrainian');
 }
 
 I18n.translations = {

@@ -27,15 +27,12 @@ const tabBarConfiguration = {
       let iconName;
       switch (routeName) {
         case 'home':
-          // iconName = isiOS ? `ios-home${focused ? '' : ''}` : 'md-home';
           iconName = isiOS ? 'ios-home' : 'md-home';
           break;
         case 'search':
-          // ? `ios-add-circle${focused ? '' : ''}`
           iconName = isiOS ? 'ios-search' : 'md-search';
           break;
         case 'new':
-          // ? `ios-add-circle${focused ? '' : ''}`
           iconName = isiOS ? 'ios-add-circle' : 'md-add-circle';
           break;
         case 'orders':

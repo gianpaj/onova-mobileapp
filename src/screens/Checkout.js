@@ -601,7 +601,7 @@ export class CheckoutContainer extends Component<Props, State> {
             </NBButton> */}
           </Right>
         </Header>
-        {isLoading ? (
+        {isLoading || !cities ? (
           <View style={styles.loadingContainer}>
             <ActivityIndicator size="large" />
           </View>

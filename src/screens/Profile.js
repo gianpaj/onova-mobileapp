@@ -103,28 +103,11 @@ const { analyticsEnabled } = api;
 class ProfileScreen extends React.Component<Props, State> {
   constructor(props) {
     super(props);
-    const { userData } = this.props;
-    const { params } = this.props.navigation.state;
 
-    // if we're not navigating and passing params or it's me
-    if (!params || params._id == userData._id) {
-      this.state = {
-        ...defaultState,
-        _id: userData._id,
-        bio: userData.bio,
-        displayName: userData.displayName,
-        emailAddress: userData.emailAddress,
-        followersCount: userData.followersCount,
-        followingCount: userData.followingCount,
-        mobileNumber: userData.mobileNumber,
-        profilePic: userData.profilePic,
-        // rateAvg: ratingsTotal == 0 ? ratingsTotal : ratingsTotal / reviewsCount,
-        reviewsCount: userData.reviewsCount,
-        username: userData.username,
-      };
-    } else {
-      this.state = defaultState;
-    }
+    this.state = {
+      ...defaultState,
+      ...this.props.userData,
+    };
   }
 
   static navigationOptions = () => ({
@@ -222,13 +205,9 @@ class ProfileScreen extends React.Component<Props, State> {
     const { bio, displayName, profilePic } = this.state;
     const formData = new FormData();
 
-    if (bio && bio !== '') {
-      formData.append('bio', bio);
-    }
+    formData.append('bio', bio);
 
-    if (displayName && displayName !== '') {
-      formData.append('displayName', displayName);
-    }
+    formData.append('displayName', displayName);
 
     if (profilePic && profilePic.path !== undefined) {
       // $FlowFixMe

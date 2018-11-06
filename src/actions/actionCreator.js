@@ -305,6 +305,7 @@ const signup = (data: SignupData) => (dispatch: Dispatch) => {
     })
     .catch((err: APIError) => {
       dispatch(handleErrorWithAlert({ type: SIGNUP_FAIL }, err));
+      Toast.hide();
       throw err;
     })
     .then(() => Toast.hide());

@@ -55,25 +55,22 @@ class ReviewsTabContainer extends Component<Props, State> {
     const { token } = this.props;
     // for development
     // (firstuser) on local server
-    // let userId = '5a78d09e2d314a702698f957';
+    let userId = '5a78d09e2d314a702698f957';
     // (alex) on prod server
-    let userId = '5afaa93daeeb1453812fc011';
+    // let userId = '5afaa93daeeb1453812fc011';
 
     if (this.props.navigation.state.params) {
       userId = this.props.navigation.state.params.userId;
     }
 
-    const res = await api.get(
+    const { data } = await api.get(
       `/api/users/${userId}/reviews?as=${this.props.as}`,
       { token }
     );
     // get the first image size and then setState `data` for the FlatList
-    if (res.data && res.data.length) {
-      const { data } = res;
-      const uri = data[0].order.product.photoURIs[0].replace(
-        '.jpg',
-        '-thumb.jpg'
-      );
+    if (data && data.length) {
+      console.log(data);
+      const uri = data[0].product.photoURIs[0].replace('.jpg', '-thumb.jpg');
       Image.getSize(uri, (w, h) => {
         this.setState({
           imageHeight: Math.floor(h * (width / 4 / w)),
@@ -95,15 +92,13 @@ class ReviewsTabContainer extends Component<Props, State> {
       .then(() => this.setState({ isRefreshing: false }));
   };
 
-  goToProfile = (user: UserData) => {
-    let routeName = 'profileInStack';
+  goToProfile = (user: UserData) =>
     // $FlowFixMe
     this.props.navigation.navigate({
-      routeName,
+      routeName: 'profileInStack',
       params: user,
       key: `profile-${user.username}`,
     });
-  };
 
   renderEmptyState = () => {
     // TODO: center empty state in RN 0.56 - https://github.com/facebook/react-native/pull/18206
@@ -116,15 +111,13 @@ class ReviewsTabContainer extends Component<Props, State> {
     );
   };
 
-  _keyExtractor = (item): string => item._id;
+  _keyExtractor = (item): string => item.id;
 
   _renderSeparator = () => <View style={styles.separator} />;
 
-  _renderItem = ({ item }) => {
-    return (
-      <ReviewCard review={item} as={this.props.as} onPress={this.goToProfile} />
-    );
-  };
+  _renderItem = ({ item }) => (
+    <ReviewCard order={item} as={this.props.as} onPress={this.goToProfile} />
+  );
 
   render() {
     return (

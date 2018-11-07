@@ -189,8 +189,8 @@ export type Order = {
     uuid: string,
   },
   // reason: ?string,
-  reviewFromBuyer: ?string,
-  reviewFromSeller: ?string,
+  reviewFromBuyer: ?string | Review,
+  reviewFromSeller: ?string | Review,
   seller: UserDataShorter,
   status: string,
   // taxAmount: ?number;

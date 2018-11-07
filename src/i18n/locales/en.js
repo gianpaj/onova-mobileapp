@@ -254,7 +254,7 @@ http://onova.co/uploader
   reviews: {
     header: 'Reviews',
     sold_tab: 'Sold',
-    purchased_tab: 'Purchase',
+    purchased_tab: 'Purchased',
     alert_info_title: 'Want more reviews?',
     alert_info_body:
       'To transfer your reviews from VK, Instagram, Facebook or other places, contact us at support@onova.co',

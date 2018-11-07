@@ -70,7 +70,7 @@ type State = {
   isRefreshing: boolean,
   profilePic: string | Image,
   // rateAvg: number,
-  reviewsCount: number,
+  ordersAndReviewsCount: number,
   username: string,
   index: number,
   routes: Array<any>,
@@ -89,7 +89,7 @@ const defaultState = {
   isFetching: true,
   profilePic: '',
   // rateAvg: -1,
-  reviewsCount: -1,
+  ordersAndReviewsCount: -1,
   username: '',
   index: 0,
   routes: [
@@ -133,7 +133,7 @@ class ProfileScreen extends React.Component<Props, State> {
           followersCount,
           followingCount,
           // ratingsTotal,
-          reviewsCount,
+          ordersAndReviewsCount,
         } = res;
 
         this.setState({
@@ -146,7 +146,7 @@ class ProfileScreen extends React.Component<Props, State> {
           followingCount,
           // rateAvg:
           //   ratingsTotal == 0 ? ratingsTotal : ratingsTotal / reviewsCount,
-          reviewsCount,
+          ordersAndReviewsCount,
         });
 
         if (params._id !== userData._id) {
@@ -391,22 +391,28 @@ class ProfileScreen extends React.Component<Props, State> {
   };
 
   renderUserNumbers = () => {
+    const {
+      ordersAndReviewsCount,
+      followersCount,
+      followingCount,
+    } = this.state;
+
     return (
       <View style={styles.userNumbers}>
         <TouchableOpacity onPress={this.goToReviews} style={styles.alignCenter}>
-          <Text style={styles.numbers}>{this.state.reviewsCount}</Text>
+          <Text style={styles.numbers}>{ordersAndReviewsCount}</Text>
           <Text style={styles.label}>{I18n.t('profile.reviews_label')}</Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={this.goToFollowers}
           style={styles.alignCenter}>
-          <Text style={styles.numbers}>{this.state.followersCount}</Text>
+          <Text style={styles.numbers}>{followersCount}</Text>
           <Text style={styles.label}>{I18n.t('profile.followers_label')}</Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={this.goToFollowing}
           style={styles.alignCenter}>
-          <Text style={styles.numbers}>{this.state.followingCount}</Text>
+          <Text style={styles.numbers}>{followingCount}</Text>
           <Text style={styles.label}>{I18n.t('profile.following_label')}</Text>
         </TouchableOpacity>
       </View>

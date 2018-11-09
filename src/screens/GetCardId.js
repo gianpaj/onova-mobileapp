@@ -9,6 +9,7 @@ import { enableRefresh } from '../actions/actionCreator';
 
 import * as api from '../utils/api';
 import * as ui from '../utils/ui';
+import I18n from '../i18n';
 
 const URL_BASE = 'https://api.demo.uapay.ua';
 
@@ -99,7 +100,9 @@ class GetCardId extends Component {
                 <iframe id="uapayFrame" style="border: 0; height: 220px; width: 100%" src="${URL_BASE}/api/iframe/${
               this.state.tokenForCardIFrame
             }"></iframe>
-                <button id="btnSubmit">Створити картку</button>
+                <button id="btnSubmit">${I18n.t(
+                  'checkout.save_card_info'
+                )}</button>
               </body></html>`,
           }}
           injectedJavaScript={`(${JStoInject.toString()}());`}
@@ -108,7 +111,7 @@ class GetCardId extends Component {
           startInLoadingState
         />
         <Button
-          title="go back"
+          title={I18n.t('checkout.go_back')}
           onPress={() => this.props.navigation.goBack()}
         />
       </View>

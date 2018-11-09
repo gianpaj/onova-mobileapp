@@ -1,4 +1,5 @@
 import defaults from '../../utils/defaults';
+import settings from '../../config/settings';
 
 export default {
   intro: {
@@ -143,7 +144,7 @@ http://onova.co/uploader
     image_processing: 'Loading images',
     edit_item_header: 'Edit Item',
     price_label: 'Price:',
-    price_placeholder: 'min 150 UAH',
+    price_placeholder: `min ${settings.MIN_PRICE} UAH`,
     description_label: 'Description:',
     description_placeholder:
       'Please provide details such as brand, size and condition about the item',
@@ -230,6 +231,8 @@ http://onova.co/uploader
     ),
     department_requirement_right: 'Pick a city',
     payment_button: 'Make Payment',
+    save_card_info: 'Зберегти данні картки',
+    go_back: 'Назад',
   },
   userInfo: {
     firstName: "Ім'я",

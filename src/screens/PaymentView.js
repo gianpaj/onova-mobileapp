@@ -147,7 +147,7 @@ class PaymentView extends Component {
           }}
         />
         <Button
-          title="go back"
+          title={I18n.t('checkout.go_back')}
           onPress={() => this.props.navigation.goBack()}
         />
       </View>

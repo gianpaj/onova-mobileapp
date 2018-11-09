@@ -1,3 +1,3 @@
 export default {
-  numHoursSellerHasToConfirm: 24,
+  numHoursSellerHasToConfirm: 48,
 };

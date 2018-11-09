@@ -382,7 +382,11 @@ class SettingsContainer extends Component<Props, State> {
         itemsContainerStyle={styles.autocompleteItemContainers}
         itemStyle={styles.autocompleteItems}
         items={departments}
-        extra={!city && <Text>Pick a city</Text>}
+        extra={
+          !city && (
+            <Text>{I18n.t('checkout.department_requirement_right')}</Text>
+          )
+        }
         {...props}
       />
     );

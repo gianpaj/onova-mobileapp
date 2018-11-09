@@ -1,4 +1,5 @@
 import defaults from '../../utils/defaults';
+import settings from '../../config/settings';
 
 export default {
   intro: {
@@ -143,7 +144,7 @@ http://onova.co/uploader
     image_processing: 'Фотографії завантажуються',
     edit_item_header: 'Редагувати',
     price_label: 'Ціна:',
-    price_placeholder: 'min 150 UAH',
+    price_placeholder: `${settings.MIN_PRICE} ГРН`,
     description_label: 'Опис:',
     description_placeholder:
       'В якому стані річ, якого розміру, бренду і тому подібне',
@@ -153,6 +154,7 @@ http://onova.co/uploader
     select_photo_source_gallery: 'Галерея',
     select_photo_source_cancel: 'Відмінити',
     too_many_images: 'Дозвелоно максимум 6 зображень',
+    min_price: 'Мінімальна ціна Х',
   },
   create_drop: {
     title: 'Створити Дроп',
@@ -228,6 +230,8 @@ http://onova.co/uploader
     ),
     department_requirement_right: 'Обери місто',
     payment_button: 'Придбати',
+    save_card_info: 'Save card information',
+    go_back: 'Назад',
   },
   userInfo: {
     firstName: "Ім'я",
@@ -262,10 +266,10 @@ http://onova.co/uploader
       'Щоб перенести свої відгуки з VK, Instagram, Facebook або іншого місця напиши нам на support@onova.co',
     empty_state_message:
       'Щоб перенести свої відгуки з VK, Instagram, Facebook або іншого місця напиши нам на support@onova.co',
-    completed: 'Successful transaction. No review left',
-    cancelled: 'Seller cancelled the order',
-    failed_by_buyer: 'Buyer failed to pick up or refused the item',
-    failed_by_seller: "Seller failed to ship or didn't confirm on time",
+    completed: 'Успішна покупка без відгуку',
+    cancelled: 'Продавець відмінив покупку',
+    failed_by_buyer: 'Покупець не забрав покупку',
+    failed_by_seller: 'Продавець відмінив або не відправив товар',
   },
   settings: {
     header: 'Налаштування',
@@ -282,7 +286,7 @@ http://onova.co/uploader
   },
   add_review: {
     header: 'Відгук',
-    // success_message: 'Thanks for the review!',
+    success_message: 'Відгук залишено!',
     // nova_poshta_tracking_num: 'Номер накладної Нової Пошти',
     text_placeholder: "Текст (не обов'язково)",
     rating_error: 'Обери якість від 1 до 5',

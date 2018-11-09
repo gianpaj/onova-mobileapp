@@ -172,7 +172,7 @@ class ChatContainer extends Component<Props, State> {
     const navigateToChat = NavigationActions.navigate({
       routeName: 'chat',
       params: { roomId },
-      key: `chat-${roomId}`,
+      key: `chat-${roomId}`, // TODO: use OrderId
     });
     this.props.navigation.dispatch(navigateToChat);
   };

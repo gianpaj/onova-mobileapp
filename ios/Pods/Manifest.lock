@@ -95,6 +95,8 @@ PODS:
     - QBImagePickerController
     - React/Core
     - RSKImageCropper
+  - RNSVG (8.0.8):
+    - React
   - RNVectorIcons (4.6.0):
     - React
   - RSKImageCropper (2.2.1)
@@ -131,6 +133,7 @@ DEPENDENCIES:
   - rn-fetch-blob (from `../node_modules/rn-fetch-blob`)
   - RNI18n (from `../node_modules/react-native-i18n`)
   - RNImageCropPicker (from `../node_modules/react-native-image-crop-picker`)
+  - RNSVG (from `../node_modules/react-native-svg`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - Segment-Mixpanel
   - SentryReactNative (from `../node_modules/react-native-sentry/SentryReactNative.podspec`)
@@ -173,6 +176,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-i18n"
   RNImageCropPicker:
     :path: "../node_modules/react-native-image-crop-picker"
+  RNSVG:
+    :path: "../node_modules/react-native-svg"
   RNVectorIcons:
     :path: "../node_modules/react-native-vector-icons"
   SentryReactNative:
@@ -202,6 +207,7 @@ SPEC CHECKSUMS:
   rn-fetch-blob: 76a8f798dae965bbcd146a2438f2e1d381c91ae3
   RNI18n: 46b8694063fbd699f2c06a4dc8e835b3176763b1
   RNImageCropPicker: 32ca4b9fef4e1b7b85ba69494242122948117e06
+  RNSVG: 6252323c0312735f0af5f58b5adf2965b6a9ffbf
   RNVectorIcons: c0dbfbf6068fefa240c37b0f71bd03b45dddac44
   RSKImageCropper: 98296ad26b41753f796b6898d015509598f13d97
   Segment-Mixpanel: edded29dfc288e62f0fae20c9b42a3c50d0639b9
@@ -209,6 +215,6 @@ SPEC CHECKSUMS:
   SentryReactNative: d476259b21060a59dc637a29a40d60f0aac09cf7
   yoga: b1ce48b6cf950b98deae82838f5173ea7cf89e85
 
-PODFILE CHECKSUM: bb241ebe9ebb30ad0055ccc4705b4a4c8ba1e369
+PODFILE CHECKSUM: 986accbb8008104e810a0ca2146e542b00b39c39
 
 COCOAPODS: 1.5.3

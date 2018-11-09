@@ -47,6 +47,8 @@ target 'onova' do
   pod 'ReactNativePermissions', :path => '../node_modules/react-native-permissions'
 
   # Add new pods below this line - DO NOT DELETE THIS LINE - it's used for when running `react-native link _native_pkg_`
+  pod 'RNSVG', :path => '../node_modules/react-native-svg'
+
   pod 'react-native-webview', :path => '../node_modules/react-native-webview'
 
 

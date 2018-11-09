@@ -10,6 +10,8 @@ import { logout } from '../actions/actionCreator';
 import type { Dispatch } from '../types';
 import I18n from '../i18n';
 import colors from '../config/colors';
+import Shield from '../assets/svg/shield';
+import ShoeLabel from '../assets/svg/shoe-label';
 
 type Props = {
   dispatch: Dispatch,
@@ -38,25 +40,19 @@ class IntroScreens extends Component<Props> {
         pages={[
           {
             backgroundColor: colors.white,
-            image: <Icon color={colors.black} name="md-person-add" size={48} />,
+            image: <Shield width={80} height={80} />,
             title: I18n.t('intro.step_1.title'),
             subtitle: I18n.t('intro.step_1.subtitle'),
           },
           {
             backgroundColor: colors.white,
-            image: <Icon color={colors.black} name="md-camera" size={48} />,
+            image: <ShoeLabel width={80} height={80} />,
             title: I18n.t('intro.step_2.title'),
             subtitle: I18n.t('intro.step_2.subtitle'),
           },
           {
             backgroundColor: colors.white,
-            image: (
-              <Icon
-                color={colors.black}
-                name="md-information-circle"
-                size={48}
-              />
-            ),
+            image: <Icon color={colors.black} name="md-person-add" size={80} />,
             title: I18n.t('intro.step_3.title'),
             subtitle: I18n.t('intro.step_3.subtitle'),
           },

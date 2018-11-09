@@ -5,20 +5,23 @@ export default {
     skip: 'Пропустити',
     next: 'Наступний',
     step_1: {
-      title: 'Додавай інші магазини',
-      subtitle:
-        'Додавай інших продавців, щоб бачити їхні речі. На головній сторінці ти бачиш лише речі продавців, котрі в тебе в контактах. Чим більше продавців ти додасиш, тим більше речей бачитимеш',
+      title: 'БЕЗПЕЧНА КУПІВЛЯ',
+      subtitle: `Купуй речі з захищеною системою від UA-PAY
+
+
+
+ `,
     },
     step_2: {
-      title: 'Швидке завантаження',
-      subtitle: `Для швидкого завантаження речей з комп'ютера, використовуй onova.co/uploader
+      title: 'ПРОДАВАЙ ЛЕГКО',
+      subtitle: `Створи професійну сторінку продавця менш ніж за хвилину
 
 
  `,
     },
     step_3: {
-      title: 'Допомога',
-      subtitle: `Якщо є якісь питання, пиши на офіційний профіль @onova
+      title: 'ДОДАВАЙ ІНШИХ',
+      subtitle: `Чим більше людей ти додаєш, тим більше речей ти бачиш на домашній сторінці
 
 
  `,
@@ -259,6 +262,10 @@ http://onova.co/uploader
       'Щоб перенести свої відгуки з VK, Instagram, Facebook або іншого місця напиши нам на support@onova.co',
     empty_state_message:
       'Щоб перенести свої відгуки з VK, Instagram, Facebook або іншого місця напиши нам на support@onova.co',
+    completed: 'Successful transaction. No review left',
+    cancelled: 'Seller cancelled the order',
+    failed_by_buyer: 'Buyer failed to pick up or refused the item',
+    failed_by_seller: "Seller failed to ship or didn't confirm on time",
   },
   settings: {
     header: 'Налаштування',

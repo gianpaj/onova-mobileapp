@@ -5,18 +5,22 @@ export default {
     skip: 'Skip',
     next: 'Next',
     step_1: {
-      title: 'Follow shops',
-      subtitle:
-        'Add other shops to see their items. On the Main page, you see items of the shops that are in your contacts. The more shops you add, the more items you see',
+      title: 'Buy safely',
+      subtitle: `Buy things safely with UA-PAY Safe Purchase
+
+
+ `,
     },
     step_2: {
-      title: 'Add Items',
-      subtitle: `Use onova.co/uploader to upload items faster from your computer
+      title: 'Sell easily',
+      subtitle: `Make a professional seller page under a minute
+
+
  `,
     },
     step_3: {
-      title: 'Information',
-      subtitle: `If you have any questions, contact @onova user
+      title: 'Follow shops',
+      subtitle: `The more shops you follow the more items you see on your homepage
 
  `,
     },
@@ -260,6 +264,10 @@ http://onova.co/uploader
       'To transfer your reviews from VK, Instagram, Facebook or other places, contact us at support@onova.co',
     empty_state_message:
       'To transfer your reviews from VK, Instagram, Facebook or other places, contact us at support@onova.co',
+    completed: 'Successful transaction. No review left',
+    cancelled: 'Seller cancelled the order',
+    failed_by_buyer: 'Buyer failed to pick up or refused the item',
+    failed_by_seller: "Seller failed to ship or didn't confirm on time",
   },
   settings: {
     header: 'Settings',

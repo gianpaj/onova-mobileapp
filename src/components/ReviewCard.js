@@ -17,6 +17,7 @@ import { Body, ListItem } from 'native-base';
 
 import colors from '../config/colors';
 import * as ui from '../utils/ui';
+import i18n from '../i18n';
 
 import type { Order, UserData } from '../types';
 
@@ -92,9 +93,13 @@ class ReviewCard extends PureComponent<Props> {
               </Text>
             </TouchableOpacity>
           </View>
-          {review && (
+          {review ? (
             <Text style={styles.reviewText} numberOfLines={3}>
               {review.text}
+            </Text>
+          ) : (
+            <Text style={styles.statusText} numberOfLines={3}>
+              {i18n.t(`reviews.${order.status}`)}
             </Text>
           )}
           <Text numberOfLines={1}>
@@ -124,6 +129,11 @@ const styles = StyleSheet.create({
   },
   reviewText: {
     flex: 1,
+    // textAlignVertical: 'bottom', // android
+    paddingBottom: 5,
+  },
+  statusText: {
+    fontStyle: 'italic',
     // textAlignVertical: 'bottom', // android
     paddingBottom: 5,
   },

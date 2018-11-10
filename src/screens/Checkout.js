@@ -90,9 +90,10 @@ type State = {
 
 const cyrillicRegex = /^$|^[\u0400-\u04FF\s]+$/;
 
-export class CheckoutContainer extends Component<Props, State> {
+class CheckoutContainer extends Component<Props, State> {
   inputs = [];
   cancelToken: CancelTokenSource;
+
   state = {
     areFeesLoading: false,
     cvc: '',
@@ -148,7 +149,7 @@ export class CheckoutContainer extends Component<Props, State> {
         this.setState({ departments });
       }
     } catch (error) {
-      console.debug(error);
+      console.error(error);
       if (error.message.startsWith('Seller is missing')) {
         Toast.fail(error.message);
         return this.props.navigation.goBack();
@@ -804,5 +805,7 @@ const mapStateToProps: any = (state: ReduxState) => ({
   token: state.LoginReducer.token,
   shouldRefresh: state.RefresherReducer.shouldRefresh,
 });
+
+export default CheckoutContainer;
 
 export const Checkout = connect(mapStateToProps)(CheckoutContainer);

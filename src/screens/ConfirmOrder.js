@@ -31,7 +31,6 @@ import I18n from '../i18n';
 import colors from '../config/colors';
 import typography from '../config/typography';
 import * as api from '../utils/api';
-import * as ui from '../utils/ui';
 
 import type { NavigationScreenProp } from 'react-navigation';
 import type { Order, UserData, ReduxState } from '../types';

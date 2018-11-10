@@ -64,7 +64,7 @@ export class ConfirmOrderContainer extends Component<Props, State> {
 
     const params = this.props.navigation.state.params;
     // for development
-    let orderId = '5bd1e36e97a6745fbd9643b2';
+    let orderId = '5bdb16b06a7aef00de9da76b';
 
     if (params) {
       orderId = params.id;
@@ -201,7 +201,7 @@ export class ConfirmOrderContainer extends Component<Props, State> {
           <Right />
         </Header>
         <View>
-          <ListItem style={{ marginLeft: 0, paddingTop: 0, paddingBottom: 0 }}>
+          <ListItem style={styles.itemOnTop}>
             <TouchableOpacity
               onPress={() => this.goToProduct(order.product)}
               style={{ height: width / 5 }}>
@@ -222,25 +222,15 @@ export class ConfirmOrderContainer extends Component<Props, State> {
               </Text>
             </Body>
           </ListItem>
-          <View
-            style={{
-              padding: 10,
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}>
+          <View style={styles.mainContainer}>
             <Avatar
               onPress={() => this.goToProfile(buyer)}
               uri={buyer.profilePic}
               style={{ margin: 10 }}
             />
-            <View
-              style={{
-                alignItems: 'center',
-                padding: 5,
-                flexDirection: 'row',
-              }}>
+            <View style={[styles.row, { alignItems: 'center' }]}>
               <StarRating
-                // eslint-disable-next-line
+                // eslint-disable-next-line react-native/no-inline-styles
                 containerStyle={{
                   justifyContent: 'space-between',
                   width: 108,
@@ -268,20 +258,12 @@ export class ConfirmOrderContainer extends Component<Props, State> {
             <Text numberOfLines={2} style={styles.messageText}>
               {I18n.t('confirm_order.buying_item_text')}
             </Text>
-            <View
-              style={{
-                marginTop: 5,
-                flexDirection: 'row',
-              }}>
+            <View style={styles.row}>
               <Button
                 block
                 dark
                 disabled={isPending}
-                style={{
-                  marginTop: 15,
-                  marginRight: 15,
-                  width: widthButtons,
-                }}
+                style={styles.buttonConfirm}
                 onPress={this.onConfirm}>
                 <Text style={styles.buttonText}>
                   {I18n.t('confirm_order.confirm')}
@@ -291,10 +273,7 @@ export class ConfirmOrderContainer extends Component<Props, State> {
                 light
                 block
                 disabled={isPending}
-                style={{
-                  marginTop: 15,
-                  width: widthButtons,
-                }}
+                style={styles.buttonCancel}
                 onPress={this.showModal}>
                 <Text style={[styles.buttonText, { color: colors.black }]}>
                   {I18n.t('alerts.action_button_cancel')}
@@ -345,12 +324,13 @@ export class ConfirmOrderContainer extends Component<Props, State> {
                         value={control.value}
                       />
                       <Text
-                        style={{
-                          display: !hasError ? 'none' : 'flex',
-                          marginBottom: 15,
-                          color: colors.red,
-                          textAlign: 'center',
-                        }}>
+                        style={[
+                          styles.dialogErrorText,
+                          // eslint-disable-next-line react-native/no-inline-styles
+                          {
+                            display: hasError ? 'flex' : 'none',
+                          },
+                        ]}>
                         {I18n.t('confirm_order.error_reason_is_mandatory')}
                       </Text>
                     </View>
@@ -384,18 +364,28 @@ const mapStateToProps: any = (state: ReduxState) => ({
 
 export const ConfirmOrder = connect(mapStateToProps)(ConfirmOrderContainer);
 
-const isUkraian = I18n.locale === 'uk-UA';
-
-const widthButtons = isUkraian ? 120 : 100;
-
 const styles = StyleSheet.create({
   container: {
     alignItems: 'stretch',
     flex: 1,
     justifyContent: 'center',
   },
+  itemOnTop: {
+    marginLeft: 0,
+    paddingTop: 0,
+    paddingBottom: 0,
+  },
+  mainContainer: {
+    padding: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   name: {
     fontWeight: 'bold',
+  },
+  row: {
+    padding: 5,
+    flexDirection: 'row',
   },
   itemImage: {
     borderWidth: StyleSheet.hairlineWidth,
@@ -410,8 +400,22 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
     fontSize: typography.font_body_size * 1.5,
   },
+  buttonConfirm: {
+    marginTop: 15,
+    marginRight: 15,
+    paddingHorizontal: 20,
+  },
+  buttonCancel: {
+    marginTop: 15,
+    paddingHorizontal: 20,
+  },
   buttonText: {
     fontSize: typography.font_button_size,
     color: colors.white,
+  },
+  dialogErrorText: {
+    marginBottom: 15,
+    color: colors.red,
+    textAlign: 'center',
   },
 });

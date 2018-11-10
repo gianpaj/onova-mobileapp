@@ -115,9 +115,15 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     uuid: '',
   };
 
-  componentDidMount() {
+  async componentDidMount() {
     // $FlowFixMe
     const { params } = this.props.navigation.state;
+
+    // for development
+    // const data = await api.getProduct('D6cEHxhIX');
+    // console.warn(data);
+    // const params = { item: data };
+
     if (params && params.item) {
       this.setState({ inEditMode: true });
       const { item }: { item: Product } = params;
@@ -129,6 +135,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
           isUploading: false,
         });
       }
+      this.priceControl.onChange(item.price);
       return this.setState({
         images,
         description: item.description,
@@ -292,24 +299,25 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
   };
 
   closeModalConditional = () => {
-    const { inEditMode } = this.state;
-    if (!inEditMode /* && fields.touched() */) {
-      if (this.hasUnsavedChanges()) {
-        ui.showConfirmAlert(
-          I18n.t('profile.alert_unsaved_changes_title'),
-          I18n.t('profile.alert_unsaved_changes_body'),
-          () => {
-            // on continue
-            this.closeModal();
-          },
-          () => {},
-          I18n.t('profile.alert_unsaved_changes_button_cancel'),
-          I18n.t('profile.alert_unsaved_changes_button_confirm')
-        );
-      } else {
-        this.closeModal();
-      }
+    // const { inEditMode } = this.state;
+    // if (!inEditMode /* && fields.touched() */) {
+    // FIXME: check if the changes are different from loading from the API
+    if (this.hasUnsavedChanges()) {
+      ui.showConfirmAlert(
+        I18n.t('profile.alert_unsaved_changes_title'),
+        I18n.t('profile.alert_unsaved_changes_body'),
+        () => {
+          // on continue
+          this.closeModal();
+        },
+        () => {},
+        I18n.t('profile.alert_unsaved_changes_button_cancel'),
+        I18n.t('profile.alert_unsaved_changes_button_confirm')
+      );
+    } else {
+      this.closeModal();
     }
+    // }
   };
 
   onSave = async ({ price }) => {

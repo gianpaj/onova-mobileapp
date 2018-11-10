@@ -121,44 +121,44 @@ class ProfileScreen extends React.Component<Props, State> {
     // const CancelToken = axios.CancelToken;
     // this.cancelToken = CancelToken.source();
     try {
-      // if the screen navigated with an userID and it's not me
+      let userId = userData._id;
+      // if the screen was navigated with an userID
       if (params && params._id) {
-        const res: UserData = await api.get(`/api/users/${params._id}`);
-        const {
-          _id,
-          bio,
-          displayName,
-          profilePic,
-          username,
-          followersCount,
-          followingCount,
-          // ratingsTotal,
-          ordersAndReviewsCount,
-        } = res;
+        userId = params._id;
+      }
+      const res: UserData = await api.get(`/api/users/${userId}`);
+      const {
+        _id,
+        bio,
+        displayName,
+        profilePic,
+        username,
+        followersCount,
+        followingCount,
+        // ratingsTotal,
+        ordersAndReviewsCount,
+      } = res;
 
-        this.setState({
-          _id,
-          bio,
-          displayName,
-          profilePic,
-          username,
-          followersCount,
-          followingCount,
-          // rateAvg:
-          //   ratingsTotal == 0 ? ratingsTotal : ratingsTotal / reviewsCount,
-          ordersAndReviewsCount,
+      this.setState({
+        _id,
+        bio,
+        displayName,
+        profilePic,
+        username,
+        followersCount,
+        followingCount,
+        // rateAvg:
+        //   ratingsTotal == 0 ? ratingsTotal : ratingsTotal / reviewsCount,
+        ordersAndReviewsCount,
+      });
+
+      if (params && params._id !== userData._id) {
+        const { data } = await api.get(`/api/users/${userId}/follow`, {
+          token,
         });
-
-        if (params._id !== userData._id) {
-          const { data } = await api.get(`/api/users/${params._id}/follow`, {
-            token,
-          });
-          if (data.following == params._id) {
-            this.setState({ isFollowing: true });
-          }
+        if (data.following == params._id) {
+          this.setState({ isFollowing: true });
         }
-      } else {
-        return this.props.dispatch(getPersonalUserData());
       }
     } catch (err) {
       if (err.message == 'Not following') {

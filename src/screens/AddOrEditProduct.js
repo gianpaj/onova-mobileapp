@@ -85,6 +85,7 @@ type State = {
   grp_2: number,
   images: Array<Image>,
   inEditMode: boolean,
+  isLoading: boolean,
   isUploading: boolean,
   numberOfBrands: number,
   order: Array<number>,
@@ -105,6 +106,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     grp_2: -1,
     images: [],
     inEditMode: false,
+    isLoading: true,
     isUploading: false,
     numberOfBrands: 0,
     order: [],
@@ -115,7 +117,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     uuid: '',
   };
 
-  async componentDidMount() {
+  componentDidMount() {
     // $FlowFixMe
     const { params } = this.props.navigation.state;
 
@@ -135,17 +137,18 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
           isUploading: false,
         });
       }
-      this.priceControl.onChange(item.price);
       return this.setState({
-        images,
         description: item.description,
-        price: item.price,
-        tags: item.tags,
         grp_1: item.categoryIds[0],
         grp_2: item.typeIds[0],
+        images,
+        isLoading: false,
+        price: item.price,
+        tags: item.tags,
         uuid: item.uuid,
       });
     }
+    this.setState({ isLoading: false });
     this.selectPhotoTapped(0);
   }
 
@@ -193,7 +196,6 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
               .catch(() => this.closeModalConditional());
             break;
           default:
-            this.closeModalConditional();
             break;
         }
       }
@@ -258,11 +260,9 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
   }
 
   removeSinglePhoto = (index: number) =>
-    this.setState(prevState => {
-      return {
-        images: prevState.images.filter((e, i) => i !== index),
-      };
-    });
+    this.setState(prevState => ({
+      images: prevState.images.filter((e, i) => i !== index),
+    }));
 
   // if we want to replace an existing photo
   appendImageOrReplace = (image: any, i: number) => {
@@ -270,33 +270,24 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
       if (prevState.images[i]) {
         const copy = [...prevState.images];
         copy[i] = image;
-        return {
-          images: copy,
-        };
+        return { images: copy };
       }
 
-      return {
-        images: [...prevState.images, image],
-      };
+      return { images: [...prevState.images, image] };
     });
   };
 
   hasUnsavedChanges(): boolean {
     const { description, images, price, tags } = this.state;
-    if (
+    return (
       description.length > 0 ||
       images.length > 0 ||
       price.length > 0 ||
       tags.length > 0
-    ) {
-      return true;
-    }
-    return false;
+    );
   }
 
-  closeModal = () => {
-    this.props.navigation.goBack();
-  };
+  closeModal = () => this.props.navigation.goBack();
 
   closeModalConditional = () => {
     // const { inEditMode } = this.state;
@@ -469,16 +460,19 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
       grp_2,
       images,
       inEditMode,
+      isLoading,
       isUploading,
+      price,
       tags,
       tagsText,
     } = this.state;
 
-    // if (images.length < 1 && !inEditMode) return null;
+    if (isLoading) return null;
 
     return (
       <Foect.Form
         onValidSubmit={this.onSave}
+        defaultValue={{ price }}
         onInvalidSubmit={this.onInvalidSubmit}>
         {form => (
           <Container>

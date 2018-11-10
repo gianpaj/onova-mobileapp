@@ -83,7 +83,7 @@ export default class ImagePicker extends React.Component<Props, State> {
           sortingEnabled={enabled}
           scrollEnabled={false}
           showsHorizontalScrollIndicator={false}
-          onPressRow={index => this.onImageClick(index)}
+          onPressRow={this.onImageClick}
           onChangeOrder={onChangeOrder}
         />
         {selectable && (
@@ -102,19 +102,17 @@ export default class ImagePicker extends React.Component<Props, State> {
     );
   }
 
-  _renderRow = ({ data, active, index }) => {
-    return (
-      <Row
-        active={active}
-        data={data}
-        index={index}
-        removeImage={() => {
-          if (this.props.enabled) this.removeImage(index);
-        }}
-        styles={styles}
-      />
-    );
-  };
+  _renderRow = ({ data, active, index }) => (
+    <Row
+      active={active}
+      data={data}
+      index={index}
+      removeImage={() => {
+        if (this.props.enabled) this.removeImage(index);
+      }}
+      styles={styles}
+    />
+  );
 }
 
 type RowProps = {

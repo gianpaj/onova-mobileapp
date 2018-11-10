@@ -104,10 +104,7 @@ class ProfileScreen extends React.Component<Props, State> {
   constructor(props) {
     super(props);
 
-    this.state = {
-      ...defaultState,
-      ...this.props.userData,
-    };
+    this.state = defaultState;
   }
 
   static navigationOptions = () => ({
@@ -131,25 +128,25 @@ class ProfileScreen extends React.Component<Props, State> {
         _id,
         bio,
         displayName,
-        profilePic,
-        username,
         followersCount,
         followingCount,
         // ratingsTotal,
         ordersAndReviewsCount,
+        profilePic,
+        username,
       } = res;
 
       this.setState({
         _id,
         bio,
         displayName,
-        profilePic,
-        username,
         followersCount,
         followingCount,
         // rateAvg:
         //   ratingsTotal == 0 ? ratingsTotal : ratingsTotal / reviewsCount,
         ordersAndReviewsCount,
+        profilePic,
+        username,
       });
 
       if (params && params._id !== userData._id) {
@@ -159,6 +156,8 @@ class ProfileScreen extends React.Component<Props, State> {
         if (data.following == params._id) {
           this.setState({ isFollowing: true });
         }
+      } else {
+        this.props.dispatch(getPersonalUserData());
       }
     } catch (err) {
       if (err.message == 'Not following') {
@@ -176,6 +175,7 @@ class ProfileScreen extends React.Component<Props, State> {
 
   onGoToSettings = () => {
     if (!this.hasUnsavedChanges()) {
+      this.setState({ editing: false });
       return this.goToSettings();
     }
     ui.showConfirmAlert(
@@ -183,6 +183,8 @@ class ProfileScreen extends React.Component<Props, State> {
       I18n.t('profile.alert_unsaved_changes_body'),
       () => {
         // on continue
+        this.refresh();
+        this.setState({ editing: false });
         this.goToSettings();
       },
       () => {},
@@ -243,6 +245,9 @@ class ProfileScreen extends React.Component<Props, State> {
       });
   };
 
+  /**
+   * return true if it has changes that need to be saved
+   */
   hasUnsavedChanges(): boolean {
     const { userData } = this.props;
     const { bio, displayName, profilePic } = this.state;

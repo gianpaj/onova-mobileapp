@@ -230,7 +230,7 @@ http://onova.co/uploader
     ),
     department_requirement_right: 'Обери місто',
     payment_button: 'Придбати',
-    save_card_info: 'Save card information',
+    save_card_info: 'Зберегти данні картки',
     go_back: 'Назад',
   },
   userInfo: {
@@ -295,5 +295,16 @@ http://onova.co/uploader
     toast_msg_reviewed: 'Ти вже залишив відгук',
     alert_confirm_archive: 'Видалити?',
     archived: 'Переміщено в Архів',
+    tracking_num_label: 'Накладна',
+  },
+  order_status: {
+    confirmed: 'Сплачено покупцем',
+    shipped: 'Відправлено продавцем',
+    not_shipped: 'Чекає відправлення продавцем',
+    not_collected: 'Відправлення прибуло, чекає покупця',
+    collected: 'Отримано покупцем',
+    failed_to_collect: 'Покупець не забрав пакунок',
+    failed_to_ship: 'Продавець не відправив пакунок',
+    updated: '(Оновлено)',
   },
 };

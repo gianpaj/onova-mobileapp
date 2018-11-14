@@ -1,14 +1,10 @@
 // @flow
 
 import React, { PureComponent } from 'react';
-import { Steps, WingBlank } from 'antd-mobile-rn';
-
+import { Steps } from 'antd-mobile-rn';
 import { StyleSheet, View } from 'react-native';
-
 import { differenceInHours, format } from 'date-fns';
 
-import colors from '../config/colors';
-import * as ui from '../utils/ui';
 import i18n from '../i18n';
 
 import type { Order } from '../types';
@@ -64,7 +60,9 @@ class OrderStatus extends PureComponent<Props> {
 
     const shipped = {
       title: i18n.t('order_status.shipped'),
-      description: `${formatDate(order.dateShipped)} (updated)`,
+      description: `${formatDate(order.dateShipped)} ${i18n.t(
+        'order_status.updated'
+      )}`,
       status: 'finish',
     };
     if (order.status == 'confirmed') {
@@ -89,7 +87,9 @@ class OrderStatus extends PureComponent<Props> {
       steps.push(shipped);
       steps.push({
         title: i18n.t('order_status.collected'),
-        description: `${formatDate(order.finalisedAt)} (updated)`,
+        description: `${formatDate(order.finalisedAt)} ${i18n.t(
+          'order_status.updated'
+        )}`,
         status: 'finish',
       });
     } else if (order.status == 'failed_by_buyer') {
@@ -97,13 +97,17 @@ class OrderStatus extends PureComponent<Props> {
       steps.push({
         // or refused (still not determined in API side)
         title: i18n.t('order_status.failed_to_collect'),
-        description: `${formatDate(order.finalisedAt)} (updated)`,
+        description: `${formatDate(order.finalisedAt)} ${i18n.t(
+          'order_status.updated'
+        )}`,
         status: 'error',
       });
     } else if (order.status == 'failed_by_seller') {
       steps.push({
         title: i18n.t('order_status.failed_to_ship'),
-        description: `${formatDate(order.finalisedAt)} (updated)`,
+        description: `${formatDate(order.finalisedAt)} ${i18n.t(
+          'order_status.updated'
+        )}`,
         status: 'error',
       });
     }
@@ -116,8 +120,7 @@ class OrderStatus extends PureComponent<Props> {
     if (!steps) return null;
 
     return (
-      <View
-        style={[{ alignItems: 'center', marginBottom: -30 }, this.props.style]}>
+      <View style={[styles.container, this.props.style]}>
         <Steps>
           {steps.map((item: any, index: number) => (
             <Step
@@ -136,27 +139,5 @@ class OrderStatus extends PureComponent<Props> {
 export default OrderStatus;
 
 const styles = StyleSheet.create({
-  itemImage: {
-    marginHorizontal: 15,
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor: colors.grey4,
-  },
-  contentRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 6,
-  },
-  username: {
-    color: colors.grey1,
-  },
-  reviewText: {
-    flex: 1,
-    // textAlignVertical: 'bottom', // android
-    paddingBottom: 5,
-  },
-  statusText: {
-    fontStyle: 'italic',
-    // textAlignVertical: 'bottom', // android
-    paddingBottom: 5,
-  },
+  container: { alignItems: 'center', marginBottom: -30 },
 });

@@ -231,8 +231,8 @@ http://onova.co/uploader
     ),
     department_requirement_right: 'Pick a city',
     payment_button: 'Make Payment',
-    save_card_info: 'Зберегти данні картки',
-    go_back: 'Назад',
+    save_card_info: 'Save card information',
+    go_back: 'Go back',
   },
   userInfo: {
     firstName: "Ім'я",
@@ -296,5 +296,16 @@ http://onova.co/uploader
     toast_msg_reviewed: 'You have already left a review',
     alert_confirm_archive: 'Are you sure you want to archive this order?',
     archived: 'Archived',
+    tracking_num_label: 'Tracking num.',
+  },
+  order_status: {
+    confirmed: 'Item is paid and confirmed',
+    shipped: 'Item was shipped',
+    not_shipped: 'Item is waiting to be shipped',
+    not_collected: 'Item is waiting to be collected',
+    collected: 'Item was collected',
+    failed_to_collect: 'Buyer did not collect on time',
+    failed_to_ship: 'Seller did not ship on time',
+    updated: '(updated)',
   },
 };

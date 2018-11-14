@@ -7,7 +7,7 @@ export default {
     next: 'Наступний',
     step_1: {
       title: 'БЕЗПЕЧНА КУПІВЛЯ',
-      subtitle: `Купуй речі з захищеною системою від UA-PAY
+      subtitle: `Купуй речі з захищеною системою від UAPAY™
 
 
 

@@ -18,7 +18,7 @@ import StarRating from 'react-native-star-rating';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Foect from 'foect';
 
-import { Header, Title } from '../components';
+import { OrderStatus, Header, Title } from '../components';
 
 import I18n from '../i18n';
 import colors from '../config/colors';
@@ -160,6 +160,12 @@ export class AddReviewContainer extends Component<Props, State> {
 
     // const targetUser = iAmTheSeller ? order.buyer : order.seller;
 
+    const canLeaveReview = [
+      'completed',
+      'failed_by_buyer',
+      'failed_by_seller',
+    ].includes(order.status);
+
     return (
       <Container>
         <Header>
@@ -178,23 +184,35 @@ export class AddReviewContainer extends Component<Props, State> {
             <Button
               transparent
               dark
-              style={{ backgroundColor: colors.transparent }}
+              disabled
+              // style={{ backgroundColor: colors.transparent }}
               onPress={this.onArchive}>
               <MaterialCommunityIcons
                 name="delete"
                 size={28}
-                color={colors.black}
+                color={canLeaveReview ? colors.black : colors.grey4}
               />
             </Button>
           </Right>
         </Header>
         <Content>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignSelf: 'center',
+              marginTop: 20,
+            }}>
+            <Text>{I18n.t('add_review.tracking_num_label')} </Text>
+            <Text selectable>{order.trackingNumber}</Text>
+          </View>
+          <OrderStatus order={order} style={{ marginTop: 30 }} />
           <Foect.Form onValidSubmit={this.onRate}>
             {form => (
-              <View style={{ padding: 10, flex: 1, marginTop: 15 }}>
+              <View style={{ padding: 10, flex: 1, marginTop: 0 }}>
                 <Foect.Control name="text">
                   {control => (
                     <TextareaItem
+                      editable={canLeaveReview}
                       count={settings.MAX_LENGTH_REVIEW}
                       error={
                         control.value.length > 0 &&
@@ -204,7 +222,10 @@ export class AddReviewContainer extends Component<Props, State> {
                       onChangeText={control.onChange}
                       placeholder={I18n.t('add_review.text_placeholder')}
                       rows={2}
-                      style={styles.textInputContainer}
+                      style={[
+                        styles.textInputContainer,
+                        canLeaveReview ? {} : { borderColor: colors.grey4 },
+                      ]}
                       value={control.value}
                     />
                   )}
@@ -220,9 +241,11 @@ export class AddReviewContainer extends Component<Props, State> {
                           justifyContent: 'space-between',
                           marginTop: 10,
                         }}
-                        // disabled={isLoading}
+                        disabled={!canLeaveReview}
                         emptyStar="md-star-outline"
-                        emptyStarColor={colors.black}
+                        emptyStarColor={
+                          canLeaveReview ? colors.black : colors.grey4
+                        }
                         fullStar="md-star"
                         fullStarColor={colors.black}
                         iconSet="Ionicons"
@@ -246,6 +269,7 @@ export class AddReviewContainer extends Component<Props, State> {
                 <Button
                   block
                   dark
+                  disabled={!canLeaveReview}
                   style={{
                     marginTop: 15,
                     width: widthFields,

@@ -7,7 +7,7 @@ export default {
     next: 'Next',
     step_1: {
       title: 'Buy safely',
-      subtitle: `Buy things safely with UA-PAY Safe Purchase
+      subtitle: `Buy things safely with UAPAY™ Safe Purchase
 
 
  `,

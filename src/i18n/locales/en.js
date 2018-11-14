@@ -233,6 +233,9 @@ http://onova.co/uploader
     payment_button: 'Make Payment',
     save_card_info: 'Save card information',
     go_back: 'Go back',
+    total_row: 'Total:',
+    item_row: 'Item:',
+    shipping_cost_row: 'Shipping cost:',
   },
   userInfo: {
     firstName: "Ім'я",

@@ -232,6 +232,9 @@ http://onova.co/uploader
     payment_button: 'Придбати',
     save_card_info: 'Зберегти данні картки',
     go_back: 'Назад',
+    total_row: 'Загалом:',
+    item_row: 'Річ:',
+    shipping_cost_row: 'Вартість доставки:',
   },
   userInfo: {
     firstName: "Ім'я",

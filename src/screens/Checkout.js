@@ -120,7 +120,9 @@ class CheckoutContainer extends Component<Props, State> {
 
     // for development
     if (!item) {
-      item = { uuid: 'ZnE96_uds' };
+      // item = { uuid: 'ZnE96_uds' };
+      // prod (alex item)
+      item = { uuid: 'GoSdu69xp' };
     }
     console.log(item);
 
@@ -496,7 +498,7 @@ class CheckoutContainer extends Component<Props, State> {
   };
 
   renderPricingContainer() {
-    const { areFeesLoading, item, order, shippingFee } = this.state;
+    const { areFeesLoading, order, shippingFee } = this.state;
 
     if (areFeesLoading)
       return (
@@ -505,47 +507,37 @@ class CheckoutContainer extends Component<Props, State> {
         </View>
       );
 
-    const total =
-      parseFloat(order.transactionFee || 0) +
-      parseFloat(order.priceOfItem) +
-      parseFloat(shippingFee);
+    const total = parseFloat(order.priceOfItem) + parseFloat(shippingFee);
 
     return (
       <View style={styles.pricesContainer}>
         <View style={styles.row}>
           {/* $FlowFixMe */}
-          <Text style={{ color: colors.black }}>Total: </Text>
+          <Text style={{ color: colors.black }}>
+            {I18n.t('checkout.total_row')}
+          </Text>
           <View style={styles.innerRow}>
             <H1 style={styles.fontFamilyMono}>{ui.formatCurrency(total)} </H1>
             {/* $FlowFixMe */}
-            <Text>{item.currency}</Text>
+            <Text>{order.currency}</Text>
           </View>
         </View>
         <View style={styles.row}>
-          <Text>Item: </Text>
+          <Text>{I18n.t('checkout.item_row')}</Text>
           <View style={styles.innerRow}>
             <H3 style={styles.fontFamilyMono}>
               {ui.formatCurrency(order.priceOfItem)}{' '}
             </H3>
-            <Text>{item.currency}</Text>
+            <Text>{order.currency}</Text>
           </View>
         </View>
         <View style={styles.row}>
-          <Text>Fees: </Text>
-          <View style={styles.innerRow}>
-            <H3 style={styles.fontFamilyMono}>
-              {ui.formatCurrency(order.transactionFee)}{' '}
-            </H3>
-            <Text>{item.currency}</Text>
-          </View>
-        </View>
-        <View style={styles.row}>
-          <Text>Shipping cost: </Text>
+          <Text>{I18n.t('checkout.shipping_cost_row')}</Text>
           <View style={styles.innerRow}>
             <H3 style={styles.fontFamilyMono}>
               {ui.formatCurrency(shippingFee)}{' '}
             </H3>
-            <Text>{item.currency}</Text>
+            <Text>{order.currency}</Text>
           </View>
         </View>
       </View>

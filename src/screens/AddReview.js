@@ -57,7 +57,7 @@ export class AddReviewContainer extends Component<Props, State> {
 
     // for development
     if (!params) {
-      orderId = '5bdb16b06a7aef00de9da76b';
+      orderId = '5bed82ab61d3476321aa9aac';
     } else {
       orderId = params.orderId;
     }
@@ -205,7 +205,9 @@ export class AddReviewContainer extends Component<Props, State> {
               marginTop: 20,
             }}>
             <Text>{I18n.t('add_review.tracking_num_label')} </Text>
-            <Text selectable>{order.trackingNumber}</Text>
+            <Text selectable style={{ padding: 10, margin: -10 }}>
+              {order.trackingNumber}
+            </Text>
           </View>
           <OrderStatus order={order} style={{ marginTop: 30 }} />
           <Foect.Form onValidSubmit={this.onRate}>

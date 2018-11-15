@@ -120,9 +120,9 @@ class CheckoutContainer extends Component<Props, State> {
 
     // for development
     if (!item) {
-      // item = { uuid: 'ZnE96_uds' };
+      item = { uuid: 'ohgbOOLbq' };
       // prod (alex item)
-      item = { uuid: 'GoSdu69xp' };
+      // item = { uuid: 'GoSdu69xp' };
     }
     console.log(item);
 

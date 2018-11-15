@@ -235,6 +235,14 @@ http://onova.co/uploader
     total_row: 'Загалом:',
     item_row: 'Річ:',
     shipping_cost_row: 'Вартість доставки:',
+    missing: {
+      cardNumber: 'CVC номер',
+      cardInfo: 'Данні картки',
+      shippingAddress: 'Адреса доставки',
+      mobileNumber: 'Мобільний телефон',
+    },
+    error_is_missing: 'відсутній',
+    error_is_not_valid: 'недійсний',
   },
   userInfo: {
     firstName: "Ім'я",

@@ -120,7 +120,7 @@ class CheckoutContainer extends Component<Props, State> {
 
     // for development
     if (!item) {
-      item = { uuid: 'ohgbOOLbq' };
+      item = { uuid: 'kSJn1hKZx' };
       // prod (alex item)
       // item = { uuid: 'GoSdu69xp' };
     }
@@ -272,31 +272,36 @@ class CheckoutContainer extends Component<Props, State> {
   onCheckout = async () => {
     const { cvc, mobileNumber, order, shippingAddress } = this.state;
     const { paymentInfo } = this.props.userData;
-    let error = 'missing';
 
     try {
       // TODO: extract into checkPaymentErrorsOrThrow function
       if (this.canMakePayment()) {
         let missing;
-        if (!shippingAddress.departmentNovaposhta || !shippingAddress.city) {
-          missing = 'Shipping address';
+        let error = I18n.t('checkout.error_is_missing');
+        if (
+          !shippingAddress.departmentNovaposhta ||
+          !shippingAddress.city ||
+          !shippingAddress.firstName ||
+          !shippingAddress.lastName
+        ) {
+          missing = I18n.t('checkout.missing.shippingAddress');
         } else if (!mobileNumber) {
-          missing = 'Mobile number';
+          missing = I18n.t('checkout.missing.mobileNumber');
           this.inputs[4].focus();
         } else if (!cvc) {
-          missing = 'Card CVC number';
+          missing = I18n.t('checkout.missing.cardNumber');
           this.inputs[5].focus();
         } else if (cvc.length !== 3) {
-          missing = 'Card CVC number';
-          error = 'not valid';
+          missing = I18n.t('checkout.missing.cardNumber');
+          error = I18n.t('checkout.error_is_not_valid');
           this.inputs[5].focus();
         } else if (!paymentInfo.last_four || !paymentInfo.method) {
-          missing = 'Card information';
+          missing = I18n.t('checkout.missing.cardInfo');
         } else if (!isPhoneNumberValid(mobileNumber)) {
-          missing = 'Mobile number';
-          error = 'not valid';
+          missing = I18n.t('checkout.missing.mobileNumber');
+          error = I18n.t('checkout.error_is_not_valid');
         }
-        return ui.showToast(`${missing} is ${error}`, 'warning', null, 5);
+        return ui.showToast(`${missing} ${error}`, 'warning', null, 5);
       }
       // console.log(order);
 

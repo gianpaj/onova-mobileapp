@@ -236,6 +236,14 @@ http://onova.co/uploader
     total_row: 'Total:',
     item_row: 'Item:',
     shipping_cost_row: 'Shipping cost:',
+    missing: {
+      cardNumber: 'Card CVC number',
+      cardInfo: 'Card information',
+      shippingAddress: 'Shipping address',
+      mobileNumber: 'Mobile number',
+    },
+    error_is_missing: 'is missing',
+    error_is_not_valid: 'is not valid',
   },
   userInfo: {
     firstName: "Ім'я",

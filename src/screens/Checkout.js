@@ -314,8 +314,8 @@ class CheckoutContainer extends Component<Props, State> {
       this.goToPay(order.id, cvc);
     } catch (error) {
       console.debug(error);
-      this.setState({ pending: false });
     }
+    this.setState({ pending: false });
   };
 
   updateShippingInfo(): Promise<any> {

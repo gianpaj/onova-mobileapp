@@ -109,13 +109,15 @@ export class CreateDropScreen extends React.Component<Props, State> {
 
     try {
       await this.props.dispatch(getPersonalUserData());
-      if (!this.canCreateDrop())
+      if (!this.canCreateDrop()) {
         throw new Error(I18n.t('create_drop.cannot_create_drop_alert'));
+      }
     } catch (error) {
+      this.closeModal();
+      this.props.navigation.navigate('settings');
       Toast.hide();
-      ui.showToast(error.message, 'warning', null, 4);
-      return this.closeModal();
-      // return this.props.navigation.navigate('profile');
+      ui.showToast(error.message, 'warning', 'OK', 4);
+      return;
     }
 
     try {

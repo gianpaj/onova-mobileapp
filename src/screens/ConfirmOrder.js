@@ -118,6 +118,8 @@ export class ConfirmOrderContainer extends Component<Props, State> {
     const { token } = this.props;
     const { order } = this.state;
 
+    Toast.loading('Loading...', 30);
+
     this.setState({ isPending: true });
     try {
       const { data } = await api.put(
@@ -126,12 +128,14 @@ export class ConfirmOrderContainer extends Component<Props, State> {
         { token }
       );
       console.debug(data);
+      Toast.hide();
       Toast.success(
         "Awesome! Let's continue and get you the tracking number",
         5
       );
       this.goToChat(order.id);
     } catch (err) {
+      Toast.hide();
       Toast.fail(err.message, 3);
       console.log(err);
       this.setState({ isPending: false });

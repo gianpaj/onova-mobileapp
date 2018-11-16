@@ -89,7 +89,7 @@ export default class Avatar extends PureComponent<Props, State> {
   getAppropriateSource = () => {
     const { uri } = this.props;
 
-    if (typeof uri == 'object' && uri !== '') {
+    if (typeof uri == 'object') {
       return { uri: uri.path };
     }
 

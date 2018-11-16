@@ -6,6 +6,7 @@ import { Button, View } from 'react-native';
 import { WebView } from 'react-native-webview';
 import { Toast } from 'antd-mobile-rn';
 
+import { enableRefresh, disableCancelOrder } from '../actions/actionCreator';
 import * as api from '../utils/api';
 import * as ui from '../utils/ui';
 import I18n from '../i18n';
@@ -15,8 +16,20 @@ import type { ReduxState } from '../types';
 // for development
 // const params = { orderId: '5bdb0ced6a7aef00de9da722', cvc: '111' };
 
-class PaymentView extends Component {
+type Props = {
+  dispatch: Dispatch,
+  navigation?: NavigationScreenProp<*>,
+  token: string,
+};
+
+type State = {
+  payment?: any,
+  isLoading: boolean,
+};
+
+class PaymentView extends Component<Props, State> {
   state = {
+    payment: null,
     isLoading: true,
   };
 
@@ -107,6 +120,8 @@ class PaymentView extends Component {
 
   onSuccess = () => {
     Toast.success(I18n.t('checkout.success_msg'), 5);
+    this.props.dispatch(enableRefresh());
+    this.props.dispatch(disableCancelOrder());
     // go back to home page
     this.props.navigation.popToTop();
   };
@@ -156,7 +171,6 @@ class PaymentView extends Component {
 }
 
 const mapStateToProps: any = (state: ReduxState) => ({
-  userData: state.LoginReducer.data,
   token: state.LoginReducer.token,
 });
 

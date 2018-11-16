@@ -36,7 +36,11 @@ import update from 'immutability-helper';
 import axios from 'axios';
 import type { CancelTokenSource } from 'axios';
 
-import { disableRefresh, getPersonalUserData } from '../actions/actionCreator';
+import {
+  disableRefresh,
+  enableCancelOrder,
+  getPersonalUserData,
+} from '../actions/actionCreator';
 
 import {
   Accordion,
@@ -67,6 +71,7 @@ import type {
 type Props = {
   dispatch: Dispatch,
   navigation: NavigationScreenProp<*>,
+  shouldCancelOrder?: boolean,
   shouldRefresh?: boolean,
   token: string,
   userData: UserData,
@@ -166,9 +171,16 @@ class CheckoutContainer extends Component<Props, State> {
     // trigger Axios to reject the request
     this.cancelToken.cancel('operation_canceled');
 
-    const { shippingAddress, mobileNumber, cities, departments } = this.state;
-    // cancel order when going back with Back button
-    if (this.state.order.id) this.onCancel();
+    const {
+      shippingAddress,
+      mobileNumber,
+      cities,
+      departments,
+      order,
+    } = this.state;
+
+    // cancel order when going back with Back button but not after successful payment
+    if (order.id && this.props.shouldCancelOrder) this.onCancel();
     if (
       isPhoneNumberValid(mobileNumber) &&
       validShippingAddress(shippingAddress, cities, departments)
@@ -216,6 +228,7 @@ class CheckoutContainer extends Component<Props, State> {
         this.props.dispatch(disableRefresh());
       }
     });
+    this.props.dispatch(enableCancelOrder());
 
     this.keyboardDidShowListener = Keyboard.addListener(
       'keyboardDidShow',
@@ -798,9 +811,10 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps: any = (state: ReduxState) => ({
-  userData: state.LoginReducer.data,
-  token: state.LoginReducer.token,
+  shouldCancelOrder: state.RefresherReducer.shouldCancelOrder,
   shouldRefresh: state.RefresherReducer.shouldRefresh,
+  token: state.LoginReducer.token,
+  userData: state.LoginReducer.data,
 });
 
 export default CheckoutContainer;

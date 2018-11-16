@@ -441,6 +441,10 @@ const enableRefresh = () => ({ type: DO_REFRESH });
 
 const disableRefresh = () => ({ type: DONOT_REFRESH });
 
+const enableCancelOrder = () => ({ type: 'DO_CANCEL_ORDER' });
+
+const disableCancelOrder = () => ({ type: 'DONOT_CANCEL_ORDER' });
+
 /*
 const displayNotification = (notification: any) => (
   dispatch: Dispatch,
@@ -473,5 +477,7 @@ export {
   currentUser,
   enableRefresh,
   disableRefresh,
+  enableCancelOrder,
+  disableCancelOrder,
   // displayNotification,
 };

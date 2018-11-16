@@ -5,10 +5,12 @@ import type { Action } from '../types/loginReducer';
 
 export type ScreenRefreshState = {
   shouldRefresh: boolean,
+  shouldCancelOrder: boolean,
 };
 
 const initialState = {
   shouldRefresh: false,
+  shouldCancelOrder: true,
 };
 
 export default function(
@@ -26,6 +28,18 @@ export default function(
       return {
         ...state,
         shouldRefresh: false,
+      };
+
+    case 'DO_CANCEL_ORDER':
+      return {
+        ...state,
+        shouldCancelOrder: true,
+      };
+
+    case 'DONOT_CANCEL_ORDER':
+      return {
+        ...state,
+        shouldCancelOrder: false,
       };
 
     default:

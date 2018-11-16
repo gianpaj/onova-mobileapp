@@ -725,7 +725,7 @@ export const AddOrEditProduct = connect(mapStateToProps)(
 Foect.Validators.add('checkPrice', (val: any) => {
   if (!val) return null;
 
-  if (parseFloat(val) < settings.MIN_PRICE) {
+  if (parseFloat(val) <= settings.MIN_PRICE) {
     return { checkPrice: true };
   } else return null;
 });

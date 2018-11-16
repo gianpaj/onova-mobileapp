@@ -226,6 +226,7 @@ export class ConfirmOrderContainer extends Component<Props, State> {
             <Avatar
               onPress={() => this.goToProfile(buyer)}
               uri={buyer.profilePic}
+              placeholderText={buyer.username}
               style={{ margin: 10 }}
             />
             <View style={[styles.row, { alignItems: 'center' }]}>

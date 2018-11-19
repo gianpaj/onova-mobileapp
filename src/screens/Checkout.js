@@ -444,18 +444,20 @@ class CheckoutContainer extends Component<Props, State> {
 
     return (
       <SearchableDropdown
+        refProp={el => (this.inputs[2] = el)}
         onItemSelect={async ({ id }) => {
           if (!id) this.setState({ departments: [] });
           else {
             const departments = await api.getDepartments(id);
             this.setState({ departments });
-            // Automatically focus on Department field
-            this.inputs[3]._onFocus();
+            // Automatically focus on Department InputItem
+            this.inputs[3].focus();
           }
 
           // reset the department field after selecting a new city
-          if (this.state.shippingAddress.city !== id)
-            this.inputs[3].onChangeText('');
+          if (this.state.shippingAddress.city !== id) {
+            this.autoCompleteRef.onChangeText('');
+          }
 
           this.setState(
             update(this.state, {
@@ -481,6 +483,8 @@ class CheckoutContainer extends Component<Props, State> {
     const city = cities.find(city => city.id === shippingAddress.city);
     return (
       <SearchableDropdown
+        ref={el => (this.autoCompleteRef = el)}
+        refProp={el => (this.inputs[3] = el)}
         onItemSelect={async ({ id: department }) => {
           this.setState(
             update(this.state, {
@@ -629,7 +633,8 @@ class CheckoutContainer extends Component<Props, State> {
                     ref: el => (this.inputs[0] = el),
                     placeholder: I18n.t('userInfo.firstName'),
                     value: shippingAddress.firstName,
-                    onFocus: () => this.handleFocus(0),
+                    onFocus: this.handleFocus.bind(this, 0),
+                    onSubmitEditing: () => this.changeInputFocus(1),
                     onChangeText: t => {
                       if (cyrillicRegex.test(t))
                         this.setState(
@@ -645,7 +650,8 @@ class CheckoutContainer extends Component<Props, State> {
                     ref: el => (this.inputs[1] = el),
                     placeholder: I18n.t('userInfo.lastName'),
                     value: shippingAddress.lastName,
-                    onFocus: () => this.handleFocus(1),
+                    onFocus: this.handleFocus.bind(this, 1),
+                    onSubmitEditing: () => this.changeInputFocus(1),
                     onChangeText: t => {
                       if (cyrillicRegex.test(t))
                         this.setState(
@@ -658,25 +664,25 @@ class CheckoutContainer extends Component<Props, State> {
                     error: !shippingAddress.lastName,
                   },
                   {
-                    // ref: el => (this.inputs[2] = el),
                     placeholder: I18n.t('userInfo.city'),
                     value: cities.find(
                       city => city.id === shippingAddress.city
                     ),
-                    // onFocus: this.handleFocus.bind(this, 2),
+                    onFocus: this.handleFocus.bind(this, 2),
+                    onSubmitEditing: () => this.changeInputFocus(1),
                     // textContentType: 'addressCity',
                     error: !shippingAddress.city,
                     render: this._renderCityAutocomplete,
                   },
                   {
-                    ref: el => (this.inputs[3] = el),
                     placeholder: I18n.t('userInfo.department'),
+                    onFocus: this.handleFocus.bind(this, 3),
+                    onSubmitEditing: () => this.changeInputFocus(1),
                     value:
                       departments &&
                       departments.find(
                         d => d.id === shippingAddress.departmentNovaposhta
                       ),
-                    // onFocus: this.handleFocus.bind(this, 3),
                     error: !shippingAddress.departmentNovaposhta,
                     render: this._renderDepartmentAutocomplete,
                   },
@@ -684,7 +690,7 @@ class CheckoutContainer extends Component<Props, State> {
                     ref: el => (this.inputs[4] = el),
                     placeholder: I18n.t('userInfo.mobileNumber'),
                     value: ui.formatPhoneNumber(mobileNumber),
-                    onFocus: () => this.handleFocus(4),
+                    onFocus: this.handleFocus.bind(this, 4),
                     onChangeText: t => this.setState({ mobileNumber: t }),
                     type: 'phone',
                     shouldShowError: () =>

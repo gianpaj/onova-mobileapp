@@ -96,11 +96,10 @@ export default class Accordion extends PureComponent<Props, State> {
               clearButtonMode: 'while-editing',
               error: c.shouldShowError ? !c.shouldShowError() : false,
               last: true, // to remove borderBottomWidth
-              onFocus: t => {
-                c.onFocus && c.onFocus(t);
-              },
-              onSubmitEditing: () =>
-                section.content[i + 1] && section.content[i + 1].input.focus(),
+              onFocus: t => c.onFocus && c.onFocus(t),
+              onSubmitEditing: t => c.onSubmitEditing && c.onSubmitEditing(t),
+              // onSubmitEditing: () =>
+              //   section.content[i + 1] && section.content[i + 1].input.focus(),
               returnKeyType: 'next',
               ...c,
             };

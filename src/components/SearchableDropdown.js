@@ -25,19 +25,22 @@ export default class SearchableDropDown extends Component {
   static propTypes = {
     containerStyle: PropTypes.object,
     disabled: PropTypes.bool,
-    inputContainerStyle: PropTypes.object,
-    extra: PropTypes.node,
     error: PropTypes.bool,
+    extra: PropTypes.node,
+    inputContainerStyle: PropTypes.object,
     items: PropTypes.array,
     itemsContainerStyle: PropTypes.object,
     itemStyle: PropTypes.object,
     itemTextStyle: PropTypes.object,
     onFocus: PropTypes.func,
     onItemSelect: PropTypes.func.isRequired,
+    onSubmitEditing: PropTypes.func,
     onTextChange: PropTypes.func,
     placeholder: PropTypes.string,
     placeholderTextColor: PropTypes.string,
+    returnKeyType: PropTypes.string,
     // e.g. only allow cyrillic characters
+    refProp: PropTypes.func.isRequired,
     regexToMatch: PropTypes.instanceOf(RegExp),
     value: PropTypes.shape({
       uk: PropTypes.string,
@@ -108,7 +111,7 @@ export default class SearchableDropDown extends Component {
       .replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
     const regex = new RegExp(cleanText, 'i');
     const filteredItems = items.filter(item => regex.test(item.uk));
-    filteredItems.sort((a, b) => a > b);
+    // filteredItems.sort((a, b) => a > b);
     const idResult = items.find(i => i.uk == searchedText);
     this.setState({
       currentVal: { uk: searchedText, id: idResult || -1 }, // cleanText?
@@ -122,12 +125,13 @@ export default class SearchableDropDown extends Component {
     }
   };
 
+  // FIXME: do not render the component again if there are no changes
   static getDerivedStateFromProps(props, state) {
     if (!props.items) return null;
     // if it's not focused, reset
     if (!state.focus && props.items.length !== state.items.length) {
       return {
-        items: props.items,
+        items: props.items.slice(0, LIMIT_BY),
       };
     }
 
@@ -173,24 +177,32 @@ export default class SearchableDropDown extends Component {
       containerStyle,
       error,
       extra,
-      value,
+      inputContainerStyle,
+      onSubmitEditing,
       placeholder,
       placeholderTextColor,
-      inputContainerStyle,
+      returnKeyType,
+      refProp,
+      value,
     } = this.props;
 
     return (
       <View keyboardShouldpersist="always" style={containerStyle}>
         <InputItem
+          ref={e => {
+            this.input = e;
+            refProp(e);
+          }}
           autoCorrect={false}
           clearButtonMode="while-editing"
           extra={extra}
-          ref={e => (this.input = e)}
           onBlur={this._onBlur}
           onChangeText={this.onChangeText}
           onFocus={this._onFocus}
           placeholder={placeholder}
           placeholderTextColor={placeholderTextColor}
+          returnKeyType={returnKeyType}
+          onSubmitEditing={onSubmitEditing}
           style={inputContainerStyle}
           value={
             this.state.focus ? this.state.currentVal.uk : value && value.uk

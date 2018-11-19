@@ -333,18 +333,20 @@ class SettingsContainer extends Component<Props, State> {
 
     return (
       <SearchableDropdown
+        refProp={el => (this.inputs[2] = el)}
         onItemSelect={async ({ id }) => {
           if (!id) this.setState({ departments: [] });
           else {
             const departments = await api.getDepartments(id);
             this.setState({ departments });
-            // Automatically focus on Department field
-            this.inputs[3]._onFocus();
+            // Automatically focus on Department InputItem
+            this.inputs[3].focus();
           }
 
           // reset the department field after selecting a new city
-          if (this.state.shippingAddress.city !== id)
-            this.inputs[3].onChangeText('');
+          if (this.state.shippingAddress.city !== id) {
+            this.autoCompleteRef.onChangeText('');
+          }
 
           this.setState(
             update(this.state, {
@@ -369,6 +371,8 @@ class SettingsContainer extends Component<Props, State> {
     const city = cities.find(city => city.id === shippingAddress.city);
     return (
       <SearchableDropdown
+        ref={el => (this.autoCompleteRef = el)}
+        refProp={el => (this.inputs[3] = el)}
         onItemSelect={({ id }) =>
           this.setState(
             update(this.state, {
@@ -452,6 +456,7 @@ class SettingsContainer extends Component<Props, State> {
                   placeholder: I18n.t('userInfo.firstName'),
                   value: shippingAddress.firstName,
                   onFocus: this.handleFocus.bind(this, 0),
+                  onSubmitEditing: () => this.changeInputFocus(1),
                   onChangeText: t => {
                     if (cyrillicRegex.test(t))
                       this.setState(
@@ -467,6 +472,7 @@ class SettingsContainer extends Component<Props, State> {
                   placeholder: I18n.t('userInfo.lastName'),
                   value: shippingAddress.lastName,
                   onFocus: this.handleFocus.bind(this, 1),
+                  onSubmitEditing: () => this.changeInputFocus(1),
                   onChangeText: t => {
                     if (cyrillicRegex.test(t))
                       this.setState(
@@ -478,22 +484,22 @@ class SettingsContainer extends Component<Props, State> {
                   textContentType: 'streetAddressLine2',
                 },
                 {
-                  // ref: el => (this.inputs[2] = el),
                   placeholder: I18n.t('userInfo.city'),
                   value: cities.find(city => city.id === shippingAddress.city),
-                  // onFocus: this.handleFocus.bind(this, 2),
+                  onFocus: this.handleFocus.bind(this, 2),
+                  onSubmitEditing: () => this.changeInputFocus(1),
                   // textContentType: 'addressCity',
                   render: this._renderCityAutocomplete,
                 },
                 {
-                  ref: el => (this.inputs[3] = el),
                   placeholder: I18n.t('userInfo.department'),
+                  onFocus: this.handleFocus.bind(this, 3),
+                  onSubmitEditing: () => this.changeInputFocus(1),
                   value:
                     departments &&
                     departments.find(
                       d => d.id === shippingAddress.departmentNovaposhta
                     ),
-                  // onFocus: this.handleFocus.bind(this, 3),
                   render: this._renderDepartmentAutocomplete,
                 },
                 {
@@ -503,10 +509,8 @@ class SettingsContainer extends Component<Props, State> {
                   onFocus: this.handleFocus.bind(this, 4),
                   onChangeText: t => this.setState({ mobileNumber: t }),
                   type: 'phone',
-                  shouldShowError: () => {
-                    if (!mobileNumber) return true;
-                    return isPhoneNumberValid(mobileNumber);
-                  },
+                  shouldShowError: () =>
+                    mobileNumber ? isPhoneNumberValid(mobileNumber) : true,
                   textContentType: 'telephoneNumber',
                 },
               ]}
@@ -517,7 +521,7 @@ class SettingsContainer extends Component<Props, State> {
             <View style={{ alignSelf: 'center' }}>
               <TouchableOpacity onPress={this.enterPaymentInfo}>
                 {Object.keys(userData.paymentInfo).length ? (
-                  <CardView focused="number" {...this.formatCardInfo()} />
+                  <CardView {...this.formatCardInfo()} focused="number" />
                 ) : (
                   <CardView {...this.formatCardInfo()} number="" expiry="" />
                 )}

@@ -92,7 +92,7 @@ class PaymentView extends Component<Props, State> {
       let transactionStatus;
       do {
         retryNum++;
-        let { status } = await this.getPaymentStatus();
+        const { status } = await this.getPaymentStatus();
         transactionStatus = status;
         // console.debug(status);
         await sleep(1000);

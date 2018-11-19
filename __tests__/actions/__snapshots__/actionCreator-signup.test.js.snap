@@ -6,7 +6,7 @@ Array [
     "type": "SIGNUP_PENDING",
   },
   Object {
-    "type": "SIGNUP_FAIL",
+    "type": "SIGNUP_SUCCESS",
   },
 ]
 `;

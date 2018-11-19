@@ -31,7 +31,7 @@ describe('AddOrEditProduct screen (inEditMode false)', () => {
       root = tree.root;
     });
 
-    it('at the beginning the Add Item button should NOT be enabled', async () => {
+    it.skip('at the beginning the Add Item button should NOT be enabled', async () => {
       await sleep(100);
       const { state } = tree.getInstance();
       expect(state.images).toMatchSnapshot();
@@ -40,7 +40,7 @@ describe('AddOrEditProduct screen (inEditMode false)', () => {
       );
     });
 
-    it('should require a min length description', async () => {
+    it.skip('should require a min length description', async () => {
       await sleep(100);
       expect(root.findByProps({ testID: 'saveButton' }).props.disabled).toBe(
         true
@@ -59,7 +59,7 @@ describe('AddOrEditProduct screen (inEditMode false)', () => {
       );
     });
 
-    it('should require a category', async () => {
+    it.skip('should require a category', async () => {
       await sleep(100);
       expect(root.findByProps({ testID: 'saveButton' }).props.disabled).toBe(
         true
@@ -78,7 +78,7 @@ describe('AddOrEditProduct screen (inEditMode false)', () => {
       );
     });
 
-    it('should require a type', async () => {
+    it.skip('should require a type', async () => {
       await sleep(100);
       expect(root.findByProps({ testID: 'saveButton' }).props.disabled).toBe(
         true

@@ -7,8 +7,8 @@ Object {
   "fetchLoading": false,
   "hasError": true,
   "isLoggedIn": false,
+  "isVerifyAccountModalVisible": false,
   "loading": false,
-  "loadingGoogleLogin": false,
   "token": "",
 }
 `;
@@ -20,8 +20,8 @@ Object {
   "fetchLoading": true,
   "hasError": false,
   "isLoggedIn": false,
+  "isVerifyAccountModalVisible": false,
   "loading": false,
-  "loadingGoogleLogin": false,
   "token": "",
 }
 `;
@@ -36,8 +36,8 @@ Object {
   "fetchLoading": false,
   "hasError": false,
   "isLoggedIn": false,
+  "isVerifyAccountModalVisible": false,
   "loading": false,
-  "loadingGoogleLogin": false,
   "token": "",
 }
 `;
@@ -49,8 +49,8 @@ Object {
   "fetchLoading": false,
   "hasError": false,
   "isLoggedIn": false,
+  "isVerifyAccountModalVisible": false,
   "loading": false,
-  "loadingGoogleLogin": false,
   "token": "",
 }
 `;
@@ -62,8 +62,8 @@ Object {
   "fetchLoading": false,
   "hasError": true,
   "isLoggedIn": false,
+  "isVerifyAccountModalVisible": false,
   "loading": false,
-  "loadingGoogleLogin": false,
   "token": "",
 }
 `;
@@ -75,8 +75,8 @@ Object {
   "fetchLoading": false,
   "hasError": false,
   "isLoggedIn": false,
+  "isVerifyAccountModalVisible": false,
   "loading": true,
-  "loadingGoogleLogin": false,
   "token": "",
 }
 `;
@@ -90,8 +90,8 @@ Object {
   "fetchLoading": false,
   "hasError": false,
   "isLoggedIn": true,
+  "isVerifyAccountModalVisible": false,
   "loading": false,
-  "loadingGoogleLogin": false,
   "token": "myJWTAuthtoken",
 }
 `;
@@ -103,8 +103,8 @@ Object {
   "fetchLoading": false,
   "hasError": false,
   "isLoggedIn": false,
+  "isVerifyAccountModalVisible": false,
   "loading": false,
-  "loadingGoogleLogin": false,
   "token": "",
 }
 `;
@@ -116,8 +116,8 @@ Object {
   "fetchLoading": false,
   "hasError": true,
   "isLoggedIn": false,
+  "isVerifyAccountModalVisible": false,
   "loading": false,
-  "loadingGoogleLogin": false,
   "token": "",
 }
 `;
@@ -129,8 +129,8 @@ Object {
   "fetchLoading": false,
   "hasError": false,
   "isLoggedIn": false,
+  "isVerifyAccountModalVisible": false,
   "loading": false,
-  "loadingGoogleLogin": false,
   "token": "",
 }
 `;
@@ -142,8 +142,8 @@ Object {
   "fetchLoading": false,
   "hasError": true,
   "isLoggedIn": false,
+  "isVerifyAccountModalVisible": false,
   "loading": false,
-  "loadingGoogleLogin": false,
   "token": "",
 }
 `;
@@ -155,23 +155,21 @@ Object {
   "fetchLoading": false,
   "hasError": false,
   "isLoggedIn": false,
+  "isVerifyAccountModalVisible": false,
   "loading": true,
-  "loadingGoogleLogin": false,
   "token": "",
 }
 `;
 
 exports[`Login reducer should have an signup success state 1`] = `
 Object {
-  "checkedLoggedIn": true,
-  "data": Object {
-    "extraTestData": Object {},
-  },
+  "checkedLoggedIn": false,
+  "data": null,
   "fetchLoading": false,
   "hasError": false,
-  "isLoggedIn": true,
+  "isLoggedIn": false,
+  "isVerifyAccountModalVisible": true,
   "loading": false,
-  "loadingGoogleLogin": false,
-  "token": "myJWTAuthtoken",
+  "token": "",
 }
 `;

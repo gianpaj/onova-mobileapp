@@ -287,14 +287,16 @@ export function getDepartments(
 }
 export function getShippingCosts(
   price: string,
-  weight: number = 500,
+  weight?: number,
   orderId: string,
   recipientOfficeID: string,
   token: string
 ): Promise<string | Error> {
   return new Promise((resolve, reject) => {
+    let weightQuery = '';
+    if (weight) weightQuery = `&weight=${weight}`;
     get(
-      `/api/shipping/costs/?price=${price}&weight=${weight}&orderId=${orderId}&recipientOfficeID=${recipientOfficeID}`,
+      `/api/shipping/costs/?price=${price}${weightQuery}&orderId=${orderId}&recipientOfficeID=${recipientOfficeID}`,
       { token }
     )
       .then(({ data }) => resolve(data))

@@ -22,12 +22,27 @@ describe('CreateDrop screen', () => {
           // $FlowExpectedError
           navigation={{ state: {} }}
           // $FlowExpectedError
-          userData={{ accountStatus: 'verified' }}
+          userData={{
+            accountStatus: 'verified',
+            mobileNumber: '380677929197',
+            paymentInfo: {
+              last_four: '1111',
+              method: 'uapay',
+            },
+            shippingAddress: {
+              firstName: 'Джанфранко',
+              lastName: 'Палумбо',
+              city: '8d5a980d-391c-11dd-90d9-001a92567626', // Київ
+              departmentNovaposhta: '1ec09d88-e1c2-11e3-8c4a-0050568002cf', // Відділення №1: вул. Червонопрапорна, 34 (Корчувате)
+            },
+          }}
           token=""
         />
       );
       root = tree.root;
     });
+
+    // TODO: test that user cannot create a drop before entering the payment and shipping info
 
     it('at the beginning the Create Drop button should NOT be enabled', async () => {
       await sleep(100);

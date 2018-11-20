@@ -200,12 +200,16 @@ export class SignUpTabContainer extends Component<Props, State> {
       isPasswordVisible: !prevState.isPasswordVisible,
     }));
 
-  openTerm() {
+  openPrivacyPolicy() {
+    linking.openURL('https://onova.co/privacy-policy.html');
+  }
+
+  openTerms() {
     linking.openURL('https://onova.co/terms-and-condition.html');
   }
 
-  openPolicy() {
-    linking.openURL('https://onova.co/privacy-policy.html');
+  openSafePurchase() {
+    linking.openURL('https://onova.co/safe-purchase-rules.html');
   }
 
   /*
@@ -397,30 +401,26 @@ export class SignUpTabContainer extends Component<Props, State> {
           <View
             style={{
               alignSelf: 'center',
-              flexDirection: 'row',
-              flexWrap: 'wrap',
               paddingVertical: 20,
               width: 320,
             }}>
-            <Text style={{ color: colors.grey4 }}>
-              {I18n.t('signup.terms_text_1')}
+            <Text>
+              <Text style={{ color: colors.grey4 }}>
+                {I18n.t('signup.terms_text_1')}
+              </Text>
               &nbsp;
-            </Text>
-            <TouchableOpacity onPress={this.openTerm}>
-              <Text style={styles.termsLink}>
+              <Text onPress={this.openPrivacyPolicy} style={styles.link}>
                 {I18n.t('signup.terms_text_2')}
               </Text>
-            </TouchableOpacity>
-            <Text style={{ color: colors.grey4 }}>
-              &nbsp;
-              {I18n.t('signup.terms_text_3')}
-              &nbsp;
-            </Text>
-            <TouchableOpacity onPress={this.openPolicy}>
-              <Text style={styles.termsLink}>
+              <Text>&nbsp;</Text>
+              <Text onPress={this.openTerms} style={styles.link}>
+                {I18n.t('signup.terms_text_3')}
+              </Text>
+              <Text>&nbsp;</Text>
+              <Text onPress={this.openSafePurchase} style={styles.link}>
                 {I18n.t('signup.terms_text_4')}
               </Text>
-            </TouchableOpacity>
+            </Text>
           </View>
         </Animated.View>
         {this.renderVerifyAccountModal()}
@@ -496,8 +496,9 @@ const styles = StyleSheet.create({
   mt15: {
     marginTop: 15,
   },
-  termsLink: {
+  link: {
     textDecorationLine: 'underline',
+    textAlign: 'center',
   },
 });
 

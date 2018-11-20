@@ -52,10 +52,10 @@ export default {
     email_placeholder: 'Email',
     password_placeholder: 'Password (minimum 8 characters)',
     sign_up_button: 'Створити профіль',
-    terms_text_1: ' Створюючи профіль ви погоджуєтесь з',
-    terms_text_2: 'Terms',
-    terms_text_3: 'та',
-    terms_text_4: 'Privacy Policy',
+    terms_text_1: 'Натискаючи зареєструватись ви погоджуєтесь з',
+    terms_text_2: 'Політикою Конфіденційності,',
+    terms_text_3: 'Умовами надання послуг,',
+    terms_text_4: 'Умовами Безпечної угодиy',
   },
   home: {
     clothes_tab: 'Одяг',
@@ -63,13 +63,11 @@ export default {
     other_tab: 'Інше',
     share:
       'Android: https://play.google.com/store/apps/details?id=com.onova.app&hl=uk - Apple Store: https://itunes.apple.com/ua/app/onova/id1365771422?mt=8',
-    alert_info_title: 'Information',
-    alert_info_body: `1. На головній сторінці ти бачиш спочатку речі продавців яких додав в контакти, а потім решту.
+    alert_info_title: 'Підтримка',
+    alert_info_body: `З будь якими питаннями щодо додатку телефонуйте до Onova
+(067) 792-91-97
 
-2. Щоб завантажити багато речей одночасно з комп'ютера, використовуй:
-http://onova.co/uploader
-
-3. Якщо є якісь питання, пиши на акаунт @onova`,
+З будь якими питаннями щодо платежів телефонуйте до UAPAY (044) 364-11-44`,
   },
   image_grid: {
     error: 'Помилка завантаження інформації оголошення',

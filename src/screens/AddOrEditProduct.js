@@ -110,6 +110,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     isUploading: false,
     numberOfBrands: 0,
     order: [],
+    pending: false,
     price: '',
     progress: 0,
     tags: [],
@@ -277,6 +278,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     });
   };
 
+  // FIXME: check changes properly if inEditMode
   hasUnsavedChanges(): boolean {
     const { description, images, price, tags } = this.state;
     return (
@@ -314,6 +316,8 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
   onSave = async ({ price }) => {
     if (!this.canSave({ price })) return;
 
+    this.setState({ pending: true });
+
     Toast.loading(I18n.t('alerts.toast_uploading'), 30);
     const {
       description,
@@ -339,6 +343,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
       if (inEditMode) {
         res = await this.uploadEditedProduct(uuid, data);
       } else {
+        // return the data to the CreateDrop screen
         this.props.navigation.state.params.returnData(data);
       }
       this.props.dispatch(enableRefresh());
@@ -347,6 +352,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     } catch (err) {
       console.debug(err);
       ui.showToast(err.message, 'warning');
+      this.setState({ pending: false });
     }
     Toast.hide();
   };
@@ -420,9 +426,10 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
   canSave({ price }): boolean {
     // const tagsPattern = /^(\b[a-z][a-z0-9]*)$/i;
 
-    const { images } = this.state;
+    const { images, pending } = this.state;
     // return true if all of these are true
     return (
+      !pending &&
       images.length > 0 &&
       // if all the images have been uploaded
       images.filter((i: any) => i.isUploading === false).length ===

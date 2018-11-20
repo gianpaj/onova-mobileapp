@@ -48,15 +48,13 @@ export default class ImagePicker extends React.Component<Props, State> {
   };
 
   addImage(imageObj: any) {
+    const { files = [], onChange } = this.props;
     if (!imageObj.url) {
       imageObj.url = imageObj.uri;
       delete imageObj.uri;
     }
-    const { files = [] } = this.props;
     const newImages = files.concat(imageObj);
-    if (this.props.onChange) {
-      this.props.onChange(newImages, 'add');
-    }
+    if (onChange) onChange(newImages, 'add');
   }
 
   removeImage = (idx: number): void => {
@@ -67,7 +65,7 @@ export default class ImagePicker extends React.Component<Props, State> {
   };
 
   onImageClick = (index: number) => {
-    const { onImageClick, files } = this.props;
+    const { files, onImageClick } = this.props;
     if (onImageClick) onImageClick(index, files);
   };
 
@@ -107,9 +105,7 @@ export default class ImagePicker extends React.Component<Props, State> {
       active={active}
       data={data}
       index={index}
-      removeImage={() => {
-        if (this.props.enabled) this.removeImage(index);
-      }}
+      removeImage={() => this.props.enabled && this.removeImage(index)}
       styles={styles}
     />
   );

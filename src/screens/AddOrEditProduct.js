@@ -440,7 +440,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
   }
 
   onImageChange = (images: Array<any>) => {
-    this.setState({ images }, () => this.closeModalConditional());
+    this.setState({ images });
   };
 
   onChangeDescription = (t: string) => this.setState({ description: t });

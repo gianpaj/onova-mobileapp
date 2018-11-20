@@ -241,6 +241,37 @@ export default {
     },
     error_is_missing: 'відсутній',
     error_is_not_valid: 'недійсний',
+    paragraph_1: [
+      {
+        p: 'Натискаючи на кнопку «Підтвердити покупку», ви погоджуєтесь з',
+      },
+      {
+        p: 'умовами публічних договорів,',
+        link: 'https://uapay.ua/ru/rules',
+      },
+      {
+        p: 'умовами погодження на обробку персональних даних,',
+        link: 'https://uapay.ua/ru/rules?anchor=userAgreement',
+      },
+      {
+        p: 'умовами надання послуг логістичним партнером,',
+        link: 'https://novaposhta.ua/uploads/misc/doc/Terms_of_Service.pdf',
+      },
+      {
+        p:
+          'публічним договором про надання послуг по організації перевезення відправлень,',
+        link: 'https://novaposhta.ua/uploads/misc/doc/public_offer.pdf',
+      },
+      {
+        p: 'а також',
+      },
+      {
+        p: 'приймаєте Правила надання сервісу Безпечна покупка.',
+        link: 'https://telegra.ph/Pravila-Bezpechnoi-ugodi-11-20',
+      },
+    ],
+    paragraph_2:
+      'Надання інформації про платіжну картку безпечне, Onova не зберігає ці дані. Зберігання та обробка відбувається на стороні нашого фінансового партнера, UAPAY, який пройшов аудит і отримав сертифікат PCI DSS 3.2, який гарантує повну безпеку ваших даних.',
   },
   userInfo: {
     firstName: "Ім'я",

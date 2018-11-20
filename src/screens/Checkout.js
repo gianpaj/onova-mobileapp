@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import {
   ActivityIndicator,
   Keyboard,
+  Image,
   Platform,
   StyleSheet,
   Text,
@@ -52,6 +53,7 @@ import {
 
 import colors from '../config/colors';
 import { isPhoneNumberValid, validShippingAddress } from '../utils/validators';
+import * as linking from '../utils/linking';
 import * as api from '../utils/api';
 import * as ui from '../utils/ui';
 import I18n from '../i18n';
@@ -579,6 +581,51 @@ class CheckoutContainer extends Component<Props, State> {
     }
   };
 
+  openLink = (link: string) => linking.openURL(link);
+
+  renderMandatory() {
+    return (
+      <React.Fragment>
+        <Text style={{ marginHorizontal: 20 }}>
+          <NBIcon name="ios-checkmark" style={{ color: colors.grey3 }} />
+          <Text>&nbsp;</Text>
+          {I18n.t('checkout.paragraph_1').map((para, i) => (
+            <React.Fragment key={i}>
+              <Text
+                style={para.link ? styles.link : styles.paragraph}
+                onPress={para.link && this.openLink.bind(this, para.link)}>
+                {para.p}
+              </Text>
+              <Text>&nbsp;</Text>
+            </React.Fragment>
+          ))}
+        </Text>
+        <View style={{ flexDirection: 'row', padding: 10 }}>
+          <Image
+            source={require('../assets/images/visa.png')}
+            style={styles.mandatoryImage}
+            resizeMode="contain"
+          />
+          <Image
+            source={require('../assets/images/mastercard.png')}
+            style={styles.mandatoryImage}
+            resizeMode="contain"
+          />
+          <Image
+            source={require('../assets/images/pci.png')}
+            style={styles.mandatoryImage}
+            resizeMode="contain"
+          />
+          <Image
+            source={require('../assets/images/uapay.png')}
+            style={[styles.mandatoryImage, { width: '15%' }]}
+            resizeMode="contain"
+          />
+        </View>
+      </React.Fragment>
+    );
+  }
+
   render() {
     const { userData } = this.props;
     const {
@@ -702,7 +749,7 @@ class CheckoutContainer extends Component<Props, State> {
               <FormLabel labelStyle={[styles.label, { paddingBottom: 10 }]}>
                 {I18n.t('userInfo.paymentInfo')}
               </FormLabel>
-              <View style={{ alignSelf: 'center', paddingBottom: 10 }}>
+              <View style={{ alignSelf: 'center' }}>
                 <TouchableOpacity onPress={this.goToEnterPaymentInfo}>
                   {Object.keys(userData.paymentInfo).length ? (
                     <CardView {...this.formatCardInfo()} focused="number" />
@@ -722,6 +769,7 @@ class CheckoutContainer extends Component<Props, State> {
                   value={cvc}
                 />
               </View>
+              {this.renderMandatory()}
             </Content>
             {showFooter && (
               <Footer>
@@ -813,6 +861,18 @@ const styles = StyleSheet.create({
   },
   autocompleteContainers: {
     borderBottomWidth: 0,
+  },
+  paragraph: {
+    color: colors.grey4,
+  },
+  link: {
+    color: colors.grey3,
+    textDecorationLine: 'underline',
+  },
+  mandatoryImage: {
+    margin: 10,
+    width: '20%',
+    height: 50,
   },
 });
 

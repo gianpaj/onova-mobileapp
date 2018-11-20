@@ -312,7 +312,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
   };
 
   onSave = async ({ price }) => {
-    if (!this.isButtonEnabled({ price })) return;
+    if (!this.canSave({ price })) return;
 
     Toast.loading(I18n.t('alerts.toast_uploading'), 30);
     const {
@@ -417,16 +417,17 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
 
   // numbers only, one dot and 2 decimal points
 
-  isButtonEnabled({ price }): boolean {
+  canSave({ price }): boolean {
     // const tagsPattern = /^(\b[a-z][a-z0-9]*)$/i;
 
     const { images } = this.state;
     // return true if all of these are true
     return (
+      images.length > 0 &&
       // if all the images have been uploaded
       images.filter((i: any) => i.isUploading === false).length ===
         images.length &&
-      // If the price is not empty
+      // if the price is not empty
       price !== '' &&
       // if the description doesn't exceed the maximum length
       this.state.description.trim().length >= settings.MIN_LENGTH_DESCRIPTION &&
@@ -493,7 +494,6 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
                 <NBButton
                   testID="saveButton"
                   transparent
-                  // disabled={!this.isButtonEnabled()}
                   style={{ backgroundColor: colors.transparent }}
                   onPress={() => form.submit()}>
                   <Icon name="check" color={colors.black} size={28} />

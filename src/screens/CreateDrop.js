@@ -13,7 +13,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { NoticeBar, Toast } from 'antd-mobile-rn';
 import DateTimePicker from 'react-native-modal-datetime-picker';
@@ -423,7 +423,7 @@ export class CreateDropScreen extends React.Component<Props, State> {
         <Header>
           <Left style={styles.flex1}>
             <NBButton transparent onPress={this.closeModalConditional}>
-              <Icon color={colors.black} name="close" size={28} />
+              <MaterialIcons color={colors.black} name="close" size={28} />
             </NBButton>
           </Left>
           <Body style={styles.flex2AndCenter}>
@@ -449,7 +449,7 @@ export class CreateDropScreen extends React.Component<Props, State> {
               // style={{ backgroundColor: colors.transparent }}
               transparent
               onPress={this.onSendDrop}>
-              <Icon
+              <MaterialIcons
                 name="check"
                 color={this.isButtonEnabled() ? colors.black : colors.grey4}
                 size={28}

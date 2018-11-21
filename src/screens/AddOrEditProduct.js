@@ -3,7 +3,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Dimensions, StyleSheet, View, Text } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {
   ActionSheet,
   Body,
@@ -23,6 +24,7 @@ import RadioForm, {
 import ImagePicker from 'react-native-image-crop-picker';
 import { InputItem, TextareaItem, Toast } from 'antd-mobile-rn';
 import Foect from 'foect';
+import Dialog from 'react-native-dialog';
 
 import { Header, HR, TagInput } from '../components';
 import AntImagePicker from '../components/ImagePicker';
@@ -150,7 +152,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
       });
     }
     this.setState({ isLoading: false });
-    this.selectPhotoTapped(0);
+    // this.selectPhotoTapped(0);
   }
 
   selectPhotoTapped = (i: number = 0, multiple: boolean = true) => {
@@ -161,7 +163,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
             'https://storage.googleapis.com/temp-uploads.onova.co/1537607915827.jpg';
           this.appendSinglePhoto(url, i);
         })
-        .catch(() => this.closeModalConditional());
+        .catch(() => this.goBackConditional());
     }
 
     const BUTTONS = [CAMERA, GALLERY, CANCEL];
@@ -178,7 +180,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
               ...imagePickerOptons,
             })
               .then(response => this.appendPhoto(response, i))
-              .catch(() => this.closeModalConditional());
+              .catch(() => this.goBackConditional());
             break;
           case 1:
             ImagePicker.openPicker({
@@ -194,7 +196,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
               ],
             })
               .then(response => this.appendPhoto(response, i))
-              .catch(() => this.closeModalConditional());
+              .catch(() => this.goBackConditional());
             break;
           default:
             break;
@@ -289,9 +291,9 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     );
   }
 
-  closeModal = () => this.props.navigation.goBack();
+  goBack = () => this.props.navigation.goBack();
 
-  closeModalConditional = () => {
+  goBackConditional = () => {
     // const { inEditMode } = this.state;
     // if (!inEditMode /* && fields.touched() */) {
     // FIXME: check if the changes are different from loading from the API
@@ -301,14 +303,14 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
         I18n.t('profile.alert_unsaved_changes_body'),
         () => {
           // on continue
-          this.closeModal();
+          this.goBack();
         },
         () => {},
         I18n.t('profile.alert_unsaved_changes_button_cancel'),
         I18n.t('profile.alert_unsaved_changes_button_confirm')
       );
     } else {
-      this.closeModal();
+      this.goBack();
     }
     // }
   };
@@ -347,7 +349,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
         this.props.navigation.state.params.returnData(data);
       }
       this.props.dispatch(enableRefresh());
-      this.closeModal();
+      this.goBack();
       console.debug(res);
     } catch (err) {
       console.debug(err);
@@ -478,208 +480,258 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     if (isLoading) return null;
 
     return (
-      <Foect.Form
-        onValidSubmit={this.onSave}
-        defaultValue={{ price }}
-        onInvalidSubmit={this.onInvalidSubmit}>
-        {form => (
-          <Container>
-            <Header>
-              <Left style={styles.container}>
-                <NBButton transparent onPress={this.closeModalConditional}>
-                  <Icon color={colors.black} name="close" size={28} />
-                </NBButton>
-              </Left>
-              <Body style={styles.container}>
-                <Title style={{ color: colors.black }}>
-                  {inEditMode
-                    ? I18n.t('add_or_edit_item.edit_item_header')
-                    : I18n.t('add_or_edit_item.add_item_header')}
-                </Title>
-              </Body>
-              <Right>
-                <NBButton
-                  testID="saveButton"
-                  transparent
-                  style={{ backgroundColor: colors.transparent }}
-                  onPress={() => form.submit()}>
-                  <Icon name="check" color={colors.black} size={28} />
-                </NBButton>
-              </Right>
-            </Header>
-            <Content>
-              <View
-                style={{
-                  alignItems: 'flex-start',
-                  marginLeft: 17,
-                  paddingTop: 18,
-                  height: width / 6 + 10,
-                }}>
-                <AntImagePicker
-                  files={images}
-                  onImageClick={i => this.selectPhotoTapped(i, false)}
-                  onAddImageClick={() => this.selectPhotoTapped(images.length)}
-                  selectable={images.length < 6}
-                  enabled={!isUploading}
-                  onChange={this.onImageChange}
-                  onChangeOrder={array => {
-                    const order = array.map(e => parseInt(e));
-                    const newOrder = [];
-                    for (let i = 0; i < order.length; i++) {
-                      const o = order[i];
-                      newOrder.push(this.state.images[o]);
+      <React.Fragment>
+        <Foect.Form
+          onValidSubmit={this.onSave}
+          defaultValue={{ price }}
+          onInvalidSubmit={this.onInvalidSubmit}>
+          {form => (
+            <Container>
+              <Header>
+                <Left style={styles.container}>
+                  <NBButton transparent onPress={this.goBackConditional}>
+                    <MaterialIcons
+                      color={colors.black}
+                      name="close"
+                      size={28}
+                    />
+                  </NBButton>
+                </Left>
+                <Body style={styles.flex2AndCenter}>
+                  <Title
+                    style={{
+                      color: colors.black,
+                      marginLeft: 22,
+                      marginRight: 5,
+                    }}>
+                    {inEditMode
+                      ? I18n.t('add_or_edit_item.edit_item_header')
+                      : I18n.t('add_or_edit_item.add_item_header')}
+                  </Title>
+                  <NBButton
+                    transparent
+                    hitSlop={{ top: 0, left: 15, bottom: 0, right: 20 }}
+                    onPress={this.toggleDialog}>
+                    <MaterialCommunityIcons
+                      name="information-outline"
+                      size={18}
+                    />
+                  </NBButton>
+                </Body>
+                <Right>
+                  <NBButton
+                    testID="saveButton"
+                    transparent
+                    style={{ backgroundColor: colors.transparent }}
+                    onPress={() => form.submit()}>
+                    <MaterialIcons
+                      name="check"
+                      color={colors.black}
+                      size={28}
+                    />
+                  </NBButton>
+                </Right>
+              </Header>
+              <Content>
+                <View
+                  style={{
+                    alignItems: 'flex-start',
+                    marginLeft: 17,
+                    paddingTop: 18,
+                    height: width / 6 + 10,
+                  }}>
+                  <AntImagePicker
+                    files={images}
+                    onImageClick={i => this.selectPhotoTapped(i, false)}
+                    onAddImageClick={() =>
+                      this.selectPhotoTapped(images.length)
                     }
-                    this.setState({ images: newOrder });
-                  }}
-                />
-              </View>
-              <View>
-                <FormLabel labelStyle={styles.label}>
-                  {I18n.t('add_or_edit_item.price_label')}
-                </FormLabel>
-                <Foect.Control
-                  name="price"
-                  required
-                  maxLength={8}
-                  checkPrice={{}}>
-                  {/* you can use control for getting/setting it's value, checking/updating(control.isValid, control.markAsTouched(), ...) it's state, checking it's errors(control.errors.required) */}
-                  {control => {
-                    this.priceControl = control;
-                    return (
-                      <View style={{ paddingLeft: 6 }}>
-                        <InputItem
-                          testID="price"
-                          ref={input => (this.priceInput = input)}
-                          autoCorrect={false}
-                          clearButtonMode="while-editing"
-                          error={control.isTouched && control.isInvalid}
-                          // onErrorClick={ show toast with }
-                          last
-                          onBlur={control.markAsTouched}
-                          onChange={v => {
-                            settings.PRICE_REGEX.test(v) && control.onChange(v);
-                          }}
-                          placeholder={I18n.t(
-                            'add_or_edit_item.price_placeholder'
-                          )}
-                          type="number"
-                          value={control.value}
+                    selectable={images.length < 6}
+                    enabled={!isUploading}
+                    onChange={this.onImageChange}
+                    onChangeOrder={array => {
+                      const order = array.map(e => parseInt(e));
+                      const newOrder = [];
+                      for (let i = 0; i < order.length; i++) {
+                        const o = order[i];
+                        newOrder.push(this.state.images[o]);
+                      }
+                      this.setState({ images: newOrder });
+                    }}
+                  />
+                </View>
+                <View>
+                  <FormLabel labelStyle={styles.label}>
+                    {I18n.t('add_or_edit_item.price_label')}
+                  </FormLabel>
+                  <Foect.Control
+                    name="price"
+                    required
+                    maxLength={8}
+                    checkPrice={{}}>
+                    {/* you can use control for getting/setting it's value, checking/updating(control.isValid, control.markAsTouched(), ...) it's state, checking it's errors(control.errors.required) */}
+                    {control => {
+                      this.priceControl = control;
+                      return (
+                        <View style={{ paddingLeft: 6 }}>
+                          <InputItem
+                            testID="price"
+                            ref={input => (this.priceInput = input)}
+                            autoCorrect={false}
+                            clearButtonMode="while-editing"
+                            error={control.isTouched && control.isInvalid}
+                            // onErrorClick={ show toast with }
+                            last
+                            onBlur={control.markAsTouched}
+                            onChange={v => {
+                              settings.PRICE_REGEX.test(v) &&
+                                control.onChange(v);
+                            }}
+                            placeholder={I18n.t(
+                              'add_or_edit_item.price_placeholder'
+                            )}
+                            type="number"
+                            value={control.value}
+                          />
+                          {control.isTouched &&
+                            control.isInvalid && (
+                              <Text style={styles.minPrice}>
+                                {`${I18n.t('add_or_edit_item.min_price')} ${
+                                  settings.MIN_PRICE
+                                } UAH`}
+                              </Text>
+                            )}
+                        </View>
+                      );
+                    }}
+                  </Foect.Control>
+                  <FormLabel labelStyle={styles.label}>
+                    {I18n.t('add_or_edit_item.description_label')}
+                  </FormLabel>
+                  <TextareaItem
+                    testID="description"
+                    style={styles.inputContainerNew}
+                    last // to set borderBottomWidth=0
+                    containerStyle={{ borderBottomWidth: 5, marginRight: 12 }}
+                    rows={3}
+                    count={settings.MAX_LENGTH_DESCRIPTION}
+                    onChangeText={this.onChangeDescription}
+                    onFocus={() => this.setState({ descriptionFocused: true })}
+                    placeholder={I18n.t(
+                      'add_or_edit_item.description_placeholder'
+                    )}
+                    value={description}
+                    error={
+                      descriptionFocused &&
+                      description.trim().length <
+                        settings.MIN_LENGTH_DESCRIPTION
+                    }
+                  />
+                  <FormLabel labelStyle={styles.label}>
+                    {I18n.t('add_or_edit_item.hashtags_label')}
+                  </FormLabel>
+                  <TagInput
+                    inputDefaultWidth={140}
+                    maxHeight={2000}
+                    labelExtractor={tag => tag}
+                    onChange={this.changeTags}
+                    onChangeText={this.changeTagsTest}
+                    tagColor={colors.primary}
+                    tagTextColor="white"
+                    text={tagsText}
+                    value={tags}
+                    inputProps={{
+                      placeholder:
+                        tags.length < 1
+                          ? I18n.t('add_or_edit_item.hashtags_placeholder')
+                          : '',
+                    }}
+                  />
+                </View>
+                <View style={styles.grps}>
+                  <RadioForm animation formHorizontal>
+                    {ui.category_radio_grp_1.map((option, i) => (
+                      <RadioButton labelHorizontal={false} key={i}>
+                        <RadioButtonLabel
+                          index={i}
+                          labelHorizontal
+                          labelStyle={styles.radioButtonLabel}
+                          obj={option}
+                          onPress={grp_1 => this.setState({ grp_1 })}
                         />
-                        {control.isTouched &&
-                          control.isInvalid && (
-                            <Text style={styles.minPrice}>
-                              {`${I18n.t('add_or_edit_item.min_price')} ${
-                                settings.MIN_PRICE
-                              } UAH`}
-                            </Text>
-                          )}
-                      </View>
-                    );
-                  }}
-                </Foect.Control>
-                <FormLabel labelStyle={styles.label}>
-                  {I18n.t('add_or_edit_item.description_label')}
-                </FormLabel>
-                <TextareaItem
-                  testID="description"
-                  style={styles.inputContainerNew}
-                  last // to set borderBottomWidth=0
-                  containerStyle={{ borderBottomWidth: 5, marginRight: 12 }}
-                  rows={3}
-                  count={settings.MAX_LENGTH_DESCRIPTION}
-                  onChangeText={this.onChangeDescription}
-                  onFocus={() => this.setState({ descriptionFocused: true })}
-                  placeholder={I18n.t(
-                    'add_or_edit_item.description_placeholder'
-                  )}
-                  value={description}
-                  error={
-                    descriptionFocused &&
-                    description.trim().length < settings.MIN_LENGTH_DESCRIPTION
-                  }
-                />
-                <FormLabel labelStyle={styles.label}>
-                  {I18n.t('add_or_edit_item.hashtags_label')}
-                </FormLabel>
-                <TagInput
-                  inputDefaultWidth={140}
-                  maxHeight={2000}
-                  labelExtractor={tag => tag}
-                  onChange={this.changeTags}
-                  onChangeText={this.changeTagsTest}
-                  tagColor={colors.primary}
-                  tagTextColor="white"
-                  text={tagsText}
-                  value={tags}
-                  inputProps={{
-                    placeholder:
-                      tags.length < 1
-                        ? I18n.t('add_or_edit_item.hashtags_placeholder')
-                        : '',
-                  }}
-                />
-              </View>
-              <View style={styles.grps}>
-                <RadioForm animation formHorizontal>
-                  {ui.category_radio_grp_1.map((option, i) => (
-                    <RadioButton labelHorizontal={false} key={i}>
-                      <RadioButtonLabel
-                        index={i}
-                        labelHorizontal
-                        labelStyle={styles.radioButtonLabel}
-                        obj={option}
-                        onPress={grp_1 => this.setState({ grp_1 })}
-                      />
-                      <RadioButtonInput
-                        testID={`grp_1_input_${i}`}
-                        borderWidth={2}
-                        buttonInnerColor={colors.black}
-                        buttonOuterColor={colors.black}
-                        buttonOuterSize={19}
-                        buttonSize={19}
-                        buttonWrapStyle={styles.radioButtonInput}
-                        index={i}
-                        isSelected={grp_1 === i}
-                        obj={option}
-                        onPress={grp_1 => this.setState({ grp_1 })}
-                      />
-                    </RadioButton>
-                  ))}
-                </RadioForm>
-              </View>
-              <HR color={colors.grey5} />
-              <View style={[styles.grps, { marginBottom: 20 }]}>
-                <RadioForm animation formHorizontal>
-                  {ui.category_radio_grp_2.map((option, i) => (
-                    <RadioButton labelHorizontal={false} key={i}>
-                      <RadioButtonLabel
-                        index={i}
-                        labelHorizontal
-                        labelStyle={styles.radioButtonLabel}
-                        obj={option}
-                        onPress={grp_2 => this.setState({ grp_2 })}
-                      />
-                      <RadioButtonInput
-                        testID={`grp_2_input_${i}`}
-                        borderWidth={2}
-                        buttonInnerColor={colors.black}
-                        buttonOuterColor={colors.black}
-                        buttonOuterSize={19}
-                        buttonSize={19}
-                        buttonWrapStyle={styles.radioButtonInput}
-                        index={i}
-                        isSelected={grp_2 == i}
-                        obj={option}
-                        onPress={grp_2 => this.setState({ grp_2 })}
-                      />
-                    </RadioButton>
-                  ))}
-                </RadioForm>
-              </View>
-            </Content>
-          </Container>
-        )}
-      </Foect.Form>
+                        <RadioButtonInput
+                          testID={`grp_1_input_${i}`}
+                          borderWidth={2}
+                          buttonInnerColor={colors.black}
+                          buttonOuterColor={colors.black}
+                          buttonOuterSize={19}
+                          buttonSize={19}
+                          buttonWrapStyle={styles.radioButtonInput}
+                          index={i}
+                          isSelected={grp_1 === i}
+                          obj={option}
+                          onPress={grp_1 => this.setState({ grp_1 })}
+                        />
+                      </RadioButton>
+                    ))}
+                  </RadioForm>
+                </View>
+                <HR color={colors.grey5} />
+                <View style={[styles.grps, { marginBottom: 20 }]}>
+                  <RadioForm animation formHorizontal>
+                    {ui.category_radio_grp_2.map((option, i) => (
+                      <RadioButton labelHorizontal={false} key={i}>
+                        <RadioButtonLabel
+                          index={i}
+                          labelHorizontal
+                          labelStyle={styles.radioButtonLabel}
+                          obj={option}
+                          onPress={grp_2 => this.setState({ grp_2 })}
+                        />
+                        <RadioButtonInput
+                          testID={`grp_2_input_${i}`}
+                          borderWidth={2}
+                          buttonInnerColor={colors.black}
+                          buttonOuterColor={colors.black}
+                          buttonOuterSize={19}
+                          buttonSize={19}
+                          buttonWrapStyle={styles.radioButtonInput}
+                          index={i}
+                          isSelected={grp_2 == i}
+                          obj={option}
+                          onPress={grp_2 => this.setState({ grp_2 })}
+                        />
+                      </RadioButton>
+                    ))}
+                  </RadioForm>
+                </View>
+              </Content>
+            </Container>
+          )}
+        </Foect.Form>
+        {this.renderInfoDialog()}
+      </React.Fragment>
+    );
+  }
+
+  toggleDialog = () =>
+    this.setState(prevState => ({ dialogVisible: !prevState.dialogVisible }));
+
+  renderInfoDialog() {
+    return (
+      <React.Fragment>
+        <Dialog.Container visible={this.state.dialogVisible}>
+          {/* <Dialog.Title>Account delete</Dialog.Title> */}
+          <Dialog.Description style={{ textAlign: 'justify' }}>
+            {I18n.t('add_or_edit_item.info_popup')}
+          </Dialog.Description>
+          {/* <Dialog.Button label="Cancel" /> */}
+          <Dialog.Button
+            label={I18n.t('product.toast_warning_ok_button')}
+            onPress={this.toggleDialog}
+          />
+        </Dialog.Container>
+      </React.Fragment>
     );
   }
 }
@@ -689,6 +741,12 @@ const styles = StyleSheet.create({
     alignItems: 'stretch',
     flex: 1,
     justifyContent: 'center',
+  },
+  flex2AndCenter: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    flex: 2,
+    flexDirection: 'row',
   },
   label: {
     fontWeight: '600',

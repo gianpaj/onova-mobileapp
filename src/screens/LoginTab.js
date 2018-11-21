@@ -31,6 +31,7 @@ import type { NavigationScreenProp } from 'react-navigation';
 import { Header } from '../components';
 import { login } from '../actions/actionCreator';
 import * as api from '../utils/api';
+import * as ui from '../utils/ui';
 import colors from '../config/colors';
 import typography from '../config/typography';
 
@@ -81,10 +82,12 @@ type State = {
 
 export class LoginTabContainer extends React.Component<Props, State> {
   PwdInput: any;
+  EmailInput: any;
   constructor(props: Props) {
     super(props);
 
     this.PwdInput = React.createRef();
+    this.EmailInput = React.createRef();
   }
 
   // loginBtn;
@@ -110,7 +113,20 @@ export class LoginTabContainer extends React.Component<Props, State> {
 
   onLogin = () => {
     const { emailAddress, password } = this.state;
-    if (!emailAddress || !password || this.props.loading) return;
+
+    if (emailAddress.trim().length < 1) {
+      this.EmailInput.current.shake();
+      return this.EmailInput.current.focus();
+    } else if (!isEmail(emailAddress)) {
+      this.EmailInput.current.shake();
+      ui.showToast('Email is not valid', 'warning', null, 2);
+      return this.EmailInput.current.focus();
+    } else if (!password.length) {
+      this.PwdInput.current.shake();
+      return this.PwdInput.current.focus();
+    }
+    if (this.props.loading) return;
+
     this.props.dispatch(login({ emailAddress, password })).catch(() => {
       this.setState({ verifyAccountModalVisible: true });
     });
@@ -132,9 +148,7 @@ export class LoginTabContainer extends React.Component<Props, State> {
   }
 
   onResetPassword = () => {
-    if (!isEmail(this.state.emailReset)) {
-      return;
-    }
+    if (!isEmail(this.state.emailReset)) return;
 
     this.setState({ loadingReset: true });
     api
@@ -148,9 +162,7 @@ export class LoginTabContainer extends React.Component<Props, State> {
         console.log(res);
       })
       .catch((err: api.APIError) => {
-        // if (err.status = 400) {
         Toast.success(err.message, 5);
-        // }
       })
       .then(() => this.setPwdResetModalVisible(false))
       .then(() => this.setState({ loadingReset: false }));
@@ -159,10 +171,13 @@ export class LoginTabContainer extends React.Component<Props, State> {
   _inputProps = {
     autoCapitalize: 'none',
     autoCorrect: false,
+    blurOnSubmit: false,
     clearButtonMode: 'while-editing',
     editable: !this.props.loading,
     enablesReturnKeyAutomatically: true,
     inputStyle: styles.input,
+    onSubmitEditing: this.onLogin,
+    returnKeyType: 'go',
   };
 
   /**
@@ -212,9 +227,7 @@ export class LoginTabContainer extends React.Component<Props, State> {
     return !emailAddress || !password || this.props.loading;
   }
 
-  getHandler = (key: string) => (val: any) => {
-    this.setState({ [key]: val });
-  };
+  getHandler = (key: string) => (val: any) => this.setState({ [key]: val });
 
   render() {
     const {
@@ -235,14 +248,11 @@ export class LoginTabContainer extends React.Component<Props, State> {
             marginTop: 40,
           }}>
           <FormInput
+            ref={this.EmailInput}
             placeholder={I18n.t('login.email_placeholder')}
             keyboardType="email-address"
-            returnKeyType="next"
             onBlur={this._onBlurEmail}
             onFocus={this._onFocusEmail}
-            onSubmitEditing={() =>
-              this.PwdInput && this.PwdInput.current.focus()
-            }
             value={emailAddress}
             testID="EmailField"
             textContentType="emailAddress"
@@ -257,10 +267,8 @@ export class LoginTabContainer extends React.Component<Props, State> {
             ref={this.PwdInput}
             secureTextEntry={!isPasswordVisible}
             placeholder={I18n.t('login.password_placeholder')}
-            returnKeyType="go"
             onBlur={this._onBlurPass}
             onFocus={this._onFocusPass}
-            onSubmitEditing={this.onLogin}
             value={password}
             testID="PasswordField"
             textContentType="password"
@@ -289,19 +297,14 @@ export class LoginTabContainer extends React.Component<Props, State> {
             <NBButton
               testID="loginButton"
               block
-              disabled={this.isDisabled()}
-              dark={!this.isDisabled()}
-              {...buttonProps}
-              // style={[
-              //   {
-              //     backgroundColor: this.backgroundColor,
-              //   },
-              // ]}
-              onPress={this.onLogin}>
+              disabled={this.props.loading}
+              dark={!this.props.loading}
+              onPress={this.onLogin}
+              {...buttonProps}>
               <Text
                 // eslint-disable-next-line
                 style={{
-                  fontSize: 16,
+                  fontSize: typography.font_button_size,
                   color: colors.white,
                 }}>
                 {I18n.t('login.log_in_button')}

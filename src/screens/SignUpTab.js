@@ -145,7 +145,7 @@ export class SignUpTabContainer extends Component<Props, State> {
       this.UserNameInput.current.shake();
       ui.showToast('Please enter a valid username', 'warning', null, 2);
       return this.UserNameInput.current.focus();
-    } else if (emailAddress.trim() < 1) {
+    } else if (emailAddress.trim().length < 1) {
       this.EmailInput.current.shake();
       return this.EmailInput.current.focus();
     } else if (!isEmail(emailAddress)) {
@@ -181,9 +181,7 @@ export class SignUpTabContainer extends Component<Props, State> {
     this.props
       .dispatch(signup({ username, emailAddress, password }))
       .then(() => this.setVerifyAccountVisible(true))
-      .catch(err => {
-        console.warn(err);
-      });
+      .catch(err => console.debug(err));
   };
 
   onUserChange = (username: string) => {
@@ -294,13 +292,15 @@ export class SignUpTabContainer extends Component<Props, State> {
           style={[styles.container, { paddingVertical: this.keyboardHeight }]}>
           <FormInput
             ref={this.UserNameInput}
+            blurOnSubmit={false}
             placeholder={I18n.t('signup.username_placeholder')}
-            returnKeyType="next"
+            returnKeyType="go"
             onBlur={this._onBlurUser}
             onFocus={this._onFocusUser}
-            onSubmitEditing={() =>
-              this.EmailInput && this.EmailInput.current.focus()
-            }
+            // onSubmitEditing={() =>
+            //   this.EmailInput && this.EmailInput.current.focus()
+            // }
+            onSubmitEditing={this.onSignup}
             value={this.state.username}
             onChangeText={this.onUserChange}
             accessibilityLabel="username"
@@ -310,14 +310,16 @@ export class SignUpTabContainer extends Component<Props, State> {
           />
           <FormInput
             ref={this.EmailInput}
+            blurOnSubmit={false}
             placeholder={I18n.t('signup.email_placeholder')}
             keyboardType="email-address"
-            returnKeyType="next"
+            returnKeyType="go"
             onBlur={this._onBlurEmail}
             onFocus={this._onFocusEmail}
-            onSubmitEditing={() =>
-              this.PwdInput && this.PwdInput.current.focus()
-            }
+            // onSubmitEditing={() =>
+            //   this.PwdInput && this.PwdInput.current.focus()
+            // }
+            onSubmitEditing={this.onSignup}
             value={this.state.emailAddress}
             testID="EmailField"
             onChangeText={this.getHandler('emailAddress')}
@@ -331,6 +333,7 @@ export class SignUpTabContainer extends Component<Props, State> {
           <View>
             <FormInput
               ref={this.PwdInput}
+              blurOnSubmit={false}
               secureTextEntry={!isPasswordVisible}
               placeholder={I18n.t('signup.password_placeholder')}
               returnKeyType="go"

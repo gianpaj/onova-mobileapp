@@ -45,7 +45,7 @@ type Props = {
 type State = {
   isLoading: boolean,
   isPending: boolean,
-  showModal: boolean,
+  dialogVisible: boolean,
   order: Order,
   buyer: User,
 };
@@ -54,7 +54,7 @@ export class ConfirmOrderContainer extends Component<Props, State> {
   state = {
     isLoading: true,
     isPending: false,
-    showModal: false,
+    dialogVisible: false,
     order: null,
     buyer: null,
   };
@@ -65,6 +65,9 @@ export class ConfirmOrderContainer extends Component<Props, State> {
     const params = this.props.navigation.state.params;
     // for development
     let orderId = '5bdb16b06a7aef00de9da76b';
+
+    // for prod dev
+    // let orderId = '5bf52286186739115fb39e02';
 
     if (params) {
       orderId = params.id;
@@ -88,10 +91,6 @@ export class ConfirmOrderContainer extends Component<Props, State> {
     }
   }
 
-  showModal = () => {
-    this.setState({ showModal: true });
-  };
-
   onCancelSubmit = async ({ reason }: { reason: string }) => {
     const { token } = this.props;
 
@@ -104,11 +103,11 @@ export class ConfirmOrderContainer extends Component<Props, State> {
       );
       // console.warn('cancelled', this.state.order.id, reason);
       Toast.info('The order has been cancelled');
-      this.setState({ showModal: false });
+      this.setState({ dialogVisible: false });
       this.props.navigation.goBack();
     } catch (err) {
       console.log(err);
-      this.setState({ showModal: false });
+      this.setState({ dialogVisible: false });
       Toast.fail(err.message, 5);
     }
     this.setState({ isPending: false });
@@ -279,7 +278,7 @@ export class ConfirmOrderContainer extends Component<Props, State> {
                 block
                 disabled={isPending}
                 style={styles.buttonCancel}
-                onPress={this.showModal}>
+                onPress={this.toggleDialog}>
                 <Text style={[styles.buttonText, { color: colors.black }]}>
                   {I18n.t('alerts.action_button_cancel')}
                 </Text>
@@ -292,11 +291,16 @@ export class ConfirmOrderContainer extends Component<Props, State> {
     );
   }
 
+  toggleDialog = () =>
+    this.setState(prevState => ({ dialogVisible: !prevState.dialogVisible }));
+
   renderCancelDialog = () => {
-    const { showModal, isPending } = this.state;
+    const { dialogVisible, isPending } = this.state;
     let thisForm;
     return (
-      <Dialog.Container visible={showModal}>
+      <Dialog.Container
+        visible={dialogVisible}
+        onBackButtonPress={this.toggleDialog}>
         <Dialog.Title style={{ color: colors.black }}>
           {I18n.t('confirm_order.dialog_title')}
         </Dialog.Title>
@@ -349,7 +353,7 @@ export class ConfirmOrderContainer extends Component<Props, State> {
           disabled={isPending}
           color={Platform.OS === 'ios' ? '#007ff9' : colors.grey2}
           label={I18n.t('alerts.action_button_close')}
-          onPress={() => this.setState({ showModal: false })}
+          onPress={this.toggleDialog}
         />
         <Dialog.Button
           bold

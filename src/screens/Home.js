@@ -152,7 +152,9 @@ export class Home extends PureComponent<Props, State> {
   renderInfoDialog() {
     return (
       <React.Fragment>
-        <Dialog.Container visible={this.state.dialogVisible}>
+        <Dialog.Container
+          visible={this.state.dialogVisible}
+          onBackButtonPress={this.toggleDialog}>
           <Dialog.Title>{I18n.t('home.alert_info_title')}</Dialog.Title>
 
           <ParsedText

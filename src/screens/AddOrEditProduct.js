@@ -745,7 +745,9 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
   renderInfoDialog() {
     return (
       <React.Fragment>
-        <Dialog.Container visible={this.state.dialogInfoVisible}>
+        <Dialog.Container
+          visible={this.state.dialogInfoVisible}
+          onBackButtonPress={this.toggleInfoDialog}>
           <Dialog.Description style={{ textAlign: 'justify' }}>
             {I18n.t('add_or_edit_item.info_popup')}
           </Dialog.Description>
@@ -766,7 +768,9 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
   renderPriceDialog() {
     return (
       <React.Fragment>
-        <Dialog.Container visible={this.state.dialogPriceVisible}>
+        <Dialog.Container
+          visible={this.state.dialogPriceVisible}
+          onBackButtonPress={this.togglePriceDialog}>
           <Dialog.Title>
             {I18n.t('add_or_edit_item.price_popup_title')}
           </Dialog.Title>

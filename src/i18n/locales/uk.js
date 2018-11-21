@@ -323,6 +323,8 @@ export default {
     alert_msg_email_address_changed:
       'Новий email має бути підтверджено. Ми надіслали інструкції',
     alert_msg_settigs_changed: 'Зміни збережено',
+    safe_purchase_rules: 'Правила Безпечної угоди',
+    faq: 'Поширені запитання',
   },
   add_review: {
     header: 'Відгук',

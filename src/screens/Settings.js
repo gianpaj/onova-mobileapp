@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
+  TouchableHighlight,
   UIManager,
   View,
 } from 'react-native';
@@ -30,7 +31,13 @@ import update from 'immutability-helper';
 // import Instabug from 'instabug-reactnative';
 import { KeyboardAccessoryNavigation } from 'react-native-keyboard-accessory';
 
-import { Accordion, CardView, Header, SearchableDropdown } from '../components';
+import {
+  Accordion,
+  CardView,
+  Header,
+  HR,
+  SearchableDropdown,
+} from '../components';
 
 import {
   disableRefresh,
@@ -584,6 +591,30 @@ class SettingsContainer extends Component<Props, State> {
               clearButtonMode="while-editing"
               onFocus={this.handleFocus.bind(this, 7)}
             />
+            <HR full />
+            <TouchableOpacity
+              style={{ marginVertical: 15, marginHorizontal: 20, width: '50%' }}
+              hitSlop={linkHitSlop}
+              accessibilityRole="link"
+              onPress={linking.openURL.bind(
+                this,
+                'https://onova.co/safe-purchase-rules.html'
+              )}>
+              <Text style={styles.labelLink}>
+                {I18n.t('settings.safe_purchase_rules')}
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{
+                marginVertical: 15,
+                marginHorizontal: 20,
+                width: '20%',
+              }}
+              hitSlop={linkHitSlop}
+              accessibilityRole="link"
+              onPress={linking.openURL.bind(this, 'https://onova.co/faq.html')}>
+              <Text style={styles.labelLink}>{I18n.t('settings.faq')}</Text>
+            </TouchableOpacity>
           </View>
           {/* TODO: add Notifications switch */}
           {/* You only get notifications for messages and status updates in your sales or purchases.
@@ -605,6 +636,7 @@ class SettingsContainer extends Component<Props, State> {
                 />
               </NBButton>
               <TouchableOpacity
+                accessibilityRole="link"
                 onPress={() => linking.email('mailto:hello@onova.co')}>
                 <Text style={styles.centerText}>hello@onova.co</Text>
               </TouchableOpacity>
@@ -629,6 +661,8 @@ class SettingsContainer extends Component<Props, State> {
   }
 }
 
+const linkHitSlop = { top: 10, left: 5, bottom: 10, right: 10 };
+
 const styles = StyleSheet.create({
   container: {
     alignItems: 'stretch',
@@ -637,6 +671,11 @@ const styles = StyleSheet.create({
   },
   label: {
     color: colors.black,
+    fontWeight: '600',
+  },
+  labelLink: {
+    color: colors.black,
+    fontSize: 13,
     fontWeight: '600',
   },
   input: {

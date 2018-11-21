@@ -326,6 +326,8 @@ http://onova.co/uploader
     alert_msg_email_address_changed:
       'The new email address requires to be valided. Please check your inbox',
     alert_msg_settigs_changed: 'Your settings have been updated',
+    safe_purchase_rules: 'Onova safe purchase rules',
+    faq: 'FAQ',
   },
   add_review: {
     header: 'Review',

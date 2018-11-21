@@ -3,7 +3,6 @@ import colors from '../config/colors';
 
 import React, { PureComponent } from 'react';
 import {
-  Alert,
   Dimensions,
   Share,
   // Platform,
@@ -14,10 +13,13 @@ import { Body, Button, Icon, Left, Right, Title } from 'native-base';
 import { TabView, TabBar } from 'react-native-tab-view';
 import Analytics from 'react-native-analytics-segment-io';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Dialog from 'react-native-dialog';
+import ParsedText from 'react-native-parsed-text';
 
 import I18n from '../i18n';
 import { Header, ImageGrid } from '../components';
 import * as api from '../utils/api';
+import * as linking from '../utils/linking';
 
 import type { NavigationScreenProp } from 'react-navigation';
 import type { Route, NavigationState } from 'react-native-tab-view';
@@ -31,18 +33,22 @@ type Props = {
   navigation?: NavigationScreenProp<*>,
 };
 
-type State = NavigationState<
-  Route<{
-    key: string,
-    title: string,
-  }>
->;
+type State = {
+  ...NavigationState<
+    Route<{
+      key: string,
+      title: string,
+    }>
+  >,
+  dialogVisible: boolean,
+};
 
 const { analyticsEnabled } = api;
 
 export class Home extends PureComponent<Props, State> {
   state = {
     index: 0,
+    dialogVisible: false,
     routes: [
       { key: 'clothes', title: I18n.t('home.clothes_tab') },
       { key: 'shoes', title: I18n.t('home.shoes_tab') },
@@ -99,24 +105,16 @@ export class Home extends PureComponent<Props, State> {
     if (analyticsEnabled) Analytics.track('press_share_invite');
   }
 
-  onInfoIcon() {
-    Alert.alert(
-      I18n.t('home.alert_info_title'),
-      I18n.t('home.alert_info_body')
-    );
-  }
-
   render() {
     return (
       <View testID="Home" style={{ flex: 1 }}>
-        {/* <View style={styles.statusBarUnderlay} /> */}
         <Header hasTabs>
           <Left style={styles.container}>
             <Button
               transparent
               dark
               style={{ marginLeft: 5 }}
-              onPress={this.onInfoIcon}>
+              onPress={this.toggleDialog}>
               <MaterialCommunityIcons name="information-outline" size={18} />
             </Button>
           </Left>
@@ -143,7 +141,38 @@ export class Home extends PureComponent<Props, State> {
           initialLayout={initialLayout}
           useNativeDriver
         />
+        {this.renderInfoDialog()}
       </View>
+    );
+  }
+
+  toggleDialog = () =>
+    this.setState(prevState => ({ dialogVisible: !prevState.dialogVisible }));
+
+  renderInfoDialog() {
+    return (
+      <React.Fragment>
+        <Dialog.Container visible={this.state.dialogVisible}>
+          <Dialog.Title>{I18n.t('home.alert_info_title')}</Dialog.Title>
+
+          <ParsedText
+            style={{ marginTop: 4, margin: 18 }}
+            parse={[
+              { type: 'url', style: styles.url, onPress: linking.openURL },
+              {
+                pattern: /[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{2,3}[-\s\.]?[0-9]{2,3}/,
+                style: styles.url,
+                onPress: linking.call,
+              },
+            ]}>
+            {I18n.t('home.alert_info_body')}
+          </ParsedText>
+          <Dialog.Button
+            label={I18n.t('product.toast_warning_ok_button')}
+            onPress={this.toggleDialog}
+          />
+        </Dialog.Container>
+      </React.Fragment>
     );
   }
 }
@@ -172,5 +201,9 @@ const styles = StyleSheet.create({
   },
   tab: {
     width: initialLayout.width / 3,
+  },
+  url: {
+    color: colors.active,
+    textDecorationLine: 'underline',
   },
 });

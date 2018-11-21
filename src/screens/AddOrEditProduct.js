@@ -83,6 +83,7 @@ type Props = {
 type State = {
   description: string,
   descriptionFocused: boolean,
+  dialogVisible: boolean,
   grp_1: number,
   grp_2: number,
   images: Array<Image>,
@@ -104,6 +105,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
   state = {
     description: '',
     descriptionFocused: false,
+    dialogVisible: false,
     grp_1: -1,
     grp_2: -1,
     images: [],
@@ -721,11 +723,9 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     return (
       <React.Fragment>
         <Dialog.Container visible={this.state.dialogVisible}>
-          {/* <Dialog.Title>Account delete</Dialog.Title> */}
           <Dialog.Description style={{ textAlign: 'justify' }}>
             {I18n.t('add_or_edit_item.info_popup')}
           </Dialog.Description>
-          {/* <Dialog.Button label="Cancel" /> */}
           <Dialog.Button
             label={I18n.t('product.toast_warning_ok_button')}
             onPress={this.toggleDialog}

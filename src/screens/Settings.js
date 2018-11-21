@@ -324,11 +324,6 @@ class SettingsContainer extends Component<Props, State> {
     this.inputs[focusingRef] && this.inputs[focusingRef].focus();
   }
 
-  onFAQ() {
-    // in Ukrainian
-    linking.openURL('https://onova.co/faq.html');
-  }
-
   enterPaymentInfo = () =>
     this.props.navigation.navigate({
       routeName: 'getCardId',
@@ -628,7 +623,12 @@ class SettingsContainer extends Component<Props, State> {
                 styles.padder,
                 { alignItems: 'center', flexDirection: 'row' },
               ]}>
-              <NBButton transparent onPress={this.onFAQ}>
+              <NBButton
+                transparent
+                onPress={linking.openURL.bind(
+                  this,
+                  'https://onova.co/faq.html'
+                )}>
                 <NBIcon
                   name="md-information-circle"
                   style={{ color: colors.grey4 }}
@@ -637,7 +637,7 @@ class SettingsContainer extends Component<Props, State> {
               </NBButton>
               <TouchableOpacity
                 accessibilityRole="link"
-                onPress={() => linking.email('mailto:hello@onova.co')}>
+                onPress={linking.email.bind(this, 'mailto:hello@onova.co')}>
                 <Text style={styles.centerText}>hello@onova.co</Text>
               </TouchableOpacity>
             </View>

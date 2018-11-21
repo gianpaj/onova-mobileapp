@@ -154,6 +154,7 @@ export class Home extends PureComponent<Props, State> {
       <React.Fragment>
         <Dialog.Container
           visible={this.state.dialogVisible}
+          // onBackdropPress={this.toggleDialog}
           onBackButtonPress={this.toggleDialog}>
           <Dialog.Title>{I18n.t('home.alert_info_title')}</Dialog.Title>
 

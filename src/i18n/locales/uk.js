@@ -55,7 +55,7 @@ export default {
     terms_text_1: 'Натискаючи зареєструватись ви погоджуєтесь з',
     terms_text_2: 'Політикою Конфіденційності,',
     terms_text_3: 'Умовами надання послуг,',
-    terms_text_4: 'Умовами Безпечної угодиy',
+    terms_text_4: 'Умовами Безпечної угоди',
   },
   home: {
     clothes_tab: 'Одяг',
@@ -273,10 +273,10 @@ export default {
         link: 'https://novaposhta.ua/uploads/misc/doc/public_offer.pdf',
       },
       {
-        p: 'а також',
+        p: 'а також приймаєте',
       },
       {
-        p: 'приймаєте Правила надання сервісу Безпечна покупка.',
+        p: 'Правила надання сервісу Безпечна покупка.',
         link: 'https://telegra.ph/Pravila-Bezpechnoi-ugodi-11-20',
       },
     ],

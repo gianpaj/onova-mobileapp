@@ -603,7 +603,7 @@ class SettingsContainer extends Component<Props, State> {
               style={{
                 marginVertical: 15,
                 marginHorizontal: 20,
-                width: '20%',
+                width: '40%',
               }}
               hitSlop={linkHitSlop}
               accessibilityRole="link"

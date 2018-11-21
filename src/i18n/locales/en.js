@@ -276,10 +276,10 @@ http://onova.co/uploader
         link: 'https://novaposhta.ua/uploads/misc/doc/public_offer.pdf',
       },
       {
-        p: 'а також',
+        p: 'а також приймаєте',
       },
       {
-        p: 'приймаєте Правила надання сервісу Безпечна покупка.',
+        p: 'Правила надання сервісу Безпечна покупка.',
         link: 'https://telegra.ph/Pravila-Bezpechnoi-ugodi-11-20',
       },
     ],

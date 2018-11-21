@@ -138,30 +138,35 @@ export class SignUpTabContainer extends Component<Props, State> {
       );
       return this.UserNameInput.current.focus();
     } else if (username.trim().length > 50) {
-      this.UserNameInput.current.shake();
       ui.showToast('Please enter a shorter username', 'warning', null, 2);
+      this.UserNameInput.current.shake();
       return this.UserNameInput.current.focus();
     } else if (!settings.USERNAME_REGEX.test(username)) {
+      ui.showToast(
+        'Please enter a valid username (only numbers, letters and _ .)',
+        'warning',
+        null,
+        2
+      );
       this.UserNameInput.current.shake();
-      ui.showToast('Please enter a valid username', 'warning', null, 2);
       return this.UserNameInput.current.focus();
-    } else if (emailAddress.trim().length < 1) {
-      this.EmailInput.current.shake();
-      return this.EmailInput.current.focus();
     } else if (!isEmail(emailAddress)) {
+      if (emailAddress.trim().length > 0)
+        ui.showToast('Email is not valid', 'warning', null, 2);
       this.EmailInput.current.shake();
-      ui.showToast('Email is not valid', 'warning', null, 2);
       return this.EmailInput.current.focus();
-    } else if (!password.length) {
+    } else if (!validPassword(password)) {
+      if (password.length && password.length < 8) {
+        ui.showToast(
+          'Please enter a longer password (min 8 chars)',
+          'warning',
+          null,
+          2
+        );
+      } else if (password.length > 50) {
+        ui.showToast('Please enter a shorter password', 'warning', null, 2);
+      }
       this.PwdInput.current.shake();
-      return this.PwdInput.current.focus();
-    } else if (password.length < 8) {
-      this.PwdInput.current.shake();
-      ui.showToast('Please enter a longer password', 'warning', null, 2);
-      return this.PwdInput.current.focus();
-    } else if (password.length > 50) {
-      this.PwdInput.current.shake();
-      ui.showToast('Please enter a shorter password', 'warning', null, 2);
       return this.PwdInput.current.focus();
     }
     // username min(3) max(30)

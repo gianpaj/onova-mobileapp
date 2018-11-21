@@ -83,11 +83,13 @@ type State = {
 export class LoginTabContainer extends React.Component<Props, State> {
   PwdInput: any;
   EmailInput: any;
+  PwdReset: any;
   constructor(props: Props) {
     super(props);
 
     this.PwdInput = React.createRef();
     this.EmailInput = React.createRef();
+    this.PwdReset = React.createRef();
   }
 
   // loginBtn;
@@ -148,7 +150,11 @@ export class LoginTabContainer extends React.Component<Props, State> {
   }
 
   onResetPassword = () => {
-    if (!isEmail(this.state.emailReset)) return;
+    if (!isEmail(this.state.emailReset)) {
+      this.PwdReset.current.shake();
+      this.PwdReset.current.focus();
+      return;
+    }
 
     this.setState({ loadingReset: true });
     api
@@ -400,8 +406,10 @@ export class LoginTabContainer extends React.Component<Props, State> {
           </View>
 
           <FormInput
+            ref={this.PwdReset}
             autoCapitalize="none"
             autoCorrect={false}
+            blurOnSubmit={false}
             autoFocus
             clearButtonMode="while-editing"
             containerStyle={{ margin: 10 }}
@@ -410,6 +418,7 @@ export class LoginTabContainer extends React.Component<Props, State> {
             onBlur={this._onBlurEmailReset}
             onChangeText={text => this.setState({ emailReset: text })}
             onFocus={this._onFocusEmailReset}
+            onSubmitEditing={this.onResetPassword}
             placeholder="Email"
             returnKeyType="go"
             underlineColorAndroid={
@@ -424,14 +433,12 @@ export class LoginTabContainer extends React.Component<Props, State> {
             block
             disabled={isDisabled}
             dark={!isDisabled}
-            light={isDisabled}
-            // {...buttonProps}
             onPress={this.onResetPassword}>
             <Text
               // eslint-disable-next-line
               style={{
-                fontSize: 16,
-                color: isDisabled ? colors.black : colors.white,
+                fontSize: typography.font_button_size,
+                color: colors.white,
               }}>
               {I18n.t('login.reset_password.button')}
             </Text>
@@ -450,7 +457,7 @@ export const LoginTab = connect(mapStateToProps)(LoginTabContainer);
 
 const buttonProps = {
   foregroundColor: colors.white,
-  labelStyle: { fontSize: 16 },
+  labelStyle: { fontSize: typography.font_button_size },
   maxWidth: Platform.select({
     ios: 346,
     android: 383,

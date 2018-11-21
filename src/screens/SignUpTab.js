@@ -381,7 +381,7 @@ export class SignUpTabContainer extends Component<Props, State> {
               <Text
                 // eslint-disable-next-line
                 style={{
-                  fontSize: 16,
+                  fontSize: typography.font_button_size16,
                   color: colors.white,
                 }}>
                 {I18n.t('signup.sign_up_button')}
@@ -459,7 +459,7 @@ export class SignUpTabContainer extends Component<Props, State> {
 
 const buttonProps = {
   foregroundColor: colors.white,
-  labelStyle: { fontSize: 16 },
+  labelStyle: { fontSize: typography.font_button_size },
   maxWidth: Platform.select({
     ios: 346,
     android: 383,

@@ -123,7 +123,7 @@ export class SignUpTabContainer extends Component<Props, State> {
   onSignup = () => {
     const { username, emailAddress, password } = this.state;
 
-    // console.debug('onSignup()', username, emailAddress, password);
+    if (this.props.loading) return;
 
     if (username.trim() < 3) {
       this.UserNameInput.current.shake();
@@ -264,9 +264,12 @@ export class SignUpTabContainer extends Component<Props, State> {
   _inputProps = {
     autoCapitalize: 'none',
     autoCorrect: false,
+    blurOnSubmit: false,
     clearButtonMode: 'while-editing',
     editable: !this.props.loading,
     inputStyle: styles.input,
+    onSubmitEditing: this.onSignup,
+    returnKeyType: 'go',
   };
 
   _onBlurUser = () => this.setState({ hasFocusUser: false });
@@ -292,15 +295,9 @@ export class SignUpTabContainer extends Component<Props, State> {
           style={[styles.container, { paddingVertical: this.keyboardHeight }]}>
           <FormInput
             ref={this.UserNameInput}
-            blurOnSubmit={false}
             placeholder={I18n.t('signup.username_placeholder')}
-            returnKeyType="go"
             onBlur={this._onBlurUser}
             onFocus={this._onFocusUser}
-            // onSubmitEditing={() =>
-            //   this.EmailInput && this.EmailInput.current.focus()
-            // }
-            onSubmitEditing={this.onSignup}
             value={this.state.username}
             onChangeText={this.onUserChange}
             accessibilityLabel="username"
@@ -310,16 +307,10 @@ export class SignUpTabContainer extends Component<Props, State> {
           />
           <FormInput
             ref={this.EmailInput}
-            blurOnSubmit={false}
             placeholder={I18n.t('signup.email_placeholder')}
             keyboardType="email-address"
-            returnKeyType="go"
             onBlur={this._onBlurEmail}
             onFocus={this._onFocusEmail}
-            // onSubmitEditing={() =>
-            //   this.PwdInput && this.PwdInput.current.focus()
-            // }
-            onSubmitEditing={this.onSignup}
             value={this.state.emailAddress}
             testID="EmailField"
             onChangeText={this.getHandler('emailAddress')}
@@ -333,13 +324,10 @@ export class SignUpTabContainer extends Component<Props, State> {
           <View>
             <FormInput
               ref={this.PwdInput}
-              blurOnSubmit={false}
               secureTextEntry={!isPasswordVisible}
               placeholder={I18n.t('signup.password_placeholder')}
-              returnKeyType="go"
               onBlur={this._onBlurPass}
               onFocus={this._onFocusPass}
-              onSubmitEditing={this.onSignup}
               value={this.state.password}
               onChangeText={this.getHandler('password')}
               accessibilityLabel="password"
@@ -382,7 +370,7 @@ export class SignUpTabContainer extends Component<Props, State> {
               testID="signUpButton"
               block
               disabled={this.props.loading}
-              dark
+              dark={!this.props.loading}
               // style={[
               //   {
               //     backgroundColor: this.backgroundColor,

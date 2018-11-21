@@ -2,7 +2,13 @@
 
 import React from 'react';
 import { connect } from 'react-redux';
-import { Dimensions, StyleSheet, View, Text } from 'react-native';
+import {
+  Dimensions,
+  StyleSheet,
+  View,
+  Text,
+  TouchableOpacity,
+} from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {
@@ -83,7 +89,8 @@ type Props = {
 type State = {
   description: string,
   descriptionFocused: boolean,
-  dialogVisible: boolean,
+  dialogInfoVisible: boolean,
+  dialogPriceVisible: boolean,
   grp_1: number,
   grp_2: number,
   images: Array<Image>,
@@ -105,7 +112,8 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
   state = {
     description: '',
     descriptionFocused: false,
-    dialogVisible: false,
+    dialogInfoVisible: false,
+    dialogPriceVisible: false,
     grp_1: -1,
     grp_2: -1,
     images: [],
@@ -513,7 +521,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
                   <NBButton
                     transparent
                     hitSlop={{ top: 0, left: 15, bottom: 0, right: 20 }}
-                    onPress={this.toggleDialog}>
+                    onPress={this.toggleInfoDialog}>
                     <MaterialCommunityIcons
                       name="information-outline"
                       size={18}
@@ -562,10 +570,22 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
                     }}
                   />
                 </View>
-                <View>
-                  <FormLabel labelStyle={styles.label}>
-                    {I18n.t('add_or_edit_item.price_label')}
-                  </FormLabel>
+                <React.Fragment>
+                  <View
+                    style={{
+                      alignItems: 'baseline',
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                    }}>
+                    <FormLabel labelStyle={styles.label}>
+                      {I18n.t('add_or_edit_item.price_label')}
+                    </FormLabel>
+                    <TouchableOpacity
+                      style={{ marginRight: 15 }}
+                      onPress={this.togglePriceDialog}>
+                      <Text>{I18n.t('add_or_edit_item.price_info')}</Text>
+                    </TouchableOpacity>
+                  </View>
                   <Foect.Control
                     name="price"
                     required
@@ -649,7 +669,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
                           : '',
                     }}
                   />
-                </View>
+                </React.Fragment>
                 <View style={styles.grps}>
                   <RadioForm animation formHorizontal>
                     {ui.category_radio_grp_1.map((option, i) => (
@@ -712,23 +732,50 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
           )}
         </Foect.Form>
         {this.renderInfoDialog()}
+        {this.renderPriceDialog()}
       </React.Fragment>
     );
   }
 
-  toggleDialog = () =>
-    this.setState(prevState => ({ dialogVisible: !prevState.dialogVisible }));
+  toggleInfoDialog = () =>
+    this.setState(prevState => ({
+      dialogInfoVisible: !prevState.dialogInfoVisible,
+    }));
 
   renderInfoDialog() {
     return (
       <React.Fragment>
-        <Dialog.Container visible={this.state.dialogVisible}>
+        <Dialog.Container visible={this.state.dialogInfoVisible}>
           <Dialog.Description style={{ textAlign: 'justify' }}>
             {I18n.t('add_or_edit_item.info_popup')}
           </Dialog.Description>
           <Dialog.Button
             label={I18n.t('product.toast_warning_ok_button')}
-            onPress={this.toggleDialog}
+            onPress={this.toggleInfoDialog}
+          />
+        </Dialog.Container>
+      </React.Fragment>
+    );
+  }
+
+  togglePriceDialog = () =>
+    this.setState(prevState => ({
+      dialogPriceVisible: !prevState.dialogPriceVisible,
+    }));
+
+  renderPriceDialog() {
+    return (
+      <React.Fragment>
+        <Dialog.Container visible={this.state.dialogPriceVisible}>
+          <Dialog.Title>
+            {I18n.t('add_or_edit_item.price_popup_title')}
+          </Dialog.Title>
+          <Dialog.Description style={{ textAlign: 'justify' }}>
+            {I18n.t('add_or_edit_item.price_popup_body')}
+          </Dialog.Description>
+          <Dialog.Button
+            label={I18n.t('product.toast_warning_ok_button')}
+            onPress={this.togglePriceDialog}
           />
         </Dialog.Container>
       </React.Fragment>

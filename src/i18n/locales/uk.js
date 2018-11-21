@@ -143,6 +143,10 @@ export default {
     edit_item_header: 'Редагувати',
     price_label: 'Ціна:',
     price_placeholder: `${settings.MIN_PRICE} ГРН`,
+    price_info: 'Комісія',
+    price_popup_title: 'Комісія',
+    price_popup_body:
+      'Коли якусь річ успішно продано, UAPAY автоматично знімає від загальної вартості комісію 10%+10 грн для товарів вартістю менше ніж 1000 грн та 5%+10 грн для товарів вартістю більше ніж 1000 грн. Решта надходить на ваш рахунок.',
     description_label: 'Опис:',
     description_placeholder:
       'В якому стані річ, якого розміру, бренду і тому подібне',

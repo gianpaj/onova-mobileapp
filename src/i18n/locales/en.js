@@ -145,6 +145,10 @@ http://onova.co/uploader
     edit_item_header: 'Edit Item',
     price_label: 'Price:',
     price_placeholder: `min ${settings.MIN_PRICE} UAH`,
+    price_info: 'Комісія',
+    price_popup_title: 'Комісія',
+    price_popup_body:
+      'Коли якусь річ успішно продано, UAPAY автоматично знімає від загальної вартості комісію 10%+10 грн для товарів вартістю менше ніж 1000 грн та 5%+10 грн для товарів вартістю більше ніж 1000 грн. Решта надходить на ваш рахунок.',
     description_label: 'Description:',
     description_placeholder:
       'Please provide details such as brand, size and condition about the item',

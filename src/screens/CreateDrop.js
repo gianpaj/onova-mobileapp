@@ -14,6 +14,7 @@ import {
   View,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { NoticeBar, Toast } from 'antd-mobile-rn';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import Permissions from 'react-native-permissions';
@@ -36,6 +37,7 @@ import { Header } from '../components';
 import imagePickerStyle from '../components/ImagePicker.styles';
 import I18n from '../i18n';
 import * as api from '../utils/api';
+import * as linking from '../utils/linking';
 import * as ui from '../utils/ui';
 import { getPersonalUserData } from '../actions/actionCreator';
 
@@ -425,15 +427,26 @@ export class CreateDropScreen extends React.Component<Props, State> {
             </NBButton>
           </Left>
           <Body style={styles.flex2AndCenter}>
-            <Title style={{ color: colors.black }}>
+            <Title
+              style={{ color: colors.black, marginLeft: 22, marginRight: 5 }}>
               {I18n.t('create_drop.title')}
             </Title>
+            <NBButton
+              transparent
+              hitSlop={{ top: 0, left: 15, bottom: 0, right: 20 }}
+              onPress={linking.openURL.bind(
+                this,
+                'https://onova.co/drop.html'
+              )}>
+              <MaterialCommunityIcons name="information-outline" size={18} />
+            </NBButton>
           </Body>
           <Right>
             <NBButton
               testID="sendDropButton"
               disabled={!this.isButtonEnabled()}
               style={{ backgroundColor: colors.transparent }}
+              // style={{ backgroundColor: colors.transparent }}
               transparent
               onPress={this.onSendDrop}>
               <Icon
@@ -534,8 +547,10 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   flex2AndCenter: {
-    flex: 2,
     alignItems: 'center',
+    justifyContent: 'center',
+    flex: 2,
+    flexDirection: 'row',
   },
   closeWrap: {
     width: 16,

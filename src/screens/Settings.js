@@ -7,7 +7,6 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  TouchableHighlight,
   UIManager,
   View,
 } from 'react-native';
@@ -618,29 +617,12 @@ class SettingsContainer extends Component<Props, State> {
             <NBButton light full onPress={this.onSignout}>
               <Text>{I18n.t('settings.sign_out_button')}</Text>
             </NBButton>
-            <View
-              style={[
-                styles.padder,
-                { alignItems: 'center', flexDirection: 'row' },
-              ]}>
-              <NBButton
-                transparent
-                onPress={linking.openURL.bind(
-                  this,
-                  'https://onova.co/faq.html'
-                )}>
-                <NBIcon
-                  name="md-information-circle"
-                  style={{ color: colors.grey4 }}
-                  size={28}
-                />
-              </NBButton>
-              <TouchableOpacity
-                accessibilityRole="link"
-                onPress={linking.email.bind(this, 'mailto:hello@onova.co')}>
-                <Text style={styles.centerText}>hello@onova.co</Text>
-              </TouchableOpacity>
-            </View>
+            <TouchableOpacity
+              style={styles.padder}
+              accessibilityRole="link"
+              onPress={linking.email.bind(this, 'mailto:hello@onova.co')}>
+              <Text style={styles.centerText}>hello@onova.co</Text>
+            </TouchableOpacity>
             <Text style={styles.centerText}>{version}</Text>
           </View>
           {/* <HR full /> */}

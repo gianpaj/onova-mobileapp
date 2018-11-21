@@ -52,8 +52,8 @@ export default {
     password_placeholder: 'Password (minimum 8 characters)',
     sign_up_button: 'Create account',
     terms_text_1: 'By pressing Create account you agree to the',
-    terms_text_3: 'Privacy Policy,',
-    terms_text_2: 'Terms,',
+    terms_text_2: 'Privacy Policy,',
+    terms_text_3: 'Terms,',
     terms_text_4: 'Safe Purchase Rules',
   },
   home: {

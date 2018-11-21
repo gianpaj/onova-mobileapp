@@ -99,6 +99,8 @@ class ChatContainer extends Component<Props, State> {
     if (!params) {
       // for development on 'onova-test' Pusher Instance (local env)
       params = { roomId: 19372253 };
+      // for prod between Alex-Gian
+      // params = { roomId: 16463859 };
     }
 
     this.initialise(params.roomId, params.orderId)
@@ -137,7 +139,7 @@ class ChatContainer extends Component<Props, State> {
 
       this.connectToPusher()
         .then(() => {
-          // coming from ChatRooms or Push Notification
+          // coming from ChatRooms or a Push Notification
           if (roomId) {
             return pusherCurrentUser
               .joinRoom({ roomId })
@@ -160,15 +162,13 @@ class ChatContainer extends Component<Props, State> {
               });
           }
 
-          const { token } = this.props;
-
-          return api.getOrder(orderId, token);
+          return api.getOrder(orderId, this.props.token);
         })
         .then(o => {
-          console.debug(o);
-
           // coming from ChatRooms
           if (roomId) return;
+
+          console.debug(o);
 
           // else join an existing room or create one
 
@@ -285,6 +285,11 @@ class ChatContainer extends Component<Props, State> {
         // show orders which are with the person I'm chatting with
         .then(orders =>
           orders.filter((o: Order) => getRoomName(o) == thisRoom.name)
+        )
+        .then(orders =>
+          orders.filter(
+            (o: Order) => o.status !== 'cancelled' && o.status !== 'pending'
+          )
         )
         // show orders which i have not archived
         // AND

@@ -93,16 +93,18 @@ class ChatContainer extends Component<Props, State> {
       if (!pusherCurrentUser) return reject();
       api
         .getOrders(token)
+        .then(orders =>
+          orders.filter(
+            (o: Order) => o.status !== 'cancelled' && o.status !== 'pending'
+          )
+        )
         .then(o => {
-          if (o.length === 0) {
-            return resolve([]);
-          }
+          if (o.length === 0) return resolve([]);
+
           orders = o;
           return pusherCurrentUser.getJoinableRooms();
         })
-        .then((rooms: Array<any>) => {
-          return [...rooms, ...pusherCurrentUser.rooms];
-        })
+        .then((rooms: Array<any>) => [...rooms, ...pusherCurrentUser.rooms])
         .then(allRooms => {
           // let roomsAndTheirOrders = allRooms.filter(r => {
           //   const o = orders.filter((o: Order) => getRoomName(o) == r.name);

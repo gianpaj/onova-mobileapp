@@ -120,9 +120,6 @@ class Comments extends React.Component<Props, State> {
             );
             // report action
             break;
-          // case BUTTONS.indexOf('Share'):
-          //   this.showShareActionSheet();
-          //   break;
           default:
             break;
         }
@@ -235,6 +232,7 @@ class Comments extends React.Component<Props, State> {
   renderText = (string: string, matches: Array<string>) => matches[1];
 
   renderSuggestionsRow = (
+    // eslint-disable-next-line react/no-unused-prop-types
     { item: user }: { item: UserData },
     hidePanel: () => void
   ) => {

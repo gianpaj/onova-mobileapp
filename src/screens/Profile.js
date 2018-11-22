@@ -76,36 +76,30 @@ type State = {
   routes: Array<any>,
 };
 
-const defaultState = {
-  _id: '',
-  bio: '',
-  displayName: '',
-  editing: false,
-  followersCount: -1,
-  followingCount: -1,
-  isFollowing: false,
-  isRefreshing: false,
-  isSaving: false,
-  isFetching: true,
-  ordersAndReviewsCount: -1,
-  profilePic: '',
-  // rateAvg: -1,
-  username: '',
-  index: 0,
-  routes: [
-    { key: 'shop', title: I18n.t('profile.shop_tab') },
-    { key: 'drops', title: I18n.t('profile.drops_tab') },
-  ],
-};
-
 const { analyticsEnabled } = api;
 
 class ProfileScreen extends React.Component<Props, State> {
-  constructor(props) {
-    super(props);
-
-    this.state = defaultState;
-  }
+  state = {
+    _id: '',
+    bio: '',
+    displayName: '',
+    editing: false,
+    followersCount: -1,
+    followingCount: -1,
+    isFollowing: false,
+    isRefreshing: false,
+    isSaving: false,
+    isFetching: true,
+    ordersAndReviewsCount: -1,
+    profilePic: '',
+    // rateAvg: -1,
+    username: '',
+    index: 0,
+    routes: [
+      { key: 'shop', title: I18n.t('profile.shop_tab') },
+      { key: 'drops', title: I18n.t('profile.drops_tab') },
+    ],
+  };
 
   static navigationOptions = () => ({
     tabBarIcon: (props: any) => <NotificationsDot {...props} />,

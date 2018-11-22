@@ -150,3 +150,7 @@ Using [react-native-bundle-visualizer](https://github.com/IjzerenHein/react-nati
   2.  Refresh the App
   3.  Comment the line again to persist it.
   4.  Refresh tha App, one last time
+
+- Issues with yarn and `node-gyp.js build --fallback-to-build`
+
+Use node < v10 e.g. v8.11

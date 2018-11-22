@@ -761,7 +761,8 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
         <Dialog.Container
           visible={this.state.dialogInfoVisible}
           // onBackdropPress={this.toggleInfoDialog}
-          onBackButtonPress={this.toggleInfoDialog}>
+          onBackButtonPress={this.toggleInfoDialog}
+          renderToHardwareTextureAndroid>
           <Dialog.Description style={{ textAlign: 'justify' }}>
             {I18n.t('add_or_edit_item.info_popup')}
           </Dialog.Description>
@@ -785,7 +786,8 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
         <Dialog.Container
           visible={this.state.dialogPriceVisible}
           // onBackdropPress={this.togglePriceDialog}
-          onBackButtonPress={this.togglePriceDialog}>
+          onBackButtonPress={this.togglePriceDialog}
+          renderToHardwareTextureAndroid>
           <Dialog.Title>
             {I18n.t('add_or_edit_item.price_popup_title')}
           </Dialog.Title>

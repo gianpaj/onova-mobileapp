@@ -15,7 +15,7 @@
     "nuke-android": "yarn nuke-bundler && cd android/ && ./gradlew clean && cd ..",
     "nuke-bundler": "watchman watch-del-all && rm -rf $TMPDIR/react-*",
     "nuke-ios": "yarn nuke-bundler && rm -rf ios/build/ModuleCache && rm -rf ~/Library/Developer/Xcode/DerivedData/*",
-    "postinstall": "flow-typed install",
+    "DISABLEDpostinstall": "flow-typed install",
     "start-emulator": "cd $ANDROID_HOME/emulator && ./emulator -avd Nexus_5X_API_28 &",
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "storybook": "storybook start -p 7007",

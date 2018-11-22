@@ -155,7 +155,8 @@ export class Home extends PureComponent<Props, State> {
         <Dialog.Container
           visible={this.state.dialogVisible}
           // onBackdropPress={this.toggleDialog}
-          onBackButtonPress={this.toggleDialog}>
+          onBackButtonPress={this.toggleDialog}
+          renderToHardwareTextureAndroid>
           <Dialog.Title>{I18n.t('home.alert_info_title')}</Dialog.Title>
 
           <ParsedText

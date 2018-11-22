@@ -87,8 +87,6 @@ type Props = {
 };
 
 type State = {
-  description: string,
-  descriptionFocused: boolean,
   dialogInfoVisible: boolean,
   dialogPriceVisible: boolean,
   grp_1: number,
@@ -108,10 +106,10 @@ type State = {
 
 export class AddOrEditProductScreen extends React.Component<Props, State> {
   priceControl;
+  priceInput;
+  descriptionControl;
 
   state = {
-    description: '',
-    descriptionFocused: false,
     dialogInfoVisible: false,
     dialogPriceVisible: false,
     grp_1: -1,
@@ -325,21 +323,13 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     // }
   };
 
-  onSave = async ({ price }) => {
-    if (!this.canSave({ price })) return;
+  onSave = async ({ price, description }) => {
+    if (!this.canSave({ price, description })) return;
 
     this.setState({ pending: true });
 
     Toast.loading(I18n.t('alerts.toast_uploading'), 30);
-    const {
-      description,
-      grp_1,
-      grp_2,
-      images,
-      inEditMode,
-      tags,
-      uuid,
-    } = this.state;
+    const { grp_1, grp_2, images, inEditMode, tags, uuid } = this.state;
 
     const data: any = {
       categoryIds: grp_1.toString(),
@@ -435,7 +425,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
 
   // numbers only, one dot and 2 decimal points
 
-  canSave({ price }): boolean {
+  canSave({ price, description }): boolean {
     // const tagsPattern = /^(\b[a-z][a-z0-9]*)$/i;
 
     const { images, pending } = this.state;
@@ -449,7 +439,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
       // if the price is not empty
       price !== '' &&
       // if the description doesn't exceed the maximum length
-      this.state.description.trim().length >= settings.MIN_LENGTH_DESCRIPTION &&
+      description.trim().length >= settings.MIN_LENGTH_DESCRIPTION &&
       // if there's the minimum required of tags
       this.state.tags.length >= settings.MIN_TAGS &&
       // if there's a clothing category selected
@@ -463,19 +453,18 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     this.setState({ images });
   };
 
-  onChangeDescription = (t: string) => this.setState({ description: t });
-
   onInvalidSubmit = (errors: any) => {
-    if (errors.price) {
+    if (Object.keys(errors.price).length) {
       this.priceInput.focus();
       this.priceControl.markAsTouched();
+    }
+    if (Object.keys(errors.description).length) {
+      this.descriptionControl.markAsTouched();
     }
   };
 
   render() {
     const {
-      description,
-      descriptionFocused,
       grp_1,
       grp_2,
       images,
@@ -592,7 +581,6 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
                     required
                     maxLength={8}
                     checkPrice={{}}>
-                    {/* you can use control for getting/setting it's value, checking/updating(control.isValid, control.markAsTouched(), ...) it's state, checking it's errors(control.errors.required) */}
                     {control => {
                       this.priceControl = control;
                       return (
@@ -601,6 +589,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
                             testID="price"
                             ref={input => (this.priceInput = input)}
                             autoCorrect={false}
+                            blurOnSubmit={false}
                             clearButtonMode="while-editing"
                             error={control.isTouched && control.isInvalid}
                             // onErrorClick={ show toast with }
@@ -613,6 +602,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
                             placeholder={I18n.t(
                               'add_or_edit_item.price_placeholder'
                             )}
+                            returnKeyType="go"
                             type="number"
                             value={control.value}
                           />
@@ -631,25 +621,35 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
                   <FormLabel labelStyle={styles.label}>
                     {I18n.t('add_or_edit_item.description_label')}
                   </FormLabel>
-                  <TextareaItem
-                    testID="description"
-                    style={styles.inputContainerNew}
-                    last // to set borderBottomWidth=0
-                    containerStyle={{ borderBottomWidth: 5, marginRight: 12 }}
-                    rows={3}
-                    count={settings.MAX_LENGTH_DESCRIPTION}
-                    onChangeText={this.onChangeDescription}
-                    onFocus={() => this.setState({ descriptionFocused: true })}
-                    placeholder={I18n.t(
-                      'add_or_edit_item.description_placeholder'
-                    )}
-                    value={description}
-                    error={
-                      descriptionFocused &&
-                      description.trim().length <
-                        settings.MIN_LENGTH_DESCRIPTION
-                    }
-                  />
+                  <Foect.Control
+                    name="description"
+                    required
+                    minLength={settings.MIN_LENGTH_DESCRIPTION}
+                    maxLength={settings.MAX_LENGTH_DESCRIPTION}>
+                    {control => {
+                      this.descriptionControl = control;
+                      return (
+                        <TextareaItem
+                          testID="description"
+                          error={control.isTouched && control.isInvalid}
+                          last // to set borderBottomWidth=0
+                          containerStyle={{
+                            borderBottomWidth: 5,
+                            marginRight: 12,
+                          }}
+                          count={settings.MAX_LENGTH_DESCRIPTION}
+                          onBlur={control.markAsTouched}
+                          onChangeText={control.onChange.bind(this)}
+                          rows={3}
+                          style={styles.inputContainerNew}
+                          placeholder={I18n.t(
+                            'add_or_edit_item.description_placeholder'
+                          )}
+                          value={control.value}
+                        />
+                      );
+                    }}
+                  </Foect.Control>
                   <FormLabel labelStyle={styles.label}>
                     {I18n.t('add_or_edit_item.hashtags_label')}
                   </FormLabel>

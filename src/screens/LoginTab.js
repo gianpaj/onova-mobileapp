@@ -306,7 +306,6 @@ export class LoginTabContainer extends React.Component<Props, State> {
               onPress={this.onLogin}
               {...buttonProps}>
               <Text
-                // eslint-disable-next-line
                 style={{
                   fontSize: typography.font_button_size,
                   color: colors.white,
@@ -359,11 +358,7 @@ export class LoginTabContainer extends React.Component<Props, State> {
               color={colors.grey2}
               style={{ alignSelf: 'center', marginBottom: 30 }}
             />
-            <Text
-              style={{
-                color: colors.black,
-                textAlign: 'center',
-              }}>
+            <Text style={{ color: colors.black, textAlign: 'center' }}>
               {I18n.t('login.verify_account.title')}
             </Text>
           </View>
@@ -407,8 +402,8 @@ export class LoginTabContainer extends React.Component<Props, State> {
             ref={this.PwdReset}
             autoCapitalize="none"
             autoCorrect={false}
-            blurOnSubmit={false}
             autoFocus
+            blurOnSubmit={false}
             clearButtonMode="while-editing"
             containerStyle={{ margin: 10 }}
             inputStyle={styles.input}

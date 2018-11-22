@@ -328,6 +328,10 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
 
     this.setState({ pending: true });
 
+    if (this.state.tagsText.length) {
+      await this.changeTagsTest(this.state.tagsText + ',');
+    }
+
     Toast.loading(I18n.t('alerts.toast_uploading'), 30);
     const { grp_1, grp_2, images, inEditMode, tags, uuid } = this.state;
 
@@ -377,34 +381,39 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
   };
 
   changeTagsTest = (tagsText: string) => {
-    const textWithoutSeparators = tagsText.replace(/,|;| | \n/gi, '');
-    // if the tag is longer the maximum
-    // OR if it doesn't match the regex
-    if (
-      textWithoutSeparators.length > settings.MAX_LENGTH_PER_TAG ||
-      (textWithoutSeparators.length > 1 &&
-        !settings.HASHTAG_REGEX.test(textWithoutSeparators))
-    )
-      return;
+    return new Promise(resolve => {
+      const textWithoutSeparators = tagsText.replace(/,|;| | \n/gi, '');
+      // if the tag is longer the maximum
+      // OR if it doesn't match the regex
+      if (
+        textWithoutSeparators.length > settings.MAX_LENGTH_PER_TAG ||
+        (textWithoutSeparators.length > 1 &&
+          !settings.HASHTAG_REGEX.test(textWithoutSeparators))
+      )
+        return;
 
-    const lastTyped = tagsText.charAt(tagsText.length - 1);
-    const parseWhen = [',', ' ', ';', '\n'];
+      const lastTyped = tagsText.charAt(tagsText.length - 1);
+      const parseWhen = [',', ' ', ';', '\n'];
 
-    // if a separator was typed at the end of the tag
-    // AND the tag has the minimum length
-    if (
-      parseWhen.indexOf(lastTyped) > -1 &&
-      textWithoutSeparators.length >= settings.MIN_LENGTH_PER_TAG &&
-      this.state.tags.length < settings.MAX_TAGS &&
-      this.onlyOneBrand(this.state.tagsText) == true
-    ) {
-      const newTags = new Set([...this.state.tags, this.state.tagsText]);
-      return this.setState({
-        tags: Array.from(newTags),
-        tagsText: '',
-      });
-    }
-    this.setState({ tagsText: textWithoutSeparators });
+      // if a separator was typed at the end of the tag
+      // AND the tag has the minimum length
+      if (
+        parseWhen.indexOf(lastTyped) > -1 &&
+        textWithoutSeparators.length >= settings.MIN_LENGTH_PER_TAG &&
+        this.state.tags.length < settings.MAX_TAGS &&
+        this.onlyOneBrand(this.state.tagsText) == true
+      ) {
+        const newTags = new Set([...this.state.tags, this.state.tagsText]);
+        return this.setState(
+          {
+            tags: Array.from(newTags),
+            tagsText: '',
+          },
+          () => resolve()
+        );
+      }
+      this.setState({ tagsText: textWithoutSeparators }, () => resolve());
+    });
   };
 
   /**
@@ -655,10 +664,13 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
                   </FormLabel>
                   <TagInput
                     inputDefaultWidth={140}
-                    maxHeight={2000}
                     labelExtractor={tag => tag}
+                    maxHeight={2000}
                     onChange={this.changeTags}
                     onChangeText={this.changeTagsTest}
+                    onBlur={() =>
+                      this.changeTagsTest(this.state.tagsText + ',')
+                    }
                     tagColor={colors.primary}
                     tagTextColor="white"
                     text={tagsText}

@@ -206,11 +206,6 @@ class TagInput<T> extends React.PureComponent<Props<T>, State> {
     }
   };
 
-  onBlur = (event: { nativeEvent: { text: string } }) => {
-    invariant(Platform.OS === 'ios', 'only iOS gets text on TextInput.onBlur');
-    this.props.onChangeText(event.nativeEvent.text);
-  };
-
   onKeyPress = (event: { nativeEvent: { key: string } }) => {
     if (this.props.text !== '' || event.nativeEvent.key !== 'Backspace') {
       return;
@@ -294,7 +289,7 @@ class TagInput<T> extends React.PureComponent<Props<T>, State> {
                       color: this.props.inputColor,
                     },
                   ]}
-                  onBlur={Platform.OS === 'ios' ? this.onBlur : undefined}
+                  onBlur={this.props.onBlur}
                   onChangeText={this.props.onChangeText}
                   autoCapitalize="none"
                   autoCorrect={false}

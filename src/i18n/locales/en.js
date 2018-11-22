@@ -116,7 +116,7 @@ http://onova.co/uploader
     action_button_delete: 'Delete',
     action_button_edit: 'Edit',
     action_button_report: 'Report',
-    toast_uploading: 'Uploading...',
+    toast_uploading: 'Saving...',
   },
   search: {
     header: 'Search',

@@ -162,7 +162,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
       });
     }
     this.setState({ isLoading: false });
-    // this.selectPhotoTapped(0);
+    this.selectPhotoTapped(0);
   }
 
   selectPhotoTapped = (i: number = 0, multiple: boolean = true) => {
@@ -581,6 +581,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
                       {I18n.t('add_or_edit_item.price_label')}
                     </FormLabel>
                     <TouchableOpacity
+                      hitSlop={{ top: 10, left: 5, bottom: 5, right: 10 }}
                       style={{ marginRight: 15 }}
                       onPress={this.togglePriceDialog}>
                       <Text>{I18n.t('add_or_edit_item.price_info')}</Text>

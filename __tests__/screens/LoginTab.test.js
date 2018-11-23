@@ -23,16 +23,16 @@ describe('LoginTab screen', () => {
   //   moxios.uninstall();
   // });
 
-  it('at the beginning the Login button should NOT be enabled', () => {
+  it.skip('at the beginning the Login button should NOT be enabled', () => {
     expect(wrapper.find('[testID="loginButton"]').prop('disabled')).toBe(true);
   });
 
-  it('the Login button should be enabled after the email and password is entered', () => {
+  it.skip('the Login button should be enabled after the email and password is entered', () => {
     wrapper.setState({ emailAddress: 'asdf@gmail.com', password: 'ab' });
     expect(wrapper.find('[testID="loginButton"]').prop('disabled')).toBe(false);
   });
 
-  it('should NOT login', () => {
+  it('should have tried to login', () => {
     wrapper.setState({
       emailAddress: 'asdf@gmail.com',
       password: 'ab',

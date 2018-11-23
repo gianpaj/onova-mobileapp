@@ -48,7 +48,11 @@ export default function(
       };
 
     case SIGNUP_SUCCESS:
-      return { ...state, isVerifyAccountModalVisible: true };
+      return {
+        ...state,
+        isVerifyAccountModalVisible: true,
+        loading: false,
+      };
 
     case LOGIN_SUCCESS:
       const thisState = {

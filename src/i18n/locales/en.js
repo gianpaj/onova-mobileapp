@@ -30,6 +30,25 @@ export default {
     signup: 'SIGNUP',
     login: 'LOGIN',
   },
+  signup: {
+    username_placeholder: 'Username',
+    email_placeholder: 'Email',
+    password_placeholder: 'Password (minimum 8 characters)',
+    sign_up_button: 'Create account',
+    terms_text_1: 'By pressing Create account you agree to the',
+    terms_text_2: 'Privacy Policy,',
+    terms_text_3: 'Terms,',
+    terms_text_4: 'Safe Purchase Rules',
+    alerts: {
+      username_too_short: 'Please enter a longer username (min 3 chars)',
+      username_too_long: 'Please enter a shorter username',
+      username_invalid:
+        'Please enter a valid username (only numbers, letters and _ .)',
+      email_invalid: 'Email is not valid',
+      password_too_short: 'Please enter a longer password (min 8 chars)',
+      password_too_long: 'Please enter a shorter password',
+    },
+  },
   login: {
     email_placeholder: 'Email',
     password_placeholder: 'Password',
@@ -45,16 +64,6 @@ export default {
         'One step left! Check your inbox for a confirmation email and click on the link.',
     },
     retry: 'Try again',
-  },
-  signup: {
-    username_placeholder: 'Username',
-    email_placeholder: 'Email',
-    password_placeholder: 'Password (minimum 8 characters)',
-    sign_up_button: 'Create account',
-    terms_text_1: 'By pressing Create account you agree to the',
-    terms_text_2: 'Privacy Policy,',
-    terms_text_3: 'Terms,',
-    terms_text_4: 'Safe Purchase Rules',
   },
   home: {
     clothes_tab: 'Clothes',

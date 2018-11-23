@@ -32,6 +32,25 @@ export default {
     signup: 'Реєстрація',
     login: 'Вхід',
   },
+  signup: {
+    username_placeholder: 'Username',
+    email_placeholder: 'Email',
+    password_placeholder: 'Password (мін 8 знаків)',
+    sign_up_button: 'Створити профіль',
+    terms_text_1: 'Натискаючи зареєструватись ви погоджуєтесь з',
+    terms_text_2: 'Політикою Конфіденційності,',
+    terms_text_3: 'Умовами надання послуг,',
+    terms_text_4: 'Умовами Безпечної угоди',
+    alerts: {
+      username_too_short: "Будь ласка введіть довше ім'я (мін 3 знаків)",
+      username_too_long: "будь ласка введіть коротше ім'я",
+      username_invalid:
+        "Будь ласка введіть правильне ім'я (лише літери, цифри та _ .)",
+      email_invalid: 'Електронна адреса не дійсна',
+      password_too_short: 'Будь ласка введіть довший пароль (мін 8 знаків)',
+      password_too_long: 'Будь ласка введіть коротший пароль',
+    },
+  },
   login: {
     email_placeholder: 'Email',
     password_placeholder: 'Password',
@@ -46,16 +65,6 @@ export default {
       title: 'Ми надіслали вам підтвердження на пошту!',
     },
     retry: 'Спробуй ще раз',
-  },
-  signup: {
-    username_placeholder: 'Username',
-    email_placeholder: 'Email',
-    password_placeholder: 'Password (minimum 8 characters)',
-    sign_up_button: 'Створити профіль',
-    terms_text_1: 'Натискаючи зареєструватись ви погоджуєтесь з',
-    terms_text_2: 'Політикою Конфіденційності,',
-    terms_text_3: 'Умовами надання послуг,',
-    terms_text_4: 'Умовами Безпечної угоди',
   },
   home: {
     clothes_tab: 'Одяг',

@@ -542,6 +542,7 @@ class SettingsContainer extends Component<Props, State> {
             <FormInput
               ref={el => (this.inputs[5] = el)}
               autoCorrect={false}
+              autoCapitalize="none"
               containerStyle={styles.inputContainer}
               editable={!pending}
               inputStyle={styles.input}
@@ -590,10 +591,7 @@ class SettingsContainer extends Component<Props, State> {
               style={{ marginVertical: 15, marginHorizontal: 20, width: '50%' }}
               hitSlop={linkHitSlop}
               accessibilityRole="link"
-              onPress={linking.openURL.bind(
-                this,
-                'https://onova.co/safe-purchase-rules.html'
-              )}>
+              onPress={() => this.props.navigation.navigate('markdownDoc')}>
               <Text style={styles.labelLink}>
                 {I18n.t('settings.safe_purchase_rules')}
               </Text>

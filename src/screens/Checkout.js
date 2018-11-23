@@ -90,6 +90,7 @@ type State = {
   order: Order | {},
   paymentInfo: PaymentInfo,
   pending: boolean,
+  seller: UserData,
   shippingAddress: ?ShippingAddress,
   shippingFee: string,
   showFooter: boolean,
@@ -113,6 +114,7 @@ class CheckoutContainer extends Component<Props, State> {
     paymentInfo: {},
     pending: false,
     query: '',
+    seller: null,
     shippingAddress: null,
     shippingFee: 0,
     showFooter: true,
@@ -193,16 +195,21 @@ class CheckoutContainer extends Component<Props, State> {
 
   initialilizeOrder(item) {
     const { token } = this.props;
+    // TODO: refactor this for both a new order and existing. use async/await
     return api
       .createOrder(item.uuid, token)
-      .then((order: Order) =>
+      .then((order: Order) => {
+        // if it's a new order
         this.setState({
           item,
           order,
           shippingFee: order.shippingFee,
-        })
-      )
-      .catch(err => {
+        });
+        return order;
+      })
+      .then((order: Order) => api.getUser(order.seller))
+      .then((seller: UserData) => this.setState({ seller }))
+      .catch(async err => {
         if (err.data && err.data.data) {
           const { data } = err.data;
           if (err.message == 'Duplicate order' && data.status == 'confirmed') {
@@ -212,9 +219,11 @@ class CheckoutContainer extends Component<Props, State> {
 
           if (data.status == 'pending' || data.status == 'cancelled') {
             console.log('order is: pending or cancelled');
+            const seller = await api.getUser(data.seller);
             return this.setState({
               item,
               order: data,
+              seller,
               shippingFee: data.shippingFee,
             });
           }
@@ -522,8 +531,7 @@ class CheckoutContainer extends Component<Props, State> {
   };
 
   renderPricingContainer() {
-    const { areFeesLoading, order, shippingFee } = this.state;
-
+    const { areFeesLoading, order, shippingFee, seller } = this.state;
     if (areFeesLoading)
       return (
         <View style={{ flex: 1, paddingTop: 10 }}>
@@ -562,6 +570,14 @@ class CheckoutContainer extends Component<Props, State> {
               {ui.formatCurrency(shippingFee)}{' '}
             </H3>
             <Text>{order.currency}</Text>
+          </View>
+        </View>
+        <View style={styles.row}>
+          <Text>
+            @{seller.username} {I18n.t('checkout.location')}:
+          </Text>
+          <View style={[styles.innerRow, { paddingTop: 6 }]}>
+            <Text>{I18n.t('checkout.ukraine')}</Text>
           </View>
         </View>
       </View>
@@ -758,13 +774,13 @@ class CheckoutContainer extends Component<Props, State> {
                   )}
                 </TouchableOpacity>
                 <InputItem
+                  ref={el => (this.inputs[5] = el)}
                   autoCorrect={false}
                   error={cvc.length !== 3}
                   last
                   onChange={this.onCVCChange}
                   onFocus={() => this.handleFocus(5)}
                   placeholder="CVC"
-                  ref={el => (this.inputs[5] = el)}
                   type="number"
                   value={cvc}
                 />

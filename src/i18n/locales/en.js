@@ -259,6 +259,8 @@ http://onova.co/uploader
     total_row: 'Total:',
     item_row: 'Item:',
     shipping_cost_row: 'Shipping cost:',
+    location: 'location',
+    ukraine: 'Ukraine',
     missing: {
       cardNumber: 'Card CVC number',
       cardInfo: 'Card information',

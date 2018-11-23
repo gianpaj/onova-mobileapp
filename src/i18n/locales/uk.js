@@ -256,6 +256,8 @@ export default {
     total_row: 'Загалом:',
     item_row: 'Річ:',
     shipping_cost_row: 'Вартість доставки:',
+    location: 'місцезнаходження',
+    ukraine: 'Україна',
     missing: {
       cardNumber: 'CVC номер',
       cardInfo: 'Данні картки',

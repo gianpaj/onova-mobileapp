@@ -179,9 +179,8 @@ export class ProductContainer extends React.Component<Props, State> {
         ) {
           await this.onSuccessfulShare();
           return null;
-        } else {
-          throw new Error('not_shared');
         }
+        throw new Error('not_shared');
       })
       .catch(e => {
         console.warn(e);

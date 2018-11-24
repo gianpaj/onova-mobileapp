@@ -9,6 +9,8 @@
 # Uncomment the line if you want fastlane to automatically update itself
 # update_fastlane
 
+json_key = "fastlane/google-service_account.json"
+
 default_platform(:android)
 
 platform :android do
@@ -18,11 +20,21 @@ platform :android do
   # end
 
   desc "Release build"
+  lane :release do
+    gradle(
+      task: 'assemble',
+      build_type: 'Release'
+    )
+  end
+
+  desc "Deply a new version to Beta track"
   lane :beta do
     gradle(
       task: 'assemble',
       build_type: 'Release'
     )
+
+    upload_to_play_store(track: 'beta', json_key: json_key)
   end
 
   desc "Deploy a new version to the Google Play"

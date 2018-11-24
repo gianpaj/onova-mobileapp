@@ -16,11 +16,16 @@ or alternatively using `brew cask install fastlane`
 
 # Available Actions
 ## Android
+### android release
+```
+fastlane android release
+```
+Release build
 ### android beta
 ```
 fastlane android beta
 ```
-Release build
+Deply a new version to Beta track
 ### android deploy
 ```
 fastlane android deploy

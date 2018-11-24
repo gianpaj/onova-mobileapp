@@ -67,6 +67,7 @@ config-*.json
 
 # fastlane iOS
 !ios/.env
+android/fastlane/google-service_account.json
 
 # jest
 .cache

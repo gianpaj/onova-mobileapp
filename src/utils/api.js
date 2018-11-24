@@ -16,8 +16,8 @@ if (process.env.NODE_ENV === 'prod' || process.env.NODE_ENV === 'production') {
   config = require('../../config-dev.json');
 }
 
-// const analyticsEnabled = isProd == true;
-const analyticsEnabled = false;
+const analyticsEnabled = isProd == true;
+// const analyticsEnabled = false;
 
 export { isProd, analyticsEnabled, config };
 

@@ -1,6 +1,6 @@
 // @flow
 
-// originally from https://github.com/ant-design/ant-design-mobile-rn/blob/7715f25a77557ac41f5e2e5889a73dfb4c47b66c/components/image-picker/index.native.tsx
+// originally from https://github.com/ant-design/ant-design-mobile-rn/blob/0544f09b0843bb0fae6c353f07056d16f4538cd9/components/image-picker/index.tsx
 
 import React from 'react';
 import {

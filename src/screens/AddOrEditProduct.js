@@ -304,7 +304,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
   // FIXME: check changes properly if inEditMode
   hasUnsavedChanges(): boolean {
     const { images, price, tags } = this.state;
-    const description = this.descriptionControl.getValue();
+    const description = this.descriptionControl.value;
     return (
       description.length > 0 ||
       images.length > 0 ||

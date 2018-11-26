@@ -93,6 +93,7 @@ type Props = {
 type State = {
   dialogInfoVisible: boolean,
   dialogPriceVisible: boolean,
+  description: string,
   grp_1: number,
   grp_2: number,
   images: Array<Image>,
@@ -116,6 +117,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
   state = {
     dialogInfoVisible: false,
     dialogPriceVisible: false,
+    description: '',
     grp_1: -1,
     grp_2: -1,
     images: [],
@@ -301,7 +303,8 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
 
   // FIXME: check changes properly if inEditMode
   hasUnsavedChanges(): boolean {
-    const { description, images, price, tags } = this.state;
+    const { images, price, tags } = this.state;
+    const description = this.descriptionControl.getValue();
     return (
       description.length > 0 ||
       images.length > 0 ||
@@ -495,6 +498,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
 
   render() {
     const {
+      description,
       grp_1,
       grp_2,
       images,
@@ -512,7 +516,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
       <React.Fragment>
         <Foect.Form
           onValidSubmit={this.onSave}
-          defaultValue={{ price }}
+          defaultValue={{ description, price }}
           onInvalidSubmit={this.onInvalidSubmit}>
           {form => (
             <Container>

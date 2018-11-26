@@ -167,16 +167,22 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     }
     this.setState({ isLoading: false });
     this.selectPhotoTapped(0);
-    // development
-    // this.selectPhotoTapped(1);
-    // this.selectPhotoTapped(2);
   }
 
   selectPhotoTapped = (i: number = 0, multiple: boolean = true) => {
     // development
-    // const url =
-    //   'https://storage.googleapis.com/assets.onova.co/products/MS8mGgiHPi-1-1542904777176.jpg';
-    // return this.appendSinglePhoto(url, i);
+    // this.appendSinglePhoto(
+    //   'https://storage.googleapis.com/assets.onova.co/products/MS8mGgiHPi-1-1542904777176.jpg',
+    //   0
+    // );
+    // this.appendSinglePhoto(
+    //   'https://storage.googleapis.com/assets.onova.co/products/saxBKnrTO-1-1542904778726.jpg',
+    //   1
+    // );
+    // return this.appendSinglePhoto(
+    //   'https://storage.googleapis.com/assets.onova.co/products/e3X8Z2hehL-1-1542904778086.jpg',
+    //   2
+    // );
     if (global.__TESTING__) {
       return ImagePicker.openPicker()
         .then(() => {
@@ -475,7 +481,6 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
   onImageChange = (images: Array<any>) => this.setState({ images });
 
   onImageChangeOrder = (array: Array<any>) => {
-    console.warn('onImageChangeOrder');
     // TODO: use a single map function
     const order = array.map(e => parseInt(e));
     const newOrder = [];

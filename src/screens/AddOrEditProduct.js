@@ -165,9 +165,16 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     }
     this.setState({ isLoading: false });
     this.selectPhotoTapped(0);
+    // development
+    // this.selectPhotoTapped(1);
+    // this.selectPhotoTapped(2);
   }
 
   selectPhotoTapped = (i: number = 0, multiple: boolean = true) => {
+    // development
+    // const url =
+    //   'https://storage.googleapis.com/assets.onova.co/products/MS8mGgiHPi-1-1542904777176.jpg';
+    // return this.appendSinglePhoto(url, i);
     if (global.__TESTING__) {
       return ImagePicker.openPicker()
         .then(() => {
@@ -462,8 +469,18 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     );
   }
 
-  onImageChange = (images: Array<any>) => {
-    this.setState({ images });
+  onImageChange = (images: Array<any>) => this.setState({ images });
+
+  onImageChangeOrder = (array: Array<any>) => {
+    console.warn('onImageChangeOrder');
+    // TODO: use a single map function
+    const order = array.map(e => parseInt(e));
+    const newOrder = [];
+    for (let i = 0; i < order.length; i++) {
+      const o = order[i];
+      newOrder.push(this.state.images[o]);
+    }
+    this.setState({ images: newOrder });
   };
 
   onInvalidSubmit = (errors: any) => {
@@ -561,15 +578,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
                     selectable={images.length < 6}
                     enabled={!isUploading}
                     onChange={this.onImageChange}
-                    onChangeOrder={array => {
-                      const order = array.map(e => parseInt(e));
-                      const newOrder = [];
-                      for (let i = 0; i < order.length; i++) {
-                        const o = order[i];
-                        newOrder.push(this.state.images[o]);
-                      }
-                      this.setState({ images: newOrder });
-                    }}
+                    onChangeOrder={this.onImageChangeOrder}
                   />
                 </View>
                 <React.Fragment>

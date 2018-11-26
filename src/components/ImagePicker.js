@@ -75,14 +75,17 @@ export default class ImagePicker extends React.Component<Props, State> {
     return (
       <View style={styles.container}>
         <SortableList
-          horizontal
           data={files}
+          horizontal
+          onChangeOrder={onChangeOrder}
+          onPressRow={this.onImageClick}
           renderRow={this._renderRow}
-          sortingEnabled={enabled}
           scrollEnabled={false}
           showsHorizontalScrollIndicator={false}
-          onPressRow={this.onImageClick}
-          onChangeOrder={onChangeOrder}
+          sortingEnabled={enabled}
+          // FIXME: allow to drag-drop to sort over multiple items. not jumping one by one
+          // onActivateRow={() => console.warn('onActivateRow')}
+          // onReleaseRow={() => console.warn('onReleaseRow')}
         />
         {selectable && (
           <TouchableOpacity

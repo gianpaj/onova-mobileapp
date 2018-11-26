@@ -32,8 +32,12 @@ import { InputItem, TextareaItem, Toast } from 'antd-mobile-rn';
 import Foect from 'foect';
 import Dialog from 'react-native-dialog';
 
-import { Header, HR, TagInput } from '../components';
-import AntImagePicker from '../components/ImagePicker';
+import {
+  ImagePicker as AntImagePicker,
+  Header,
+  HR,
+  TagInput,
+} from '../components';
 import { enableRefresh } from '../actions/actionCreator';
 import I18n from '../i18n';
 import colors from '../config/colors';

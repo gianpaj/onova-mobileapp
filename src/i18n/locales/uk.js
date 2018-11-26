@@ -162,7 +162,7 @@ export default {
     hashtags_label: '#tags:',
     hashtags_placeholder: 'adidas, 43',
     select_photo_source_camera: 'Камера',
-    select_photo_source_gallery: 'Галерея',
+    select_photo_source_gallery: 'Галерея (група зображень)',
     select_photo_source_cancel: 'Відмінити',
     too_many_images: 'Дозвелоно максимум 6 зображень',
     min_price: 'Мінімальна ціна Х',

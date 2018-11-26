@@ -164,7 +164,7 @@ http://onova.co/uploader
     hashtags_label: '#tags:',
     hashtags_placeholder: 'adidas, 43',
     select_photo_source_camera: 'Camera',
-    select_photo_source_gallery: 'Gallery',
+    select_photo_source_gallery: 'Gallery (multiple images)',
     select_photo_source_cancel: 'Cancel',
     too_many_images: 'An item can have up to 6 images',
     min_price: 'The minimum price is',

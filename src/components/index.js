@@ -11,6 +11,7 @@ import Header from './Header';
 import HR from './HR';
 import ImageGrid from './ImageGrid';
 import ImageGridSearch from './ImageGridSearch';
+import ImagePicker from './ImagePicker';
 import MediaView from './MediaView';
 import NotificationsDot from './NotificationsDot';
 import OrderStatus from './OrderStatus';
@@ -24,18 +25,19 @@ export {
   Avatar,
   CardView,
   // ChatActions,
+  Comments,
   DropsGrid,
   EditableText,
-  Comments,
-  HR,
   Header,
-  Title,
+  HR,
   ImageGrid,
   ImageGridSearch,
+  ImagePicker,
   MediaView,
   NotificationsDot,
   OrderStatus,
   SearchableDropdown,
   Send,
   TagInput,
+  Title,
 };

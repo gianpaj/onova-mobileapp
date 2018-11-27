@@ -122,6 +122,7 @@ export class SignUpTabContainer extends Component<Props, State> {
 
   onSignup = () => {
     if (this.props.loading) return;
+
     let { username, emailAddress, password } = this.state;
     const prefix = 'signup.alerts.';
 

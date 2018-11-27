@@ -113,6 +113,8 @@ export class LoginTabContainer extends React.Component<Props, State> {
   };
 
   onLogin = () => {
+    if (this.props.loading) return;
+
     let { emailAddress, password } = this.state;
 
     emailAddress = emailAddress.trim();
@@ -126,7 +128,6 @@ export class LoginTabContainer extends React.Component<Props, State> {
       this.PwdInput.current.shake();
       return this.PwdInput.current.focus();
     }
-    if (this.props.loading) return;
 
     this.props.dispatch(login({ emailAddress, password })).catch(() => {
       this.setState({ verifyAccountModalVisible: true });

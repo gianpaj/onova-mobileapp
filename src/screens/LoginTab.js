@@ -418,7 +418,7 @@ export class LoginTabContainer extends React.Component<Props, State> {
           />
 
           <NBButton
-            style={{ alignSelf: 'center', width: 200 }}
+            style={{ alignSelf: 'center', minWidth: 260 }}
             testID="ResetButton"
             block
             disabled={isDisabled}

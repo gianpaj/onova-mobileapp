@@ -468,12 +468,10 @@ export class CreateDropScreen extends React.Component<Props, State> {
               {I18n.t('create_drop.title')}
             </Title>
             <NBButton
-              transparent
               hitSlop={{ top: 0, left: 15, bottom: 0, right: 20 }}
-              onPress={linking.openURL.bind(
-                this,
-                'https://onova.co/drop.html'
-              )}>
+              onPress={linking.openURL.bind(this, 'https://onova.co/drop.html')}
+              style={{ marginTop: 5 }}
+              transparent>
               <MaterialCommunityIcons name="information-outline" size={18} />
             </NBButton>
           </Body>

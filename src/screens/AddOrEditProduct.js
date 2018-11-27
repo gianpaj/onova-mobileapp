@@ -206,7 +206,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
             ImagePicker.openCamera({
               ...imagePickerOptons,
             })
-              .then(response => this.appendPhoto(response, i))
+              .then(response => this.appendPhotos(response, i))
               .catch(() => this.goBackConditional());
             break;
           case 1:
@@ -222,7 +222,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
                 'RecentlyAdded',
               ],
             })
-              .then(response => this.appendPhoto(response, i))
+              .then(response => this.appendPhotos(response, i))
               .catch(() => this.goBackConditional());
             break;
           default:
@@ -232,8 +232,8 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     );
   };
 
-  appendPhoto(response: Array<any> | any, i: number) {
-    if (response.length) {
+  async appendPhotos(response: Array<any> | any, i: number) {
+    if (response.length > 1) {
       if (response.length + this.state.images.length > MAX_IMAGES) {
         Toast.fail(I18n.t('add_or_edit_item.too_many_images'));
         return console.debug('too many images');
@@ -255,7 +255,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     this.setState({ progress });
   };
 
-  async uploadImagesTemporarilyAndAppend(
+  async uploadOneImageTemporarilyAndAppend(
     response: Array<any> | any,
     i: number
   ) {
@@ -294,7 +294,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
       images: prevState.images.filter((e, i) => i !== index),
     }));
 
-  // if we want to replace an existing photo
+  // add or replace an existing photo
   appendImageOrReplace = (image: any, i: number) => {
     this.setState(prevState => {
       if (prevState.images[i]) {
@@ -547,9 +547,10 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
                       : I18n.t('add_or_edit_item.add_item_header')}
                   </Title>
                   <NBButton
-                    transparent
                     hitSlop={{ top: 0, left: 15, bottom: 0, right: 20 }}
-                    onPress={this.toggleInfoDialog}>
+                    onPress={this.toggleInfoDialog}
+                    style={{ marginTop: 5 }}
+                    transparent>
                     <MaterialCommunityIcons
                       name="information-outline"
                       size={18}
@@ -574,9 +575,9 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
                 <View
                   style={{
                     alignItems: 'flex-start',
+                    height: width / 6 + 10,
                     marginLeft: 17,
                     paddingTop: 18,
-                    height: width / 6 + 10,
                   }}>
                   <AntImagePicker
                     files={images}

@@ -139,14 +139,10 @@ export class LoginTabContainer extends React.Component<Props, State> {
   // }
 
   setPwdResetModalVisible(visible: boolean) {
-    this.setState(prevState => {
-      return {
-        emailReset: prevState.emailReset
-          ? prevState.emailReset
-          : prevState.emailAddress,
-        pwdResetModalVisible: visible,
-      };
-    });
+    this.setState(({ emailReset, emailAddress }) => ({
+      emailReset: emailReset ? emailReset : emailAddress,
+      pwdResetModalVisible: visible,
+    }));
   }
 
   onResetPassword = () => {
@@ -370,10 +366,9 @@ export class LoginTabContainer extends React.Component<Props, State> {
   }
 
   renderPwdResetModal() {
-    const { hasFocusEmailReset } = this.state;
+    const { hasFocusEmailReset, emailReset, loadingReset } = this.state;
 
-    const isDisabled =
-      !isEmail(this.state.emailReset) || this.state.loadingReset;
+    const isDisabled = !isEmail(emailReset.trim()) || loadingReset;
 
     return (
       <Modal
@@ -411,7 +406,7 @@ export class LoginTabContainer extends React.Component<Props, State> {
             inputStyle={styles.input}
             keyboardType="email-address"
             onBlur={this._onBlurEmailReset}
-            onChangeText={text => this.setState({ emailReset: text })}
+            onChangeText={t => this.setState({ emailReset: t })}
             onFocus={this._onFocusEmailReset}
             onSubmitEditing={this.onResetPassword}
             placeholder="Email"

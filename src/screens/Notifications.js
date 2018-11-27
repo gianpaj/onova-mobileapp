@@ -200,12 +200,14 @@ class NotificationsContainer extends Component<Props, State> {
               break;
           }
         }}>
-        <Avatar
-          size={'verySmall'}
-          style={styles.avatarContainer}
-          uri={item.sourceUser.profilePic}
-          placeholderText={item.sourceUser.username}
-        />
+        {item.sourceUser.profilePic && (
+          <Avatar
+            size={'verySmall'}
+            style={styles.avatarContainer}
+            uri={item.sourceUser.profilePic}
+            placeholderText={item.sourceUser.username}
+          />
+        )}
         <Body>
           {/* Paid orders do not have a senderName (for now) */}
           {item.sourceUser.username && (

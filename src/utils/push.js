@@ -7,6 +7,7 @@ import type { Notification, NotificationOpen } from 'react-native-firebase';
 
 import NavigationService from '../navigation/NavigationService';
 import * as api from '../utils/api';
+import { addPushNotifBreadcrumb, addErrorBreadcrumb } from '../utils/analytics';
 
 let onMessageSubscription, onNotificationOpenedSubscription;
 
@@ -19,7 +20,7 @@ export function registerPushNotifications(): Promise<string | null> {
       .then(enabled => {
         if (enabled) {
           // Instabug.setPushNotificationsEnabled(true);
-          console.debug('push permissions granted');
+          addPushNotifBreadcrumb({ message: 'push permissions granted' });
           // user has permissions
           return;
         }
@@ -29,10 +30,16 @@ export function registerPushNotifications(): Promise<string | null> {
           .requestPermission()
           .then(() => {
             // Instabug.setPushNotificationsEnabled(true);
-            console.debug('push permissions requested and granted');
+            addPushNotifBreadcrumb({
+              message: 'push permissions requested and granted',
+            });
           })
-          .catch(err => {
-            console.debug('user rejected push permissions', err);
+          .catch(error => {
+            addErrorBreadcrumb({
+              category: 'push-notifications',
+              error,
+              level: 'warning',
+            });
             // TODO: handle
           });
       })
@@ -86,7 +93,7 @@ export function registerPushNotifications(): Promise<string | null> {
       })
       .then(() =>
         firebase.messaging().onTokenRefresh((token: string) => {
-          console.log('onTokenRefresh');
+          addPushNotifBreadcrumb({ message: 'onTokenRefresh' });
           console.log(token);
           // registerPushToken(token);
         })
@@ -105,7 +112,7 @@ export function registerPushNotifications(): Promise<string | null> {
           onMessageSubscription = firebase
             .notifications()
             .onNotification(async (msg: Notification) => {
-              console.log(msg);
+              addPushNotifBreadcrumb({ data: msg });
               const notification = new firebase.notifications.Notification()
                 .setTitle(msg.title)
                 .setBody(msg.body)
@@ -123,7 +130,10 @@ export function registerPushNotifications(): Promise<string | null> {
                   .notifications()
                   .displayNotification(notification);
               } catch (error) {
-                console.error(error);
+                addErrorBreadcrumb({
+                  category: 'push-notifications',
+                  error,
+                });
               }
             });
         }
@@ -136,7 +146,13 @@ export function registerPushNotifications(): Promise<string | null> {
           //   return registerPushToken(token);
           // })
           .then(token => resolve(token))
-          .catch(() => reject())
+          .catch(error => {
+            addErrorBreadcrumb({
+              category: 'push-notifications',
+              error,
+            });
+            reject(error);
+          })
       );
   });
 }
@@ -158,7 +174,7 @@ async function navigate(notif) {
   firebase.notifications().removeDeliveredNotification(notif.notificationId);
   if (notif.data && notif.data.triggeredType) {
     const { triggeredType, triggeredBy, productUuid } = notif.data;
-    console.debug('should navigate to:', triggeredType);
+    addPushNotifBreadcrumb({ message: 'should navigate to: ' + triggeredType });
 
     // TODO: show Toast error cannot navigate
 
@@ -208,6 +224,7 @@ async function navigate(notif) {
 
 /**
  * Sets the badge number on the app icon.
+ * TODO: put on use
  *
  * Works in certain Android phones. We use it only for iOS.
  */

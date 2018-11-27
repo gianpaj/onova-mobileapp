@@ -49,10 +49,8 @@ let currentUser: PusherUser;
 const { isProd, analyticsEnabled, config } = api;
 
 const intro = () => (dispatch: Dispatch) => {
-  addNavigationBreadcrumb({
-    message: INTRO,
-    level: 'info',
-  });
+  addNavigationBreadcrumb({ message: INTRO });
+  // TODO: dispatch only one action to send back to Intro screens
   dispatch(logout());
   dispatch({ type: INTRO });
 };
@@ -92,9 +90,7 @@ const login = (data: LoginData) => (dispatch: Dispatch) => {
     .then(userData => {
       // FIXME: use `userData` key in payload
       dispatch({ type: LOGIN_SUCCESS, payload: userData });
-      addNavigationBreadcrumb({
-        message: LOGIN_SUCCESS,
-      });
+      addNavigationBreadcrumb({ message: LOGIN_SUCCESS });
       return registerPushNotifications()
         .then(pushToken => {
           if (pushToken) return sendToken(pushToken, userData, userData.token);
@@ -122,7 +118,6 @@ const login = (data: LoginData) => (dispatch: Dispatch) => {
         error,
         level: 'warning',
       });
-      console.debug(error);
     });
 };
 
@@ -161,21 +156,17 @@ const initializePusher = (
         },
       }),
       logger: {
-        error: error => {
-          console.error(error);
+        error: error =>
           addErrorBreadcrumb({
             category: 'chat',
             error,
             level: 'fatal',
-          });
-        },
-        warn: error => {
-          console.warn(error);
+          }),
+        warn: error =>
           addErrorBreadcrumb({
             category: 'chat',
             error,
-          });
-        },
+          }),
         info: () => {},
         debug: () => {},
         verbose: () => {},
@@ -213,7 +204,6 @@ const initializePusher = (
           error,
           level: 'fatal',
         });
-        console.error(error);
         reject(error);
       });
   });
@@ -292,15 +282,10 @@ const checkLogin = (userData: UserData, token: string) => (
     .then(() => dispatch({ type: RELOAD_SUCCESS }))
     .then(() => registerPushNotifications())
     .then(pushToken => {
-      console.debug('Push notifications: initialized');
-      addNavigationBreadcrumb({
-        message: RELOAD_SUCCESS,
-        level: 'info',
-      });
+      addNavigationBreadcrumb({ message: RELOAD_SUCCESS });
       if (pushToken) return sendToken(pushToken, userData, token);
     })
     .catch(error => {
-      console.debug(error);
       dispatch({ type: RELOAD_FAIL });
       ui.showToast(error.message || JSON.stringify(error), 'danger', 'OK', 5);
       addErrorBreadcrumb({
@@ -322,11 +307,7 @@ const signup = (data: SignupData) => (dispatch: Dispatch) => {
     })
     .then(res => {
       if (res.data) {
-        console.debug('user created', res.data);
-        console.debug('token', res.token);
-        addNavigationBreadcrumb({
-          message: SIGNUP_SUCCESS,
-        });
+        addNavigationBreadcrumb({ message: SIGNUP_SUCCESS });
 
         if (analyticsEnabled) {
           trackUser(res.data);
@@ -353,9 +334,7 @@ const signup = (data: SignupData) => (dispatch: Dispatch) => {
       }
       console.warn(res);
       dispatch({ type: SIGNUP_FAIL });
-      addNavigationBreadcrumb({
-        message: SIGNUP_FAIL,
-      });
+      addNavigationBreadcrumb({ message: SIGNUP_FAIL });
     })
     .catch((err: APIError) => {
       dispatch(
@@ -396,10 +375,7 @@ const getUserData = (userId: string, options?: Options = {}) => (
   dispatch({ type: GETUSER_PENDING }),
   api
     .get(`/api/users/${userId}`, options)
-    .then((res: UserData) => {
-      console.debug(res);
-      dispatch({ type: GETUSER_SUCCESS, payload: res });
-    })
+    .then((res: UserData) => dispatch({ type: GETUSER_SUCCESS, payload: res }))
     .catch(err => {
       dispatch(handleErrorWithAlert({ type: GETUSER_FAIL }, err));
     })
@@ -424,6 +400,11 @@ const logout = () => (dispatch: Dispatch) => {
     console.log('disconnected from Pusher');
   }
   if (analyticsEnabled) {
+    Sentry.addBreadcrumb({
+      category: 'chat',
+      message: 'disconnected from Pusher',
+      level: 'info',
+    });
     Analytics.flush();
     Analytics.reset();
   }
@@ -461,42 +442,36 @@ const sendToken = (
     });
 };
 
-const handleErrorWithAlert = (data: any, err: any, buttonText?) => {
-  addErrorBreadcrumb({
-    error: data,
-    level: 'warning',
-  });
+const handleErrorWithAlert = (data: any, error: any, buttonText?) => {
   let errorType;
-  if (err.status == 400 || err.status == 500) {
+  if (error.status == 400 || error.status == 500) {
     errorType = 'danger';
-  } else if (err.status == 401) {
+  } else if (error.status == 401) {
     // auth error
     errorType = 'warning';
 
-    if (err.message == 'invalid password') {
-      err.message = I18n.t('alerts.password_error');
-    } else if (err.message == 'invalid email') {
-      err.message = I18n.t('alerts.email_error');
+    if (error.message == 'invalid password') {
+      error.message = I18n.t('alerts.password_error');
+    } else if (error.message == 'invalid email') {
+      error.message = I18n.t('alerts.email_error');
     }
   } else if (
-    err.message.includes('timeout') ||
-    err.message === 'Network Error'
+    error.message.includes('timeout') ||
+    error.message === 'Network Error'
   ) {
     errorType = 'danger';
-    err.message = I18n.t('alerts.network_error');
-    // } else if (err.message == 'operation_canceled') {
-    //   return {
-    //     type: data.type,
-    //   };
+    error.message = I18n.t('alerts.network_error');
   } else {
-    console.error(err);
+    console.error(error);
   }
+  addErrorBreadcrumb({
+    error,
+    level: errorType == 'danger' ? 'error ' : 'warning',
+  });
   if (!global.__TESTING__) {
-    ui.showToast(err.message, errorType || '', buttonText);
+    ui.showToast(error.message, errorType || '', buttonText);
   }
-  return {
-    type: data.type,
-  };
+  return { type: data.type };
 };
 
 const enableRefresh = () => ({ type: DO_REFRESH });

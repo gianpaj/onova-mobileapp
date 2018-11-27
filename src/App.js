@@ -28,7 +28,6 @@ export default class App extends React.Component<*> {
 
     if (analyticsEnabled) {
       Sentry.config(config.SENTRY_URL).install();
-      console.debug('SENTRY is enabled');
       Sentry.addBreadcrumb({
         category: 'analytics',
         message: 'SENTRY is enabled',
@@ -48,7 +47,6 @@ export default class App extends React.Component<*> {
       message: 'Segment.com is enabled',
       level: 'info',
     });
-    console.debug('Segment.com is enabled');
   }
 
   _renderLoading = () => (

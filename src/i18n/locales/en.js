@@ -126,6 +126,11 @@ http://onova.co/uploader
     action_button_edit: 'Edit',
     action_button_report: 'Report',
     toast_uploading: 'Saving...',
+    notice_bar_account_verification:
+      'Ми надіслали вам підтвердження на вказану електронну адресу',
+    notice_bar_location_not_gathered:
+      'Увімкніть геолокацію для відображення ваших речей',
+    notice_bar_location_not_gathered_button: 'Повторити',
   },
   search: {
     header: 'Search',
@@ -166,7 +171,7 @@ http://onova.co/uploader
     select_photo_source_camera: 'Camera',
     select_photo_source_gallery: 'Gallery (multiple images)',
     select_photo_source_cancel: 'Cancel',
-    too_many_images: 'An item can have up to 6 images',
+    too_many_images: 'An item cannot have more than 6 images',
     min_price: 'The minimum price is',
     info_popup: `Чим якісніші твої фотографії тим більше ймовірності в тебе щось придбають:
 
@@ -222,7 +227,6 @@ http://onova.co/uploader
     empty_state_message_mine: `Get closer to your first sale by adding items
 `,
     empty_state_button_mine: 'Make a Drop',
-    notice_bar: 'Check your inbox for a confirmation email.',
     toast_saving: 'Loading...',
     toast_updated: 'Your profile has been updated',
     alert_unsaved_changes_title: 'Unsaved changes',

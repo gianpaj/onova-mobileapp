@@ -107,16 +107,21 @@ export class CreateDropScreen extends React.Component<Props, State> {
   };
 
   async componentDidMount() {
-    Toast.loading(I18n.t('alerts.loading_message'), 20);
+    const loader = setTimeout(() => {
+      Toast.loading(I18n.t('alerts.loading_message'), 20);
+    }, 500);
 
+    // check if we user has payment and settings info
     try {
       await this.props.dispatch(getPersonalUserData());
+      clearTimeout(loader);
       if (!this.canCreateDrop()) {
         throw new Error(I18n.t('create_drop.cannot_create_drop_alert'));
       }
     } catch (error) {
       this.closeModal();
       this.props.navigation.navigate('settings');
+      clearTimeout(loader);
       Toast.hide();
       ui.showToast(error.message, 'warning', 'OK', 4);
       return;
@@ -124,23 +129,26 @@ export class CreateDropScreen extends React.Component<Props, State> {
 
     try {
       const response = await Permissions.check('location');
-      // Response is one of: 'authorized', 'denied', 'restricted', or 'undetermined'
+      // Response is one of: 'authorized', 'denied', 'restricted' or 'undetermined'
       console.debug('location permission:', response);
       if (response === 'restricted' || response === 'denied') {
         // show error
         this.alertForPermission(response);
-        this.closeModal();
+        // this.closeModal();
       } else if (response === 'undetermined') {
         // show Modal explaining why
         this.alertForPermission(response);
       } else {
         // authorized
-        this.getLocationAndInitiate();
+        await this.getLocationAndInitiate();
       }
+      this.setState({ isLoading: false });
     } catch (error) {
+      // TODO: show better error message if location is denied
+      // translate
+      this.setState({ isLoading: false });
       console.debug(error);
     }
-    this.setState({ isLoading: false });
     Toast.hide();
   }
 
@@ -175,7 +183,7 @@ export class CreateDropScreen extends React.Component<Props, State> {
           text: I18n.t('profile.alert_unsaved_changes_button_cancel'),
           onPress: () => {
             console.log('Permission denied');
-            this.closeModal();
+            // this.closeModal();
           },
           style: 'cancel',
         },
@@ -187,21 +195,21 @@ export class CreateDropScreen extends React.Component<Props, State> {
           : {
               text: I18n.t('create_drop.permission_alert_button_settings'),
               onPress: () => {
-                if (Platform.OS === 'android') {
-                  RNAndroidLocationEnabler.promptForEnableLocationIfNeeded({
-                    interval: 10000,
-                    fastInterval: 5000,
-                  }).catch(err => {
-                    // ERR00 : The user canceled the popup
-                    // ERR01 : If the Settings change are unavailable
-                    // ERR02 : If the popup has failed to open
-                    console.debug(err);
-                    // this.closeModal();
-                  });
-                } else {
-                  Permissions.openSettings();
+                if (Platform.OS === 'ios') {
+                  return Permissions.openSettings();
                 }
-                this.closeModal();
+                // android
+                RNAndroidLocationEnabler.promptForEnableLocationIfNeeded({
+                  interval: 10000,
+                  fastInterval: 5000,
+                }).catch(err => {
+                  // ERR00 : The user canceled the popup
+                  // ERR01 : If the Settings change are unavailable
+                  // ERR02 : If the popup has failed to open
+                  console.debug(err);
+                  // this.closeModal();
+                });
+                // this.closeModal();
               },
             },
       ]
@@ -213,55 +221,71 @@ export class CreateDropScreen extends React.Component<Props, State> {
     Permissions.request('location').then(response => {
       // Returns once the user has chosen to 'allow' or to 'not allow' access
       // Response is one of: 'authorized', 'denied', 'restricted' or 'undetermined'
-      if (response !== 'authorized') {
-        // show error
-        this.closeModal();
-      } else {
-        this.getLocationAndInitiate();
-      }
+      if (response === 'authorized') this.tryToGetLocationAndInitiate();
     });
   };
 
-  getLocationAndInitiate = () => {
-    const timeout = 20; // seconds
-    navigator.geolocation.getCurrentPosition(
-      position => {
-        const { coords } = position;
-        console.log(coords);
-        this.setState({
-          location: {
-            longitude: coords.longitude,
-            latitude: coords.latitude,
-          },
-        });
-      },
-      err => {
-        // Location authorized but not setting is not enabled (only Android)
-        if (
-          err.message === 'No location provider available.' &&
-          Platform.OS === 'android'
-        ) {
-          return RNAndroidLocationEnabler.promptForEnableLocationIfNeeded({
-            interval: 10000,
-            fastInterval: 5000,
-          }).catch(err => {
-            // ERR00 : The user canceled the popup
-            // ERR01 : If the Settings change are unavailable
-            // ERR02 : If the popup has failed to open
-            console.debug(err);
-            // this.closeModal();
-          });
+  getLocationAndInitiate = async () => {
+    try {
+      const location = await this.tryToGetLocationAndInitiate();
+      this.setState({ location });
+      console.log(location);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  tryToGetLocationAndInitiate = (): Promise<any> => {
+    return new Promise((resolve, reject) => {
+      const timeout = 20; // seconds
+      navigator.geolocation.getCurrentPosition(
+        ({ coords: { longitude, latitude } }) =>
+          resolve({ longitude, latitude }),
+        err => {
+          // Location authorized but not setting is not enabled (only Android)
+          if (
+            err.message === 'No location provider available.' &&
+            Platform.OS === 'android'
+          ) {
+            return RNAndroidLocationEnabler.promptForEnableLocationIfNeeded({
+              interval: 10000,
+              fastInterval: 5000,
+            })
+              .then(() =>
+                navigator.geolocation.getCurrentPosition(
+                  ({ coords: { longitude, latitude } }) =>
+                    resolve({ longitude, latitude }),
+                  err => {
+                    throw err;
+                  },
+                  {
+                    enableHighAccuracy: false,
+                    maximumAge: 100,
+                    timeout: timeout * 1000,
+                  }
+                )
+              )
+              .catch(err => {
+                // ERR00 : The user canceled the popup
+                // ERR01 : If the Settings change are unavailable
+                // ERR02 : If the popup has failed to open
+                console.debug(err);
+                // this.closeModal();
+                reject(err);
+              });
+          }
+          reject(err);
+          Toast.fail(err.message || JSON.stringify(err));
+          // this.closeModal();
+          console.debug(err);
+        },
+        {
+          enableHighAccuracy: false,
+          maximumAge: 10 * 60 * 1000, // 5 minutes
+          timeout: timeout * 1000,
         }
-        Toast.fail(err.message || JSON.stringify(err));
-        this.closeModal();
-        console.debug(err);
-      },
-      {
-        enableHighAccuracy: false,
-        timeout: timeout * 1000,
-        maximumAge: 60 * 1000,
-      }
-    );
+      );
+    });
   };
 
   // return true if all of these are true
@@ -301,9 +325,12 @@ export class CreateDropScreen extends React.Component<Props, State> {
   onSendDrop = async () => {
     const { datetime, products, location } = this.state;
     const { token } = this.props;
-    Toast.loading(I18n.t('alerts.toast_uploading'), 30);
 
     if (!location) return this.alertForPermission('denied');
+
+    const loader = setTimeout(() => {
+      Toast.loading(I18n.t('alerts.toast_uploading'), 30);
+    }, 500);
     this.setState({ pending: true });
 
     const productsReady = products.filter(i => i.uploaded === true);
@@ -327,12 +354,14 @@ export class CreateDropScreen extends React.Component<Props, State> {
 
     try {
       await Promise.all(promises);
+      clearTimeout(loader);
       Toast.hide();
       ui.showToast(I18n.t('create_drop.success'), 'success');
       this.closeModal();
     } catch (err) {
       Toast.hide();
       ui.showToast(err.message, 'warning');
+      this.setState({ pending: false });
     }
   };
 
@@ -401,9 +430,11 @@ export class CreateDropScreen extends React.Component<Props, State> {
       products: prevState.products.filter(product => product.key !== key),
     }));
 
-  shouldShowNoticeBar() {
+  shouldShowAccountNotVerifiedNoticeBar() {
     return this.props.userData.accountStatus === 'notverified';
   }
+
+  shouldShowNoLocationGatheredNoticeBar = () => this.state.location === null;
 
   render() {
     let {
@@ -414,9 +445,6 @@ export class CreateDropScreen extends React.Component<Props, State> {
       isTimePickerVisible,
     } = this.state;
 
-    if (isLoading) return null;
-
-    // if (products.length < 9) {
     const next = [
       {
         uploaded: false,
@@ -425,7 +453,6 @@ export class CreateDropScreen extends React.Component<Props, State> {
       },
     ];
     products = [...products, ...next];
-    // }
 
     return (
       <Container>
@@ -466,50 +493,68 @@ export class CreateDropScreen extends React.Component<Props, State> {
             </NBButton>
           </Right>
         </Header>
-        <View>
-          {this.shouldShowNoticeBar() && (
-            <NoticeBar
-              marqueeProps={{ loop: false, style: styles.noticeBar }}
-              icon={false}>
-              {I18n.t('profile.notice_bar')}
-            </NoticeBar>
-          )}
-          <List>
-            <View style={styles.datesContainer}>
-              <Text style={styles.dateStrings} onPress={this._toggleDatePicker}>
-                {format(datetime, 'D MMM')}
-              </Text>
-              <Text style={styles.dateStrings} onPress={this._toggleTimePicker}>
-                {format(datetime, 'HH:mm')}
-              </Text>
+        {isLoading ? null : (
+          <>
+            <View>
+              {this.shouldShowAccountNotVerifiedNoticeBar() ? (
+                <NoticeBar marqueeProps={{ style: styles.noticeBar }}>
+                  {I18n.t('alerts.notice_bar_account_verification')}
+                </NoticeBar>
+              ) : (
+                this.shouldShowNoLocationGatheredNoticeBar() && (
+                  <NoticeBar
+                    marqueeProps={{ loop: true, style: styles.noticeBar }}
+                    mode="button"
+                    buttonText={I18n.t(
+                      'alerts.notice_bar_location_not_gathered_button'
+                    )}
+                    onPress={this.getLocationAndInitiate}>
+                    {I18n.t('alerts.notice_bar_location_not_gathered')}
+                  </NoticeBar>
+                )
+              )}
+              <List>
+                <View style={styles.datesContainer}>
+                  <Text
+                    style={styles.dateStrings}
+                    onPress={this._toggleDatePicker}>
+                    {format(datetime, 'D MMM')}
+                  </Text>
+                  <Text
+                    style={styles.dateStrings}
+                    onPress={this._toggleTimePicker}>
+                    {format(datetime, 'HH:mm')}
+                  </Text>
+                </View>
+                <DateTimePicker
+                  mode="date"
+                  isVisible={isDatePickerVisible}
+                  onConfirm={this.setDate}
+                  onCancel={this._closePickers}
+                  minimumDate={new Date()}
+                  maximumDate={MAX_DATE}
+                  {...pickerProps}
+                />
+                <DateTimePicker
+                  mode="time"
+                  isVisible={isTimePickerVisible}
+                  onConfirm={this.setTime}
+                  onCancel={this._closePickers}
+                  {...pickerProps}
+                />
+              </List>
             </View>
-            <DateTimePicker
-              mode="date"
-              isVisible={isDatePickerVisible}
-              onConfirm={this.setDate}
-              onCancel={this._closePickers}
-              minimumDate={new Date()}
-              maximumDate={MAX_DATE}
-              {...pickerProps}
-            />
-            <DateTimePicker
-              mode="time"
-              isVisible={isTimePickerVisible}
-              onConfirm={this.setTime}
-              onCancel={this._closePickers}
-              {...pickerProps}
-            />
-          </List>
-        </View>
-        <Content>
-          <FlatList
-            columnWrapperStyle={[styles.columnWrapper]}
-            data={products}
-            numColumns={3}
-            renderItem={this.renderItem}
-            style={styles.list}
-          />
-        </Content>
+            <Content>
+              <FlatList
+                columnWrapperStyle={styles.columnWrapper}
+                data={products}
+                numColumns={3}
+                renderItem={this.renderItem}
+                style={styles.list}
+              />
+            </Content>
+          </>
+        )}
       </Container>
     );
   }
@@ -585,9 +630,8 @@ const styles = StyleSheet.create({
     marginBottom: 0,
   },
   noticeBar: {
-    color: colors.grey2,
-    textAlign: 'center',
-    width: '34.5%',
+    fontSize: 15,
+    color: colors.grey1,
   },
   list: {
     flex: 1,

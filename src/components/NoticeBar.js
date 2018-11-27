@@ -5,15 +5,15 @@
 
 import React from 'react';
 import {
-  Image,
   StyleProp,
   StyleSheet,
   Text,
-  TouchableWithoutFeedback,
+  TouchableOpacity,
   View,
   ViewStyle,
 } from 'react-native';
 import Marquee, { MarqueeProps } from './Marquee';
+import colors from '../config/colors';
 
 interface INoticeBarStyle {
   notice: ViewStyle;
@@ -31,7 +31,7 @@ const variables = {
   notice_bar_height: 36,
   h_spacing_lg: 15,
   font_size_subhead: 15,
-  brand_warning: '#f4333c',
+  brand_warning: colors.red,
   h_spacing_sm: 5,
   font_size_icontext: 10,
 };
@@ -65,7 +65,7 @@ const NoticeStyle = {
   },
   close: {
     color: variables.brand_warning,
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: '200',
     textAlign: 'left',
   },
@@ -80,6 +80,7 @@ const NoticeStyle = {
 
 type NoticeNativeProps = {
   action?: React.ReactElement<any>,
+  buttonText: string,
   children: string,
   icon?: React.ReactElement<any>,
   marqueeProps?: MarqueeProps,
@@ -95,55 +96,54 @@ export default class NoticeBar extends React.Component<NoticeNativeProps, any> {
   static defaultProps = {
     mode: '',
     onPress() {},
-    icon: (
-      <Image
-        // tslint:disable-next-line:jsx-no-multiline-js
-        source={{
-          uri:
-            'https://zos.alipayobjects.com/rmsportal/UgviADRsIpznkjSEXWEaPTlKtPCMSlth.png',
-        }}
-        style={{ width: 14, height: 12 }}
-      />
-    ),
+    icon: null,
     styles: NoticeStyles,
   };
 
-  constructor(props: NoticeNativeProps) {
-    super(props);
-    this.state = {
-      show: true,
-    };
-  }
+  state = {
+    show: true,
+  };
 
   onPress = () => {
     const { mode, onPress } = this.props;
-    if (onPress) {
-      onPress();
-    }
-    if (mode === 'closable') {
-      this.setState({
-        show: false,
-      });
-    }
+    if (onPress) onPress();
+
+    if (mode === 'closable') this.setState({ show: false });
   };
 
   render() {
-    const { children, mode, icon, style, action, marqueeProps } = this.props;
-    const styles = this.props.styles;
+    const {
+      buttonText,
+      styles,
+      children,
+      mode,
+      icon,
+      style,
+      action,
+      marqueeProps,
+    } = this.props;
 
     let operationDom: any = null;
-    if (mode === 'closable') {
+    if (mode === 'button') {
       operationDom = (
-        <TouchableWithoutFeedback onPress={this.onPress}>
+        <TouchableOpacity onPress={this.onPress}>
           <View style={styles.actionWrap}>
-            {action ? action : <Text style={[styles.close]}>×</Text>}
+            {action ? action : <Text style={styles.close}>{buttonText}</Text>}
           </View>
-        </TouchableWithoutFeedback>
+        </TouchableOpacity>
+      );
+    } else if (mode === 'closable') {
+      operationDom = (
+        <TouchableOpacity onPress={this.onPress}>
+          <View style={styles.actionWrap}>
+            {action ? action : <Text style={styles.close}>×</Text>}
+          </View>
+        </TouchableOpacity>
       );
     } else if (mode === 'link') {
       operationDom = (
         <View style={styles.actionWrap}>
-          {action ? action : <Text style={[styles.link]}>∟</Text>}
+          {action ? action : <Text style={styles.link}>∟</Text>}
         </View>
       );
     }
@@ -157,14 +157,11 @@ export default class NoticeBar extends React.Component<NoticeNativeProps, any> {
         {operationDom}
       </View>
     );
-    return this.state.show ? (
-      mode === 'closable' ? (
-        main
-      ) : (
-        <TouchableWithoutFeedback onPress={this.onPress}>
-          {main}
-        </TouchableWithoutFeedback>
-      )
-    ) : null;
+    if (!this.state.show) return null;
+    return mode === 'closable' ? (
+      main
+    ) : (
+      <TouchableOpacity onPress={this.onPress}>{main}</TouchableOpacity>
+    );
   }
 }

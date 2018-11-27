@@ -646,7 +646,7 @@ class ProfileScreen extends React.Component<Props, State> {
             <NoticeBar
               marqueeProps={{ loop: false, style: styles.noticeBar }}
               icon={false}>
-              {I18n.t('profile.notice_bar')}
+              {I18n.t('alerts.notice_bar_account_verification')}
             </NoticeBar>
           )}
           {this.renderProfileTop()}

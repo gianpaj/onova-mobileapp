@@ -104,15 +104,12 @@ class AppNavigation extends React.PureComponent<Props, *> {
       source={require('../assets/images/bg.png')}
       resizeMode="repeat"
       style={styles.container}>
-      {/* cloud with stricking line Icon */}
+      {/* TODO: add a cloud icon with stricking line */}
       {/* You're not connected to the Internet */}
       <Button
-        buttonStyle={styles.tryAgainButton}
+        buttonStyle={styles.retryButtonContainer}
         onPress={this.onCheckLogin}
-        textStyle={{
-          fontSize: 16,
-          color: colors.white,
-        }}
+        textStyle={styles.retryButtonText}
         title={I18n.t('login.retry')}
       />
     </ImageBackground>
@@ -151,9 +148,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  tryAgainButton: {
+  retryButtonContainer: {
     backgroundColor: colors.primary,
     minWidth: 160,
+  },
+  retryButtonText: {
+    fontSize: 16,
+    color: colors.white,
   },
 });
 

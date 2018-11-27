@@ -124,6 +124,11 @@ export default {
     action_button_edit: 'Редагувати',
     action_button_report: 'Поскаржитись',
     toast_uploading: 'Завантажуємо зображення...',
+    notice_bar_account_verification:
+      'Check your inbox for a confirmation email',
+    notice_bar_location_not_gathered:
+      "Couldn't gather you location. It's needed to display the item city",
+    notice_bar_location_not_gathered_button: 'Retry',
   },
   search: {
     header: 'Пошук',
@@ -219,7 +224,6 @@ export default {
     empty_state_message_others: 'Поки нічого не виставлено',
     empty_state_message_mine: 'Ти ще нічого не виставив ',
     empty_state_button_mine: 'Створити дроп',
-    notice_bar: 'Потрібно підтвердити свій профіль через email',
     toast_saving: 'Зберігаємо...',
     toast_updated: 'Твій профіль оновлено',
     alert_unsaved_changes_title: 'Незбережені зміни',

@@ -135,7 +135,7 @@ const initializePusher = (
     }
     console.log('initializePusher');
 
-    setTimeout(() => {
+    const timer = setTimeout(() => {
       addErrorBreadcrumb({
         category: 'chat',
         errMsg: 'Error connecting to Chat provider',
@@ -178,6 +178,7 @@ const initializePusher = (
       .then(user => {
         console.log('Pusher: connected');
         currentUser = user;
+        clearTimeout(timer);
         resolve(userData);
         //   // TODO: Subscribe to all rooms the user is a member of
         //   user.rooms.map(room =>
@@ -204,6 +205,7 @@ const initializePusher = (
           error,
           level: 'fatal',
         });
+        clearTimeout(timer);
         reject(error);
       });
   });

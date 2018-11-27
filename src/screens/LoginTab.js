@@ -113,10 +113,12 @@ export class LoginTabContainer extends React.Component<Props, State> {
   };
 
   onLogin = () => {
-    const { emailAddress, password } = this.state;
+    let { emailAddress, password } = this.state;
+
+    emailAddress = emailAddress.trim();
 
     if (!isEmail(emailAddress)) {
-      if (emailAddress.trim().length > 0)
+      if (emailAddress.length > 0)
         ui.showToast('Email is not valid', 'warning', null, 2);
       this.EmailInput.current.shake();
       return this.EmailInput.current.focus();

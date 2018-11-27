@@ -122,8 +122,10 @@ export class SignUpTabContainer extends Component<Props, State> {
 
   onSignup = () => {
     if (this.props.loading) return;
-    const { username, emailAddress, password } = this.state;
+    let { username, emailAddress, password } = this.state;
     const prefix = 'signup.alerts.';
+
+    emailAddress = emailAddress.trim();
 
     if (username.trim() < 3) {
       this.UserNameInput.current.shake();
@@ -141,7 +143,7 @@ export class SignUpTabContainer extends Component<Props, State> {
       this.UserNameInput.current.shake();
       return this.UserNameInput.current.focus();
     } else if (!isEmail(emailAddress)) {
-      if (emailAddress.trim().length > 0)
+      if (emailAddress.length > 0)
         ui.showToast(I18n.t(prefix + 'email_invalid'), 'warning', null, 2);
       this.EmailInput.current.shake();
       return this.EmailInput.current.focus();
@@ -178,9 +180,7 @@ export class SignUpTabContainer extends Component<Props, State> {
     if (settings.USERNAME_REGEX.test(username)) this.setState({ username });
   };
 
-  getHandler = (key: string) => (val: any) => {
-    this.setState({ [key]: val });
-  };
+  getHandler = (key: string) => (val: any) => this.setState({ [key]: val });
 
   onPasswordToggle = () =>
     this.setState(prevState => ({

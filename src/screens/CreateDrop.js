@@ -15,7 +15,7 @@ import {
 } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { NoticeBar, Toast } from 'antd-mobile-rn';
+import { Toast } from 'antd-mobile-rn';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import Permissions from 'react-native-permissions';
 import RNAndroidLocationEnabler from 'react-native-android-location-enabler';
@@ -33,7 +33,7 @@ import { format } from 'date-fns';
 import ObjectID from 'bson-objectid';
 
 import colors from '../config/colors';
-import { Header } from '../components';
+import { Header, NoticeBar } from '../components';
 import imagePickerStyle from '../components/ImagePicker.styles';
 import I18n from '../i18n';
 import * as api from '../utils/api';
@@ -48,15 +48,15 @@ import type { NavigationScreenProp } from 'react-navigation';
 type Props = {
   dispatch: Dispatch,
   navigation: NavigationScreenProp<*>,
-  userData: UserData,
   token: string,
+  userData: UserData,
 };
 
 type State = {
   datetime: Date,
   isDatePickerVisible: boolean,
-  isTimePickerVisible: boolean,
   isLoading: boolean,
+  isTimePickerVisible: boolean,
   pending: boolean,
   products: Array<Product>,
   location: ?{
@@ -138,7 +138,7 @@ export class CreateDropScreen extends React.Component<Props, State> {
         this.getLocationAndInitiate();
       }
     } catch (error) {
-      console.error(e);
+      console.debug(error);
     }
     this.setState({ isLoading: false });
     Toast.hide();
@@ -161,6 +161,11 @@ export class CreateDropScreen extends React.Component<Props, State> {
     );
   }
 
+  /**
+   * Show Modal explaining why location is needed
+   *
+   * @param {*} response 'authorized', 'denied', 'restricted' or 'undetermined'
+   */
   alertForPermission(response: string) {
     Alert.alert(
       I18n.t('create_drop.permission_title'),
@@ -186,9 +191,13 @@ export class CreateDropScreen extends React.Component<Props, State> {
                   RNAndroidLocationEnabler.promptForEnableLocationIfNeeded({
                     interval: 10000,
                     fastInterval: 5000,
-                  })
-                    .then(() => {})
-                    .catch(() => this.closeModal());
+                  }).catch(err => {
+                    // ERR00 : The user canceled the popup
+                    // ERR01 : If the Settings change are unavailable
+                    // ERR02 : If the popup has failed to open
+                    console.debug(err);
+                    // this.closeModal();
+                  });
                 } else {
                   Permissions.openSettings();
                 }
@@ -203,7 +212,7 @@ export class CreateDropScreen extends React.Component<Props, State> {
     // $FlowFixMe
     Permissions.request('location').then(response => {
       // Returns once the user has chosen to 'allow' or to 'not allow' access
-      // Response is one of: 'authorized', 'denied', 'restricted', or 'undetermined'
+      // Response is one of: 'authorized', 'denied', 'restricted' or 'undetermined'
       if (response !== 'authorized') {
         // show error
         this.closeModal();
@@ -235,9 +244,13 @@ export class CreateDropScreen extends React.Component<Props, State> {
           return RNAndroidLocationEnabler.promptForEnableLocationIfNeeded({
             interval: 10000,
             fastInterval: 5000,
-          })
-            .then(() => {})
-            .catch(() => this.closeModal());
+          }).catch(err => {
+            // ERR00 : The user canceled the popup
+            // ERR01 : If the Settings change are unavailable
+            // ERR02 : If the popup has failed to open
+            console.debug(err);
+            // this.closeModal();
+          });
         }
         Toast.fail(err.message || JSON.stringify(err));
         this.closeModal();
@@ -287,18 +300,17 @@ export class CreateDropScreen extends React.Component<Props, State> {
 
   onSendDrop = async () => {
     const { datetime, products, location } = this.state;
-    if (!location) {
-      return this.alertForPermission('denied');
-    }
     const { token } = this.props;
     Toast.loading(I18n.t('alerts.toast_uploading'), 30);
+
+    if (!location) return this.alertForPermission('denied');
     this.setState({ pending: true });
 
     const productsReady = products.filter(i => i.uploaded === true);
 
     const dropId = ObjectID();
     const promises = productsReady.map(product => {
-      let formData = {
+      const formData = {
         ...product,
         date: datetime,
         dropId,
@@ -382,15 +394,12 @@ export class CreateDropScreen extends React.Component<Props, State> {
   _toggleTimePicker = () =>
     this.setState({ isTimePickerVisible: !this.state.isTimePickerVisible });
 
-  removeImage = (key: string) => {
-    // show alert prompt
-    // if confirmed
-    this.setState(prevState => {
-      return {
-        products: prevState.products.filter(product => product.key !== key),
-      };
-    });
-  };
+  // show alert prompt
+  // if confirmed
+  removeImage = (key: string) =>
+    this.setState(prevState => ({
+      products: prevState.products.filter(product => product.key !== key),
+    }));
 
   shouldShowNoticeBar() {
     return this.props.userData.accountStatus === 'notverified';

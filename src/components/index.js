@@ -13,6 +13,7 @@ import ImageGrid from './ImageGrid';
 import ImageGridSearch from './ImageGridSearch';
 import ImagePicker from './ImagePicker';
 import MediaView from './MediaView';
+import NoticeBar from './NoticeBar';
 import NotificationsDot from './NotificationsDot';
 import OrderStatus from './OrderStatus';
 import SearchableDropdown from './SearchableDropdown';
@@ -34,6 +35,7 @@ export {
   ImageGridSearch,
   ImagePicker,
   MediaView,
+  NoticeBar,
   NotificationsDot,
   OrderStatus,
   SearchableDropdown,

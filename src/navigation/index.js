@@ -24,6 +24,8 @@ import type { NavigationState } from '../types/navigationReducer';
 import colors from '../config/colors';
 import I18n from '../i18n';
 
+import { addAuthBreadcrumb } from '../utils/analytics';
+
 type Props = {
   checkedLoggedIn: boolean,
   dispatch: Dispatch,
@@ -69,9 +71,11 @@ class AppNavigation extends React.PureComponent<Props, *> {
         } else {
           this.setState({ canReload: true });
         }
+        addAuthBreadcrumb({ data: e });
         console.debug(e);
       });
     } else {
+      addAuthBreadcrumb({ message: 'not logged in' });
       dispatch(intro());
     }
   };

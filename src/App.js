@@ -29,6 +29,11 @@ export default class App extends React.Component<*> {
     if (analyticsEnabled) {
       Sentry.config(config.SENTRY_URL).install();
       console.debug('SENTRY is enabled');
+      Sentry.addBreadcrumb({
+        category: 'analytics',
+        message: 'SENTRY is enabled',
+        level: 'info',
+      });
       this.enableSegmentCom();
     } else {
       console.debug('SENTRY is not enabled');
@@ -38,6 +43,11 @@ export default class App extends React.Component<*> {
 
   enableSegmentCom() {
     Analytics.setup(config.SEGMENT_API, segmentOptions);
+    Sentry.addBreadcrumb({
+      category: 'analytics',
+      message: 'Segment.com is enabled',
+      level: 'info',
+    });
     console.debug('Segment.com is enabled');
   }
 

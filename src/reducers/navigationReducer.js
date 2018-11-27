@@ -3,6 +3,7 @@ import { NavigationActions } from 'react-navigation';
 
 import NavigationStack from '../navigation/navigationStack';
 import {
+  INTRO,
   LOGIN_SUCCESS,
   LOGOUT,
   RELOAD_SUCCESS,
@@ -56,7 +57,7 @@ const navigationReducer = (
         ),
       };
 
-    case 'INTRO':
+    case INTRO:
       return {
         stateForLoggedOut: NavigationStack.router.getStateForAction(
           NavigationActions.navigate({ routeName: 'introScreens' })

@@ -1,19 +1,20 @@
 // @flow
 
 import {
-  LOGIN_PENDING,
-  LOGIN_SUCCESS,
-  LOGIN_FAIL,
-  // GOOGLE_LOGIN_PENDING,
-  SIGNUP_PENDING,
-  SIGNUP_SUCCESS,
-  SIGNUP_FAIL,
-  LOGOUT,
-  RELOAD_SUCCESS,
-  RELOAD_FAIL,
+  GETUSER_FAIL,
   GETUSER_PENDING,
   GETUSER_SUCCESS,
-  GETUSER_FAIL,
+  INTRO,
+  LOGIN_FAIL,
+  LOGIN_PENDING,
+  LOGIN_SUCCESS,
+  LOGOUT,
+  RELOAD_FAIL,
+  RELOAD_PENDING,
+  RELOAD_SUCCESS,
+  SIGNUP_FAIL,
+  SIGNUP_PENDING,
+  SIGNUP_SUCCESS,
 } from '../actions/actionTypes';
 import type { Action, LoginState } from '../types/loginReducer';
 
@@ -88,7 +89,7 @@ export default function(
         token: '',
       };
 
-    case 'RELOAD_PENDING':
+    case RELOAD_PENDING:
       return {
         ...state,
         hasError: false,
@@ -107,7 +108,7 @@ export default function(
         checkedLoggedIn: false,
       };
 
-    case 'INTRO':
+    case INTRO:
       return {
         ...state,
         hasError: true,

@@ -8,20 +8,22 @@ import Analytics from 'react-native-analytics-segment-io';
 
 import type { PusherUser } from '@pusher/chatkit';
 import {
-  LOGIN_PENDING,
-  LOGIN_FAIL,
-  LOGIN_SUCCESS,
-  SIGNUP_PENDING,
-  SIGNUP_SUCCESS,
-  SIGNUP_FAIL,
-  LOGOUT,
-  GETUSER_PENDING,
-  GETUSER_SUCCESS,
-  GETUSER_FAIL,
   DO_REFRESH,
   DONOT_REFRESH,
+  GETUSER_FAIL,
+  GETUSER_PENDING,
+  GETUSER_SUCCESS,
+  INTRO,
+  LOGIN_FAIL,
+  LOGIN_PENDING,
+  LOGIN_SUCCESS,
+  LOGOUT,
   RELOAD_FAIL,
+  RELOAD_PENDING,
   RELOAD_SUCCESS,
+  SIGNUP_FAIL,
+  SIGNUP_PENDING,
+  SIGNUP_SUCCESS,
 } from './actionTypes';
 import type {
   Dispatch,
@@ -32,6 +34,10 @@ import type {
   // PusherUser,
 } from '../types';
 import type { Options, APIError } from '../utils/api';
+import {
+  addNavigationBreadcrumb,
+  addErrorBreadcrumb,
+} from '../utils/analytics';
 
 import { registerPushNotifications } from '../utils/push';
 import * as api from '../utils/api';
@@ -43,8 +49,12 @@ let currentUser: PusherUser;
 const { isProd, analyticsEnabled, config } = api;
 
 const intro = () => (dispatch: Dispatch) => {
+  addNavigationBreadcrumb({
+    message: INTRO,
+    level: 'info',
+  });
   dispatch(logout());
-  dispatch({ type: 'INTRO' });
+  dispatch({ type: INTRO });
 };
 
 const login = (data: LoginData) => (dispatch: Dispatch) => {
@@ -82,6 +92,9 @@ const login = (data: LoginData) => (dispatch: Dispatch) => {
     .then(userData => {
       // FIXME: use `userData` key in payload
       dispatch({ type: LOGIN_SUCCESS, payload: userData });
+      addNavigationBreadcrumb({
+        message: LOGIN_SUCCESS,
+      });
       return registerPushNotifications()
         .then(pushToken => {
           if (pushToken) return sendToken(pushToken, userData, userData.token);
@@ -92,16 +105,28 @@ const login = (data: LoginData) => (dispatch: Dispatch) => {
         })
         .then(() => Toast.hide());
     })
-    .catch((err: APIError) => {
+    .catch((error: APIError) => {
       Toast.hide();
-      if (err.message === 'NOT_VERIFIED') {
+      if (error.message === 'NOT_VERIFIED') {
+        addErrorBreadcrumb({
+          category: 'auth',
+          error,
+          level: 'info',
+        });
         dispatch({ type: LOGIN_FAIL });
-        throw err;
+        throw error;
       }
-      console.debug(err);
-      dispatch(handleErrorWithAlert({ type: LOGIN_FAIL }, err));
+      dispatch(handleErrorWithAlert({ type: LOGIN_FAIL }, error));
+      addErrorBreadcrumb({
+        category: 'auth',
+        error,
+        level: 'warning',
+      });
+      console.debug(error);
     });
 };
+
+const PUSHER_CONN_TIMEOUT = 30 * 1000;
 
 const initializePusher = (
   userData: UserData,
@@ -116,62 +141,81 @@ const initializePusher = (
     console.log('initializePusher');
 
     setTimeout(() => {
-      reject(new Error('Error connecting to Chat provider'));
-    }, 30000);
-
-    try {
-      const chatManager = new ChatManager({
-        instanceLocator: config.PUSHER_INSTANCE,
-        userId: userData._id,
-        tokenProvider: new TokenProvider({
-          url: config.PUSHER_TOKEN_PROVIDER,
-          headers: {
-            token: token,
-            avatarURL: userData.profilePic,
-            username: userData.username,
-          },
-        }),
-        logger: {
-          error: console.log,
-          warn: console.log,
-          info: () => {},
-          debug: () => {},
-          verbose: () => {},
-        },
-        connectionTimeout: 30 * 1000,
+      addErrorBreadcrumb({
+        category: 'chat',
+        errMsg: 'Error connecting to Chat provider',
+        level: 'fatal',
       });
-      chatManager
-        .connect()
-        .then(user => {
-          console.log('Pusher: connected');
-          currentUser = user;
-          resolve(userData);
-          //   // Subscribe to all rooms the user is a member of
-          //   user.rooms.map(room =>
-          //     user.subscribeToRoom({
-          //       roomId: room.id,
-          //       hooks: { onNewMessage: onNewMessage },
-          //       messageLimit: 1,
-          //     })
-          //   );
-          //   const r = user.rooms.map(room => {
-          //     const cursor = user.readCursor({
-          //       roomId: room.id,
-          //     });
-          //     return { [room.id]: cursor.position };
-          //   });
-          //   console.log(r);
-          // })
-          // .then(() => {
-          //   resolve(userData);
-        })
-        .catch(err => {
-          console.error(err);
-          reject(err);
+      reject(new Error('Error connecting to Chat provider'));
+    }, PUSHER_CONN_TIMEOUT);
+
+    const chatManager = new ChatManager({
+      instanceLocator: config.PUSHER_INSTANCE,
+      userId: userData._id,
+      tokenProvider: new TokenProvider({
+        url: config.PUSHER_TOKEN_PROVIDER,
+        headers: {
+          token: token,
+          avatarURL: userData.profilePic,
+          username: userData.username,
+        },
+      }),
+      logger: {
+        error: error => {
+          console.error(error);
+          addErrorBreadcrumb({
+            category: 'chat',
+            error,
+            level: 'fatal',
+          });
+        },
+        warn: error => {
+          console.warn(error);
+          addErrorBreadcrumb({
+            category: 'chat',
+            error,
+          });
+        },
+        info: () => {},
+        debug: () => {},
+        verbose: () => {},
+      },
+      connectionTimeout: PUSHER_CONN_TIMEOUT,
+    });
+    chatManager
+      .connect()
+      .then(user => {
+        console.log('Pusher: connected');
+        currentUser = user;
+        resolve(userData);
+        //   // TODO: Subscribe to all rooms the user is a member of
+        //   user.rooms.map(room =>
+        //     user.subscribeToRoom({
+        //       roomId: room.id,
+        //       hooks: { onNewMessage: onNewMessage },
+        //       messageLimit: 1,
+        //     })
+        //   );
+        //   const r = user.rooms.map(room => {
+        //     const cursor = user.readCursor({
+        //       roomId: room.id,
+        //     });
+        //     return { [room.id]: cursor.position };
+        //   });
+        //   console.log(r);
+        // })
+        // .then(() => {
+        //   resolve(userData);
+      })
+      .catch(error => {
+        addErrorBreadcrumb({
+          category: 'chat',
+          error,
+          level: 'fatal',
         });
-    } catch (err) {
-      reject(err);
-    }
+        console.error(error);
+        reject(error);
+      });
   });
 };
 
@@ -235,7 +279,7 @@ const checkLogin = (userData: UserData, token: string) => (
   dispatch: Dispatch
 ) => {
   console.debug('checkLogin');
-  dispatch({ type: 'RELOAD_PENDING' });
+  dispatch({ type: RELOAD_PENDING });
   return api
     .get(`/api/users/${userData._id}/personal`, { token })
     .then(() => {
@@ -249,13 +293,21 @@ const checkLogin = (userData: UserData, token: string) => (
     .then(() => registerPushNotifications())
     .then(pushToken => {
       console.debug('Push notifications: initialized');
+      addNavigationBreadcrumb({
+        message: RELOAD_SUCCESS,
+        level: 'info',
+      });
       if (pushToken) return sendToken(pushToken, userData, token);
     })
-    .catch(err => {
-      console.debug(err);
+    .catch(error => {
+      console.debug(error);
       dispatch({ type: RELOAD_FAIL });
-      ui.showToast(err.message || JSON.stringify(err), 'danger', 'OK', 5);
-      throw err;
+      ui.showToast(error.message || JSON.stringify(error), 'danger', 'OK', 5);
+      addErrorBreadcrumb({
+        category: 'auth',
+        error,
+      });
+      throw error;
     });
 };
 
@@ -272,10 +324,9 @@ const signup = (data: SignupData) => (dispatch: Dispatch) => {
       if (res.data) {
         console.debug('user created', res.data);
         console.debug('token', res.token);
-        // const userData: UserData = {
-        //   ...res.data,
-        //   ...{ token: res.token, provider: 'email' },
-        // };
+        addNavigationBreadcrumb({
+          message: SIGNUP_SUCCESS,
+        });
 
         if (analyticsEnabled) {
           trackUser(res.data);
@@ -302,6 +353,9 @@ const signup = (data: SignupData) => (dispatch: Dispatch) => {
       }
       console.warn(res);
       dispatch({ type: SIGNUP_FAIL });
+      addNavigationBreadcrumb({
+        message: SIGNUP_FAIL,
+      });
     })
     .catch((err: APIError) => {
       dispatch(
@@ -311,7 +365,11 @@ const signup = (data: SignupData) => (dispatch: Dispatch) => {
           I18n.t('product.toast_warning_ok_button')
         )
       );
-      Toast.hide();
+      addErrorBreadcrumb({
+        category: 'auth',
+        error,
+        level: 'warning',
+      });
       throw err;
     })
     .then(() => Toast.hide());
@@ -404,6 +462,10 @@ const sendToken = (
 };
 
 const handleErrorWithAlert = (data: any, err: any, buttonText?) => {
+  addErrorBreadcrumb({
+    error: data,
+    level: 'warning',
+  });
   let errorType;
   if (err.status == 400 || err.status == 500) {
     errorType = 'danger';

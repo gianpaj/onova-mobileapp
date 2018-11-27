@@ -557,6 +557,7 @@ export class CreateDropScreen extends React.Component<Props, State> {
     );
   }
 
+  // eslint-disable-next-line react/no-unused-prop-types
   renderItem = ({ item: product }: { item: any }) => (
     <View style={styles.row} key={product.key}>
       {product.uploaded ? (

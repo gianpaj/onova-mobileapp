@@ -49,7 +49,7 @@ export default class App extends React.Component<*> {
     });
   }
 
-  _renderLoading = () => (
+  _renderLoading = (
     <ImageBackground
       source={require('./assets/images/bg.png')}
       resizeMode="repeat"
@@ -61,7 +61,7 @@ export default class App extends React.Component<*> {
   render() {
     return (
       <Provider store={store}>
-        <PersistGate loading={this._renderLoading()} persistor={persistor}>
+        <PersistGate loading={this._renderLoading} persistor={persistor}>
           <Root>
             <AppNavigation />
           </Root>

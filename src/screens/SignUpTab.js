@@ -409,43 +409,41 @@ export class SignUpTabContainer extends Component<Props, State> {
     );
   }
 
-  renderVerifyAccountModal() {
-    return (
-      <Modal
-        animationType="slide"
-        visible={this.state.isVerifyAccountModalVisible}
-        onRequestClose={() => this.setVerifyAccountVisible(false)}>
-        <View>
-          <Header noShadow style={{ backgroundColor: colors.transparent }}>
-            <Left />
-            <Body />
-            <Right>
-              <Button
-                transparent
-                onPress={() => this.setVerifyAccountVisible(false)}>
-                <NBIcon name="close" style={{ color: colors.black }} />
-              </Button>
-            </Right>
-          </Header>
-          <View style={{ margin: 20 }}>
-            <Icon
-              size={typography.empty_state_icon}
-              name={'email-open-outline'}
-              color={colors.grey2}
-              style={{ alignSelf: 'center', marginBottom: 30 }}
-            />
-            <Text
-              style={{
-                color: colors.black,
-                textAlign: 'center',
-              }}>
-              {I18n.t('login.verify_account.title')}
-            </Text>
-          </View>
+  renderVerifyAccountModal = (
+    <Modal
+      animationType="slide"
+      visible={this.state.isVerifyAccountModalVisible}
+      onRequestClose={() => this.setVerifyAccountVisible(false)}>
+      <View>
+        <Header noShadow style={{ backgroundColor: colors.transparent }}>
+          <Left />
+          <Body />
+          <Right>
+            <Button
+              transparent
+              onPress={() => this.setVerifyAccountVisible(false)}>
+              <NBIcon name="close" style={{ color: colors.black }} />
+            </Button>
+          </Right>
+        </Header>
+        <View style={{ margin: 20 }}>
+          <Icon
+            size={typography.empty_state_icon}
+            name={'email-open-outline'}
+            color={colors.grey2}
+            style={{ alignSelf: 'center', marginBottom: 30 }}
+          />
+          <Text
+            style={{
+              color: colors.black,
+              textAlign: 'center',
+            }}>
+            {I18n.t('login.verify_account.title')}
+          </Text>
         </View>
-      </Modal>
-    );
-  }
+      </View>
+    </Modal>
+  );
 }
 
 const buttonProps = {

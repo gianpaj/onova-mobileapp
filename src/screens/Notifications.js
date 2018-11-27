@@ -86,22 +86,19 @@ class NotificationsContainer extends Component<Props, State> {
 
   _keyExtractor = (item): string => item._id;
 
-  _renderSeparator = () => <View style={styles.separator} />;
+  _renderSeparator = <View style={styles.separator} />;
 
-  renderEmptyState = () => {
-    // TODO: center empty state in RN 0.56 - https://github.com/facebook/react-native/pull/18206
-    return (
-      <View style={[styles.container, { alignSelf: 'center', height: 300 }]}>
-        <Ionicons
-          size={48}
-          name={isiOS ? 'ios-notifications' : 'md-notifications'}
-          color={colors.grey2}
-          style={{ alignSelf: 'center', marginBottom: 30 }}
-        />
-        <Text>{I18n.t('notifications.empty_state_message')}</Text>
-      </View>
-    );
-  };
+  renderEmptyState = (
+    <View style={[styles.container, { alignSelf: 'center', height: 300 }]}>
+      <Ionicons
+        size={48}
+        name={isiOS ? 'ios-notifications' : 'md-notifications'}
+        color={colors.grey2}
+        style={{ alignSelf: 'center', marginBottom: 30 }}
+      />
+      <Text>{I18n.t('notifications.empty_state_message')}</Text>
+    </View>
+  );
 
   loadMore = async () => {
     this.setState({ isRefreshing: true });
@@ -123,18 +120,13 @@ class NotificationsContainer extends Component<Props, State> {
     });
   };
 
-  renderFooter = () => {
-    if (this.state.lastId == '') return null;
-
-    // TODO: center empty state in RN 0.56 - https://github.com/facebook/react-native/pull/18206
-    return (
-      <View style={styles.container}>
-        <Button full light onPress={this.loadMore}>
-          <Text>{I18n.t('notifications.load_more_button')}</Text>
-        </Button>
-      </View>
-    );
-  };
+  renderFooter = this.state.lastId === '' && (
+    <View style={styles.container}>
+      <Button full light onPress={this.loadMore}>
+        <Text>{I18n.t('notifications.load_more_button')}</Text>
+      </Button>
+    </View>
+  );
 
   goToProfile = (user: UserData) => {
     const { _id } = this.props.userData;
@@ -178,64 +170,63 @@ class NotificationsContainer extends Component<Props, State> {
       .then(() => this.setState({ isRefreshing: false }));
   };
 
-  _renderItem = ({ item }: { item: Notification }) => {
-    return (
-      <ListItem
-        button
-        style={{ marginLeft: 0 }}
-        onPress={() => {
-          switch (item.triggeredType) {
-            case 'User':
-              this.goToProfile(item.sourceUser);
-              break;
-            case 'Product':
-              this.goToProduct(item.triggeredBy);
-              break;
-            case 'Order':
-              // or the ConfirmOrder screen should check if it can be confirmed ('paid' and not 'confirmed')
-              if (item.data.status === 'paid')
-                this.goToConfirmOrder(item.triggeredBy);
-              break;
-            default:
-              break;
-          }
-        }}>
-        {item.sourceUser && ( // deepscan-disable-line
-          <Avatar
-            size={'verySmall'}
-            style={styles.avatarContainer}
-            uri={item.sourceUser.profilePic}
-            placeholderText={item.sourceUser.username}
-          />
+  // eslint-disable-next-line react/no-unused-prop-types
+  _renderItem = ({ item }: { item: Notification }) => (
+    <ListItem
+      button
+      style={{ marginLeft: 0 }}
+      onPress={() => {
+        switch (item.triggeredType) {
+          case 'User':
+            this.goToProfile(item.sourceUser);
+            break;
+          case 'Product':
+            this.goToProduct(item.triggeredBy);
+            break;
+          case 'Order':
+            // or the ConfirmOrder screen should check if it can be confirmed ('paid' and not 'confirmed')
+            if (item.data.status === 'paid')
+              this.goToConfirmOrder(item.triggeredBy);
+            break;
+          default:
+            break;
+        }
+      }}>
+      {item.sourceUser && ( // deepscan-disable-line
+        <Avatar
+          size={'verySmall'}
+          style={styles.avatarContainer}
+          uri={item.sourceUser.profilePic}
+          placeholderText={item.sourceUser.username}
+        />
+      )}
+      <Body>
+        {/* Paid orders do not have a senderName (for now) */}
+        {item.sourceUser && (
+          <View style={styles.contentRow}>
+            <Text style={styles.name} numberOfLines={1}>
+              @{item.sourceUser.username}
+            </Text>
+          </View>
         )}
-        <Body>
-          {/* Paid orders do not have a senderName (for now) */}
-          {item.sourceUser && (
-            <View style={styles.contentRow}>
-              <Text style={styles.name} numberOfLines={1}>
-                @{item.sourceUser.username}
-              </Text>
-            </View>
-          )}
-          <Text style={styles.reviewText} numberOfLines={3}>
-            {item.notifI18n}
-            {/* for comment notifications */}
-            {item.triggeredType == 'Product' &&
-              item.triggeredBy &&
-              ': ' + item.data.text}
-          </Text>
-        </Body>
-        <Right>
-          <Text style={styles.time} numberOfLines={1}>
-            {ui.formatTime(item.dateCreated)}
-          </Text>
-          <IconEL size={28} name="chevron-right" color={colors.grey4} />
-        </Right>
-      </ListItem>
-    );
-  };
+        <Text style={styles.reviewText} numberOfLines={3}>
+          {item.notifI18n}
+          {/* for comment notifications */}
+          {item.triggeredType == 'Product' &&
+            item.triggeredBy &&
+            ': ' + item.data.text}
+        </Text>
+      </Body>
+      <Right>
+        <Text style={styles.time} numberOfLines={1}>
+          {ui.formatTime(item.dateCreated)}
+        </Text>
+        <IconEL size={28} name="chevron-right" color={colors.grey4} />
+      </Right>
+    </ListItem>
+  );
 
-  renderLoading = () => (
+  renderLoading = (
     <View style={styles.container}>
       <ActivityIndicator size="large" />
     </View>
@@ -261,7 +252,7 @@ class NotificationsContainer extends Component<Props, State> {
           <Right />
         </Header>
         {this.state.isLoading ? (
-          this.renderLoading()
+          this.renderLoading
         ) : (
           <FlatList
             data={this.state.data}

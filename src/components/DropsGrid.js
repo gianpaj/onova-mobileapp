@@ -151,7 +151,7 @@ class DropsGridComponent extends React.PureComponent<Props, State> {
 
     if (this.firstFocus) return null;
 
-    if (!hasError && isLoading) return this.renderLoading();
+    if (!hasError && isLoading) return this.renderLoading;
 
     return (
       <View style={styles.container}>
@@ -169,7 +169,7 @@ class DropsGridComponent extends React.PureComponent<Props, State> {
     );
   }
 
-  renderSeparator = () => <View style={styles.separator} />;
+  renderSeparator = <View style={styles.separator} />;
 
   _keyExtractorDrop = (item): string => item.uuid;
 
@@ -187,7 +187,7 @@ class DropsGridComponent extends React.PureComponent<Props, State> {
     return this.props.emptyState;
   };
 
-  renderLoading = () => (
+  renderLoading = (
     <View style={styles.container}>
       <ActivityIndicator size="large" />
     </View>

@@ -456,18 +456,16 @@ class ChatContainer extends Component<Props, State> {
     }
   };
 
-  renderSystemMessage(props): React$Element<*> {
-    return (
-      <SystemMessage
-        {...props}
-        containerStyle={st.systemContainer}
-        textStyle={st.systemText}
-      />
-    );
-  }
+  renderSystemMessage = (props): React$Element<*> => (
+    <SystemMessage
+      {...props}
+      containerStyle={st.systemContainer}
+      textStyle={st.systemText}
+    />
+  );
 
-  renderSend(props): React$Element<*> {
-    const showActiveOpacity = props.text.trim().length > 0;
+  renderSend({ text }): React$Element<*> {
+    const showActiveOpacity = text.trim().length > 0;
     return (
       <View style={st.send}>
         <Send {...props}>

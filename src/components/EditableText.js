@@ -92,21 +92,16 @@ class EditableText extends PureComponent<Props, State> {
             {...this.props.textInputProps}
           />
         </View>
-        {this.renderActivityIndicator()}
+        {this.renderActivityIndicator}
       </View>
     );
   }
 
-  renderActivityIndicator() {
-    if (this.props.loading) {
-      return (
-        <View style={styles.spinnerStyle}>
-          <ActivityIndicator size="small" />
-        </View>
-      );
-    }
-    return null;
-  }
+  renderActivityIndicator = this.props.loading && (
+    <View style={styles.spinnerStyle}>
+      <ActivityIndicator size="small" />
+    </View>
+  );
 
   render = () => (
     <View>

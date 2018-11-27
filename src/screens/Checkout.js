@@ -599,48 +599,46 @@ class CheckoutContainer extends Component<Props, State> {
 
   openLink = (link: string) => linking.openURL(link);
 
-  renderMandatory() {
-    return (
-      <React.Fragment>
-        <Text style={{ marginHorizontal: 20 }}>
-          <NBIcon name="ios-checkmark" style={{ color: colors.grey3 }} />
-          <Text>&nbsp;</Text>
-          {I18n.t('checkout.paragraph_1').map((para, i) => (
-            <React.Fragment key={i}>
-              <Text
-                style={para.link ? styles.link : styles.paragraph}
-                onPress={para.link && this.openLink.bind(this, para.link)}>
-                {para.p}
-              </Text>
-              <Text>&nbsp;</Text>
-            </React.Fragment>
-          ))}
-        </Text>
-        <View style={{ flexDirection: 'row', padding: 10 }}>
-          <Image
-            source={require('../assets/images/visa.png')}
-            style={styles.mandatoryImage}
-            resizeMode="contain"
-          />
-          <Image
-            source={require('../assets/images/mastercard.png')}
-            style={styles.mandatoryImage}
-            resizeMode="contain"
-          />
-          <Image
-            source={require('../assets/images/pci.png')}
-            style={styles.mandatoryImage}
-            resizeMode="contain"
-          />
-          <Image
-            source={require('../assets/images/uapay.png')}
-            style={[styles.mandatoryImage, { width: '15%' }]}
-            resizeMode="contain"
-          />
-        </View>
-      </React.Fragment>
-    );
-  }
+  renderMandatory = (
+    <>
+      <Text style={{ marginHorizontal: 20 }}>
+        <NBIcon name="ios-checkmark" style={{ color: colors.grey3 }} />
+        <Text>&nbsp;</Text>
+        {I18n.t('checkout.paragraph_1').map((para, i) => (
+          <React.Fragment key={i}>
+            <Text
+              style={para.link ? styles.link : styles.paragraph}
+              onPress={para.link && this.openLink.bind(this, para.link)}>
+              {para.p}
+            </Text>
+            <Text>&nbsp;</Text>
+          </React.Fragment>
+        ))}
+      </Text>
+      <View style={{ flexDirection: 'row', padding: 10 }}>
+        <Image
+          source={require('../assets/images/visa.png')}
+          style={styles.mandatoryImage}
+          resizeMode="contain"
+        />
+        <Image
+          source={require('../assets/images/mastercard.png')}
+          style={styles.mandatoryImage}
+          resizeMode="contain"
+        />
+        <Image
+          source={require('../assets/images/pci.png')}
+          style={styles.mandatoryImage}
+          resizeMode="contain"
+        />
+        <Image
+          source={require('../assets/images/uapay.png')}
+          style={[styles.mandatoryImage, { width: '15%' }]}
+          resizeMode="contain"
+        />
+      </View>
+    </>
+  );
 
   render() {
     const { userData } = this.props;
@@ -785,7 +783,7 @@ class CheckoutContainer extends Component<Props, State> {
                   value={cvc}
                 />
               </View>
-              {this.renderMandatory()}
+              {this.renderMandatory}
             </Content>
             {showFooter && (
               <Footer>

@@ -213,15 +213,17 @@ class ImageGridComponent extends React.PureComponent<Props, State> {
     );
   };
 
-  renderFooter = () => {
-    if (!this.state.isRefreshing) return null;
+  renderFooter = this.state.isRefreshing && (
+    <View style={{ paddingVertical: 20 }}>
+      <ActivityIndicator size="large" />
+    </View>
+  );
 
-    return (
-      <View style={{ paddingVertical: 20 }}>
-        <ActivityIndicator size="large" />
-      </View>
-    );
-  };
+  renderLoading = () => (
+    <View style={styles.container}>
+      <ActivityIndicator size="large" />
+    </View>
+  );
 
   render() {
     const { hasError, isLoading, items } = this.state;
@@ -283,7 +285,6 @@ class ImageGridComponent extends React.PureComponent<Props, State> {
           style={styles.searchButton}
           onPress={() => this.props.navigation.navigate('search')}>
           <Text
-            // eslint-disable-next-line
             style={{
               fontSize: 16,
               color: colors.white,
@@ -294,12 +295,6 @@ class ImageGridComponent extends React.PureComponent<Props, State> {
       </View>
     );
   };
-
-  renderLoading = () => (
-    <View style={styles.container}>
-      <ActivityIndicator size="large" />
-    </View>
-  );
 }
 
 const mapStateToProps = (state: any) => ({

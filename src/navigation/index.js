@@ -90,7 +90,7 @@ class AppNavigation extends React.PureComponent<Props, *> {
     return true;
   };
 
-  _renderLoading = () => (
+  _renderLoading = (
     <ImageBackground
       source={require('../assets/images/bg.png')}
       resizeMode="repeat"
@@ -99,7 +99,7 @@ class AppNavigation extends React.PureComponent<Props, *> {
     </ImageBackground>
   );
 
-  _renderRetry = () => (
+  _renderRetry = (
     <ImageBackground
       source={require('../assets/images/bg.png')}
       resizeMode="repeat"
@@ -127,8 +127,8 @@ class AppNavigation extends React.PureComponent<Props, *> {
         ? navigationState.stateForLoggedIn
         : navigationState.stateForLoggedOut;
 
-    if (this.state.canReload) return this._renderRetry();
-    if (isLoggedIn && !checkedLoggedIn) return this._renderLoading();
+    if (this.state.canReload) return this._renderRetry;
+    if (isLoggedIn && !checkedLoggedIn) return this._renderLoading;
 
     return (
       <NavigationStack

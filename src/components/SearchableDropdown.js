@@ -61,24 +61,21 @@ export default class SearchableDropDown extends Component {
 
   _keyExtractor = item => item.id;
 
-  renderList = () => {
-    if (this.state.focus && this.state.items.length) {
-      return (
-        <FlatList
-          style={this.props.itemsContainerStyle}
-          keyboardShouldPersistTaps="always"
-          data={this.state.items}
-          keyExtractor={this._keyExtractor}
-          renderItem={this.renderItems}
-          // ItemSeparatorComponent={() => <View style={styles.separator} />}
-        />
-      );
-    }
-  };
+  renderList = this.state.focus &&
+    this.state.items.length && (
+      <FlatList
+        style={this.props.itemsContainerStyle}
+        keyboardShouldPersistTaps="always"
+        data={this.state.items}
+        keyExtractor={this._keyExtractor}
+        renderItem={this.renderItems}
+        // ItemSeparatorComponent={() => <View style={styles.separator} />}
+      />
+    );
 
   componentDidMount() {
     const { items } = this.props;
-    // if (value) this.setState({ item: value });
+
     if (items) this.setState({ items: items.slice(0, LIMIT_BY) });
   }
 
@@ -209,7 +206,7 @@ export default class SearchableDropDown extends Component {
           }
           error={error}
         />
-        {this.renderList()}
+        {this.renderList}
       </View>
     );
   }

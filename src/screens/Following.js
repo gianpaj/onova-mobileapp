@@ -105,6 +105,7 @@ class FollowingContainer extends Component<Props, State> {
       });
   }
 
+  // eslint-disable-next-line react/no-unused-prop-types
   _renderItem = ({ item: user }: { item: UserData }) => {
     const { _id } = this.props.userData;
 
@@ -141,27 +142,20 @@ class FollowingContainer extends Component<Props, State> {
 
   _keyExtractor = (item): string => item.dateCreated;
 
-  renderEmptyState = () => {
-    // if (!this.state.showingResults) return null;
-
-    // TODO: center empty state in RN 0.56 - https://github.com/facebook/react-native/pull/18206
-    return (
-      <View style={styles.emptyContainer}>
-        <MaterialCommunityIcons
-          size={48}
-          name={'account-multiple-plus'}
-          color={colors.grey2}
-          style={styles.emptyStateIcon}
-        />
-        <Text style={styles.boldText}>
-          {I18n.t('following.empty_state_message_title')}
-        </Text>
-        <Text style={styles.centerText}>
-          {I18n.t('following.empty_state_message_body')}
-        </Text>
-      </View>
-    );
-  };
+  renderEmptyState = (
+    <View style={styles.emptyContainer}>
+      <MaterialCommunityIcons
+        size={48}
+        name={'account-multiple-plus'}
+        color={colors.grey2}
+        style={styles.emptyStateIcon}
+      />
+      <Text style={styles.boldText}>
+        {I18n.t('following.empty_state_message_title')}
+      </Text>
+      <Text>{I18n.t('following.empty_state_message_body')}</Text>
+    </View>
+  );
 
   refreshFollowing = () => {
     this.setState({ isRefreshing: true });
@@ -173,7 +167,7 @@ class FollowingContainer extends Component<Props, State> {
       .then(() => this.setState({ isRefreshing: false }));
   };
 
-  renderLoading = () => (
+  renderLoading = (
     <View style={styles.container}>
       <ActivityIndicator size="large" />
     </View>
@@ -199,7 +193,7 @@ class FollowingContainer extends Component<Props, State> {
           <Right />
         </Header>
         {this.state.isLoading ? (
-          this.renderLoading()
+          this.renderLoading
         ) : (
           <FlatList
             data={this.state.data}
@@ -267,9 +261,6 @@ const styles = StyleSheet.create({
   },
   boldText: {
     fontWeight: 'bold',
-  },
-  centerText: {
-    marginTop: 5,
   },
   emptyContainer: {
     alignItems: 'center',

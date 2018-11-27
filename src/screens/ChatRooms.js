@@ -216,6 +216,7 @@ class ChatContainer extends Component<Props, State> {
   };
   */
 
+  // eslint-disable-next-line react/no-unused-prop-types
   _renderRoomRow = ({ item }: { item: Room }) => {
     let { lastMessage } = item;
     let from;

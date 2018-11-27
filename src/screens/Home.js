@@ -149,36 +149,34 @@ export class Home extends PureComponent<Props, State> {
   toggleDialog = () =>
     this.setState(prevState => ({ dialogVisible: !prevState.dialogVisible }));
 
-  renderInfoDialog() {
-    return (
-      <React.Fragment>
-        <Dialog.Container
-          visible={this.state.dialogVisible}
-          onBackdropPress={this.toggleDialog}
-          onBackButtonPress={this.toggleDialog}
-          renderToHardwareTextureAndroid>
-          <Dialog.Title>{I18n.t('home.alert_info_title')}</Dialog.Title>
+  renderInfoDialog = () => (
+    <React.Fragment>
+      <Dialog.Container
+        visible={this.state.dialogVisible}
+        onBackdropPress={this.toggleDialog}
+        onBackButtonPress={this.toggleDialog}
+        renderToHardwareTextureAndroid>
+        <Dialog.Title>{I18n.t('home.alert_info_title')}</Dialog.Title>
 
-          <ParsedText
-            style={{ marginTop: 4, margin: 18 }}
-            parse={[
-              { type: 'url', style: styles.url, onPress: linking.openURL },
-              {
-                pattern: /[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{2,3}[-\s\.]?[0-9]{2,3}/,
-                style: styles.url,
-                onPress: linking.call,
-              },
-            ]}>
-            {I18n.t('home.alert_info_body')}
-          </ParsedText>
-          <Dialog.Button
-            label={I18n.t('product.toast_warning_ok_button')}
-            onPress={this.toggleDialog}
-          />
-        </Dialog.Container>
-      </React.Fragment>
-    );
-  }
+        <ParsedText
+          style={{ marginTop: 4, margin: 18 }}
+          parse={[
+            { type: 'url', style: styles.url, onPress: linking.openURL },
+            {
+              pattern: /[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{2,3}[-\s\.]?[0-9]{2,3}/,
+              style: styles.url,
+              onPress: linking.call,
+            },
+          ]}>
+          {I18n.t('home.alert_info_body')}
+        </ParsedText>
+        <Dialog.Button
+          label={I18n.t('product.toast_warning_ok_button')}
+          onPress={this.toggleDialog}
+        />
+      </Dialog.Container>
+    </React.Fragment>
+  );
 }
 
 // const STATUS_BAR_HEIGHT = Platform.OS === 'ios' ? 20 : 0;

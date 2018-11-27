@@ -203,15 +203,17 @@ class ImageGridComponent extends React.Component<Props, State> {
     );
   };
 
-  renderFooter = () => {
-    if (!this.state.isRefreshing) return null;
+  renderFooter = this.state.isRefreshing && (
+    <View style={{ paddingVertical: 20 }}>
+      <ActivityIndicator size="large" />
+    </View>
+  );
 
-    return (
-      <View style={{ paddingVertical: 20 }}>
-        <ActivityIndicator size="large" />
-      </View>
-    );
-  };
+  renderLoading = () => (
+    <View style={styles.container}>
+      <ActivityIndicator size="large" />
+    </View>
+  );
 
   render() {
     const { hasError, isLoading, items } = this.state;
@@ -274,14 +276,6 @@ class ImageGridComponent extends React.Component<Props, State> {
       </View>
     );
   };
-
-  renderLoading() {
-    return (
-      <View style={[styles.container, { height: height - 150 }]}>
-        <ActivityIndicator size="large" />
-      </View>
-    );
-  }
 }
 
 const mapStateToProps = (state: any) => ({

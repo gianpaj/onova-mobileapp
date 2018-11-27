@@ -100,20 +100,17 @@ class ReviewsTabContainer extends Component<Props, State> {
       key: `profile-${user.username}`,
     });
 
-  renderEmptyState = () => {
-    // TODO: center empty state in RN 0.56 - https://github.com/facebook/react-native/pull/18206
-    return (
-      <View style={styles.emptyStateContainer}>
-        <Text style={{ textAlign: 'center' }}>
-          {I18n.t('reviews.empty_state_message')}
-        </Text>
-      </View>
-    );
-  };
+  renderEmptyState = (
+    <View style={styles.emptyStateContainer}>
+      <Text style={{ textAlign: 'center' }}>
+        {I18n.t('reviews.empty_state_message')}
+      </Text>
+    </View>
+  );
 
   _keyExtractor = (item): string => item.id;
 
-  _renderSeparator = () => <View style={styles.separator} />;
+  _renderSeparator = <View style={styles.separator} />;
 
   _renderItem = ({ item }) => (
     <ReviewCard order={item} as={this.props.as} onPress={this.goToProfile} />

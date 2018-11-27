@@ -211,7 +211,7 @@ class Comments extends React.Component<Props, State> {
 
   _keyExtractor = item => item._id;
 
-  renderSeparator = () => <View style={styles.separator} />;
+  renderSeparator = <View style={styles.separator} />;
 
   renderComments() {
     if (this.state.comments.length < 1) return null;
@@ -235,29 +235,27 @@ class Comments extends React.Component<Props, State> {
     // eslint-disable-next-line react/no-unused-prop-types
     { item: user }: { item: UserData },
     hidePanel: () => void
-  ) => {
-    return (
-      <TouchableOpacity
-        style={[
-          styles.row,
-          {
-            borderColor: convertHex(colors.grey2, 10),
-            borderWidth: StyleSheet.hairlineWidth,
-          },
-        ]}
-        onPress={() => this.onSuggestionTap(user, hidePanel)}>
-        <Avatar
-          style={{ marginTop: 2 }}
-          size={'verySmall'}
-          uri={user.profilePic || ''}
-          placeholderText={user.username}
-        />
-        <View style={styles.userDetailsBox}>
-          <Text style={styles.suggestionUsernameText}>@{user.username}</Text>
-        </View>
-      </TouchableOpacity>
-    );
-  };
+  ) => (
+    <TouchableOpacity
+      style={[
+        styles.row,
+        {
+          borderColor: convertHex(colors.grey2, 10),
+          borderWidth: StyleSheet.hairlineWidth,
+        },
+      ]}
+      onPress={() => this.onSuggestionTap(user, hidePanel)}>
+      <Avatar
+        style={{ marginTop: 2 }}
+        size={'verySmall'}
+        uri={user.profilePic || ''}
+        placeholderText={user.username}
+      />
+      <View style={styles.userDetailsBox}>
+        <Text style={styles.suggestionUsernameText}>@{user.username}</Text>
+      </View>
+    </TouchableOpacity>
+  );
 
   onSuggestionTap = (user: UserData, hidePanel: () => void) => {
     hidePanel();
@@ -440,10 +438,10 @@ class Comments extends React.Component<Props, State> {
 
   render() {
     return (
-      <View>
+      <>
         {this.renderComments()}
         {this.renderAddComment()}
-      </View>
+      </>
     );
   }
 }

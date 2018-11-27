@@ -87,25 +87,21 @@ class SearchSellersTabContainer extends Component<Props, State> {
     });
   };
 
-  renderEmptyState = () => {
-    if (!this.state.showingResults) return null;
-
-    // TODO: center empty state in RN 0.56 - https://github.com/facebook/react-native/pull/18206
-    return (
-      <View style={styles.container}>
-        <Text>
-          {this.state.hasError
-            ? I18n.t('search.error')
-            : I18n.t('search.empty_state_message')}
-        </Text>
-      </View>
-    );
-  };
+  renderEmptyState = this.state.showingResults && (
+    <View style={styles.container}>
+      <Text>
+        {this.state.hasError
+          ? I18n.t('search.error')
+          : I18n.t('search.empty_state_message')}
+      </Text>
+    </View>
+  );
 
   _keyExtractor = (item): string => item._id;
 
-  _renderSeparator = () => <View style={styles.separator} />;
+  _renderSeparator = <View style={styles.separator} />;
 
+  // eslint-disable-next-line react/no-unused-prop-types
   _renderItem = ({ item: user }: { item: UserData }) => {
     return (
       <TouchableHighlight

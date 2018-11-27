@@ -400,7 +400,7 @@ const logout = () => (dispatch: Dispatch) => {
     console.log('disconnected from Pusher');
   }
   if (analyticsEnabled) {
-    Sentry.addBreadcrumb({
+    Sentry.captureBreadcrumb({
       category: 'chat',
       message: 'disconnected from Pusher',
       level: 'info',

@@ -13,7 +13,7 @@ export const addNavigationBreadcrumb = ({
 }) => {
   log(message || data);
   if (analyticsEnabled) {
-    Sentry.addBreadcrumb({
+    Sentry.captureBreadcrumb({
       category: 'navigation',
       ...(message ? { message: message } : {}),
       ...(data ? { data: data } : {}),
@@ -31,7 +31,7 @@ export const addAuthBreadcrumb = ({
 }) => {
   log(message || data);
   if (analyticsEnabled) {
-    Sentry.addBreadcrumb({
+    Sentry.captureBreadcrumb({
       category: 'auth',
       ...(message ? { message: message } : {}),
       ...(data ? { data: data } : {}),
@@ -49,7 +49,7 @@ export const addPushNotifBreadcrumb = ({
 }) => {
   log(message || data);
   if (analyticsEnabled) {
-    Sentry.addBreadcrumb({
+    Sentry.captureBreadcrumb({
       category: 'push-notifications',
       ...(message ? { message: message } : {}),
       ...(data ? { data: data } : {}),
@@ -78,7 +78,7 @@ export const addErrorBreadcrumb = ({
 }) => {
   log(errMsg || error, level);
   if (analyticsEnabled) {
-    Sentry.addBreadcrumb({
+    Sentry.captureBreadcrumb({
       category,
       ...(errMsg ? { message: errMsg } : {}),
       ...(error ? { data: error } : {}),

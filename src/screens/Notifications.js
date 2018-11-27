@@ -200,7 +200,7 @@ class NotificationsContainer extends Component<Props, State> {
               break;
           }
         }}>
-        {item.sourceUser.profilePic && (
+        {item.sourceUser && ( // deepscan-disable-line
           <Avatar
             size={'verySmall'}
             style={styles.avatarContainer}
@@ -210,7 +210,7 @@ class NotificationsContainer extends Component<Props, State> {
         )}
         <Body>
           {/* Paid orders do not have a senderName (for now) */}
-          {item.sourceUser.username && (
+          {item.sourceUser && (
             <View style={styles.contentRow}>
               <Text style={styles.name} numberOfLines={1}>
                 @{item.sourceUser.username}

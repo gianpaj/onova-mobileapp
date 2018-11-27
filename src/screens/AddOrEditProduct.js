@@ -782,7 +782,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
       <React.Fragment>
         <Dialog.Container
           visible={this.state.dialogInfoVisible}
-          // onBackdropPress={this.toggleInfoDialog}
+          onBackdropPress={this.toggleInfoDialog}
           onBackButtonPress={this.toggleInfoDialog}
           renderToHardwareTextureAndroid>
           <Dialog.Description style={{ textAlign: 'justify' }}>
@@ -807,7 +807,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
       <React.Fragment>
         <Dialog.Container
           visible={this.state.dialogPriceVisible}
-          // onBackdropPress={this.togglePriceDialog}
+          onBackdropPress={this.togglePriceDialog}
           onBackButtonPress={this.togglePriceDialog}
           renderToHardwareTextureAndroid>
           <Dialog.Title>

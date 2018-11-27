@@ -10589,10 +10589,10 @@ react-native-compat@^1.0.0:
   dependencies:
     prop-types "^15.5.10"
 
-react-native-dialog@^5.4.0:
-  version "5.4.0"
-  resolved "https://registry.yarnpkg.com/react-native-dialog/-/react-native-dialog-5.4.0.tgz#8529950ad3c30e30c7b78b0036b5f98ccf598ff0"
-  integrity sha512-5AI2G7qxV/Cz2FpOk287lstWf2GV6HzYE4DVW0LnA/PO32qnAHjo8kvmjnRJxTICCFhTVCGWTQypVDC8Kk9eIg==
+react-native-dialog@^5.5.0:
+  version "5.5.0"
+  resolved "https://registry.yarnpkg.com/react-native-dialog/-/react-native-dialog-5.5.0.tgz#09d13e23264f820d6308b5f93e1f03606f97dee3"
+  integrity sha512-pHijXodWoXcuGD2GHRnYDcZDrptFKZMRbEKhAxAxFtxR1fF/UBNkBNSQnfw+KVvQp6lMqJQEWK/N+Sn9YpUkAQ==
   dependencies:
     prop-types "^15.6.0"
     react-native-modal "^6.4.0"

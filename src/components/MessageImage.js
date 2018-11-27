@@ -71,10 +71,10 @@ class MessageImage extends React.Component<*, State> {
         <Modal
           backdropOpacity={1}
           isVisible={isModalVisible}
+          onBackButtonPress={this._toggleModal}
           onBackdropPress={this._toggleModal}
           onSwipe={this._toggleModal}
           style={[Platform.OS === 'ios' ? { left: -19 } : {}]}
-          onBackButtonPress={this._toggleModal}
           swipeDirection="down">
           <ImageZoom
             cropWidth={width}

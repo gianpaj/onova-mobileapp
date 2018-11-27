@@ -300,7 +300,7 @@ export class ConfirmOrderContainer extends Component<Props, State> {
     return (
       <Dialog.Container
         visible={dialogVisible}
-        // onBackdropPress={this.toggleDialog}
+        onBackdropPress={this.toggleDialog}
         onBackButtonPress={this.toggleDialog}>
         <Dialog.Title style={{ color: colors.black }}>
           {I18n.t('confirm_order.dialog_title')}

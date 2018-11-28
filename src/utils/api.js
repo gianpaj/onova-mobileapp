@@ -243,9 +243,9 @@ export function getFollowers(
   });
 }
 
-export function getProduct(uuid: string): Promise<Product> {
+export function getProduct(uuid: string, options: Options): Promise<Product> {
   return new Promise((resolve, reject) => {
-    get(`/api/products/${uuid}`)
+    get(`/api/products/${uuid}`, options)
       .then(({ data }) => resolve(data))
       .catch(e => reject(e));
   });

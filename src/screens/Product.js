@@ -25,6 +25,7 @@ import {
 import { Button } from 'react-native-elements';
 import ParsedText from 'react-native-parsed-text';
 import { Modal } from 'antd-mobile-rn';
+import axios from 'axios';
 import Analytics from 'react-native-analytics-segment-io';
 // import LottieView from 'lottie-react-native';
 
@@ -56,9 +57,9 @@ type Props = {
 };
 
 type State = {
+  item: ?ProductType,
   loading: boolean,
   loadingBuy: boolean,
-  item: ?ProductType,
   // likeAnimValue: number,
 };
 
@@ -66,6 +67,7 @@ const { analyticsEnabled } = api;
 
 export class ProductContainer extends React.Component<Props, State> {
   anim: ?React$Element<*>;
+  cancelToken;
   scrollView: Content;
   reqTimer = 0;
 
@@ -75,14 +77,14 @@ export class ProductContainer extends React.Component<Props, State> {
   }
 
   state = {
+    item: null,
     loading: true,
     loadingBuy: false,
     // likeAnimValue: new Animated.Value(0.35),
-    item: null,
   };
 
   componentDidMount() {
-    this.refresh();
+    this.refresh().then(() => this.setState({ loading: false }));
 
     this.props.navigation.addListener('didFocus', () => {
       if (this.props.shouldRefresh) {
@@ -91,6 +93,11 @@ export class ProductContainer extends React.Component<Props, State> {
         }, 1000);
       }
     });
+  }
+
+  componentWillUnmount() {
+    // trigger Axios to reject the request
+    this.cancelToken.cancel('operation_canceled');
   }
 
   showActionSheetForProduct = () => {
@@ -246,6 +253,9 @@ export class ProductContainer extends React.Component<Props, State> {
     const { params }: { params: ProductType } = this.props.navigation.state;
     let uuid;
 
+    const CancelToken = axios.CancelToken;
+    this.cancelToken = CancelToken.source();
+
     // for development
     if (!params) {
       // local
@@ -257,20 +267,15 @@ export class ProductContainer extends React.Component<Props, State> {
     }
     console.debug('product uuid:', uuid);
     return api
-      .getProduct(uuid)
+      .getProduct(uuid, { cancelToken: this.cancelToken.token })
       .then(data => {
         if (data.status !== 'forsale' && data.status !== 'reserved') {
           return this.props.navigation.goBack();
         }
-        this.setState({
-          item: data,
-          loading: false,
-        });
+        this.setState({ item: data });
         return data;
       })
-      .catch(e => {
-        console.error(e);
-      });
+      .catch(e => console.error(e));
   }
 
   goToProfileOfSeller = () => {
@@ -351,7 +356,7 @@ export class ProductContainer extends React.Component<Props, State> {
         // TODO: if the product is reserved to me open the checkout (e.g. if closed the app and want to finish paying) - not visible at the moment
         // if product status is not longer for sale while looking at an item (ie. a second person presses buy faster)
         if (product.status !== 'forsale') {
-          this.refresh();
+          // this.refresh();
           if (product.status === 'reserved') {
             throw Error(I18n.t('product.reserved_message'));
           }

@@ -11,7 +11,7 @@ import * as api from '../utils/api';
 import * as ui from '../utils/ui';
 import I18n from '../i18n';
 
-const URL_BASE = 'https://api.demo.uapay.ua';
+const URL_BASE = 'https://api.uapay.ua';
 
 import type { ReduxState } from '../types';
 

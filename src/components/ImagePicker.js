@@ -5,6 +5,7 @@
 import React from 'react';
 import {
   ActivityIndicator,
+  Dimensions,
   Animated,
   Easing,
   Image,
@@ -26,11 +27,19 @@ export type Props = {
   onChangeOrder: (Array<{}>) => void,
   onImageClick?: (index?: number, files?: Array<{}>) => void,
   selectable?: boolean,
+  imagePerRow: number,
 };
 
 type State = {
   visible: boolean,
 };
+
+const { width } = Dimensions.get('window');
+
+let square;
+const imageMargin = 5;
+
+const widthOfContainer = width - 16 * 2;
 
 export default class ImagePicker extends React.Component<Props, State> {
   state = {
@@ -40,6 +49,16 @@ export default class ImagePicker extends React.Component<Props, State> {
   static defaultProps = {
     selectable: true,
   };
+
+  constructor(props) {
+    super(props);
+    const size = widthOfContainer / this.props.imagePerRow - imageMargin * 2;
+
+    square = {
+      width: size,
+      height: size,
+    };
+  }
 
   showPicker = () => {
     if (this.props.onAddImageClick) return this.props.onAddImageClick();
@@ -80,22 +99,23 @@ export default class ImagePicker extends React.Component<Props, State> {
           // onChangeOrder={onChangeOrder}
           onChangeOrder={arr => (this.arr = arr)}
           onPressRow={this.onImageClick}
+          onReleaseRow={() => this.arr && onChangeOrder(this.arr)}
           renderRow={this._renderRow}
           scrollEnabled={false}
           showsHorizontalScrollIndicator={false}
           sortingEnabled={enabled}
-          onReleaseRow={() => this.arr && onChangeOrder(this.arr)}
         />
         {selectable && (
           <TouchableOpacity
             onPress={this.showPicker}
             style={[
               styles.item,
-              styles.size,
+              square,
+              { marginLeft: imageMargin - 1, marginVertical: imageMargin - 1 },
               styles.plusWrap,
               styles.plusWrapNormal,
             ]}>
-            <Text style={[styles.plusText]}>+</Text>
+            <Text style={styles.plusText}>+</Text>
           </TouchableOpacity>
         )}
       </View>
@@ -107,6 +127,7 @@ export default class ImagePicker extends React.Component<Props, State> {
       active={active}
       data={data}
       index={index}
+      imagePerRow={this.props.imagePerRow}
       removeImage={() => this.props.enabled && this.removeImage(index)}
       styles={styles}
     />
@@ -160,20 +181,19 @@ class Row extends React.Component<RowProps> {
   }
 
   render() {
-    const { data, styles, removeImage } = this.props;
+    let { data, styles, removeImage } = this.props;
+
+    const style = [square, { margin: imageMargin - 1 }, styles.image];
 
     return (
       <Animated.View style={[styles.row, this._style]}>
         {data.isUploading ? (
-          <ActivityIndicator
-            size="small"
-            style={[styles.size, styles.image, styles.loader]}
-          />
+          <ActivityIndicator size="small" style={[...style, styles.loader]} />
         ) : (
-          <View>
+          <>
             <Image
               source={{ uri: data.url.replace('.jpg', '-thumb.jpg') }}
-              style={[styles.size, styles.image]}
+              style={style}
             />
             <TouchableOpacity
               onPress={removeImage}
@@ -181,7 +201,7 @@ class Row extends React.Component<RowProps> {
               activeOpacity={0.6}>
               <Text style={styles.closeText}>×</Text>
             </TouchableOpacity>
-          </View>
+          </>
         )}
       </Animated.View>
     );
@@ -190,10 +210,12 @@ class Row extends React.Component<RowProps> {
 
 const styles = StyleSheet.create({
   ...imagePickerStyle,
+  image: {
+    margin: imageMargin,
+  },
   row: {
     flexDirection: 'column',
     alignItems: 'center',
-    borderRadius: 4,
   },
   loader: {
     borderWidth: 1,

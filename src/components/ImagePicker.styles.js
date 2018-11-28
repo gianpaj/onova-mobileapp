@@ -9,7 +9,6 @@ const { width } = Dimensions.get('window');
 
 export interface IImagePickerStyle {
   container: ViewStyle;
-  size: ViewStyle;
   item: ViewStyle;
   image: ImageStyle;
   closeWrap: ViewStyle;
@@ -25,11 +24,6 @@ export default {
     flexWrap: 'wrap',
     flexDirection: 'row',
     height: width / 6,
-  },
-  size: {
-    width: width / 6 - 12,
-    height: width / 6 - 12,
-    margin: 5,
   },
   item: {
     // marginRight: variables.h_spacing_sm,
@@ -61,10 +55,10 @@ export default {
     fontWeight: '300',
   },
   plusWrap: {
+    alignItems: 'center',
     borderRadius: variables.radius_sm,
     borderWidth: 1,
     justifyContent: 'center',
-    alignItems: 'center',
   },
   plusWrapNormal: {
     backgroundColor: colors.white,

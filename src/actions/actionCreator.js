@@ -48,6 +48,9 @@ let currentUser: PusherUser;
 
 const { isProd, analyticsEnabled, config } = api;
 
+const enabledPusher = isProd == true;
+// const enabledPusher = false;
+
 const intro = () => (dispatch: Dispatch) => {
   addNavigationBreadcrumb({ message: INTRO });
   // TODO: dispatch only one action to send back to Intro screens
@@ -128,8 +131,7 @@ const initializePusher = (
   token: string
 ): Promise<any | Error> => {
   return new Promise((resolve, reject) => {
-    // if (!isProd && process.env.NODE_ENV !== 'test') {
-    if (!isProd) {
+    if (!enabledPusher) {
       console.log('%cskipping Pusher', 'color: green');
       return resolve(userData);
     }

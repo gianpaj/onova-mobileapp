@@ -141,37 +141,42 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     uuid: '',
   };
 
-  componentDidMount() {
+  async componentDidMount() {
     // $FlowFixMe
-    const { params } = this.props.navigation.state;
+    let { params } = this.props.navigation.state;
 
     // for development
-    // const data = await api.getProduct('D6cEHxhIX');
-    // console.warn(data);
-    // const params = { item: data };
+    // params = { item: { uuid: '5k_CnnlcF' } };
 
+    // edit mode
     if (params && params.item) {
       this.setState({ inEditMode: true });
-      const { item }: { item: Product } = params;
-      let images = [];
-      for (let i = 0; i < item.photoURIs.length; i++) {
-        images.push({
-          url: item.photoURIs[i],
-          id: i,
-          isUploading: false,
+      try {
+        const item = await api.getProduct(params.item.uuid);
+        // console.warn(item);
+        let images = [];
+        for (let i = 0; i < item.photoURIs.length; i++) {
+          images.push({
+            url: item.photoURIs[i],
+            id: i,
+            isUploading: false,
+          });
+        }
+        return this.setState({
+          description: item.description,
+          grp_1: item.categoryIds[0],
+          grp_2: item.typeIds[0],
+          images,
+          isLoading: false,
+          price: item.price,
+          tags: item.tags,
+          uuid: item.uuid,
         });
+      } catch (error) {
+        console.error(error);
       }
-      return this.setState({
-        description: item.description,
-        grp_1: item.categoryIds[0],
-        grp_2: item.typeIds[0],
-        images,
-        isLoading: false,
-        price: item.price,
-        tags: item.tags,
-        uuid: item.uuid,
-      });
     }
+    // adding a new item
     this.setState({ isLoading: false });
     this.selectPhotoTapped(0);
   }
@@ -248,12 +253,16 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     try {
       this.setState({ isUploading: true });
 
-      // starts from i, increments with j
-      await Promise.all(
-        response.map((image, j) =>
-          this.uploadImageTemporarilyAndAppend(image, i + j)
-        )
-      );
+      if (response.length) {
+        // starts from i, increments with j
+        return await Promise.all(
+          response.map((image, j) =>
+            this.uploadImageTemporarilyAndAppend(image, i + j)
+          )
+        );
+      }
+      // one image (from camera)
+      this.uploadImageTemporarilyAndAppend(response, i);
     } catch (error) {
       console.log(error);
 
@@ -594,6 +603,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
                       this.selectPhotoTapped(images.length)
                     }
                     selectable={images.length < 6}
+                    imagePerRow={6}
                     enabled={!isUploading}
                     onChange={this.onImageChange}
                     onChangeOrder={this.onImageChangeOrder}
@@ -611,7 +621,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
                     </FormLabel>
                     <TouchableOpacity
                       hitSlop={{ top: 10, left: 5, bottom: 5, right: 10 }}
-                      style={{ marginRight: 15 }}
+                      style={{ marginRight: 17 }}
                       onPress={this.togglePriceDialog}>
                       <Text>{I18n.t('add_or_edit_item.price_info')}</Text>
                     </TouchableOpacity>

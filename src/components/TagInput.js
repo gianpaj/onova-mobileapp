@@ -58,6 +58,8 @@ type OptionalProps = {
    * If false, text input is not editable and existing tags cannot be removed.
    */
   editable: boolean,
+
+  onBlur: () => void,
   /**
    * Background color of tags
    */
@@ -107,18 +109,19 @@ type State = {
 
 class TagInput<T> extends React.PureComponent<Props<T>, State> {
   static propTypes = {
-    value: PropTypes.array.isRequired,
-    onChange: PropTypes.func.isRequired,
-    labelExtractor: PropTypes.func.isRequired,
-    text: PropTypes.string.isRequired,
-    onChangeText: PropTypes.func.isRequired,
     editable: PropTypes.bool,
-    tagColor: PropTypes.string,
-    tagTextColor: PropTypes.string,
-    tagContainerStyle: ViewPropTypes.style,
-    tagTextStyle: Text.propTypes.style,
-    inputDefaultWidth: PropTypes.number,
     inputColor: PropTypes.string,
+    inputDefaultWidth: PropTypes.number,
+    labelExtractor: PropTypes.func.isRequired,
+    onBlur: PropTypes.func,
+    onChange: PropTypes.func.isRequired,
+    onChangeText: PropTypes.func.isRequired,
+    tagColor: PropTypes.string,
+    tagContainerStyle: ViewPropTypes.style,
+    tagTextColor: PropTypes.string,
+    tagTextStyle: Text.propTypes.style,
+    text: PropTypes.string.isRequired,
+    value: PropTypes.array.isRequired,
     // $FlowFixMe(>=0.49.0): https://github.com/facebook/react-native/pull/16437
     inputProps: PropTypes.shape(TextInput.propTypes),
     maxHeight: PropTypes.number,
@@ -155,9 +158,8 @@ class TagInput<T> extends React.PureComponent<Props<T>, State> {
       return inputDefaultWidth;
     } else if (spaceLeft >= 100) {
       return spaceLeft - 10;
-    } else {
-      return wrapperWidth;
     }
+    return wrapperWidth;
   }
 
   constructor(props: Props<T>) {
@@ -240,19 +242,35 @@ class TagInput<T> extends React.PureComponent<Props<T>, State> {
   };
 
   render() {
-    const tags = this.props.value.map((tag, index) => (
+    const {
+      editable,
+      inputColor,
+      inputProps,
+      labelExtractor,
+      onBlur,
+      onChangeText,
+      scrollViewProps,
+      tagColor,
+      tagContainerStyle,
+      tagTextColor,
+      tagTextStyle,
+      text,
+      value,
+    } = this.props;
+
+    const tags = value.map((tag, index) => (
       <Tag
+        editable={editable}
         index={index}
-        label={this.props.labelExtractor(tag)}
-        isLastTag={this.props.value.length === index + 1}
+        isLastTag={value.length === index + 1}
+        key={index}
+        label={labelExtractor(tag)}
         onLayoutLastTag={this.onLayoutLastTag}
         removeIndex={this.removeIndex}
-        tagColor={this.props.tagColor}
-        tagTextColor={this.props.tagTextColor}
-        tagContainerStyle={this.props.tagContainerStyle}
-        tagTextStyle={this.props.tagTextStyle}
-        key={index}
-        editable={this.props.editable}
+        tagColor={tagColor}
+        tagContainerStyle={tagContainerStyle}
+        tagTextColor={tagTextColor}
+        tagTextStyle={tagTextStyle}
       />
     ));
 
@@ -269,7 +287,7 @@ class TagInput<T> extends React.PureComponent<Props<T>, State> {
             keyboardShouldPersistTaps={
               ('handled': KeyboardShouldPersistTapsProps)
             }
-            {...this.props.scrollViewProps}>
+            {...scrollViewProps}>
             <View style={styles.tagInputContainer}>
               {tags}
               <View
@@ -281,24 +299,24 @@ class TagInput<T> extends React.PureComponent<Props<T>, State> {
                   ref={this.tagInputRef}
                   blurOnSubmit={false}
                   onKeyPress={this.onKeyPress}
-                  value={this.props.text}
+                  value={text}
                   style={[
                     styles.textInput,
                     {
                       width: this.state.inputWidth,
-                      color: this.props.inputColor,
+                      color: inputColor,
                     },
                   ]}
-                  onBlur={this.props.onBlur}
-                  onChangeText={this.props.onChangeText}
                   autoCapitalize="none"
                   autoCorrect={false}
+                  editable={editable}
+                  keyboardType="default"
+                  onBlur={onBlur}
+                  onChangeText={onChangeText}
                   placeholder="Start typing"
                   returnKeyType="done"
-                  keyboardType="default"
-                  editable={this.props.editable}
                   underlineColorAndroid="rgba(0,0,0,0)"
-                  {...this.props.inputProps}
+                  {...inputProps}
                 />
               </View>
             </View>
@@ -319,9 +337,8 @@ class TagInput<T> extends React.PureComponent<Props<T>, State> {
   };
 
   onScrollViewContentSizeChange = (w: number, h: number) => {
-    if (this.contentHeight === h) {
-      return;
-    }
+    if (this.contentHeight === h) return;
+
     const nextWrapperHeight = Math.min(this.props.maxHeight, h);
     if (nextWrapperHeight !== this.state.wrapperHeight) {
       this.setState(
@@ -350,29 +367,29 @@ class TagInput<T> extends React.PureComponent<Props<T>, State> {
 }
 
 type TagProps = {
-  index: number,
-  label: string,
-  isLastTag: boolean,
   editable: boolean,
+  index: number,
+  isLastTag: boolean,
+  label: string,
   onLayoutLastTag: (endPosOfTag: number) => void,
   removeIndex: (index: number) => void,
   tagColor: string,
-  tagTextColor: string,
   tagContainerStyle?: ViewPropTypes,
+  tagTextColor: string,
   tagTextStyle?: ViewPropTypes,
 };
 class Tag extends React.PureComponent<TagProps> {
   props: TagProps;
   static propTypes = {
-    index: PropTypes.number.isRequired,
-    label: PropTypes.string.isRequired,
-    isLastTag: PropTypes.bool.isRequired,
     editable: PropTypes.bool.isRequired,
+    index: PropTypes.number.isRequired,
+    isLastTag: PropTypes.bool.isRequired,
+    label: PropTypes.string.isRequired,
     onLayoutLastTag: PropTypes.func.isRequired,
     removeIndex: PropTypes.func.isRequired,
     tagColor: PropTypes.string.isRequired,
-    tagTextColor: PropTypes.string.isRequired,
     tagContainerStyle: ViewPropTypes.style,
+    tagTextColor: PropTypes.string.isRequired,
     tagTextStyle: Text.propTypes.style,
   };
   curPos: ?number = null;
@@ -389,23 +406,23 @@ class Tag extends React.PureComponent<TagProps> {
   }
 
   render() {
+    const {
+      editable,
+      label,
+      tagColor,
+      tagContainerStyle,
+      tagTextColor,
+      tagTextStyle,
+    } = this.props;
+
     return (
       <TouchableOpacity
-        disabled={!this.props.editable}
+        disabled={!editable}
         onPress={this.onPress}
         onLayout={this.onLayoutLastTag}
-        style={[
-          styles.tag,
-          { backgroundColor: this.props.tagColor },
-          this.props.tagContainerStyle,
-        ]}>
-        <Text
-          style={[
-            styles.tagText,
-            { color: this.props.tagTextColor },
-            this.props.tagTextStyle,
-          ]}>
-          {this.props.label}
+        style={[styles.tag, { backgroundColor: tagColor }, tagContainerStyle]}>
+        <Text style={[styles.tagText, { color: tagTextColor }, tagTextStyle]}>
+          {label}
           &nbsp;&times;
         </Text>
       </TouchableOpacity>
@@ -432,11 +449,12 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   wrapper: {
+    alignItems: 'flex-start',
     flex: 1,
     flexDirection: 'row',
-    marginTop: 3,
     marginBottom: 2,
-    alignItems: 'flex-start',
+    marginTop: 3,
+    marginHorizontal: 20,
   },
   tagInputContainerScroll: {
     flex: 1,
@@ -445,7 +463,10 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     flexWrap: 'wrap',
-    marginHorizontal: 20,
+  },
+  textInputContainer: {
+    height: 60,
+    marginTop: 2,
   },
   textInput: {
     height: 60,
@@ -453,10 +474,6 @@ const styles = StyleSheet.create({
     flex: 0.6,
     marginBottom: 6,
     textAlignVertical: 'center',
-  },
-  textInputContainer: {
-    height: 60,
-    marginTop: 2,
   },
   tag: {
     justifyContent: 'center',

@@ -845,7 +845,7 @@ const styles = StyleSheet.create({
   body: {
     alignItems: 'flex-start',
     height: width / 6 + 10,
-    marginLeft: 17,
+    marginHorizontal: 17,
     paddingTop: 18,
   },
   flex2AndCenter: {

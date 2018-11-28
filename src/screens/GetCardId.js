@@ -51,10 +51,6 @@ class GetCardId extends Component {
     tokenForCardIFrame: null,
   };
 
-  constructor(props) {
-    super(props);
-  }
-
   async componentDidMount() {
     const tokenForCardIFrame = await this.generateTokenForIFrame();
     console.log(tokenForCardIFrame);

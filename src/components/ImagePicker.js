@@ -84,8 +84,8 @@ export default class ImagePicker extends React.Component<Props, State> {
   };
 
   onImageClick = (index: number) => {
-    const { files, onImageClick } = this.props;
-    if (onImageClick) onImageClick(index, files);
+    const { onImageClick } = this.props;
+    if (onImageClick) onImageClick(index);
   };
 
   render() {

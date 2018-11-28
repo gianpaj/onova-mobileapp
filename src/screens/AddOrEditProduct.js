@@ -255,14 +255,24 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
 
       if (response.length) {
         // starts from i, increments with j
-        return await Promise.all(
-          response.map((image, j) =>
-            this.uploadImageTemporarilyAndAppend(image, i + j)
-          )
-        );
+        // await Promise.all(
+        //   response.map((image, j) =>
+        //     this.uploadImageTemporarilyAndAppend(image, i + j)
+        //   )
+        // );
+        for (let j = 0; j < response.length; j++) {
+          this.appendImageOrReplace({ isUploading: true }, j);
+        }
+        this.forceUpdate();
+        for (let j = 0; j < response.length; j++) {
+          await this.uploadImageTemporarilyAndAppend(response[j], i + j);
+        }
+        return;
       }
       // one image (from camera)
-      this.uploadImageTemporarilyAndAppend(response, i);
+      this.appendImageOrReplace({ isUploading: true }, i);
+      this.forceUpdate();
+      await this.uploadImageTemporarilyAndAppend(response, i);
     } catch (error) {
       console.log(error);
 
@@ -289,9 +299,8 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
           I18n.t('add_or_edit_item.image_too_small', { MIN_WIDTH, ...response })
         );
       }
-      this.setState({ isUploading: true });
-      this.appendImageOrReplace({ isUploading: true }, i);
-      this.forceUpdate();
+      // this.appendImageOrReplace({ isUploading: true }, i);
+      // this.forceUpdate();
 
       const data = await api.uploadTempImage(
         response.path,
@@ -304,7 +313,6 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
       ui.showToast(err.message || JSON.stringify(err), 'warning', '', 5);
       console.debug(err);
     }
-    this.setState({ isUploading: false });
   }
 
   appendSinglePhoto(path: string, i: number) {

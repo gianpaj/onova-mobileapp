@@ -4,6 +4,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import {
   Dimensions,
+  Platform,
   StyleSheet,
   View,
   Text,
@@ -51,6 +52,8 @@ const { width } = Dimensions.get('window');
 
 const brands = require('../assets/brands.json');
 
+const MIN_WIDTH = 1440;
+const MIN_HEIGHT = 1440;
 const IMAGE_WIDTH = 2560;
 const IMAGE_HEIGHT = 2560;
 const MAX_IMAGES = 6;
@@ -75,7 +78,11 @@ const imagePickerOptons = {
 };
 
 const CAMERA = I18n.t('add_or_edit_item.select_photo_source_camera');
-const GALLERY = I18n.t('add_or_edit_item.select_photo_source_gallery');
+const GALLERY =
+  Platform.OS == 'ios'
+    ? I18n.t('add_or_edit_item.select_photo_source_gallery_ios')
+    : I18n.t('add_or_edit_item.select_photo_source_gallery_android');
+
 const CANCEL = I18n.t('add_or_edit_item.select_photo_source_cancel');
 
 type Image = {
@@ -169,7 +176,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     this.selectPhotoTapped(0);
   }
 
-  selectPhotoTapped = (i: number = 0, multiple: boolean = true) => {
+  selectPhotoTapped = (i: number = 0) => {
     // development
     // this.appendSinglePhoto(
     //   'https://storage.googleapis.com/assets.onova.co/products/MS8mGgiHPi-1-1542904777176.jpg',
@@ -203,16 +210,14 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
       buttonIndex => {
         switch (buttonIndex) {
           case 0:
-            ImagePicker.openCamera({
-              ...imagePickerOptons,
-            })
+            ImagePicker.openCamera({ ...imagePickerOptons })
               .then(response => this.appendPhotos(response, i))
               .catch(() => this.goBackConditional());
             break;
           case 1:
             ImagePicker.openPicker({
               ...imagePickerOptons,
-              multiple,
+              multiple: true,
               smartAlbums: [
                 'UserLibrary',
                 'PhotoStream',
@@ -233,43 +238,56 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
   };
 
   async appendPhotos(response: Array<any> | any, i: number) {
-    if (response.length > 1) {
-      if (response.length + this.state.images.length > MAX_IMAGES) {
-        Toast.fail(I18n.t('add_or_edit_item.too_many_images'));
-        return console.debug('too many images');
-      }
-      for (let j = 0; j < response.length; j++) {
-        // starts from i, increments with j
-        this.uploadImagesTemporarilyAndAppend(response[j], i + j);
-      }
-    } else {
-      this.uploadImagesTemporarilyAndAppend(response, i);
+    if (
+      response.length &&
+      response.length + this.state.images.length > MAX_IMAGES
+    ) {
+      Toast.fail(I18n.t('add_or_edit_item.too_many_images'));
+      return console.debug('too many images');
     }
+    try {
+      this.setState({ isUploading: true });
+
+      // starts from i, increments with j
+      await Promise.all(
+        response.map((image, j) =>
+          this.uploadImageTemporarilyAndAppend(image, i + j)
+        )
+      );
+    } catch (error) {
+      console.log(error);
+
+      ui.showToast(err.message || JSON.stringify(err), 'warning', '', 5);
+    }
+    this.setState({ isUploading: false });
   }
 
+  /*
   onUploadProgress = (progressEvent: any) => {
     const progress = Math.round(
       (progressEvent.loaded * 100) / progressEvent.total
     );
-    // console.log(progress);
     this.setState({ progress });
   };
+  */
 
-  async uploadOneImageTemporarilyAndAppend(
-    response: Array<any> | any,
-    i: number
-  ) {
+  async uploadImageTemporarilyAndAppend(response: Array<any> | any, i: number) {
     const { token } = this.props;
 
-    this.setState({ isUploading: true, progress: 100 });
-    const image = { isUploading: true };
-
     try {
-      this.appendImageOrReplace(image, i);
+      if (response.width < MIN_WIDTH || response.height < MIN_HEIGHT) {
+        throw new Error(
+          I18n.t('add_or_edit_item.image_too_small', { MIN_WIDTH, ...response })
+        );
+      }
+      this.setState({ isUploading: true });
+      this.appendImageOrReplace({ isUploading: true }, i);
+      this.forceUpdate();
+
       const data = await api.uploadTempImage(
         response.path,
-        token,
-        this.onUploadProgress
+        token
+        // this.onUploadProgress
       );
       this.appendSinglePhoto(data, i);
     } catch (err) {
@@ -277,16 +295,18 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
       ui.showToast(err.message || JSON.stringify(err), 'warning', '', 5);
       console.debug(err);
     }
-    this.setState({ isUploading: false, progress: 100 });
+    this.setState({ isUploading: false });
   }
 
   appendSinglePhoto(path: string, i: number) {
-    const image = {
-      url: path,
-      id: i,
-      isUploading: false,
-    };
-    this.appendImageOrReplace(image, i);
+    this.appendImageOrReplace(
+      {
+        url: path,
+        id: i,
+        isUploading: false,
+      },
+      i
+    );
   }
 
   removeSinglePhoto = (index: number) =>
@@ -365,16 +385,15 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     };
 
     try {
-      let res;
       if (inEditMode) {
-        res = await this.uploadEditedProduct(uuid, data);
+        const res = await this.uploadEditedProduct(uuid, data);
+        console.debug(res);
       } else {
         // return the data to the CreateDrop screen
         this.props.navigation.state.params.returnData(data);
       }
       this.props.dispatch(enableRefresh());
       this.goBack();
-      console.debug(res);
     } catch (err) {
       console.debug(err);
       ui.showToast(err.message, 'warning');
@@ -383,20 +402,20 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     Toast.hide();
   };
 
-  uploadEditedProduct = (uuid: string, data: any): Promise<any> => {
-    const { token } = this.props;
-    return api.put(`/api/products/${uuid}`, data, { token, timeout: 30000 });
-  };
+  uploadEditedProduct = (uuid: string, data: any): Promise<any> =>
+    api.put(`/api/products/${uuid}`, data, {
+      token: this.props.token,
+      timeout: 30000,
+    });
 
   /**
    * triggers only when a tag is deleted
    */
   changeTags = (tags: Array<string>) => {
     // if there no are any brands in the hashtags
-    let found = this.state.tags.some(r => brands.brands.indexOf(r) >= 0);
-    if (!found) {
-      this.setState({ numberOfBrands: 0 });
-    }
+    const found = this.state.tags.some(r => brands.brands.indexOf(r) >= 0);
+    if (!found) this.setState({ numberOfBrands: 0 });
+
     this.setState({ tags });
   };
 
@@ -536,12 +555,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
                   </NBButton>
                 </Left>
                 <Body style={styles.flex2AndCenter}>
-                  <Title
-                    style={{
-                      color: colors.black,
-                      marginLeft: 22,
-                      marginRight: 5,
-                    }}>
+                  <Title style={styles.title}>
                     {inEditMode
                       ? I18n.t('add_or_edit_item.edit_item_header')
                       : I18n.t('add_or_edit_item.add_item_header')}
@@ -572,16 +586,10 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
                 </Right>
               </Header>
               <Content>
-                <View
-                  style={{
-                    alignItems: 'flex-start',
-                    height: width / 6 + 10,
-                    marginLeft: 17,
-                    paddingTop: 18,
-                  }}>
+                <View style={styles.body}>
                   <AntImagePicker
                     files={images}
-                    onImageClick={i => this.selectPhotoTapped(i, false)}
+                    onImageClick={this.selectPhotoTapped}
                     onAddImageClick={() =>
                       this.selectPhotoTapped(images.length)
                     }
@@ -767,8 +775,8 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
             </Container>
           )}
         </Foect.Form>
-        {this.renderInfoDialog()}
-        {this.renderPriceDialog()}
+        {this.renderInfoDialogs}
+        {this.renderPriceDialog}
       </React.Fragment>
     );
   }
@@ -778,53 +786,49 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
       dialogInfoVisible: !prevState.dialogInfoVisible,
     }));
 
-  renderInfoDialog() {
-    return (
-      <React.Fragment>
-        <Dialog.Container
-          visible={this.state.dialogInfoVisible}
-          onBackdropPress={this.toggleInfoDialog}
-          onBackButtonPress={this.toggleInfoDialog}
-          renderToHardwareTextureAndroid>
-          <Dialog.Description style={{ textAlign: 'justify' }}>
-            {I18n.t('add_or_edit_item.info_popup')}
-          </Dialog.Description>
-          <Dialog.Button
-            label={I18n.t('product.toast_warning_ok_button')}
-            onPress={this.toggleInfoDialog}
-          />
-        </Dialog.Container>
-      </React.Fragment>
-    );
-  }
+  renderInfoDialog = (
+    <React.Fragment>
+      <Dialog.Container
+        visible={this.state.dialogInfoVisible}
+        onBackdropPress={this.toggleInfoDialog}
+        onBackButtonPress={this.toggleInfoDialog}
+        renderToHardwareTextureAndroid>
+        <Dialog.Description style={{ textAlign: 'justify' }}>
+          {I18n.t('add_or_edit_item.info_popup')}
+        </Dialog.Description>
+        <Dialog.Button
+          label={I18n.t('product.toast_warning_ok_button')}
+          onPress={this.toggleInfoDialog}
+        />
+      </Dialog.Container>
+    </React.Fragment>
+  );
 
   togglePriceDialog = () =>
     this.setState(prevState => ({
       dialogPriceVisible: !prevState.dialogPriceVisible,
     }));
 
-  renderPriceDialog() {
-    return (
-      <React.Fragment>
-        <Dialog.Container
-          visible={this.state.dialogPriceVisible}
-          onBackdropPress={this.togglePriceDialog}
-          onBackButtonPress={this.togglePriceDialog}
-          renderToHardwareTextureAndroid>
-          <Dialog.Title>
-            {I18n.t('add_or_edit_item.price_popup_title')}
-          </Dialog.Title>
-          <Dialog.Description style={{ textAlign: 'justify' }}>
-            {I18n.t('add_or_edit_item.price_popup_body')}
-          </Dialog.Description>
-          <Dialog.Button
-            label={I18n.t('product.toast_warning_ok_button')}
-            onPress={this.togglePriceDialog}
-          />
-        </Dialog.Container>
-      </React.Fragment>
-    );
-  }
+  renderPriceDialog = (
+    <React.Fragment>
+      <Dialog.Container
+        visible={this.state.dialogPriceVisible}
+        onBackdropPress={this.togglePriceDialog}
+        onBackButtonPress={this.togglePriceDialog}
+        renderToHardwareTextureAndroid>
+        <Dialog.Title>
+          {I18n.t('add_or_edit_item.price_popup_title')}
+        </Dialog.Title>
+        <Dialog.Description style={{ textAlign: 'justify' }}>
+          {I18n.t('add_or_edit_item.price_popup_body')}
+        </Dialog.Description>
+        <Dialog.Button
+          label={I18n.t('product.toast_warning_ok_button')}
+          onPress={this.togglePriceDialog}
+        />
+      </Dialog.Container>
+    </React.Fragment>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -832,6 +836,17 @@ const styles = StyleSheet.create({
     alignItems: 'stretch',
     flex: 1,
     justifyContent: 'center',
+  },
+  title: {
+    color: colors.black,
+    marginLeft: 22,
+    marginRight: 5,
+  },
+  body: {
+    alignItems: 'flex-start',
+    height: width / 6 + 10,
+    marginLeft: 17,
+    paddingTop: 18,
   },
   flex2AndCenter: {
     alignItems: 'center',

@@ -174,6 +174,8 @@ export default {
     select_photo_source_gallery_android: 'Галерея (група зображень)',
     select_photo_source_cancel: 'Відмінити',
     too_many_images: 'Дозвелоно максимум 6 зображень',
+    image_too_small:
+      'Зображення низької якості. Мінімальна ширина та висота {{MIN_WIDTH}} px. Надане зображення {{width}}x{{height}} px',
     min_price: 'Мінімальна ціна Х',
     info_popup: `Чим якісніші твої фотографії тим більше ймовірності в тебе щось придбають:
 

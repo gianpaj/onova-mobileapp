@@ -775,8 +775,8 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
             </Container>
           )}
         </Foect.Form>
-        {this.renderInfoDialogs}
-        {this.renderPriceDialog}
+        {this.renderInfoDialog()}
+        {this.renderPriceDialog()}
       </React.Fragment>
     );
   }
@@ -786,7 +786,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
       dialogInfoVisible: !prevState.dialogInfoVisible,
     }));
 
-  renderInfoDialog = (
+  renderInfoDialog = () => (
     <React.Fragment>
       <Dialog.Container
         visible={this.state.dialogInfoVisible}
@@ -809,7 +809,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
       dialogPriceVisible: !prevState.dialogPriceVisible,
     }));
 
-  renderPriceDialog = (
+  renderPriceDialog = () => (
     <React.Fragment>
       <Dialog.Container
         visible={this.state.dialogPriceVisible}

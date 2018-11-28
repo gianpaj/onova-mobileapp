@@ -409,7 +409,7 @@ export class SignUpTabContainer extends Component<Props, State> {
     );
   }
 
-  renderVerifyAccountModal = (
+  renderVerifyAccountModal = () => (
     <Modal
       animationType="slide"
       visible={this.state.isVerifyAccountModalVisible}

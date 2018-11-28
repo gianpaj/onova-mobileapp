@@ -127,9 +127,9 @@ http://onova.co/uploader
     action_button_report: 'Report',
     toast_uploading: 'Saving...',
     notice_bar_account_verification:
-      'Ми надіслали вам підтвердження на вказану електронну адресу',
+      'Check your inbox for a confirmation email',
     notice_bar_location_not_gathered:
-      'Увімкніть геолокацію для відображення ваших речей',
+      "Couldn't gather you location. It's needed to display the item city",
     notice_bar_location_not_gathered_button: 'Повторити',
   },
   search: {
@@ -185,7 +185,9 @@ http://onova.co/uploader
 Слідкуй щоб весь товар влізав в квадрат зображення і роби фото з різних сторін товару
 
 3. Став свій тег
-Якщо хочеш додаткової довіри з боку покупця - просто напиши десь на листочку і постав свій @username в фото.`,
+Якщо хочеш додаткової довіри з боку покупця - просто напиши десь на листочку і постав свій @username в фото.
+
+З галереї можна обирати кілька фотографій одразу для завантаження`,
   },
   create_drop: {
     title: 'Create Drop',

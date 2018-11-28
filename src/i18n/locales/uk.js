@@ -125,9 +125,9 @@ export default {
     action_button_report: 'Поскаржитись',
     toast_uploading: 'Завантажуємо зображення...',
     notice_bar_account_verification:
-      'Check your inbox for a confirmation email',
+      'Ми надіслали вам підтвердження на вказану електронну адресу',
     notice_bar_location_not_gathered:
-      "Couldn't gather you location. It's needed to display the item city",
+      'Увімкніть геолокацію для відображення ваших речей',
     notice_bar_location_not_gathered_button: 'Retry',
   },
   search: {

@@ -607,7 +607,10 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
                 <View style={styles.body}>
                   <AntImagePicker
                     files={images}
-                    onImageClick={this.selectPhotoTapped}
+                    onImageClick={index => {
+                      !this.state.images[index].isUploading &&
+                        this.selectPhotoTapped(index);
+                    }}
                     onAddImageClick={() =>
                       this.selectPhotoTapped(images.length)
                     }

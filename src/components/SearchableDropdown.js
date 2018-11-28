@@ -61,7 +61,8 @@ export default class SearchableDropDown extends Component {
 
   _keyExtractor = item => item.id;
 
-  renderList = this.state.focus &&
+  renderList = () =>
+    this.state.focus &&
     this.state.items.length && (
       <FlatList
         style={this.props.itemsContainerStyle}
@@ -206,7 +207,7 @@ export default class SearchableDropDown extends Component {
           }
           error={error}
         />
-        {this.renderList}
+        {this.renderList()}
       </View>
     );
   }

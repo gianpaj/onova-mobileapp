@@ -120,13 +120,14 @@ class NotificationsContainer extends Component<Props, State> {
     });
   };
 
-  renderFooter = this.state.lastId === '' && (
-    <View style={styles.container}>
-      <Button full light onPress={this.loadMore}>
-        <Text>{I18n.t('notifications.load_more_button')}</Text>
-      </Button>
-    </View>
-  );
+  renderFooter = () =>
+    this.state.lastId === '' && (
+      <View style={styles.container}>
+        <Button full light onPress={this.loadMore}>
+          <Text>{I18n.t('notifications.load_more_button')}</Text>
+        </Button>
+      </View>
+    );
 
   goToProfile = (user: UserData) => {
     const { _id } = this.props.userData;

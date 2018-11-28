@@ -56,8 +56,8 @@ class SearchProductsResultsContainer extends Component<Props, State> {
     category_radio_grp_2.find(g => g.value == num).label;
 
   render() {
-    if (!this.state.terms) return null;
     const { terms } = this.state;
+    if (!terms) return null;
 
     return (
       <View style={styles.flex1}>

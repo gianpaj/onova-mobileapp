@@ -203,11 +203,12 @@ class ImageGridComponent extends React.Component<Props, State> {
     );
   };
 
-  renderFooter = this.state.isRefreshing && (
-    <View style={{ paddingVertical: 20 }}>
-      <ActivityIndicator size="large" />
-    </View>
-  );
+  renderFooter = () =>
+    this.state.isRefreshing && (
+      <View style={{ paddingVertical: 20 }}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
 
   renderLoading = () => (
     <View style={styles.container}>

@@ -213,13 +213,14 @@ class ImageGridComponent extends React.PureComponent<Props, State> {
     );
   };
 
-  renderFooter = this.state.isRefreshing && (
-    <View style={{ paddingVertical: 20 }}>
-      <ActivityIndicator size="large" />
-    </View>
-  );
+  renderFooter = () =>
+    this.state.isRefreshing && (
+      <View style={{ paddingVertical: 20 }}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
 
-  renderLoading = () => (
+  renderLoading = (
     <View style={styles.container}>
       <ActivityIndicator size="large" />
     </View>
@@ -230,7 +231,7 @@ class ImageGridComponent extends React.PureComponent<Props, State> {
 
     if (this.firstFocus) return null;
 
-    if (!hasError && isLoading) return this.renderLoading();
+    if (!hasError && isLoading) return this.renderLoading;
 
     return (
       <View style={styles.container}>

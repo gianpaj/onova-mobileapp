@@ -24,6 +24,7 @@ import type { UserData, Dispatch, ReduxState } from '../types';
 
 type Props = {
   dispatch: Dispatch,
+  focused: boolean,
   navigation: NavigationScreenProp<*>,
   token: string,
 };
@@ -41,6 +42,10 @@ class SearchSellersTabContainer extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.search = React.createRef();
+  }
+
+  componentDidUpdate() {
+    this.props.focused && this.search.current.focus();
   }
 
   state = {
@@ -87,43 +92,42 @@ class SearchSellersTabContainer extends Component<Props, State> {
     });
   };
 
-  renderEmptyState = this.state.showingResults && (
-    <View style={styles.container}>
-      <Text>
-        {this.state.hasError
-          ? I18n.t('search.error')
-          : I18n.t('search.empty_state_message')}
-      </Text>
-    </View>
-  );
+  renderEmptyState = () =>
+    this.state.showingResults && (
+      <View style={styles.container}>
+        <Text>
+          {this.state.hasError
+            ? I18n.t('search.error')
+            : I18n.t('search.empty_state_message')}
+        </Text>
+      </View>
+    );
 
   _keyExtractor = (item): string => item._id;
 
   _renderSeparator = <View style={styles.separator} />;
 
   // eslint-disable-next-line react/no-unused-prop-types
-  _renderItem = ({ item: user }: { item: UserData }) => {
-    return (
-      <TouchableHighlight
-        underlayColor={colors.grey4}
-        onPress={() => this.goToProfile(user)}>
-        <View style={styles.itemContainer}>
-          <Avatar
-            size={'verySmall'}
-            uri={user.profilePic}
-            placeholderText={user.username}
-          />
-          <View style={[styles.flex1, styles.content]}>
-            <View style={styles.contentHeader}>
-              <Text style={styles.name}>{user.username}</Text>
-            </View>
-            <Text numberOfLines={1}>{user.username}</Text>
+  _renderItem = ({ item: user }: { item: UserData }) => (
+    <TouchableHighlight
+      underlayColor={colors.grey4}
+      onPress={() => this.goToProfile(user)}>
+      <View style={styles.itemContainer}>
+        <Avatar
+          size={'verySmall'}
+          uri={user.profilePic}
+          placeholderText={user.username}
+        />
+        <View style={[styles.flex1, styles.content]}>
+          <View style={styles.contentHeader}>
+            <Text style={styles.name}>{user.username}</Text>
           </View>
-          <Icon size={28} name="chevron-right" color={colors.grey4} />
+          <Text numberOfLines={1}>{user.username}</Text>
         </View>
-      </TouchableHighlight>
-    );
-  };
+        <Icon size={28} name="chevron-right" color={colors.grey4} />
+      </View>
+    </TouchableHighlight>
+  );
 
   clearResults = () => this.setState({ data: [], showingResults: false });
 
@@ -131,53 +135,52 @@ class SearchSellersTabContainer extends Component<Props, State> {
     const { isLoading } = this.state;
 
     return (
-      <View style={styles.flex1}>
-        <FlatList
-          data={this.state.data}
-          ItemSeparatorComponent={this._renderSeparator}
-          ListHeaderComponent={
-            <View
-              style={{
-                alignSelf: 'center',
-                marginVertical: 30,
-                width: 280,
-              }}>
-              <SearchBar
-                ref={this.search}
-                autoCapitalize="none"
-                autoCorrect={false}
-                blurOnSubmit={false}
-                containerStyle={{
-                  backgroundColor: colors.white,
-                  borderTopWidth: 0,
-                  borderBottomWidth: 0,
-                }}
-                underlineColorAndroid={colors.black}
-                onClearText={this.clearResults}
-                clearButtonMode="while-editing" // iOS
-                // enablesReturnKeyAutomatically // iOS
-                icon={{ type: 'feather', name: 'at-sign', color: colors.grey1 }}
-                lightTheme
-                maxLength={30}
-                onChangeText={this.onChangeText}
-                onSubmitEditing={this.onSearch}
-                placeholder={I18n.t('search.username_placeholder')}
-                showLoadingIcon={isLoading}
-                placeholderTextColor={colors.grey1}
-                inputStyle={{
-                  backgroundColor: colors.white,
-                  color: this.isSearchEnabled() ? colors.black : colors.red,
-                }}
-                returnKeyType="search"
-                value={this.state.text}
-              />
-            </View>
-          }
-          keyExtractor={this._keyExtractor}
-          ListEmptyComponent={this.renderEmptyState}
-          renderItem={this._renderItem}
-        />
-      </View>
+      <FlatList
+        data={this.state.data}
+        ItemSeparatorComponent={this._renderSeparator}
+        ListHeaderComponent={
+          <View
+            style={{
+              alignSelf: 'center',
+              marginVertical: 30,
+              width: 280,
+            }}>
+            <SearchBar
+              ref={this.search}
+              autoCapitalize="none"
+              autoCorrect={false}
+              autoFocus={this.props.focused}
+              blurOnSubmit={false}
+              clearButtonMode="while-editing" // iOS
+              containerStyle={{
+                backgroundColor: colors.white,
+                borderTopWidth: 0,
+                borderBottomWidth: 0,
+              }}
+              // enablesReturnKeyAutomatically // iOS
+              icon={{ type: 'feather', name: 'at-sign', color: colors.grey1 }}
+              inputStyle={{
+                backgroundColor: colors.white,
+                color: this.isSearchEnabled() ? colors.black : colors.red,
+              }}
+              lightTheme
+              maxLength={30}
+              onChangeText={this.onChangeText}
+              onClearText={this.clearResults}
+              onSubmitEditing={this.onSearch}
+              placeholder={I18n.t('search.username_placeholder')}
+              placeholderTextColor={colors.grey1}
+              returnKeyType="search"
+              showLoadingIcon={isLoading}
+              underlineColorAndroid={colors.black}
+              value={this.state.text}
+            />
+          </View>
+        }
+        keyExtractor={this._keyExtractor}
+        ListEmptyComponent={this.renderEmptyState}
+        renderItem={this._renderItem}
+      />
     );
   }
 }

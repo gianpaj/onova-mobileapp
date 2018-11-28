@@ -69,12 +69,12 @@ export class Home extends PureComponent<Props, State> {
     />
   );
 
-  _renderScene = ({ route, navigationState }) => {
+  _renderScene = ({ route, navigationState: { index } }) => {
     switch (route.key) {
       case 'clothes':
         return (
           <ImageGrid
-            focused={navigationState.index === 0}
+            focused={index === 0}
             apiURL="/api/feed/flat/?categoryIds=0"
             navigation={this.props.navigation}
           />
@@ -82,7 +82,7 @@ export class Home extends PureComponent<Props, State> {
       case 'shoes':
         return (
           <ImageGrid
-            focused={navigationState.index === 1}
+            focused={index === 1}
             apiURL="/api/feed/flat/?categoryIds=1"
             navigation={this.props.navigation}
           />
@@ -90,7 +90,7 @@ export class Home extends PureComponent<Props, State> {
       case 'other':
         return (
           <ImageGrid
-            focused={navigationState.index === 2}
+            focused={index === 2}
             apiURL="/api/feed/flat/?categoryIds=2"
             navigation={this.props.navigation}
           />

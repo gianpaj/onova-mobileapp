@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Dimensions, StyleSheet } from 'react-native';
 import { Body, Container, Title, Left, Right } from 'native-base';
-import { TabView, TabBar, SceneMap } from 'react-native-tab-view';
+import { TabView, TabBar } from 'react-native-tab-view';
 
 import { SearchWithHasthagsTab } from './SearchWithHasthagsTab';
 import { SearchSellersTab } from './SearchSellersTab';
@@ -50,10 +50,16 @@ class SearchContainer extends Component<Props, State> {
     />
   );
 
-  _renderScene = SceneMap({
-    tags: SearchWithHasthagsTab,
-    sellers: SearchSellersTab,
-  });
+  _renderScene = ({ route, navigationState: { index } }) => {
+    switch (route.key) {
+      case 'tags':
+        return <SearchWithHasthagsTab focused={index === 0} />;
+      case 'sellers':
+        return <SearchSellersTab focused={index === 1} />;
+      default:
+        return null;
+    }
+  };
 
   render() {
     return (

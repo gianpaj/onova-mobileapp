@@ -22,6 +22,7 @@ import { category_radio_grp_1, category_radio_grp_2 } from '../utils/ui';
 import type { ReduxState } from '../types';
 
 type Props = {
+  focused: boolean,
   navigation: NavigationScreenProp<*>,
 };
 
@@ -45,6 +46,14 @@ class SearchWithHasthagsTabContainer extends Component<Props, State> {
     grp_1: -1,
     grp_2: -1,
   };
+
+  componentDidMount() {
+    this.search.current.focus();
+  }
+
+  componentDidUpdate() {
+    this.props.focused && this.search.current.focus();
+  }
 
   onSearch = () => {
     if (!this.isSearchEnabled()) return;
@@ -120,27 +129,27 @@ class SearchWithHasthagsTabContainer extends Component<Props, State> {
               autoCapitalize="none"
               autoCorrect={false}
               blurOnSubmit={false}
+              clearButtonMode="while-editing" // iOS
               containerStyle={{
                 backgroundColor: colors.white,
                 borderTopWidth: 0,
                 borderBottomWidth: 0,
               }}
-              underlineColorAndroid={colors.black}
-              clearButtonMode="while-editing" // iOS
               // enablesReturnKeyAutomatically // iOS
               icon={{ type: 'feather', name: 'hash', color: colors.grey1 }}
+              inputStyle={{
+                backgroundColor: colors.white,
+                color: this.isSearchEnabled() ? colors.black : colors.red,
+              }}
               lightTheme
               maxLength={50}
               onChangeText={this.onChangeText}
               onSubmitEditing={this.onSearch}
               placeholder={I18n.t('search.hashtag_placeholder')}
-              showLoadingIcon={isLoading}
               placeholderTextColor={colors.grey1}
-              inputStyle={{
-                backgroundColor: colors.white,
-                color: this.isSearchEnabled() ? colors.black : colors.red,
-              }}
               returnKeyType="search"
+              showLoadingIcon={isLoading}
+              underlineColorAndroid={colors.black}
               value={this.state.text}
             />
           </View>

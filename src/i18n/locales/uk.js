@@ -128,7 +128,7 @@ export default {
       'Ми надіслали вам підтвердження на вказану електронну адресу',
     notice_bar_location_not_gathered:
       'Увімкніть геолокацію для відображення ваших речей',
-    notice_bar_location_not_gathered_button: 'Retry',
+    notice_bar_location_not_gathered_button: 'Повторити',
   },
   search: {
     header: 'Пошук',

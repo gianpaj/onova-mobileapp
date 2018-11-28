@@ -130,7 +130,7 @@ http://onova.co/uploader
       'Check your inbox for a confirmation email',
     notice_bar_location_not_gathered:
       "Couldn't gather you location. It's needed to display the item city",
-    notice_bar_location_not_gathered_button: 'Повторити',
+    notice_bar_location_not_gathered_button: 'Retry',
   },
   search: {
     header: 'Search',

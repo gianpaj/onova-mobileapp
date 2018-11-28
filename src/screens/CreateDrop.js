@@ -193,6 +193,7 @@ export class CreateDropScreen extends React.Component<Props, State> {
               onPress: this.requestPermission,
             }
           : {
+              // 'restricted' || 'denied'
               text: I18n.t('create_drop.permission_alert_button_settings'),
               onPress: () => {
                 if (Platform.OS === 'ios') {
@@ -202,13 +203,15 @@ export class CreateDropScreen extends React.Component<Props, State> {
                 RNAndroidLocationEnabler.promptForEnableLocationIfNeeded({
                   interval: 10000,
                   fastInterval: 5000,
-                }).catch(err => {
-                  // ERR00 : The user canceled the popup
-                  // ERR01 : If the Settings change are unavailable
-                  // ERR02 : If the popup has failed to open
-                  console.debug(err);
-                  // this.closeModal();
-                });
+                })
+                  .then(() => this.getLocationAndInitiate())
+                  .catch(err => {
+                    // ERR00 : The user canceled the popup
+                    // ERR01 : If the Settings change are unavailable
+                    // ERR02 : If the popup has failed to open
+                    console.debug(err);
+                    // this.closeModal();
+                  });
                 // this.closeModal();
               },
             },
@@ -221,7 +224,7 @@ export class CreateDropScreen extends React.Component<Props, State> {
     Permissions.request('location').then(response => {
       // Returns once the user has chosen to 'allow' or to 'not allow' access
       // Response is one of: 'authorized', 'denied', 'restricted' or 'undetermined'
-      if (response === 'authorized') this.tryToGetLocationAndInitiate();
+      if (response === 'authorized') this.getLocationAndInitiate();
     });
   };
 

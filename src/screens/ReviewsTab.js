@@ -8,16 +8,17 @@ import {
   // Image,
   RefreshControl,
   StyleSheet,
-  Text,
   View,
 } from 'react-native';
 import { withNavigation } from 'react-navigation';
+import ParsedText from 'react-native-parsed-text';
 
 import I18n from '../i18n';
 import colors from '../config/colors';
 import * as api from '../utils/api';
 import { addErrorBreadcrumb } from '../utils/analytics';
 import ReviewCard from '../components/ReviewCard';
+import * as linking from '../utils/linking';
 
 import type { NavigationScreenProp } from 'react-navigation';
 
@@ -104,9 +105,18 @@ class ReviewsTabContainer extends Component<Props, State> {
 
   renderEmptyState = (
     <View style={styles.emptyStateContainer}>
-      <Text style={{ textAlign: 'center' }}>
+      <ParsedText
+        style={styles.emptyText}
+        parse={[
+          { type: 'email', style: styles.url, onPress: linking.email },
+          // {
+          //   pattern: /[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{2,3}[-\s\.]?[0-9]{2,3}/,
+          //   style: styles.url,
+          //   onPress: linking.call,
+          // },
+        ]}>
         {I18n.t('reviews.empty_state_message')}
-      </Text>
+      </ParsedText>
     </View>
   );
 
@@ -156,6 +166,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: 20,
   },
+  emptyText: {
+    marginTop: 4,
+    margin: 18,
+    textAlign: 'center',
+  },
   root: {
     height: '100%',
   },
@@ -165,5 +180,9 @@ const styles = StyleSheet.create({
   separator: {
     height: StyleSheet.hairlineWidth,
     backgroundColor: colors.grey5,
+  },
+  url: {
+    color: colors.active,
+    textDecorationLine: 'underline',
   },
 });

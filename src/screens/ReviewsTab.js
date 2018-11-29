@@ -17,8 +17,9 @@ import I18n from '../i18n';
 import colors from '../config/colors';
 import * as api from '../utils/api';
 import { addErrorBreadcrumb } from '../utils/analytics';
-import ReviewCard from '../components/ReviewCard';
 import * as linking from '../utils/linking';
+
+import ReviewCard from '../components/ReviewCard';
 
 import type { NavigationScreenProp } from 'react-navigation';
 
@@ -30,6 +31,7 @@ type Props = {
   as: string,
   navigation: NavigationScreenProp<*>,
   token: string,
+  userData: UserData,
 };
 
 type State = {
@@ -125,7 +127,12 @@ class ReviewsTabContainer extends Component<Props, State> {
   _renderSeparator = <View style={styles.separator} />;
 
   _renderItem = ({ item }) => (
-    <ReviewCard order={item} as={this.props.as} onPress={this.goToProfile} />
+    <ReviewCard
+      as={this.props.as}
+      onPress={this.goToProfile}
+      order={item}
+      userData={this.props.userData}
+    />
   );
 
   render() {
@@ -153,6 +160,7 @@ class ReviewsTabContainer extends Component<Props, State> {
 // Inject dispatch and userData
 const mapStateToProps: any = (state: ReduxState) => ({
   token: state.LoginReducer.token,
+  userData: state.LoginReducer.data,
 });
 
 export const ReviewsTab = withNavigation(

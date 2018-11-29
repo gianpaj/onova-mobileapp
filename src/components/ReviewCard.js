@@ -27,27 +27,26 @@ type Props = {
   as: string,
   order: Order,
   onPress: (reviewer: UserData) => void,
+  userData: UserData,
 };
 
 class ReviewCard extends PureComponent<Props> {
   render() {
-    const { order } = this.props;
+    const { order, userData } = this.props;
 
     let reviewer = order.buyer;
     let review = order.reviewFromSeller;
 
     if (this.props.as === 'seller') {
-      console.log(this.props.as);
       reviewer = order.seller;
       review = order.reviewFromBuyer;
     }
     if (!review) {
-      console.log('not a review');
-      reviewer = order.seller;
+      const iAmTheBuyer =
+        userData._id.toString() === order.buyer._id.toString();
+      reviewer = order.buyer;
+      if (iAmTheBuyer) reviewer = order.seller;
     }
-    console.log(order);
-    console.log('reviewer');
-    console.log(reviewer);
 
     const uri = order.product.photoURIs[0].replace('.jpg', '-thumb.jpg');
 

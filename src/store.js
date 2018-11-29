@@ -38,6 +38,9 @@ const rootReducer = combineReducers({
   RefresherReducer,
 });
 
+// TODO: create reducer to keep track screen navigations
+// Analytics.screen('Photo Screen', { feed: 'private' });
+
 if (__DEV__) {
   console.debug('__DEV__ mode on');
 }

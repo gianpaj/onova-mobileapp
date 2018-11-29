@@ -267,28 +267,33 @@ class ProfileScreen extends React.Component<Props, State> {
         cancelButtonIndex: BUTTONS.indexOf(CANCEL),
       },
       buttonIndex => {
-        if (buttonIndex == BUTTONS.indexOf(REPORT)) {
-          Modal.prompt(
-            I18n.t('profile.alert_report_title'),
-            I18n.t('alerts.report_subtitle'),
-            [
-              { text: CANCEL },
-              {
-                text: REPORT,
-                onPress: t => this.onReport(t),
-              },
-            ],
-            'default',
-            ''
-          );
-        } else if (buttonIndex == BUTTONS.indexOf(BLOCK)) {
-          ui.showConfirmAlert(
-            I18n.t('profile.alert_block_title'),
-            I18n.t('profile.alert_block_subtitle'),
-            () => this.onBlock()
-          );
-        } else {
-          console.debug('Cancel');
+        switch (buttonIndex) {
+          case BUTTONS.indexOf(REPORT):
+            Modal.prompt(
+              I18n.t('profile.alert_report_title'),
+              I18n.t('alerts.report_subtitle'),
+              [
+                { text: CANCEL },
+                {
+                  text: REPORT,
+                  onPress: this.onReport,
+                },
+              ],
+              'default',
+              ''
+            );
+            break;
+          case BUTTONS.indexOf(BLOCK):
+            ui.showConfirmAlert(
+              I18n.t('profile.alert_block_title'),
+              I18n.t('profile.alert_block_subtitle'),
+              () => this.onBlock()
+            );
+            break;
+
+          default:
+            console.debug('Cancelled reporting');
+            break;
         }
       }
     );

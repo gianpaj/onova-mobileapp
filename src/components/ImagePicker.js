@@ -129,7 +129,6 @@ export default class ImagePicker extends React.Component<Props, State> {
       index={index}
       imagePerRow={this.props.imagePerRow}
       removeImage={() => this.props.enabled && this.removeImage(index)}
-      styles={styles}
     />
   );
 }
@@ -141,7 +140,6 @@ type RowProps = {
     isUploading: boolean,
   },
   removeImage: () => void,
-  styles: IImagePickerStyle,
 };
 
 class Row extends React.Component<RowProps> {
@@ -181,7 +179,7 @@ class Row extends React.Component<RowProps> {
   }
 
   render() {
-    let { data, styles, removeImage } = this.props;
+    const { data, removeImage } = this.props;
 
     const style = [square, { margin: imageMargin - 1 }, styles.image];
 
@@ -211,6 +209,7 @@ class Row extends React.Component<RowProps> {
 const styles = StyleSheet.create({
   ...imagePickerStyle,
   image: {
+    ...imagePickerStyle.image,
     margin: imageMargin,
   },
   row: {

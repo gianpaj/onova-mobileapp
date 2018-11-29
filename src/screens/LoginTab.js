@@ -52,10 +52,12 @@ if (__DEV__ && !global.__TESTING__) {
 
   if (isProd) {
     defaultState = {
-      emailAddress: 'gianfranco_p@hotmail.com',
-      password: '***REMOVED***007',
+      // emailAddress: 'gianfranco_p@hotmail.com',
+      // password: '***REMOVED***007',
       // emailAddress: 'gianpa@gmail.com',
       // password: '***REMOVED***',
+      emailAddress: 'isho@ukr.net',
+      password: 'qwe123qwe123',
     };
   }
 }

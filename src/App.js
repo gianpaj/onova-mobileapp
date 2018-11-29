@@ -17,6 +17,8 @@ import { analyticsEnabled, config } from './utils/api';
 
 const { store, persistor } = configureStore();
 const segmentOptions = {
+  // track app lifecycle events such as "Application Installed", "Application Updated" and "Application Opened".
+  [AnalyticsConstants.trackApplicationLifecycleEvents]: true,
   [AnalyticsConstants.enableAdvertisingTracking]: false,
 };
 
@@ -40,7 +42,12 @@ export default class App extends React.Component<*> {
     }
   }
 
+  componentWillUnmount() {
+    if (analyticsEnabled) Analytics.flush();
+  }
+
   enableSegmentCom() {
+    // FIXME: Analytics is already set up, cannot perform setup twice.
     Analytics.setup(config.SEGMENT_API, segmentOptions);
     Sentry.captureBreadcrumb({
       category: 'analytics',

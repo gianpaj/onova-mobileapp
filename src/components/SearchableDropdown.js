@@ -61,18 +61,19 @@ export default class SearchableDropDown extends Component {
 
   _keyExtractor = item => item.id;
 
-  renderList = () =>
-    this.state.focus &&
-    this.state.items.length && (
+  renderList = () => {
+    if (!this.state.focus || !this.state.items.length) return;
+    return (
       <FlatList
-        style={this.props.itemsContainerStyle}
-        keyboardShouldPersistTaps="always"
         data={this.state.items}
+        keyboardShouldPersistTaps="always"
         keyExtractor={this._keyExtractor}
         renderItem={this.renderItems}
+        style={this.props.itemsContainerStyle}
         // ItemSeparatorComponent={() => <View style={styles.separator} />}
       />
     );
+  };
 
   componentDidMount() {
     const { items } = this.props;

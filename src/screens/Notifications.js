@@ -86,9 +86,9 @@ class NotificationsContainer extends Component<Props, State> {
 
   _keyExtractor = (item): string => item._id;
 
-  _renderSeparator = <View style={styles.separator} />;
+  _renderSeparator = () => <View style={styles.separator} />;
 
-  renderEmptyState = (
+  renderEmptyState = () => (
     <View style={[styles.container, { alignSelf: 'center', height: 300 }]}>
       <Ionicons
         size={48}
@@ -227,7 +227,7 @@ class NotificationsContainer extends Component<Props, State> {
     </ListItem>
   );
 
-  renderLoading = (
+  renderLoading = () => (
     <View style={styles.container}>
       <ActivityIndicator size="large" />
     </View>
@@ -253,7 +253,7 @@ class NotificationsContainer extends Component<Props, State> {
           <Right />
         </Header>
         {this.state.isLoading ? (
-          this.renderLoading
+          this.renderLoading()
         ) : (
           <FlatList
             data={this.state.data}

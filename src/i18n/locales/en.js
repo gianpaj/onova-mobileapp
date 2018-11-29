@@ -116,7 +116,7 @@ http://onova.co/uploader
     confirm_alert_button_cancel: 'Cancel',
     confirm_alert_button_confirm: 'Confirm',
     // `Thank you for helping keep the Onova community safe and fun for everyone. Remember, we don't reveal who submitted reports to the seller.`
-    report_subtitle: 'Enter reason (required)',
+    report_subtitle: 'Enter reason (required). The seller will not be notified',
     report_error: 'Please give a longer reason. Min 7 characters',
     report_success: 'Thank you for helping keep the Onova community safe',
     action_button_close: 'Close',

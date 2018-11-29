@@ -464,8 +464,8 @@ class ChatContainer extends Component<Props, State> {
     />
   );
 
-  renderSend({ text }): React$Element<*> {
-    const showActiveOpacity = text.trim().length > 0;
+  renderSend(props): React$Element<*> {
+    const showActiveOpacity = props.text.trim().length > 0;
     return (
       <View style={st.send}>
         <Send {...props}>

@@ -87,11 +87,14 @@ export function formatPhoneNumber(value: string): string {
   return value.trim();
 }
 
-export function formatCurrency(value: string): string {
+export function formatCurrency(
+  value: string,
+  minDecimalPoints: number = 2
+): string {
   if (!value) return 'n/a';
 
   return new Intl.NumberFormat('ua-UA', {
-    minimumFractionDigits: 2,
+    minimumFractionDigits: minDecimalPoints,
     maximumFractionDigits: 2,
   }).format(value);
 }

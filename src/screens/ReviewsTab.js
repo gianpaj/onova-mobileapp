@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import {
   Dimensions,
   FlatList,
-  Image,
+  // Image,
   RefreshControl,
   StyleSheet,
   Text,
@@ -16,6 +16,7 @@ import { withNavigation } from 'react-navigation';
 import I18n from '../i18n';
 import colors from '../config/colors';
 import * as api from '../utils/api';
+import { addErrorBreadcrumb } from '../utils/analytics';
 import ReviewCard from '../components/ReviewCard';
 
 import type { NavigationScreenProp } from 'react-navigation';
@@ -69,27 +70,28 @@ class ReviewsTabContainer extends Component<Props, State> {
     );
     // get the first image size and then setState `data` for the FlatList
     if (data && data.length) {
-      console.log(data);
-      const uri = data[0].product.photoURIs[0].replace('.jpg', '-thumb.jpg');
-      Image.getSize(uri, (w, h) => {
-        this.setState({
-          imageHeight: Math.floor(h * (width / 4 / w)),
-          data,
-        });
+      // const uri = data[0].product.photoURIs[0].replace('.jpg', '-thumb.jpg');
+      // Image.getSize(uri, (w, h) => {
+      // imageHeight: Math.floor(h * (width / 4 / w)),
+      // all thumbnails are 240 px wide
+      this.setState({
+        imageHeight: Math.floor(240 * (width / 4 / 240)),
+        data,
       });
-    } else {
-      this.setState({ data: [] });
+      // });
     }
   }
 
-  refreshReviews = () => {
+  refreshReviews = async () => {
     this.setState({ isRefreshing: true });
-    this.getReviewsAndSetState()
-      .catch(err => {
-        console.debug(err);
-        // this.setState({ hasError: true });
-      })
-      .then(() => this.setState({ isRefreshing: false }));
+    try {
+      await this.getReviewsAndSetState();
+      this.setState({ isRefreshing: false });
+    } catch (error) {
+      console.debug(error);
+      addErrorBreadcrumb({ error });
+      // this.setState({ hasError: true });
+    }
   };
 
   goToProfile = (user: UserData) =>

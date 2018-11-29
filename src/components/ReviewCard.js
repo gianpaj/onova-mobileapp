@@ -33,15 +33,21 @@ class ReviewCard extends PureComponent<Props> {
   render() {
     const { order } = this.props;
 
-    let reviewer, review;
+    let reviewer = order.buyer;
+    let review = order.reviewFromSeller;
 
     if (this.props.as === 'seller') {
+      console.log(this.props.as);
       reviewer = order.seller;
       review = order.reviewFromBuyer;
-    } else {
-      reviewer = order.buyer;
-      review = order.reviewFromSeller;
     }
+    if (!review) {
+      console.log('not a review');
+      reviewer = order.seller;
+    }
+    console.log(order);
+    console.log('reviewer');
+    console.log(reviewer);
 
     const uri = order.product.photoURIs[0].replace('.jpg', '-thumb.jpg');
 

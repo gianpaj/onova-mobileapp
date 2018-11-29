@@ -181,6 +181,10 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     this.selectPhotoTapped(0);
   }
 
+  componentWillUnmount() {
+    // TODO: cancel all uploads
+  }
+
   selectPhotoTapped = (i: number = 0) => {
     // development
     // this.appendSinglePhoto(

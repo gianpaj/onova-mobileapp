@@ -221,7 +221,9 @@ export class ConfirmOrderContainer extends Component<Props, State> {
             </TouchableOpacity>
             <Body>
               <Text style={styles.price}>
-                {order.priceOfItem} {order.currency}
+                {`${ui.formatCurrency(order.priceOfItem, 0)} ${I18n.t(
+                  order.currency
+                )}`}
               </Text>
             </Body>
           </ListItem>

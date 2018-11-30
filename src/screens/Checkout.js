@@ -539,6 +539,8 @@ class CheckoutContainer extends Component<Props, State> {
         </View>
       );
 
+    const currency = I18n.t(item.currency);
+
     const total = parseFloat(order.priceOfItem) + parseFloat(shippingFee);
 
     return (
@@ -551,7 +553,7 @@ class CheckoutContainer extends Component<Props, State> {
           <View style={styles.innerRow}>
             <H1 style={styles.fontFamilyMono}>{ui.formatCurrency(total)} </H1>
             {/* $FlowFixMe */}
-            <Text>{order.currency}</Text>
+            <Text>{currency}</Text>
           </View>
         </View>
         <View style={styles.row}>
@@ -560,7 +562,7 @@ class CheckoutContainer extends Component<Props, State> {
             <H3 style={styles.fontFamilyMono}>
               {ui.formatCurrency(order.priceOfItem)}{' '}
             </H3>
-            <Text>{order.currency}</Text>
+            <Text>{currency}</Text>
           </View>
         </View>
         <View style={styles.row}>
@@ -569,7 +571,7 @@ class CheckoutContainer extends Component<Props, State> {
             <H3 style={styles.fontFamilyMono}>
               {ui.formatCurrency(shippingFee)}{' '}
             </H3>
-            <Text>{order.currency}</Text>
+            <Text>{currency}</Text>
           </View>
         </View>
         <View style={styles.row}>

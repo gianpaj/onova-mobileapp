@@ -386,4 +386,5 @@ http://onova.co/uploader
     failed_to_ship: 'Seller did not ship on time',
     updated: '(updated)',
   },
+  UAH: 'UAH',
 };

@@ -65,7 +65,7 @@ class ReviewCard extends PureComponent<Props> {
         <Body>
           <View style={styles.contentRow}>
             <Text numberOfLines={1}>
-              {ui.formatCurrency(order.priceOfItem, 0)} {order.currency}
+              {ui.formatCurrency(order.priceOfItem, 0)} {I18n.t(item.currency)}
             </Text>
             {review ? (
               <Text numberOfLines={1}>{ui.formatTime(review.createdAt)}</Text>

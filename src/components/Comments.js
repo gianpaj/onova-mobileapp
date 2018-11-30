@@ -211,7 +211,7 @@ class Comments extends React.Component<Props, State> {
 
   _keyExtractor = item => item._id;
 
-  renderSeparator = <View style={styles.separator} />;
+  renderSeparator = () => <View style={styles.separator} />;
 
   renderComments() {
     if (this.state.comments.length < 1) return null;

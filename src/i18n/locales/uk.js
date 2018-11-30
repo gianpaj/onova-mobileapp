@@ -114,7 +114,8 @@ export default {
     network_error: 'Проблема з інтернетом',
     confirm_alert_button_cancel: 'відміна',
     confirm_alert_button_confirm: 'OK',
-    report_subtitle: "Напишіть причину (обов'язково). Продавець цього не побачить",
+    report_subtitle:
+      "Напишіть причину (обов'язково). Продавець цього не побачить",
     report_error: 'Мінімально 7 знаків',
     report_success: 'Дякую, що допомагаєте нам відсіювати поганих користувачів',
     action_button_close: 'Закрити',
@@ -386,4 +387,5 @@ export default {
     failed_to_ship: 'Продавець не відправив пакунок',
     updated: '(Оновлено)',
   },
+  UAH: 'грн',
 };

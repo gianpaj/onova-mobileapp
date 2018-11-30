@@ -478,7 +478,9 @@ export class ProductContainer extends React.Component<Props, State> {
                 </View>
                 <View style={styles.flex1} />
                 <Text style={styles.price}>
-                  {item.price} {item.currency}
+                  {`${ui.formatCurrency(item.price, 0)} ${I18n.t(
+                    item.currency
+                  )}`}
                 </Text>
               </View>
               <MediaView source={item.photoURIs} />

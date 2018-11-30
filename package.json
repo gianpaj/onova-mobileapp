@@ -116,7 +116,7 @@
     "prettier": "^1.14.0",
     "prop-types": "^15.6.2",
     "react-dom": "^16.3.1",
-    "react-native-bundle-visualizer": "^1.2.0",
+    "react-native-bundle-visualizer": "^1.4.0",
     "react-native-touch-visualizer": "^0.1.0",
     "react-test-renderer": "16.4.1"
   },

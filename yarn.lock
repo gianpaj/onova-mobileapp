@@ -11073,10 +11073,10 @@ react-native-elements@^0.19.1:
     opencollective "^1.0.3"
     prop-types "^15.5.8"
 
-react-native-firebase@^4.2.0:
-  version "4.3.8"
-  resolved "https://registry.yarnpkg.com/react-native-firebase/-/react-native-firebase-4.3.8.tgz#a425b260aca0b97cde023dd2556fc18d16a3b7b3"
-  integrity sha512-lQuRrcnRd6Y3Drk8X66GYodfqPhWqy82+3S0rjOCoB3LhapnYXpi6QCqKJwkdBsy49zTyVsuH9cmMgQyejYW+w==
+react-native-firebase@~4.2.0:
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/react-native-firebase/-/react-native-firebase-4.2.0.tgz#d44b1e5b5149d65936045c0398e0acc2ebb4c7e9"
+  integrity sha512-HGmvsToYD9qrVoe0u/kXSNG6lHvPah9bbC1Rvt/L5669kHs7oSufS9SM0QzDpEw8QEstXCrB/yg+57VEsUUtFw==
   dependencies:
     opencollective "^1.0.3"
     postinstall-build "^5.0.1"
@@ -11327,10 +11327,10 @@ react-native-vector-icons@4.6.0, react-native-vector-icons@^4.5.0, react-native-
     prop-types "^15.5.10"
     yargs "^8.0.2"
 
-react-native-webview@^2.5.0:
-  version "2.14.0"
-  resolved "https://registry.yarnpkg.com/react-native-webview/-/react-native-webview-2.14.0.tgz#def9fd91bcd6bca3b16c4a1e7ed0f0881e89f942"
-  integrity sha512-24frICMSPwr9/j2mvR9kD/NWs542eS3kFkM+VUX0iL8/x5csW1ZBKjc+InApqDNNDIOUKsBzA7PgYa+EvJhiaA==
+react-native-webview@~2.5.0:
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/react-native-webview/-/react-native-webview-2.5.0.tgz#70d2a82f723c77e5ed8156e4f46f6721fb54092b"
+  integrity sha512-9FkDRxkHexw9pq8V8i4kj4DqjgB+O2FzY6rsBICShTDhEF0c0dn0NBsJ0qW4EOd4jhp/rVVEYbJXUbpAUr9EuA==
   dependencies:
     escape-string-regexp "^1.0.5"
     fbjs "^0.8.17"

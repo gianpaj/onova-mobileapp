@@ -192,7 +192,7 @@ android {
 }
 
 dependencies {
-    compile project(':react-native-svg')
+    implementation project(':react-native-svg')
     implementation project(':react-native-webview')
     implementation project(':react-native-android-location-enabler')
     implementation project(':rn-fetch-blob')

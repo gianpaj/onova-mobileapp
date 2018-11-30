@@ -45,12 +45,10 @@ target 'onova' do
   pod 'RNI18n', :path => '../node_modules/react-native-i18n'
   pod 'SentryReactNative', :path => '../node_modules/react-native-sentry/SentryReactNative.podspec'
   pod 'ReactNativePermissions', :path => '../node_modules/react-native-permissions'
+  pod 'react-native-webview', :path => '../node_modules/react-native-webview'
 
   # Add new pods below this line - DO NOT DELETE THIS LINE - it's used for when running `react-native link _native_pkg_`
   pod 'RNSVG', :path => '../node_modules/react-native-svg'
-
-  pod 'react-native-webview', :path => '../node_modules/react-native-webview'
-
 
   pod 'Firebase/Core'
   pod 'Firebase/Messaging'

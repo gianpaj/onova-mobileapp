@@ -173,19 +173,18 @@ async function navigate(notif) {
   console.log(notif);
   firebase.notifications().removeDeliveredNotification(notif.notificationId);
   if (notif.data && notif.data.triggeredType) {
-    const { triggeredType, triggeredBy, productUuid } = notif.data;
+    const { triggeredType, triggeredBy, productUuid, senderName } = notif.data;
     addPushNotifBreadcrumb({ message: 'should navigate to: ' + triggeredType });
 
     // TODO: show Toast error cannot navigate
 
-    // follow
+    // follow or new drop has been listed
     if (triggeredType == 'User') {
       console.debug(triggeredBy);
-      const user = await api.getUser(triggeredBy);
       return NavigationService.navigate(
         'profileInStack',
         user,
-        `profile-${user.username}`
+        `profile-${senderName}`
       );
     }
     if (triggeredType == 'Product') {

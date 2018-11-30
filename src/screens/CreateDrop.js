@@ -339,10 +339,16 @@ export class CreateDropScreen extends React.Component<Props, State> {
     const productsReady = products.filter(i => i.uploaded === true);
 
     const dropId = ObjectID();
-    const promises = productsReady.map(product => {
+
+    const promises = productsReady.map((product, i) => {
       const formData = {
         ...product,
-        date: datetime,
+        // remove 100 millis; to ensure dropped items will be posted in the right order
+        // e.g.
+        // 1st -200
+        // 2nd -100
+        // 3rd -0
+        date: new Date(datetime.getTime() - productsReady.length - 1 - i * 100),
         dropId,
         latitude: location.latitude.toString(),
         longitude: location.longitude.toString(),

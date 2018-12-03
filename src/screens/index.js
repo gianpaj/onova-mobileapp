@@ -11,6 +11,7 @@ import { Home } from '../screens/Home';
 import IntroScreens from '../screens/IntroScreens';
 import { Followers } from '../screens/Followers';
 import { Following } from '../screens/Following';
+import { Suggestions } from '../screens/Suggestions';
 import GetCardId from '../screens/GetCardId';
 import { Notifications } from '../screens/Notifications';
 import MarkdownDoc from '../screens/MarkdownDoc';
@@ -46,4 +47,5 @@ export {
   SearchProductsResults,
   Settings,
   SignUpLogin,
+  Suggestions,
 };

@@ -243,6 +243,12 @@ export function getFollowers(
   });
 }
 
+export function getSuggestions(
+  token: string
+): Promise<Array<UserData> | Error> {
+  return get('/api/suggested-users/', { token });
+}
+
 export function getProduct(uuid: string, options: Options): Promise<Product> {
   return new Promise((resolve, reject) => {
     get(`/api/products/${uuid}`, options)

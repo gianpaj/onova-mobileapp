@@ -143,6 +143,7 @@ class ProfileScreen extends React.Component<Props, State> {
         username,
       });
 
+      // if it's not me
       if (params && params._id !== userData._id) {
         const { data } = await api.get(`/api/users/${userId}/follow`, {
           token,
@@ -151,6 +152,9 @@ class ProfileScreen extends React.Component<Props, State> {
           this.setState({ isFollowing: true });
         }
       } else {
+        const suggestions = await api.getSuggestions(token);
+
+        this.setState({ suggestions });
         this.props.dispatch(getPersonalUserData());
       }
     } catch (err) {

@@ -243,9 +243,7 @@ export function getFollowers(
   });
 }
 
-export function getSuggestions(
-  token: string
-): Promise<Array<UserData> | Error> {
+export function getSuggestions(token: string): Promise<any> {
   return get('/api/suggested-users/', { token });
 }
 

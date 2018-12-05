@@ -95,9 +95,7 @@ const login = (data: LoginData) => (dispatch: Dispatch) => {
       dispatch({ type: LOGIN_SUCCESS, payload: userData });
       addNavigationBreadcrumb({ message: LOGIN_SUCCESS });
       return registerPushNotifications()
-        .then(pushToken => {
-          if (pushToken) return sendToken(pushToken, userData, userData.token);
-        })
+        .then(pushToken => sendToken(pushToken, userData, userData.token))
         .catch(err => {
           console.warn(err);
           dispatch({ type: LOGIN_FAIL });
@@ -287,7 +285,7 @@ const checkLogin = (userData: UserData, token: string) => (
     .then(() => registerPushNotifications())
     .then(pushToken => {
       addNavigationBreadcrumb({ message: RELOAD_SUCCESS });
-      if (pushToken) return sendToken(pushToken, userData, token);
+      sendToken(pushToken, userData, token);
     })
     .catch(error => {
       dispatch({ type: RELOAD_FAIL });
@@ -441,9 +439,7 @@ const sendToken = (
       console.debug('pushToken and platform sent');
       console.debug(data);
     })
-    .catch(err => {
-      console.error(err);
-    });
+    .catch(err => console.error(err));
 };
 
 const handleErrorWithAlert = (data: any, error: any, buttonText?) => {

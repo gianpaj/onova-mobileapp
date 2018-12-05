@@ -430,6 +430,22 @@ class ProfileScreen extends React.Component<Props, State> {
           <Text style={styles.numbers}>{followingCount}</Text>
           <Text style={styles.label}>{I18n.t('profile.following_label')}</Text>
         </TouchableOpacity>
+        {this.isMe() && (
+          <TouchableOpacity
+            onPress={this.goToSuggestions}
+            style={styles.alignCenter}>
+            <Text
+              style={[
+                styles.numbers,
+                suggestions.new ? { color: colors.red } : {},
+              ]}>
+              {suggestions.data.length}
+            </Text>
+            <Text style={styles.label}>
+              {I18n.t('profile.suggestions_label')}
+            </Text>
+          </TouchableOpacity>
+        )}
       </View>
     );
   };

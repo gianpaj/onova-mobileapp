@@ -247,7 +247,7 @@ http://onova.co/uploader
     drops_tab: 'Drops',
   },
   chat_rooms: {
-    header: 'Chats',
+    header: 'Orders',
     error: 'Error fetching chats',
     empty_state_message: 'No chats found',
     my_message_prefix: 'You: ',
@@ -385,6 +385,11 @@ http://onova.co/uploader
     failed_to_collect: 'Buyer did not collect on time',
     failed_to_ship: 'Seller did not ship on time',
     updated: '(updated)',
+  },
+  suggestions: {
+    header: 'Suggested users',
+    empty_state_message_title: 'No suggestions today',
+    empty_state_message_body: 'Please check tomorrow',
   },
   UAH: 'UAH',
 };

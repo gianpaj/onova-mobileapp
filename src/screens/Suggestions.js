@@ -86,11 +86,8 @@ export class SuggestionsContainer extends Component<Props, State> {
     }
   }
 
-  // eslint-disable-next-line react/no-unused-prop-types
-  _renderItem = ({ item }: { item: UserData }) => {
-    // const { _id } = this.props.userData;
-
-    const user = item._id;
+  _renderItem = ({ item }) => {
+    const user: UserData = item._id;
 
     return (
       <TouchableHighlight

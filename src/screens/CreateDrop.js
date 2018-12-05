@@ -123,6 +123,7 @@ export class CreateDropScreen extends React.Component<Props, State> {
       this.props.navigation.navigate('settings');
       clearTimeout(loader);
       Toast.hide();
+      // TODO: translate error
       ui.showToast(error.message, 'warning', 'OK', 4);
       return;
     }

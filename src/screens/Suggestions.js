@@ -106,17 +106,18 @@ export class SuggestionsContainer extends Component<Props, State> {
             }
             onPress={() => this.goToProfile(user)}
           />
-          <Text
-            style={[{ color: colors.black, marginTop: -26 }]}
-            numberOfLines={1}>
+          <Text style={styles.username} numberOfLines={1}>
             @{user.username}
           </Text>
+          {/* <Text style={styles.numOfConns} numberOfLines={1}>
+            ({item.numOfConns})
+          </Text> */}
         </View>
       </TouchableHighlight>
     );
   };
 
-  _keyExtractor = (item): string => item._id._id;
+  _keyExtractor = (item: string) => item._id._id;
 
   renderEmptyState = (
     <View style={styles.emptyContainer}>
@@ -246,4 +247,12 @@ const styles = StyleSheet.create({
     marginHorizontal: -MARGIN * 2,
     marginBottom: -MARGIN * 2,
   },
+  username: {
+    color: colors.black,
+    marginTop: -26,
+  },
+  // numOfConns: {
+  //   color: colors.black,
+  //   marginTop: 2,
+  // },
 });

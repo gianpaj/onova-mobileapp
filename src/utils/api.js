@@ -26,6 +26,18 @@ if (!global.__TESTING__) console.debug(`connecting to ${config.API_URL}`);
 axios.defaults.baseURL = config.API_URL;
 axios.defaults.timeout = 20000;
 
+// axios.interceptors.response.use(null, error => {
+//   if (error.config && error.response && error.response.status === 401) {
+//     return updateToken().then(token => {
+//       console.log(token);
+//       // error.config.headers.xxxx <= set the token
+//       return axios.request(error.config);
+//     });
+//   }
+
+//   return Promise.reject(error);
+// });
+
 export type Options = {
   suppressRedBox?: boolean, // If true, no warning is shown on failed request
   cancelToken?: CancelToken,

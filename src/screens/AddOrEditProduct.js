@@ -271,12 +271,12 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
         for (let j = 0; j < response.length; j++) {
           await this.uploadImageTemporarilyAndAppend(response[j], i + j);
         }
-        return;
+      } else {
+        // one image (from camera)
+        this.appendImageOrReplace({ isUploading: true }, i);
+        this.forceUpdate();
+        await this.uploadImageTemporarilyAndAppend(response, i);
       }
-      // one image (from camera)
-      this.appendImageOrReplace({ isUploading: true }, i);
-      this.forceUpdate();
-      await this.uploadImageTemporarilyAndAppend(response, i);
     } catch (error) {
       console.log(error);
 
@@ -672,14 +672,13 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
                             type="number"
                             value={control.value}
                           />
-                          {control.isTouched &&
-                            control.isInvalid && (
-                              <Text style={styles.minPrice}>
-                                {`${I18n.t('add_or_edit_item.min_price')} ${
-                                  settings.MIN_PRICE
-                                } UAH`}
-                              </Text>
-                            )}
+                          {control.isTouched && control.isInvalid && (
+                            <Text style={styles.minPrice}>
+                              {`${I18n.t('add_or_edit_item.min_price')} ${
+                                settings.MIN_PRICE
+                              } UAH`}
+                            </Text>
+                          )}
                         </View>
                       );
                     }}

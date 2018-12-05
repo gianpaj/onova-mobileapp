@@ -55,7 +55,7 @@ export class SuggestionsContainer extends Component<Props, State> {
   async componentDidMount() {
     const { token } = this.props;
     try {
-      const data = await api.getSuggestions(token);
+      const { data } = await api.getSuggestions(token);
       this.setState({ data });
     } catch (err) {
       console.error(err);
@@ -87,10 +87,11 @@ export class SuggestionsContainer extends Component<Props, State> {
   }
 
   // eslint-disable-next-line react/no-unused-prop-types
-  _renderItem = ({ item: user }: { item: UserData }) => {
+  _renderItem = ({ item }: { item: UserData }) => {
     // const { _id } = this.props.userData;
 
-    // const shouldShowButton = user._id !== _id;
+    const user = item._id;
+
     return (
       <TouchableHighlight
         style={{ width: initialLayout.width / 3 }}
@@ -109,10 +110,7 @@ export class SuggestionsContainer extends Component<Props, State> {
             onPress={() => this.goToProfile(user)}
           />
           <Text
-            style={[
-              { color: colors.black },
-              shouldShowButton ? { marginTop: -26 } : { marginTop: 10 },
-            ]}
+            style={[{ color: colors.black, marginTop: -26 }]}
             numberOfLines={1}>
             @{user.username}
           </Text>

@@ -398,11 +398,18 @@ class ProfileScreen extends React.Component<Props, State> {
     });
   };
 
+  goToSuggestions = () =>
+    this.props.navigation.navigate({
+      routeName: 'suggestions',
+      key: 'suggestions',
+    });
+
   renderUserNumbers = () => {
     const {
       ordersAndReviewsCount,
       followersCount,
       followingCount,
+      suggestions,
     } = this.state;
 
     return (
@@ -630,16 +637,15 @@ class ProfileScreen extends React.Component<Props, State> {
             <NBButton transparent dark onPress={this.shareProfile}>
               <NBIcon ios="ios-share" android="md-share" style={styles.icon} />
             </NBButton>
-            {!this.ifNavigatedFromProduct() &&
-              this.isMe() && (
-                <NBButton transparent onPress={this.onGoToSettings}>
-                  <NBIcon
-                    ios="ios-settings"
-                    android="md-settings"
-                    style={styles.icon}
-                  />
-                </NBButton>
-              )}
+            {!this.ifNavigatedFromProduct() && this.isMe() && (
+              <NBButton transparent onPress={this.onGoToSettings}>
+                <NBIcon
+                  ios="ios-settings"
+                  android="md-settings"
+                  style={styles.icon}
+                />
+              </NBButton>
+            )}
             {!this.isMe() && (
               <NBButton
                 transparent

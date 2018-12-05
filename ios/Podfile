@@ -10,15 +10,6 @@ target 'onova' do
     'Core',
     'CxxBridge', # Include this for RN >= 0.47
     'DevSupport', # Include this to enable In-App Devmenu if RN >= 0.43
-    'RCTActionSheet',
-    'RCTLinkingIOS',
-    # 'RCTGeolocation',
-    # 'RCTVibration',
-    # 'RCTSettings',
-    # 'ART',
-    # 'RCTBlob',
-    # 'RCTCameraRoll',
-    # 'RCTPushNotification',
     'RCTImage', # for react-native-image-crop-picker
     'RCTText',
     'RCTNetwork',

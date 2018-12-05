@@ -17,7 +17,7 @@ import { Body, ListItem } from 'native-base';
 
 import colors from '../config/colors';
 import * as ui from '../utils/ui';
-import i18n from '../i18n';
+import I18n from '../i18n';
 
 import type { Order, UserData } from '../types';
 

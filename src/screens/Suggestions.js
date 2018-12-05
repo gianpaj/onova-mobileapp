@@ -137,7 +137,7 @@ export class SuggestionsContainer extends Component<Props, State> {
     const { token } = this.props;
     this.setState({ isRefreshing: true });
     try {
-      const data = await api.getSuggestions(token);
+      const { data } = await api.getSuggestions(token);
       this.setState({ data });
     } catch (err) {
       console.error(err);

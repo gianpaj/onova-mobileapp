@@ -105,7 +105,7 @@ class SearchSellersTabContainer extends Component<Props, State> {
 
   _keyExtractor = (item): string => item._id;
 
-  _renderSeparator = <View style={styles.separator} />;
+  _renderSeparator = () => <View style={styles.separator} />;
 
   // eslint-disable-next-line react/no-unused-prop-types
   _renderItem = ({ item: user }: { item: UserData }) => (

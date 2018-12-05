@@ -71,11 +71,37 @@
   },
   "devDependencies": {
     "babel-jest": "23.6.0",
+    "enzyme": "^3.7.0",
+    "enzyme-adapter-react-16": "^1.7.0",
     "jest": "23.6.0",
     "metro-react-native-babel-preset": "0.50.0",
-    "react-test-renderer": "16.6.1"
+    "moxios": "^0.4.0",
+    "prettier": "^1.15.3",
+    "react-dom": "^16.6.3",
+    "react-test-renderer": "16.6.1",
+    "redux-mock-store": "^1.5.3"
   },
   "jest": {
-    "preset": "react-native"
+    "preset": "react-native",
+    "cacheDirectory": "./.cache",
+    "setupFiles": [
+      "<rootDir>/__tests__/setup.js"
+    ],
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "./__tests__/setup",
+      "./__tests__/App",
+      "./e2e/"
+    ],
+    "transformIgnorePatterns": [
+      "node_modules/(?!(jest-)?react-native|react-native-vector-icons|react-navigation|native-base-shoutem-theme|redux-persist|react-native-gifted-chat|native-base|@expo/react-native-action-sheet)"
+    ],
+    "transform": {
+      "^.+\\.(js)$": "<rootDir>/node_modules/react-native/jest/preprocessor.js"
+    },
+    "globals": {
+      "window": true,
+      "__TESTING__": true
+    }
   }
 }

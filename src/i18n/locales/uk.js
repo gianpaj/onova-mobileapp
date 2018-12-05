@@ -220,9 +220,10 @@ export default {
     empty_state_message_others: 'Жодних запланованих Дропів',
   },
   profile: {
-    reviews_label: 'відгуки',
+    reviews_label: 'Відгуки',
     followers_label: 'Клієнти',
     following_label: 'Магазини',
+    suggestions_label: 'Рекомендовані',
     edit_profile_button: 'Редагувати профіль',
     save_profile_button: 'Зберегти',
     follow_button: 'додати',

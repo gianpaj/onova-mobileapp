@@ -221,6 +221,7 @@ http://onova.co/uploader
     reviews_label: 'reviews',
     followers_label: 'followers',
     following_label: 'following',
+    suggestions_label: 'suggestions',
     edit_profile_button: 'Edit Profile',
     save_profile_button: 'Save',
     follow_button: 'Follow',

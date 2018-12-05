@@ -1,14 +1,11 @@
 # Uncomment the next line to define a global platform for your project
 platform :ios, '9.0'
 
-project 'onova.xcodeproj'
-
 target 'onova' do
   # Uncomment the next line if you're using Swift or would like to use dynamic frameworks
   # use_frameworks!
 
-  # Your 'node_modules' directory is probably in the root of your project,
-  # but if not, adjust the `:path` accordingly
+  # Pods for onova
   pod 'React', :path => '../node_modules/react-native', :subspecs => [
     'Core',
     'CxxBridge', # Include this for RN >= 0.47
@@ -22,7 +19,7 @@ target 'onova' do
     # 'RCTBlob',
     # 'RCTCameraRoll',
     # 'RCTPushNotification',
-    'RCTImage',
+    'RCTImage', # for react-native-image-crop-picker
     'RCTText',
     'RCTNetwork',
     'RCTWebSocket', # Needed for debugging
@@ -39,21 +36,17 @@ target 'onova' do
   pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
 
   # Pods for onova
-  pod 'RNImageCropPicker', :path => '../node_modules/react-native-image-crop-picker'
+  pod 'SentryReactNative', :path => '../node_modules/react-native-sentry'
+  pod 'RNImageCropPicker', :path =>  '../node_modules/react-native-image-crop-picker'
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
-  pod 'rn-fetch-blob', :path => '../node_modules/rn-fetch-blob'
   pod 'RNI18n', :path => '../node_modules/react-native-i18n'
-  pod 'SentryReactNative', :path => '../node_modules/react-native-sentry/SentryReactNative.podspec'
   pod 'ReactNativePermissions', :path => '../node_modules/react-native-permissions'
   pod 'react-native-webview', :path => '../node_modules/react-native-webview'
-
-  # Add new pods below this line - DO NOT DELETE THIS LINE - it's used for when running `react-native link _native_pkg_`
   pod 'RNSVG', :path => '../node_modules/react-native-svg'
-
-  pod 'Firebase/Core'
-  pod 'Firebase/Messaging'
+  pod 'Firebase/Core', '~> 5.11.0'
+  pod 'Firebase/Messaging', '~> 5.11.0'
   # segment.com
-  pod 'Analytics'
+  pod 'Analytics', '~> 3.6.10'
   # Device-based integration
   pod 'Segment-Mixpanel'
 
@@ -62,14 +55,4 @@ target 'onova' do
     # Pods for testing
   end
 
-end
-
-# very important to have, unless you removed React dependencies for Libraries
-# and you rely on Cocoapods to manage it
-post_install do |installer|
-  installer.pods_project.targets.each do |target|
-    if target.name == "React"
-      target.remove_from_project
-    end
-  end
 end

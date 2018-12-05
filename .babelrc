@@ -1,17 +1,8 @@
 {
-  "presets": [
-    ["babel-preset-react-native", { "decoratorsLegacy": true }],
-    "@babel/preset-flow"
-  ],
+  "presets": ["module:metro-react-native-babel-preset"],
   "retainLines": true,
-  "plugins": [
-    ["import", { "libraryName": "antd-mobile-rn" }],
-    "@babel/plugin-transform-react-jsx-source"
-  ],
+  "plugins": [["import", { "libraryName": "antd-mobile-rn" }]],
   "env": {
-    "development": {
-      "plugins": ["transform-react-jsx-source"]
-    },
     "production": {
       "plugins": ["transform-remove-console"]
     }

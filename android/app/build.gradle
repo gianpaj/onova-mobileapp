@@ -131,25 +131,20 @@ def enableProguardInReleaseBuilds = false
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
-    buildToolsVersion rootProject.ext.buildToolsVersion
+    // the minimum supported version (28.0.2) for Android Gradle Plugin 3.2.0.
+    // buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
         applicationId "com.onova.app"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode googleVer
-        versionName userVer
-        consumerProguardFiles 'proguard-rules.pro'
-        // for react-native-image-crop-picker
-        vectorDrawables.useSupportLibrary = true
+        versionCode 1
+        versionName "1.0"
+        vectorDrawables.useSupportLibrary = true // for react-native-image-crop-picker
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
-
-        // for detox - this will later be used to control the test apk build type
-        testBuildType System.getProperty('testBuildType', 'debug')
-        missingDimensionStrategy "minReactNative", "minReactNative46"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true // in order to make react-native-analytics-segment-io work
     }
     splits {
         abi {
@@ -192,32 +187,28 @@ android {
 }
 
 dependencies {
-    implementation project(':react-native-svg')
-    implementation project(':react-native-webview')
     implementation project(':react-native-android-location-enabler')
-    implementation project(':rn-fetch-blob')
-    implementation project(':react-native-i18n')
-    implementation project(':react-native-sentry')
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
     implementation "com.facebook.react:react-native:+" // From node_modules
 
+    implementation project(':react-native-sentry')
     implementation project(':react-native-firebase')
+
     // Firebase dependencies
-    implementation "com.google.android.gms:play-services-base:15.0.0"
-    implementation "com.google.firebase:firebase-core:15.0.2"
+    implementation "com.google.android.gms:play-services-base:16.0.1"
+    implementation "com.google.firebase:firebase-core:16.0.4"
     // react-native-firebase w/ messaging
-    implementation "com.google.firebase:firebase-messaging:15.0.2"
-    // implementation 'me.leolin:ShortcutBadger:1.1.21@aar' // <-- Add this line if you wish to use badge on Android
+    implementation "com.google.firebase:firebase-messaging:17.3.4"
+
     implementation project(':react-native-image-crop-picker')
+    implementation project(':react-native-i18n')
+    implementation project(':react-native-webview')
+    implementation project(':react-native-svg')
     implementation project(':react-native-analytics-segment-io')
     implementation 'com.segment.analytics.android:analytics:4.+'
     implementation 'com.segment.analytics.android.integrations:mixpanel:2.0.0'
-
-    androidTestImplementation(project(path: ":detox"))
-    androidTestImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test:rules:1.0.2'
+    implementation project(':react-native-android-location-enabler')
 }
 
 // Run this once to be able to run the application with BUCK
@@ -235,3 +226,6 @@ apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
 
 // for react-native-firebase
 apply plugin: 'com.google.gms.google-services'
+
+// fix for build issue - https://stackoverflow.com/a/51846868/728287
+com.google.gms.googleservices.GoogleServicesPlugin.config.disableVersionCheck = true

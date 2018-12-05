@@ -437,7 +437,9 @@ class ProfileScreen extends React.Component<Props, State> {
             <Text
               style={[
                 styles.numbers,
-                suggestions.new ? { color: colors.red } : {},
+                suggestions.new && suggestions.data.length
+                  ? { color: colors.red }
+                  : {},
               ]}>
               {suggestions.data.length}
             </Text>

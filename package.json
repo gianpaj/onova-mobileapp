@@ -8,25 +8,12 @@
   },
   "scripts": {
     "build-android": "cd android/ && ./gradlew assembleRelease",
-    "flow-check": "flow check",
-    "flow-start": "flow start",
-    "flow-stop": "flow stop",
-    "flow": "flow",
     "nuke-android": "yarn nuke-bundler && cd android/ && ./gradlew clean && cd ..",
     "nuke-bundler": "watchman watch-del-all && rm -rf $TMPDIR/react-*",
     "nuke-ios": "yarn nuke-bundler && rm -rf ios/build/ModuleCache && rm -rf ~/Library/Developer/Xcode/DerivedData/*",
-    "DISABLEDpostinstall": "flow-typed install",
     "start-emulator": "cd $ANDROID_HOME/emulator && ./emulator -avd Nexus_5X_API_28 &",
     "start": "node node_modules/react-native/local-cli/cli.js start",
-    "storybook": "storybook start -p 7007",
-    "test": "jest --verbose",
-    "test:e2e:android": "detox test -c android.emu.debug --loglevel verbose",
-    "test:e2e:android:build": "detox build -c android.emu.debug",
-    "test:e2e:ios": "detox test -c ios.sim.debug",
-    "test:e2e:ios:build": "detox build -c ios.sim.debug",
-    "test:coverage": "jest --coverage --verbose",
-    "test:lint": "eslint src --quiet",
-    "test:watch": "jest __tests__ --verbose --watch"
+    "test": "jest"
   },
   "dependencies": {
     "@pusher/chatkit": "^0.7.18",
@@ -76,7 +63,6 @@
     "react-native-webview": "^2.14.0",
     "react-navigation": "1.5.11",
     "react-navigation-redux-helpers": "^1.0.3",
-    "redux-mock-store": "^1.5.3",
     "react-redux": "^5.1.1",
     "redux": "^4.0.1",
     "redux-persist": "^5.10.0",
@@ -84,89 +70,12 @@
     "validator": "^10.9.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.0.0-beta.55",
-    "@babel/plugin-transform-react-jsx-source": "^7.0.0-beta.55",
-    "@babel/preset-flow": "^7.0.0-beta.55",
-    "@storybook/addon-actions": "^3.4.8",
-    "@storybook/addon-links": "^3.4.8",
-    "@storybook/addons": "^3.4.8",
-    "@storybook/react-native": "^3.4.8",
-    "babel-core": "^7.0.0-0",
-    "babel-eslint": "^8.2.6",
-    "babel-jest": "23.4.2",
-    "babel-plugin-import": "^1.8.0",
-    "babel-preset-react-native": "^5",
-    "babel-runtime": "^6.26.0",
-    "enzyme": "^3.7.0",
-    "enzyme-adapter-react-16": "^1.6.0",
-    "eslint": "^5.2.0",
-    "eslint-config-prettier": "^2.9.0",
-    "eslint-plugin-babel": "^5.1.0",
-    "eslint-plugin-flowtype": "^2.50.0",
-    "eslint-plugin-import": "^2.13.0",
-    "eslint-plugin-prettier": "^2.6.2",
-    "eslint-plugin-react": "^7.10.0",
-    "eslint-plugin-react-native": "^3.2.1",
-    "eslint-plugin-react-native-a11y": "^1.0.0",
-    "flow-bin": "^0.75.0",
-    "invariant": "^2.2.4",
-    "jest": "23.4.2",
-    "moxios": "^0.4.0",
-    "prettier": "^1.14.0",
-    "prop-types": "^15.6.2",
-    "react-dom": "^16.3.1",
-    "react-native-bundle-visualizer": "^1.4.0",
-    "react-native-touch-visualizer": "^0.1.0",
-    "react-test-renderer": "16.4.1"
-  },
-  "resolutions": {
-    "react-native-invertible-scroll-view": "1.1.1"
+    "babel-jest": "23.6.0",
+    "jest": "23.6.0",
+    "metro-react-native-babel-preset": "0.50.0",
+    "react-test-renderer": "16.6.1"
   },
   "jest": {
-    "cacheDirectory": "./.cache",
-    "setupFiles": [
-      "<rootDir>/__tests__/setup.js"
-    ],
-    "testPathIgnorePatterns": [
-      "/node_modules/",
-      "./__tests__/setup",
-      "./__tests__/App",
-      "./e2e/"
-    ],
-    "preset": "react-native",
-    "transformIgnorePatterns": [
-      "node_modules/(?!(jest-)?react-native|react-native-vector-icons|react-navigation|native-base-shoutem-theme|redux-persist|react-native-gifted-chat|native-base|@expo/react-native-action-sheet)"
-    ],
-    "transform": {
-      "^.+\\.js$": "<rootDir>/node_modules/react-native/jest/preprocessor.js"
-    },
-    "globals": {
-      "window": true,
-      "__TESTING__": true
-    }
-  },
-  "detox": {
-    "test-runner": "jest",
-    "runner-config": "e2e/config.json",
-    "configurations": {
-      "ios.sim.debug": {
-        "binaryPath": "ios/build/Build/Products/Debug-iphonesimulator/onova.app",
-        "build": "xcodebuild -project ios/onova.xcodeproj -scheme onova -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build",
-        "type": "ios.simulator",
-        "name": "iPhone 6"
-      },
-      "android.emu.debug": {
-        "binaryPath": "android/app/build/outputs/apk/debug/app-debug.apk",
-        "build": "pushd android && ./gradlew assembleDebug assembleAndroidTest -DtestBuildType=debug && popd",
-        "type": "android.emulator",
-        "name": "Nexus_5X_API_25_7.1.1_"
-      },
-      "android.emu.release": {
-        "binaryPath": "android/app/build/outputs/apk/release/app-release.apk",
-        "build": "pushd android && ./gradlew assembleRelease assembleAndroidTest -DtestBuildType=release && popd",
-        "type": "android.emulator",
-        "name": "Nexus_5X_API_25_7.1.1_"
-      }
-    }
+    "preset": "react-native"
   }
 }

@@ -1,6 +1,6 @@
 // @flow
 
-import { createStore, combineReducers, applyMiddleware } from 'redux';
+import { createStore, combineReducers, compose, applyMiddleware } from 'redux';
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/es/storage';
 import thunk from 'redux-thunk';
@@ -47,14 +47,13 @@ if (__DEV__) {
 
 const middlewares = [thunk, reactNavigation /*, analytics */];
 
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+
 function configureStore() {
   // $FlowFixMe
   const store = createStore(
     rootReducer,
-    __DEV__ &&
-      window.__REDUX_DEVTOOLS_EXTENSION__ &&
-      window.__REDUX_DEVTOOLS_EXTENSION__(),
-    applyMiddleware(...middlewares)
+    composeEnhancers(applyMiddleware(...middlewares))
   );
   const persistor = persistStore(store);
   // persistor.purge();

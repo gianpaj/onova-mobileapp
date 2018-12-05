@@ -246,8 +246,9 @@ class ChatContainer extends Component<Props, State> {
                 <Text style={[st.name, item.unreadCount > 0 && st.unread]}>
                   {item.partner.name}
                 </Text>
-                {lastMessage.senderId !== -1 &&
-                  item.isPartnerOnline && <View style={st.onlineDot} />}
+                {lastMessage.senderId !== -1 && item.isPartnerOnline && (
+                  <View style={st.onlineDot} />
+                )}
               </View>
               <Text style={[st.datetime, item.unreadCount > 0 && st.unread]}>
                 {ui.formatTime(lastMessage.createdAt)}

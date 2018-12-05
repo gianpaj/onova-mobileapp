@@ -750,7 +750,10 @@ const styles = StyleSheet.create({
   },
   label: {
     color: colors.grey2,
-    fontSize: 14,
+    fontSize: Platform.select({
+      ios: 13,
+      android: 14,
+    }),
   },
   editOrFollowButton: {
     marginVertical: 10,

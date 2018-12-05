@@ -220,9 +220,10 @@ export default {
     empty_state_message_others: 'Жодних запланованих Дропів',
   },
   profile: {
-    reviews_label: 'відгуки',
+    reviews_label: 'Відгуки',
     followers_label: 'Клієнти',
     following_label: 'Магазини',
+    suggestions_label: 'Рекомендовані',
     edit_profile_button: 'Редагувати профіль',
     save_profile_button: 'Зберегти',
     follow_button: 'додати',
@@ -248,7 +249,7 @@ export default {
     drops_tab: 'Дропи',
   },
   chat_rooms: {
-    header: 'Чати',
+    header: 'Замовлення',
     error: 'Помилка завантаження чатів',
     empty_state_message: 'Немає замовлень',
     my_message_prefix: 'Ти: ',
@@ -326,7 +327,7 @@ export default {
     empty_state_message: 'Жодних сповіщень',
   },
   followers: {
-    header: 'Контакти',
+    header: 'Клієнти',
     empty_state_message_title: 'Жодних доданих користувачів',
     empty_state_message_body: 'Хтось тобі по смаку десь там є точно - пошукай',
   },
@@ -386,6 +387,11 @@ export default {
     failed_to_collect: 'Покупець не забрав пакунок',
     failed_to_ship: 'Продавець не відправив пакунок',
     updated: '(Оновлено)',
+  },
+  suggestions: {
+    header: 'Рекомендовані',
+    empty_state_message_title: 'Сьогодні немає рекомендацій',
+    empty_state_message_body: 'Будь ласка перегляньте завтра',
   },
   UAH: 'грн',
 };

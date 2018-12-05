@@ -398,11 +398,18 @@ class ProfileScreen extends React.Component<Props, State> {
     });
   };
 
+  goToSuggestions = () =>
+    this.props.navigation.navigate({
+      routeName: 'suggestions',
+      key: 'suggestions',
+    });
+
   renderUserNumbers = () => {
     const {
       ordersAndReviewsCount,
       followersCount,
       followingCount,
+      suggestions,
     } = this.state;
 
     return (
@@ -423,6 +430,24 @@ class ProfileScreen extends React.Component<Props, State> {
           <Text style={styles.numbers}>{followingCount}</Text>
           <Text style={styles.label}>{I18n.t('profile.following_label')}</Text>
         </TouchableOpacity>
+        {this.isMe() && (
+          <TouchableOpacity
+            onPress={this.goToSuggestions}
+            style={styles.alignCenter}>
+            <Text
+              style={[
+                styles.numbers,
+                suggestions.new && suggestions.data.length
+                  ? { color: colors.red }
+                  : {},
+              ]}>
+              {suggestions.data.length}
+            </Text>
+            <Text style={styles.label}>
+              {I18n.t('profile.suggestions_label')}
+            </Text>
+          </TouchableOpacity>
+        )}
       </View>
     );
   };
@@ -630,16 +655,15 @@ class ProfileScreen extends React.Component<Props, State> {
             <NBButton transparent dark onPress={this.shareProfile}>
               <NBIcon ios="ios-share" android="md-share" style={styles.icon} />
             </NBButton>
-            {!this.ifNavigatedFromProduct() &&
-              this.isMe() && (
-                <NBButton transparent onPress={this.onGoToSettings}>
-                  <NBIcon
-                    ios="ios-settings"
-                    android="md-settings"
-                    style={styles.icon}
-                  />
-                </NBButton>
-              )}
+            {!this.ifNavigatedFromProduct() && this.isMe() && (
+              <NBButton transparent onPress={this.onGoToSettings}>
+                <NBIcon
+                  ios="ios-settings"
+                  android="md-settings"
+                  style={styles.icon}
+                />
+              </NBButton>
+            )}
             {!this.isMe() && (
               <NBButton
                 transparent
@@ -726,7 +750,10 @@ const styles = StyleSheet.create({
   },
   label: {
     color: colors.grey2,
-    fontSize: 14,
+    fontSize: Platform.select({
+      ios: 13,
+      android: 14,
+    }),
   },
   editOrFollowButton: {
     marginVertical: 10,

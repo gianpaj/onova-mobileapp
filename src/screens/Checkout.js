@@ -539,7 +539,7 @@ class CheckoutContainer extends Component<Props, State> {
         </View>
       );
 
-    const currency = I18n.t(item.currency);
+    const currency = I18n.t(order.currency);
 
     const total = parseFloat(order.priceOfItem) + parseFloat(shippingFee);
 

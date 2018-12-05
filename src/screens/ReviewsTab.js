@@ -124,7 +124,7 @@ class ReviewsTabContainer extends Component<Props, State> {
 
   _keyExtractor = (item): string => item.id;
 
-  _renderSeparator = <View style={styles.separator} />;
+  _renderSeparator = () => <View style={styles.separator} />;
 
   _renderItem = ({ item }) => (
     <ReviewCard

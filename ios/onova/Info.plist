@@ -43,6 +43,8 @@
 	<true/>
 	<key>NSAppTransportSecurity</key>
 	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
 		<key>NSExceptionDomains</key>
 		<dict>
 			<key>localhost</key>
@@ -59,23 +61,25 @@
 			</dict>
 		</dict>
 	</dict>
-	<key>NSAppleMusicUsageDescription</key>
-	<string>Onova does not need this</string>
+	<key>LSApplicationCategoryType</key>
+	<string>public.app-category.lifestyle</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Onova uses to your camera to add pictures when creating an item</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Onova uses your location when creating a new item or drop</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Onova uses to your photo library to add selected pictures when creating an item</string>
 	<key>NSBluetoothPeripheralUsageDescription</key>
 	<string>Onova does not need this</string>
 	<key>NSCalendarsUsageDescription</key>
 	<string>Onova does not need this</string>
-	<key>NSCameraUsageDescription</key>
-	<string>Onova uses to your camera in order to add pictures when creating an item</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Onova uses your location when adding a new item</string>
 	<key>NSMotionUsageDescription</key>
 	<string>Onova does not need this</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>Onova does not need this</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Onova uses to your photo library in order to add pictures when creating an item</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>Onova does not need this</string>
+	<key>NSAppleMusicUsageDescription</key>
 	<string>Onova does not need this</string>
 	<key>UIAppFonts</key>
 	<array>

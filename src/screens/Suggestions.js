@@ -116,7 +116,7 @@ export class SuggestionsContainer extends Component<Props, State> {
     );
   };
 
-  _keyExtractor = (item): string => item.dateCreated;
+  _keyExtractor = (item): string => item._id._id;
 
   renderEmptyState = (
     <View style={styles.emptyContainer}>

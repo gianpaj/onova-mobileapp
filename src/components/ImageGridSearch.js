@@ -54,22 +54,20 @@ type State = {
 
 const { width, height } = Dimensions.get('window');
 
-class ImageGridComponent extends React.Component<Props, State> {
+class ImageGridSearchComponent extends React.Component<Props, State> {
   state = {
     hasError: false,
     isLoading: false,
     isRefreshing: false,
     itemHeight: 0,
     items: [],
-    refreshing: false,
   };
 
   componentDidMount() {
     // const defaultImageCacheManager = ImageCacheManager();
     // defaultImageCacheManager.clearCache();
-    // if (terms.tag) {
+
     this.fetchItems(this.props.terms);
-    // }
   }
 
   /**
@@ -111,7 +109,7 @@ class ImageGridComponent extends React.Component<Props, State> {
           isLoading: false,
           isRefreshing: false,
         });
-        console.err(e);
+        console.error(e);
       });
   }
 
@@ -228,7 +226,7 @@ class ImageGridComponent extends React.Component<Props, State> {
           columnWrapperStyle={[styles.columnWrapper, { height: width / 3 }]}
           data={items}
           getItemLayout={this.getItemLayout}
-          initialNumToRender={6}
+          initialNumToRender={12}
           keyExtractor={this._keyExtractor}
           ListEmptyComponent={this.renderEmptyState}
           numColumns={3}
@@ -283,13 +281,12 @@ const mapStateToProps = (state: any) => ({
   token: state.LoginReducer.token,
 });
 
-export default connect(mapStateToProps)(ImageGridComponent);
+export default connect(mapStateToProps)(ImageGridSearchComponent);
 
 const MARGIN = 1;
 
 const styles = StyleSheet.create({
   container: {
-    alignItems: 'stretch',
     flex: 1,
     justifyContent: 'center',
   },

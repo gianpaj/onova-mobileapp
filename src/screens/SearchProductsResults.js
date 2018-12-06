@@ -38,11 +38,14 @@ class SearchProductsResultsContainer extends Component<Props, State> {
 
   componentDidMount() {
     const { params } = this.props.navigation.state;
-    let terms = params;
+    let terms;
 
     // for development
     if (!params) {
-      terms.tag = 'boots';
+      // find shoes
+      terms = { grp_1: 0, grp_2: -1, tag: '' };
+    } else {
+      terms = params;
     }
     this.setState({ terms });
   }
@@ -92,9 +95,7 @@ class SearchProductsResultsContainer extends Component<Props, State> {
           </Body>
           <Right />
         </Header>
-        <Content>
-          <ImageGridSearch terms={terms} navigation={this.props.navigation} />
-        </Content>
+        <ImageGridSearch terms={terms} navigation={this.props.navigation} />
       </View>
     );
   }

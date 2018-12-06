@@ -19,8 +19,6 @@ import colors from '../config/colors';
 import settings from '../config/settings';
 import { category_radio_grp_1, category_radio_grp_2 } from '../utils/ui';
 
-import type { ReduxState } from '../types';
-
 type Props = {
   focused: boolean,
   navigation: NavigationScreenProp<*>,
@@ -84,36 +82,36 @@ class SearchWithHasthagsTabContainer extends Component<Props, State> {
 
     // OR
 
+    const { text, grp_1, grp_2 } = this.state;
+
     // it can be empty and either category or type
     return (
-      (this.state.text.length &&
-        this.state.text.length >= settings.MIN_LENGTH_PER_TAG) ||
-      (!this.state.text.length &&
-        (this.state.grp_1 !== -1 || this.state.grp_2 !== -1))
-      // this.state.isLoading == false
+      (text.length && text.length >= settings.MIN_LENGTH_PER_TAG) ||
+      (!text.length && (grp_1 !== -1 || grp_2 !== -1))
+      // isLoading == false
     );
   }
 
   setCategories = (grp_1: number) => {
-    if (!this.state.isLoading) {
-      if (this.state.grp_1 == grp_1) {
-        return this.setState({ grp_1: -1 });
-      }
-      this.setState({ grp_1 });
-    }
+    if (this.state.isLoading) return;
+
+    // if the same category is pressed
+    if (this.state.grp_1 === grp_1) grp_1 = -1;
+
+    this.setState({ grp_1 });
   };
 
   setTypes = (grp_2: number) => {
-    if (!this.state.isLoading) {
-      if (this.state.grp_2 == grp_2) {
-        return this.setState({ grp_2: -1 });
-      }
-      this.setState({ grp_2 });
-    }
+    if (this.state.isLoading) return;
+
+    // if the same type is pressed
+    if (this.state.grp_2 == grp_2) grp_2 = -1;
+
+    this.setState({ grp_2 });
   };
 
   render() {
-    const { isLoading } = this.state;
+    const { isLoading, text, grp_1, grp_2 } = this.state;
 
     return (
       <Content style={styles.flex1}>
@@ -150,7 +148,7 @@ class SearchWithHasthagsTabContainer extends Component<Props, State> {
               returnKeyType="search"
               showLoadingIcon={isLoading}
               underlineColorAndroid={colors.black}
-              value={this.state.text}
+              value={text}
             />
           </View>
           <View style={styles.grps}>
@@ -167,7 +165,7 @@ class SearchWithHasthagsTabContainer extends Component<Props, State> {
                   <RadioButtonInput
                     obj={option}
                     index={i}
-                    isSelected={this.state.grp_1 == i}
+                    isSelected={grp_1 == i}
                     onPress={this.setCategories}
                     borderWidth={2}
                     buttonInnerColor={colors.black}
@@ -194,7 +192,7 @@ class SearchWithHasthagsTabContainer extends Component<Props, State> {
                   <RadioButtonInput
                     obj={option}
                     index={i}
-                    isSelected={this.state.grp_2 == i}
+                    isSelected={grp_2 == i}
                     onPress={this.setTypes}
                     borderWidth={2}
                     buttonInnerColor={colors.black}
@@ -262,10 +260,6 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps: any = (state: ReduxState) => ({
-  userData: state.LoginReducer.data,
-});
-
 export const SearchWithHasthagsTab = withNavigation(
-  connect(mapStateToProps)(SearchWithHasthagsTabContainer)
+  connect(null)(SearchWithHasthagsTabContainer)
 );

@@ -223,7 +223,7 @@ export default {
     reviews_label: 'Відгуки',
     followers_label: 'Клієнти',
     following_label: 'Магазини',
-    suggestions_label: 'Рекомендовані',
+    suggestions_label: 'Рекоменд',
     edit_profile_button: 'Редагувати профіль',
     save_profile_button: 'Зберегти',
     follow_button: 'додати',

@@ -65,7 +65,7 @@ class ReviewCard extends PureComponent<Props> {
         <Body>
           <View style={styles.contentRow}>
             <Text numberOfLines={1}>
-              {ui.formatCurrency(order.priceOfItem, 0)} {I18n.t(item.currency)}
+              {ui.formatCurrency(order.priceOfItem, 0)} {I18n.t(order.currency)}
             </Text>
             {review ? (
               <Text numberOfLines={1}>{ui.formatTime(review.createdAt)}</Text>
@@ -109,7 +109,7 @@ class ReviewCard extends PureComponent<Props> {
                 order.status == 'cancelled' ? { color: colors.red } : {},
               ]}
               numberOfLines={3}>
-              {i18n.t(`reviews.${order.status}`)}
+              {I18n.t(`reviews.${order.status}`)}
             </Text>
           )}
           <Text numberOfLines={1}>

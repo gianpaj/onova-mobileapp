@@ -5,7 +5,7 @@ import { Steps } from 'antd-mobile-rn';
 import { StyleSheet, View } from 'react-native';
 import { differenceInHours, format } from 'date-fns';
 
-import i18n from '../i18n';
+import I18n from '../i18n';
 
 import type { Order } from '../types';
 
@@ -52,42 +52,42 @@ class OrderStatus extends PureComponent<Props> {
 
     const steps = [
       {
-        title: i18n.t('order_status.confirmed'),
+        title: I18n.t('order_status.confirmed'),
         description: formatDate(order.datePaid),
         status: 'finish',
       },
     ];
 
     const shipped = {
-      title: i18n.t('order_status.shipped'),
-      description: `${formatDate(order.dateShipped)} ${i18n.t(
+      title: I18n.t('order_status.shipped'),
+      description: `${formatDate(order.dateShipped)} ${I18n.t(
         'order_status.updated'
       )}`,
       status: 'finish',
     };
     if (order.status == 'confirmed') {
       steps.push({
-        title: i18n.t('order_status.not_shipped'),
+        title: I18n.t('order_status.not_shipped'),
         status: 'wait',
       });
     } else if (order.status == 'shipped') {
       steps.push(shipped);
       steps.push({
-        title: i18n.t('order_status.not_collected'),
+        title: I18n.t('order_status.not_collected'),
         status: 'wait',
       });
     } else if (order.status == 'delivered') {
       steps.push(shipped);
       steps.push({
-        title: i18n.t('order_status.not_collected'),
+        title: I18n.t('order_status.not_collected'),
         description: formatDate(order.dateDelivered),
         status: 'wait',
       });
     } else if (order.status == 'completed') {
       steps.push(shipped);
       steps.push({
-        title: i18n.t('order_status.collected'),
-        description: `${formatDate(order.finalisedAt)} ${i18n.t(
+        title: I18n.t('order_status.collected'),
+        description: `${formatDate(order.finalisedAt)} ${I18n.t(
           'order_status.updated'
         )}`,
         status: 'finish',
@@ -96,16 +96,16 @@ class OrderStatus extends PureComponent<Props> {
       steps.push(shipped);
       steps.push({
         // or refused (still not determined in API side)
-        title: i18n.t('order_status.failed_to_collect'),
-        description: `${formatDate(order.finalisedAt)} ${i18n.t(
+        title: I18n.t('order_status.failed_to_collect'),
+        description: `${formatDate(order.finalisedAt)} ${I18n.t(
           'order_status.updated'
         )}`,
         status: 'error',
       });
     } else if (order.status == 'failed_by_seller') {
       steps.push({
-        title: i18n.t('order_status.failed_to_ship'),
-        description: `${formatDate(order.finalisedAt)} ${i18n.t(
+        title: I18n.t('order_status.failed_to_ship'),
+        description: `${formatDate(order.finalisedAt)} ${I18n.t(
           'order_status.updated'
         )}`,
         status: 'error',

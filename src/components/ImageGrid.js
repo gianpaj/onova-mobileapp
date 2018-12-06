@@ -119,7 +119,8 @@ class ImageGridComponent extends React.PureComponent<Props, State> {
         items: data,
         isLoading: false,
         isRefreshing: false,
-        lastId: data.length > 0 ? lastItem._id : '',
+        lastId: data.length ? lastItem._id : '',
+        theEnd: false,
       });
     } catch (err) {
       this.setState({
@@ -158,8 +159,12 @@ class ImageGridComponent extends React.PureComponent<Props, State> {
           }
           const lastItem = data[data.length - 1];
 
+          const map = items.map(i => i._id);
+
+          const filtered = data.filter(i => -1 === map.indexOf(i._id));
+
           this.setState({
-            items: [...items, ...data],
+            items: [...items, ...filtered],
             lastId: lastItem._id,
             isRefreshing: false,
             isLoading: false,
@@ -220,7 +225,7 @@ class ImageGridComponent extends React.PureComponent<Props, State> {
       </View>
     );
 
-  renderLoading = (
+  renderLoading = () => (
     <View style={styles.container}>
       <ActivityIndicator size="large" />
     </View>
@@ -231,7 +236,7 @@ class ImageGridComponent extends React.PureComponent<Props, State> {
 
     if (this.firstFocus) return null;
 
-    if (!hasError && isLoading) return this.renderLoading;
+    if (!hasError && isLoading) return this.renderLoading();
 
     return (
       <View style={styles.container}>

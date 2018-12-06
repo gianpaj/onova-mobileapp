@@ -93,7 +93,8 @@ class ImageGridSearchComponent extends React.Component<Props, State> {
           isLoading: false,
           isRefreshing: false,
           items: data,
-          lastId: data.length > 0 ? lastItem._id : '',
+          lastId: data.length ? lastItem._id : '',
+          theEnd: false,
         });
       })
       .catch(e => {
@@ -144,8 +145,12 @@ class ImageGridSearchComponent extends React.Component<Props, State> {
           }
           const lastItem = data[data.length - 1];
 
+          const map = items.map(i => i._id);
+
+          const filtered = data.filter(i => -1 === map.indexOf(i._id));
+
           this.setState({
-            items: [...items, ...data],
+            items: [...items, ...filtered],
             lastId: lastItem._id,
             isRefreshing: false,
             isLoading: false,

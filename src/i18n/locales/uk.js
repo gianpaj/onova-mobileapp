@@ -342,9 +342,9 @@ export default {
     purchased_tab: 'Куплено',
     alert_info_title: 'Потрібно більше відгуків?',
     alert_info_body:
-      'Щоб перенести свої відгуки з VK, Instagram, Facebook або іншого місця напиши нам на support@onova.co',
+      'Щоб перенести свої відгуки з VK, Instagram, Facebook або іншого місця напиши нам на re@onova.co',
     empty_state_message:
-      'Щоб перенести свої відгуки з VK, Instagram, Facebook або іншого місця напиши нам на support@onova.co',
+      'Щоб перенести свої відгуки з VK, Instagram, Facebook або іншого місця напиши нам на re@onova.co',
     completed: 'Успішна покупка без відгуку',
     cancelled: 'Продавець відмінив покупку',
     failed_by_buyer: 'Покупець не забрав покупку',
@@ -362,7 +362,7 @@ export default {
     alert_msg_email_address_changed:
       'Новий email має бути підтверджено. Ми надіслали інструкції',
     alert_msg_settigs_changed: 'Зміни збережено',
-    safe_purchase_rules: 'Правила Безпечної угоди',
+    safe_purchase_rules: 'Офіційні правила безпечної угоди',
     faq: 'Поширені запитання',
   },
   add_review: {

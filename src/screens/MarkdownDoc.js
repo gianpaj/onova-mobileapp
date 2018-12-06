@@ -93,12 +93,12 @@ class MarkdownDoc extends React.Component {
           </Left>
           <Body
             style={{
-              flex: 4,
+              flex: 5,
               justifyContent: 'center',
               alignItems: 'stretch',
             }}>
             <Title style={{ color: colors.black }}>
-              Правила Безпечної угоди
+              Офіційні правила безпечної угоди
             </Title>
           </Body>
           <Right />

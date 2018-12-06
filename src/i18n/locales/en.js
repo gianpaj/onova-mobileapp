@@ -341,9 +341,9 @@ http://onova.co/uploader
     purchased_tab: 'Purchased',
     alert_info_title: 'Want more reviews?',
     alert_info_body:
-      'To transfer your reviews from VK, Instagram, Facebook or similar, contact us at support@onova.co',
+      'To transfer your reviews from VK, Instagram, Facebook or similar, contact us at re@onova.co',
     empty_state_message:
-      'To transfer your reviews from VK, Instagram, Facebook or similar, contact us at support@onova.co',
+      'To transfer your reviews from VK, Instagram, Facebook or similar, contact us at re@onova.co',
     completed: 'Successful transaction. No review left',
     cancelled: 'Seller cancelled the order',
     failed_by_buyer: 'Buyer failed to pick up or refused the item',

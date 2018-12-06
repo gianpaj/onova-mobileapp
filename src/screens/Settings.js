@@ -588,15 +588,6 @@ class SettingsContainer extends Component<Props, State> {
             />
             <HR full />
             <TouchableOpacity
-              style={{ marginVertical: 15, marginHorizontal: 20, width: '50%' }}
-              hitSlop={linkHitSlop}
-              accessibilityRole="link"
-              onPress={() => this.props.navigation.navigate('markdownDoc')}>
-              <Text style={styles.labelLink}>
-                {I18n.t('settings.safe_purchase_rules')}
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
               style={{
                 marginVertical: 15,
                 marginHorizontal: 20,
@@ -606,6 +597,15 @@ class SettingsContainer extends Component<Props, State> {
               accessibilityRole="link"
               onPress={linking.openURL.bind(this, 'https://onova.co/faq.html')}>
               <Text style={styles.labelLink}>{I18n.t('settings.faq')}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{ marginVertical: 15, marginHorizontal: 20, width: '70%' }}
+              hitSlop={linkHitSlop}
+              accessibilityRole="link"
+              onPress={() => this.props.navigation.navigate('markdownDoc')}>
+              <Text style={styles.labelLink}>
+                {I18n.t('settings.safe_purchase_rules')}
+              </Text>
             </TouchableOpacity>
           </View>
           {/* TODO: add Notifications switch */}

@@ -55,14 +55,18 @@ class ChatContainer extends Component<Props, State> {
   };
 
   componentDidMount() {
+    // return this.setState({
+    //   ordersAndChats: [],
+    //   isLoading: false,
+    // });
     if (pusherCurrentUser) {
       this.getChatsAndTheirOrders()
-        .then(ordersAndChats => {
+        .then(ordersAndChats =>
           this.setState({
             ordersAndChats,
             isLoading: false,
-          });
-        })
+          })
+        )
         .catch(err => {
           this.setState({ hasError: true });
           console.debug(err);
@@ -358,6 +362,7 @@ class ChatContainer extends Component<Props, State> {
                 }
                 renderItem={this._renderRoomRow}
                 style={st.root}
+                contentContainerStyle={{ flexGrow: 1 }}
               />
             </View>
           )}
@@ -386,7 +391,6 @@ const st = StyleSheet.create({
     alignItems: 'center',
     flex: 1,
     justifyContent: 'center',
-    padding: 20,
   },
   root: {
     height: '100%',

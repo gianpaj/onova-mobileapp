@@ -903,6 +903,8 @@ const styles = StyleSheet.create({
   radioButtonInput: {
     marginHorizontal: '5%',
     width: 60,
+    alignItems: 'center',
+    alignSelf: 'center',
   },
   minPrice: {
     color: colors.red,

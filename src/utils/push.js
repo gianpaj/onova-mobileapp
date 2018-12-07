@@ -29,7 +29,8 @@ export async function registerPushNotifications(): Promise<string | null> {
           error,
           level: 'warning',
         });
-        throw error;
+        // hack iOS01: to allow the login to continue even though the user denied permission - should throw an error
+        return error;
         // TODO: handle
       }
     }

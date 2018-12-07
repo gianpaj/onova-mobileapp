@@ -30,6 +30,7 @@ import { Avatar, Header, Title } from '../components';
 import I18n from '../i18n';
 import colors from '../config/colors';
 import typography from '../config/typography';
+import * as ui from '../utils/ui';
 import * as api from '../utils/api';
 
 import type { NavigationScreenProp } from 'react-navigation';

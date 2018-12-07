@@ -56,6 +56,7 @@ type Props = {
 type State = {
   // itemHeight: number,
   hasError: boolean,
+  initializing: boolean,
   isLoading: boolean,
   isRefreshing: boolean,
   items: Array<any>,
@@ -71,6 +72,7 @@ class ImageGridComponent extends React.PureComponent<Props, State> {
   state = {
     // itemHeight: 0,
     hasError: false,
+    initializing: true,
     isLoading: false,
     isRefreshing: false,
     items: [],
@@ -83,13 +85,17 @@ class ImageGridComponent extends React.PureComponent<Props, State> {
     // defaultImageCacheManager.clearCache();
     if (this.props.focused) {
       this.firstFocus = false;
-      this.fetchItems();
+      this.fetchItems()
+        .catch(err => this.setState({ hasError: true }))
+        .then(() => this.setState({ initializing: false }));
     }
 
     this.props.navigation.addListener('didFocus', () => {
       if (this.props.shouldRefresh) {
         setTimeout(() => {
-          this.fetchItems();
+          this.fetchItems()
+            .catch(err => this.setState({ hasError: true }))
+            .then(() => this.setState({ initializing: false }));
           this.props.dispatch(disableRefresh());
         }, 1000);
       }
@@ -99,7 +105,9 @@ class ImageGridComponent extends React.PureComponent<Props, State> {
   componentDidUpdate() {
     if (this.firstFocus && this.props.focused) {
       this.firstFocus = false;
-      this.fetchItems();
+      this.fetchItems()
+        .catch(err => this.setState({ hasError: true }))
+        .then(() => this.setState({ initializing: false }));
     }
   }
 
@@ -107,13 +115,16 @@ class ImageGridComponent extends React.PureComponent<Props, State> {
    * used when pulling and refreshing AND when initially
    */
   fetchItems = async () => {
-    this.setState({ isLoading: true });
+    const loader = setTimeout(() => {
+      this.setState({ isLoading: true });
+    }, 300);
     const { token } = this.props;
 
     try {
       const { data } = await api.get(`${this.props.apiURL}&limit=${LIMIT}`, {
         token,
       });
+      clearTimeout(loader);
       const lastItem = data[data.length - 1];
       this.setState({
         items: data,
@@ -122,13 +133,17 @@ class ImageGridComponent extends React.PureComponent<Props, State> {
         lastId: data.length ? lastItem._id : '',
         theEnd: false,
       });
+      return;
     } catch (err) {
+      clearTimeout(loader);
       this.setState({
+        items: [],
         hasError: true,
         isLoading: false,
         isRefreshing: false,
       });
       console.error(err);
+      throw err;
     }
   };
 
@@ -171,6 +186,7 @@ class ImageGridComponent extends React.PureComponent<Props, State> {
           });
         } catch (err) {
           this.setState({
+            items: [],
             hasError: true,
             isRefreshing: false,
             isLoading: false,
@@ -218,13 +234,6 @@ class ImageGridComponent extends React.PureComponent<Props, State> {
     );
   };
 
-  renderFooter = () =>
-    this.state.isRefreshing && (
-      <View style={{ paddingVertical: 20 }}>
-        <ActivityIndicator size="large" />
-      </View>
-    );
-
   renderLoading = () => (
     <View style={styles.container}>
       <ActivityIndicator size="large" />
@@ -232,11 +241,11 @@ class ImageGridComponent extends React.PureComponent<Props, State> {
   );
 
   render() {
-    const { hasError, isLoading, items } = this.state;
+    const { hasError, isLoading, initializing, items } = this.state;
 
     if (this.firstFocus) return null;
 
-    if (!hasError && isLoading) return this.renderLoading();
+    if (!hasError && initializing) return this.renderLoading();
 
     return (
       <View style={styles.container}>
@@ -251,7 +260,6 @@ class ImageGridComponent extends React.PureComponent<Props, State> {
           numColumns={3}
           onRefresh={this.fetchItems}
           refreshing={isLoading}
-          ListFooterComponent={this.renderFooter}
           renderItem={this.renderItem}
           // showsVerticalScrollIndicator={false}
           style={styles.list}

@@ -206,12 +206,15 @@ class ImageGridSearchComponent extends React.Component<Props, State> {
     );
   };
 
-  renderFooter = () =>
-    this.state.isRefreshing && (
+  renderFooter = () => {
+    if (!this.state.isRefreshing) return null;
+
+    return (
       <View style={{ paddingVertical: 20 }}>
         <ActivityIndicator size="large" />
       </View>
     );
+  };
 
   renderLoading = () => (
     <View style={styles.container}>
@@ -255,7 +258,7 @@ class ImageGridSearchComponent extends React.Component<Props, State> {
   renderEmptyState = () => {
     if (this.state.hasError) {
       return (
-        <View style={[styles.container, { height: height - 150 }]}>
+        <View style={styles.emptyContainer}>
           <Text style={styles.centerText}>{I18n.t('image_grid.error')}</Text>
         </View>
       );

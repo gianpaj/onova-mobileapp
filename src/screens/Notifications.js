@@ -101,33 +101,46 @@ class NotificationsContainer extends Component<Props, State> {
   );
 
   loadMore = async () => {
-    this.setState({ isRefreshing: true });
-    const { token } = this.props;
-    const res = await api.get(
-      `/api/users/notifications?lastId=${this.state.lastId}`,
-      {
+    const { data, lastId, isRefreshing } = this.state;
+
+    if (isRefreshing) return;
+
+    const lastIdQuery = lastId ? `lastId=${lastId}` : '';
+
+    try {
+      this.setState({ isRefreshing: true });
+      const { token } = this.props;
+      const res = await api.get(`/api/users/notifications?${lastIdQuery}`, {
         token,
+      });
+      if (res.data.length == 0) {
+        return this.setState({ isRefreshing: false, lastId: '' });
       }
-    );
+
+      const lastNotif = res.data[res.data.length - 1];
+
+      this.setState({
+        data: [...data, ...res.data],
+        lastId: lastNotif._id,
+      });
+    } catch (error) {
+      console.error(err);
+    }
     this.setState({ isRefreshing: false });
-    if (res.data.length == 0) return;
-
-    const lastNotif = res.data[res.data.length - 1];
-
-    this.setState({
-      data: [...this.state.data, ...res.data],
-      lastId: lastNotif._id,
-    });
   };
 
-  renderFooter = () =>
-    this.state.lastId === '' && (
+  renderFooter = () => {
+    // if there are no items OR there is no lastId
+    if (!this.state.data.length || this.state.lastId === '') return null;
+
+    return (
       <View style={styles.container}>
         <Button full light onPress={this.loadMore}>
           <Text>{I18n.t('notifications.load_more_button')}</Text>
         </Button>
       </View>
     );
+  };
 
   goToProfile = (user: UserData) => {
     const { _id } = this.props.userData;

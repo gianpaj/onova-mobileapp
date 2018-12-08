@@ -801,7 +801,10 @@ class CheckoutContainer extends Component<Props, State> {
                     onPress={this.onCheckout}
                     full>
                     <Text
-                      style={[!this.canMakePayment() && styles.payButtonText]}>
+                      style={[
+                        styles.payButtonText,
+                        this.canMakePayment() ? {} : { color: colors.white },
+                      ]}>
                       {I18n.t('checkout.payment_button')}
                     </Text>
                   </NBButton>
@@ -830,7 +833,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   payButtonText: {
-    color: colors.white,
+    fontWeight: '600',
   },
   label: {
     color: colors.black,

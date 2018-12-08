@@ -42,7 +42,7 @@ class PaymentView extends Component<Props, State> {
       console.debug(status);
       this.initializeListeners();
       if (status === 'ua-finished') {
-        throw new Error('Payment has been already completed');
+        throw new Error(I18n.t('paymentView.error_payment'));
       }
       const payment = await this.createPayment();
       console.debug(payment);

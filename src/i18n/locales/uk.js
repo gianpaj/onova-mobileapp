@@ -211,6 +211,9 @@ export default {
     dialog_title: 'Ти впевнений що хочеш скасувати замовлення?',
     reason_placeholder: 'Напиши чому ти скасовуєш замовлення',
     error_reason_is_mandatory: 'Будь ласка вкажи причину',
+    confirmation_success:
+      'Покупку підтверджено, гроші з рахунку покупця заблоковано, надсилайте товар за вказаною накладною',
+    cancellation_success: 'Покупку скасовано',
   },
   drops_grid: {
     empty_state_title: 'Створити дроп',
@@ -393,6 +396,9 @@ export default {
     header: 'Рекомендовані',
     empty_state_message_title: 'Сьогодні немає рекомендацій',
     empty_state_message_body: 'Будь ласка перегляньте завтра',
+  },
+  paymentView: {
+    error_payment: 'Покупка вже була завершена',
   },
   UAH: 'грн',
 };

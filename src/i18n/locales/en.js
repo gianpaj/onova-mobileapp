@@ -209,6 +209,9 @@ http://onova.co/uploader
     dialog_title: 'Are you sure to cancel the order?',
     reason_placeholder: 'Write why you are cancelling the order',
     error_reason_is_mandatory: 'Please enter a reason',
+    confirmation_success:
+      "Awesome! Let's continue and get you the tracking number",
+    cancellation_success: 'The order has been cancelled',
   },
   drops_grid: {
     empty_state_title: 'Make a Drop',
@@ -392,6 +395,9 @@ http://onova.co/uploader
     header: 'Suggested users',
     empty_state_message_title: 'No suggestions today',
     empty_state_message_body: 'Please check tomorrow',
+  },
+  paymentView: {
+    error_payment: 'Payment has been already completed',
   },
   UAH: 'UAH',
 };

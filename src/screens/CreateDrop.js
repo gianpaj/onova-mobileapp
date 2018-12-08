@@ -349,7 +349,7 @@ export class CreateDropScreen extends React.Component<Props, State> {
         // 1st -200
         // 2nd -100
         // 3rd -0
-        date: new Date(datetime.getTime() - productsReady.length - 1 - i * 100),
+        date: new Date(datetime.getTime() - (productsReady.length - 1 - i) * 100),
         dropId,
         latitude: location.latitude.toString(),
         longitude: location.longitude.toString(),

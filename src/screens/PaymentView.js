@@ -119,7 +119,7 @@ class PaymentView extends Component<Props, State> {
   };
 
   onSuccess = () => {
-    Toast.success(I18n.t('checkout.success_msg'), 5);
+    Toast.success(I18n.t('checkout.success_msg'), 10);
     this.props.dispatch(enableRefresh());
     this.props.dispatch(disableCancelOrder());
     // go back to home page

@@ -2,7 +2,7 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Button, View } from 'react-native';
+import { Button, Keyboard, View } from 'react-native';
 import { WebView } from 'react-native-webview';
 
 import { enableRefresh } from '../actions/actionCreator';
@@ -46,16 +46,51 @@ function JStoInject() {
   }
   window.addEventListener('message', listener, false);
 }
-class GetCardId extends Component {
+
+type Props = {
+  dispatch: Dispatch,
+  navigation: NavigationScreenProp<*>,
+  token: string,
+  userData: UserData,
+};
+
+type State = {
+  showFooter: boolean,
+  tokenForCardIFrame: string,
+};
+
+class GetCardId extends Component<Props, State> {
   state = {
     tokenForCardIFrame: null,
+    showFooter: true,
   };
 
   async componentDidMount() {
     const tokenForCardIFrame = await this.generateTokenForIFrame();
     console.log(tokenForCardIFrame);
     this.setState({ tokenForCardIFrame });
+    this.initializeListeners();
   }
+
+  componentWillUnmount() {
+    this.keyboardDidShowListener.remove();
+    this.keyboardDidHideListener.remove();
+  }
+
+  initializeListeners() {
+    this.keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      this._keyboardDidShow
+    );
+    this.keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      this._keyboardDidHide
+    );
+  }
+
+  _keyboardDidShow = () => this.setState({ showFooter: false });
+
+  _keyboardDidHide = () => this.setState({ showFooter: true });
 
   async generateTokenForIFrame() {
     const { data } = await api.get('/api/auth/get-token');
@@ -84,7 +119,9 @@ class GetCardId extends Component {
   };
 
   render() {
-    if (!this.state.tokenForCardIFrame) return null;
+    const { showFooter, tokenForCardIFrame } = this.state;
+
+    if (!tokenForCardIFrame) return null;
     return (
       <View style={{ flex: 1, marginTop: 20 }}>
         <WebView
@@ -93,9 +130,7 @@ class GetCardId extends Component {
             html: `<html>
               <head><meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0"></head>
               <body>
-                <iframe id="uapayFrame" style="border: 0; height: 220px; width: 100%" src="${URL_BASE}/api/iframe/${
-              this.state.tokenForCardIFrame
-            }"></iframe>
+                <iframe id="uapayFrame" style="border: 0; height: 220px; width: 100%" src="${URL_BASE}/api/iframe/${tokenForCardIFrame}"></iframe>
                 <button id="btnSubmit">${I18n.t(
                   'checkout.save_card_info'
                 )}</button>
@@ -106,10 +141,12 @@ class GetCardId extends Component {
           scrollEnabled={false} // ios
           startInLoadingState
         />
-        <Button
-          title={I18n.t('checkout.go_back')}
-          onPress={() => this.props.navigation.goBack()}
-        />
+        {showFooter && (
+          <Button
+            title={I18n.t('checkout.go_back')}
+            onPress={() => this.props.navigation.goBack()}
+          />
+        )}
       </View>
     );
   }

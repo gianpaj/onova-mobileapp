@@ -2,7 +2,7 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Button, View } from 'react-native';
+import { Button, Keyboard, View } from 'react-native';
 import { WebView } from 'react-native-webview';
 import { Toast } from 'antd-mobile-rn';
 
@@ -25,12 +25,14 @@ type Props = {
 type State = {
   payment?: any,
   isLoading: boolean,
+  showFooter: boolean,
 };
 
 class PaymentView extends Component<Props, State> {
   state = {
     payment: null,
     isLoading: true,
+    showFooter: true,
   };
 
   async componentDidMount() {
@@ -38,9 +40,9 @@ class PaymentView extends Component<Props, State> {
     try {
       const { status } = await this.getPaymentStatus();
       console.debug(status);
+      this.initializeListeners();
       if (status === 'ua-finished') {
-        ui.showToast('Payment has been already completed', 'danger');
-        return this.props.navigation.goBack();
+        throw new Error('Payment has been already completed');
       }
       const payment = await this.createPayment();
       console.debug(payment);
@@ -52,6 +54,26 @@ class PaymentView extends Component<Props, State> {
     }
     Toast.hide();
   }
+
+  componentWillUnmount() {
+    this.keyboardDidShowListener.remove();
+    this.keyboardDidHideListener.remove();
+  }
+
+  initializeListeners() {
+    this.keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      this._keyboardDidShow
+    );
+    this.keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      this._keyboardDidHide
+    );
+  }
+
+  _keyboardDidShow = () => this.setState({ showFooter: false });
+
+  _keyboardDidHide = () => this.setState({ showFooter: true });
 
   createPayment(): Promise<any> {
     const { token } = this.props;
@@ -127,9 +149,9 @@ class PaymentView extends Component<Props, State> {
   };
 
   render() {
-    if (this.state.isLoading) return null;
+    const { payment, showFooter, isLoading } = this.state;
 
-    const { payment } = this.state;
+    if (isLoading) return null;
 
     return (
       <View style={{ flex: 1, marginTop: 20 }}>
@@ -161,10 +183,12 @@ class PaymentView extends Component<Props, State> {
             }
           }}
         />
-        <Button
-          title={I18n.t('checkout.go_back')}
-          onPress={() => this.props.navigation.goBack()}
-        />
+        {showFooter && (
+          <Button
+            title={I18n.t('checkout.go_back')}
+            onPress={() => this.props.navigation.goBack()}
+          />
+        )}
       </View>
     );
   }

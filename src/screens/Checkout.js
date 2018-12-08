@@ -552,7 +552,6 @@ class CheckoutContainer extends Component<Props, State> {
           </Text>
           <View style={styles.innerRow}>
             <H1 style={styles.fontFamilyMono}>{ui.formatCurrency(total)} </H1>
-            {/* $FlowFixMe */}
             <Text>{currency}</Text>
           </View>
         </View>

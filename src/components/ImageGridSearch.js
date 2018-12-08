@@ -46,6 +46,7 @@ type Props = {
 type State = {
   // loadingMore: boolean,
   hasError: boolean,
+  initializing: boolean,
   isLoading: boolean,
   isRefreshing: boolean,
   itemHeight: number,
@@ -57,6 +58,7 @@ const { width, height } = Dimensions.get('window');
 class ImageGridSearchComponent extends React.Component<Props, State> {
   state = {
     hasError: false,
+    initializing: true,
     isLoading: false,
     isRefreshing: false,
     itemHeight: 0,
@@ -67,13 +69,16 @@ class ImageGridSearchComponent extends React.Component<Props, State> {
     // const defaultImageCacheManager = ImageCacheManager();
     // defaultImageCacheManager.clearCache();
 
-    this.fetchItems(this.props.terms);
+    this.fetchItems()
+      .catch(err => this.setState({ hasError: true }))
+      .then(() => this.setState({ initializing: false }));
   }
 
   /**
    * used when pulling and refreshing AND when initially
    */
-  fetchItems({ tag, grp_1, grp_2 }): Promise<any> {
+  fetchItems = (): Promise<any> => {
+    const { tag, grp_1, grp_2 } = this.props.terms;
     this.setState({ isLoading: true });
     const { token } = this.props;
     const tagQuery = tag == '' ? '' : `tag=${tag}`;
@@ -112,7 +117,7 @@ class ImageGridSearchComponent extends React.Component<Props, State> {
         });
         console.error(e);
       });
-  }
+  };
 
   loadMore = () => {
     const { lastId, items, theEnd, isRefreshing } = this.state;
@@ -206,16 +211,6 @@ class ImageGridSearchComponent extends React.Component<Props, State> {
     );
   };
 
-  renderFooter = () => {
-    if (!this.state.isRefreshing) return null;
-
-    return (
-      <View style={{ paddingVertical: 20 }}>
-        <ActivityIndicator size="large" />
-      </View>
-    );
-  };
-
   renderLoading = () => (
     <View style={styles.container}>
       <ActivityIndicator size="large" />
@@ -223,9 +218,9 @@ class ImageGridSearchComponent extends React.Component<Props, State> {
   );
 
   render() {
-    const { hasError, isLoading, items } = this.state;
+    const { hasError, isLoading, initializing, items } = this.state;
 
-    if (!hasError && isLoading) return this.renderLoading();
+    if (!hasError && initializing) return this.renderLoading();
 
     return (
       <View style={styles.container}>
@@ -240,7 +235,6 @@ class ImageGridSearchComponent extends React.Component<Props, State> {
           numColumns={3}
           onRefresh={this.fetchItems}
           refreshing={isLoading}
-          ListFooterComponent={this.renderFooter}
           renderItem={this.renderItem}
           // showsVerticalScrollIndicator={false}
           style={styles.list}

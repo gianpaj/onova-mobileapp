@@ -9,7 +9,7 @@ import {
   RefreshControl,
   StyleSheet,
   Text,
-  TouchableHighlight,
+  TouchableOpacity,
   View,
 } from 'react-native';
 import { Body, Button, Container, Icon, Left, Right, Title } from 'native-base';
@@ -111,9 +111,8 @@ class FollowingContainer extends Component<Props, State> {
 
     const shouldShowButton = user._id !== _id;
     return (
-      <TouchableHighlight
+      <TouchableOpacity
         style={{ width: initialLayout.width / 3 }}
-        underlayColor={colors.grey4}
         onPress={() => this.goToProfile(user)}>
         <View style={{ alignItems: 'center' }}>
           <Avatar
@@ -125,7 +124,6 @@ class FollowingContainer extends Component<Props, State> {
             onButtonPress={() =>
               this.onFollowOrUnfollow(user._id, user.amIAFollower)
             }
-            onPress={() => this.goToProfile(user)}
           />
           <Text
             style={[
@@ -136,7 +134,7 @@ class FollowingContainer extends Component<Props, State> {
             @{user.username}
           </Text>
         </View>
-      </TouchableHighlight>
+      </TouchableOpacity>
     );
   };
 

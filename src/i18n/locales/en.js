@@ -258,6 +258,7 @@ http://onova.co/uploader
     no_orders: 'No orders',
   },
   checkout: {
+    header: 'Checkout',
     success_msg: "Super! We'll now alert the seller. The confirmation should arrive within __time__ hours".replace(
       '__time__',
       defaults.numHoursSellerHasToConfirm

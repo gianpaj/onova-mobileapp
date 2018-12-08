@@ -17,8 +17,6 @@ import {
   Button as NBButton,
   Container,
   Content,
-  H1,
-  H3,
   Icon as NBIcon,
   Left,
   Footer,
@@ -551,25 +549,25 @@ class CheckoutContainer extends Component<Props, State> {
             {I18n.t('checkout.total_row')}
           </Text>
           <View style={styles.innerRow}>
-            <H1 style={styles.fontFamilyMono}>{ui.formatCurrency(total)} </H1>
+            <Text style={[styles.price, styles.priceTotal]}>
+              {ui.formatCurrency(total)}{' '}
+            </Text>
             <Text>{currency}</Text>
           </View>
         </View>
         <View style={styles.row}>
           <Text>{I18n.t('checkout.item_row')}</Text>
           <View style={styles.innerRow}>
-            <H3 style={styles.fontFamilyMono}>
+            <Text style={styles.price}>
               {ui.formatCurrency(order.priceOfItem)}{' '}
-            </H3>
+            </Text>
             <Text>{currency}</Text>
           </View>
         </View>
         <View style={styles.row}>
           <Text>{I18n.t('checkout.shipping_cost_row')}</Text>
           <View style={styles.innerRow}>
-            <H3 style={styles.fontFamilyMono}>
-              {ui.formatCurrency(shippingFee)}{' '}
-            </H3>
+            <Text style={styles.price}>{ui.formatCurrency(shippingFee)} </Text>
             <Text>{currency}</Text>
           </View>
         </View>
@@ -657,7 +655,7 @@ class CheckoutContainer extends Component<Props, State> {
     return (
       <Container>
         <Header>
-          <Left>
+          <Left style={styles.container}>
             <NBButton
               transparent
               dark
@@ -665,8 +663,10 @@ class CheckoutContainer extends Component<Props, State> {
               <NBIcon ios="ios-arrow-back" android="md-arrow-back" />
             </NBButton>
           </Left>
-          <Body>
-            <Title>Checkout</Title>
+          <Body style={styles.container}>
+            <Title style={{ color: colors.black }}>
+              {I18n.t('checkout.header')}
+            </Title>
           </Body>
           <Right>
             {/* <NBButton
@@ -679,7 +679,7 @@ class CheckoutContainer extends Component<Props, State> {
           </Right>
         </Header>
         {isLoading || !cities ? (
-          <View style={styles.loadingContainer}>
+          <View style={styles.container}>
             <ActivityIndicator size="large" />
           </View>
         ) : (
@@ -826,13 +826,18 @@ class CheckoutContainer extends Component<Props, State> {
 }
 
 const styles = StyleSheet.create({
-  loadingContainer: {
+  container: {
     alignItems: 'stretch',
     flex: 1,
     justifyContent: 'center',
   },
   payButtonText: {
+    color: colors.black,
     fontWeight: '600',
+    fontSize: Platform.select({
+      android: 18,
+      ios: 16,
+    }),
   },
   label: {
     color: colors.black,
@@ -843,11 +848,17 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     padding: 10,
   },
-  fontFamilyMono: {
+  price: {
     fontFamily: Platform.select({
       android: 'monospace',
       ios: 'Helvetica Neue',
     }),
+    fontSize: 21,
+    lineHeight: 22,
+  },
+  priceTotal: {
+    color: colors.black,
+    fontWeight: '600',
   },
   row: {
     alignItems: 'baseline',
@@ -858,7 +869,10 @@ const styles = StyleSheet.create({
     alignItems: 'baseline',
     flexDirection: 'row',
     justifyContent: 'flex-end',
-    minWidth: 180,
+    minWidth: Platform.select({
+      android: 160,
+      ios: 130,
+    }),
   },
   autocompleteItemContainers: {
     // top: -30,

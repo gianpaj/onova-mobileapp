@@ -259,6 +259,7 @@ export default {
     no_orders: 'Немає замовлень',
   },
   checkout: {
+    header: 'Купівля',
     success_msg: 'Ми надіслали замовлення продавцеві, чекай на підтвердження протягом __time__ годин'.replace(
       '__time__',
       defaults.numHoursSellerHasToConfirm

@@ -88,10 +88,9 @@ class FollowersContainer extends Component<Props, State> {
   async onFollowOrUnfollow(_id: string, amIAFollower: boolean) {
     const { token } = this.props;
     const followOrUnfollow = amIAFollower ? 'unfollow' : 'follow';
+    console.debug(followOrUnfollow, _id);
     try {
       await api.post(`/api/users/${_id}/${followOrUnfollow}`, {}, { token });
-      console.debug(followOrUnfollow, _id);
-      // this.setState({ isFollowing: followOrUnfollow == 'follow' });
       this.refreshFollowers();
     } catch (err) {
       console.error(err);
@@ -213,9 +212,7 @@ class FollowersContainer extends Component<Props, State> {
     );
   }
 
-  onLayout = () => {
-    this.setState({ itemHeight: initialLayout.width / 3 });
-  };
+  onLayout = () => this.setState({ itemHeight: initialLayout.width / 3 });
 
   getItemLayout = (data: any, index: number) => {
     const { itemHeight } = this.state;

@@ -249,7 +249,7 @@ export function getFollowers(
   token: string
 ): Promise<Array<UserData> | Error> {
   return new Promise((resolve, reject) => {
-    get(`/api/users/${userId}/followers`, { token })
+    get(`/api/users/${userId}/followers?limit=500`, { token })
       .then(res => resolve(res.data))
       .catch(err => reject(err));
   });

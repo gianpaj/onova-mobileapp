@@ -71,7 +71,7 @@ class FollowingContainer extends Component<Props, State> {
       userId = this.props.navigation.state.params.userId;
     }
 
-    const res = await api.get(`/api/users/${userId}/following`, {
+    const res = await api.get(`/api/users/${userId}/following?limit=500`, {
       token,
     });
     // get the first image size and then setState `data` for the FlatList
@@ -90,19 +90,16 @@ class FollowingContainer extends Component<Props, State> {
     });
   };
 
-  onFollowOrUnfollow(_id: string, amIAFollower: boolean) {
+  async onFollowOrUnfollow(_id: string, amIAFollower: boolean) {
     const { token } = this.props;
     const followOrUnfollow = amIAFollower ? 'unfollow' : 'follow';
-    api
-      .post(`/api/users/${_id}/${followOrUnfollow}`, {}, { token })
-      .then(() => {
-        console.debug(followOrUnfollow, _id);
-        // this.setState({ isFollowing: followOrUnfollow == 'follow' });
-        this.refreshFollowing();
-      })
-      .catch(err => {
-        console.error(err);
-      });
+    console.debug(followOrUnfollow, _id);
+    try {
+      await api.post(`/api/users/${_id}/${followOrUnfollow}`, {}, { token });
+      this.refreshFollowers();
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   // eslint-disable-next-line react/no-unused-prop-types
@@ -219,9 +216,7 @@ class FollowingContainer extends Component<Props, State> {
     );
   }
 
-  onLayout = () => {
-    this.setState({ itemHeight: initialLayout.width / 3 });
-  };
+  onLayout = () => this.setState({ itemHeight: initialLayout.width / 3 });
 
   getItemLayout = (data: any, index: number) => {
     const { itemHeight } = this.state;

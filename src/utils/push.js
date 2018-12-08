@@ -1,6 +1,6 @@
 // @flow
 
-import { AsyncStorage } from 'react-native';
+import { AsyncStorage, Platform } from 'react-native';
 import firebase from 'react-native-firebase';
 import type { Notification, NotificationOpen } from 'react-native-firebase';
 // import Instabug from 'instabug-reactnative';
@@ -38,15 +38,10 @@ export async function registerPushNotifications(): Promise<string | null> {
     console.error(error);
     throw error;
   }
-  const initialNotification = await firebase
+  const notificationOpen: NotificationOpen = await firebase
     .notifications()
     .getInitialNotification();
-  if (initialNotification && initialNotification.notificationOpen) {
-    const {
-      notificationOpen,
-    }: {
-      notificationOpen: NotificationOpen,
-    } = initialNotification;
+  if (notificationOpen) {
     console.debug('notificationOpen');
     // App was opened by a notification
     // if (
@@ -60,7 +55,8 @@ export async function registerPushNotifications(): Promise<string | null> {
     // const action = notificationOpen.action;
     // console.log(action);
     // Get information about the notification that was opened
-    const notification: Notification = notificationOpen.notification;
+    const { notification }: Notification = notificationOpen;
+
     const lastNotification = await AsyncStorage.getItem('lastNotification');
     if (lastNotification !== notification.notificationId) {
       navigate(notification);
@@ -104,17 +100,23 @@ export async function registerPushNotifications(): Promise<string | null> {
     onMessageSubscription = firebase
       .notifications()
       .onNotification(async (msg: Notification) => {
-        addPushNotifBreadcrumb({ data: msg });
+        const { title, body, data } = msg;
+        addPushNotifBreadcrumb({ data: { title, body, data } });
         const notification = new firebase.notifications.Notification()
+          .setNotificationId(msg.notificationId)
           .setTitle(msg.title)
           .setBody(msg.body)
-          .setData(msg.data)
-          .android.setPriority(
+          .setData(msg.data);
+
+        if (Platform.OS === 'android') {
+          notification.android.setPriority(
             parseInt(msg.data.priority) ||
               firebase.notifications.Android.Priority.High
-          )
-          .android.setSmallIcon('ic_stat_ic_notification')
-          .android.setChannelId('channelId');
+          );
+          notification.android
+            .setSmallIcon('ic_stat_ic_notification')
+            .android.setChannelId('channelId');
+        }
         // You've received a notification that hasn't been displayed by the OS
         // To display it whilst the app is in the foreground, simply call the following
         try {
@@ -167,7 +169,7 @@ async function navigate(notif) {
       console.debug(triggeredBy);
       return NavigationService.navigate(
         'profileInStack',
-        user,
+        { _id: triggeredBy },
         `profile-${senderName}`
       );
     }

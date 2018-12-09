@@ -74,7 +74,7 @@ export const addErrorBreadcrumb = ({
   category: string,
   errMsg?: string,
   error?: any,
-  level: string,
+  level?: string,
 }) => {
   log(errMsg || error, level);
   if (analyticsEnabled) {

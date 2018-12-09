@@ -11,7 +11,7 @@ import { addPushNotifBreadcrumb, addErrorBreadcrumb } from '../utils/analytics';
 
 let onMessageSubscription, onNotificationOpenedSubscription;
 
-export async function registerPushNotifications(): Promise<string | null> {
+export async function registerPushNotifications(): Promise<string> {
   console.debug('registerPushNotifications');
   try {
     const enabled = await firebase.messaging().hasPermission();
@@ -55,7 +55,7 @@ export async function registerPushNotifications(): Promise<string | null> {
     // const action = notificationOpen.action;
     // console.log(action);
     // Get information about the notification that was opened
-    const { notification }: Notification = notificationOpen;
+    const { notification } = notificationOpen;
 
     const lastNotification = await AsyncStorage.getItem('lastNotification');
     if (lastNotification !== notification.notificationId) {

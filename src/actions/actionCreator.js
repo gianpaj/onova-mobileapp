@@ -338,11 +338,11 @@ const signup = (data: SignupData) => (dispatch: Dispatch) => {
       dispatch({ type: SIGNUP_FAIL });
       addNavigationBreadcrumb({ message: SIGNUP_FAIL });
     })
-    .catch((err: APIError) => {
+    .catch((error: APIError) => {
       dispatch(
         handleErrorWithAlert(
           { type: SIGNUP_FAIL },
-          err,
+          error,
           I18n.t('product.toast_warning_ok_button')
         )
       );
@@ -351,7 +351,7 @@ const signup = (data: SignupData) => (dispatch: Dispatch) => {
         error,
         level: 'warning',
       });
-      throw err;
+      throw error;
     })
     .then(() => Toast.hide());
 };
@@ -434,7 +434,7 @@ const sendToken = (
   };
 
   // hack iOS01: to allow the login to continue even though the user denied permission
-  if (typeof pushToken !== 'string') return;
+  if (typeof pushToken !== 'string') return Promise.resolve();
 
   return api
     .put(`/api/users/${userData._id}`, data, { token })
@@ -468,6 +468,7 @@ const handleErrorWithAlert = (data: any, error: any, buttonText?) => {
     console.error(error);
   }
   addErrorBreadcrumb({
+    category: 'misc',
     error,
     level: errorType == 'danger' ? 'error ' : 'warning',
   });

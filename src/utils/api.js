@@ -259,7 +259,10 @@ export function getSuggestions(token: string): Promise<any> {
   return get('/api/suggested-users/', { token });
 }
 
-export function getProduct(uuid: string, options: Options): Promise<Product> {
+export function getProduct(
+  uuid: string,
+  options: Options = {}
+): Promise<Product> {
   return new Promise((resolve, reject) => {
     get(`/api/products/${uuid}`, options)
       .then(({ data }) => resolve(data))

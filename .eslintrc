@@ -47,10 +47,7 @@
     "react/jsx-boolean-value": 2,
     "react/jsx-wrap-multilines": 2,
     "react/no-unused-prop-types": 2,
-    "react/prefer-es6-class": [
-      2,
-      "always"
-    ],
+    "react/prefer-es6-class": [2, "always"],
     "react/prop-types": [
       1,
       {
@@ -75,5 +72,10 @@
         "useTabs": false
       }
     ]
+  },
+  "settings": {
+    "react": {
+      "version": "16.6"
+    }
   }
 }

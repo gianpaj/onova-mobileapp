@@ -7,5 +7,6 @@
     "**/coverage": true,
     "**/*.js.snap": true
   },
-  "prettier.eslintIntegration": true
+  "prettier.eslintIntegration": true,
+  "eslint.packageManager": "yarn"
 }

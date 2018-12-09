@@ -7,7 +7,7 @@ import { name as appName } from './app.json';
 
 YellowBox.ignoreWarnings([
   // "Warning: Can't perform a React state update",
-  "Require cycle"
+  'Require cycle',
 ]);
 
 AppRegistry.registerComponent(appName, () => App);

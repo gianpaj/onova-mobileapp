@@ -1,12 +1,13 @@
 {
   // Enable/disable JavaScript validation. (For Flow)
   "javascript.validate.enable": false,
-  "eslint.enable": true,
   "deepscan.enable": true,
   "search.exclude": {
     "**/coverage": true,
     "**/*.js.snap": true
   },
-  "prettier.eslintIntegration": true,
-  "eslint.packageManager": "yarn"
+  "eslint.enable": true,
+  "eslint.packageManager": "yarn",
+  "flow.useNPMPackagedFlow": true,
+  "prettier.eslintIntegration": true
 }

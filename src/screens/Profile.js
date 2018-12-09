@@ -473,7 +473,7 @@ class ProfileScreen extends React.Component<Props, State> {
     } = this.state;
     return (
       <View style={styles.profileTop}>
-        <View>
+        <>
           <View style={[styles.row, { marginTop: 5 }]}>
             <Avatar
               style={styles.avatarContainer}
@@ -570,7 +570,7 @@ class ProfileScreen extends React.Component<Props, State> {
               isTextEditable={editing && this.isMe()}
             />
           </View>
-        </View>
+        </>
       </View>
     );
   }
@@ -649,6 +649,7 @@ class ProfileScreen extends React.Component<Props, State> {
             )}
           </Left>
           <Body style={styles.container}>
+            {/* eslint-disable-next-line react-native/no-raw-text */}
             <Title style={{ color: colors.black }}>@{username}</Title>
           </Body>
           <Right>
@@ -674,7 +675,7 @@ class ProfileScreen extends React.Component<Props, State> {
             )}
           </Right>
         </Header>
-        <View>
+        <>
           {this.shouldShowNoticeBar() && (
             <NoticeBar
               marqueeProps={{ loop: false, style: styles.noticeBar }}
@@ -683,7 +684,7 @@ class ProfileScreen extends React.Component<Props, State> {
             </NoticeBar>
           )}
           {this.renderProfileTop()}
-        </View>
+        </>
         <TabView
           testID="Tabs"
           navigationState={this.state}

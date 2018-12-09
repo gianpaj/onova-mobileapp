@@ -45,7 +45,7 @@ import colors from '../config/colors';
 import settings from '../config/settings';
 import * as api from '../utils/api';
 import * as ui from '../utils/ui';
-import type { Dispatch, ReduxState, Product } from '../types';
+import type { Dispatch, ReduxState } from '../types';
 
 import type { NavigationScreenProp } from 'react-navigation';
 const { width } = Dimensions.get('window');

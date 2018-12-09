@@ -76,7 +76,7 @@ class EditableText extends PureComponent<Props, State> {
     const { autoCorrect, placeholder, style } = this.props;
 
     return (
-      <View>
+      <>
         <View style={styles.textInputContainer}>
           <TextInput
             autoCorrect={autoCorrect}
@@ -93,7 +93,7 @@ class EditableText extends PureComponent<Props, State> {
           />
         </View>
         {this.renderActivityIndicator}
-      </View>
+      </>
     );
   }
 
@@ -103,13 +103,10 @@ class EditableText extends PureComponent<Props, State> {
     </View>
   );
 
-  render = () => (
-    <View>
-      {this.props.isTextEditable || this.props.loading
-        ? this.renderTextInput()
-        : this.renderText()}
-    </View>
-  );
+  render = () =>
+    this.props.isTextEditable || this.props.loading
+      ? this.renderTextInput()
+      : this.renderText();
 }
 
 const styles = StyleSheet.create({

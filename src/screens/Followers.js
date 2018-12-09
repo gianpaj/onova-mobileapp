@@ -24,7 +24,7 @@ import { Avatar, Header } from '../components';
 
 import type { NavigationScreenProp } from 'react-navigation';
 
-import type { UserData, Dispatch, ReduxState } from '../types';
+import type { UserData, ReduxState } from '../types';
 
 const initialLayout = {
   height: 0,
@@ -32,7 +32,6 @@ const initialLayout = {
 };
 
 type Props = {
-  dispatch: Dispatch,
   navigation: NavigationScreenProp<*>,
   userData: UserData,
   token: string,

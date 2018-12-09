@@ -349,7 +349,9 @@ export class CreateDropScreen extends React.Component<Props, State> {
         // 1st -200
         // 2nd -100
         // 3rd -0
-        date: new Date(datetime.getTime() - (productsReady.length - 1 - i) * 100),
+        date: new Date(
+          datetime.getTime() - (productsReady.length - 1 - i) * 100
+        ),
         dropId,
         latitude: location.latitude.toString(),
         longitude: location.longitude.toString(),
@@ -503,7 +505,7 @@ export class CreateDropScreen extends React.Component<Props, State> {
         </Header>
         {isLoading ? null : (
           <>
-            <View>
+            <>
               {this.shouldShowAccountNotVerifiedNoticeBar() ? (
                 <NoticeBar marqueeProps={{ style: styles.noticeBar }}>
                   {I18n.t('alerts.notice_bar_account_verification')}
@@ -551,7 +553,7 @@ export class CreateDropScreen extends React.Component<Props, State> {
                   {...pickerProps}
                 />
               </List>
-            </View>
+            </>
             <Content>
               <FlatList
                 columnWrapperStyle={styles.columnWrapper}
@@ -571,7 +573,7 @@ export class CreateDropScreen extends React.Component<Props, State> {
   renderItem = ({ item: product }: { item: any }) => (
     <View style={styles.row} key={product.key}>
       {product.uploaded ? (
-        <View>
+        <>
           <Image
             source={{
               uri: product.photos[0].replace('.jpg', '-thumb.jpg'),
@@ -584,7 +586,7 @@ export class CreateDropScreen extends React.Component<Props, State> {
             activeOpacity={0.6}>
             <Text style={imagePickerStyle.closeText}>×</Text>
           </TouchableOpacity>
-        </View>
+        </>
       ) : (
         product.next && (
           <TouchableOpacity

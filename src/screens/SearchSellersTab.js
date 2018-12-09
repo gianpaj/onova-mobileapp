@@ -20,10 +20,9 @@ import * as api from '../utils/api';
 
 import type { NavigationScreenProp } from 'react-navigation';
 
-import type { UserData, Dispatch, ReduxState } from '../types';
+import type { UserData, ReduxState } from '../types';
 
 type Props = {
-  dispatch: Dispatch,
   focused: boolean,
   navigation: NavigationScreenProp<*>,
   token: string,

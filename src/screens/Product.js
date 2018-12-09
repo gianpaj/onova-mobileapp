@@ -456,7 +456,7 @@ export class ProductContainer extends React.Component<Props, State> {
         <Content ref={this.scrollView} style={styles.flex1}>
           {loading && <ActivityIndicator size="large" />}
           {item && (
-            <View>
+            <>
               <View style={styles.topSection}>
                 <View style={[styles.avatar, styles.row]}>
                   <Avatar
@@ -589,7 +589,7 @@ export class ProductContainer extends React.Component<Props, State> {
                   goToProfile={this.goToProfile}
                 />
               </View>
-            </View>
+            </>
           )}
         </Content>
       </Container>

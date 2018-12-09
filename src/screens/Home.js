@@ -119,6 +119,7 @@ export class Home extends PureComponent<Props, State> {
             </Button>
           </Left>
           <Body style={styles.container}>
+            {/* eslint-disable-next-line react-native/no-raw-text */}
             <Title style={{ color: colors.black }}>ONOVA</Title>
           </Body>
           <Right>

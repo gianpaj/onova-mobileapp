@@ -338,8 +338,7 @@ class ChatContainer extends Component<Props, State> {
               <ActivityIndicator size="large" />
             </View>
           ) : (
-            <View>
-              {/* {allOrders.length > 0 && (
+            /* {allOrders.length > 0 && (
                 <FlatList
                   style={{ height: 60 + 8 + 8 }}
                   data={allOrders}
@@ -348,23 +347,22 @@ class ChatContainer extends Component<Props, State> {
                   ItemSeparatorComponent={this._renderSeparatorHorizontal}
                   renderItem={this._renderOrderCircle}
                 />
-              )} */}
-              <FlatList
-                data={ordersAndChats}
-                ItemSeparatorComponent={this._renderSeparator}
-                keyExtractor={this._keyExtractor}
-                ListEmptyComponent={this.renderEmptyState}
-                refreshControl={
-                  <RefreshControl
-                    refreshing={this.state.isRefreshing}
-                    onRefresh={this.refreshOrdersAndChats}
-                  />
-                }
-                renderItem={this._renderRoomRow}
-                style={st.root}
-                contentContainerStyle={{ flexGrow: 1 }}
-              />
-            </View>
+              )} */
+            <FlatList
+              data={ordersAndChats}
+              ItemSeparatorComponent={this._renderSeparator}
+              keyExtractor={this._keyExtractor}
+              ListEmptyComponent={this.renderEmptyState}
+              refreshControl={
+                <RefreshControl
+                  refreshing={this.state.isRefreshing}
+                  onRefresh={this.refreshOrdersAndChats}
+                />
+              }
+              renderItem={this._renderRoomRow}
+              style={st.root}
+              contentContainerStyle={{ flexGrow: 1 }}
+            />
           )}
         </View>
       </Container>

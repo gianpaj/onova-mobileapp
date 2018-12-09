@@ -51,6 +51,7 @@ class SignUpLoginContainer extends React.Component<Props, State> {
     return (
       <Container>
         <View style={styles.header}>
+          {/* eslint-disable-next-line react-native/no-raw-text */}
           <Title style={{ color: colors.black }}>ONOVA</Title>
         </View>
         <TabView

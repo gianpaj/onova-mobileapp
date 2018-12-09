@@ -312,7 +312,7 @@ export class SignUpTabContainer extends Component<Props, State> {
             }
             {...this._inputProps}
           />
-          <View>
+          <>
             <FormInput
               ref={this.PwdInput}
               secureTextEntry={!isPasswordVisible}
@@ -338,7 +338,7 @@ export class SignUpTabContainer extends Component<Props, State> {
                 onPress={this.onPasswordToggle}
               />
             )}
-          </View>
+          </>
           <View style={styles.mt15}>
             {/* <AnimButton
               ref={r => (this.signupBtn = r)}
@@ -414,7 +414,7 @@ export class SignUpTabContainer extends Component<Props, State> {
       animationType="slide"
       visible={this.state.isVerifyAccountModalVisible}
       onRequestClose={() => this.setVerifyAccountVisible(false)}>
-      <View>
+      <>
         <Header noShadow style={{ backgroundColor: colors.transparent }}>
           <Left />
           <Body />
@@ -441,7 +441,7 @@ export class SignUpTabContainer extends Component<Props, State> {
             {I18n.t('login.verify_account.title')}
           </Text>
         </View>
-      </View>
+      </>
     </Modal>
   );
 }

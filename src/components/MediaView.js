@@ -99,7 +99,7 @@ export default class MediaView extends React.Component<Props, State> {
     }
 
     return (
-      <View>
+      <>
         <TouchableWithoutFeedback onPress={() => this.openModal(0)}>
           <Image
             source={{ uri: source[0] }}
@@ -118,7 +118,7 @@ export default class MediaView extends React.Component<Props, State> {
             imageUrls={[{ url: source[0] }]}
           />
         </Modal>
-      </View>
+      </>
     );
   }
 }

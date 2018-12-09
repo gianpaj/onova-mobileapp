@@ -6,7 +6,6 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  View,
   ViewPropTypes,
 } from 'react-native';
 
@@ -31,9 +30,7 @@ export default function Send({
       style={[styles.container, containerStyle]}
       onPress={() => !isDisabled && onSend({ text: text.trim() }, true)}
       accessibilityTraits="button">
-      <View>
-        {children || <Text style={[styles.text, textStyle]}>{label}</Text>}
-      </View>
+      <>{children || <Text style={[styles.text, textStyle]}>{label}</Text>}</>
     </TouchableOpacity>
   );
   // return <View />;

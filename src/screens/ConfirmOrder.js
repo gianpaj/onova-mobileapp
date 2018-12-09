@@ -92,6 +92,7 @@ export class ConfirmOrderContainer extends Component<Props, State> {
     }
   }
 
+  // eslint-disable-next-line react/no-unused-prop-types
   onCancelSubmit = async ({ reason }: { reason: string }) => {
     const { token } = this.props;
 
@@ -201,7 +202,7 @@ export class ConfirmOrderContainer extends Component<Props, State> {
           </Body>
           <Right />
         </Header>
-        <View>
+        <>
           <ListItem style={styles.itemOnTop}>
             <TouchableOpacity
               onPress={() => this.goToProduct(order.product)}
@@ -285,7 +286,7 @@ export class ConfirmOrderContainer extends Component<Props, State> {
               </Button>
             </View>
           </View>
-        </View>
+        </>
         {this.renderCancelDialog()}
       </Container>
     );
@@ -320,7 +321,7 @@ export class ConfirmOrderContainer extends Component<Props, State> {
                     (control.isTouched || form.isSubmitted) &&
                     control.isInvalid;
                   return (
-                    <View>
+                    <>
                       <Dialog.Input
                         autoCorrect
                         onBlur={control.markAsTouched}
@@ -343,7 +344,7 @@ export class ConfirmOrderContainer extends Component<Props, State> {
                         ]}>
                         {I18n.t('confirm_order.error_reason_is_mandatory')}
                       </Text>
-                    </View>
+                    </>
                   );
                 }}
               </Foect.Control>

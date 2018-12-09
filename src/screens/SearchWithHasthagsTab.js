@@ -115,7 +115,7 @@ class SearchWithHasthagsTabContainer extends Component<Props, State> {
 
     return (
       <Content style={styles.flex1}>
-        <View>
+        <>
           <View
             style={{
               alignSelf: 'center',
@@ -205,7 +205,7 @@ class SearchWithHasthagsTabContainer extends Component<Props, State> {
               ))}
             </RadioForm>
           </View>
-        </View>
+        </>
         <View
           style={[
             styles.padder,

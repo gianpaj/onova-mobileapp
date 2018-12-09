@@ -347,8 +347,8 @@ class Comments extends React.Component<Props, State> {
                   ? 1100
                   : 'auto'
                 : shouldHideSuggestions
-                  ? 1100
-                  : 0,
+                ? 1100
+                : 0,
               left: isiOS ? -12 : 0,
               position: isiOS ? 'absolute' : 'relative',
               right: -47,

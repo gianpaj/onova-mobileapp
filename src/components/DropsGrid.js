@@ -117,7 +117,7 @@ class DropsGridComponent extends React.PureComponent<Props, State> {
   };
 
   renderDropGrid = ({ item }: any) => (
-    <View>
+    <>
       <List>
         <Text style={styles.dateStrings}>
           {format(item.products[0].nextRunAt, 'D MMM HH:mm')}
@@ -133,7 +133,7 @@ class DropsGridComponent extends React.PureComponent<Props, State> {
         renderItem={this.renderItem}
         horizontal={false}
       />
-    </View>
+    </>
   );
 
   renderFooter = () => {
@@ -151,7 +151,7 @@ class DropsGridComponent extends React.PureComponent<Props, State> {
 
     if (this.firstFocus) return null;
 
-    if (!hasError && isLoading) return this.renderLoading;
+    if (!hasError && isLoading) return this.renderLoading();
 
     return (
       <View style={styles.container}>
@@ -187,7 +187,7 @@ class DropsGridComponent extends React.PureComponent<Props, State> {
     return this.props.emptyState;
   };
 
-  renderLoading = (
+  renderLoading = () => (
     <View style={styles.container}>
       <ActivityIndicator size="large" />
     </View>

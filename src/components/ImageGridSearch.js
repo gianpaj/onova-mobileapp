@@ -70,7 +70,7 @@ class ImageGridSearchComponent extends React.Component<Props, State> {
     // defaultImageCacheManager.clearCache();
 
     this.fetchItems()
-      .catch(err => this.setState({ hasError: true }))
+      .catch(() => this.setState({ hasError: true }))
       .then(() => this.setState({ initializing: false }));
   }
 

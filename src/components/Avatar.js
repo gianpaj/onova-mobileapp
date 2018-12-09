@@ -8,7 +8,6 @@ import {
   Platform,
   StyleSheet,
   TouchableOpacity,
-  View,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 // import { CachedImage } from 'react-native-cached-image';
@@ -158,7 +157,7 @@ export default class Avatar extends PureComponent<Props, State> {
 
     const { buttonActiveState } = this.props;
     return (
-      <View>
+      <>
         {Avatar}
         <TouchableOpacity
           onPress={this.props.onButtonPress}
@@ -175,7 +174,7 @@ export default class Avatar extends PureComponent<Props, State> {
             // ]}
           />
         </TouchableOpacity>
-      </View>
+      </>
     );
   };
 

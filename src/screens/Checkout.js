@@ -647,7 +647,7 @@ class CheckoutContainer extends Component<Props, State> {
       departments,
       isLoading,
       mobileNumber = '',
-      pending,
+      // pending,
       shippingAddress,
       showFooter,
     } = this.state;

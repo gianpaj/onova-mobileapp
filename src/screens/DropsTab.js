@@ -49,7 +49,7 @@ class DropsTabContainer extends React.Component<Props, {}> {
               {!this.isMe() ? (
                 <Text>{I18n.t('drops_grid.empty_state_message_others')}</Text>
               ) : (
-                <View>
+                <>
                   <MaterialCommunityIcons
                     size={48}
                     name="clock"
@@ -76,7 +76,7 @@ class DropsTabContainer extends React.Component<Props, {}> {
                       {I18n.t('drops_grid.empty_state_button_mine')}
                     </Text>
                   </NBButton>
-                </View>
+                </>
               )}
             </View>
           }

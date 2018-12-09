@@ -6,7 +6,6 @@ import { StyleSheet, View } from 'react-native';
 import {
   Body,
   Button as NBButton,
-  Content,
   Left,
   Right,
   Icon as NBIcon,
@@ -75,6 +74,7 @@ class SearchProductsResultsContainer extends Component<Props, State> {
           </Left>
           <Body style={styles.container}>
             {terms.tag && terms.grp_1 == -1 && terms.grp_2 == -1 ? (
+              // eslint-disable-next-line react-native/no-raw-text
               <Title style={{ color: colors.black }}>#{terms.tag}</Title>
             ) : // searching for category (clothes, shoes or other)
             terms.tag == '' && terms.grp_1 !== -1 && terms.grp_2 == -1 ? (

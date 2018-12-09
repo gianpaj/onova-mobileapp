@@ -33,18 +33,11 @@ import * as ui from '../utils/ui';
 
 const isiOS = Platform.OS === 'ios';
 
-import type {
-  UserData,
-  Dispatch,
-  Notification,
-  ReduxState,
-  Product,
-} from '../types';
+import type { UserData, Notification, ReduxState, Product } from '../types';
 
 import type { NavigationScreenProp } from 'react-navigation';
 
 type Props = {
-  dispatch: Dispatch,
   navigation: NavigationScreenProp<*>,
   userData: UserData,
   token: string,
@@ -289,7 +282,6 @@ class NotificationsContainer extends Component<Props, State> {
   }
 }
 
-// Inject dispatch and userData
 const mapStateToProps: any = (state: ReduxState) => ({
   userData: state.LoginReducer.data,
   token: state.LoginReducer.token,

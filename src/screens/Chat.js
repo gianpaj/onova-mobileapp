@@ -579,6 +579,7 @@ class ChatContainer extends Component<Props, State> {
           </Left>
           <Body style={st.containerHeader}>
             {partner && (
+              // eslint-disable-next-line react-native/no-raw-text
               <Title style={{ color: colors.black }} onPress={this.goToProfile}>
                 @{partner.username}
               </Title>

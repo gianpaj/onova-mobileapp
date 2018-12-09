@@ -97,6 +97,7 @@ class MarkdownDoc extends React.Component {
               justifyContent: 'center',
               alignItems: 'stretch',
             }}>
+            {/* eslint-disable-next-line react-native/no-raw-text */}
             <Title style={{ color: colors.black }}>
               Офіційні правила безпечної угоди
             </Title>

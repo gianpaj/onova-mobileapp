@@ -15,7 +15,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import imagePickerStyle, { IImagePickerStyle } from './ImagePicker.styles';
+import imagePickerStyle from './ImagePicker.styles';
 import SortableList from 'react-native-sortable-list';
 import colors from '../config/colors';
 

@@ -337,7 +337,7 @@ export class LoginTabContainer extends React.Component<Props, State> {
         onRequestClose={() =>
           this.setState({ verifyAccountModalVisible: false })
         }>
-        <View>
+        <>
           <Header noShadow style={{ backgroundColor: colors.transparent }}>
             <Left />
             <Body />
@@ -362,7 +362,7 @@ export class LoginTabContainer extends React.Component<Props, State> {
               {I18n.t('login.verify_account.title')}
             </Text>
           </View>
-        </View>
+        </>
       </Modal>
     );
   }
@@ -378,7 +378,7 @@ export class LoginTabContainer extends React.Component<Props, State> {
         animationType="slide"
         visible={this.state.pwdResetModalVisible}
         onRequestClose={() => this.setPwdResetModalVisible(false)}>
-        <View>
+        <>
           <Header noShadow style={{ backgroundColor: colors.transparent }}>
             <Left />
             <Body />
@@ -435,7 +435,7 @@ export class LoginTabContainer extends React.Component<Props, State> {
               {I18n.t('login.reset_password.button')}
             </Text>
           </NBButton>
-        </View>
+        </>
       </Modal>
     );
   }

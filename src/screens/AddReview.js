@@ -94,25 +94,26 @@ export class AddReviewContainer extends Component<Props, State> {
     rateNumber,
     text,
   }: {
+    // eslint-disable-next-line react/no-unused-prop-types
     rateNumber: number,
+    // eslint-disable-next-line react/no-unused-prop-types
     text: string,
   }) => {
-    const { order } = this.state;
-    const { token } = this.props;
+    const { token, userData } = this.props;
 
     if (text && text.trim().length < settings.MIN_LENGTH_REVIEW) {
       return;
     }
 
     let body = {
-      orderId: order.id,
+      orderId: this.state.order.id,
       rateNumber,
       lang: I18n.locale.slice(0, 2),
     };
     if (text) body = { ...body, text };
     try {
       const { data } = await api.post(
-        `/api/users/${this.props.userData._id}/reviews`,
+        `/api/users/${userData._id}/reviews`,
         body,
         { token }
       );
@@ -236,7 +237,7 @@ export class AddReviewContainer extends Component<Props, State> {
                 </Foect.Control>
                 <Foect.Control name="rateNumber" required>
                   {control => (
-                    <View>
+                    <>
                       <StarRating
                         // eslint-disable-next-line
                         containerStyle={{
@@ -267,7 +268,7 @@ export class AddReviewContainer extends Component<Props, State> {
                           ? I18n.t('add_review.rating_error')
                           : ' '}
                       </Text>
-                    </View>
+                    </>
                   )}
                 </Foect.Control>
                 <Button

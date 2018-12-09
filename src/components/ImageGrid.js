@@ -86,7 +86,7 @@ class ImageGridComponent extends React.PureComponent<Props, State> {
     if (this.props.focused) {
       this.firstFocus = false;
       this.fetchItems()
-        .catch(err => this.setState({ hasError: true }))
+        .catch(() => this.setState({ hasError: true }))
         .then(() => this.setState({ initializing: false }));
     }
 
@@ -94,7 +94,7 @@ class ImageGridComponent extends React.PureComponent<Props, State> {
       if (this.props.shouldRefresh) {
         setTimeout(() => {
           this.fetchItems()
-            .catch(err => this.setState({ hasError: true }))
+            .catch(() => this.setState({ hasError: true }))
             .then(() => this.setState({ initializing: false }));
           this.props.dispatch(disableRefresh());
         }, 1000);
@@ -106,7 +106,7 @@ class ImageGridComponent extends React.PureComponent<Props, State> {
     if (this.firstFocus && this.props.focused) {
       this.firstFocus = false;
       this.fetchItems()
-        .catch(err => this.setState({ hasError: true }))
+        .catch(() => this.setState({ hasError: true }))
         .then(() => this.setState({ initializing: false }));
     }
   }

@@ -103,7 +103,7 @@ export class ConfirmOrderContainer extends Component<Props, State> {
         { token }
       );
       // console.warn('cancelled', this.state.order.id, reason);
-      Toast.info(i18n.t('confirm_order.cancellation_success'));
+      Toast.info(I18n.t('confirm_order.cancellation_success'));
       this.setState({ dialogVisible: false });
       this.props.navigation.goBack();
     } catch (err) {
@@ -118,7 +118,7 @@ export class ConfirmOrderContainer extends Component<Props, State> {
     const { token } = this.props;
     const { order } = this.state;
 
-    Toast.loading(i18n.t('alerts.loading_message'), 30);
+    Toast.loading(I18n.t('alerts.loading_message'), 30);
 
     this.setState({ isPending: true });
     try {
@@ -129,7 +129,7 @@ export class ConfirmOrderContainer extends Component<Props, State> {
       );
       console.debug(data);
       Toast.hide();
-      Toast.success(i18n.t('confirm_order.confirmation_success'), 5);
+      Toast.success(I18n.t('confirm_order.confirmation_success'), 5);
       this.goToChat(order.id);
     } catch (err) {
       Toast.hide();

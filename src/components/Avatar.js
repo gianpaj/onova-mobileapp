@@ -41,7 +41,7 @@ type Props = {
   uri: string | Image,
   withBorder: boolean,
   withButton?: boolean, // to show an button to follow or not
-  onButtonPress?: () => void,
+  onButtonPress?: () => void | Promise<void>,
   buttonActiveState?: boolean, // to show an button to follow or to unfollow
 };
 

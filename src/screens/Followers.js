@@ -129,7 +129,7 @@ class FollowersContainer extends Component<Props, State> {
     );
   };
 
-  _keyExtractor = (item): string => item.dateCreated;
+  _keyExtractor = (item): string => item._id;
 
   renderEmptyState = (
     <View style={styles.emptyContainer}>

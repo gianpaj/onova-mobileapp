@@ -95,7 +95,7 @@ class FollowingContainer extends Component<Props, State> {
     console.debug(followOrUnfollow, _id);
     try {
       await api.post(`/api/users/${_id}/${followOrUnfollow}`, {}, { token });
-      this.refreshFollowers();
+      this.refreshFollowing();
     } catch (err) {
       console.error(err);
     }
@@ -134,7 +134,7 @@ class FollowingContainer extends Component<Props, State> {
     );
   };
 
-  _keyExtractor = (item): string => item.dateCreated;
+  _keyExtractor = (item): string => item._id;
 
   renderEmptyState = (
     <View style={styles.emptyContainer}>

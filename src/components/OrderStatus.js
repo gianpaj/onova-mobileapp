@@ -11,7 +11,7 @@ import type { Order } from '../types';
 
 type Props = {
   order: Order,
-  style: any,
+  style: ?any,
 };
 
 const Step = Steps.Step;

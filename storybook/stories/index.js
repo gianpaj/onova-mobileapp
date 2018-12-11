@@ -13,6 +13,7 @@ import CenterView from './CenterView';
 import Welcome from './Welcome';
 import ReviewCard from './ReviewCard';
 import ImagePicker from './ImagePicker';
+import OrderStatus from './OrderStatus';
 
 import colors from '../../src/config/colors';
 import typography from '../../src/config/typography';
@@ -170,3 +171,7 @@ storiesOf('ImagePicker', module)
       onChangeOrder={() => {}}
     />
   ));
+
+storiesOf('OrderStatus', module).add('confirmed', () => (
+  <OrderStatus order={{ datePaid: new Date(), status: 'confirmed' }} />
+));

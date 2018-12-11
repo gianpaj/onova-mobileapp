@@ -7,13 +7,14 @@ import { WebView } from 'react-native-webview';
 
 import { enableRefresh } from '../actions/actionCreator';
 
+import type { NavigationScreenProp } from 'react-navigation';
+import type { Dispatch, UserData, ReduxState } from '../types';
+
 import * as api from '../utils/api';
 import * as ui from '../utils/ui';
 import I18n from '../i18n';
 
 const URL_BASE = 'https://api.uapay.ua';
-
-import type { ReduxState } from '../types';
 
 function JStoInject() {
   var originalPostMessage = window.postMessage;
@@ -60,8 +61,10 @@ type State = {
 };
 
 class GetCardId extends Component<Props, State> {
+  keyboardDidShowListener;
+  keyboardDidHideListener;
   state = {
-    tokenForCardIFrame: null,
+    tokenForCardIFrame: '',
     showFooter: true,
   };
 
@@ -102,7 +105,7 @@ class GetCardId extends Component<Props, State> {
     try {
       data = JSON.parse(data);
       // TODO: if TIMEOUT_ERROR reload
-      if (data.name !== 'Success') throw Error(error);
+      if (data.name !== 'Success') throw Error(data);
 
       await api.put(
         `/api/users/${userData._id}`,

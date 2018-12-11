@@ -386,6 +386,8 @@ http://onova.co/uploader
     shipped: 'Item was shipped',
     not_shipped: 'Item is waiting to be shipped',
     not_collected: 'Item is waiting to be collected',
+    not_delivered: 'Item is on the way',
+    delivered: 'Item has been delivered',
     collected: 'Item was collected',
     failed_to_collect: 'Buyer did not collect on time',
     failed_to_ship: 'Seller did not ship on time',

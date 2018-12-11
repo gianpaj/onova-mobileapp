@@ -284,8 +284,8 @@ const checkLogin = (userData: UserData, token: string) => (
     .then(() => dispatch({ type: RELOAD_SUCCESS }))
     .then(() => registerPushNotifications())
     .then(pushToken => {
-      addNavigationBreadcrumb({ message: RELOAD_SUCCESS });
       sendToken(pushToken, userData, token);
+      addNavigationBreadcrumb({ message: RELOAD_SUCCESS });
     })
     .catch(error => {
       dispatch({ type: RELOAD_FAIL });
@@ -300,7 +300,9 @@ const checkLogin = (userData: UserData, token: string) => (
 
 const signup = (data: SignupData) => (dispatch: Dispatch) => {
   dispatch({ type: SIGNUP_PENDING });
-  Toast.loading('', 30);
+  const timer = setTimeout(() => {
+    Toast.loading('', 30);
+  }, 300);
   return api
     .post('/api/users', {
       username: data.username,
@@ -337,6 +339,8 @@ const signup = (data: SignupData) => (dispatch: Dispatch) => {
       console.warn(res);
       dispatch({ type: SIGNUP_FAIL });
       addNavigationBreadcrumb({ message: SIGNUP_FAIL });
+      clearTimeout(timer);
+      Toast.hide();
     })
     .catch((error: APIError) => {
       dispatch(
@@ -351,9 +355,10 @@ const signup = (data: SignupData) => (dispatch: Dispatch) => {
         error,
         level: 'warning',
       });
+      clearTimeout(timer);
+      Toast.hide();
       throw error;
-    })
-    .then(() => Toast.hide());
+    });
 };
 
 const getPersonalUserData = (options?: Options = {}) => (

@@ -5,7 +5,7 @@ import { Text } from 'react-native';
 
 import { storiesOf } from '@storybook/react-native';
 import { action } from '@storybook/addon-actions';
-import { linkTo } from '@storybook/addon-links';
+// import { linkTo } from '@storybook/addon-links';
 
 // $FlowFixMe
 import Button from './Button';
@@ -18,7 +18,9 @@ import colors from '../../src/config/colors';
 import typography from '../../src/config/typography';
 
 storiesOf('Welcome', module).add('to Storybook', () => (
-  <Welcome showApp={linkTo('Button')} />
+  <Welcome
+  // showApp={linkTo('Button')}
+  />
 ));
 
 storiesOf('Button', module)
@@ -131,7 +133,9 @@ storiesOf('ReviewCard', module)
   ));
 
 storiesOf('ImagePicker', module)
-  .add('with no images', () => <ImagePicker enabled onChangeOrder={() => {}} />)
+  .add('with no images', () => (
+    <ImagePicker imagePerRow={6} enabled onChangeOrder={() => {}} />
+  ))
   .add('with images from iPhone Simulator', () => (
     <ImagePicker
       files={[
@@ -146,6 +150,7 @@ storiesOf('ImagePicker', module)
           id: 1,
         },
       ]}
+      imagePerRow={6}
       enabled
       onChangeOrder={() => {}}
     />
@@ -160,6 +165,7 @@ storiesOf('ImagePicker', module)
           isUploading: true,
         },
       ]}
+      imagePerRow={6}
       enabled={false}
       onChangeOrder={() => {}}
     />

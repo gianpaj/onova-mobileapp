@@ -9,6 +9,8 @@ configure(() => {
   require('./stories');
 }, module);
 
+import './rn-addons';
+
 // This assumes that storybook is running on the same host as your RN packager,
 // to set manually use, e.g. host: 'localhost' option
 const StorybookUIRoot = getStorybookUI({ port: 7007, onDeviceUI: true });

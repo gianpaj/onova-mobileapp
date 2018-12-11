@@ -13,6 +13,7 @@
     "nuke-ios": "yarn nuke-bundler && rm -rf ios/build/ModuleCache && rm -rf ~/Library/Developer/Xcode/DerivedData/*",
     "start-emulator": "cd $ANDROID_HOME/emulator && ./emulator -avd Nexus_5X_API_28 &",
     "start": "node node_modules/react-native/local-cli/cli.js start",
+    "storybook": "storybook start",
     "test": "jest"
   },
   "dependencies": {
@@ -71,6 +72,11 @@
   },
   "devDependencies": {
     "@babel/preset-flow": "^7.0.0",
+    "@storybook/addon-actions": "^4.0.12",
+    "@storybook/addon-knobs": "^4.0.12",
+    "@storybook/addon-ondevice-knobs": "^4.0.12",
+    "@storybook/addon-ondevice-notes": "^4.0.12",
+    "@storybook/react-native": "^4.0.12",
     "babel-eslint": "^10.0.1",
     "babel-jest": "23.6.0",
     "enzyme": "^3.7.0",

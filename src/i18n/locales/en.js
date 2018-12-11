@@ -72,12 +72,10 @@ export default {
     share:
       'Android: https://play.google.com/store/apps/details?id=com.onova.app&hl=uk - Apple Store: https://itunes.apple.com/ua/app/onova/id1365771422?mt=8',
     alert_info_title: 'Information',
-    alert_info_body: `1. On the homepage you first the items from the sellers you follow, then everybody else's.
+    alert_info_body: `For any questions about the app please contact Onova at
+(063) 419-75-03
 
-2. To upload multiple items at once or from a computer use:
-http://onova.co/uploader
-
-3. If you have any questions please chat to @onova user`,
+For any questions regarding payments please contact UAPAY at (044) 364-11-44`,
   },
   image_grid: {
     error: 'Error fetching listing',

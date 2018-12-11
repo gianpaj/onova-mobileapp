@@ -346,12 +346,10 @@ class ProfileScreen extends React.Component<Props, State> {
   };
 
   isMe(): boolean {
-    const navState = this.props.navigation.state;
-    if (!navState.params) {
-      return true;
-    }
+    const { params } = this.props.navigation.state;
+    if (!params) return true;
 
-    return navState.params._id == this.props.userData._id;
+    return params._id == this.props.userData._id;
   }
 
   ifNavigatedFromProduct = () =>

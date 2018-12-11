@@ -164,20 +164,22 @@ type UserDataShorter = {
 };
 
 export type Order = {
-  archivedBySeller: boolean,
   archivedByBuyer: boolean,
+  archivedBySeller: boolean,
   id: string,
   buyer: UserDataShorter,
-  citySender: string,
   cityRecipient: string,
+  citySender: string,
   currency: string,
   dateCancelled: ?Date,
   dateCompleted: ?Date,
   dateConfirmed: ?Date,
   dateDelivered: ?Date,
+  dateFailed: ?Date,
   datePaid: ?Date,
   datePending: Date,
   dateShipped: ?Date,
+  finalisedAt: ?Date,
   onovaFee: number,
   paymentMethod: ?string,
   priceOfItem: number,
@@ -192,16 +194,17 @@ export type Order = {
   reviewFromBuyer: ?string | Review,
   reviewFromSeller: ?string | Review,
   seller: UserDataShorter,
-  status: string,
-  // taxAmount: ?number;
-  trackingNumber: ?string,
-  transactionId: ?string,
-  transactionFee: number,
-  transactionStatus: ?string,
-  total: number,
   shippingFee: ?number,
   shippingProvider: ?string,
-  // shippingStatus: string,
+  shippingStatus: string,
+  shippingUpdatedAt: string,
+  status: string,
+  // taxAmount: ?number;
+  total: number,
+  trackingNumber: ?string,
+  transactionFee: number,
+  transactionId: ?string,
+  transactionStatus: ?string,
 };
 
 export type Review = {

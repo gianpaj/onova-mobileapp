@@ -333,7 +333,8 @@ class ChatContainer extends Component<Props, State> {
           <Right />
         </Header>
         <View style={st.flex1}>
-          {!hasError && isLoading ? (
+          {/* check userData to fix logout issue */}
+          {(!hasError && isLoading) || !this.props.userData ? (
             <View style={st.container}>
               <ActivityIndicator size="large" />
             </View>

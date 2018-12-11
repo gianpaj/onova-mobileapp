@@ -1,6 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
 import PropTypes from 'prop-types';
+
 import OrderStatus from '../../../src/components/OrderStatus';
 
 export default function OrderStatusComponent(props) {

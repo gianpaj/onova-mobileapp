@@ -25,27 +25,6 @@ function formatDate(time) {
 
 class OrderStatus extends PureComponent<Props> {
   generateSteps(order: Order): Array<any> | null {
-    // 1
-    // order.status = 'confirmed';
-
-    // 2
-    // order.status = 'shipped';
-    // order.dateShipped = new Date();
-
-    // 2.1
-    // order.status = 'delivered';
-    // order.dateDelivered = new Date();
-
-    // 3
-    // order.status = 'completed';
-    // order.finalisedAt = new Date();
-
-    // order.status = 'failed_by_buyer';
-    // order.finalisedAt = new Date();
-
-    // order.status = 'failed_by_seller';
-    // order.finalisedAt = new Date();
-
     if (order.status == 'pending' || order.status == 'paid') {
       return null;
     }
@@ -65,6 +44,11 @@ class OrderStatus extends PureComponent<Props> {
       )}`,
       status: 'finish',
     };
+    const delivered = {
+      title: I18n.t('order_status.delivered'),
+      description: formatDate(order.dateDelivered),
+      status: 'finish',
+    };
     if (order.status == 'confirmed') {
       steps.push({
         title: I18n.t('order_status.not_shipped'),
@@ -73,11 +57,12 @@ class OrderStatus extends PureComponent<Props> {
     } else if (order.status == 'shipped') {
       steps.push(shipped);
       steps.push({
-        title: I18n.t('order_status.not_collected'),
+        title: I18n.t('order_status.not_delivered'),
         status: 'wait',
       });
     } else if (order.status == 'delivered') {
       steps.push(shipped);
+      steps.push(delivered);
       steps.push({
         title: I18n.t('order_status.not_collected'),
         description: formatDate(order.dateDelivered),
@@ -85,6 +70,7 @@ class OrderStatus extends PureComponent<Props> {
       });
     } else if (order.status == 'completed') {
       steps.push(shipped);
+      steps.push(delivered);
       steps.push({
         title: I18n.t('order_status.collected'),
         description: `${formatDate(order.finalisedAt)} ${I18n.t(
@@ -94,6 +80,7 @@ class OrderStatus extends PureComponent<Props> {
       });
     } else if (order.status == 'failed_by_buyer') {
       steps.push(shipped);
+      steps.push(delivered);
       steps.push({
         // or refused (still not determined in API side)
         title: I18n.t('order_status.failed_to_collect'),

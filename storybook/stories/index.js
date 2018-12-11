@@ -172,6 +172,45 @@ storiesOf('ImagePicker', module)
     />
   ));
 
-storiesOf('OrderStatus', module).add('confirmed', () => (
-  <OrderStatus order={{ datePaid: new Date(), status: 'confirmed' }} />
+const orderConfirmed = { datePaid: new Date(), status: 'confirmed' };
+
+const OrderStatusStory = storiesOf('OrderStatus', module).add(
+  'confirmed',
+  () => <OrderStatus order={orderConfirmed} />
+);
+const orderShipped = {
+  ...orderConfirmed,
+  dateShipped: new Date(),
+  status: 'shipped',
+};
+OrderStatusStory.add('shipped', () => <OrderStatus order={orderShipped} />);
+const orderDelivered = {
+  ...orderShipped,
+  dateDelivered: new Date(),
+  status: 'delivered',
+};
+OrderStatusStory.add('delivered', () => <OrderStatus order={orderDelivered} />);
+const orderCollected = {
+  ...orderDelivered,
+  finalisedAt: new Date(),
+  status: 'completed',
+};
+OrderStatusStory.add('completed', () => <OrderStatus order={orderCollected} />);
+// failed to collect
+const orderFailedByBuyer = {
+  ...orderDelivered,
+  finalisedAt: new Date(),
+  status: 'failed_by_buyer',
+};
+OrderStatusStory.add('failed_by_buyer', () => (
+  <OrderStatus order={orderFailedByBuyer} />
+));
+// failed to ship
+const orderFailedBySeller = {
+  ...orderConfirmed,
+  finalisedAt: new Date(),
+  status: 'failed_by_seller',
+};
+OrderStatusStory.add('failed_by_seller', () => (
+  <OrderStatus order={orderFailedBySeller} />
 ));

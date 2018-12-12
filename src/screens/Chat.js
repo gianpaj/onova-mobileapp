@@ -165,7 +165,7 @@ class ChatContainer extends Component<Props, State> {
           return api.getOrder(orderId, this.props.token);
         })
         .then(o => {
-          // coming from ChatRooms
+          // skip if coming from ChatRooms
           if (roomId) return;
 
           console.debug(o);
@@ -182,8 +182,8 @@ class ChatContainer extends Component<Props, State> {
             .then(rooms => {
               // console.debug(rooms);
 
-              // check if there's a previouly a room created,
-              // by a partner (seller) or my self
+              // check if there's a previously created room,
+              // by a partner (seller) or myself
               if (rooms.length > 0) {
                 const firstRoom = rooms[0].id;
                 return pusherCurrentUser
@@ -213,14 +213,14 @@ class ChatContainer extends Component<Props, State> {
                 .createRoom({
                   name: getRoomName(o),
                   private: true,
-                  addUserIds: [o.seller._id, userData._id],
+                  addUserIds: [o.buyer._id, userData._id],
                 })
                 .then(room => {
                   roomId = room.id;
                   thisRoom = room;
                   console.debug('Created room id', roomId);
                 })
-                .then(() => api.getUser(o.seller._id))
+                .then(() => api.getUser(o.buyer._id))
                 .then(partner => this.setState({ partner }))
                 .catch(err => {
                   console.log('Error creating room');

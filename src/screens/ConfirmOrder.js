@@ -48,7 +48,7 @@ type State = {
   isPending: boolean,
   dialogVisible: boolean,
   order: Order,
-  buyer: User,
+  buyer: UserData,
 };
 
 export class ConfirmOrderContainer extends Component<Props, State> {
@@ -80,7 +80,7 @@ export class ConfirmOrderContainer extends Component<Props, State> {
         console.warn('order.status', order.status);
         throw new Error(`Order has already been ${order.status}`);
       }
-      const buyer: Order = await api.getUser(order.buyer._id);
+      const buyer: UserData = await api.getUser(order.buyer._id);
       console.debug(order);
       // const iAmTheSeller = _id.toString() === order.seller._id.toString();
 

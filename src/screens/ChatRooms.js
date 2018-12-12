@@ -265,7 +265,7 @@ class ChatContainer extends Component<Props, State> {
             <View style={st.contentHeader}>
               <Text
                 numberOfLines={1}
-                style={[item.unreadCount > 0 && st.unread]}>
+                style={[st.text, item.unreadCount > 0 && st.unreadText]}>
                 {from}
                 {lastMessage.attachment ? (
                   <Feather name="camera" size={11} color={colors.grey3} />
@@ -275,7 +275,7 @@ class ChatContainer extends Component<Props, State> {
               </Text>
               {item.unreadCount > 0 && (
                 <Badge style={st.unreadBadge}>
-                  <Text style={st.unreadText}>{item.unreadCount}</Text>
+                  <Text style={st.unreadBadgeText}>{item.unreadCount}</Text>
                 </Badge>
               )}
             </View>
@@ -416,6 +416,10 @@ const st = StyleSheet.create({
   unread: {
     fontWeight: 'bold',
   },
+  unreadText: {
+    fontWeight: 'bold',
+    marginRight: 20,
+  },
   datetime: {
     fontSize: 12,
     color: colors.grey1,
@@ -453,14 +457,13 @@ const st = StyleSheet.create({
   unreadBadge: {
     backgroundColor: colors.active,
     height: 20,
+    position: 'absolute',
+    right: 0,
     width: 20,
-    paddingLeft: 7,
-    paddingTop: 4,
   },
-  unreadText: {
+  unreadBadgeText: {
     color: colors.white,
     fontSize: 13,
-    top: -2,
   },
 });
 

@@ -594,6 +594,7 @@ class ChatContainer extends Component<Props, State> {
                 data={orders}
                 keyExtractor={this._keyExtractor}
                 horizontal
+                contentContainerStyle={{ flexGrow: 1 }}
                 ItemSeparatorComponent={this._renderSeparatorHorizontal}
                 renderItem={this._renderOrderSquare}
                 ListEmptyComponent={() => (
@@ -679,6 +680,9 @@ const st = StyleSheet.create({
   },
   noOrders: {
     alignSelf: 'center',
+    color: colors.grey3,
+    flex: 1,
+    textAlign: 'center',
   },
   flex1: {
     flex: 1,

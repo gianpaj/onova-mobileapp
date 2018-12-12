@@ -23,7 +23,7 @@ import ReviewCard from '../components/ReviewCard';
 
 import type { NavigationScreenProp } from 'react-navigation';
 
-import type { UserData, ReduxState, Review } from '../types';
+import type { UserData, ReduxState, Review, Order } from '../types';
 
 const { width } = Dimensions.get('window');
 
@@ -35,7 +35,7 @@ type Props = {
 };
 
 type State = {
-  data: Array<Review>,
+  data: Array<Review | Order>,
   imageHeight: number,
   isRefreshing: boolean,
 };
@@ -43,7 +43,9 @@ type State = {
 class ReviewsTabContainer extends Component<Props, State> {
   state = {
     data: [],
-    imageHeight: 0,
+    // all thumbnails are 240 px wide
+    imageHeight: Math.floor(240 * (width / 4 / 240)),
+    // imageHeight: 0,
     isRefreshing: false,
   };
 
@@ -76,11 +78,7 @@ class ReviewsTabContainer extends Component<Props, State> {
       // const uri = data[0].product.photoURIs[0].replace('.jpg', '-thumb.jpg');
       // Image.getSize(uri, (w, h) => {
       // imageHeight: Math.floor(h * (width / 4 / w)),
-      // all thumbnails are 240 px wide
-      this.setState({
-        imageHeight: Math.floor(240 * (width / 4 / 240)),
-        data,
-      });
+      this.setState({ data });
       // });
     }
   }
@@ -92,7 +90,7 @@ class ReviewsTabContainer extends Component<Props, State> {
       this.setState({ isRefreshing: false });
     } catch (error) {
       console.debug(error);
-      addErrorBreadcrumb({ error });
+      addErrorBreadcrumb({ category: 'review', error });
       // this.setState({ hasError: true });
     }
   };

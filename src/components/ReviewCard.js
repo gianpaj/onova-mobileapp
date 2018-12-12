@@ -34,19 +34,21 @@ class ReviewCard extends PureComponent<Props> {
   render() {
     const { order, userData } = this.props;
 
-    let reviewer = order.buyer;
+    // as buyer (Purchased Tab)
+    let reviewer = order.seller;
     let review = order.reviewFromSeller;
 
+    // as seller (Sold Tab)
     if (this.props.as === 'seller') {
-      reviewer = order.seller;
+      reviewer = order.buyer;
       review = order.reviewFromBuyer;
     }
-    if (!review) {
-      const iAmTheBuyer =
-        userData._id.toString() === order.buyer._id.toString();
-      reviewer = order.buyer;
-      if (iAmTheBuyer) reviewer = order.seller;
-    }
+    // if (!review) {
+    //   // const iAmTheBuyer =
+    //   //   userData._id.toString() === order.buyer._id.toString();
+    //   reviewer = order.buyer;
+    //   // if (iAmTheBuyer) reviewer = order.seller;
+    // }
 
     const uri = order.product.photoURIs[0].replace('.jpg', '-thumb.jpg');
 

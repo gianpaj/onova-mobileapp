@@ -31,6 +31,8 @@ import { getRoomName } from './Chat';
 
 import { currentUser as pusherCurrentUser } from '../actions/actionCreator';
 
+const ONOVA_BOT_ID = '5bd1f7af46c62e6cdee546d0';
+
 type Props = {
   navigation: NavigationScreenProp<*>,
   userData: UserData,
@@ -140,7 +142,9 @@ class ChatContainer extends Component<Props, State> {
               } catch (err) {
                 throw new Error(err);
               }
-              const partner = room.users.filter(u => u.id !== userData._id)[0];
+              const partner = room.users
+                .filter(u => u.id !== ONOVA_BOT_ID)
+                .find(u => u.id !== userData._id);
               const cursor = await pusherCurrentUser.readCursor({
                 roomId: room.id,
               });

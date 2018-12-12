@@ -440,6 +440,10 @@ const sendToken = (
 
   // hack iOS01: to allow the login to continue even though the user denied permission
   if (typeof pushToken !== 'string') return Promise.resolve();
+  if (__DEV__) {
+    console.warn('sendToken skipped');
+    return Promise.resolve();
+  }
 
   return api
     .put(`/api/users/${userData._id}`, data, { token })

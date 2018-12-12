@@ -10,4 +10,6 @@ YellowBox.ignoreWarnings([
   'Require cycle',
 ]);
 
+// if (__DEV__) require('./storybook');
+// else
 AppRegistry.registerComponent(appName, () => App);

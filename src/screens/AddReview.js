@@ -25,6 +25,7 @@ import colors from '../config/colors';
 import typography from '../config/typography';
 import settings from '../config/settings';
 import * as api from '../utils/api';
+import * as linking from '../utils/linking';
 import * as ui from '../utils/ui';
 
 import type { NavigationScreenProp } from 'react-navigation';
@@ -180,8 +181,22 @@ export class AddReviewContainer extends Component<Props, State> {
               <Icon ios="ios-arrow-back" android="md-arrow-back" />
             </Button>
           </Left>
-          <Body style={styles.container}>
-            <Title>{I18n.t('add_review.header')}</Title>
+          <Body style={styles.flex2AndCenter}>
+            <Title
+              style={{ color: colors.black, marginLeft: 22, marginRight: 5 }}>
+              {I18n.t('add_review.header')}
+            </Title>
+            <Button
+              hitSlop={{ top: 0, left: 15, bottom: 0, right: 20 }}
+              onPress={linking.openURL.bind(this, 'https://onova.co/drop.html')}
+              style={{ marginTop: 5 }}
+              transparent>
+              <MaterialCommunityIcons
+                color={colors.red}
+                name="information-outline"
+                size={18}
+              />
+            </Button>
           </Body>
           <Right>
             <Button
@@ -226,7 +241,7 @@ export class AddReviewContainer extends Component<Props, State> {
                       last
                       onChangeText={control.onChange}
                       placeholder={I18n.t('add_review.text_placeholder')}
-                      rows={2}
+                      rows={3}
                       style={[
                         styles.textInputContainer,
                         canLeaveReview ? {} : { borderColor: colors.grey4 },
@@ -308,6 +323,12 @@ const styles = StyleSheet.create({
     alignItems: 'stretch',
     flex: 1,
     justifyContent: 'center',
+  },
+  flex2AndCenter: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    flex: 2,
+    flexDirection: 'row',
   },
   textInputContainer: {
     alignSelf: 'center',

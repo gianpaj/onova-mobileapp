@@ -588,6 +588,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
                     style={{ marginTop: 5 }}
                     transparent>
                     <MaterialCommunityIcons
+                      color={colors.red}
                       name="information-outline"
                       size={18}
                     />

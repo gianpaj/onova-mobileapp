@@ -484,7 +484,11 @@ export class CreateDropScreen extends React.Component<Props, State> {
               onPress={linking.openURL.bind(this, 'https://onova.co/drop.html')}
               style={{ marginTop: 5 }}
               transparent>
-              <MaterialCommunityIcons name="information-outline" size={18} />
+              <MaterialCommunityIcons
+                color={colors.red}
+                name="information-outline"
+                size={18}
+              />
             </NBButton>
           </Body>
           <Right>

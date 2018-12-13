@@ -46,7 +46,9 @@ class OrderStatus extends PureComponent<Props> {
     };
     const delivered = {
       title: I18n.t('order_status.delivered'),
-      description: formatDate(order.dateDelivered),
+      description: `${formatDate(order.dateDelivered)} ${I18n.t(
+        'order_status.updated'
+      )}`,
       status: 'finish',
     };
     if (order.status == 'confirmed') {
@@ -65,7 +67,6 @@ class OrderStatus extends PureComponent<Props> {
       steps.push(delivered);
       steps.push({
         title: I18n.t('order_status.not_collected'),
-        description: formatDate(order.dateDelivered),
         status: 'wait',
       });
     } else if (order.status == 'completed') {

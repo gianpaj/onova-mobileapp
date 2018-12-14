@@ -7,6 +7,7 @@ import {
   PixelRatio,
   Platform,
   StyleSheet,
+  View,
   TouchableOpacity,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -157,7 +158,7 @@ export default class Avatar extends PureComponent<Props, State> {
 
     const { buttonActiveState } = this.props;
     return (
-      <>
+      <View>
         {Avatar}
         <TouchableOpacity
           onPress={this.props.onButtonPress}
@@ -174,7 +175,7 @@ export default class Avatar extends PureComponent<Props, State> {
             // ]}
           />
         </TouchableOpacity>
-      </>
+      </View>
     );
   };
 

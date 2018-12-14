@@ -55,6 +55,7 @@ export type UserData = {
   emailAddress: string,
   followersCount: number,
   followingCount: number,
+  amIAFollower?: boolean,
   sharedCount: number,
   mobileNumber: ?string,
   // password: string;

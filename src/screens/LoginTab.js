@@ -45,10 +45,14 @@ if (__DEV__ && !global.__TESTING__) {
     // firstperson
     emailAddress: 'gianpa+test@gmail.com',
     password: 'expressos',
-    // iosuser
-    // emailAddress: 'gianpa+test3@gmail.com',
-    // password: '***REMOVED***',
   };
+  if (Platform.OS === 'android') {
+    // iosuser
+    defaultState = {
+      emailAddress: 'gianpa+test3@gmail.com',
+      password: '***REMOVED***',
+    };
+  }
 
   if (isProd) {
     defaultState = {

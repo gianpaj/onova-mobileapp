@@ -113,15 +113,27 @@ export default class Avatar extends PureComponent<Props, State> {
   };
 
   renderAvatarImage = () => {
-    const { placeholderText, uri } = this.props;
+    const {
+      buttonActiveState,
+      interactive,
+      onButtonPress,
+      overlayColor,
+      placeholderText,
+      resizeMode,
+      size,
+      style,
+      uri,
+      withBorder,
+      withButton,
+    } = this.props;
     let name, Avatar;
 
     const allStyles = [
-      styles.avatar,
-      styles[`${this.props.size}Avatar`],
-      this.props.withBorder ? styles.border : {},
-      this.props.interactive ? styles.borderInteractive : {},
-      this.props.style,
+      // styles.avatar,
+      styles[`${size}Avatar`],
+      withBorder ? styles.border : {},
+      interactive ? styles.borderInteractive : {},
+      style,
     ];
 
     if (!uri && placeholderText !== undefined) {
@@ -134,45 +146,31 @@ export default class Avatar extends PureComponent<Props, State> {
         <GiftedAvatar
           avatarStyle={allStyles}
           user={{ name }}
-          textStyle={styles[`${this.props.size}AvatarPlaceHolderText`]}
+          textStyle={styles[`${size}AvatarPlaceHolderText`]}
         />
       );
     } else {
       Avatar = (
         <Image
           defaultSource={this.getPlaceholder()}
-          resizeMode={this.props.resizeMode}
+          resizeMode={resizeMode}
           source={this.getAppropriateSource()}
-          style={[
-            !isiOS && { overlayColor: this.props.overlayColor },
-            allStyles,
-          ]}
+          style={[!isiOS && { overlayColor }, allStyles]}
         />
         // <CachedImage source={this.getAppropriateSource()} />
       );
     }
 
-    if (!this.props.withButton) {
-      return Avatar;
-    }
+    if (!withButton) return Avatar;
 
-    const { buttonActiveState } = this.props;
     return (
       <View>
         {Avatar}
-        <TouchableOpacity
-          onPress={this.props.onButtonPress}
-          style={styles.button}>
+        <TouchableOpacity onPress={onButtonPress} style={styles.button}>
           <Ionicons
             color={buttonActiveState ? colors.grey4 : colors.active}
-            size={25}
             name={buttonActiveState ? 'ios-checkmark-circle' : 'md-add-circle'}
-            // style={[
-            //   buttonActiveState && {
-            //     backgroundColor: colors.black,
-            //     borderRadius: 50,
-            //   },
-            // ]}
+            size={25}
           />
         </TouchableOpacity>
       </View>
@@ -180,15 +178,16 @@ export default class Avatar extends PureComponent<Props, State> {
   };
 
   render() {
-    if (!this.props.onPress && !this.props.interactive) {
+    const { onPress, interactive } = this.props;
+
+    if (!onPress && !interactive) {
       return this.renderAvatarImage();
     }
+
     return (
       <TouchableOpacity
         onPress={() =>
-          this.props.onPress
-            ? this.props.onPress()
-            : this.props.interactive && this.handleInteractivePress()
+          onPress ? onPress() : interactive && this.handleInteractivePress()
         }>
         {this.renderAvatarImage()}
       </TouchableOpacity>
@@ -197,9 +196,6 @@ export default class Avatar extends PureComponent<Props, State> {
 }
 
 const styles = StyleSheet.create({
-  avatar: {
-    // backgroundColor: colors.grey3,
-  },
   button: {
     alignItems: 'center',
     alignSelf: 'flex-end',
@@ -274,9 +270,4 @@ const styles = StyleSheet.create({
     borderColor: colors.active,
     borderWidth: 2,
   },
-  // container: {
-  //   flex: 1,
-  //   justifyContent: 'center',
-  //   alignItems: 'center',
-  // },
 });

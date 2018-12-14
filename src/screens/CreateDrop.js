@@ -78,7 +78,6 @@ const pickerProps = {
   confirmTextIOS: I18n.t('create_drop.ok'),
   cancelTextIOS: I18n.t('create_drop.cancel'),
   titleIOS: I18n.t('create_drop.select'),
-  date: new Date(),
 };
 
 export class CreateDropScreen extends React.Component<Props, State> {
@@ -95,9 +94,10 @@ export class CreateDropScreen extends React.Component<Props, State> {
       },
     };
   };
+  initialDate = new Date();
 
   state = {
-    datetime: new Date(),
+    datetime: this.initialDate,
     isDatePickerVisible: false,
     isTimePickerVisible: false,
     isLoading: true,
@@ -549,6 +549,7 @@ export class CreateDropScreen extends React.Component<Props, State> {
                   minimumDate={new Date()}
                   maximumDate={MAX_DATE}
                   {...pickerProps}
+                  date={this.initialDate}
                 />
                 <DateTimePicker
                   mode="time"
@@ -556,6 +557,7 @@ export class CreateDropScreen extends React.Component<Props, State> {
                   onConfirm={this.setTime}
                   onCancel={this._closePickers}
                   {...pickerProps}
+                  date={this.initialDate}
                 />
               </List>
             </>

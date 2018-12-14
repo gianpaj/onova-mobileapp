@@ -344,13 +344,14 @@ export class CreateDropScreen extends React.Component<Props, State> {
     const promises = productsReady.map((product, i) => {
       const formData = {
         ...product,
-        // remove 100 millis; to ensure dropped items will be posted in the right order
+        // add 500 millis; to ensure dropped items will be posted in the right order
         // e.g.
-        // 1st -200
-        // 2nd -100
+        // 1st +1000
+        // 2nd +500
         // 3rd -0
         date: new Date(
-          datetime.getTime() - (productsReady.length - 1 - i) * 100
+          // datetime.getTime() - (productsReady.length - 1 - i) * 100
+          datetime.getTime() + (productsReady.length - 1 - i) * 500
         ),
         dropId,
         latitude: location.latitude.toString(),

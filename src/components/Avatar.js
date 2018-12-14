@@ -36,9 +36,9 @@ type Props = {
   placeholderSource?: number,
   placeholderText?: string,
   placeholderURI?: string,
-  resizeMode: Image.resizeMode,
+  resizeMode: ImageStyle.resizeMode,
   size: 'default' | 'mini' | 'verySmall' | 'small' | 'medium',
-  style?: Image.style,
+  style?: ImageStyle,
   uri: string | Image,
   withBorder: boolean,
   withButton?: boolean, // to show an button to follow or not
@@ -46,11 +46,7 @@ type Props = {
   buttonActiveState?: boolean, // to show an button to follow or to unfollow
 };
 
-type State = {
-  failed: boolean,
-};
-
-export default class Avatar extends PureComponent<Props, State> {
+export default class Avatar extends PureComponent<Props, *> {
   static defaultProps = {
     interactive: false,
     overlayColor: 'transparent',
@@ -60,23 +56,16 @@ export default class Avatar extends PureComponent<Props, State> {
     withButton: false,
   };
 
-  state = {
-    failed: false,
-  };
-
   handleInteractivePress = () => {
     ImagePicker.openPicker({
       ...PICKER_OPTIONS,
       // ...this.props.pickerOptions,
     })
       .then((response: Image) => {
-        this.setState({ failed: false });
-
         this.props.onChange && this.props.onChange(response);
       })
       .catch(e => {
         if (e.code == 'E_PICKER_CANCELLED') {
-          this.setState({ failed: true });
           if (this.props.onChangeFailed) {
             this.props.onChangeFailed();
           }

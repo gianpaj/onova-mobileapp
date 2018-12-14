@@ -13,7 +13,7 @@ type Props = {
   userData: any,
 };
 
-class NotificationsDot extends React.Component<Props, void> {
+class NotificationsDot extends React.Component<Props> {
   render() {
     const { userData, focused } = this.props;
 
@@ -24,7 +24,7 @@ class NotificationsDot extends React.Component<Props, void> {
         {/* {userData.notifications && <View style={st.dot} />} */}
         <Avatar
           style={st.avatarContainer}
-          size={'verySmall'}
+          size="verySmall"
           withBorder={focused}
           uri={userData.profilePic}
           placeholderText={userData.username}
@@ -42,11 +42,11 @@ class NotificationsDot extends React.Component<Props, void> {
 
 const st = StyleSheet.create({
   iconContainer: {
-    zIndex: 0,
-    flex: 1,
-    alignSelf: 'stretch',
-    justifyContent: 'space-around',
-    alignItems: 'center',
+    // zIndex: 0,
+    // flex: 1,
+    // alignSelf: 'stretch',
+    // justifyContent: 'space-around',
+    // alignItems: 'center',
   },
   // dot: {
   //   backgroundColor: colors.red,

@@ -37,13 +37,13 @@ class PaymentView extends Component<Props, State> {
 
   async componentDidMount() {
     Toast.loading('', 30);
+    this.initializeListeners();
     try {
-      const { status } = await this.getPaymentStatus();
-      console.debug(status);
-      this.initializeListeners();
-      if (status === 'ua-finished') {
-        throw new Error(I18n.t('paymentView.error_payment'));
-      }
+      // const { status } = await this.getPaymentStatus();
+      // console.debug(status);
+      // if (status === 'ua-finished') {
+      //   throw new Error(I18n.t('paymentView.error_payment'));
+      // }
       const payment = await this.createPayment();
       console.debug(payment);
       this.setState({ payment, isLoading: false });
@@ -118,7 +118,7 @@ class PaymentView extends Component<Props, State> {
         transactionStatus = status;
         // console.debug(status);
         await sleep(1000);
-      } while (transactionStatus !== 'ua-finished' || retryNum > 4);
+      } while (transactionStatus !== 'ua-finished' && retryNum < 5);
       // if it should be
 
       // console.debug(transactionStatus);
@@ -128,6 +128,7 @@ class PaymentView extends Component<Props, State> {
       // if error.code == 'NOT_ALLOWED'
       // return to previous screen (Checkout)
       // TODO: run goToChat() on Checkout or ReplaceCurrentScreen (2 screens)
+
       if (transactionStatus !== 'ua-finished') {
         // ui.showToast('Timeout', 'warning', 'OK', 4);
         // retry?
@@ -137,6 +138,7 @@ class PaymentView extends Component<Props, State> {
     } catch (error) {
       ui.showToast(error.message, 'danger');
       console.error(error);
+      this.props.navigation.goBack();
     }
   };
 

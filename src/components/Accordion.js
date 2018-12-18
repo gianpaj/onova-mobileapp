@@ -11,14 +11,14 @@ import * as Animatable from 'react-native-animatable';
 import colors from '../config/colors';
 
 type Field = {
-  ref: el => void,
-  error: boolean,
-  input: React.Node, // used to store the ref and later be able to focus on next input field when the Next button is pressed (on the keyboard)
-  onChangeText: value => void,
+  ref?: el => void,
+  error?: boolean,
+  input?: React.Node, // used to store the ref and later be able to focus on next input field when the Next button is pressed (on the keyboard)
+  onChangeText?: value => void,
   onFocus: () => void,
   placeholder: string,
-  render: (props: any) => React.Node,
-  shouldShowError: () => boolean,
+  render?: (props: any) => React.Node,
+  shouldShowError?: () => boolean,
   type?: string,
   value: string,
 };

@@ -294,12 +294,9 @@ export function getCities(token: string): Promise<Array<City>> {
   });
 }
 
-export function getDepartments(
-  cityID: string,
-  token: string
-): Promise<Array<Department>> {
+export function getDepartments(cityID: string): Promise<Array<Department>> {
   return new Promise((resolve, reject) => {
-    get(`/api/shipping/departments/${cityID}`, { token })
+    get(`/api/shipping/departments/${cityID}`)
       .then(({ data }) => resolve(data))
       .catch(err => reject(err));
   });
@@ -310,7 +307,7 @@ export function getShippingCosts(
   orderId: string,
   recipientOfficeID: string,
   token: string
-): Promise<string | Error> {
+): Promise<string> {
   return new Promise((resolve, reject) => {
     let weightQuery = '';
     if (weight) weightQuery = `&weight=${weight}`;

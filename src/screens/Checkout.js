@@ -80,18 +80,21 @@ type Props = {
 type State = {
   areFeesLoading: boolean,
   cvc: string,
-  cities: Array<City>,
-  departments: Array<Department>,
+  cities: ?Array<City>,
+  departments: ?Array<Department>,
   isLoading: boolean,
   item: Product | {},
   mobileNumber: string,
   order: Order | {},
   paymentInfo: PaymentInfo,
   pending: boolean,
-  seller: UserData,
+  seller: ?UserData,
   shippingAddress: ?ShippingAddress,
   shippingFee: string,
   showFooter: boolean,
+  nextFocusDisabled: boolean,
+  previousFocusDisabled: boolean,
+  activeInputRef: number,
 };
 
 const cyrillicRegex = /^$|^[\u0400-\u04FF\s]+$/;
@@ -99,6 +102,10 @@ const cyrillicRegex = /^$|^[\u0400-\u04FF\s]+$/;
 class CheckoutContainer extends Component<Props, State> {
   inputs = [];
   cancelToken: CancelTokenSource;
+  _scrollView;
+  autoCompleteRef;
+  keyboardDidShowListener;
+  keyboardDidHideListener;
 
   state = {
     areFeesLoading: false,
@@ -114,8 +121,11 @@ class CheckoutContainer extends Component<Props, State> {
     query: '',
     seller: null,
     shippingAddress: null,
-    shippingFee: 0,
+    shippingFee: '',
     showFooter: true,
+    nextFocusDisabled: true,
+    previousFocusDisabled: true,
+    activeInputRef: -1,
   };
 
   async componentDidMount() {
@@ -268,7 +278,7 @@ class CheckoutContainer extends Component<Props, State> {
       nextFocusDisabled: ref === 5,
     });
 
-  changeInputFocus(direction = 1) {
+  changeInputFocus(direction: number = 1) {
     if (
       (this.state.nextFocusDisabled && direction === 1) ||
       (this.state.previousFocusDisabled && direction === -1)
@@ -280,7 +290,7 @@ class CheckoutContainer extends Component<Props, State> {
     this.inputs[focusingRef] && this.inputs[focusingRef].focus();
   }
 
-  static getDerivedStateFromProps(props, state) {
+  static getDerivedStateFromProps(props: Props, state: State) {
     if (state.isLoading)
       return {
         shippingAddress: props.userData.shippingAddress,

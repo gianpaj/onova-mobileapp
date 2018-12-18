@@ -294,11 +294,12 @@ export class CreateDropScreen extends React.Component<Props, State> {
 
   // return true if all of these are true
   isButtonEnabled(): boolean {
-    const { products, location } = this.state;
+    const { products, location, pending } = this.state;
     return (
       // if any products have been uploaded
       products.filter((i: any) => i.uploaded === true).length > 0 &&
-      location !== null
+      location !== null &&
+      !pending
     );
   }
 
@@ -332,10 +333,11 @@ export class CreateDropScreen extends React.Component<Props, State> {
 
     if (!location) return this.alertForPermission('denied');
 
+    this.setState({ pending: true });
+
     const loader = setTimeout(() => {
       Toast.loading(I18n.t('alerts.toast_uploading'), 30);
     }, 500);
-    this.setState({ pending: true });
 
     const productsReady = products.filter(i => i.uploaded === true);
 
@@ -438,10 +440,12 @@ export class CreateDropScreen extends React.Component<Props, State> {
 
   // show alert prompt
   // if confirmed
-  removeImage = (key: string) =>
+  removeImage = (key: string) => {
+    if (this.state.pending) return;
     this.setState(prevState => ({
       products: prevState.products.filter(product => product.key !== key),
     }));
+  };
 
   shouldShowAccountNotVerifiedNoticeBar() {
     return this.props.userData.accountStatus === 'notverified';
@@ -588,7 +592,7 @@ export class CreateDropScreen extends React.Component<Props, State> {
             style={[styles.size, imagePickerStyle.image]}
           />
           <TouchableOpacity
-            onPress={() => !this.state.pending && this.removeImage(product.key)}
+            onPress={() => this.removeImage(product.key)}
             style={styles.closeWrap}
             activeOpacity={0.6}>
             <Text style={imagePickerStyle.closeText}>×</Text>

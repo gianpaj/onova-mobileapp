@@ -118,7 +118,7 @@ class PaymentView extends Component<Props, State> {
         transactionStatus = status;
         // console.debug(status);
         await sleep(1000);
-      } while (transactionStatus !== 'ua-finished' && retryNum < 5);
+      } while (transactionStatus !== 'ua-finished' && retryNum < 30);
       // if it should be
 
       // console.debug(transactionStatus);

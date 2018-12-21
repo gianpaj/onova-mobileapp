@@ -76,7 +76,10 @@ export const addErrorBreadcrumb = ({
   error?: any,
   level?: string,
 }) => {
-  log(errMsg || error, level);
+  // avoid red screen when switching from Dev and Prod API
+  if (error && error.message !== 'Invalid user') {
+    log(errMsg || error, level);
+  }
   if (analyticsEnabled) {
     Sentry.captureBreadcrumb({
       category,

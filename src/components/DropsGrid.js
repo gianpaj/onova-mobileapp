@@ -18,7 +18,7 @@ import { format } from 'date-fns';
 import type { NavigationScreenProp } from 'react-navigation';
 
 import { disableRefresh } from '../actions/actionCreator';
-import type { Schedule, Product } from '../types';
+import type { Dispatch, Schedule, Product } from '../types';
 
 import I18n from '../i18n';
 import * as api from '../utils/api';
@@ -26,6 +26,7 @@ import typography from '../config/typography';
 import colors from '../config/colors';
 
 type Props = {
+  dispatch: Dispatch,
   emptyState: React.Node,
   focused: boolean,
   navigation?: NavigationScreenProp<*>,

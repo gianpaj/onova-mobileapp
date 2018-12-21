@@ -33,7 +33,7 @@ import I18n from '../i18n';
 
 import { Avatar, EditableText, Header, NotificationsDot } from '../components';
 import ShopTab from './ShopTab';
-import DropsTab from './DropsTab';
+import UserDropsTab from './UserDropsTab';
 import { getPersonalUserData, enableRefresh } from '../actions/actionCreator';
 
 import typography from '../config/typography';
@@ -608,7 +608,7 @@ class ProfileScreen extends React.Component<Props, State> {
       case 'drops':
         if (navigationState.username)
           return (
-            <DropsTab
+            <UserDropsTab
               username={navigationState.username}
               navigation={this.props.navigation}
             />

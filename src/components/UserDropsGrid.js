@@ -44,7 +44,7 @@ type State = {
 
 const { width, height } = Dimensions.get('window');
 
-class DropsGridComponent extends React.PureComponent<Props, State> {
+class UserDropsGridComponent extends React.PureComponent<Props, State> {
   reqTimer = 0;
   firstFocus = true;
   state = {
@@ -111,7 +111,7 @@ class DropsGridComponent extends React.PureComponent<Props, State> {
   renderItem = ({ item }: { item: Product }) => {
     const uri = item.photoURIs[0].replace('.jpg', '-thumb.jpg');
     return (
-      <View style={styles.imageContainer} key={item.uuid}>
+      <View style={styles.imageContainer} key={item._id}>
         <Image style={styles.image} source={{ uri }} />
       </View>
     );
@@ -200,7 +200,7 @@ const mapStateToProps = (state: any) => ({
   shouldRefresh: state.RefresherReducer.shouldRefresh,
 });
 
-export default connect(mapStateToProps)(DropsGridComponent);
+export default connect(mapStateToProps)(UserDropsGridComponent);
 
 const MARGIN = 1;
 

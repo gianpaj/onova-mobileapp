@@ -5,7 +5,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { Button as NBButton } from 'native-base';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import { DropsGrid } from '../components';
+import { UserDropsGrid } from '../components';
 import colors from '../config/colors';
 import I18n from '../i18n';
 
@@ -18,7 +18,7 @@ type Props = {
   username: string,
 };
 
-class DropsTabContainer extends React.Component<Props, {}> {
+class UserDropsTabContainer extends React.Component<Props, {}> {
   imageGrid;
 
   constructor(props) {
@@ -40,7 +40,7 @@ class DropsTabContainer extends React.Component<Props, {}> {
 
     return (
       <View style={styles.flex1}>
-        <DropsGrid
+        <UserDropsGrid
           focused
           ref={this.imageGrid}
           username={username}
@@ -117,4 +117,4 @@ const mapStateToProps: any = (state: ReduxState) => ({
   userData: state.LoginReducer.data,
 });
 
-export default connect(mapStateToProps)(DropsTabContainer);
+export default connect(mapStateToProps)(UserDropsTabContainer);

@@ -5,7 +5,7 @@ import Avatar from './Avatar';
 // import ChatActions from './ChatActions';
 import CardView from './CardView';
 import Comments from './Comments';
-import DropsGrid from './DropsGrid';
+import UserDropsGrid from './UserDropsGrid';
 import EditableText from './EditableText';
 import Header from './Header';
 import HR from './HR';
@@ -27,7 +27,7 @@ export {
   CardView,
   // ChatActions,
   Comments,
-  DropsGrid,
+  UserDropsGrid,
   EditableText,
   Header,
   HR,

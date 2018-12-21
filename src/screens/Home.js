@@ -21,6 +21,8 @@ import { Header, ImageGrid } from '../components';
 import * as api from '../utils/api';
 import * as linking from '../utils/linking';
 
+import Megaphone from '../assets/svg/megaphone';
+
 import type { NavigationScreenProp } from 'react-navigation';
 import type { Route, NavigationState } from 'react-native-tab-view';
 
@@ -43,7 +45,7 @@ type State = {
   dialogVisible: boolean,
 };
 
-const { analyticsEnabled } = api;
+// const { analyticsEnabled } = api;
 
 export class Home extends PureComponent<Props, State> {
   state = {
@@ -100,10 +102,18 @@ export class Home extends PureComponent<Props, State> {
     }
   };
 
-  onShare() {
-    Share.share({ message: I18n.t('home.share'), title: 'Share' });
-    if (analyticsEnabled) Analytics.track('press_share_invite');
-  }
+  // onShare() {
+  //   Share.share({ message: I18n.t('home.share'), title: 'Share' });
+  //   if (analyticsEnabled) Analytics.track('press_share_invite');
+  // }
+
+  goToDropsFeed = () => {
+    // $FlowFixMe
+    this.props.navigation.navigate({
+      routeName: 'dropsFeed',
+      key: 'dropsFeed',
+    });
+  };
 
   render() {
     return (
@@ -123,12 +133,8 @@ export class Home extends PureComponent<Props, State> {
             <Title style={{ color: colors.black }}>ONOVA</Title>
           </Body>
           <Right>
-            <Button transparent onPress={this.onShare}>
-              <Icon
-                style={{ color: colors.black }}
-                android="md-person-add"
-                ios="ios-person-add"
-              />
+            <Button transparent onPress={this.goToDropsFeed}>
+              <Megaphone width={19} height={19} />
             </Button>
           </Right>
         </Header>

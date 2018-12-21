@@ -222,6 +222,10 @@ export default {
     empty_state_button_mine: 'Створити дроп',
     empty_state_message_others: 'Жодних запланованих Дропів',
   },
+  drops_feed: {
+    header: 'Дропи',
+    error: 'Помилка завантаження інформації про Дропи',
+  },
   profile: {
     reviews_label: 'Відгуки',
     followers_label: 'Клієнти',

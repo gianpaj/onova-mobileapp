@@ -218,6 +218,10 @@ For any questions regarding payments please contact UAPAY at (044) 364-11-44`,
     empty_state_button_mine: 'Make a Drop',
     empty_state_message_others: 'There are no drops yet',
   },
+  drops_feed: {
+    header: 'Drops',
+    error: 'Error fetching drops',
+  },
   profile: {
     reviews_label: 'reviews',
     followers_label: 'followers',

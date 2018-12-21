@@ -8,6 +8,17 @@ import type {
   NavigationState,
 } from './navigationReducer';
 
+export type Drop = {
+  _id: MongoId,
+  createdAt: Date,
+  posted: Boolean,
+  products: Array<ProductDoc>,
+  scheduledAt: Date,
+  seller: MongoId,
+  updatedAt: Date,
+  uuid: string,
+};
+
 export type ProductStatus =
   | 'forsale'
   | 'reserved'

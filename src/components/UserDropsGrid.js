@@ -85,14 +85,10 @@ class UserDropsGridComponent extends React.PureComponent<Props, State> {
     const { token, username } = this.props;
 
     try {
-      const { data } = await api.get(`/api/schedule?username=${username}`, {
+      const { data } = await api.get(`/api/v2/drops/?username=${username}`, {
         token,
       });
-      let arrayOfDrops = [];
-      for (const key in data) {
-        arrayOfDrops.push({ products: data[key], key });
-      }
-      this.setState({ items: arrayOfDrops });
+      this.setState({ items: data });
     } catch (err) {
       this.setState({ hasError: true });
       console.error(err);
@@ -121,13 +117,13 @@ class UserDropsGridComponent extends React.PureComponent<Props, State> {
     <>
       <List>
         <Text style={styles.dateStrings}>
-          {format(item.products[0].nextRunAt, 'D MMM HH:mm')}
+          {format(item.scheduledAt, 'D MMM HH:mm')}
         </Text>
       </List>
       <FlatList
         data={item.products}
         columnWrapperStyle={[styles.columnWrapper, { height: width / 3 }]}
-        keyExtractor={this._keyExtractorDrop}
+        keyExtractor={this._keyProductExtractor}
         getItemLayout={this.getItemLayout}
         numColumns={3}
         // $FlowFixMe
@@ -165,6 +161,7 @@ class UserDropsGridComponent extends React.PureComponent<Props, State> {
           refreshing={isLoading}
           renderItem={this.renderDropGrid}
           ItemSeparatorComponent={this.renderSeparator}
+          keyExtractor={this._keyDropExtractor}
         />
       </View>
     );
@@ -172,7 +169,8 @@ class UserDropsGridComponent extends React.PureComponent<Props, State> {
 
   renderSeparator = () => <View style={styles.separator} />;
 
-  _keyExtractorDrop = (item): string => item.uuid;
+  _keyProductExtractor = (item): string => item._id;
+  _keyDropExtractor = (item): string => item._id;
 
   renderEmptyState = () => {
     if (this.state.items.length > 1) return null;

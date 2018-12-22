@@ -22,7 +22,6 @@
     "axios": "^0.18.0",
     "babel-plugin-import": "^1.11.0",
     "babel-plugin-transform-remove-console": "^6.9.4",
-    "bson-objectid": "^1.2.4",
     "date-fns": "^1.29.0",
     "foect": "^0.1.5",
     "google-libphonenumber": "^3.2.1",

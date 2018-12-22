@@ -30,7 +30,6 @@ import {
   Title,
 } from 'native-base';
 import { format } from 'date-fns';
-import ObjectID from 'bson-objectid';
 
 import colors from '../config/colors';
 import { Header, NoticeBar } from '../components';
@@ -339,36 +338,26 @@ export class CreateDropScreen extends React.Component<Props, State> {
       Toast.loading(I18n.t('alerts.toast_uploading'), 30);
     }, 500);
 
-    const productsReady = products.filter(i => i.uploaded === true);
+    let productsReady = products.filter(i => i.uploaded === true);
 
-    const dropId = ObjectID();
+    productsReady = productsReady.map(product => {
+      // eslint-disable-next-line no-unused-vars
+      const { key, uploaded, ...rest } = product;
+      return rest;
+    });
 
-    const promises = productsReady.map((product, i) => {
-      const formData = {
-        ...product,
-        // add 500 millis; to ensure dropped items will be posted in the right order
-        // e.g.
-        // 1st +1000
-        // 2nd +500
-        // 3rd -0
-        date: new Date(
-          // datetime.getTime() - (productsReady.length - 1 - i) * 100
-          datetime.getTime() + (productsReady.length - 1 - i) * 500
-        ),
-        dropId,
-        latitude: location.latitude.toString(),
-        longitude: location.longitude.toString(),
-      };
-      delete formData.key;
-      delete formData.uploaded;
-      return api.post('/api/schedule', formData, {
+    const formData = {
+      date: new Date(datetime.getTime()),
+      products: productsReady,
+      latitude: location.latitude.toString(),
+      longitude: location.longitude.toString(),
+    };
+
+    try {
+      await api.post('/api/v2/drops', formData, {
         token,
         timeout: 20000,
       });
-    });
-
-    try {
-      await Promise.all(promises);
       clearTimeout(loader);
       Toast.hide();
       ui.showToast(I18n.t('create_drop.success'), 'success');

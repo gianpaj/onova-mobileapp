@@ -156,10 +156,9 @@ export class ConfirmOrderContainer extends Component<Props, State> {
   }
 
   goToProfile = (user: UserData) => {
-    let routeName = 'profileInStack';
     // $FlowFixMe
     this.props.navigation.navigate({
-      routeName,
+      routeName: 'profileInStack',
       params: user,
       key: `profile-${user.username}`,
     });

@@ -9,6 +9,7 @@ import {
   Image,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from 'react-native';
 import {
@@ -31,7 +32,7 @@ import typography from '../config/typography';
 import * as api from '../utils/api';
 
 import type { NavigationScreenProp } from 'react-navigation';
-import type { Drop, ReduxState, Product } from '../types';
+import type { Drop, ReduxState, Product, UserData } from '../types';
 
 const { width, height } = Dimensions.get('window');
 
@@ -114,20 +115,31 @@ class DropsFeed extends Component<Props, State> {
             style={styles.emptyStateIcon}
           />
           <Text style={styles.boldText}>
-            {I18n.t('drops_grid.empty_state_title')}
+            {I18n.t('drops_feed.empty_state_title')}
           </Text>
           <Text style={styles.centerText}>
-            {I18n.t('drops_grid.empty_state_message_mine')}
+            {I18n.t('drops_feed.empty_state_message')}
           </Text>
         </>
       </View>
     );
   };
 
+  goToProfile = (user: UserData) => {
+    // $FlowFixMe
+    this.props.navigation.navigate({
+      routeName: 'profileInStack',
+      params: user,
+      key: `profile-${user.username}`,
+    });
+  };
+
   renderDropGrid = ({ item }: any) => (
     <>
       <List style={styles.dropHeader}>
-        <View style={styles.dropUserRow}>
+        <TouchableOpacity
+          style={styles.dropUserRow}
+          onPress={() => this.goToProfile(item.seller)}>
           <Avatar
             size={'verySmall'}
             // style={styles.avatarContainer}
@@ -135,7 +147,7 @@ class DropsFeed extends Component<Props, State> {
             placeholderText={item.seller.username}
           />
           <Text style={styles.userName}>{item.seller.username}</Text>
-        </View>
+        </TouchableOpacity>
         <Text style={styles.dateStrings}>
           {format(item.scheduledAt, 'D MMM HH:mm')}
         </Text>

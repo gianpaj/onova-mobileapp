@@ -221,6 +221,8 @@ For any questions regarding payments please contact UAPAY at (044) 364-11-44`,
   drops_feed: {
     header: 'Drops',
     error: 'Error fetching drops',
+    empty_state_title: 'No drop in your feed',
+    empty_state_message: 'Follow more sellers to see their Drops',
   },
   profile: {
     reviews_label: 'reviews',

@@ -225,6 +225,8 @@ export default {
   drops_feed: {
     header: 'Дропи',
     error: 'Помилка завантаження інформації про Дропи',
+    empty_state_title: 'Поки що немає дропів',
+    empty_state_message: 'Додавайте магазини в контакти щоб бачити їх дропи',
   },
   profile: {
     reviews_label: 'Відгуки',

@@ -23,7 +23,7 @@ import {
 import { format } from 'date-fns';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import { Header } from '../components';
+import { Header, Avatar } from '../components';
 
 import I18n from '../i18n';
 import colors from '../config/colors';
@@ -126,9 +126,18 @@ class DropsFeed extends Component<Props, State> {
 
   renderDropGrid = ({ item }: any) => (
     <>
-      <List>
+      <List style={styles.dropHeader}>
+        <View style={styles.dropUserRow}>
+          <Avatar
+            size={'verySmall'}
+            // style={styles.avatarContainer}
+            uri={item.seller.profilePic}
+            placeholderText={item.seller.username}
+          />
+          <Text style={styles.userName}>{item.seller.username}</Text>
+        </View>
         <Text style={styles.dateStrings}>
-          {format(item.products[0].nextRunAt, 'D MMM HH:mm')}
+          {format(item.scheduledAt, 'D MMM HH:mm')}
         </Text>
       </List>
       <FlatList
@@ -146,6 +155,7 @@ class DropsFeed extends Component<Props, State> {
   renderSeparator = () => <View style={styles.separator} />;
 
   _keyProductExtractor = (item): string => item._id;
+  _keyDropExtractor = (item): string => item._id;
 
   renderLoading = () => (
     <View style={styles.container}>
@@ -183,6 +193,7 @@ class DropsFeed extends Component<Props, State> {
             // $FlowFixMe
             onRefresh={this.fetchItems}
             refreshing={isLoading}
+            keyExtractor={this._keyDropExtractor}
             renderItem={this.renderDropGrid}
             ItemSeparatorComponent={this.renderSeparator}
           />
@@ -221,10 +232,24 @@ const styles = StyleSheet.create({
   imageContainer: {
     alignItems: 'stretch',
   },
-  dateStrings: {
-    color: colors.black,
+  dropUserRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  userName: {
+    paddingLeft: 10,
+  },
+  dropHeader: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     paddingHorizontal: 20,
     paddingVertical: 15,
+  },
+  dateStrings: {
+    // justifyContent: 'flex-end',
+    color: colors.black,
     fontSize: typography.font_body_size,
   },
   separator: {
@@ -245,8 +270,9 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
   },
-  searchButton: {
-    marginTop: 20,
+  avatarContainer: {
+    marginHorizontal: 10,
+    top: -10,
   },
 });
 

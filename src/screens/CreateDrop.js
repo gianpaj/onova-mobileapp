@@ -363,6 +363,7 @@ export class CreateDropScreen extends React.Component<Props, State> {
       ui.showToast(I18n.t('create_drop.success'), 'success');
       this.closeModal();
     } catch (err) {
+      clearTimeout(loader);
       Toast.hide();
       ui.showToast(err.message, 'warning');
       this.setState({ pending: false });

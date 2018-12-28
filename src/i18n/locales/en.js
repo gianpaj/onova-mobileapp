@@ -406,4 +406,8 @@ For any questions regarding payments please contact UAPAY at (044) 364-11-44`,
     error_payment: 'Payment has been already completed',
   },
   UAH: 'UAH',
+  countdown: {
+    m: 'm',
+    s: 's',
+  },
 };

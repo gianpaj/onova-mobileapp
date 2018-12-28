@@ -409,4 +409,8 @@ export default {
     error_payment: 'Покупка вже була завершена',
   },
   UAH: 'грн',
+  countdown: {
+    m: 'хв',
+    s: 'сек',
+  },
 };

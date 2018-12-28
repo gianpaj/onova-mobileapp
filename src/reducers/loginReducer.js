@@ -24,6 +24,7 @@ const initialState: LoginState = {
   data: null,
   fetchLoading: false,
   hasError: false,
+  isAdmin: false,
   isLoggedIn: false,
   isVerifyAccountModalVisible: false,
   loading: false,
@@ -35,6 +36,14 @@ export default function(
   state: LoginState = initialState,
   action: Action
 ): LoginState {
+  let isAdmin = false;
+  if (
+    state.data &&
+    ['alex', 'onova', 'gianpaj'].includes(state.data.username)
+  ) {
+    isAdmin = true;
+  }
+
   switch (action.type) {
     case LOGIN_PENDING:
     case SIGNUP_PENDING:
@@ -58,6 +67,7 @@ export default function(
     case LOGIN_SUCCESS:
       const thisState = {
         ...state,
+        isAdmin,
         checkedLoggedIn: true,
         isLoggedIn: true,
         loading: false,
@@ -98,7 +108,7 @@ export default function(
       };
 
     case RELOAD_SUCCESS:
-      return { ...state, hasError: false, checkedLoggedIn: true };
+      return { ...state, hasError: false, isAdmin, checkedLoggedIn: true };
 
     case RELOAD_FAIL:
       return {

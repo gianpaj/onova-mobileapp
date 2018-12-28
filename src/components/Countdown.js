@@ -1,0 +1,149 @@
+// @flow
+
+// inspired by from https://github.com/talalmajali/react-native-countdown-component/blob/master/index.js
+
+import React from 'react';
+import PropTypes from 'prop-types';
+
+import { AppState, StyleSheet, Text, View } from 'react-native';
+import _ from 'lodash';
+import { sprintf } from 'sprintf-js';
+
+import colors from '../config/colors';
+import I18n from '../i18n';
+
+const DEFAULT_BG_COLOR = colors.white;
+const DEFAULT_DIGIT_TXT_COLOR = colors.red;
+
+export default class Countdown extends React.Component<*, *> {
+  timer: IntervalID | null;
+  onFinish: Function;
+  static propTypes = {
+    digitBgColor: PropTypes.string,
+    digitTxtColor: PropTypes.string,
+    size: PropTypes.number,
+    until: PropTypes.number,
+    onFinish: PropTypes.func,
+  };
+
+  state = {
+    until: Math.max(this.props.until, 0),
+    wentBackgroundAt: null,
+  };
+
+  static defaultProps = {
+    digitBgColor: DEFAULT_BG_COLOR,
+    digitTxtColor: DEFAULT_DIGIT_TXT_COLOR,
+    until: 0,
+    size: 15,
+  };
+
+  componentDidMount() {
+    if (this.props.onFinish) {
+      this.onFinish = _.once(this.props.onFinish);
+    }
+    this.timer = setInterval(this.updateTimer, 1000);
+    AppState.addEventListener('change', this._handleAppStateChange);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.timer);
+    this.timer = null;
+    AppState.removeEventListener('change', this._handleAppStateChange);
+  }
+
+  _handleAppStateChange = currentAppState => {
+    const { until, wentBackgroundAt } = this.state;
+    if (currentAppState === 'active' && wentBackgroundAt) {
+      const diff = (Date.now() - wentBackgroundAt) / 1000.0;
+      this.setState({ until: Math.max(0, until - diff) });
+    }
+    if (currentAppState === 'background') {
+      this.setState({ wentBackgroundAt: Date.now() });
+    }
+  };
+
+  getTimeLeft = () => {
+    const { until } = this.state;
+    return {
+      seconds: until % 60,
+      minutes: parseInt(until / 60, 10) % 60,
+    };
+  };
+
+  updateTimer = () => {
+    const { until } = this.state;
+
+    if (until <= 1) {
+      clearInterval(this.timer);
+      this.timer = null;
+      this.setState({ until: 0 });
+      if (this.onFinish) {
+        this.onFinish();
+      }
+    } else {
+      this.setState({ until: until - 1 });
+    }
+  };
+
+  renderDigit = (digit: number, label: string) => {
+    const { digitBgColor, digitTxtColor, size } = this.props;
+    return (
+      <View style={styles.doubleDigitCont}>
+        <View
+          style={[
+            styles.digitCont,
+            { backgroundColor: digitBgColor },
+            { width: size * 1.9, height: size * 2.6 },
+          ]}>
+          <Text
+            numberOfLines={1}
+            style={[
+              styles.digitTxt,
+              { fontSize: size },
+              { color: digitTxtColor },
+            ]}>
+            {digit + label}
+          </Text>
+        </View>
+      </View>
+    );
+  };
+
+  renderCountDown = () => {
+    const { minutes, seconds } = this.getTimeLeft();
+    const [min, sec] = sprintf('%01d:%01d', minutes, seconds).split(':');
+
+    return (
+      <View style={styles.timeCont}>
+        {this.renderDigit(min, I18n.t('countdown.m'))}
+        {this.renderDigit(sec, I18n.t('countdown.s'))}
+      </View>
+    );
+  };
+
+  render() {
+    return <View style={this.props.style}>{this.renderCountDown()}</View>;
+  }
+}
+
+const styles = StyleSheet.create({
+  timeCont: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  digitCont: {
+    alignItems: 'center',
+    borderRadius: 5,
+    justifyContent: 'center',
+    marginHorizontal: 0,
+  },
+  doubleDigitCont: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  digitTxt: {
+    color: colors.red,
+    fontVariant: ['tabular-nums'],
+  },
+});

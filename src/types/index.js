@@ -69,7 +69,7 @@ export type UserData = {
   amIAFollower?: boolean,
   sharedCount: number,
   mobileNumber: ?string,
-  // password: string;
+  ordersAndReviewsCount?: boolean,
   paymentInfo?: {
     last_four: string,
     exp_month: string,

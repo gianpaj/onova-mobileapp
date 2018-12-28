@@ -12,8 +12,11 @@ import {
   Text,
   View,
 } from 'react-native';
-import { List } from 'native-base';
-import { format } from 'date-fns';
+import { ActionSheet, List } from 'native-base';
+import Icon from 'react-native-vector-icons/Feather';
+import { format, differenceInMinutes, differenceInSeconds } from 'date-fns';
+
+import { Countdown } from '../components';
 
 import type { NavigationScreenProp } from 'react-navigation';
 
@@ -22,6 +25,7 @@ import type { Dispatch, Schedule, Product } from '../types';
 
 import I18n from '../i18n';
 import * as api from '../utils/api';
+import * as ui from '../utils/ui';
 import typography from '../config/typography';
 import colors from '../config/colors';
 
@@ -29,6 +33,7 @@ type Props = {
   dispatch: Dispatch,
   emptyState: React.Node,
   focused: boolean,
+  isAdmin: boolean,
   navigation?: NavigationScreenProp<*>,
   shouldRefresh?: boolean,
   token?: string,
@@ -88,6 +93,45 @@ class UserDropsGridComponent extends React.PureComponent<Props, State> {
       const { data } = await api.get(`/api/v2/drops/?username=${username}`, {
         token,
       });
+
+      //#region development
+      /*
+      const data = [
+        {
+          posted: false,
+          products: [
+            {
+              photoURIs: [
+                'https://assets.onova.co/products/8LOvCz1MR-1-1546028852413.jpg',
+              ],
+              _id: '5c2687346657400c3ff4567b',
+            },
+          ],
+          status: 'valid',
+          _id: '5c2687346657400c3ff4567a',
+          scheduledAt: '2018-12-28T20:48:56.891Z',
+          seller: {
+            shippingAddress: {
+              firstName: 'Олександр',
+              lastName: 'Костінський ',
+              city: 'db5c88f5-391c-11dd-90d9-001a92567626',
+              departmentNovaposhta: '39931b85-e1c2-11e3-8c4a-0050568002cf',
+            },
+            accountStatus: 'verified',
+            _id: '5afaa93daeeb1453812fc011',
+            username: 'alex',
+            profilePic:
+              'http://assets.onova.co/users/5afaa93daeeb1453812fc011-1526385408286.jpg',
+            displayName: 'Alex',
+          },
+          createdAt: '2018-12-28T20:27:32.932Z',
+          updatedAt: '2018-12-28T20:27:32.932Z',
+          uuid: 'yAyE262fS',
+        },
+      ];
+      */
+      //#endregion
+
       this.setState({ items: data });
     } catch (err) {
       this.setState({ hasError: true });
@@ -113,25 +157,81 @@ class UserDropsGridComponent extends React.PureComponent<Props, State> {
     );
   };
 
-  renderDropGrid = ({ item }: any) => (
-    <>
-      <List>
-        <Text style={styles.dateStrings}>
-          {format(item.scheduledAt, 'D MMM HH:mm')}
-        </Text>
-      </List>
-      <FlatList
-        data={item.products}
-        columnWrapperStyle={[styles.columnWrapper, { height: width / 3 }]}
-        keyExtractor={this._keyProductExtractor}
-        getItemLayout={this.getItemLayout}
-        numColumns={3}
-        // $FlowFixMe
-        renderItem={this.renderItem}
-        horizontal={false}
-      />
-    </>
-  );
+  onDeleteDrop(uuid: string) {
+    const DELETE = 'Delete? (only admin can see the icon)';
+    const CANCEL = I18n.t('alerts.action_button_cancel');
+
+    const BUTTONS = [DELETE, CANCEL];
+    ActionSheet.show(
+      {
+        options: BUTTONS,
+        destructiveButtonIndex: 0,
+        cancelButtonIndex: BUTTONS.indexOf(CANCEL),
+      },
+      buttonIndex => {
+        if (0 === buttonIndex) {
+          ui.showConfirmAlert('Confirm deleting the drop?', '', () => {
+            this.deleteDrop(uuid);
+          });
+        }
+      }
+    );
+  }
+
+  async deleteDrop(uuid: string) {
+    const { token } = this.props;
+    try {
+      await api.del(`/api/v2/drops/${uuid}`, { token });
+      this.fetchItems();
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  renderDropGrid = ({ item }: any) => {
+    const scheduledAt = new Date(item.scheduledAt);
+
+    const willDropIn15Mins = differenceInMinutes(scheduledAt, new Date()) < 16;
+    return (
+      <>
+        <List
+          style={{
+            flex: 1,
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+          }}>
+          {willDropIn15Mins ? (
+            <Countdown
+              size={14}
+              until={differenceInSeconds(scheduledAt, new Date())}
+            />
+          ) : (
+            <Text style={styles.dateStrings}>
+              {format(item.scheduledAt, 'D MMM HH:mm')}
+            </Text>
+          )}
+          {this.props.isAdmin && (
+            <Icon
+              style={{ paddingRight: 5, paddingTop: 5 }}
+              name="trash-2"
+              size={22}
+              onPress={() => this.onDeleteDrop(item.uuid)}
+            />
+          )}
+        </List>
+        <FlatList
+          data={item.products}
+          columnWrapperStyle={[styles.columnWrapper, { height: width / 3 }]}
+          keyExtractor={this._keyProductExtractor}
+          getItemLayout={this.getItemLayout}
+          numColumns={3}
+          // $FlowFixMe
+          renderItem={this.renderItem}
+          horizontal={false}
+        />
+      </>
+    );
+  };
 
   renderFooter = () => {
     if (!this.state.isRefreshing) return null;
@@ -194,6 +294,7 @@ class UserDropsGridComponent extends React.PureComponent<Props, State> {
 }
 
 const mapStateToProps = (state: any) => ({
+  isAdmin: state.LoginReducer.isAdmin,
   token: state.LoginReducer.token,
   shouldRefresh: state.RefresherReducer.shouldRefresh,
 });

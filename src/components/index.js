@@ -5,6 +5,7 @@ import Avatar from './Avatar';
 // import ChatActions from './ChatActions';
 import CardView from './CardView';
 import Comments from './Comments';
+import Countdown from './Countdown';
 import UserDropsGrid from './UserDropsGrid';
 import EditableText from './EditableText';
 import Header from './Header';
@@ -27,6 +28,7 @@ export {
   CardView,
   // ChatActions,
   Comments,
+  Countdown,
   UserDropsGrid,
   EditableText,
   Header,

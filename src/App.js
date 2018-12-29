@@ -26,8 +26,6 @@ export default class App extends React.Component<*> {
   constructor() {
     super();
 
-    // console.warn('MAIN constructor');
-
     if (analyticsEnabled) {
       Sentry.config(config.SENTRY_URL).install();
       Sentry.captureBreadcrumb({

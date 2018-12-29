@@ -61,12 +61,11 @@ class DropsFeed extends Component<Props, State> {
   }
 
   /**
-   * used when pulling and refreshing AND when initially
+   * used when pulling and refreshing AND initially
    */
   fetchItems = async () => {
     this.setState({ isLoading: true });
     const { token } = this.props;
-    console.log(token);
 
     try {
       const { data } = await api.get('/api/feed/drops', { token });
@@ -108,7 +107,7 @@ class DropsFeed extends Component<Props, State> {
     return (
       <View style={styles.emptyContainer}>
         <>
-          <MaterialCommunityIcons // or SVG?
+          <MaterialCommunityIcons
             size={48}
             name="clock"
             color={colors.grey2}
@@ -126,7 +125,6 @@ class DropsFeed extends Component<Props, State> {
   };
 
   goToProfile = (user: UserData) => {
-    // $FlowFixMe
     this.props.navigation.navigate({
       routeName: 'profileInStack',
       params: user,

@@ -139,9 +139,23 @@ class DropsFeed extends Component<Props, State> {
     </View>
   );
 
-  onSubscribeUnsubscribed() {
-    console.warn('onSubscribeUnsubscribed');
-  }
+  onSubscribeUnsubscribed = async (drop: Drop) => {
+    const { token } = this.props;
+    try {
+      if (drop.amISubscribed) {
+        await api.post(`/api/v2/drops/${drop.uuid}/unsubscribe`, null, {
+          token,
+        });
+      } else {
+        await api.post(`/api/v2/drops/${drop.uuid}/subscribe`, null, {
+          token,
+        });
+      }
+      this.fetchItems();
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   render() {
     const { hasError, isLoading, items } = this.state;

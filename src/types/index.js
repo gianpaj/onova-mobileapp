@@ -11,12 +11,12 @@ import type {
 export type Drop = {
   _id: string,
   createdAt: Date,
-  iSubscribed: boolean,
+  amISubscribed: boolean,
   subscribers: Array<any>,
   posted: boolean,
   products: Array<Product>,
   scheduledAt: Date,
-  seller: MongoId,
+  seller: any,
   updatedAt: Date,
   uuid: string,
 };

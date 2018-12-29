@@ -67,14 +67,16 @@ export default class DropCard extends Component<Props> {
           <Button
             dark
             style={{ paddingHorizontal: 10 }}
-            onPress={onSubscribeUnsubscribed}>
+            onPress={() =>
+              onSubscribeUnsubscribed && onSubscribeUnsubscribed(drop)
+            }>
             <Text
               // eslint-disable-next-line
               style={{
                 fontSize: typography.font_button_size,
                 color: colors.white,
               }}>
-              {drop.iSubscribed
+              {drop.amISubscribed
                 ? I18n.t('drops_feed.unsubscribe')
                 : I18n.t('drops_feed.subscribe')}
             </Text>

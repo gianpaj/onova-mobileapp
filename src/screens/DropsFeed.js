@@ -9,7 +9,6 @@ import {
   Image,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
 } from 'react-native';
 import {
@@ -17,18 +16,15 @@ import {
   Button as NBButton,
   Icon as NBIcon,
   Left,
-  List,
   Right,
   Title,
 } from 'native-base';
-import { format } from 'date-fns';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import { Header, Avatar } from '../components';
+import { Header, DropCard } from '../components';
 
 import I18n from '../i18n';
 import colors from '../config/colors';
-import typography from '../config/typography';
 import * as api from '../utils/api';
 
 import type { NavigationScreenProp } from 'react-navigation';
@@ -69,6 +65,7 @@ class DropsFeed extends Component<Props, State> {
 
     try {
       const { data } = await api.get('/api/feed/drops', { token });
+
       this.setState({ items: data });
     } catch (err) {
       this.setState({ hasError: true });
@@ -132,39 +129,8 @@ class DropsFeed extends Component<Props, State> {
     });
   };
 
-  renderDropGrid = ({ item }: any) => (
-    <>
-      <List style={styles.dropHeader}>
-        <TouchableOpacity
-          style={styles.dropUserRow}
-          onPress={() => this.goToProfile(item.seller)}>
-          <Avatar
-            size={'verySmall'}
-            // style={styles.avatarContainer}
-            uri={item.seller.profilePic}
-            placeholderText={item.seller.username}
-          />
-          <Text style={styles.userName}>{item.seller.username}</Text>
-        </TouchableOpacity>
-        <Text style={styles.dateStrings}>
-          {format(item.scheduledAt, 'D MMM HH:mm')}
-        </Text>
-      </List>
-      <FlatList
-        data={item.products}
-        columnWrapperStyle={[styles.columnWrapper, { height: width / 3 }]}
-        keyExtractor={this._keyProductExtractor}
-        getItemLayout={this.getItemLayout}
-        numColumns={3}
-        renderItem={this.renderItem}
-        horizontal={false}
-      />
-    </>
-  );
-
   renderSeparator = () => <View style={styles.separator} />;
 
-  _keyProductExtractor = (item): string => item._id;
   _keyDropExtractor = (item): string => item._id;
 
   renderLoading = () => (
@@ -172,6 +138,10 @@ class DropsFeed extends Component<Props, State> {
       <ActivityIndicator size="large" />
     </View>
   );
+
+  onSubscribeUnsubscribed() {
+    console.warn('onSubscribeUnsubscribed');
+  }
 
   render() {
     const { hasError, isLoading, items } = this.state;
@@ -200,12 +170,18 @@ class DropsFeed extends Component<Props, State> {
           <FlatList
             data={items}
             ListEmptyComponent={this.renderEmptyState}
+            ItemSeparatorComponent={this.renderSeparator}
+            keyExtractor={this._keyDropExtractor}
             // $FlowFixMe
             onRefresh={this.fetchItems}
             refreshing={isLoading}
-            keyExtractor={this._keyDropExtractor}
-            renderItem={this.renderDropGrid}
-            ItemSeparatorComponent={this.renderSeparator}
+            renderItem={props => (
+              <DropCard
+                goToProfile={this.goToProfile}
+                onSubscribeUnsubscribed={this.onSubscribeUnsubscribed}
+                {...props}
+              />
+            )}
           />
         )}
       </View>
@@ -228,12 +204,6 @@ const styles = StyleSheet.create({
     marginTop: 5,
     textAlign: 'center',
   },
-  columnWrapper: {
-    flex: 1,
-    flexDirection: 'row',
-    marginHorizontal: -MARGIN * 2,
-    marginBottom: 0,
-  },
   image: {
     flex: 1,
     margin: MARGIN,
@@ -241,26 +211,6 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     alignItems: 'stretch',
-  },
-  dropUserRow: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  userName: {
-    paddingLeft: 10,
-  },
-  dropHeader: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingVertical: 15,
-  },
-  dateStrings: {
-    // justifyContent: 'flex-end',
-    color: colors.black,
-    fontSize: typography.font_body_size,
   },
   separator: {
     height: StyleSheet.hairlineWidth,
@@ -279,10 +229,6 @@ const styles = StyleSheet.create({
   boldText: {
     fontWeight: 'bold',
     textAlign: 'center',
-  },
-  avatarContainer: {
-    marginHorizontal: 10,
-    top: -10,
   },
 });
 

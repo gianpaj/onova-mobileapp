@@ -7,8 +7,8 @@ import { storiesOf } from '@storybook/react-native';
 import { action } from '@storybook/addon-actions';
 // import { linkTo } from '@storybook/addon-links';
 
-// $FlowFixMe
 import Button from './Button';
+import DropCard from './DropCard';
 import CenterView from './CenterView';
 import Welcome from './Welcome';
 import ReviewCard from './ReviewCard';
@@ -214,3 +214,7 @@ const orderFailedBySeller = {
 OrderStatusStory.add('failed_by_seller', () => (
   <OrderStatus order={orderFailedBySeller} />
 ));
+
+storiesOf('DropCard', module)
+  .add('mine', () => <DropCard amITheSeller />)
+  .add('other', () => <DropCard />);

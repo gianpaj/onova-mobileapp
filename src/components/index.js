@@ -4,6 +4,7 @@ import Accordion from './Accordion';
 import Avatar from './Avatar';
 // import ChatActions from './ChatActions';
 import CardView from './CardView';
+import DropCard from './DropCard';
 import Comments from './Comments';
 import Countdown from './Countdown';
 import UserDropsGrid from './UserDropsGrid';
@@ -26,6 +27,7 @@ export {
   Accordion,
   Avatar,
   CardView,
+  DropCard,
   // ChatActions,
   Comments,
   Countdown,

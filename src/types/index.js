@@ -9,10 +9,12 @@ import type {
 } from './navigationReducer';
 
 export type Drop = {
-  _id: MongoId,
+  _id: string,
   createdAt: Date,
-  posted: Boolean,
-  products: Array<ProductDoc>,
+  iSubscribed: boolean,
+  subscribers: Array<any>,
+  posted: boolean,
+  products: Array<Product>,
   scheduledAt: Date,
   seller: MongoId,
   updatedAt: Date,

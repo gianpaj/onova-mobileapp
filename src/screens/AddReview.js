@@ -199,12 +199,7 @@ export class AddReviewContainer extends Component<Props, State> {
             </Button>
           </Body>
           <Right>
-            <Button
-              transparent
-              dark
-              disabled
-              // style={{ backgroundColor: colors.transparent }}
-              onPress={this.onArchive}>
+            <Button transparent dark disabled onPress={this.onArchive}>
               <MaterialCommunityIcons
                 name="delete"
                 size={28}

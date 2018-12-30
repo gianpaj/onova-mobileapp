@@ -168,6 +168,13 @@ class ProfileScreen extends React.Component<Props, State> {
   };
 
   componentDidMount() {
+    if (
+      this.props.navigation.state.params &&
+      this.props.navigation.state.params.tab == 'drop'
+    ) {
+      this.setState({ index: 1 });
+    }
+
     this.refresh()
       .then(() => this.setState({ isFetching: false }))
       .catch(e => console.error(e));
@@ -354,6 +361,7 @@ class ProfileScreen extends React.Component<Props, State> {
     return params._id == this.props.userData._id;
   }
 
+  // or from push notification
   ifNavigatedFromProduct = () =>
     this.props.navigation.state.params ? true : false;
 

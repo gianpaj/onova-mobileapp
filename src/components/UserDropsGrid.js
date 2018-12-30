@@ -192,6 +192,8 @@ class UserDropsGridComponent extends React.PureComponent<Props, State> {
           data={items}
           ListEmptyComponent={this.renderEmptyState}
           ListFooterComponent={this.renderFooter}
+          ItemSeparatorComponent={this.renderSeparator}
+          keyExtractor={this._keyDropExtractor}
           // $FlowFixMe
           onRefresh={this.fetchItems}
           refreshing={isLoading}
@@ -202,8 +204,6 @@ class UserDropsGridComponent extends React.PureComponent<Props, State> {
               {...props}
             />
           )}
-          ItemSeparatorComponent={this.renderSeparator}
-          keyExtractor={this._keyDropExtractor}
         />
       </View>
     );
@@ -211,7 +211,6 @@ class UserDropsGridComponent extends React.PureComponent<Props, State> {
 
   renderSeparator = () => <View style={styles.separator} />;
 
-  _keyProductExtractor = (item): string => item._id;
   _keyDropExtractor = (item): string => item._id;
 
   renderEmptyState = () => {

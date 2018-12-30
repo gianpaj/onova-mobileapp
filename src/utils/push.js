@@ -202,6 +202,14 @@ async function navigate(notif) {
           'confirmOrder'
         );
     }
+    if (triggeredType === 'DropSubscription') {
+      console.debug(triggeredBy);
+      return NavigationService.navigate(
+        'profileInStack',
+        { _id: triggeredBy, tab: 'drops' },
+        `profile-${senderName}`
+      );
+    }
   }
 }
 // TODO: on log out

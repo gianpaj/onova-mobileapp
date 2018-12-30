@@ -91,7 +91,7 @@ class DropCard extends Component<Props> {
                   fontSize: typography.font_button_size,
                 },
                 drop.amISubscribed
-                  ? { color: colors.grey1 }
+                  ? { color: colors.grey1, marginTop: -1 }
                   : { color: colors.white },
               ]}>
               {drop.amISubscribed
@@ -145,8 +145,8 @@ class DropCard extends Component<Props> {
   render() {
     const { isAdmin, item: drop } = this.props;
 
-    const scheduledAt = new Date('2018-12-30T19:30:24.714Z');
-    // const scheduledAt = new Date(drop.scheduledAt);
+    // const scheduledAt = new Date('2018-12-30T18:50:24.714Z');
+    const scheduledAt = new Date(drop.scheduledAt);
 
     const willDropIn15Mins = differenceInMinutes(scheduledAt, new Date()) < 16;
 
@@ -170,7 +170,7 @@ class DropCard extends Component<Props> {
             />
           ) : (
             <Text style={styles.dateStrings}>
-              {format(drop.scheduledAt, 'D MMM HH:mm')}
+              {format(scheduledAt, 'D MMM HH:mm')}
             </Text>
           )}
           {isAdmin && (

@@ -247,7 +247,9 @@ class SettingsContainer extends Component<Props, State> {
     // }
 
     // FIXME: state should be the number unformatted. useful also when comparing if number has been changed
-    data.mobileNumber = mobileNumber.replace(/\D/g, '');
+    if (mobileNumber) {
+      data.mobileNumber = mobileNumber.replace(/\D/g, '');
+    }
 
     // console.log(data);
 

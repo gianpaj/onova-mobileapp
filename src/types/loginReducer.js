@@ -9,13 +9,13 @@ export type Action = {
 
 export type LoginState = {
   +checkedLoggedIn: boolean,
+  +isAdmin: boolean,
   +data: any,
   +fetchLoading: boolean,
   +hasError: boolean,
   +isLoggedIn: boolean,
   +loading: boolean,
   +isVerifyAccountModalVisible: false,
-  // +loadingGoogleLogin: boolean,
   +token: string,
   // +errorMsg: string,
 };

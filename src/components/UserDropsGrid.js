@@ -12,21 +12,16 @@ import {
   Text,
   View,
 } from 'react-native';
-import { ActionSheet, List } from 'native-base';
-import Icon from 'react-native-vector-icons/Feather';
-import { format, differenceInMinutes, differenceInSeconds } from 'date-fns';
-
-import { Countdown } from '../components';
 
 import type { NavigationScreenProp } from 'react-navigation';
 
+import { DropCard } from '../components';
+
 import { disableRefresh } from '../actions/actionCreator';
-import type { Dispatch, Schedule, Product } from '../types';
+import type { Dispatch, Drop, Schedule, Product, UserData } from '../types';
 
 import I18n from '../i18n';
 import * as api from '../utils/api';
-import * as ui from '../utils/ui';
-import typography from '../config/typography';
 import colors from '../config/colors';
 
 type Props = {
@@ -38,6 +33,7 @@ type Props = {
   shouldRefresh?: boolean,
   token?: string,
   username: string,
+  userData: UserData,
 };
 
 type State = {
@@ -143,93 +139,12 @@ class UserDropsGridComponent extends React.PureComponent<Props, State> {
     });
   };
 
-  getItemLayout(data: any, index: number) {
-    const itemHeight = width / 3;
-    return { length: itemHeight, offset: itemHeight * index, index };
-  }
-
   renderItem = ({ item }: { item: Product }) => {
     const uri = item.photoURIs[0].replace('.jpg', '-thumb.jpg');
     return (
       <View style={styles.imageContainer} key={item._id}>
         <Image style={styles.image} source={{ uri }} />
       </View>
-    );
-  };
-
-  onDeleteDrop(uuid: string) {
-    const DELETE = 'Delete? (only admin can see the icon)';
-    const CANCEL = I18n.t('alerts.action_button_cancel');
-
-    const BUTTONS = [DELETE, CANCEL];
-    ActionSheet.show(
-      {
-        options: BUTTONS,
-        destructiveButtonIndex: 0,
-        cancelButtonIndex: BUTTONS.indexOf(CANCEL),
-      },
-      buttonIndex => {
-        if (0 === buttonIndex) {
-          ui.showConfirmAlert('Confirm deleting the drop?', '', () => {
-            this.deleteDrop(uuid);
-          });
-        }
-      }
-    );
-  }
-
-  async deleteDrop(uuid: string) {
-    const { token } = this.props;
-    try {
-      await api.del(`/api/v2/drops/${uuid}`, { token });
-      this.fetchItems();
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  renderDropGrid = ({ item }: any) => {
-    const scheduledAt = new Date(item.scheduledAt);
-
-    const willDropIn15Mins = differenceInMinutes(scheduledAt, new Date()) < 16;
-    return (
-      <>
-        <List
-          style={{
-            flex: 1,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-          }}>
-          {willDropIn15Mins ? (
-            <Countdown
-              size={14}
-              until={differenceInSeconds(scheduledAt, new Date())}
-            />
-          ) : (
-            <Text style={styles.dateStrings}>
-              {format(item.scheduledAt, 'D MMM HH:mm')}
-            </Text>
-          )}
-          {this.props.isAdmin && (
-            <Icon
-              style={{ paddingRight: 5, paddingTop: 5 }}
-              name="trash-2"
-              size={22}
-              onPress={() => this.onDeleteDrop(item.uuid)}
-            />
-          )}
-        </List>
-        <FlatList
-          data={item.products}
-          columnWrapperStyle={[styles.columnWrapper, { height: width / 3 }]}
-          keyExtractor={this._keyProductExtractor}
-          getItemLayout={this.getItemLayout}
-          numColumns={3}
-          // $FlowFixMe
-          renderItem={this.renderItem}
-          horizontal={false}
-        />
-      </>
     );
   };
 
@@ -243,12 +158,33 @@ class UserDropsGridComponent extends React.PureComponent<Props, State> {
     );
   };
 
+  onSubscribeUnsubscribed = async (drop: Drop) => {
+    const { token } = this.props;
+    try {
+      if (drop.amISubscribed) {
+        await api.post(`/api/v2/drops/${drop.uuid}/unsubscribe`, null, {
+          token,
+        });
+      } else {
+        await api.post(`/api/v2/drops/${drop.uuid}/subscribe`, null, {
+          token,
+        });
+      }
+      this.fetchItems();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   render() {
     const { hasError, isLoading, items } = this.state;
+    const { username, userData } = this.props;
 
     if (this.firstFocus) return null;
 
     if (!hasError && isLoading) return this.renderLoading();
+
+    const amITheSeller = userData.username === username;
 
     return (
       <View style={styles.container}>
@@ -259,7 +195,13 @@ class UserDropsGridComponent extends React.PureComponent<Props, State> {
           // $FlowFixMe
           onRefresh={this.fetchItems}
           refreshing={isLoading}
-          renderItem={this.renderDropGrid}
+          renderItem={props => (
+            <DropCard
+              amITheSeller={amITheSeller}
+              onSubscribeUnsubscribed={this.onSubscribeUnsubscribed}
+              {...props}
+            />
+          )}
           ItemSeparatorComponent={this.renderSeparator}
           keyExtractor={this._keyDropExtractor}
         />
@@ -297,6 +239,7 @@ const mapStateToProps = (state: any) => ({
   isAdmin: state.LoginReducer.isAdmin,
   token: state.LoginReducer.token,
   shouldRefresh: state.RefresherReducer.shouldRefresh,
+  userData: state.LoginReducer.data,
 });
 
 export default connect(mapStateToProps)(UserDropsGridComponent);
@@ -313,12 +256,6 @@ const styles = StyleSheet.create({
     marginTop: 5,
     textAlign: 'center',
   },
-  columnWrapper: {
-    flex: 1,
-    flexDirection: 'row',
-    marginHorizontal: -MARGIN * 2,
-    marginBottom: 0,
-  },
   image: {
     flex: 1,
     margin: MARGIN,
@@ -326,12 +263,6 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     alignItems: 'stretch',
-  },
-  dateStrings: {
-    color: colors.black,
-    paddingHorizontal: 20,
-    paddingVertical: 15,
-    fontSize: typography.font_body_size,
   },
   separator: {
     height: StyleSheet.hairlineWidth,

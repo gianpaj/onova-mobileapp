@@ -28,7 +28,7 @@ import colors from '../config/colors';
 import * as api from '../utils/api';
 
 import type { NavigationScreenProp } from 'react-navigation';
-import type { Drop, ReduxState, Product, UserData } from '../types';
+import type { Drop, ReduxState, Product } from '../types';
 
 const { width, height } = Dimensions.get('window');
 
@@ -121,14 +121,6 @@ class DropsFeed extends Component<Props, State> {
     );
   };
 
-  goToProfile = (user: UserData) => {
-    this.props.navigation.navigate({
-      routeName: 'profileInStack',
-      params: user,
-      key: `profile-${user.username}`,
-    });
-  };
-
   renderSeparator = () => <View style={styles.separator} />;
 
   _keyDropExtractor = (item): string => item._id;
@@ -191,7 +183,7 @@ class DropsFeed extends Component<Props, State> {
             refreshing={isLoading}
             renderItem={props => (
               <DropCard
-                goToProfile={this.goToProfile}
+                amITheSeller={false}
                 onSubscribeUnsubscribed={this.onSubscribeUnsubscribed}
                 {...props}
               />
@@ -247,6 +239,7 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps: any = (state: ReduxState) => ({
+  isAdmin: state.LoginReducer.isAdmin,
   userData: state.LoginReducer.data,
   token: state.LoginReducer.token,
 });

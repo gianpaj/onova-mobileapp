@@ -73,6 +73,7 @@ type State = {
   // rateAvg: number,
   username: string,
   index: number,
+  suggestions: Array<any>,
   routes: Array<any>,
 };
 
@@ -95,6 +96,7 @@ class ProfileScreen extends React.Component<Props, State> {
     // rateAvg: -1,
     username: '',
     index: 0,
+    suggestions: [],
     routes: [
       { key: 'shop', title: I18n.t('profile.shop_tab') },
       { key: 'drops', title: I18n.t('profile.drops_tab') },
@@ -522,7 +524,7 @@ class ProfileScreen extends React.Component<Props, State> {
                       styles.editOrFollowButton,
                       !isFollowing && { backgroundColor: colors.active },
                     ]}
-                    onPress={() => this.onFollowOrUnfollow()}>
+                    onPress={this.onFollowOrUnfollow}>
                     <Text
                       style={[
                         styles.editOrFollowButtonText,
@@ -617,6 +619,7 @@ class ProfileScreen extends React.Component<Props, State> {
       default:
         return null;
     }
+    return null;
   };
 
   _handleIndexChange = index => this.setState({ index });

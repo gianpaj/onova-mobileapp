@@ -94,7 +94,10 @@ export default class Countdown extends React.Component<*, *> {
           style={[
             styles.digitCont,
             { backgroundColor: digitBgColor },
-            { width: size * 1.9, height: size * 2.6 },
+            {
+              width: size * (I18n.locale === 'uk-UA' ? 2.3 : 1.9),
+              height: size * 2.6,
+            },
           ]}>
           <Text
             numberOfLines={1}

@@ -4,21 +4,21 @@ import colors from '../config/colors';
 import React, { PureComponent } from 'react';
 import {
   Dimensions,
-  Share,
+  // Share,
   // Platform,
   StyleSheet,
   View,
 } from 'react-native';
-import { Body, Button, Icon, Left, Right, Title } from 'native-base';
+import { Body, Button, Left, Right, Title } from 'native-base';
 import { TabView, TabBar } from 'react-native-tab-view';
-import Analytics from 'react-native-analytics-segment-io';
+// import Analytics from 'react-native-analytics-segment-io';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Dialog from 'react-native-dialog';
 import ParsedText from 'react-native-parsed-text';
 
 import I18n from '../i18n';
 import { Header, ImageGrid } from '../components';
-import * as api from '../utils/api';
+// import * as api from '../utils/api';
 import * as linking from '../utils/linking';
 
 import Megaphone from '../assets/svg/megaphone';

@@ -21,7 +21,9 @@ import {
   Right,
   Title,
 } from 'native-base';
+import Dialog from 'react-native-dialog';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { NavigationActions } from 'react-navigation';
 import { GiftedChat, Bubble, SystemMessage } from 'react-native-gifted-chat';
 
@@ -49,6 +51,7 @@ type Props = {
 };
 
 type State = {
+  dialogVisible: boolean,
   partner: UserData,
   isLoading: boolean,
   // isTyping: boolean,
@@ -64,6 +67,7 @@ class ChatContainer extends Component<Props, State> {
   rejectProm;
 
   state = {
+    dialogVisible: false,
     partner: null,
     isLoading: true,
     // isTyping: false,
@@ -557,6 +561,29 @@ class ChatContainer extends Component<Props, State> {
 
   _renderSeparatorHorizontal = () => <View style={st.separatorHorizontal} />;
 
+  toggleDialog = () =>
+    this.setState(prevState => ({ dialogVisible: !prevState.dialogVisible }));
+
+  renderInfoDialog = () => (
+    <React.Fragment>
+      <Dialog.Container
+        visible={this.state.dialogVisible}
+        onBackdropPress={this.toggleDialog}
+        onBackButtonPress={this.toggleDialog}
+        renderToHardwareTextureAndroid>
+        <Dialog.Title>{I18n.t('chat.alert_info_title')}</Dialog.Title>
+
+        <Text style={{ marginTop: 4, margin: 18 }}>
+          {I18n.t('chat.alert_info_body')}
+        </Text>
+        <Dialog.Button
+          label={I18n.t('product.toast_warning_ok_button')}
+          onPress={this.toggleDialog}
+        />
+      </Dialog.Container>
+    </React.Fragment>
+  );
+
   render() {
     const { navigation, userData } = this.props;
     const { messages, isLoading, partner, orders } = this.state;
@@ -577,64 +604,83 @@ class ChatContainer extends Component<Props, State> {
               <NBIcon ios="ios-arrow-back" android="md-arrow-back" />
             </NBButton>
           </Left>
-          <Body style={st.containerHeader}>
+          <Body style={st.flex2AndCenter}>
             {partner && (
-              // eslint-disable-next-line react-native/no-raw-text
-              <Title style={{ color: colors.black }} onPress={this.goToProfile}>
-                @{partner.username}
-              </Title>
+              <>
+                {/* // eslint-disable-next-line react-native/no-raw-text */}
+                <Title
+                  style={{
+                    color: colors.black,
+                    marginLeft: 22,
+                    marginRight: 5,
+                  }}
+                  // eslint-disable-next-line react-native/no-raw-text
+                  onPress={this.goToProfile}>
+                  @{partner.username}
+                </Title>
+                <NBButton
+                  hitSlop={{ top: 0, left: 15, bottom: 0, right: 20 }}
+                  onPress={this.toggleDialog}
+                  style={{ marginTop: 5 }}
+                  transparent>
+                  <MaterialCommunityIcons
+                    color={colors.red}
+                    name="information-outline"
+                    size={18}
+                  />
+                </NBButton>
+              </>
             )}
           </Body>
           <Right />
         </Header>
         <View style={st.flex1}>
-          <View style={st.flex1}>
-            <View style={st.orderSquaresContainer}>
-              <FlatList
-                data={orders}
-                keyExtractor={this._keyExtractor}
-                horizontal
-                contentContainerStyle={{ flexGrow: 1 }}
-                ItemSeparatorComponent={this._renderSeparatorHorizontal}
-                renderItem={this._renderOrderSquare}
-                ListEmptyComponent={() => (
-                  <Text style={st.noOrders}>{I18n.t('chat.no_orders')}</Text>
-                )}
-              />
-            </View>
-            <GiftedChat
-              messages={messages}
-              onSend={this.onSend}
-              placeholder={I18n.t('chat.send_msg_placeholder')}
-              user={{
-                _id: userData._id,
-                name: userData.username,
-                avatar: userData.profilePic,
-              }}
-              // locale=""
-              // timeformat="LT"
-              // dateformat="ll"
-              renderSend={this.renderSend}
-              renderSystemMessage={this.renderSystemMessage}
-              renderBubble={this.renderBubble}
-              renderMessageImage={props => <MessageImage {...props} />}
-              // parsePatterns={linkStyle => [
-              //   {
-              //     pattern: /: (\w+)/,
-              //     style: { ...linkStyle, color: 'darkorange' },
-              //     onPress: this.onUrlPress,
-              //   },
-              //   // {type: 'phone', style: linkStyle, onPress: this.onPhonePress},
-              //   // {type: 'email', style: linkStyle, onPress: this.onEmailPress},
-              // ]}
-              renderActions={this.renderActions}
-              // keyboardShouldPersistTaps="handled"
-              maxInputLength={settings.MAX_CHAT_INPUT_LENGTH}
-              // renderInputToolbar={this.renderInputToolbar}
-              // renderAvatar={null}
+          <View style={st.orderSquaresContainer}>
+            <FlatList
+              data={orders}
+              keyExtractor={this._keyExtractor}
+              horizontal
+              contentContainerStyle={{ flexGrow: 1 }}
+              ItemSeparatorComponent={this._renderSeparatorHorizontal}
+              renderItem={this._renderOrderSquare}
+              ListEmptyComponent={() => (
+                <Text style={st.noOrders}>{I18n.t('chat.no_orders')}</Text>
+              )}
             />
           </View>
+          <GiftedChat
+            messages={messages}
+            onSend={this.onSend}
+            placeholder={I18n.t('chat.send_msg_placeholder')}
+            user={{
+              _id: userData._id,
+              name: userData.username,
+              avatar: userData.profilePic,
+            }}
+            // locale=""
+            // timeformat="LT"
+            // dateformat="ll"
+            renderSend={this.renderSend}
+            renderSystemMessage={this.renderSystemMessage}
+            renderBubble={this.renderBubble}
+            renderMessageImage={props => <MessageImage {...props} />}
+            // parsePatterns={linkStyle => [
+            //   {
+            //     pattern: /: (\w+)/,
+            //     style: { ...linkStyle, color: 'darkorange' },
+            //     onPress: this.onUrlPress,
+            //   },
+            //   // {type: 'phone', style: linkStyle, onPress: this.onPhonePress},
+            //   // {type: 'email', style: linkStyle, onPress: this.onEmailPress},
+            // ]}
+            renderActions={this.renderActions}
+            // keyboardShouldPersistTaps="handled"
+            maxInputLength={settings.MAX_CHAT_INPUT_LENGTH}
+            // renderInputToolbar={this.renderInputToolbar}
+            // renderAvatar={null}
+          />
         </View>
+        {this.renderInfoDialog()}
       </Container>
     );
   }
@@ -660,6 +706,12 @@ const st = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  flex2AndCenter: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    flex: 2,
+    flexDirection: 'row',
   },
   containerHeader: {
     alignItems: 'stretch',

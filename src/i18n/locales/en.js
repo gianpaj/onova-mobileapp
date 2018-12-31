@@ -266,6 +266,9 @@ For any questions regarding payments please contact UAPAY at (044) 364-11-44`,
   chat: {
     send_msg_placeholder: 'Type a message',
     no_orders: 'No orders',
+    alert_info_title: 'Information',
+    alert_info_body:
+      'Press on the image of the item to see the current status of your order.',
   },
   checkout: {
     header: 'Checkout',

@@ -269,6 +269,9 @@ export default {
   chat: {
     send_msg_placeholder: 'Повідомлення',
     no_orders: 'Немає замовлень',
+    alert_info_title: 'Підтримка',
+    alert_info_body:
+      'Будь ласка натисни на зображення з лівого верхнього кута щоб дізнатися актуальний статус твого замовлення.'
   },
   checkout: {
     header: 'Купівля',

@@ -86,7 +86,7 @@ export default class Countdown extends React.Component<*, *> {
     }
   };
 
-  renderDigit = (digit: number, label: string, width: number) => {
+  renderDigits = (digits: string, style: any = {}) => {
     const { digitBgColor, digitTxtColor, size } = this.props;
     return (
       <View style={styles.doubleDigitCont}>
@@ -95,7 +95,7 @@ export default class Countdown extends React.Component<*, *> {
             styles.digitCont,
             { backgroundColor: digitBgColor },
             {
-              width: size * width,
+              // width: size * width,
               height: size * 2.6,
             },
           ]}>
@@ -105,8 +105,9 @@ export default class Countdown extends React.Component<*, *> {
               styles.digitTxt,
               { fontSize: size },
               { color: digitTxtColor },
+              style,
             ]}>
-            {digit + label}
+            {digits}
           </Text>
         </View>
       </View>
@@ -119,15 +120,9 @@ export default class Countdown extends React.Component<*, *> {
 
     return (
       <View style={styles.timeCont}>
-        {this.renderDigit(
-          min,
-          I18n.t('countdown.m'),
+        {this.renderDigits(
+          `${min}${I18n.t('countdown.m')} ${sec}${I18n.t('countdown.s')} `,
           I18n.locale === 'uk-UA' ? 2.3 : 2.2
-        )}
-        {this.renderDigit(
-          sec,
-          I18n.t('countdown.s'),
-          I18n.locale === 'uk-UA' ? 3.3 : 1.9
         )}
       </View>
     );

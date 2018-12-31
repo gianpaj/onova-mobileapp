@@ -202,7 +202,7 @@ async function navigate(notif) {
           'confirmOrder'
         );
     }
-    if (triggeredType === 'DropSubscription') {
+    if (triggeredType === 'Drop') {
       console.debug(triggeredBy);
       return NavigationService.navigate(
         'profileInStack',

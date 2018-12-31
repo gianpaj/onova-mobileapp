@@ -160,7 +160,10 @@ class SearchSellersTabContainer extends Component<Props, State> {
               icon={{ type: 'feather', name: 'at-sign', color: colors.grey1 }}
               inputStyle={{
                 backgroundColor: colors.white,
-                color: this.isSearchEnabled() ? colors.black : colors.red,
+                color:
+                  this.isSearchEnabled() || isLoading
+                    ? colors.black
+                    : colors.red,
               }}
               lightTheme
               maxLength={30}

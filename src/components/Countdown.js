@@ -122,7 +122,7 @@ export default class Countdown extends React.Component<*, *> {
         {this.renderDigit(
           min,
           I18n.t('countdown.m'),
-          I18n.locale === 'uk-UA' ? 2.3 : 1.9
+          I18n.locale === 'uk-UA' ? 2.3 : 2.2
         )}
         {this.renderDigit(
           sec,

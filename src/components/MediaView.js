@@ -5,6 +5,7 @@ import {
   Dimensions,
   Image,
   Modal,
+  // Platform,
   StyleSheet,
   TouchableWithoutFeedback,
   View,
@@ -15,6 +16,7 @@ import Swiper from 'react-native-swiper';
 import colors from '../config/colors';
 
 const { width } = Dimensions.get('window');
+// const isiOS = Platform.OS === 'ios';
 
 type Props = {
   source: Array<string>,
@@ -24,6 +26,8 @@ type State = {
   currentImageIndex: number,
   imageHeight: number,
   isModalVisible: boolean,
+  // singleImageLoaded: boolean,
+  // hasError: boolean,
 };
 
 export default class MediaView extends React.Component<Props, State> {
@@ -35,8 +39,10 @@ export default class MediaView extends React.Component<Props, State> {
 
   state = {
     currentImageIndex: 0,
-    isModalVisible: false,
     imageHeight: 0,
+    isModalVisible: false,
+    // singleImageLoaded: false,
+    // hasError: false,
   };
 
   componentDidMount() {
@@ -49,9 +55,19 @@ export default class MediaView extends React.Component<Props, State> {
     this.setState({ isModalVisible: true, currentImageIndex: index });
   }
 
+  // onError = () => this.setState({ hasError: true });
+
+  // singleImageHasLoaded = () => this.setState({ singleImageLoaded: true });
+
   render() {
     const { source } = this.props;
-    const { imageHeight, currentImageIndex } = this.state;
+    const {
+      imageHeight,
+      currentImageIndex,
+      // singleImageLoaded,
+      isModalVisible,
+      // hasError,
+    } = this.state;
 
     if (source.length > 1) {
       const images = source;
@@ -78,7 +94,7 @@ export default class MediaView extends React.Component<Props, State> {
             ))}
           </Swiper>
           <Modal
-            visible={this.state.isModalVisible}
+            visible={isModalVisible}
             transparent
             onRequestClose={() => this.setState({ isModalVisible: false })}>
             <ImageViewer
@@ -101,11 +117,25 @@ export default class MediaView extends React.Component<Props, State> {
     return (
       <>
         <TouchableWithoutFeedback onPress={() => this.openModal(0)}>
-          <Image
-            source={{ uri: source[0] }}
-            style={{ width, height: this.state.imageHeight }}
-            resizeMode={'contain'}
-          />
+          {/* TODO: show gray low-res thumb while loading */}
+          <>
+            {/* {isiOS && !singleImageLoaded && !hasError && (
+              <Image
+                source={{
+                  uri: source[0].replace('.jpg', '-thumb.jpg'),
+                  cache: 'only-if-cached',
+                }}
+                style={{ width, height: this.state.imageHeight }}
+              />
+            )} */}
+            <Image
+              source={{ uri: source[0] }}
+              style={{ width, height: this.state.imageHeight }}
+              resizeMode={'contain'}
+              // onLoadEnd={this.singleImageHasLoaded}
+              // onError={this.onError}
+            />
+          </>
         </TouchableWithoutFeedback>
         <Modal
           visible={this.state.isModalVisible}

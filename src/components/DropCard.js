@@ -11,6 +11,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import { ActionSheet, Button, List } from 'native-base';
 import Icon from 'react-native-vector-icons/Feather';
@@ -114,7 +115,7 @@ class DropCard extends Component<Props> {
   }
 
   onDeleteDrop(uuid: string) {
-    const DELETE = 'Delete? (only admin can see the icon)';
+    const DELETE = 'Delete? (only admins can hold and press)';
     const CANCEL = I18n.t('alerts.action_button_cancel');
 
     const BUTTONS = [DELETE, CANCEL];
@@ -163,37 +164,30 @@ class DropCard extends Component<Props> {
             />
             <Text style={styles.userName}>{drop.seller.username}</Text>
           </TouchableOpacity>
-          <View style={styles.dropHeaderRight}>
-            {willDropIn15Mins ? (
-              <Countdown
-                size={14}
-                until={differenceInSeconds(scheduledAt, new Date())}
-              />
-            ) : (
-              <Text style={styles.dateStrings}>
-                {format(scheduledAt, 'D MMM HH:mm')}
-              </Text>
-            )}
-            {isAdmin && (
-              <Icon
-                style={{ paddingLeft: 10, paddingBottom: 5 }}
-                name="trash-2"
-                size={22}
-                onPress={() => this.onDeleteDrop(drop.uuid)}
-              />
-            )}
-          </View>
+          {willDropIn15Mins ? (
+            <Countdown
+              size={14}
+              until={differenceInSeconds(scheduledAt, new Date())}
+            />
+          ) : (
+            <Text style={styles.dateStrings}>
+              {format(scheduledAt, 'D MMM HH:mm')}
+            </Text>
+          )}
         </List>
-        <FlatList
-          columnWrapperStyle={[styles.columnWrapper, { height: width / 3 }]}
-          data={drop.products}
-          getItemLayout={this.getItemLayout}
-          horizontal={false}
-          keyExtractor={this._keyProductExtractor}
-          ListFooterComponent={this.renderFooter}
-          numColumns={3}
-          renderItem={this.renderItem}
-        />
+        <TouchableWithoutFeedback
+          onLongPress={() => isAdmin && this.onDeleteDrop(drop.uuid)}>
+          <FlatList
+            columnWrapperStyle={[styles.columnWrapper, { height: width / 3 }]}
+            data={drop.products}
+            getItemLayout={this.getItemLayout}
+            horizontal={false}
+            keyExtractor={this._keyProductExtractor}
+            ListFooterComponent={this.renderFooter}
+            numColumns={3}
+            renderItem={this.renderItem}
+          />
+        </TouchableWithoutFeedback>
       </>
     );
   }
@@ -244,10 +238,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: 20,
     paddingVertical: 15,
-  },
-  dropHeaderRight: {
-    flexDirection: 'row',
-    alignItems: 'flex-end',
   },
   dateStrings: {
     color: colors.black,

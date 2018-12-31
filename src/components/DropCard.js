@@ -163,24 +163,26 @@ class DropCard extends Component<Props> {
             />
             <Text style={styles.userName}>{drop.seller.username}</Text>
           </TouchableOpacity>
-          {willDropIn15Mins ? (
-            <Countdown
-              size={14}
-              until={differenceInSeconds(scheduledAt, new Date())}
-            />
-          ) : (
-            <Text style={styles.dateStrings}>
-              {format(scheduledAt, 'D MMM HH:mm')}
-            </Text>
-          )}
-          {isAdmin && (
-            <Icon
-              style={{ paddingRight: 5, paddingTop: 5 }}
-              name="trash-2"
-              size={22}
-              onPress={() => this.onDeleteDrop(drop.uuid)}
-            />
-          )}
+          <View style={styles.dropHeaderRight}>
+            {willDropIn15Mins ? (
+              <Countdown
+                size={14}
+                until={differenceInSeconds(scheduledAt, new Date())}
+              />
+            ) : (
+              <Text style={styles.dateStrings}>
+                {format(scheduledAt, 'D MMM HH:mm')}
+              </Text>
+            )}
+            {isAdmin && (
+              <Icon
+                style={{ paddingLeft: 10, paddingBottom: 5 }}
+                name="trash-2"
+                size={22}
+                onPress={() => this.onDeleteDrop(drop.uuid)}
+              />
+            )}
+          </View>
         </List>
         <FlatList
           columnWrapperStyle={[styles.columnWrapper, { height: width / 3 }]}
@@ -243,8 +245,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 15,
   },
+  dropHeaderRight: {
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+  },
   dateStrings: {
-    // justifyContent: 'flex-end',
     color: colors.black,
     fontSize: typography.font_body_size,
   },

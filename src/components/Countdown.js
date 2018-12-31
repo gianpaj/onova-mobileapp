@@ -95,7 +95,6 @@ export default class Countdown extends React.Component<*, *> {
             styles.digitCont,
             { backgroundColor: digitBgColor },
             {
-              // width: size * width,
               height: size * 2.6,
             },
           ]}>

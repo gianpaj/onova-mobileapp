@@ -109,6 +109,7 @@ type State = {
   isUploading: boolean,
   numberOfBrands: number,
   order: Array<number>,
+  pending: boolean,
   price: string,
   progress: number,
   tags: Array<string>,
@@ -280,7 +281,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     } catch (error) {
       console.log(error);
 
-      ui.showToast(err.message || JSON.stringify(err), 'warning', '', 5);
+      ui.showToast(error.message || JSON.stringify(error), 'warning', '', 5);
     }
     this.setState({ isUploading: false });
   }
@@ -294,7 +295,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
   };
   */
 
-  async uploadImageTemporarilyAndAppend(response: Array<any> | any, i: number) {
+  async uploadImageTemporarilyAndAppend(response: any, i: number) {
     const { token } = this.props;
 
     try {
@@ -385,7 +386,15 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     // }
   };
 
-  onSave = async ({ price, description }) => {
+  onSave = async ({
+    price,
+    description,
+  }: {
+    // eslint-disable-next-line react/no-unused-prop-types
+    price: string,
+    // eslint-disable-next-line react/no-unused-prop-types
+    description: string,
+  }) => {
     if (!this.canSave({ price, description })) return;
 
     this.setState({ pending: true });
@@ -441,7 +450,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     this.setState({ tags });
   };
 
-  changeTagsTest = (tagsText: string) => {
+  changeTagsTest = (tagsText: string): Promise<void> => {
     return new Promise(resolve => {
       const textWithoutSeparators = tagsText.replace(/,|;| | \n/gi, '');
       // if the tag is longer the maximum
@@ -495,7 +504,15 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
 
   // numbers only, one dot and 2 decimal points
 
-  canSave({ price, description }): boolean {
+  canSave({
+    price,
+    description,
+  }: {
+    // eslint-disable-next-line react/no-unused-prop-types
+    price: string,
+    // eslint-disable-next-line react/no-unused-prop-types
+    description: string,
+  }): boolean {
     // const tagsPattern = /^(\b[a-z][a-z0-9]*)$/i;
 
     const { images, pending } = this.state;
@@ -613,7 +630,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
                   <AntImagePicker
                     files={images}
                     onImageClick={index => {
-                      !this.state.images[index].isUploading &&
+                      !images[index].isUploading &&
                         this.selectPhotoTapped(index);
                     }}
                     onAddImageClick={() =>
@@ -673,6 +690,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
                             type="number"
                             value={control.value}
                           />
+                          {/* FIXME: show price is invalid if reaches maxLength */}
                           {control.isTouched && control.isInvalid && (
                             <Text style={styles.minPrice}>
                               {`${I18n.t('add_or_edit_item.min_price')} ${

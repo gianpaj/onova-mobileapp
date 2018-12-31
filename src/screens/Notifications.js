@@ -150,7 +150,6 @@ class NotificationsContainer extends Component<Props, State> {
   };
 
   goToProduct = (item: Product) => {
-    // $FlowFixMe
     this.props.navigation.navigate({
       routeName: 'product',
       key: `product-${item.uuid}`,
@@ -192,8 +191,12 @@ class NotificationsContainer extends Component<Props, State> {
             break;
           case 'Order':
             // or the ConfirmOrder screen should check if it can be confirmed ('paid' and not 'confirmed')
+            // $FlowFixMe
             if (item.data.status === 'paid')
               this.goToConfirmOrder(item.triggeredBy);
+            break;
+          case 'Drop':
+            this.goToProfile(item.sourceUser, 'drops');
             break;
           default:
             break;

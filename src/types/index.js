@@ -236,7 +236,7 @@ export type Schedule = {
   products: Array<Product>,
 };
 
-type TriggeredType = 'User' | 'Product' | 'Order';
+type TriggeredType = 'User' | 'Product' | 'Order' | 'Drop';
 
 export type Notification = {
   data: ?{

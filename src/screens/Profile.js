@@ -170,7 +170,7 @@ class ProfileScreen extends React.Component<Props, State> {
   componentDidMount() {
     if (
       this.props.navigation.state.params &&
-      this.props.navigation.state.params.tab == 'drop'
+      this.props.navigation.state.params.tab == 'drops'
     ) {
       this.setState({ index: 1 });
     }
@@ -467,7 +467,7 @@ class ProfileScreen extends React.Component<Props, State> {
       .post(`/api/users/${this.state._id}/${followOrUnfollow}`, {}, { token })
       .then(() => this.setState({ isFollowing: followOrUnfollow == 'follow' }))
       .catch(err => console.debug(err));
-  }
+  };
 
   renderProfileTop() {
     const {

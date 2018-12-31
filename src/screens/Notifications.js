@@ -135,16 +135,15 @@ class NotificationsContainer extends Component<Props, State> {
     );
   };
 
-  goToProfile = (user: UserData) => {
+  goToProfile = (user: UserData, tab?: string) => {
     const { _id } = this.props.userData;
     let routeName = 'profileInStack';
     if (_id == user._id) {
       routeName = 'profile';
     }
-    // $FlowFixMe
     this.props.navigation.navigate({
       routeName,
-      params: user,
+      params: { ...user, ...(tab ? { tab } : {}) },
       key: `profile-${user.username}`,
     });
   };

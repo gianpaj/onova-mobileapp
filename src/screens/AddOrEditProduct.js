@@ -11,7 +11,6 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {
   ActionSheet,
   Body,
@@ -37,6 +36,7 @@ import {
   ImagePicker as AntImagePicker,
   Header,
   HR,
+  Info,
   TagInput,
 } from '../components';
 import { enableRefresh } from '../actions/actionCreator';
@@ -599,17 +599,9 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
                       ? I18n.t('add_or_edit_item.edit_item_header')
                       : I18n.t('add_or_edit_item.add_item_header')}
                   </Title>
-                  <NBButton
-                    hitSlop={{ top: 0, left: 15, bottom: 0, right: 20 }}
+                  <Info
                     onPress={this.toggleInfoDialog}
-                    style={{ marginTop: 5 }}
-                    transparent>
-                    <MaterialCommunityIcons
-                      color={colors.red}
-                      name="information-outline"
-                      size={18}
-                    />
-                  </NBButton>
+                  />
                 </Body>
                 <Right>
                   <NBButton

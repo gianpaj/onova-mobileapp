@@ -14,7 +14,6 @@ import {
   View,
 } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Toast } from 'antd-mobile-rn';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import Permissions from 'react-native-permissions';
@@ -32,7 +31,7 @@ import {
 import { format } from 'date-fns';
 
 import colors from '../config/colors';
-import { Header, NoticeBar } from '../components';
+import { Header, NoticeBar, Info } from '../components';
 import imagePickerStyle from '../components/ImagePicker.styles';
 import I18n from '../i18n';
 import * as api from '../utils/api';
@@ -474,17 +473,9 @@ export class CreateDropScreen extends React.Component<Props, State> {
               style={{ color: colors.black, marginLeft: 22, marginRight: 5 }}>
               {I18n.t('create_drop.title')}
             </Title>
-            <NBButton
-              hitSlop={{ top: 0, left: 15, bottom: 0, right: 20 }}
+            <Info
               onPress={linking.openURL.bind(this, 'https://onova.co/drop.html')}
-              style={{ marginTop: 5 }}
-              transparent>
-              <MaterialCommunityIcons
-                color={colors.red}
-                name="information-outline"
-                size={18}
-              />
-            </NBButton>
+            />
           </Body>
           <Right>
             <NBButton

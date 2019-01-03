@@ -23,7 +23,6 @@ import {
 } from 'native-base';
 import Dialog from 'react-native-dialog';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { NavigationActions } from 'react-navigation';
 import { GiftedChat, Bubble, SystemMessage } from 'react-native-gifted-chat';
 
@@ -32,7 +31,7 @@ import I18n from '../i18n';
 
 import type { NavigationScreenProp } from 'react-navigation';
 
-import { Header, Send } from '../components';
+import { Header, Send, Info } from '../components';
 import ChatActions from '../components/ChatActions';
 import MessageImage from '../components/MessageImage';
 
@@ -344,7 +343,7 @@ class ChatContainer extends Component<Props, State> {
   };
 
   getPartner(): { _id: string, name: string, avatar: string } {
-    const { partner }: { partner: UserData } = this.state;
+    const { partner }: { partner: UserData | any } = this.state;
     return {
       _id: partner._id,
       name: partner.username,
@@ -618,17 +617,7 @@ class ChatContainer extends Component<Props, State> {
                   onPress={this.goToProfile}>
                   @{partner.username}
                 </Title>
-                <NBButton
-                  hitSlop={{ top: 0, left: 15, bottom: 0, right: 20 }}
-                  onPress={this.toggleDialog}
-                  style={{ marginTop: 5 }}
-                  transparent>
-                  <MaterialCommunityIcons
-                    color={colors.red}
-                    name="information-outline"
-                    size={18}
-                  />
-                </NBButton>
+                <Info onPress={this.toggleDialog} />
               </>
             )}
           </Body>

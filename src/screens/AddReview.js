@@ -18,7 +18,7 @@ import StarRating from 'react-native-star-rating';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Foect from 'foect';
 
-import { OrderStatus, Header, Title } from '../components';
+import { OrderStatus, Header, Title, Info } from '../components';
 
 import I18n from '../i18n';
 import colors from '../config/colors';
@@ -40,7 +40,7 @@ type Props = {
 type State = {
   // imageHeight: number,
   isLoading: boolean,
-  order: Order,
+  order: ?Order,
 };
 
 export class AddReviewContainer extends Component<Props, State> {
@@ -186,17 +186,9 @@ export class AddReviewContainer extends Component<Props, State> {
               style={{ color: colors.black, marginLeft: 22, marginRight: 5 }}>
               {I18n.t('add_review.header')}
             </Title>
-            <Button
-              hitSlop={{ top: 0, left: 15, bottom: 0, right: 20 }}
+            <Info
               onPress={linking.openURL.bind(this, 'https://onova.co/drop.html')}
-              style={{ marginTop: 5 }}
-              transparent>
-              <MaterialCommunityIcons
-                color={colors.red}
-                name="information-outline"
-                size={18}
-              />
-            </Button>
+            />
           </Body>
           <Right>
             <Button transparent dark disabled onPress={this.onArchive}>

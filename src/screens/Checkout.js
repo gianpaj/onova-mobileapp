@@ -308,7 +308,7 @@ class CheckoutContainer extends Component<Props, State> {
     try {
       // TODO: extract into checkPaymentErrorsOrThrow function
       if (this.canMakePayment()) {
-        let missing;
+        let missing = '';
         let error = I18n.t('checkout.error_is_missing');
         if (
           !shippingAddress.departmentNovaposhta ||
@@ -333,7 +333,7 @@ class CheckoutContainer extends Component<Props, State> {
           missing = I18n.t('checkout.missing.mobileNumber');
           error = I18n.t('checkout.error_is_not_valid');
         }
-        return ui.showToast(`${missing} ${error}`, 'warning', null, 5);
+        return ui.showToast(`${missing} ${error}`, 'warning', '', 5);
       }
       // console.log(order);
 
@@ -375,7 +375,6 @@ class CheckoutContainer extends Component<Props, State> {
   }
 
   goToChat(orderId: string) {
-    // $FlowFixMe
     this.props.navigation.dispatch({
       key: `chat-${orderId}`,
       type: 'ReplaceCurrentScreen',
@@ -554,7 +553,6 @@ class CheckoutContainer extends Component<Props, State> {
     return (
       <View style={styles.pricesContainer}>
         <View style={styles.row}>
-          {/* $FlowFixMe */}
           <Text style={{ color: colors.black }}>
             {I18n.t('checkout.total_row')}
           </Text>

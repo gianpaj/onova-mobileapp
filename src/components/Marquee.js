@@ -16,7 +16,7 @@ export interface MarqueeProps {
   leading?: number;
   trailing?: number;
   className?: string;
-  fps: number;
+  fps?: number;
   style?: ViewStyleProp;
   maxWidth?: number;
 }

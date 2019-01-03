@@ -5,7 +5,7 @@ import React, { PureComponent } from 'react';
 import { ActivityIndicator, StyleSheet, TextInput, View } from 'react-native';
 import ParsedText from 'react-native-parsed-text';
 
-import type { ViewStyleProp } from 'react-native/Libraries/StyleSheet/StyleSheet';
+import type { TextStyleProp } from 'react-native/Libraries/StyleSheet/StyleSheet';
 
 import * as linking from '../utils/linking';
 import colors from '../config/colors';
@@ -19,7 +19,7 @@ type Props = {
   placeholderColor: ?string,
   shouldAutoFocus: boolean,
   showPlaceholder: boolean,
-  style?: ViewStyleProp,
+  style?: TextStyleProp,
   text: string,
   textInputProps: any,
   textProps: any,

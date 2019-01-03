@@ -14,7 +14,6 @@ import {
 import { Header, ImageGridSearch, Title } from '../components';
 
 import I18n from '../i18n';
-import colors from '../config/colors';
 import { category_radio_grp_1, category_radio_grp_2 } from '../utils/ui';
 
 import type { NavigationScreenProp } from 'react-navigation';
@@ -57,8 +56,8 @@ class SearchProductsResultsContainer extends Component<Props, State> {
     category_radio_grp_2.find(g => g.value == num).label;
 
   render() {
+    if (!this.state.terms) return null;
     const { terms } = this.state;
-    if (!terms) return null;
 
     return (
       <View style={styles.flex1}>

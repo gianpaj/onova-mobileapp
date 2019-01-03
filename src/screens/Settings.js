@@ -96,8 +96,8 @@ type Props = {
 
 type State = {
   activeInputRef: any,
-  cities: Array<City>,
-  departments: Array<Department>,
+  cities: ?Array<City>,
+  departments: ?Array<Department>,
   emailAddress: string,
   isLoading: boolean,
   mobileNumber: string,
@@ -112,7 +112,7 @@ type State = {
 
 class SettingsContainer extends Component<Props, State> {
   cancelToken;
-  inputs = [];
+  inputs: Array<any> = [];
   state = {
     activeInputRef: null,
     emailAddress: '',

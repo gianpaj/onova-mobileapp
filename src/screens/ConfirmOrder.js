@@ -34,7 +34,7 @@ import * as ui from '../utils/ui';
 import * as api from '../utils/api';
 
 import type { NavigationScreenProp } from 'react-navigation';
-import type { Order, UserData, ReduxState } from '../types';
+import type { Order, UserData, ReduxState, Product } from '../types';
 
 const { width } = Dimensions.get('window');
 
@@ -47,8 +47,8 @@ type State = {
   isLoading: boolean,
   isPending: boolean,
   dialogVisible: boolean,
-  order: Order,
-  buyer: UserData,
+  order: ?Order,
+  buyer: ?UserData,
 };
 
 export class ConfirmOrderContainer extends Component<Props, State> {
@@ -156,7 +156,6 @@ export class ConfirmOrderContainer extends Component<Props, State> {
   }
 
   goToProfile = (user: UserData) => {
-    // $FlowFixMe
     this.props.navigation.navigate({
       routeName: 'profileInStack',
       params: user,
@@ -165,7 +164,6 @@ export class ConfirmOrderContainer extends Component<Props, State> {
   };
 
   goToProduct = (item: Product) => {
-    // $FlowFixMe
     this.props.navigation.navigate({
       routeName: 'product',
       key: `product-${item.uuid}`,
@@ -352,7 +350,7 @@ export class ConfirmOrderContainer extends Component<Props, State> {
         </Foect.Form>
         <Dialog.Button
           disabled={isPending}
-          color={Platform.OS === 'ios' ? '#007ff9' : colors.grey2}
+          color={Platform.OS === 'ios' ? colors.active : colors.grey2}
           label={I18n.t('alerts.action_button_close')}
           onPress={this.toggleDialog}
         />

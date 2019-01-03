@@ -65,7 +65,7 @@ export class SuggestionsContainer extends Component<Props, State> {
 
   goToProfile = (user: UserData) => {
     let routeName = 'profileInStack';
-    // $FlowFixMe
+
     this.props.navigation.navigate({
       routeName,
       params: user,

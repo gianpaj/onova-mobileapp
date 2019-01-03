@@ -32,7 +32,7 @@ type State = {
 };
 
 class SearchWithHasthagsTabContainer extends Component<Props, State> {
-  search;
+  search: { current: any };
   constructor(props: Props) {
     super(props);
     this.search = React.createRef();

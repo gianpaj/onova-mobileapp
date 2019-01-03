@@ -288,7 +288,6 @@ export class ProductContainer extends React.Component<Props, State> {
   goToProfile = (user: UserData) => {
     if (!user._id) return;
 
-    // $FlowFixMe
     this.props.navigation.navigate({
       routeName: 'profileInStack',
       params: user,
@@ -365,7 +364,6 @@ export class ProductContainer extends React.Component<Props, State> {
         if (analyticsEnabled)
           Analytics.track('press_buy', { uuid: product.uuid });
 
-        // $FlowFixMe
         // this.props.navigation.navigate({
         //   routeName: 'chat',
         //   params: {
@@ -410,7 +408,6 @@ export class ProductContainer extends React.Component<Props, State> {
   // };
 
   handleHashtagPress = (matchingString: string) => {
-    // $FlowFixMe
     this.props.navigation.navigate({
       routeName: 'searchProductsResults',
       key: `searchProductsResults-${matchingString}`,

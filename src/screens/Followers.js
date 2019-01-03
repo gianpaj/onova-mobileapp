@@ -109,7 +109,7 @@ class FollowersContainer extends Component<Props, State> {
           <Avatar
             size={'medium'}
             withButton={shouldShowButton}
-            uri={user.profilePic || ''}
+            uri={user.profilePic}
             placeholderText={user.username}
             buttonActiveState={user.amIAFollower}
             onButtonPress={() =>

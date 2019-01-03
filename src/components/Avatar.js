@@ -42,7 +42,7 @@ type Props = {
   resizeMode: 'contain' | 'cover' | 'stretch' | 'center' | 'repeat',
   size: 'default' | 'mini' | 'verySmall' | 'small' | 'medium',
   style?: ImageStyleProp,
-  uri: string | Image,
+  uri: string | Image | undefined,
   withBorder: boolean,
   withButton?: boolean, // to show an button to follow or not
   onButtonPress?: () => void | Promise<void>,

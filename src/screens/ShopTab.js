@@ -11,6 +11,8 @@ import I18n from '../i18n';
 
 import type { UserData, ReduxState } from '../types';
 
+import type { NavigationScreenProp } from 'react-navigation';
+
 type Props = {
   userData: UserData,
   navigation: NavigationScreenProp<*>,

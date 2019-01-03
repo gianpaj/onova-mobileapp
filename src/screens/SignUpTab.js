@@ -49,6 +49,7 @@ type State = {
   username: string,
   emailAddress: string,
   password: string,
+  isPasswordVisible: boolean,
   hasFocusUser: boolean,
   hasFocusEmail: boolean,
   hasFocusPass: boolean,
@@ -59,9 +60,12 @@ const FORM_VERTICAL_PADDING_KEYBOARD_HIDDEN = 10;
 const FORM_VERTICAL_PADDING_KEYBOARD_VISIBLE = 40;
 
 export class SignUpTabContainer extends Component<Props, State> {
-  UserNameInput: ?FormInput;
-  EmailInput: ?FormInput;
-  PwdInput: ?FormInput;
+  UserNameInput: { current: any };
+  EmailInput: { current: any };
+  PwdInput: { current: any };
+  keyboardHeight: Animated.Value;
+  keyboardWillShowSub;
+  keyboardWillHideSub;
 
   constructor(props: Props) {
     super(props);
@@ -102,7 +106,7 @@ export class SignUpTabContainer extends Component<Props, State> {
     this.keyboardWillHideSub.remove();
   }
 
-  keyboardWillShow = event =>
+  keyboardWillShow = (event: any) =>
     Animated.timing(this.keyboardHeight, {
       duration: event ? event.duration : 250,
       toValue: Platform.select({
@@ -111,7 +115,7 @@ export class SignUpTabContainer extends Component<Props, State> {
       }),
     }).start();
 
-  keyboardWillHide = event =>
+  keyboardWillHide = (event: any) =>
     Animated.timing(this.keyboardHeight, {
       duration: event ? event.duration : 250,
       toValue: FORM_VERTICAL_PADDING_KEYBOARD_VISIBLE,
@@ -121,38 +125,38 @@ export class SignUpTabContainer extends Component<Props, State> {
     this.setState({ isVerifyAccountModalVisible: visible });
 
   onSignup = () => {
-    if (this.props.loading) return;
+    if (this.props.loading || !this.UserNameInput || !this.EmailInput) return;
 
     let { username, emailAddress, password } = this.state;
     const prefix = 'signup.alerts.';
 
     emailAddress = emailAddress.trim();
 
-    if (username.trim() < 3) {
+    if (!username.trim()) {
       this.UserNameInput.current.shake();
       return this.UserNameInput.current.focus();
     } else if (username.trim().length < 3) {
       this.UserNameInput.current.shake();
-      ui.showToast(I18n.t(prefix + 'username_too_short'), 'warning', null, 2);
+      ui.showToast(I18n.t(prefix + 'username_too_short'), 'warning', '', 2);
       return this.UserNameInput.current.focus();
     } else if (username.trim().length > 50) {
-      ui.showToast(I18n.t(prefix + 'username_too_long'), 'warning', null, 2);
+      ui.showToast(I18n.t(prefix + 'username_too_long'), 'warning', '', 2);
       this.UserNameInput.current.shake();
       return this.UserNameInput.current.focus();
     } else if (!settings.USERNAME_REGEX.test(username)) {
-      ui.showToast(I18n.t(prefix + 'username_invalid'), 'warning', null, 2);
+      ui.showToast(I18n.t(prefix + 'username_invalid'), 'warning', '', 2);
       this.UserNameInput.current.shake();
       return this.UserNameInput.current.focus();
     } else if (!isEmail(emailAddress)) {
       if (emailAddress.length > 0)
-        ui.showToast(I18n.t(prefix + 'email_invalid'), 'warning', null, 2);
+        ui.showToast(I18n.t(prefix + 'email_invalid'), 'warning', '', 2);
       this.EmailInput.current.shake();
       return this.EmailInput.current.focus();
     } else if (!validPassword(password)) {
       if (password.length && password.length < 8) {
-        ui.showToast(I18n.t(prefix + 'password_too_short'), 'warning', null, 2);
+        ui.showToast(I18n.t(prefix + 'password_too_short'), 'warning', '', 2);
       } else if (password.length > 50) {
-        ui.showToast(I18n.t(prefix + 'password_too_long'), 'warning', null, 2);
+        ui.showToast(I18n.t(prefix + 'password_too_long'), 'warning', '', 2);
       }
       this.PwdInput.current.shake();
       return this.PwdInput.current.focus();
@@ -372,7 +376,7 @@ export class SignUpTabContainer extends Component<Props, State> {
               <Text
                 // eslint-disable-next-line
                 style={{
-                  fontSize: typography.font_button_size16,
+                  fontSize: typography.font_button_size,
                   color: colors.white,
                 }}>
                 {I18n.t('signup.sign_up_button')}

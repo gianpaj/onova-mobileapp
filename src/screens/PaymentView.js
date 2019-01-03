@@ -11,7 +11,8 @@ import * as api from '../utils/api';
 import * as ui from '../utils/ui';
 import I18n from '../i18n';
 
-import type { ReduxState } from '../types';
+import type { NavigationScreenProp } from 'react-navigation';
+import type { ReduxState, Dispatch } from '../types';
 
 // for development
 // const params = { orderId: '5bdb0ced6a7aef00de9da722', cvc: '111' };
@@ -29,6 +30,9 @@ type State = {
 };
 
 class PaymentView extends Component<Props, State> {
+  keyboardDidHideListener;
+  keyboardDidShowListener;
+
   state = {
     payment: null,
     isLoading: true,

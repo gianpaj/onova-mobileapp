@@ -32,7 +32,13 @@ import * as ui from '../utils/ui';
 
 const isiOS = Platform.OS === 'ios';
 
-import type { UserData, Notification, ReduxState, Product } from '../types';
+import type {
+  UserData,
+  Notification,
+  ReduxState,
+  Product,
+  Order,
+} from '../types';
 
 import type { NavigationScreenProp } from 'react-navigation';
 
@@ -116,7 +122,7 @@ class NotificationsContainer extends Component<Props, State> {
         lastId: lastNotif._id,
       });
     } catch (error) {
-      console.error(err);
+      console.error(error);
     }
     this.setState({ isRefreshing: false });
   };
@@ -156,7 +162,6 @@ class NotificationsContainer extends Component<Props, State> {
   };
 
   goToConfirmOrder = (order: Order) => {
-    // $FlowFixMe
     this.props.navigation.navigate({
       routeName: 'confirmOrder',
       key: 'confirmOrder',

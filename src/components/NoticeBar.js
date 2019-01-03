@@ -79,12 +79,12 @@ const NoticeStyle = {
 
 type NoticeNativeProps = {
   action?: Node,
-  buttonText: string,
+  buttonText?: string,
   children: string,
   icon?: Node,
   marqueeProps?: MarqueeProps,
-  mode?: 'closable' | 'link',
-  onPress?: () => void,
+  mode?: 'closable' | 'link' | 'button' | '',
+  onPress?: () => void | Promise<any>,
   style?: ViewStyleProp,
   styles?: INoticeBarStyle,
 };

@@ -16,7 +16,7 @@ const DEFAULT_BG_COLOR = colors.white;
 const DEFAULT_DIGIT_TXT_COLOR = colors.red;
 
 export default class Countdown extends React.Component<*, *> {
-  timer: IntervalID | null;
+  timer: ?IntervalID;
   onFinish: Function;
   static propTypes = {
     digitBgColor: PropTypes.string,
@@ -47,7 +47,7 @@ export default class Countdown extends React.Component<*, *> {
   }
 
   componentWillUnmount() {
-    clearInterval(this.timer);
+    if (this.timer) clearInterval(this.timer);
     this.timer = null;
     AppState.removeEventListener('change', this._handleAppStateChange);
   }
@@ -75,7 +75,7 @@ export default class Countdown extends React.Component<*, *> {
     const { until } = this.state;
 
     if (until <= 1) {
-      clearInterval(this.timer);
+      if (this.timer) clearInterval(this.timer);
       this.timer = null;
       this.setState({ until: 0 });
       if (this.onFinish) {

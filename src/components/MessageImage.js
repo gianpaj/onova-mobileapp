@@ -33,9 +33,19 @@ class MessageImage extends React.Component<*, State> {
     imageHeight: 0,
   };
 
+  static defaultProps = {
+    currentMessage: {
+      image: null,
+    },
+    containerStyle: {},
+    imageStyle: {},
+    imageProps: {},
+    lightboxProps: {},
+  };
+
   async componentDidMount() {
     const { image } = this.props.currentMessage;
-    if (image.fetchRequired) {
+    if (image.fetchRequired && currentUser) {
       const fetched = await currentUser.fetchAttachment({ url: image.link });
       this.setState({ fetchedLink: fetched.link });
       Image.getSize(fetched.link, (w, h) => {
@@ -110,20 +120,9 @@ const styles = StyleSheet.create({
   },
 });
 
-MessageImage.defaultProps = {
-  currentMessage: {
-    image: null,
-  },
-  containerStyle: {},
-  imageStyle: {},
-  imageProps: {},
-  lightboxProps: {},
-};
-
 MessageImage.propTypes = {
   currentMessage: PropTypes.object,
   containerStyle: ViewPropTypes.style,
   imageStyle: Image.propTypes.style,
   imageProps: PropTypes.object,
-  lightboxProps: PropTypes.object,
 };

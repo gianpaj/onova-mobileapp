@@ -31,7 +31,6 @@ import type {
   SignupData,
   GetState,
   UserData,
-  // PusherUser,
 } from '../types';
 import type { Options, APIError } from '../utils/api';
 import {

@@ -1,11 +1,10 @@
 // @flow
 
 import React from 'react';
-import { View, PixelRatio, Platform, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
+import { View, PixelRatio, Platform, StyleSheet } from 'react-native';
 
 import type { ReduxState } from '../types';
-// // import colors from '../config/colors';
 import { Avatar } from '../components';
 
 type Props = {

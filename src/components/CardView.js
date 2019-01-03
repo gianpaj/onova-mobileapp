@@ -64,6 +64,7 @@ const s = StyleSheet.create({
   },
 });
 
+// $FlowFixMe
 export default class CardView extends Component {
   static propTypes = {
     focused: PropTypes.string,

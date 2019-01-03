@@ -14,6 +14,9 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 // import { CachedImage } from 'react-native-cached-image';
 import ImagePicker from 'react-native-image-crop-picker';
 import { GiftedAvatar } from 'react-native-gifted-chat';
+
+import type { ImageStyleProp } from 'react-native/Libraries/StyleSheet/StyleSheet';
+
 import colors from '../config/colors';
 
 const isiOS = Platform.OS === 'ios';
@@ -36,9 +39,9 @@ type Props = {
   placeholderSource?: number,
   placeholderText?: string,
   placeholderURI?: string,
-  resizeMode: ImageStyle.resizeMode,
+  resizeMode: 'contain' | 'cover' | 'stretch' | 'center' | 'repeat',
   size: 'default' | 'mini' | 'verySmall' | 'small' | 'medium',
-  style?: ImageStyle,
+  style?: ImageStyleProp,
   uri: string | Image,
   withBorder: boolean,
   withButton?: boolean, // to show an button to follow or not
@@ -79,6 +82,7 @@ export default class Avatar extends PureComponent<Props, *> {
     const { uri } = this.props;
 
     if (typeof uri == 'object') {
+      // $FlowFixMe
       return { uri: uri.path };
     }
 

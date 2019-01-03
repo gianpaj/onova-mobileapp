@@ -44,18 +44,21 @@ type Props = {
 };
 
 type State = {
-  // loadingMore: boolean,
   hasError: boolean,
   initializing: boolean,
   isLoading: boolean,
   isRefreshing: boolean,
   itemHeight: number,
   items: Array<any>,
+  lastId: string,
+  theEnd: boolean,
 };
 
 const { width, height } = Dimensions.get('window');
 
 class ImageGridSearchComponent extends React.Component<Props, State> {
+  reqTimer: ?TimeoutID;
+
   state = {
     hasError: false,
     initializing: true,
@@ -63,6 +66,8 @@ class ImageGridSearchComponent extends React.Component<Props, State> {
     isRefreshing: false,
     itemHeight: 0,
     items: [],
+    lastId: '',
+    theEnd: false,
   };
 
   componentDidMount() {

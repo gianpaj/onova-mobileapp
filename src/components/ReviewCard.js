@@ -27,12 +27,11 @@ type Props = {
   as: string,
   order: Order,
   onPress: (reviewer: UserData) => void,
-  userData: UserData,
 };
 
 class ReviewCard extends PureComponent<Props> {
   render() {
-    const { order, userData } = this.props;
+    const { order } = this.props;
 
     // as buyer (Purchased Tab)
     let reviewer = order.seller;

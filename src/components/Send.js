@@ -33,7 +33,6 @@ export default function Send({
       <>{children || <Text style={[styles.text, textStyle]}>{label}</Text>}</>
     </TouchableOpacity>
   );
-  // return <View />;
 }
 
 const styles = StyleSheet.create({

@@ -5,7 +5,6 @@ import {
   Dimensions,
   Image,
   Modal,
-  // Platform,
   StyleSheet,
   TouchableWithoutFeedback,
   View,
@@ -16,7 +15,6 @@ import Swiper from 'react-native-swiper';
 import colors from '../config/colors';
 
 const { width } = Dimensions.get('window');
-// const isiOS = Platform.OS === 'ios';
 
 type Props = {
   source: Array<string>,

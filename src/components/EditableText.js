@@ -2,14 +2,10 @@
 // inspired by https://github.com/ElinaSchaefer77/react-native-inline-edit/
 
 import React, { PureComponent } from 'react';
-import {
-  ActivityIndicator,
-  StyleSheet,
-  TextInput,
-  View,
-  type TextProps,
-} from 'react-native';
+import { ActivityIndicator, StyleSheet, TextInput, View } from 'react-native';
 import ParsedText from 'react-native-parsed-text';
+
+import type { ViewStyleProp } from 'react-native/Libraries/StyleSheet/StyleSheet';
 
 import * as linking from '../utils/linking';
 import colors from '../config/colors';
@@ -23,10 +19,10 @@ type Props = {
   placeholderColor: ?string,
   shouldAutoFocus: boolean,
   showPlaceholder: boolean,
-  style?: StyleSheet.Styles,
+  style?: ViewStyleProp,
   text: string,
   textInputProps: any,
-  textProps: TextProps,
+  textProps: any,
 };
 
 type State = {

@@ -1,6 +1,11 @@
 // @flow
 
-import { Dimensions, ViewStyle, ImageStyle, TextStyle } from 'react-native';
+import { Dimensions } from 'react-native';
+import type {
+  ViewStyleProp,
+  TextStyleProp,
+  ImageStyleProp,
+} from 'react-native/Libraries/StyleSheet/StyleSheet';
 
 import colors from '../config/colors';
 import variables from './default.native';
@@ -8,15 +13,15 @@ import variables from './default.native';
 const { width } = Dimensions.get('window');
 
 export interface IImagePickerStyle {
-  container: ViewStyle;
-  item: ViewStyle;
-  image: ImageStyle;
-  closeWrap: ViewStyle;
-  closeText: TextStyle;
-  plusWrap: ViewStyle;
-  plusWrapNormal: ViewStyle;
-  plusWrapHighlight: ViewStyle;
-  plusText: TextStyle;
+  container: ViewStyleProp;
+  item: ViewStyleProp;
+  image: ImageStyleProp;
+  closeWrap: ViewStyleProp;
+  closeText: TextStyleProp;
+  plusWrap: ViewStyleProp;
+  plusWrapNormal: ViewStyleProp;
+  plusWrapHighlight: ViewStyleProp;
+  plusText: TextStyleProp;
 }
 
 export default {

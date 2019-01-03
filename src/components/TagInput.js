@@ -18,6 +18,8 @@ import {
 } from 'react-native';
 import invariant from 'invariant';
 
+import type { ViewStyleProp } from 'react-native/Libraries/StyleSheet/StyleSheet';
+
 const windowWidth = Dimensions.get('window').width;
 
 type KeyboardShouldPersistTapsProps =
@@ -71,11 +73,11 @@ type OptionalProps = {
   /**
    * Styling override for container surrounding tag text
    */
-  tagContainerStyle?: typeof ViewPropTypes,
+  tagContainerStyle?: ViewStyleProp,
   /**
    * Styling override for tag's text component
    */
-  tagTextStyle?: ViewPropTypes,
+  tagTextStyle?: ViewStyleProp,
   /**
    * Width override for text input's default width when it's empty and showing placeholder
    */
@@ -122,11 +124,9 @@ class TagInput<T> extends React.PureComponent<Props<T>, State> {
     tagTextStyle: Text.propTypes.style,
     text: PropTypes.string.isRequired,
     value: PropTypes.array.isRequired,
-    // $FlowFixMe(>=0.49.0): https://github.com/facebook/react-native/pull/16437
     inputProps: PropTypes.shape(TextInput.propTypes),
     maxHeight: PropTypes.number,
     onHeightChange: PropTypes.func,
-    // $FlowFixMe: identify EdgeInsetsPropType, PointPropType as React PropType
     scrollViewProps: PropTypes.shape(ScrollView.propTypes),
   };
   props: Props<T>;
@@ -374,9 +374,9 @@ type TagProps = {
   onLayoutLastTag: (endPosOfTag: number) => void,
   removeIndex: (index: number) => void,
   tagColor: string,
-  tagContainerStyle?: ViewPropTypes,
+  tagContainerStyle?: ViewStyleProp,
   tagTextColor: string,
-  tagTextStyle?: ViewPropTypes,
+  tagTextStyle?: ViewStyleProp,
 };
 class Tag extends React.PureComponent<TagProps> {
   props: TagProps;

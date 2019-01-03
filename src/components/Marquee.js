@@ -4,24 +4,20 @@
 // MIT License
 
 import React from 'react';
-import {
-  Animated,
-  Easing,
-  LayoutChangeEvent,
-  StyleProp,
-  Text,
-  TextStyle,
-  View,
-} from 'react-native';
+import { Animated, Easing, Text, View } from 'react-native';
+
+import type { ViewStyleProp } from 'react-native/Libraries/StyleSheet/StyleSheet';
+import { type SyntheticEvent } from 'react-native/Libraries/Types/CoreEventTypes';
+import type { Node } from 'react';
 
 export interface MarqueeProps {
-  text?: React.ReactNode;
+  text?: Node;
   loop?: boolean;
   leading?: number;
   trailing?: number;
   className?: string;
-  fps?: number;
-  style?: StyleProp<TextStyle>;
+  fps: number;
+  style?: ViewStyleProp;
   maxWidth?: number;
 }
 
@@ -43,7 +39,7 @@ class Marquee extends React.PureComponent<MarqueeProps, any> {
     left: new Animated.Value(0),
   };
 
-  onLayout = (e: LayoutChangeEvent) => {
+  onLayout = (e: SyntheticEvent<any>) => {
     if (this.twidth) return;
 
     this.twidth = e.nativeEvent.layout.width;
@@ -55,7 +51,7 @@ class Marquee extends React.PureComponent<MarqueeProps, any> {
     if (this.twidth > this.width && this.width) this.startMove();
   }
 
-  onLayoutContainer = (e: LayoutChangeEvent) => {
+  onLayoutContainer = (e: SyntheticEvent<any>) => {
     if (!this.width) {
       this.width = e.nativeEvent.layout.width;
       this.setState(

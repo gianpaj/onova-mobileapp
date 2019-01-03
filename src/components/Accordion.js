@@ -1,6 +1,7 @@
 // @flow
 
 import React, { PureComponent } from 'react';
+import type { Node, Ref } from 'react';
 import { Animated, StyleSheet, View } from 'react-native';
 import CollapsibleAccordion from 'react-native-collapsible/Accordion';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -11,13 +12,13 @@ import * as Animatable from 'react-native-animatable';
 import colors from '../config/colors';
 
 type Field = {
-  ref?: el => void,
+  ref?: (Ref<any>) => any,
   error?: boolean,
-  input?: React.Node, // used to store the ref and later be able to focus on next input field when the Next button is pressed (on the keyboard)
-  onChangeText?: value => void,
+  input?: Node, // used to store the ref and later be able to focus on next input field when the Next button is pressed (on the keyboard)
+  onChangeText?: string => void,
   onFocus: () => void,
   placeholder: string,
-  render?: (props: any) => React.Node,
+  render?: (props: any) => Node,
   shouldShowError?: () => boolean,
   type?: string,
   value: string,
@@ -43,6 +44,7 @@ export default class Accordion extends PureComponent<Props, State> {
 
   static defaultProps = {
     duration: 400,
+    expanded: false,
   };
 
   constructor(props: Props) {

@@ -4,26 +4,25 @@
 // MIT License
 
 import React from 'react';
-import {
-  StyleProp,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-  ViewStyle,
-} from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Marquee, { MarqueeProps } from './Marquee';
 import colors from '../config/colors';
 
+import type {
+  ViewStyleProp,
+  TextStyleProp,
+} from 'react-native/Libraries/StyleSheet/StyleSheet';
+import type { Node } from 'react';
+
 interface INoticeBarStyle {
-  notice: ViewStyle;
-  container: ViewStyle;
-  content: TextStyle;
-  left6: ViewStyle;
-  left15: ViewStyle;
-  actionWrap: ViewStyle;
-  close: TextStyle;
-  link: TextStyle;
+  notice: ViewStyleProp;
+  container: ViewStyleProp;
+  content: TextStyleProp;
+  left6: ViewStyleProp;
+  left15: ViewStyleProp;
+  actionWrap: ViewStyleProp;
+  close: TextStyleProp;
+  link: TextStyleProp;
 }
 
 const variables = {
@@ -79,25 +78,24 @@ const NoticeStyle = {
 };
 
 type NoticeNativeProps = {
-  action?: React.ReactElement<any>,
+  action?: Node,
   buttonText: string,
   children: string,
-  icon?: React.ReactElement<any>,
+  icon?: Node,
   marqueeProps?: MarqueeProps,
   mode?: 'closable' | 'link',
   onPress?: () => void,
-  style?: StyleProp<ViewStyle>,
+  style?: ViewStyleProp,
   styles?: INoticeBarStyle,
 };
 
-const NoticeStyles = StyleSheet.create(NoticeStyle);
+const styles = StyleSheet.create(NoticeStyle);
 
 export default class NoticeBar extends React.Component<NoticeNativeProps, any> {
   static defaultProps = {
     mode: '',
     onPress() {},
     icon: null,
-    styles: NoticeStyles,
   };
 
   state = {
@@ -114,7 +112,6 @@ export default class NoticeBar extends React.Component<NoticeNativeProps, any> {
   render() {
     const {
       buttonText,
-      styles,
       children,
       mode,
       icon,
@@ -152,6 +149,7 @@ export default class NoticeBar extends React.Component<NoticeNativeProps, any> {
       <View style={[styles.notice, style]}>
         {icon && <View style={styles.left15}>{icon}</View>}
         <View style={[styles.container, icon ? styles.left6 : styles.left15]}>
+          {/* // $FlowFixMe */}
           <Marquee style={styles.content} text={children} {...marqueeProps} />
         </View>
         {operationDom}

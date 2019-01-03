@@ -8,12 +8,12 @@ import {
   Dimensions,
   Image,
   FlatList,
-  // RefreshControl,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
+import type { Node } from 'react';
 // import {
 //   CachedImage,
 //   ImageCacheProvider,
@@ -23,6 +23,7 @@ import { NavigationActions } from 'react-navigation';
 import { Button } from 'native-base';
 
 import type { NavigationScreenProp } from 'react-navigation';
+import type { Dispatch } from '../types';
 
 import { disableRefresh } from '../actions/actionCreator';
 
@@ -30,7 +31,6 @@ import I18n from '../i18n';
 import * as api from '../utils/api';
 import colors from '../config/colors';
 
-// $FlowFixMe
 // const loading = require('../assets/images/loading.jpg');
 // const TTL = 4 * 60 * 60; // cache images for 4 hours
 
@@ -46,7 +46,8 @@ const LIMIT = 48; // divisible by 3
 
 type Props = {
   apiURL: string,
-  emptyState?: React.Node,
+  dispatch: Dispatch,
+  emptyState?: Node,
   focused: boolean,
   navigation?: NavigationScreenProp<*>,
   shouldRefresh?: boolean,
@@ -258,6 +259,7 @@ class ImageGridComponent extends React.PureComponent<Props, State> {
           keyExtractor={this._keyExtractor}
           ListEmptyComponent={this.renderEmptyState}
           numColumns={3}
+          // $FlowFixMe
           onRefresh={this.fetchItems}
           refreshing={isLoading}
           renderItem={this.renderItem}

@@ -153,9 +153,9 @@ class Comments extends React.Component<Props, State> {
   renderSingleComment = ({ item: c }: { item: Comment }) => (
     <View style={styles.containerComment}>
       <Avatar
-        // $FlowFixMe
         onPress={() => this.props.goToProfile(c.user)}
         size={'verySmall'}
+        // $FlowFixMe
         uri={c.user.profilePic}
         placeholderText={c.user.username}
       />
@@ -219,7 +219,7 @@ class Comments extends React.Component<Props, State> {
     return (
       <View style={styles.padder}>
         <FlatList
-          style={styles.root}
+          // style={styles.root}
           data={this.state.comments}
           ItemSeparatorComponent={this.renderSeparator}
           keyExtractor={this._keyExtractor}
@@ -309,6 +309,7 @@ class Comments extends React.Component<Props, State> {
       <View style={styles.addCommentContainer}>
         <Avatar
           size={'verySmall'}
+          // $FlowFixMe
           uri={userData.profilePic}
           placeholderText={userData.username}
           style={{ marginLeft: 10, marginTop: 10 }}

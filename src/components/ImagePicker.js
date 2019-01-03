@@ -17,15 +17,20 @@ import {
 } from 'react-native';
 import imagePickerStyle from './ImagePicker.styles';
 import SortableList from 'react-native-sortable-list';
+
 import colors from '../config/colors';
 
 export type Props = {
   enabled: boolean,
-  files: Array<{}>,
+  files: Array<any>,
   onAddImageClick?: () => void,
-  onChange?: (files: Array<{}>, operationType?: string, index?: number) => void,
-  onChangeOrder: (Array<{}>) => void,
-  onImageClick?: (index?: number, files?: Array<{}>) => void,
+  onChange?: (
+    files: Array<any>,
+    operationType?: string,
+    index?: number
+  ) => void,
+  onChangeOrder: (Array<any>) => void,
+  onImageClick?: (index?: number, files?: Array<any>) => void,
   selectable?: boolean,
   imagePerRow: number,
 };
@@ -42,15 +47,18 @@ const imageMargin = 5;
 const widthOfContainer = width - 16 * 2;
 
 export default class ImagePicker extends React.Component<Props, State> {
+  arr: Array<any>;
+
   state = {
     visible: false,
   };
 
   static defaultProps = {
     selectable: true,
+    enabled: true,
   };
 
-  constructor(props) {
+  constructor(props: Props) {
     super(props);
     const size = widthOfContainer / this.props.imagePerRow - imageMargin * 2;
 
@@ -96,7 +104,6 @@ export default class ImagePicker extends React.Component<Props, State> {
         <SortableList
           data={files}
           horizontal
-          // onChangeOrder={onChangeOrder}
           onChangeOrder={arr => (this.arr = arr)}
           onPressRow={this.onImageClick}
           onReleaseRow={() => this.arr && onChangeOrder(this.arr)}
@@ -139,7 +146,7 @@ type RowProps = {
     url: string,
     isUploading: boolean,
   },
-  removeImage: () => void,
+  removeImage: () => any,
 };
 
 class Row extends React.Component<RowProps> {

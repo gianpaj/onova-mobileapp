@@ -15,13 +15,25 @@ import {
 } from 'react-native';
 import { InputItem } from 'antd-mobile-rn';
 
+import type { Node } from 'react';
+
 // import colors from '../config/colors';
 
 const LIMIT_BY = 20;
 
 const emptyItem = { uk: '', id: '' };
 
-export default class SearchableDropDown extends Component {
+type Item = { uk: string, id: string };
+
+type State = {
+  currentVal: Item,
+  items: Array<Item>,
+  focus: boolean,
+};
+
+export default class SearchableDropDown extends Component<*, State> {
+  input: Node;
+
   static propTypes = {
     containerStyle: PropTypes.object,
     disabled: PropTypes.bool,
@@ -81,7 +93,7 @@ export default class SearchableDropDown extends Component {
     if (items) this.setState({ items: items.slice(0, LIMIT_BY) });
   }
 
-  onChangeText = searchedText => {
+  onChangeText = (searchedText: string) => {
     const {
       disabled,
       items,
@@ -125,7 +137,7 @@ export default class SearchableDropDown extends Component {
   };
 
   // FIXME: do not render the component again if there are no changes
-  static getDerivedStateFromProps(props, state) {
+  static getDerivedStateFromProps(props: *, state: State) {
     if (!props.items) return null;
     // if it's not focused, reset
     if (!state.focus && props.items.length !== state.items.length) {
@@ -138,7 +150,7 @@ export default class SearchableDropDown extends Component {
     return null;
   }
 
-  renderItems = ({ item }) => (
+  renderItems = ({ item }: { item: Item }) => (
     <TouchableOpacity
       style={this.props.itemStyle}
       onPress={() => {
@@ -186,7 +198,8 @@ export default class SearchableDropDown extends Component {
     } = this.props;
 
     return (
-      <View keyboardShouldpersist="always" style={containerStyle}>
+      // keyboardShouldpersist="always"
+      <View style={containerStyle}>
         <InputItem
           ref={e => {
             this.input = e;

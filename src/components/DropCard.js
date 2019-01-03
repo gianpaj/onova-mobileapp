@@ -14,7 +14,6 @@ import {
   TouchableWithoutFeedback,
 } from 'react-native';
 import { ActionSheet, Button, List } from 'native-base';
-import Icon from 'react-native-vector-icons/Feather';
 import { format, differenceInMinutes, differenceInSeconds } from 'date-fns';
 
 import { Avatar, Countdown } from '../components';

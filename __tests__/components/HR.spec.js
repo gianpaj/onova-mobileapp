@@ -8,7 +8,7 @@ describe('Testing HR component', () => {
 
   describe('rendering', () => {
     it('Must be View', () => {
-      expect(wrapper.dive().find('View')).toHaveLength(1);
+      expect(wrapper.find('View')).toHaveLength(1);
     });
   });
 });

@@ -9,11 +9,11 @@ import { shallow } from 'enzyme';
 
 import { SuggestionsContainer } from '../../src/screens/Suggestions';
 
-// FIXME: test actually entering text in the input fields for the shippingAddress and mobileNumber
+// FIXME: test loading a list of suggested users
 
-describe('Suggestions screen', () => {
+describe.skip('Suggestions screen', () => {
   describe('initial rendering', () => {
-    let wrapper, spy;
+    let wrapper;
     beforeEach(() => {
       wrapper = shallow(
         <SuggestionsContainer

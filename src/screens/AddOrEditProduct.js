@@ -19,7 +19,6 @@ import {
   Content,
   Left,
   Right,
-  Title,
 } from 'native-base';
 import { FormLabel } from 'react-native-elements';
 import RadioForm, {
@@ -38,6 +37,7 @@ import {
   HR,
   Info,
   TagInput,
+  Title,
 } from '../components';
 import { enableRefresh } from '../actions/actionCreator';
 import I18n from '../i18n';
@@ -594,14 +594,12 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
                   </NBButton>
                 </Left>
                 <Body style={styles.flex2AndCenter}>
-                  <Title style={styles.title}>
+                  <Title>
                     {inEditMode
                       ? I18n.t('add_or_edit_item.edit_item_header')
                       : I18n.t('add_or_edit_item.add_item_header')}
                   </Title>
-                  <Info
-                    onPress={this.toggleInfoDialog}
-                  />
+                  <Info onPress={this.toggleInfoDialog} />
                 </Body>
                 <Right>
                   <NBButton
@@ -872,11 +870,6 @@ const styles = StyleSheet.create({
     alignItems: 'stretch',
     flex: 1,
     justifyContent: 'center',
-  },
-  title: {
-    color: colors.black,
-    marginLeft: 22,
-    marginRight: 5,
   },
   body: {
     alignItems: 'flex-start',

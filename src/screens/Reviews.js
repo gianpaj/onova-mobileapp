@@ -3,12 +3,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Alert, Dimensions, StyleSheet } from 'react-native';
-import { Body, Container, Title, Right, Left, Button, Icon } from 'native-base';
+import { Body, Container, Right, Left, Button, Icon } from 'native-base';
 import { TabView, TabBar, SceneMap } from 'react-native-tab-view';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import { ReviewsTab } from './ReviewsTab';
-import { Header } from '../components';
+import { Header, Title } from '../components';
 
 import I18n from '../i18n';
 import colors from '../config/colors';
@@ -76,9 +76,7 @@ class ReviewsContainer extends Component<Props, State> {
             </Button>
           </Left>
           <Body style={styles.container}>
-            <Title style={{ color: colors.black }}>
-              {I18n.t('reviews.header')}
-            </Title>
+            <Title>{I18n.t('reviews.header')}</Title>
           </Body>
           <Right>
             <Button

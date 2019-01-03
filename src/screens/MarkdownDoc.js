@@ -10,11 +10,12 @@ import {
   Icon as NBIcon,
   Left,
   Right,
-  Title,
 } from 'native-base';
 import Markdown from 'react-native-markdown-renderer';
 
-import { Header } from '../components';
+import type { NavigationScreenProp } from 'react-navigation';
+
+import { Header, Title } from '../components';
 
 import colors from '../config/colors';
 
@@ -78,38 +79,34 @@ const raw = `_Onova - Nov 20, 2018_
 
 Скарги розглядатимуться з Понеділка по П'ятницю з 10ї до 18ї години.
 `;
-class MarkdownDoc extends React.Component {
-  render() {
-    return (
-      <Container>
-        <Header>
-          <Left style={{ flex: 1 }}>
-            <NBButton
-              transparent
-              dark
-              onPress={() => this.props.navigation.goBack()}>
-              <NBIcon ios="ios-arrow-back" android="md-arrow-back" />
-            </NBButton>
-          </Left>
-          <Body
-            style={{
-              flex: 5,
-              justifyContent: 'center',
-              alignItems: 'stretch',
-            }}>
-            {/* eslint-disable-next-line react-native/no-raw-text */}
-            <Title style={{ color: colors.black }}>
-              Офіційні правила безпечної угоди
-            </Title>
-          </Body>
-          <Right />
-        </Header>
-        <Content contentContainerStyle={{ paddingHorizontal: 20 }}>
-          <Markdown style={{ text: { color: colors.black } }}>{raw}</Markdown>
-        </Content>
-      </Container>
-    );
-  }
-}
+
+type Props = {
+  navigation: NavigationScreenProp<*>,
+};
+
+const MarkdownDoc = (props: Props): React$Element<any> => (
+  <Container>
+    <Header>
+      <Left style={{ flex: 1 }}>
+        <NBButton transparent dark onPress={() => props.navigation.goBack()}>
+          <NBIcon ios="ios-arrow-back" android="md-arrow-back" />
+        </NBButton>
+      </Left>
+      <Body
+        style={{
+          flex: 5,
+          justifyContent: 'center',
+          alignItems: 'stretch',
+        }}>
+        {/* eslint-disable-next-line react-native/no-raw-text */}
+        <Title>Офіційні правила безпечної угоди</Title>
+      </Body>
+      <Right />
+    </Header>
+    <Content contentContainerStyle={{ paddingHorizontal: 20 }}>
+      <Markdown style={{ text: { color: colors.black } }}>{raw}</Markdown>
+    </Content>
+  </Container>
+);
 
 export default withNavigation(MarkdownDoc);

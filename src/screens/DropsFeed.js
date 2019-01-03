@@ -17,11 +17,10 @@ import {
   Icon as NBIcon,
   Left,
   Right,
-  Title,
 } from 'native-base';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import { Header, DropCard } from '../components';
+import { Header, DropCard, Title } from '../components';
 
 import I18n from '../i18n';
 import colors from '../config/colors';
@@ -164,9 +163,7 @@ class DropsFeed extends Component<Props, State> {
             </NBButton>
           </Left>
           <Body style={styles.container}>
-            <Title style={{ color: colors.black }}>
-              {I18n.t('drops_feed.header')}
-            </Title>
+            <Title>{I18n.t('drops_feed.header')}</Title>
           </Body>
           <Right />
         </Header>

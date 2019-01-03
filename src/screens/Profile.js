@@ -20,7 +20,6 @@ import {
   Icon as NBIcon,
   Left,
   Right,
-  Title,
 } from 'native-base';
 import { NavigationActions } from 'react-navigation';
 import { TabView, TabBar } from 'react-native-tab-view';
@@ -31,7 +30,7 @@ import Analytics from 'react-native-analytics-segment-io';
 
 import I18n from '../i18n';
 
-import { Avatar, EditableText, Header, NotificationsDot } from '../components';
+import { Avatar, EditableText, Header, NotificationsDot, Title } from '../components';
 import ShopTab from './ShopTab';
 import UserDropsTab from './UserDropsTab';
 import { getPersonalUserData, enableRefresh } from '../actions/actionCreator';
@@ -659,7 +658,7 @@ class ProfileScreen extends React.Component<Props, State> {
           </Left>
           <Body style={styles.container}>
             {/* eslint-disable-next-line react-native/no-raw-text */}
-            <Title style={{ color: colors.black }}>@{username}</Title>
+            <Title>@{username}</Title>
           </Body>
           <Right>
             <NBButton transparent dark onPress={this.shareProfile}>

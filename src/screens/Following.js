@@ -12,7 +12,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { Body, Button, Container, Icon, Left, Right, Title } from 'native-base';
+import { Body, Button, Container, Icon, Left, Right } from 'native-base';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { withNavigation } from 'react-navigation';
 
@@ -20,7 +20,7 @@ import I18n from '../i18n';
 import colors from '../config/colors';
 import * as api from '../utils/api';
 // import * as ui from '../utils/ui';
-import { Avatar, Header } from '../components';
+import { Avatar, Header, Title } from '../components';
 
 import type { NavigationScreenProp } from 'react-navigation';
 
@@ -180,9 +180,7 @@ class FollowingContainer extends Component<Props, State> {
             </Button>
           </Left>
           <Body style={styles.container}>
-            <Title style={{ color: colors.black }}>
-              {I18n.t('following.header')}
-            </Title>
+            <Title>{I18n.t('following.header')}</Title>
           </Body>
           <Right />
         </Header>

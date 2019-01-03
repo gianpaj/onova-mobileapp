@@ -22,7 +22,6 @@ import {
   Footer,
   FooterTab,
   Right,
-  Title,
 } from 'native-base';
 import { Toast, InputItem } from 'antd-mobile-rn';
 import { FormLabel } from 'react-native-elements';
@@ -47,6 +46,7 @@ import {
   Header,
   HR,
   SearchableDropdown,
+  Title,
 } from '../components';
 
 import colors from '../config/colors';
@@ -674,9 +674,7 @@ class CheckoutContainer extends Component<Props, State> {
             </NBButton>
           </Left>
           <Body style={styles.container}>
-            <Title style={{ color: colors.black }}>
-              {I18n.t('checkout.header')}
-            </Title>
+            <Title>{I18n.t('checkout.header')}</Title>
           </Body>
           <Right>
             {/* <NBButton

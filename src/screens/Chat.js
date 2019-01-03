@@ -19,7 +19,6 @@ import {
   Icon as NBIcon,
   Left,
   Right,
-  Title,
 } from 'native-base';
 import Dialog from 'react-native-dialog';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -31,7 +30,7 @@ import I18n from '../i18n';
 
 import type { NavigationScreenProp } from 'react-navigation';
 
-import { Header, Send, Info } from '../components';
+import { Header, Send, Info, Title } from '../components';
 import ChatActions from '../components/ChatActions';
 import MessageImage from '../components/MessageImage';
 
@@ -606,13 +605,8 @@ class ChatContainer extends Component<Props, State> {
           <Body style={st.flex2AndCenter}>
             {partner && (
               <>
-                {/* // eslint-disable-next-line react-native/no-raw-text */}
                 <Title
-                  style={{
-                    color: colors.black,
-                    marginLeft: 22,
-                    marginRight: 5,
-                  }}
+                  withIcon
                   // eslint-disable-next-line react-native/no-raw-text
                   onPress={this.goToProfile}>
                   @{partner.username}

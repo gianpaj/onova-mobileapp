@@ -182,10 +182,7 @@ export class AddReviewContainer extends Component<Props, State> {
             </Button>
           </Left>
           <Body style={styles.flex2AndCenter}>
-            <Title
-              style={{ color: colors.black, marginLeft: 22, marginRight: 5 }}>
-              {I18n.t('add_review.header')}
-            </Title>
+            <Title withIcon>{I18n.t('add_review.header')}</Title>
             <Info
               onPress={linking.openURL.bind(this, 'https://onova.co/drop.html')}
             />

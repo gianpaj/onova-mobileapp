@@ -3,17 +3,19 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Dimensions, StyleSheet } from 'react-native';
-import { Body, Container, Title, Left, Right } from 'native-base';
+import { Body, Container, Left, Right } from 'native-base';
 import { TabView, TabBar } from 'react-native-tab-view';
 
 import { SearchWithHasthagsTab } from './SearchWithHasthagsTab';
 import { SearchSellersTab } from './SearchSellersTab';
-import { Header } from '../components';
+import { Header, Title } from '../components';
 
 import I18n from '../i18n';
 import colors from '../config/colors';
 
 import type { NavigationScreenProp } from 'react-navigation';
+
+import type { Dispatch } from '../types';
 
 const initialLayout = {
   height: 0,
@@ -67,9 +69,7 @@ class SearchContainer extends Component<Props, State> {
         <Header hasTabs>
           <Left style={styles.container} />
           <Body style={styles.container}>
-            <Title style={{ color: colors.black }}>
-              {I18n.t('search.header')}
-            </Title>
+            <Title>{I18n.t('search.header')}</Title>
           </Body>
           <Right />
         </Header>

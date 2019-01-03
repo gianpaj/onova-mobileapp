@@ -26,12 +26,11 @@ import {
   Left,
   List,
   Right,
-  Title,
 } from 'native-base';
 import { format } from 'date-fns';
 
 import colors from '../config/colors';
-import { Header, NoticeBar, Info } from '../components';
+import { Header, NoticeBar, Info, Title } from '../components';
 import imagePickerStyle from '../components/ImagePicker.styles';
 import I18n from '../i18n';
 import * as api from '../utils/api';
@@ -469,10 +468,7 @@ export class CreateDropScreen extends React.Component<Props, State> {
             </NBButton>
           </Left>
           <Body style={styles.flex2AndCenter}>
-            <Title
-              style={{ color: colors.black, marginLeft: 22, marginRight: 5 }}>
-              {I18n.t('create_drop.title')}
-            </Title>
+            <Title withIcon>{I18n.t('create_drop.title')}</Title>
             <Info
               onPress={linking.openURL.bind(this, 'https://onova.co/drop.html')}
             />

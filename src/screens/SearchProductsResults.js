@@ -9,10 +9,9 @@ import {
   Left,
   Right,
   Icon as NBIcon,
-  Title,
 } from 'native-base';
 
-import { Header, ImageGridSearch } from '../components';
+import { Header, ImageGridSearch, Title } from '../components';
 
 import I18n from '../i18n';
 import colors from '../config/colors';
@@ -75,22 +74,16 @@ class SearchProductsResultsContainer extends Component<Props, State> {
           <Body style={styles.container}>
             {terms.tag && terms.grp_1 == -1 && terms.grp_2 == -1 ? (
               // eslint-disable-next-line react-native/no-raw-text
-              <Title style={{ color: colors.black }}>#{terms.tag}</Title>
+              <Title>#{terms.tag}</Title>
             ) : // searching for category (clothes, shoes or other)
             terms.tag == '' && terms.grp_1 !== -1 && terms.grp_2 == -1 ? (
-              <Title style={{ color: colors.black }}>
-                {this.getCategoryLabel(terms.grp_1)}
-              </Title>
+              <Title>{this.getCategoryLabel(terms.grp_1)}</Title>
             ) : // searching for type (men, women or other)
             terms.tag == '' && terms.grp_1 == -1 && terms.grp_2 !== -1 ? (
-              <Title style={{ color: colors.black }}>
-                {this.getTypeLabel(terms.grp_2)}
-              </Title>
+              <Title>{this.getTypeLabel(terms.grp_2)}</Title>
             ) : (
               // else, a combination
-              <Title style={{ color: colors.black }}>
-                {I18n.t('search.header')}
-              </Title>
+              <Title>{I18n.t('search.header')}</Title>
             )}
           </Body>
           <Right />

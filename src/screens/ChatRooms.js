@@ -13,7 +13,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { Badge, Body, Container, Left, Right, Title } from 'native-base';
+import { Badge, Body, Container, Left, Right } from 'native-base';
 import { NavigationActions } from 'react-navigation';
 // import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -26,7 +26,7 @@ import I18n from '../i18n';
 import colors from '../config/colors';
 import * as api from '../utils/api';
 import * as ui from '../utils/ui';
-import { Header, Avatar } from '../components';
+import { Header, Avatar, Title } from '../components';
 import { getRoomName } from './Chat';
 
 import { currentUser as pusherCurrentUser } from '../actions/actionCreator';
@@ -330,9 +330,7 @@ class ChatContainer extends Component<Props, State> {
         <Header>
           <Left style={st.container} />
           <Body style={st.container}>
-            <Title style={{ color: colors.black }}>
-              {I18n.t('chat_rooms.header')}
-            </Title>
+            <Title>{I18n.t('chat_rooms.header')}</Title>
           </Body>
           <Right />
         </Header>

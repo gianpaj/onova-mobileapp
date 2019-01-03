@@ -18,7 +18,6 @@ import {
   Icon as NBIcon,
   Left,
   Right,
-  Title,
 } from 'native-base';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { FormInput, FormLabel } from 'react-native-elements';
@@ -36,6 +35,7 @@ import {
   Header,
   HR,
   SearchableDropdown,
+  Title,
 } from '../components';
 
 import {
@@ -430,9 +430,7 @@ class SettingsContainer extends Component<Props, State> {
             </NBButton>
           </Left>
           <Body style={styles.container}>
-            <Title style={{ color: colors.black }}>
-              {I18n.t('settings.header')}
-            </Title>
+            <Title>{I18n.t('settings.header')}</Title>
           </Body>
           <Right>
             <NBButton

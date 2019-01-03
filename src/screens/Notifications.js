@@ -19,14 +19,13 @@ import {
   Left,
   ListItem,
   Right,
-  Title,
 } from 'native-base';
 import { Icon as IconEL } from 'react-native-elements';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { withNavigation } from 'react-navigation';
 
 import I18n from '../i18n';
-import { Avatar, Header } from '../components';
+import { Avatar, Header, Title } from '../components';
 import colors from '../config/colors';
 import * as api from '../utils/api';
 import * as ui from '../utils/ui';
@@ -254,9 +253,7 @@ class NotificationsContainer extends Component<Props, State> {
             </Button>
           </Left>
           <Body style={styles.container}>
-            <Title style={{ color: colors.black }}>
-              {I18n.t('notifications.header')}
-            </Title>
+            <Title>{I18n.t('notifications.header')}</Title>
           </Body>
           <Right />
         </Header>

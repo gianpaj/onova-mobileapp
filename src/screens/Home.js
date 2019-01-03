@@ -9,7 +9,7 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import { Body, Button, Left, Right, Title } from 'native-base';
+import { Body, Button, Left, Right } from 'native-base';
 import { TabView, TabBar } from 'react-native-tab-view';
 // import Analytics from 'react-native-analytics-segment-io';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -17,7 +17,7 @@ import Dialog from 'react-native-dialog';
 import ParsedText from 'react-native-parsed-text';
 
 import I18n from '../i18n';
-import { Header, ImageGrid } from '../components';
+import { Header, ImageGrid, Title } from '../components';
 // import * as api from '../utils/api';
 import * as linking from '../utils/linking';
 
@@ -130,7 +130,7 @@ export class Home extends PureComponent<Props, State> {
           </Left>
           <Body style={styles.container}>
             {/* eslint-disable-next-line react-native/no-raw-text */}
-            <Title style={{ color: colors.black }}>ONOVA</Title>
+            <Title>ONOVA</Title>
           </Body>
           <Right>
             <Button transparent onPress={this.goToDropsFeed}>

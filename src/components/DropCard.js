@@ -100,7 +100,7 @@ export class DropCard extends Component<Props> {
             full
             style={[
               styles.subscribeButton,
-              drop.amISubscribed && { backgroundColor: colors.active },
+              drop.amISubscribed && { backgroundColor: colors.bgDefault },
             ]}
             onPress={() =>
               onSubscribeUnsubscribed && onSubscribeUnsubscribed(drop)
@@ -110,9 +110,10 @@ export class DropCard extends Component<Props> {
               style={[
                 {
                   fontSize: typography.font_button_size,
+                  marginTop: -1,
                 },
                 drop.amISubscribed
-                  ? { color: colors.grey1, marginTop: -1 }
+                  ? { color: colors.grey1 }
                   : { color: colors.white },
               ]}>
               {drop.amISubscribed

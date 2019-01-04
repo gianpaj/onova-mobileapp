@@ -3,7 +3,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { DropCard as DropCardComponent } from '../../../src/components';
+import { DropCard as DropCardComponent } from '../../../src/components/DropCard';
 
 export default function DropCard(props: any) {
   return <DropCardComponent {...props} />;

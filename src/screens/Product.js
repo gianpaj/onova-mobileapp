@@ -172,7 +172,7 @@ export class ProductContainer extends React.Component<Props, State> {
         message: `https://onova.co/${item.seller.username}/${item.uuid}`,
       });
     }
-    Analytics.track('press_share_product');
+    if (analyticsEnabled) Analytics.track('press_share_product');
   };
 
   onMandatoryShare(): Promise<null | Error> {

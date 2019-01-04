@@ -216,5 +216,6 @@ OrderStatusStory.add('failed_by_seller', () => (
 ));
 
 storiesOf('DropCard', module)
+  // .addDecorator(getStory => <Provider story={getStory()} />)
   .add('mine', () => <DropCard amITheSeller />)
   .add('other', () => <DropCard />);

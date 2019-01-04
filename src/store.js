@@ -50,7 +50,6 @@ const middlewares = [thunk, reactNavigation /*, analytics */];
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 function configureStore() {
-  // $FlowFixMe
   const store = createStore(
     rootReducer,
     composeEnhancers(applyMiddleware(...middlewares))

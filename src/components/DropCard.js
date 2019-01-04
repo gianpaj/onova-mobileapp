@@ -7,14 +7,18 @@ import {
   Dimensions,
   FlatList,
   Image,
+  Platform,
+  Share,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
   TouchableWithoutFeedback,
 } from 'react-native';
-import { ActionSheet, Button, List } from 'native-base';
+import { ActionSheet, Button, Icon, List } from 'native-base';
 import { format, differenceInMinutes, differenceInSeconds } from 'date-fns';
+
+import Analytics from 'react-native-analytics-segment-io';
 
 import { Avatar, Countdown } from '../components';
 
@@ -29,6 +33,8 @@ import typography from '../config/typography';
 
 const { width } = Dimensions.get('window');
 
+const { analyticsEnabled } = api;
+
 type Props = {
   amITheSeller: boolean,
   isAdmin: boolean,
@@ -38,7 +44,7 @@ type Props = {
   token: string,
 };
 
-class DropCard extends Component<Props> {
+export class DropCard extends Component<Props> {
   // eslint-disable-next-line react/no-unused-prop-types
   renderItem = ({ item }: { item: Product }) => {
     const uri = item.photoURIs[0].replace('.jpg', '-thumb.jpg');
@@ -56,16 +62,31 @@ class DropCard extends Component<Props> {
 
   _keyProductExtractor = (item): string => item._id;
 
+  shareDrop(item: Drop) {
+    if (Platform.OS === 'ios') {
+      Share.share({
+        url: `https://onova.co/${item.seller.username}/drop/${item.uuid}`,
+      });
+    } else {
+      Share.share({
+        message: `https://onova.co/${item.seller.username}/drop/${item.uuid}`,
+      });
+    }
+    if (analyticsEnabled) Analytics.track('press_share_drop');
+  }
+
   renderFooter = () => {
     const { item: drop, onSubscribeUnsubscribed, amITheSeller } = this.props;
 
     return (
-      <View
-        style={[
-          styles.dropHeaderAndFooter,
-          // eslint-disable-next-line react-native/no-inline-styles
-          amITheSeller ? {} : { justifyContent: 'flex-end' },
-        ]}>
+      <View style={styles.dropHeaderAndFooter}>
+        <Button
+          transparent
+          dark
+          onPress={() => this.shareDrop(drop)}
+          style={styles.shareIconButton}>
+          <Icon ios="ios-share" android="md-share" style={styles.shareIcon} />
+        </Button>
         {amITheSeller && (
           <Text>
             {drop.subscribers.length} {I18n.t('drops_feed.subscribers')}
@@ -79,7 +100,7 @@ class DropCard extends Component<Props> {
             full
             style={[
               styles.subscribeButton,
-              drop.amISubscribed && { backgroundColor: colors.bgDefault },
+              drop.amISubscribed && { backgroundColor: colors.active },
             ]}
             onPress={() =>
               onSubscribeUnsubscribed && onSubscribeUnsubscribed(drop)
@@ -241,5 +262,21 @@ const styles = StyleSheet.create({
   dateStrings: {
     color: colors.black,
     fontSize: typography.font_body_size,
+  },
+  shareIconButton: {
+    // paddingBottom: Platform.select({
+    //   ios: 5,
+    //   android: 0,
+    // }),
+    paddingTop: 0,
+    marginTop: -5,
+    marginLeft: 0,
+    // paddingHorizontal: 10,
+  },
+  shareIcon: {
+    color: colors.grey1,
+    fontSize: 27,
+    marginRight: 0,
+    marginLeft: 0,
   },
 });

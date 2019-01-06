@@ -69,7 +69,7 @@ export default {
   home: {
     clothes_tab: 'Одяг',
     shoes_tab: 'Взуття',
-    other_tab: 'Інше',
+    other_tab: 'Аксесуари',
     share:
       'Android: https://play.google.com/store/apps/details?id=com.onova.app&hl=uk - Apple Store: https://itunes.apple.com/ua/app/onova/id1365771422?mt=8',
     alert_info_title: 'Підтримка',
@@ -144,7 +144,7 @@ export default {
   categories: {
     clothes: 'Одяг',
     shoes: 'Взуття',
-    other_cat: 'Інше',
+    other_cat: 'Аксесуари',
     men: 'Чоловіче',
     women: 'Жіноче',
     other_type: 'Інше',
@@ -271,7 +271,7 @@ export default {
     no_orders: 'Немає замовлень',
     alert_info_title: 'Підтримка',
     alert_info_body:
-      'Будь ласка натисни на зображення з лівого верхнього кута щоб дізнатися актуальний статус твого замовлення.'
+      'Будь ласка натисни на зображення з лівого верхнього кута щоб дізнатися актуальний статус твого замовлення.',
   },
   checkout: {
     header: 'Купівля',

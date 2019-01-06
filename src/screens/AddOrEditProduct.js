@@ -594,7 +594,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
                   </NBButton>
                 </Left>
                 <Body style={styles.flex2AndCenter}>
-                  <Title>
+                  <Title withIcon>
                     {inEditMode
                       ? I18n.t('add_or_edit_item.edit_item_header')
                       : I18n.t('add_or_edit_item.add_item_header')}

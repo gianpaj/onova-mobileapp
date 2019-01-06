@@ -203,6 +203,7 @@ const styles = StyleSheet.create({
   label: {
     color: colors.primary,
     fontWeight: '400',
+    marginHorizontal: 0,
   },
   header: {
     backgroundColor: colors.bgDefault,

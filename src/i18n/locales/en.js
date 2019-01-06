@@ -68,7 +68,7 @@ export default {
   home: {
     clothes_tab: 'Clothes',
     shoes_tab: 'Shoes',
-    other_tab: 'Other',
+    other_tab: 'Accessories',
     share:
       'Android: https://play.google.com/store/apps/details?id=com.onova.app&hl=uk - Apple Store: https://itunes.apple.com/ua/app/onova/id1365771422?mt=8',
     alert_info_title: 'Information',
@@ -143,7 +143,7 @@ For any questions regarding payments please contact UAPAY at (044) 364-11-44`,
   categories: {
     clothes: 'Clothes',
     shoes: 'Shoes',
-    other_cat: 'Other',
+    other_cat: 'Accessories',
     men: 'Men',
     women: 'Women',
     other_type: 'Other',

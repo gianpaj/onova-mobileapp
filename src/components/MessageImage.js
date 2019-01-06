@@ -15,7 +15,6 @@ import {
 import Modal from 'react-native-modal';
 import ImageZoom from 'react-native-image-pan-zoom';
 
-import { currentUser } from '../actions/actionCreator';
 import colors from '../config/colors';
 
 const { width, height } = Dimensions.get('window');
@@ -43,19 +42,11 @@ class MessageImage extends React.Component<*, State> {
     lightboxProps: {},
   };
 
-  async componentDidMount() {
+  componentDidMount() {
     const { image } = this.props.currentMessage;
-    if (image.fetchRequired && currentUser) {
-      const fetched = await currentUser.fetchAttachment({ url: image.link });
-      this.setState({ fetchedLink: fetched.link });
-      Image.getSize(fetched.link, (w, h) => {
-        this.setState({ imageHeight: Math.floor(h * (width / w)) });
-      });
-    } else {
-      Image.getSize(image.link, (w, h) => {
-        this.setState({ imageHeight: Math.floor(h * (width / w)) });
-      });
-    }
+    Image.getSize(image.link, (w, h) => {
+      this.setState({ imageHeight: Math.floor(h * (width / w)) });
+    });
   }
 
   _toggleModal = () =>

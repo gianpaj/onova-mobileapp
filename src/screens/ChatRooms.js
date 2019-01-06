@@ -134,6 +134,11 @@ class ChatContainer extends Component<Props, State> {
             roomsAndTheirOrders.map(async room => {
               let msgs;
               try {
+                await pusherCurrentUser.subscribeToRoom({
+                  roomId: room.id,
+                  hooks: { onMessage: () => null },
+                  messageLimit: 1,
+                });
                 msgs = await pusherCurrentUser.fetchMessages({
                   roomId: room.id,
                   direction: 'older',

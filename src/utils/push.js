@@ -186,8 +186,8 @@ async function navigate(notif) {
       console.debug(triggeredBy);
       return NavigationService.navigate(
         'chat',
-        { roomId: parseInt(triggeredBy) },
-        `chat-${triggeredBy}` // TODO: use OrderId
+        { roomId: triggeredBy },
+        `chat-${triggeredBy}`
       );
     }
     const extra = JSON.parse(notif.data.extra);

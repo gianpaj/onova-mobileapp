@@ -1174,13 +1174,18 @@
   resolved "https://registry.yarnpkg.com/@nodelib/fs.stat/-/fs.stat-1.1.3.tgz#2b5a3ab3f918cca48a8c754c08168e3f03eba61b"
   integrity sha512-shAmDyaQC4H92APFoIaVDHCx5bStIocgvbwQyxPRrbUY20V1EYTbSDchWbuwlMG3V17cprZhA6+78JfB+3DTPw==
 
-"@pusher/chatkit@^0.7.18":
-  version "0.7.18"
-  resolved "https://registry.yarnpkg.com/@pusher/chatkit/-/chatkit-0.7.18.tgz#7c239cfa76728a9382bb94bb1c8ddc91fdf6ce37"
-  integrity sha512-8dAOTpRO1+7euFocyPmwWwphYP2ligINqJiUKuz6G30RstWrjWWvHCtImmemgPVJh7aprfuVJyYGO+k8O9mQ/w==
+"@pusher/chatkit-client@^1.2.2":
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/@pusher/chatkit-client/-/chatkit-client-1.2.2.tgz#63326d25af119ab9b47bbd81e8191fa7cbd3352a"
+  integrity sha512-VTXVR+CRRkkqp1z1AK8NhDtWKsnvVwHT33b2Em7tlMbcpJT17YHm0wsOZLytKJkO1QG5WMdYuOsGPkymBnMYww==
   dependencies:
-    pusher-platform "^0.15.2"
+    "@pusher/platform" "^0.16.0"
     ramda "^0.25.0"
+
+"@pusher/platform@^0.16.0":
+  version "0.16.0"
+  resolved "https://registry.yarnpkg.com/@pusher/platform/-/platform-0.16.0.tgz#82510641fc3b4b7ee492726799266d59c5f35178"
+  integrity sha512-fN8GgHejm1U/WC6h9KcWfqK3kptFxMNSVXAhyCBkVek9mr63vvHnWBUmFcOZ1DBNWj8zBRxTSazfm2OvGOkkuQ==
 
 "@sentry/cli@^1.36.1":
   version "1.37.0"
@@ -9404,11 +9409,6 @@ punycode@^2.1.0, punycode@^2.1.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/punycode/-/punycode-2.1.1.tgz#b58b010ac40c22c5657616c8d2c2c02c7bf479ec"
   integrity sha512-XRsRjdf+j5ml+y/6GKHPZbrF/8p2Yga0JPtdqTIY2Xe5ohJPD9saDJJLPvp9+NSBprVvevdXZybnj2cv8OEd0A==
-
-pusher-platform@^0.15.2:
-  version "0.15.4"
-  resolved "https://registry.yarnpkg.com/pusher-platform/-/pusher-platform-0.15.4.tgz#0b177ff43fc598e04aac72a627acd95feac16f53"
-  integrity sha512-dvPfh56f+CVpdgHMKstlH7jCafNcs+veK0XyggWojUZsycdHJ+MwE0v5AtDhLGj7nT0a88m+UwA+8dFUqVE3OA==
 
 qs@6.5.2, qs@~6.5.2:
   version "6.5.2"

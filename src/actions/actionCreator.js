@@ -2,11 +2,11 @@
 
 import { Platform } from 'react-native';
 import { Toast } from 'antd-mobile-rn';
-import { ChatManager, TokenProvider } from '@pusher/chatkit/react-native';
+import { ChatManager, TokenProvider } from '@pusher/chatkit-client/react-native';
 import { Sentry } from 'react-native-sentry';
 import Analytics from 'react-native-analytics-segment-io';
 
-import type { PusherUser } from '@pusher/chatkit';
+import type { PusherUser } from '@pusher/chatkit-client';
 import {
   DO_REFRESH,
   DONOT_REFRESH,

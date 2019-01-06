@@ -144,24 +144,32 @@ class ChatContainer extends Component<Props, State> {
           // coming from ChatRooms or a Push Notification
           if (roomId) {
             return pusherCurrentUser
-              .joinRoom({ roomId })
-              .then(room => {
-                console.debug('1 Joined room ID:', room.id);
-                thisRoom = room;
-                return room;
+              .subscribeToRoom({
+                roomId,
+                hooks: { onMessage: this.onMessage },
+                messageLimit: 0,
               })
-              .then(room =>
-                api.getUser(
-                  room.userIds
-                    .filter(id => id !== ONOVA_BOT_ID)
-                    .find(id => id !== userData._id)
-                )
-              )
-              .then(partner => this.setState({ partner }))
-              .catch(err => {
-                console.log('Error joining room ID:', roomId);
-                reject(err);
-              });
+              .then(() =>
+                pusherCurrentUser
+                  .joinRoom({ roomId })
+                  .then(room => {
+                    console.debug('1 Joined room ID:', room.id);
+                    thisRoom = room;
+                    return room;
+                  })
+                  .then(room =>
+                    api.getUser(
+                      room.userIds
+                        .filter(id => id !== ONOVA_BOT_ID)
+                        .find(id => id !== userData._id)
+                    )
+                  )
+                  .then(partner => this.setState({ partner }))
+                  .catch(err => {
+                    console.log('Error joining room ID:', roomId);
+                    reject(err);
+                  })
+              );
           }
 
           return api.getOrder(orderId, this.props.token);
@@ -189,25 +197,33 @@ class ChatContainer extends Component<Props, State> {
               if (rooms.length > 0) {
                 const firstRoom = rooms[0].id;
                 return pusherCurrentUser
-                  .joinRoom({ roomId: firstRoom })
-                  .then(room => {
-                    roomId = room.id;
-                    thisRoom = room;
-                    console.debug('2 Joined room ID:', room.id);
-                    return room;
+                  .subscribeToRoom({
+                    roomId,
+                    hooks: { onMessage: this.onMessage },
+                    messageLimit: 0,
                   })
-                  .then(room =>
-                    api.getUser(
-                      room.userIds
-                        .filter(id => id !== ONOVA_BOT_ID)
-                        .find(id => id !== userData._id)
-                    )
-                  )
-                  .then(partner => this.setState({ partner }))
-                  .catch(err => {
-                    console.log('Error joining room ID:', firstRoom);
-                    console.log(err);
-                  });
+                  .then(() =>
+                    pusherCurrentUser
+                      .joinRoom({ roomId: firstRoom })
+                      .then(room => {
+                        roomId = room.id;
+                        thisRoom = room;
+                        console.debug('2 Joined room ID:', room.id);
+                        return room;
+                      })
+                      .then(room =>
+                        api.getUser(
+                          room.userIds
+                            .filter(id => id !== ONOVA_BOT_ID)
+                            .find(id => id !== userData._id)
+                        )
+                      )
+                      .then(partner => this.setState({ partner }))
+                      .catch(err => {
+                        console.log('Error joining room ID:', firstRoom);
+                        console.log(err);
+                      })
+                  );
               }
 
               // no existing room existed
@@ -265,13 +281,6 @@ class ChatContainer extends Component<Props, State> {
               });
           }, MARK_AS_READ_AFTER_MS);
         })
-        .then(() =>
-          pusherCurrentUser.subscribeToRoom({
-            roomId,
-            hooks: { onNewMessage: this.newMessage },
-            messageLimit: 0,
-          })
-        )
         .then(() => this.fetchOrders(thisRoom))
         .then(() => resolve())
         .catch(err => reject(err));
@@ -314,7 +323,7 @@ class ChatContainer extends Component<Props, State> {
     });
   };
 
-  newMessage = (m: PusherMessage) => {
+  onMessage = (m: PusherMessage) => {
     const newMsg = this.createGiftedMessage(m);
 
     setTimeout(() => {

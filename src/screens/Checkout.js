@@ -201,7 +201,7 @@ class CheckoutContainer extends Component<Props, State> {
     }
   }
 
-  initialilizeOrder(item) {
+  initialilizeOrder(item: Product) {
     const { token } = this.props;
     // TODO: refactor this for both a new order and existing. use async/await
     return api
@@ -221,7 +221,6 @@ class CheckoutContainer extends Component<Props, State> {
         if (err.data && err.data.data) {
           const { data } = err.data;
           if (err.message == 'Duplicate order' && data.status == 'confirmed') {
-            // $FlowFixMe
             return this.goToChat(data.id);
           }
 

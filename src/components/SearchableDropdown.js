@@ -119,7 +119,7 @@ export default class SearchableDropDown extends Component<*, State> {
     // https://stackoverflow.com/a/3561711/728287
     const cleanText = searchedText
       .trim()
-      .replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+      .replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&');
     const regex = new RegExp(cleanText, 'i');
     const filteredItems = items.filter(item => regex.test(item.uk));
     // filteredItems.sort((a, b) => a > b);

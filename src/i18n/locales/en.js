@@ -319,7 +319,7 @@ For any questions regarding payments please contact UAPAY at (044) 364-11-44`,
       },
       {
         p: 'Правила надання сервісу Безпечна покупка.',
-        link: 'https://telegra.ph/Pravila-Bezpechnoi-ugodi-11-20',
+        link: 'https://onova.co/safe-purchase-rules.html',
       },
     ],
     paragraph_2:

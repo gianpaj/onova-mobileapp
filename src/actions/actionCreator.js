@@ -309,37 +309,34 @@ const signup = (data: SignupData) => (dispatch: Dispatch) => {
       password: data.password,
     })
     .then(res => {
-      if (res.data) {
-        addNavigationBreadcrumb({ message: SIGNUP_SUCCESS });
-
-        if (analyticsEnabled) {
-          trackUser(res.data);
-          Analytics.track('signup');
-        }
-
-        // console.warn(userData);
-        // if (userData.accountStatus !== 'verified') {
-        return dispatch({ type: SIGNUP_SUCCESS });
-        // }
-
-        // initializePusher(userData)
-        //   .then(() => registerPushNotifications())
-        //   .then(pushToken => {
-        //     if (pushToken) return sendToken(pushToken, userData);
-        //   })
-        //   .then(() => dispatch({ type: SIGNUP_SUCCESS, payload: userData }))
-        //   .catch(err => {
-        //     console.warn(err);
-        //     dispatch({ type: SIGNUP_FAIL });
-        //     Toast.hide();
-        //   });
-        // if (analyticsEnabled) trackUser(userData)
-      }
-      console.warn(res);
-      dispatch({ type: SIGNUP_FAIL });
-      addNavigationBreadcrumb({ message: SIGNUP_FAIL });
       clearTimeout(timer);
       Toast.hide();
+      if (!res.data) {
+        console.warn(res);
+        dispatch({ type: SIGNUP_FAIL });
+        addNavigationBreadcrumb({ message: SIGNUP_FAIL });
+        return;
+      }
+      addNavigationBreadcrumb({ message: SIGNUP_SUCCESS });
+      dispatch({ type: SIGNUP_SUCCESS });
+      if (analyticsEnabled) {
+        trackUser(res.data);
+        Analytics.track('signup');
+      }
+
+      // console.warn(userData);
+
+      // initializePusher(userData)
+      //   .then(() => registerPushNotifications())
+      //   .then(pushToken => {
+      //     if (pushToken) return sendToken(pushToken, userData);
+      //   })
+      //   .then(() => dispatch({ type: SIGNUP_SUCCESS, payload: userData }))
+      //   .catch(err => {
+      //     console.warn(err);
+      //     dispatch({ type: SIGNUP_FAIL });
+      //   });
+      // if (analyticsEnabled) trackUser(userData)
     })
     .catch((error: APIError) => {
       dispatch(
@@ -354,8 +351,6 @@ const signup = (data: SignupData) => (dispatch: Dispatch) => {
         error,
         level: 'warning',
       });
-      clearTimeout(timer);
-      Toast.hide();
       throw error;
     });
 };

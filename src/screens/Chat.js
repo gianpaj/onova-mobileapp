@@ -289,18 +289,19 @@ class ChatContainer extends Component<Props, State> {
 
   fetchOrders = (thisRoom: any) => {
     const { userData, token } = this.props;
-    console.log('fetchOrders');
+    console.debug('fetchOrders');
     return new Promise((resolve, reject) => {
       api
         .getOrders(token)
-        // show orders which are with the person I'm chatting with
+        // show orders (from confirmed to completed (incl. failed))
+        // orders which are with the person I'm chatting with
         .then(orders =>
-          orders.filter((o: Order) => getRoomName(o) == thisRoom.name)
-        )
-        .then(orders =>
-          orders.filter(
-            (o: Order) => o.status !== 'cancelled' && o.status !== 'pending'
-          )
+          orders
+            .filter((o: Order) => getRoomName(o) == thisRoom.name)
+            .filter(
+              (o: Order) =>
+                !['paid', 'cancelled', 'pending', 'reserved'].includes(o.status)
+            )
         )
         // show orders which i have not archived
         // AND

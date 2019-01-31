@@ -20,7 +20,6 @@ function validShippingAddress(
   return (
     s.firstName !== '' &&
     s.lastName !== '' &&
-    // s.fathersName !== '' && // TODO: is it mandatory?
     cities &&
     cities.find(city => city.id === s.city) &&
     departments &&

@@ -101,7 +101,8 @@ class ChatContainer extends Component<Props, State> {
         .getOrders(token)
         .then(orders =>
           orders.filter(
-            (o: Order) => o.status !== 'cancelled' && o.status !== 'pending'
+            (o: Order) =>
+              !['paid', 'cancelled', 'pending', 'reserved'].includes(o.status)
           )
         )
         .then(o => {

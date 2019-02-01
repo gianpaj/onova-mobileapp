@@ -99,6 +99,10 @@ export function formatCurrency(
   }).format(value);
 }
 
+export function sleep(ms: number): Promise<any> {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 export const category_radio_grp_1 = [
   { label: I18n.t('categories.clothes'), value: 0 },
   { label: I18n.t('categories.shoes'), value: 1 },

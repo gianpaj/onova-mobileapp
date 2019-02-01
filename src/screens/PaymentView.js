@@ -24,7 +24,10 @@ type Props = {
 };
 
 type State = {
-  payment?: any,
+  payment?: {
+    redirectUrl: string,
+    PaReq: string,
+  },
   isLoading: boolean,
   showFooter: boolean,
 };
@@ -34,7 +37,7 @@ class PaymentView extends Component<Props, State> {
   keyboardDidShowListener;
 
   state = {
-    payment: null,
+    payment: {},
     isLoading: true,
     showFooter: true,
   };
@@ -43,11 +46,6 @@ class PaymentView extends Component<Props, State> {
     Toast.loading('', 30);
     this.initializeListeners();
     try {
-      // const { status } = await this.getPaymentStatus();
-      // console.debug(status);
-      // if (status === 'ua-finished') {
-      //   throw new Error(I18n.t('paymentView.error_payment'));
-      // }
       const payment = await this.createPayment();
       console.debug(payment);
       this.setState({ payment, isLoading: false });
@@ -79,33 +77,21 @@ class PaymentView extends Component<Props, State> {
 
   _keyboardDidHide = () => this.setState({ showFooter: true });
 
-  createPayment(): Promise<any> {
-    const { token } = this.props;
-    const { params } = this.props.navigation.state;
-    return new Promise((resolve, reject) => {
-      api
-        .post(
-          `/api/orders/${params.orderId}/pay`,
-          { cvc: params.cvc },
-          { token }
-        )
-        .then(({ data }) => {
-          console.debug(data);
-          resolve(data.payment);
-        })
-        .catch(err => {
-          reject(err);
-        });
-    });
+  async createPayment(): Promise<any> {
+    const { token, navigation } = this.props;
+    const { params } = navigation.state;
+    const { data } = await api.post(
+      `/api/orders/${params.orderId}/pay`,
+      { cvc: params.cvc },
+      { token }
+    );
+    return data.payment;
   }
 
   async getPaymentStatus() {
-    const { token } = this.props;
-    const { params } = this.props.navigation.state;
-    const { data } = await api.get(
-      `/api/orders/${params.orderId}/paymentStatus`,
-      { token }
-    );
+    const { token, navigation } = this.props;
+    const { params } = navigation.state;
+    const { data } = await api.get(`/api/orders/${params.orderId}/paymentStatus`, { token });
     return data;
   }
 
@@ -120,10 +106,8 @@ class PaymentView extends Component<Props, State> {
         retryNum++;
         const { status } = await this.getPaymentStatus();
         transactionStatus = status;
-        // console.debug(status);
-        await sleep(1000);
+        await ui.sleep(1000);
       } while (transactionStatus !== 'ua-finished' && retryNum < 30);
-      // if it should be
 
       // console.debug(transactionStatus);
       Toast.hide();
@@ -134,7 +118,6 @@ class PaymentView extends Component<Props, State> {
       // TODO: run goToChat() on Checkout or ReplaceCurrentScreen (2 screens)
 
       if (transactionStatus !== 'ua-finished') {
-        // ui.showToast('Timeout', 'warning', 'OK', 4);
         // retry?
         throw new Error('Timeout issue confirming payment finished');
       }
@@ -205,7 +188,3 @@ const mapStateToProps: any = (state: ReduxState) => ({
 });
 
 export default connect(mapStateToProps)(PaymentView);
-
-const sleep = ms => {
-  return new Promise(resolve => setTimeout(resolve, ms));
-};

@@ -313,7 +313,9 @@ export function getShippingCosts(
     if (weight) weightQuery = `&weight=${weight}`;
     get(
       `/api/shipping/costs/?price=${price}${weightQuery}&orderId=${orderId}&recipientOfficeID=${recipientOfficeID}`,
-      { token }
+      {
+        token,
+      }
     )
       .then(({ data }) => resolve(data))
       .catch(err => reject(err));

@@ -326,7 +326,7 @@ export class SignUpTabContainer extends Component<Props, State> {
               value={this.state.password}
               onChangeText={this.getHandler('password')}
               accessibilityLabel="password"
-              textContentType="password"
+              textContentType="newPassword"
               underlineColorAndroid={
                 hasFocusPass ? colors.primary : colors.grey3
               }

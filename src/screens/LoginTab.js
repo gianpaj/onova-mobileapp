@@ -279,7 +279,7 @@ export class LoginTabContainer extends React.Component<Props, State> {
             onFocus={this._onFocusPass}
             value={password}
             testID="PasswordField"
-            textContentType="password"
+            textContentType="oneTimeCode" // FIXME:
             accessibilityLabel="password"
             onChangeText={this.getHandler('password')}
             underlineColorAndroid={hasFocusPass ? colors.primary : colors.grey3}

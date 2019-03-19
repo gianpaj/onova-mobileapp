@@ -105,11 +105,12 @@ export class ProductContainer extends React.Component<Props, State> {
     const EDIT = I18n.t('alerts.action_button_edit');
     const CANCEL = I18n.t('alerts.action_button_cancel');
     const REPORT = I18n.t('alerts.action_button_report');
+    const SHARE = I18n.t('alerts.action_button_share');
 
-    let BUTTONS = [REPORT, CANCEL];
+    let BUTTONS = [REPORT, SHARE, CANCEL];
 
     if (this.isMyProduct()) {
-      BUTTONS = [DELETE, EDIT, CANCEL];
+      BUTTONS = [DELETE, EDIT, SHARE, CANCEL];
     }
 
     ActionSheet.show(
@@ -148,11 +149,10 @@ export class ProductContainer extends React.Component<Props, State> {
                 this.deleteItem();
               }
             );
-            // report action
             break;
-          // case BUTTONS.indexOf('Share'):
-          //   this.showShareActionSheet();
-          //   break;
+          case BUTTONS.indexOf(SHARE):
+            this.shareProduct();
+            break;
           default:
             console.debug(CANCEL);
             break;

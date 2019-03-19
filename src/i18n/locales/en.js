@@ -123,6 +123,7 @@ For any questions regarding payments please contact UAPAY at (044) 364-11-44`,
     action_button_delete: 'Delete',
     action_button_edit: 'Edit',
     action_button_report: 'Report',
+    action_button_share: 'Share',
     toast_uploading: 'Saving...',
     notice_bar_account_verification:
       'Check your inbox for a confirmation email',

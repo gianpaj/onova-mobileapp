@@ -124,6 +124,7 @@ export default {
     action_button_delete: 'Видалити',
     action_button_edit: 'Редагувати',
     action_button_report: 'Поскаржитись',
+    action_button_share: 'Поділитися',
     toast_uploading: 'Завантажуємо зображення...',
     notice_bar_account_verification:
       'Ми надіслали вам підтвердження на вказану електронну адресу',

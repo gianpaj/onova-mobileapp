@@ -58,6 +58,7 @@ export class ConfirmOrderContainer extends Component<Props, State> {
     dialogVisible: false,
     order: null,
     buyer: null,
+    buyerType: null,
   };
 
   async componentDidMount() {
@@ -80,11 +81,21 @@ export class ConfirmOrderContainer extends Component<Props, State> {
         console.warn('order.status', order.status);
         throw new Error(`Order has already been ${order.status}`);
       }
-      const buyer: UserData = await api.getUser(order.buyer._id);
       console.debug(order);
+      let buyer: UserData;
+      if (order.buyerType === 'UserWeb') {
+        buyer = await api.getUserWeb(order.buyer._id, token);
+      } else {
+        buyer = await api.getUser(order.buyer._id);
+      }
       // const iAmTheSeller = _id.toString() === order.seller._id.toString();
 
-      this.setState({ isLoading: false, order, buyer });
+      this.setState({
+        isLoading: false,
+        order,
+        buyer,
+        buyerType: order.buyerType,
+      });
     } catch (err) {
       console.log(err);
       Toast.fail(err.message, 5);
@@ -172,7 +183,7 @@ export class ConfirmOrderContainer extends Component<Props, State> {
   };
 
   render() {
-    const { isLoading, order, buyer, isPending } = this.state;
+    const { isLoading, order, buyer, buyerType, isPending } = this.state;
     if (isLoading || !order) return null;
 
     const uri = order.product.photoURIs[0].replace('.jpg', '-thumb.jpg');
@@ -216,46 +227,50 @@ export class ConfirmOrderContainer extends Component<Props, State> {
               />
             </TouchableOpacity>
             <Body>
-              <Text style={styles.price}>
-                {`${ui.formatCurrency(order.priceOfItem, 0)} ${I18n.t(
-                  order.currency
-                )}`}
-              </Text>
+              <Text style={styles.price}>{`${ui.formatCurrency(
+                order.priceOfItem,
+                0
+              )} ${I18n.t(order.currency)}`}</Text>
             </Body>
           </ListItem>
           <View style={styles.mainContainer}>
             <Avatar
-              onPress={() => this.goToProfile(buyer)}
+              onPress={() => buyerType === 'User' && this.goToProfile(buyer)}
               uri={buyer.profilePic}
-              placeholderText={buyer.username}
+              placeholderText={buyer.username || buyer.displayName}
               style={{ margin: 10 }}
             />
-            <View style={[styles.row, { alignItems: 'center' }]}>
-              <StarRating
-                // eslint-disable-next-line react-native/no-inline-styles
-                containerStyle={{
-                  justifyContent: 'space-between',
-                  width: 108,
-                  marginRight: 5,
-                }}
-                // disabled={isLoading}
-                emptyStar="md-star-outline"
-                emptyStarColor={colors.black}
-                fullStar="md-star"
-                fullStarColor={colors.black}
-                iconSet="Ionicons"
-                maxStars={5}
-                rating={parseInt(rateAvg)}
-                starSize={25}
-              />
-              <Text>({buyer.reviewsCount})</Text>
-            </View>
+            {buyerType === 'User' && (
+              <View style={[styles.row, { alignItems: 'center' }]}>
+                <StarRating
+                  // eslint-disable-next-line react-native/no-inline-styles
+                  containerStyle={{
+                    justifyContent: 'space-between',
+                    width: 108,
+                    marginRight: 5,
+                  }}
+                  // disabled={isLoading}
+                  emptyStar="md-star-outline"
+                  emptyStarColor={colors.black}
+                  fullStar="md-star"
+                  fullStarColor={colors.black}
+                  iconSet="Ionicons"
+                  maxStars={5}
+                  rating={parseInt(rateAvg)}
+                  starSize={25}
+                />
+                <Text>({buyer.reviewsCount})</Text>
+              </View>
+            )}
             <TouchableOpacity
-              onPress={() => this.goToProfile(buyer)}
+              onPress={() => buyerType === 'User' && this.goToProfile(buyer)}
               style={{ alignItems: 'center' }}>
               <Text style={styles.name}>
                 {buyerInfo.firstName} {buyerInfo.lastName}
               </Text>
+              {buyerType === 'UserWeb' && (
+                <Text style={{}}>+380 {buyer.mobileNumber}</Text>
+              )}
             </TouchableOpacity>
             <Text numberOfLines={2} style={styles.messageText}>
               {I18n.t('confirm_order.buying_item_text')}

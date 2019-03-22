@@ -621,7 +621,7 @@ class CheckoutContainer extends Component<Props, State> {
           </React.Fragment>
         ))}
       </Text>
-      <View style={{ flexDirection: 'row', padding: 10 }}>
+      <View style={{ flexDirection: 'row', padding: 10, justifyContent: 'center' }}>
         <Image
           source={require('../assets/images/visa.png')}
           style={styles.mandatoryImage}

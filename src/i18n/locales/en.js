@@ -271,6 +271,10 @@ For any questions regarding payments please contact UAPAY at (044) 364-11-44`,
     alert_info_body:
       'Press on the image of the item to see the current status of your order.',
   },
+  get_card_id: {
+    title: 'UAPAY',
+    security: 'данні вашої картки закодовано і захищено UAPAY',
+  },
   checkout: {
     header: 'Checkout',
     success_msg: "Super! We'll now alert the seller. The confirmation should arrive within __time__ hours".replace(

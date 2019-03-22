@@ -2,8 +2,18 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Button, Keyboard, View } from 'react-native';
+import {
+  Image,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
+import { Body, Button, Header, Icon, Left, Title, Right } from 'native-base';
 import { WebView } from 'react-native-webview';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import { enableRefresh } from '../actions/actionCreator';
 
@@ -13,8 +23,7 @@ import type { Dispatch, UserData, ReduxState } from '../types';
 import * as api from '../utils/api';
 import * as ui from '../utils/ui';
 import I18n from '../i18n';
-
-const URL_BASE = 'https://api.uapay.ua';
+import colors from '../config/colors';
 
 function JStoInject() {
   var originalPostMessage = window.postMessage;
@@ -33,12 +42,6 @@ function JStoInject() {
   window.postMessage = patchedPostMessage;
 
   // alert('injected');
-  var iframe = document.getElementById('uapayFrame').contentWindow;
-
-  var button = document.getElementsByTagName('button')[0];
-  button.addEventListener('click', function() {
-    iframe.postMessage('Submit', '*');
-  });
 
   function listener(event) {
     if (event.data && event.data.name !== 'Validation') {
@@ -63,6 +66,7 @@ type State = {
 class GetCardId extends Component<Props, State> {
   keyboardDidShowListener;
   keyboardDidHideListener;
+  _webviewRef = React.createRef();
   state = {
     tokenForCardIFrame: '',
     showFooter: true,
@@ -121,35 +125,120 @@ class GetCardId extends Component<Props, State> {
     }
   };
 
+  renderMandatory() {
+    return (
+      <View
+        style={{
+          flex: 1,
+          flexDirection: 'row',
+          paddingBottom: 10,
+          marginTop: -40,
+          justifyContent: 'center',
+        }}>
+        <Image
+          source={require('../assets/images/visa.png')}
+          style={styles.mandatoryImage}
+          resizeMode="contain"
+        />
+        <Image
+          source={require('../assets/images/mastercard.png')}
+          style={styles.mandatoryImage}
+          resizeMode="contain"
+        />
+        <Image
+          source={require('../assets/images/pci.png')}
+          style={styles.mandatoryImage}
+          resizeMode="contain"
+        />
+        <Image
+          source={require('../assets/images/uapay.png')}
+          style={[styles.mandatoryImage, { width: '15%' }]}
+          resizeMode="contain"
+        />
+      </View>
+    );
+  }
+
+  onSubmit = () => {
+    function script() {
+      var iframe = document.getElementById('uapayFrame').contentWindow;
+
+      // alert('click');
+      iframe.postMessage('Submit', '*');
+    }
+    this._webviewRef.current.injectJavaScript(`(${script.toString()}());`);
+  };
+
   render() {
     const { showFooter, tokenForCardIFrame } = this.state;
 
     if (!tokenForCardIFrame) return null;
     return (
-      <View style={{ flex: 1, marginTop: 20 }}>
-        <WebView
-          useWebKit={false}
-          source={{
-            html: `<html>
-              <head><meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0"></head>
-              <body>
-                <iframe id="uapayFrame" style="border: 0; height: 220px; width: 100%" src="${URL_BASE}/api/iframe/${tokenForCardIFrame}"></iframe>
-                <button id="btnSubmit">${I18n.t(
-                  'checkout.save_card_info'
-                )}</button>
-              </body></html>`,
-          }}
-          injectedJavaScript={`(${JStoInject.toString()}());`}
-          onMessage={event => this.onFinished(event.nativeEvent.data)}
-          scrollEnabled={false} // ios
-          startInLoadingState
-        />
-        {showFooter && (
-          <Button
-            title={I18n.t('checkout.go_back')}
-            onPress={() => this.props.navigation.goBack()}
-          />
-        )}
+      <View style={{ flex: 1 }}>
+        <Header>
+          <Left style={styles.container}>
+            <Button
+              transparent
+              dark
+              onPress={() => this.props.navigation.goBack()}>
+              <Icon ios="ios-arrow-back" android="md-arrow-back" />
+            </Button>
+          </Left>
+          <Body style={styles.container}>
+            <Title>{I18n.t('get_card_id.title')}</Title>
+          </Body>
+          <Right />
+        </Header>
+        <View style={{ flex: 1 }}>
+          <KeyboardAvoidingView
+            behavior="padding"
+            enabled
+            style={{
+              flex: 1,
+              marginTop: 20,
+              backgroundColor: colors.bgDefault,
+            }}>
+            <View style={{ flex: 0.01, minHeight: 260 }}>
+              <WebView
+                ref={this._webviewRef}
+                useWebKit={false}
+                source={{
+                  html: `<html>
+                    <head><meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0"></head>
+                    <body style="background: white; margin-bottom: -5px">
+                      <iframe id="uapayFrame" style="border: 0; height: 220px; width: 100%" src="${
+                        api.config.URL_BASE
+                      }/api/iframe/${tokenForCardIFrame}"></iframe>
+                    </body>
+                  </html>`,
+                }}
+                injectedJavaScript={`(${JStoInject.toString()}());`}
+                onMessage={event => this.onFinished(event.nativeEvent.data)}
+                scrollEnabled={false} // ios
+                startInLoadingState
+              />
+            </View>
+            {this.renderMandatory()}
+            {showFooter && (
+              <View style={{ flex: 2 }}>
+                <MaterialCommunityIcons
+                  color={colors.black}
+                  name="shield-lock"
+                  size={64}
+                  style={{ alignSelf: 'center' }}
+                />
+                <Text style={styles.paragraph}>
+                  {I18n.t('get_card_id.security')}
+                </Text>
+              </View>
+            )}
+            <Button full style={{ color: colors.red }} onPress={this.onSubmit}>
+              <Text style={styles.saveBtn}>
+                {I18n.t('checkout.save_card_info')}
+              </Text>
+            </Button>
+          </KeyboardAvoidingView>
+        </View>
       </View>
     );
   }
@@ -158,6 +247,29 @@ class GetCardId extends Component<Props, State> {
 const mapStateToProps: any = (state: ReduxState) => ({
   userData: state.LoginReducer.data,
   token: state.LoginReducer.token,
+});
+
+const styles = StyleSheet.create({
+  saveBtn: {
+    color: colors.white,
+    fontWeight: '600',
+    fontSize: Platform.select({
+      android: 18,
+      ios: 16,
+    }),
+  },
+  mandatoryImage: {
+    margin: 10,
+    width: '20%',
+    height: 50,
+  },
+  paragraph: {
+    color: colors.grey1,
+    fontWeight: '500',
+    textAlign: 'center',
+    marginHorizontal: 20,
+    marginTop: 15,
+  },
 });
 
 export default connect(mapStateToProps)(GetCardId);

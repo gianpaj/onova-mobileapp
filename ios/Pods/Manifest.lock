@@ -117,20 +117,20 @@ PODS:
     - QBImagePickerController
     - React/Core
     - RSKImageCropper
-  - RNSVG (8.0.8):
+  - RNSVG (8.0.10):
     - React
-  - RNVectorIcons (6.1.0):
+  - RNVectorIcons (6.4.2):
     - React
   - RSKImageCropper (2.2.1)
   - Segment-Mixpanel (1.3.0):
     - Analytics (~> 3.0)
     - Mixpanel (~> 3.0)
-  - Sentry (4.0.1):
-    - Sentry/Core (= 4.0.1)
-  - Sentry/Core (4.0.1)
-  - SentryReactNative (0.40.2):
+  - Sentry (4.1.3):
+    - Sentry/Core (= 4.1.3)
+  - Sentry/Core (4.1.3)
+  - SentryReactNative (0.40.3):
     - React
-    - Sentry (~> 4.0.1)
+    - Sentry (~> 4.1.3)
   - yoga (0.57.7.React)
 
 DEPENDENCIES:
@@ -231,8 +231,8 @@ SPEC CHECKSUMS:
   RNVectorIcons: 8c52e1e8da1153613fdef44748e865c25556cb9c
   RSKImageCropper: 98296ad26b41753f796b6898d015509598f13d97
   Segment-Mixpanel: edded29dfc288e62f0fae20c9b42a3c50d0639b9
-  Sentry: a38f7879924c02239e121b19d993d23bdd1684db
-  SentryReactNative: d476259b21060a59dc637a29a40d60f0aac09cf7
+  Sentry: 4e8a17b61ddd116f89536cc81d567fdee1ebca96
+  SentryReactNative: 4c4ac0518ba34bb90832af4ceb8f2e9db861c1ed
   yoga: b1ce48b6cf950b98deae82838f5173ea7cf89e85
 
 PODFILE CHECKSUM: a288366841fb54eab722136abe7bf70f072c15d6

@@ -273,7 +273,8 @@ For any questions regarding payments please contact UAPAY at (044) 364-11-44`,
   },
   get_card_id: {
     title: 'UAPAY',
-    security: 'данні вашої картки закодовано і захищено UAPAY',
+    security:
+      'Данні вашої картки закодовано і захищено UAPAY. Вони обслуговують також OLX, Bigl, Prom',
   },
   checkout: {
     header: 'Checkout',

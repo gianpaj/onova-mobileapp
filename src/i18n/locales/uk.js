@@ -273,7 +273,8 @@ export default {
   },
   get_card_id: {
     title: 'UAPAY',
-    security: 'данні вашої картки закодовано і захищено UAPAY',
+    security:
+      'Данні вашої картки закодовано і захищено UAPAY. Вони обслуговують також OLX, Bigl, Prom',
   },
   checkout: {
     header: 'Купівля',

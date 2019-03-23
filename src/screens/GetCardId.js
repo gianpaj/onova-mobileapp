@@ -250,6 +250,11 @@ const mapStateToProps: any = (state: ReduxState) => ({
 });
 
 const styles = StyleSheet.create({
+  container: {
+    alignItems: 'stretch',
+    flex: 1,
+    justifyContent: 'center',
+  },
   saveBtn: {
     color: colors.white,
     fontWeight: '600',

@@ -68,9 +68,6 @@ export class ConfirmOrderContainer extends Component<Props, State> {
     // for development
     let orderId = '5bdb16b06a7aef00de9da76b';
 
-    // for prod dev
-    // let orderId = '5bf52286186739115fb39e02';
-
     if (params) {
       orderId = params.id;
     }

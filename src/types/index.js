@@ -182,6 +182,7 @@ export type Order = {
   archivedBySeller: boolean,
   id: string,
   buyer: UserDataShorter,
+  buyerType: 'User' | 'UserWeb',
   cityRecipient: string,
   citySender: string,
   currency: string,

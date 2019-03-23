@@ -99,16 +99,13 @@ class ChatContainer extends Component<Props, State> {
       if (!pusherCurrentUser) return reject();
       api
         .getOrders(token)
-        .then(orders =>
-          orders.filter(
+        .then(oo => {
+          orders = oo.filter(
             (o: Order) =>
               !['paid', 'cancelled', 'pending', 'reserved'].includes(o.status)
-          )
-        )
-        .then(o => {
-          if (o.length === 0) return resolve([]);
+          );
+          if (orders.length === 0) return resolve([]);
 
-          orders = o;
           return pusherCurrentUser.getJoinableRooms();
         })
         .then((rooms: Array<any>) => [...rooms, ...pusherCurrentUser.rooms])
@@ -148,14 +145,27 @@ class ChatContainer extends Component<Props, State> {
               } catch (err) {
                 throw new Error(err);
               }
-              const partner = room.users
-                .filter(u => u.id !== ONOVA_BOT_ID)
-                .find(u => u.id !== userData._id);
-              const cursor = await pusherCurrentUser.readCursor({
-                roomId: room.id,
-              });
 
-              const isPartnerOnline = partner.presence.state == 'online';
+              let partner, unreadCount;
+              if (
+                room.orders.filter(o => o.buyerType == 'UserWeb').length > 0
+              ) {
+                partner = {
+                  _id: ONOVA_BOT_ID,
+                  name: `${room.orders[0].buyer.displayName} (web)`,
+                };
+              } else {
+                partner = room.users
+                  .filter(u => u.id !== ONOVA_BOT_ID)
+                  .find(u => u.id !== userData._id);
+                const cursor = await pusherCurrentUser.readCursor({
+                  roomId: room.id,
+                });
+                unreadCount = unreads(cursor, msgs) || 0;
+              }
+
+              const isPartnerOnline =
+                partner.presence && partner.presence.state == 'online';
               return {
                 ...room,
                 // if no messages (very first order step)
@@ -163,7 +173,7 @@ class ChatContainer extends Component<Props, State> {
                   ? msgs[msgs.length - 1]
                   : { createdAt: room.createdAt },
                 isPartnerOnline,
-                unreadCount: unreads(cursor, msgs) || 0,
+                unreadCount,
                 partner,
               };
             })

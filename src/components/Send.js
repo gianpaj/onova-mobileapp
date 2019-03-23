@@ -16,6 +16,7 @@ export default function Send({
   children,
   textStyle,
   label,
+  disabled,
 }: {
   text: string,
   containerStyle: any,
@@ -23,13 +24,15 @@ export default function Send({
   children: any,
   textStyle: any,
   label: string,
+  disabled: boolean,
 }) {
-  const isDisabled = text.trim().length < 1;
+  const isDisabled = disabled || text.trim().length < 1;
   return (
     <TouchableOpacity
-      style={[styles.container, containerStyle]}
-      onPress={() => !isDisabled && onSend({ text: text.trim() }, true)}
-      accessibilityTraits="button">
+      accessibilityTraits="button"
+      disabled={isDisabled}
+      onPress={() => onSend({ text: text.trim() }, true)}
+      style={[styles.container, containerStyle]}>
       <>{children || <Text style={[styles.text, textStyle]}>{label}</Text>}</>
     </TouchableOpacity>
   );

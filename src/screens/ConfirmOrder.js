@@ -78,7 +78,7 @@ export class ConfirmOrderContainer extends Component<Props, State> {
         console.warn('order.status', order.status);
         throw new Error(`Order has already been ${order.status}`);
       }
-      console.debug(order);
+
       let buyer: UserData;
       if (order.buyerType === 'UserWeb') {
         buyer = await api.getUserWeb(order.buyer._id, token);

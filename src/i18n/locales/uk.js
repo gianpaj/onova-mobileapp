@@ -266,6 +266,8 @@ export default {
   },
   chat: {
     send_msg_placeholder: 'Повідомлення',
+    send_msg_placeholder_disabled:
+      'Повідомлення для покупців з сайту не можна надіслати',
     no_orders: 'Немає замовлень',
     alert_info_title: 'Підтримка',
     alert_info_body:

@@ -49,6 +49,7 @@ type Props = {
 };
 
 type State = {
+  buyerType: 'User' | 'UserWeb',
   dialogVisible: boolean,
   partner: UserData,
   isLoading: boolean,
@@ -65,6 +66,7 @@ class ChatContainer extends Component<Props, State> {
   rejectProm;
 
   state = {
+    buyerType: 'User',
     dialogVisible: false,
     partner: null,
     isLoading: true,
@@ -139,7 +141,7 @@ class ChatContainer extends Component<Props, State> {
       if (!orderId && !roomId) return reject('orderId and roomId are missing');
       this.rejectProm = reject;
 
-      this.connectToPusher()
+      Promise.resolve()
         .then(() => {
           // coming from ChatRooms or a Push Notification
           if (roomId) {
@@ -158,13 +160,13 @@ class ChatContainer extends Component<Props, State> {
                     return room;
                   })
                   .then(room =>
-                    api.getUser(
-                      room.userIds
-                        .filter(id => id !== ONOVA_BOT_ID)
-                        .find(id => id !== userData._id)
-                    )
+                    room.userIds
+                      .filter(id => id !== ONOVA_BOT_ID)
+                      .find(id => id !== userData._id)
                   )
-                  .then(partner => this.setState({ partner }))
+                  // if no user then it's a UserWeb
+                  .then(user => user && api.getUser(user))
+                  .then(partner => partner && this.setState({ partner }))
                   .catch(err => {
                     console.log('Error joining room ID:', roomId);
                     reject(err);
@@ -226,20 +228,24 @@ class ChatContainer extends Component<Props, State> {
                   );
               }
 
+              let addUserIds = [o.buyer._id, userData._id];
+              if (o.buyerType === 'UserWeb') {
+                addUserIds = [ONOVA_BOT_ID, userData._id];
+              }
+
               // no existing room existed
               return pusherCurrentUser
                 .createRoom({
                   name: getRoomName(o),
                   private: true,
-                  addUserIds: [o.buyer._id, userData._id],
+                  addUserIds,
                 })
                 .then(room => {
                   roomId = room.id;
                   thisRoom = room;
                   console.debug('Created room id', roomId);
                 })
-                .then(() => api.getUser(o.buyer._id))
-                .then(partner => this.setState({ partner }))
+                .then(() => this.setPartner(o))
                 .catch(err => {
                   console.log('Error creating room');
                   reject(err);
@@ -259,7 +265,7 @@ class ChatContainer extends Component<Props, State> {
           })
         )
         .then(async messages => {
-          if (!this.state.partner) throw new Error('no partner');
+          // if (!this.state.partner) throw new Error('no partner');
 
           const newMsgs = messages.map(m => this.createGiftedMessage(m));
           this.setState({ messages: newMsgs.reverse() });
@@ -287,6 +293,29 @@ class ChatContainer extends Component<Props, State> {
     });
   }
 
+  setPartner = async (order: Order, room?: any) => {
+    let partner;
+    // existing room
+    if (room) {
+      partner = await api.getUser(
+        room.userIds
+          .filter(id => id !== ONOVA_BOT_ID)
+          .find(id => id !== userData._id)
+      );
+    } else if (order.buyerType === 'UserWeb') {
+      partner = {
+        _id: ONOVA_BOT_ID,
+        username: `${order.buyer.displayName} (web)`,
+      };
+      this.setState({ buyerType: 'UserWeb' });
+    } else {
+      // creating new room (order confirmed by seller)
+      partner = await api.getUser(order.buyer._id);
+    }
+    return this.setState({ partner });
+  };
+
+  // and set partner (if UserWeb)
   fetchOrders = (thisRoom: any) => {
     const { userData, token } = this.props;
     console.debug('fetchOrders');
@@ -318,7 +347,20 @@ class ChatContainer extends Component<Props, State> {
             }
           })
         )
-        .then(orders => this.setState({ orders }))
+        .then(orders => {
+          this.setState({ orders });
+          if (orders.filter(o => o.buyerType == 'UserWeb').length > 0) {
+            this.setState({ buyerType: 'UserWeb' });
+            return api.getUserWeb(orders[0].buyer._id, this.props.token);
+          }
+        })
+        .then(
+          partner =>
+            partner &&
+            this.setState({
+              partner: { ...partner, username: `${partner.displayName} (web)` },
+            })
+        )
         .then(() => resolve())
         .catch(e => reject(e));
     });
@@ -359,12 +401,6 @@ class ChatContainer extends Component<Props, State> {
       avatar: partner.profilePic,
     };
   }
-
-  connectToPusher = (): Promise<null> => {
-    return new Promise(resolve => {
-      resolve(null);
-    });
-  };
 
   createGiftedMessage(msg: PusherMessage): PusherMessage {
     const { userData } = this.props;
@@ -476,11 +512,12 @@ class ChatContainer extends Component<Props, State> {
     />
   );
 
-  renderSend(props): React$Element<*> {
-    const showActiveOpacity = props.text.trim().length > 0;
+  renderSend = (props): React$Element<*> => {
+    const disabled = this.state.buyerType === 'UserWeb';
+    const showActiveOpacity = props.text.trim().length > 0 && !disabled;
     return (
       <View style={st.send}>
-        <Send {...props}>
+        <Send {...props} disabled={disabled}>
           <Ionicons
             // eslint-disable-next-line
             style={{ opacity: showActiveOpacity ? 1 : 0.7 }}
@@ -490,15 +527,20 @@ class ChatContainer extends Component<Props, State> {
         </Send>
       </View>
     );
-  }
+  };
 
-  renderActions = (props: any) => (
-    <ChatActions {...props} uploadingImage={this.state.uploadingImage} />
-  );
+  renderActions = (props: any) => {
+    if (this.state.buyerType === 'UserWeb') return null;
+    return (
+      <ChatActions {...props} uploadingImage={this.state.uploadingImage} />
+    );
+  };
 
   goToProfile = () => {
-    const { partner } = this.state;
+    const { partner, isWebUser } = this.state;
     const { _id } = this.props.userData;
+
+    if (!isWebUser) return;
 
     let routeName = 'profileInStack';
     if (_id == partner._id) {
@@ -594,7 +636,7 @@ class ChatContainer extends Component<Props, State> {
 
   render() {
     const { navigation, userData } = this.props;
-    const { messages, isLoading, partner, orders } = this.state;
+    const { buyerType, messages, isLoading, partner, orders } = this.state;
 
     if (isLoading) {
       return (
@@ -604,6 +646,8 @@ class ChatContainer extends Component<Props, State> {
       );
     }
 
+    const isWebUser = buyerType === 'UserWeb';
+
     return (
       <Container style={st.flex1}>
         <Header>
@@ -612,7 +656,7 @@ class ChatContainer extends Component<Props, State> {
               <NBIcon ios="ios-arrow-back" android="md-arrow-back" />
             </NBButton>
           </Left>
-          <Body style={st.flex2AndCenter}>
+          <Body style={st.flex4AndCenter}>
             {partner && (
               <>
                 <Title
@@ -644,7 +688,11 @@ class ChatContainer extends Component<Props, State> {
           <GiftedChat
             messages={messages}
             onSend={this.onSend}
-            placeholder={I18n.t('chat.send_msg_placeholder')}
+            placeholder={
+              isWebUser
+                ? I18n.t('chat.send_msg_placeholder_disabled')
+                : I18n.t('chat.send_msg_placeholder')
+            }
             user={{
               _id: userData._id,
               name: userData.username,
@@ -671,6 +719,7 @@ class ChatContainer extends Component<Props, State> {
             maxInputLength={settings.MAX_CHAT_INPUT_LENGTH}
             // renderInputToolbar={this.renderInputToolbar}
             // renderAvatar={null}
+            textInputProps={{ editable: !isWebUser }}
           />
         </View>
         {this.renderInfoDialog()}
@@ -700,10 +749,10 @@ const st = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  flex2AndCenter: {
+  flex4AndCenter: {
     alignItems: 'center',
     justifyContent: 'center',
-    flex: 2,
+    flex: 4,
     flexDirection: 'row',
   },
   containerHeader: {

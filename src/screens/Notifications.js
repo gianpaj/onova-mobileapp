@@ -77,9 +77,9 @@ class NotificationsContainer extends Component<Props, State> {
 
     const { data } = await api.get('/api/users/notifications', { token });
 
-    let lastNotifId = '';
-    if (data.length > 0) lastNotifId = data[data.length - 1]._id;
-    this.setState({ data: data, lastId: lastNotifId });
+    let lastId = '';
+    if (data.length > 0) lastId = data[data.length - 1]._id;
+    this.setState({ data, lastId });
   }
 
   _keyExtractor = (item): string => item._id;
@@ -180,64 +180,67 @@ class NotificationsContainer extends Component<Props, State> {
   };
 
   // eslint-disable-next-line react/no-unused-prop-types
-  _renderItem = ({ item }: { item: Notification }) => (
-    <ListItem
-      button
-      style={{ marginLeft: 0 }}
-      onPress={() => {
-        switch (item.triggeredType) {
-          case 'User':
-            this.goToProfile(item.sourceUser);
-            break;
-          case 'Product':
-            this.goToProduct(item.triggeredBy);
-            break;
-          case 'Order':
-            // or the ConfirmOrder screen should check if it can be confirmed ('paid' and not 'confirmed')
-            // $FlowFixMe
-            if (item.data.status === 'paid')
-              this.goToConfirmOrder(item.triggeredBy);
-            break;
-          case 'Drop':
-            this.goToProfile(item.sourceUser, 'drops');
-            break;
-          default:
-            break;
-        }
-      }}>
-      {item.sourceUser && ( // deepscan-disable-line
-        <Avatar
-          size={'verySmall'}
-          style={styles.avatarContainer}
-          uri={item.sourceUser.profilePic}
-          placeholderText={item.sourceUser.username}
-        />
-      )}
-      <Body>
-        {/* Paid orders do not have a senderName (for now) */}
-        {item.sourceUser && (
-          <View style={styles.contentRow}>
-            <Text style={styles.name} numberOfLines={1}>
-              @{item.sourceUser.username}
-            </Text>
-          </View>
+  _renderItem = ({ item }: { item: Notification }) => {
+    const user = item.sourceUser;
+    return (
+      <ListItem
+        button
+        style={{ marginLeft: 0 }}
+        onPress={() => {
+          switch (item.triggeredType) {
+            case 'User':
+              this.goToProfile(user);
+              break;
+            case 'Product':
+              this.goToProduct(item.triggeredBy);
+              break;
+            case 'Order':
+              // or the ConfirmOrder screen should check if it can be confirmed ('paid' and not 'confirmed')
+              // $FlowFixMe
+              if (item.data.status === 'paid')
+                this.goToConfirmOrder(item.triggeredBy);
+              break;
+            case 'Drop':
+              this.goToProfile(user, 'drops');
+              break;
+            default:
+              break;
+          }
+        }}>
+        {user && ( // deepscan-disable-line
+          <Avatar
+            size={'verySmall'}
+            style={styles.avatarContainer}
+            uri={user.profilePic}
+            placeholderText={user.username || user.displayName}
+          />
         )}
-        <Text style={styles.reviewText} numberOfLines={3}>
-          {item.notifI18n}
-          {/* for comment notifications */}
-          {item.triggeredType == 'Product' &&
-            item.triggeredBy &&
-            ': ' + item.data.text}
-        </Text>
-      </Body>
-      <Right>
-        <Text style={styles.time} numberOfLines={1}>
-          {ui.formatTime(item.dateCreated)}
-        </Text>
-        <IconEL size={28} name="chevron-right" color={colors.grey4} />
-      </Right>
-    </ListItem>
-  );
+        <Body>
+          {/* Paid orders do not have a senderName (for now) */}
+          {user && (
+            <View style={styles.contentRow}>
+              <Text style={styles.name} numberOfLines={1}>
+                {user.username ? '@' + user.username : user.displayName}
+              </Text>
+            </View>
+          )}
+          <Text style={styles.reviewText} numberOfLines={3}>
+            {item.notifI18n}
+            {/* for comment notifications */}
+            {item.triggeredType == 'Product' &&
+              item.triggeredBy &&
+              ': ' + item.data.text}
+          </Text>
+        </Body>
+        <Right>
+          <Text style={styles.time} numberOfLines={1}>
+            {ui.formatTime(item.dateCreated)}
+          </Text>
+          <IconEL size={28} name="chevron-right" color={colors.grey4} />
+        </Right>
+      </ListItem>
+    );
+  };
 
   renderLoading = () => (
     <View style={styles.container}>

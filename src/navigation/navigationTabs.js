@@ -10,6 +10,11 @@ import colors from '../config/colors';
 
 import TabBarComponent from './TabBarComponent';
 
+// const initialLayout = {
+//   height: 0,
+//   width: Dimensions.get('window').width,
+// };
+
 const isiOS = Platform.OS === 'ios';
 
 const routeConfiguration = {
@@ -73,6 +78,7 @@ const tabBarConfiguration = {
   animationEnabled: false,
   swipeEnabled: false,
   tabBarComponent: TabBarComponent,
+  // initialLayout,
 };
 
 export const TabsStack = TabNavigator(routeConfiguration, tabBarConfiguration);

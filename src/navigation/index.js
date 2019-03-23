@@ -42,8 +42,6 @@ type Props = {
 const addListener = createReduxBoundAddListener('root');
 
 class AppNavigation extends React.PureComponent<Props, *> {
-  notificationListener;
-
   state = {
     canReload: false,
   };
@@ -82,7 +80,6 @@ class AppNavigation extends React.PureComponent<Props, *> {
 
   componentWillUnmount() {
     BackHandler.removeEventListener('hardwareBackPress', this.onBackPress);
-    this.notificationListener && this.notificationListener.remove();
   }
 
   onBackPress = () => {

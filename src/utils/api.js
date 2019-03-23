@@ -244,6 +244,14 @@ export function getUser(userId: string): Promise<UserData> {
   });
 }
 
+export function getUserWeb(userId: string, token: string): Promise<UserData> {
+  return new Promise((resolve, reject) => {
+    get(`/api/users-web/${userId}`, { token })
+      .then((res: UserData) => resolve(res))
+      .catch(err => reject(err));
+  });
+}
+
 export function getFollowers(
   userId: string,
   token: string

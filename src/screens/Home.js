@@ -146,7 +146,6 @@ export class Home extends PureComponent<Props, State> {
           renderTabBar={this._renderTabBar}
           onIndexChange={this._handleIndexChange}
           initialLayout={initialLayout}
-          useNativeDriver
         />
         {this.renderInfoDialog()}
       </View>

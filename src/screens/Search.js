@@ -79,7 +79,6 @@ class SearchContainer extends Component<Props, State> {
           renderTabBar={this._renderTabBar}
           onIndexChange={this._handleIndexChange}
           initialLayout={initialLayout}
-          useNativeDriver
         />
       </Container>
     );

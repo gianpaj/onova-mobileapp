@@ -48,7 +48,6 @@ type Props = {
   apiURL: string,
   dispatch: Dispatch,
   emptyState?: Node,
-  focused: boolean,
   navigation?: NavigationScreenProp<*>,
   shouldRefresh?: boolean,
   token?: string,
@@ -69,7 +68,6 @@ const { width, height } = Dimensions.get('window');
 
 class ImageGridComponent extends React.PureComponent<Props, State> {
   reqTimer = 0;
-  firstFocus = true;
   state = {
     // itemHeight: 0,
     hasError: false,
@@ -84,12 +82,9 @@ class ImageGridComponent extends React.PureComponent<Props, State> {
   componentDidMount() {
     // const defaultImageCacheManager = ImageCacheManager();
     // defaultImageCacheManager.clearCache();
-    if (this.props.focused) {
-      this.firstFocus = false;
-      this.fetchItems()
-        .catch(() => this.setState({ hasError: true }))
-        .then(() => this.setState({ initializing: false }));
-    }
+    this.fetchItems()
+      .catch(() => this.setState({ hasError: true }))
+      .then(() => this.setState({ initializing: false }));
 
     this.props.navigation.addListener('didFocus', () => {
       if (this.props.shouldRefresh) {
@@ -101,15 +96,6 @@ class ImageGridComponent extends React.PureComponent<Props, State> {
         }, 1000);
       }
     });
-  }
-
-  componentDidUpdate() {
-    if (this.firstFocus && this.props.focused) {
-      this.firstFocus = false;
-      this.fetchItems()
-        .catch(() => this.setState({ hasError: true }))
-        .then(() => this.setState({ initializing: false }));
-    }
   }
 
   /**
@@ -243,8 +229,6 @@ class ImageGridComponent extends React.PureComponent<Props, State> {
 
   render() {
     const { hasError, isLoading, initializing, items } = this.state;
-
-    if (this.firstFocus) return null;
 
     if (!hasError && initializing) return this.renderLoading();
 

@@ -73,7 +73,10 @@ class GetCardId extends Component<Props, State> {
   };
 
   async componentDidMount() {
-    const tokenForCardIFrame = await this.generateTokenForIFrame();
+    const { params } = this.props.navigation.state;
+    const tokenForCardIFrame = await this.generateTokenForIFrame(
+      params && params.short
+    );
     console.log(tokenForCardIFrame);
     this.setState({ tokenForCardIFrame });
     this.initializeListeners();
@@ -99,8 +102,8 @@ class GetCardId extends Component<Props, State> {
 
   _keyboardDidHide = () => this.setState({ showFooter: true });
 
-  async generateTokenForIFrame() {
-    const { data } = await api.get('/api/auth/get-token');
+  async generateTokenForIFrame(short = false) {
+    const { data } = await api.get('/api/auth/get-token?shortCard=' + short);
     return data;
   }
 

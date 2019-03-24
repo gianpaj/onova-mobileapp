@@ -20,7 +20,6 @@ import settings from '../config/settings';
 import { category_radio_grp_1, category_radio_grp_2 } from '../utils/ui';
 
 type Props = {
-  focused: boolean,
   navigation: NavigationScreenProp<*>,
 };
 
@@ -44,14 +43,6 @@ class SearchWithHasthagsTabContainer extends Component<Props, State> {
     grp_1: -1,
     grp_2: -1,
   };
-
-  componentDidMount() {
-    this.search.current.focus();
-  }
-
-  componentDidUpdate() {
-    this.props.focused && this.search.current.focus();
-  }
 
   onSearch = () => {
     if (!this.isSearchEnabled()) return;

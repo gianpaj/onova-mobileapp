@@ -50,6 +50,7 @@ type Props = {
   emptyState?: Node,
   navigation?: NavigationScreenProp<*>,
   shouldRefresh?: boolean,
+  header: React.ReactElement,
   token?: string,
 };
 
@@ -120,7 +121,6 @@ class ImageGridComponent extends React.PureComponent<Props, State> {
         lastId: data.length ? lastItem._id : '',
         theEnd: false,
       });
-      return;
     } catch (err) {
       clearTimeout(loader);
       this.setState({
@@ -254,6 +254,7 @@ class ImageGridComponent extends React.PureComponent<Props, State> {
           onEndReached={this.loadMore}
           onEndReachedThreshold={0.1}
           horizontal={false}
+          ListHeaderComponent={this.props.header}
         />
       </View>
     );

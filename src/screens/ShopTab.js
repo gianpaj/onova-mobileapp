@@ -17,6 +17,7 @@ type Props = {
   userData: UserData,
   navigation: NavigationScreenProp<*>,
   userid: string,
+  header: React.ReactElement,
 };
 
 class ShopTabContainer extends React.Component<Props, {}> {
@@ -37,15 +38,15 @@ class ShopTabContainer extends React.Component<Props, {}> {
   }
 
   render() {
-    const { navigation, userid } = this.props;
+    const { navigation, userid, header } = this.props;
 
     return (
       <View style={styles.flex1}>
         <ImageGrid
-          focused
           ref={this.imageGrid}
           apiURL={`/api/products?userid=${userid}`}
           navigation={navigation}
+          header={header}
           emptyState={
             <View style={styles.emptyContainer}>
               {!this.isMe() ? (

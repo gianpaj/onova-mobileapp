@@ -259,12 +259,6 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
       this.setState({ isUploading: true });
 
       if (response.length) {
-        // starts from i, increments with j
-        // await Promise.all(
-        //   response.map((image, j) =>
-        //     this.uploadImageTemporarilyAndAppend(image, i + j)
-        //   )
-        // );
         for (let j = 0; j < response.length; j++) {
           this.appendImageOrReplace({ isUploading: true }, j);
         }

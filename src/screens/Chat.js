@@ -14,7 +14,6 @@ import {
 import {
   Body,
   Button as NBButton,
-  // CardItem,
   Container,
   Icon as NBIcon,
   Left,
@@ -168,7 +167,10 @@ class ChatContainer extends Component<Props, State> {
                   .then(user => user && api.getUser(user))
                   .then(partner => partner && this.setState({ partner }))
                   .catch(err => {
-                    console.log('Error joining room ID:', roomId);
+                    addErrorBreadcrumb({
+                      category: 'chat',
+                      errMsg: `Error joining room ID: ${roomId}`,
+                    });
                     reject(err);
                   })
               );
@@ -222,7 +224,10 @@ class ChatContainer extends Component<Props, State> {
                       )
                       .then(partner => this.setState({ partner }))
                       .catch(err => {
-                        console.log('Error joining room ID:', firstRoom);
+                        addErrorBreadcrumb({
+                          category: 'chat',
+                          errMsg: `Error joining room ID: ${firstRoom}`,
+                        });
                         console.log(err);
                       })
                   );
@@ -247,12 +252,18 @@ class ChatContainer extends Component<Props, State> {
                 })
                 .then(() => this.setPartner(o))
                 .catch(err => {
-                  console.log('Error creating room');
+                  addErrorBreadcrumb({
+                    category: 'chat',
+                    errMsg: 'Error creating room',
+                  });
                   reject(err);
                 });
             })
             .catch(err => {
-              console.log('Error getting joinable rooms');
+              addErrorBreadcrumb({
+                category: 'chat',
+                errMsg: 'Error getting joinable rooms',
+              });
               reject(err);
             });
         })
@@ -283,7 +294,11 @@ class ChatContainer extends Component<Props, State> {
                 // console.debug('setReadCursor success');
               })
               .catch(err => {
-                console.log(`Error setting cursor: ${err}`);
+                addErrorBreadcrumb({
+                  category: 'chat',
+                  errMsg: 'Error setting cursor',
+                });
+                console.error(err);
               });
           }, MARK_AS_READ_AFTER_MS);
         })
@@ -379,6 +394,10 @@ class ChatContainer extends Component<Props, State> {
           // console.debug('setReadCursor success');
         })
         .catch(err => {
+          addErrorBreadcrumb({
+            category: 'chat',
+            errMsg: 'Error setting cursor',
+          });
           console.log(`Error setting cursor: ${err}`);
         });
     }, MARK_AS_READ_AFTER_MS);
@@ -499,6 +518,7 @@ class ChatContainer extends Component<Props, State> {
             this.setState({ uploadingImage: false });
           });
       } catch (err) {
+        addErrorBreadcrumb({ category: 'chat', err });
         console.error(err);
       }
     }

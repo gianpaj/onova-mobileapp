@@ -160,13 +160,14 @@ async function navigate(notif) {
   firebase.notifications().removeDeliveredNotification(notif.notificationId);
   if (notif.data && notif.data.triggeredType) {
     const { triggeredType, triggeredBy, productUuid, senderName } = notif.data;
-    addPushNotifBreadcrumb({ message: 'should navigate to: ' + triggeredType });
-
     // TODO: show Toast error cannot navigate
 
     // follow or new drop has been listed
     if (triggeredType == 'User') {
       console.debug(triggeredBy);
+      addPushNotifBreadcrumb({
+        message: `should navigate to: ${triggeredType} ${senderName}`,
+      });
       return NavigationService.navigate(
         'profileInStack',
         { _id: triggeredBy },
@@ -175,6 +176,9 @@ async function navigate(notif) {
     }
     if (triggeredType == 'Product') {
       console.debug(productUuid);
+      addPushNotifBreadcrumb({
+        message: `should navigate to: ${triggeredType} ${productUuid}`,
+      });
       const product = await api.getProduct(productUuid);
       return NavigationService.navigate(
         'product',
@@ -184,6 +188,9 @@ async function navigate(notif) {
     }
     if (triggeredType == 'Room') {
       console.debug(triggeredBy);
+      addPushNotifBreadcrumb({
+        message: `should navigate to: ${triggeredType} ${triggeredBy}`,
+      });
       return NavigationService.navigate(
         'chat',
         { roomId: triggeredBy },
@@ -194,6 +201,9 @@ async function navigate(notif) {
     if (triggeredType === 'Order') {
       console.debug(triggeredBy);
       console.debug(extra);
+      addPushNotifBreadcrumb({
+        message: `should navigate to: ${triggeredType} ${triggeredBy}`,
+      });
       // order needs confirmation
       if (extra.status == 'paid')
         return NavigationService.navigate(
@@ -204,6 +214,9 @@ async function navigate(notif) {
     }
     if (triggeredType === 'Drop') {
       console.debug(triggeredBy);
+      addPushNotifBreadcrumb({
+        message: `should navigate to: ${triggeredType} ${triggeredBy}`,
+      });
       return NavigationService.navigate(
         'profileInStack',
         { _id: triggeredBy, tab: 'drops' },

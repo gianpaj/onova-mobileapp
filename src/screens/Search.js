@@ -52,12 +52,12 @@ class SearchContainer extends Component<Props, State> {
     />
   );
 
-  _renderScene = ({ route, navigationState: { index } }) => {
+  _renderScene = ({ route }) => {
     switch (route.key) {
       case 'tags':
-        return <SearchWithHasthagsTab focused={index === 0} />;
+        return <SearchWithHasthagsTab />;
       case 'sellers':
-        return <SearchSellersTab focused={index === 1} />;
+        return <SearchSellersTab />;
       default:
         return null;
     }
@@ -79,7 +79,7 @@ class SearchContainer extends Component<Props, State> {
           renderTabBar={this._renderTabBar}
           onIndexChange={this._handleIndexChange}
           initialLayout={initialLayout}
-          useNativeDriver
+          lazy
         />
       </Container>
     );

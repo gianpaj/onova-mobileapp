@@ -71,12 +71,11 @@ export class Home extends PureComponent<Props, State> {
     />
   );
 
-  _renderScene = ({ route, navigationState: { index } }) => {
+  _renderScene = ({ route }) => {
     switch (route.key) {
       case 'clothes':
         return (
           <ImageGrid
-            focused={index === 0}
             apiURL="/api/feed/flat/?categoryIds=0"
             navigation={this.props.navigation}
           />
@@ -84,7 +83,6 @@ export class Home extends PureComponent<Props, State> {
       case 'shoes':
         return (
           <ImageGrid
-            focused={index === 1}
             apiURL="/api/feed/flat/?categoryIds=1"
             navigation={this.props.navigation}
           />
@@ -92,7 +90,6 @@ export class Home extends PureComponent<Props, State> {
       case 'other':
         return (
           <ImageGrid
-            focused={index === 2}
             apiURL="/api/feed/flat/?categoryIds=2"
             navigation={this.props.navigation}
           />
@@ -146,7 +143,7 @@ export class Home extends PureComponent<Props, State> {
           renderTabBar={this._renderTabBar}
           onIndexChange={this._handleIndexChange}
           initialLayout={initialLayout}
-          useNativeDriver
+          lazy
         />
         {this.renderInfoDialog()}
       </View>

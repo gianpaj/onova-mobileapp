@@ -23,7 +23,6 @@ import type { NavigationScreenProp } from 'react-navigation';
 import type { UserData, ReduxState } from '../types';
 
 type Props = {
-  focused: boolean,
   navigation: NavigationScreenProp<*>,
   token: string,
 };
@@ -41,10 +40,6 @@ class SearchSellersTabContainer extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.search = React.createRef();
-  }
-
-  componentDidUpdate() {
-    this.props.focused && this.search.current.focus();
   }
 
   state = {
@@ -148,7 +143,7 @@ class SearchSellersTabContainer extends Component<Props, State> {
               ref={this.search}
               autoCapitalize="none"
               autoCorrect={false}
-              autoFocus={this.props.focused}
+              autoFocus
               blurOnSubmit={false}
               clearButtonMode="while-editing" // iOS
               containerStyle={{

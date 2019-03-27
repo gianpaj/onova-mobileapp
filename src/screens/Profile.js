@@ -30,7 +30,13 @@ import Analytics from 'react-native-analytics-segment-io';
 
 import I18n from '../i18n';
 
-import { Avatar, EditableText, Header, NotificationsDot, Title } from '../components';
+import {
+  Avatar,
+  EditableText,
+  Header,
+  NotificationsDot,
+  Title,
+} from '../components';
 import ShopTab from './ShopTab';
 import UserDropsTab from './UserDropsTab';
 import { getPersonalUserData, enableRefresh } from '../actions/actionCreator';
@@ -603,23 +609,25 @@ class ProfileScreen extends React.Component<Props, State> {
     />
   );
 
-  _renderScene = ({ route, navigationState }) => {
+  _renderScene = ({ route }) => {
     switch (route.key) {
       case 'shop':
-        if (navigationState._id)
+        if (this.state._id)
           return (
             <ShopTab
-              userid={navigationState._id}
+              userid={this.state._id}
               navigation={this.props.navigation}
+              header={this.renderHeader()}
             />
           );
         break;
       case 'drops':
-        if (navigationState.username)
+        if (this.state.username)
           return (
             <UserDropsTab
-              username={navigationState.username}
+              username={this.state.username}
               navigation={this.props.navigation}
+              header={this.renderHeader()}
             />
           );
         break;
@@ -630,6 +638,23 @@ class ProfileScreen extends React.Component<Props, State> {
   };
 
   _handleIndexChange = index => this.setState({ index });
+
+  renderHeader = () => {
+    return (
+      <>
+        <View>
+          {this.shouldShowNoticeBar() && (
+            <NoticeBar
+              marqueeProps={{ loop: false, style: styles.noticeBar }}
+              icon={false}>
+              {I18n.t('alerts.notice_bar_account_verification')}
+            </NoticeBar>
+          )}
+          {this.renderProfileTop()}
+        </View>
+      </>
+    );
+  };
 
   render() {
     const { username, isFetching } = this.state;
@@ -656,7 +681,7 @@ class ProfileScreen extends React.Component<Props, State> {
               </NBButton>
             )}
           </Left>
-          <Body style={styles.container}>
+          <Body style={styles.flex2AndCenter}>
             {/* eslint-disable-next-line react-native/no-raw-text */}
             <Title>@{username}</Title>
           </Body>
@@ -683,16 +708,6 @@ class ProfileScreen extends React.Component<Props, State> {
             )}
           </Right>
         </Header>
-        <>
-          {this.shouldShowNoticeBar() && (
-            <NoticeBar
-              marqueeProps={{ loop: false, style: styles.noticeBar }}
-              icon={false}>
-              {I18n.t('alerts.notice_bar_account_verification')}
-            </NoticeBar>
-          )}
-          {this.renderProfileTop()}
-        </>
         <TabView
           testID="Tabs"
           navigationState={this.state}
@@ -700,7 +715,7 @@ class ProfileScreen extends React.Component<Props, State> {
           renderTabBar={this._renderTabBar}
           onIndexChange={this._handleIndexChange}
           initialLayout={initialLayout}
-          useNativeDriver
+          lazy
         />
       </Container>
     );
@@ -715,6 +730,12 @@ const styles = StyleSheet.create({
     alignItems: 'stretch',
     flex: 1,
     justifyContent: 'center',
+  },
+  flex2AndCenter: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    flex: 2,
+    flexDirection: 'row',
   },
   alignCenter: {
     alignItems: 'center',

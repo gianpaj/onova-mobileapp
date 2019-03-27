@@ -94,7 +94,6 @@ class ReviewsContainer extends Component<Props, State> {
           renderTabBar={this._renderTabBar}
           onIndexChange={this._handleIndexChange}
           initialLayout={initialLayout}
-          useNativeDriver
         />
       </Container>
     );

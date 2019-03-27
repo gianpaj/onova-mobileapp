@@ -91,7 +91,10 @@ class PaymentView extends Component<Props, State> {
   async getPaymentStatus() {
     const { token, navigation } = this.props;
     const { params } = navigation.state;
-    const { data } = await api.get(`/api/orders/${params.orderId}/paymentStatus`, { token });
+    const { data } = await api.get(
+      `/api/orders/${params.orderId}/paymentStatus`,
+      { token }
+    );
     return data;
   }
 
@@ -123,6 +126,7 @@ class PaymentView extends Component<Props, State> {
       }
       this.onSuccess();
     } catch (error) {
+      Toast.hide();
       ui.showToast(error.message, 'danger');
       console.error(error);
       this.props.navigation.goBack();

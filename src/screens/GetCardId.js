@@ -201,7 +201,6 @@ class GetCardId extends Component<Props, State> {
             <View style={{ flex: 0.01, minHeight: 260 }}>
               <WebView
                 ref={this._webviewRef}
-                useWebKit={false}
                 source={{
                   html: `<html>
                     <head><meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0"></head>

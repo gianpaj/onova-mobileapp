@@ -50,7 +50,7 @@ if (__DEV__ && !global.__TESTING__) {
     // iosuser
     defaultState = {
       emailAddress: 'gianpa+test3@gmail.com',
-      password: '***REMOVED***',
+      password: 'expressos',
     };
   }
 

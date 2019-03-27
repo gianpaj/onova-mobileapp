@@ -27,6 +27,7 @@ type State = {
   payment?: {
     redirectUrl: string,
     PaReq: string,
+    url: string,
   },
   isLoading: boolean,
   showFooter: boolean,
@@ -153,7 +154,7 @@ class PaymentView extends Component<Props, State> {
             html: `<html>
               <head><meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0"></head>
               <body>
-                <form action="https://acs.privatbank.ua/pPaReqMC.jsp" method="POST">
+                <form action="${payment.url}" method="POST">
                   <input name="TermUrl" value="${
                     payment.redirectUrl
                   }" type="hidden" /><br>

@@ -72,11 +72,7 @@ export type UserData = {
   sharedCount: number,
   mobileNumber: ?string,
   ordersAndReviewsCount?: boolean,
-  paymentInfo?: {
-    last_four: string,
-    exp_month: string,
-    exp_year: string,
-  },
+  paymentInfo?: PaymentInfo,
   platform: ?string,
   profilePic?: string,
   pushToken: ?string,
@@ -87,15 +83,12 @@ export type UserData = {
   username: string,
 };
 
-export type PaymentInfo =
-  | {
-      valid: boolean,
-      values: {
-        expiry: string,
-        number: string,
-      },
-    }
-  | {};
+export type PaymentInfo = {
+  card_token: string,
+  first_four: string,
+  last_four: string,
+  method: string,
+};
 
 export type ShippingAddress = {
   firstName: string,

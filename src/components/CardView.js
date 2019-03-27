@@ -5,11 +5,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {
-  View,
+  Image,
   ImageBackground,
-  Text,
-  StyleSheet,
   Platform,
+  StyleSheet,
+  Text,
+  View,
 } from 'react-native';
 import colors from '../config/colors';
 
@@ -24,6 +25,14 @@ const s = StyleSheet.create({
     color: colors.grey4,
     backgroundColor: colors.transparent,
   },
+  icon: {
+    position: 'absolute',
+    top: 15,
+    right: 15,
+    width: 60,
+    height: 40,
+    resizeMode: 'contain',
+  },
   placeholder: {
     color: colors.grey3,
   },
@@ -37,83 +46,57 @@ const s = StyleSheet.create({
     top: 95,
     left: 28,
   },
-  name: {
-    fontSize: 16,
-    position: 'absolute',
-    bottom: 20,
-    left: 25,
-    right: 100,
-  },
-  expiryLabel: {
-    fontSize: 9,
-    position: 'absolute',
-    bottom: 40,
-    left: 218,
-  },
   expiry: {
     fontSize: 16,
     position: 'absolute',
     bottom: 20,
     left: 220,
   },
-  amexCVC: {
-    fontSize: 16,
-    position: 'absolute',
-    top: 73,
-    right: 30,
-  },
 });
 
-// $FlowFixMe
+const Icons = {
+  mastercard: require('../assets/images/stp_card_mastercard.png'),
+  visa: require('../assets/images/stp_card_visa.png'),
+};
+
 export default class CardView extends Component {
   static propTypes = {
     focused: PropTypes.string,
 
-    brand: PropTypes.string,
-    name: PropTypes.string,
     number: PropTypes.string,
-    expiry: PropTypes.string,
-    cvc: PropTypes.string,
     placeholder: PropTypes.object,
 
     scale: PropTypes.number,
     fontFamily: PropTypes.string,
     imageFront: PropTypes.number,
-    // imageBack: PropTypes.number,
-    // customIcons: PropTypes.object,
   };
 
   static defaultProps = {
-    name: '',
     placeholder: {
       number: '•••• •••• •••• ••••',
-      name: 'FULL NAME',
       expiry: '••/••',
-      cvc: '•••',
     },
 
     scale: 1,
     fontFamily: Platform.select({ ios: 'Courier', android: 'monospace' }),
-    imageFront: require('../assets/images/card-front.png'),
-    // imageBack: require("../images/card-back.png"),
+    imageFront: require('../assets/images/card-front.jpg'),
   };
 
   render() {
     const {
       focused,
-      brand,
-      name,
-      number,
-      expiry,
-      cvc,
-      placeholder,
-      imageFront,
-      scale,
       fontFamily,
+      imageFront,
+      number,
+      placeholder,
+      scale,
     } = this.props;
 
-    // const Icons = { ...defaultIcons, ...customIcons };
-    const isAmex = brand === 'american-express';
+    const brand = /^4/.test(number)
+      ? 'visa'
+      : /^5[1-5]/.test(number)
+      ? 'mastercard'
+      : false;
 
     const containerSize = {
       ...BASE_SIZE,
@@ -133,6 +116,7 @@ export default class CardView extends Component {
         <ImageBackground
           style={[BASE_SIZE, s.cardFace, transform]}
           source={imageFront}>
+          {brand && <Image style={s.icon} source={Icons[brand]} />}
           <Text
             style={[
               s.baseText,
@@ -143,49 +127,9 @@ export default class CardView extends Component {
             ]}>
             {!number ? placeholder.number : number}
           </Text>
-          <Text
-            style={[
-              s.baseText,
-              { fontFamily },
-              s.name,
-              !name && s.placeholder,
-              focused === 'name' && s.focused,
-            ]}
-            numberOfLines={1}>
-            {!name ? placeholder.name : name.toUpperCase()}
+          <Text style={[s.baseText, { fontFamily }, s.expiry, s.placeholder]}>
+            {placeholder.expiry}
           </Text>
-          <Text
-            style={[
-              s.baseText,
-              { fontFamily },
-              s.expiryLabel,
-              s.placeholder,
-              focused === 'expiry' && s.focused,
-            ]}>
-            MONTH/YEAR
-          </Text>
-          <Text
-            style={[
-              s.baseText,
-              { fontFamily },
-              s.expiry,
-              !expiry && s.placeholder,
-              focused === 'expiry' && s.focused,
-            ]}>
-            {!expiry ? placeholder.expiry : expiry}
-          </Text>
-          {isAmex && (
-            <Text
-              style={[
-                s.baseText,
-                { fontFamily },
-                s.amexCVC,
-                !cvc && s.placeholder,
-                focused === 'cvc' && s.focused,
-              ]}>
-              {!cvc ? placeholder.cvc : cvc}
-            </Text>
-          )}
         </ImageBackground>
       </View>
     );

@@ -296,12 +296,14 @@ class SettingsContainer extends Component<Props, State> {
   onSignout = () => this.props.dispatch(intro());
 
   formatCardInfo() {
-    const { paymentInfo }: { paymentInfo: PaymentInfo } = this.props.userData;
+    const {
+      paymentInfo: { first_four, last_four },
+    }: { paymentInfo: PaymentInfo } = this.props.userData;
+
+    const number = `${first_four || '****'} **** **** ${last_four}`;
 
     return {
-      number: `**** **** **** ${paymentInfo.last_four}`,
-      expiry: '',
-      name: ' ',
+      number,
       scale: 0.5,
     };
   }
@@ -525,7 +527,7 @@ class SettingsContainer extends Component<Props, State> {
                 {Object.keys(userData.paymentInfo).length ? (
                   <CardView {...this.formatCardInfo()} focused="number" />
                 ) : (
-                  <CardView {...this.formatCardInfo()} number="" expiry="" />
+                  <CardView {...this.formatCardInfo()} />
                 )}
               </TouchableOpacity>
             </View>

@@ -329,6 +329,7 @@ class SettingsContainer extends Component<Props, State> {
     this.props.navigation.navigate({
       routeName: 'getCardId',
       key: 'getCardId',
+      params: { short: true },
     });
 
   _renderCityAutocomplete = props => {

@@ -70,7 +70,7 @@ export default class MediaView extends React.Component<Props, State> {
     if (source.length > 1) {
       const images = source;
       return (
-        <View style={[styles.container, { height: imageHeight + 35 }]}>
+        <View style={{ height: imageHeight + 35 }}>
           <Swiper
             ref={this._swiper}
             autoplay={false}
@@ -114,10 +114,11 @@ export default class MediaView extends React.Component<Props, State> {
 
     return (
       <>
-        <TouchableWithoutFeedback onPress={() => this.openModal(0)}>
+        <TouchableWithoutFeedback
+          style={{ borderWidth: 1 }}
+          onPress={() => this.openModal(0)}>
           {/* TODO: show gray low-res thumb while loading */}
-          <>
-            {/* {isiOS && !singleImageLoaded && !hasError && (
+          {/* {isiOS && !singleImageLoaded && !hasError && (
               <Image
                 source={{
                   uri: source[0].replace('.jpg', '-thumb.jpg'),
@@ -126,14 +127,13 @@ export default class MediaView extends React.Component<Props, State> {
                 style={{ width, height: this.state.imageHeight }}
               />
             )} */}
-            <Image
-              source={{ uri: source[0] }}
-              style={{ width, height: this.state.imageHeight }}
-              resizeMode={'contain'}
-              // onLoadEnd={this.singleImageHasLoaded}
-              // onError={this.onError}
-            />
-          </>
+          <Image
+            source={{ uri: source[0] }}
+            style={{ width, height: this.state.imageHeight }}
+            resizeMode={'contain'}
+            // onLoadEnd={this.singleImageHasLoaded}
+            // onError={this.onError}
+          />
         </TouchableWithoutFeedback>
         <Modal
           visible={this.state.isModalVisible}
@@ -152,9 +152,6 @@ export default class MediaView extends React.Component<Props, State> {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    // marginBottom: -35,
-  },
   pagination: {
     bottom: 0,
   },

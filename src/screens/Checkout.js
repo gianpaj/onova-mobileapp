@@ -578,14 +578,6 @@ class CheckoutContainer extends Component<Props, State> {
             <Text>{currency}</Text>
           </View>
         </View>
-        <View style={styles.row}>
-          <Text>
-            @{seller.username} {I18n.t('checkout.location')}:
-          </Text>
-          <View style={[styles.innerRow, { paddingTop: 6 }]}>
-            <Text>{I18n.t('checkout.ukraine')}</Text>
-          </View>
-        </View>
       </View>
     );
   }

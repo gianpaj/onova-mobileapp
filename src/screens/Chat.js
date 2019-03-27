@@ -29,6 +29,7 @@ import I18n from '../i18n';
 
 import type { NavigationScreenProp } from 'react-navigation';
 
+import { addErrorBreadcrumb } from '../utils/analytics';
 import { Header, Send, Info, Title } from '../components';
 import ChatActions from '../components/ChatActions';
 import MessageImage from '../components/MessageImage';

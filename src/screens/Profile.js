@@ -615,6 +615,7 @@ class ProfileScreen extends React.Component<Props, State> {
         if (this.state._id)
           return (
             <ShopTab
+              refreshProfile={this.refresh}
               userid={this.state._id}
               navigation={this.props.navigation}
               header={this.renderHeader()}

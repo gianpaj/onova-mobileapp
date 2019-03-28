@@ -52,6 +52,7 @@ type Props = {
   shouldRefresh?: boolean,
   header: React.ReactElement,
   token?: string,
+  refreshProfile?: () => Promise<any>,
 };
 
 type State = {
@@ -98,6 +99,11 @@ class ImageGridComponent extends React.PureComponent<Props, State> {
       }
     });
   }
+
+  refresh = async () => {
+    const { refreshProfile } = this.props;
+    await Promise.all([refreshProfile && refreshProfile(), this.fetchItems()]);
+  };
 
   /**
    * used when pulling and refreshing AND when initially
@@ -244,7 +250,7 @@ class ImageGridComponent extends React.PureComponent<Props, State> {
           ListEmptyComponent={this.renderEmptyState}
           numColumns={3}
           // $FlowFixMe
-          onRefresh={this.fetchItems}
+          onRefresh={this.refresh}
           refreshing={isLoading}
           renderItem={this.renderItem}
           // showsVerticalScrollIndicator={false}

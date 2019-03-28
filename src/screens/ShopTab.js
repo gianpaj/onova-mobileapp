@@ -18,6 +18,7 @@ type Props = {
   navigation: NavigationScreenProp<*>,
   userid: string,
   header: React.ReactElement,
+  refreshProfile: () => Promise<any>,
 };
 
 class ShopTabContainer extends React.Component<Props, {}> {
@@ -38,7 +39,7 @@ class ShopTabContainer extends React.Component<Props, {}> {
   }
 
   render() {
-    const { navigation, userid, header } = this.props;
+    const { navigation, userid, header, refreshProfile } = this.props;
 
     return (
       <View style={styles.flex1}>
@@ -47,6 +48,7 @@ class ShopTabContainer extends React.Component<Props, {}> {
           apiURL={`/api/products?userid=${userid}`}
           navigation={navigation}
           header={header}
+          refreshProfile={refreshProfile}
           emptyState={
             <View style={styles.emptyContainer}>
               {!this.isMe() ? (

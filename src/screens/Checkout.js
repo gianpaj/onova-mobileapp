@@ -132,8 +132,8 @@ class CheckoutContainer extends Component<Props, State> {
     const { token } = this.props;
     let { params: item } = this.props.navigation.state;
 
-    this.refresh();
     this.initializeListeners();
+    this.refresh();
 
     // for development
     if (!item) {

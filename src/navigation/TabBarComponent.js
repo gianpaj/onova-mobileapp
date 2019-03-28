@@ -5,24 +5,27 @@ import { TabBarBottom } from 'react-navigation';
 // Hide TabBar React Navigation when Keyboard is activated
 // e.g when typing while searching with hashtags
 class TabBarComponent extends React.PureComponent {
+  keyboardDidShowListener;
+  keyboardDidHideListener;
+
   state = {
     isVisible: true,
   };
 
   componentDidMount() {
-    this.keyboardWillShowSub = Keyboard.addListener(
+    this.keyboardDidShowListener = Keyboard.addListener(
       'keyboardDidShow',
       this.keyboardWillShow
     );
-    this.keyboardWillHideSub = Keyboard.addListener(
+    this.keyboardDidHideListener = Keyboard.addListener(
       'keyboardDidHide',
       this.keyboardWillHide
     );
   }
 
   componentWillUnmount() {
-    this.keyboardWillShowSub.remove();
-    this.keyboardWillHideSub.remove();
+    this.keyboardDidShowListener.remove();
+    this.keyboardDidHideListener.remove();
   }
 
   keyboardWillShow = () => this.setState({ isVisible: false });

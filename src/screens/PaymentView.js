@@ -44,8 +44,8 @@ class PaymentView extends Component<Props, State> {
   };
 
   async componentDidMount() {
-    Toast.loading('', 30);
     this.initializeListeners();
+    Toast.loading('', 30);
     try {
       const payment = await this.createPayment();
       console.debug(payment);

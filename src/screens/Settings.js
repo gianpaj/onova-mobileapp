@@ -329,8 +329,8 @@ class SettingsContainer extends Component<Props, State> {
 
   enterPaymentInfo = () =>
     this.props.navigation.navigate({
-      routeName: 'getCardId',
-      key: 'getCardId',
+      routeName: 'enterCardInfo',
+      key: 'enterCardInfo',
       params: { short: true },
     });
 

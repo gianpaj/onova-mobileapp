@@ -63,7 +63,7 @@ type State = {
   tokenForCardIFrame: string,
 };
 
-class GetCardId extends Component<Props, State> {
+class EnterCardInfo extends Component<Props, State> {
   keyboardDidShowListener;
   keyboardDidHideListener;
   _webviewRef = React.createRef();
@@ -279,4 +279,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default connect(mapStateToProps)(GetCardId);
+export default connect(mapStateToProps)(EnterCardInfo);

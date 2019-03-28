@@ -424,8 +424,8 @@ class CheckoutContainer extends Component<Props, State> {
   goToEnterPaymentInfo = async () => {
     await this.updateShippingInfo();
     this.props.navigation.navigate({
-      routeName: 'getCardId',
-      key: 'getCardId',
+      routeName: 'enterCardInfo',
+      key: 'enterCardInfo',
     });
   };
 

@@ -13,7 +13,7 @@ import IntroScreens from '../screens/IntroScreens';
 import { Followers } from '../screens/Followers';
 import { Following } from '../screens/Following';
 import { Suggestions } from '../screens/Suggestions';
-import GetCardId from '../screens/GetCardId';
+import EnterCardInfo from '../screens/EnterCardInfo';
 import { Notifications } from '../screens/Notifications';
 import MarkdownDoc from '../screens/MarkdownDoc';
 import PaymentView from '../screens/PaymentView';
@@ -36,7 +36,7 @@ export {
   DropsFeed,
   Followers,
   Following,
-  GetCardId,
+  EnterCardInfo,
   Home,
   IntroScreens,
   Notifications,

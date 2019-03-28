@@ -195,7 +195,7 @@ class EnterCardInfo extends Component<Props, State> {
         </Header>
         <View style={{ flex: 1 }}>
           <KeyboardAvoidingView
-            behavior="padding"
+            behavior={Platform.select({ android: null, ios: 'padding' })}
             enabled
             style={{
               flex: 1,
@@ -235,7 +235,10 @@ class EnterCardInfo extends Component<Props, State> {
                 </Text>
               </View>
             )}
-            <Button full style={{ color: colors.red }} onPress={this.onSubmit}>
+            <Button
+              full
+              style={{ backgroundColor: colors.active }}
+              onPress={this.onSubmit}>
               <Text style={styles.saveBtn}>
                 {I18n.t('checkout.save_card_info')}
               </Text>

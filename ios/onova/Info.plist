@@ -36,7 +36,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>165002</string>
+	<string>165003</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>LSApplicationCategoryType</key>
@@ -71,6 +71,10 @@
 	<string>Onova does not need this</string>
 	<key>NSCameraUsageDescription</key>
 	<string>Onova uses to your camera to add pictures when creating an item</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Onova does not need this</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Onova does not need this</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Onova uses your location when creating a new item or drop</string>
 	<key>NSMotionUsageDescription</key>

@@ -3,6 +3,7 @@ package com.onova.app;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
 import com.heanoria.library.reactnative.locationenabler.RNAndroidLocationEnablerPackage;
 import com.leo_pharma.analytics.AnalyticsPackage;
 import com.horcrux.svg.SvgPackage;
@@ -33,6 +34,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RNGestureHandlerPackage(),
             new RNAndroidLocationEnablerPackage(),
             new AnalyticsPackage(),
             new SvgPackage(),

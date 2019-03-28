@@ -11,7 +11,7 @@ import {
   Text,
   View,
 } from 'react-native';
-import { Body, Button, Icon, Left, Title, Right } from 'native-base';
+import { Body, Button, Icon, Left, Right, Container } from 'native-base';
 import { WebView } from 'react-native-webview';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -20,7 +20,7 @@ import { enableRefresh } from '../actions/actionCreator';
 import type { NavigationScreenProp } from 'react-navigation';
 import type { Dispatch, UserData, ReduxState } from '../types';
 
-import { Header } from '../components';
+import { Header, Title } from '../components';
 import * as api from '../utils/api';
 import * as ui from '../utils/ui';
 import I18n from '../i18n';
@@ -178,7 +178,7 @@ class EnterCardInfo extends Component<Props, State> {
 
     if (!tokenForCardIFrame) return null;
     return (
-      <View style={{ flex: 1 }}>
+      <Container>
         <Header>
           <Left style={styles.container}>
             <Button
@@ -242,7 +242,7 @@ class EnterCardInfo extends Component<Props, State> {
             </Button>
           </KeyboardAvoidingView>
         </View>
-      </View>
+      </Container>
     );
   }
 }

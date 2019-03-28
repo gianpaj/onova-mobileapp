@@ -8,8 +8,6 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Home, CreateDrop, ChatRooms, Profile, Search } from '../screens';
 import colors from '../config/colors';
 
-import TabBarComponent from './TabBarComponent';
-
 // const initialLayout = {
 //   height: 0,
 //   width: Dimensions.get('window').width,
@@ -77,7 +75,6 @@ const tabBarConfiguration = {
   tabBarPosition: 'bottom',
   animationEnabled: false,
   swipeEnabled: false,
-  tabBarComponent: TabBarComponent,
   // initialLayout,
 };
 

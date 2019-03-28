@@ -23,7 +23,8 @@ import {
 import isEmail from 'validator/lib/isEmail';
 import { Toast } from 'antd-mobile-rn';
 // import AnimButton from 'react-native-micro-animated-button';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import I18n from '../i18n';
 
 import type { NavigationScreenProp } from 'react-navigation';
@@ -229,13 +230,18 @@ export class LoginTabContainer extends React.Component<Props, State> {
   _onBlurEmailReset = () => this.setState({ hasFocusEmailReset: false });
   _onFocusEmailReset = () => this.setState({ hasFocusEmailReset: true });
 
+  getHandler = (key: string) => (val: any) => this.setState({ [key]: val });
+
+  onPasswordToggle = () =>
+    this.setState(prevState => ({
+      isPasswordVisible: !prevState.isPasswordVisible,
+    }));
+
   isDisabled() {
     const { emailAddress, password } = this.state;
 
     return !emailAddress || !password || this.props.loading;
   }
-
-  getHandler = (key: string) => (val: any) => this.setState({ [key]: val });
 
   render() {
     const {
@@ -271,20 +277,32 @@ export class LoginTabContainer extends React.Component<Props, State> {
             }
             {...this._inputProps}
           />
-          <FormInput
-            ref={this.PwdInput}
-            secureTextEntry={!isPasswordVisible}
-            placeholder={I18n.t('login.password_placeholder')}
-            onBlur={this._onBlurPass}
-            onFocus={this._onFocusPass}
-            value={password}
-            testID="PasswordField"
-            textContentType="oneTimeCode" // FIXME:
-            accessibilityLabel="password"
-            onChangeText={this.getHandler('password')}
-            underlineColorAndroid={hasFocusPass ? colors.primary : colors.grey3}
-            {...this._inputProps}
-          />
+          <View>
+            <FormInput
+              ref={this.PwdInput}
+              secureTextEntry={!isPasswordVisible}
+              placeholder={I18n.t('login.password_placeholder')}
+              onBlur={this._onBlurPass}
+              onFocus={this._onFocusPass}
+              value={password}
+              testID="PasswordField"
+              textContentType="oneTimeCode" // FIXME:
+              accessibilityLabel="password"
+              onChangeText={this.getHandler('password')}
+              underlineColorAndroid={
+                hasFocusPass ? colors.primary : colors.grey3
+              }
+              {...this._inputProps}
+              clearButtonMode="never"
+            />
+            <MaterialIcons
+              style={styles.pwdIcon}
+              name={isPasswordVisible ? 'visibility' : 'visibility-off'}
+              size={Platform.select({ ios: 23, android: 25 })}
+              color={colors.grey1}
+              onPress={this.onPasswordToggle}
+            />
+          </View>
           <View style={{ marginTop: 15 }}>
             {/* <AnimButton
               ref={r => (this.loginBtn = r)}
@@ -342,7 +360,7 @@ export class LoginTabContainer extends React.Component<Props, State> {
           this.setState({ verifyAccountModalVisible: false })
         }>
         <>
-          <Header noShadow style={{ backgroundColor: colors.transparent }}>
+          <Header transparent style={{ backgroundColor: colors.transparent }}>
             <Left />
             <Body />
             <Right>
@@ -356,7 +374,7 @@ export class LoginTabContainer extends React.Component<Props, State> {
             </Right>
           </Header>
           <View style={{ margin: 20 }}>
-            <Icon
+            <MaterialCommunityIcons
               size={typography.empty_state_icon}
               name={'email-open-outline'}
               color={colors.grey2}
@@ -383,7 +401,7 @@ export class LoginTabContainer extends React.Component<Props, State> {
         visible={this.state.pwdResetModalVisible}
         onRequestClose={() => this.setPwdResetModalVisible(false)}>
         <>
-          <Header noShadow style={{ backgroundColor: colors.transparent }}>
+          <Header transparent style={{ backgroundColor: colors.transparent }}>
             <Left />
             <Body />
             <Right>
@@ -465,10 +483,12 @@ const styles = StyleSheet.create({
     color: colors.black,
     width: '100%',
   },
-  // PassResetButton: {
-  //   alignSelf: 'center',
-  //   borderRadius: 5,
-  // },
+  pwdIcon: {
+    position: 'absolute',
+    top: 7,
+    right: 20,
+    zIndex: 10,
+  },
   hr: {
     alignSelf: 'center',
     margin: 10,

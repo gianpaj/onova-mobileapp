@@ -20,7 +20,7 @@ import {
   Icon as NBIcon,
 } from 'native-base';
 import { FormInput } from 'react-native-elements';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import isEmail from 'validator/lib/isEmail';
 
@@ -316,7 +316,7 @@ export class SignUpTabContainer extends Component<Props, State> {
             }
             {...this._inputProps}
           />
-          <>
+          <View>
             <FormInput
               ref={this.PwdInput}
               secureTextEntry={!isPasswordVisible}
@@ -331,18 +331,16 @@ export class SignUpTabContainer extends Component<Props, State> {
                 hasFocusPass ? colors.primary : colors.grey3
               }
               {...this._inputProps}
-              clearButtonMode="unless-editing"
+              clearButtonMode="never"
             />
-            {this.state.hasFocusPass && (
-              <MaterialIcons
-                style={styles.pwdIcon}
-                name={isPasswordVisible ? 'visibility' : 'visibility-off'}
-                size={Platform.select({ ios: 23, android: 25 })}
-                color={colors.grey1}
-                onPress={this.onPasswordToggle}
-              />
-            )}
-          </>
+            <MaterialIcons
+              style={styles.pwdIcon}
+              name={isPasswordVisible ? 'visibility' : 'visibility-off'}
+              size={Platform.select({ ios: 23, android: 25 })}
+              color={colors.grey1}
+              onPress={this.onPasswordToggle}
+            />
+          </View>
           <View style={styles.mt15}>
             {/* <AnimButton
               ref={r => (this.signupBtn = r)}
@@ -419,7 +417,7 @@ export class SignUpTabContainer extends Component<Props, State> {
       visible={this.state.isVerifyAccountModalVisible}
       onRequestClose={() => this.setVerifyAccountVisible(false)}>
       <>
-        <Header noShadow style={{ backgroundColor: colors.transparent }}>
+        <Header transparent style={{ backgroundColor: colors.transparent }}>
           <Left />
           <Body />
           <Right>
@@ -431,12 +429,20 @@ export class SignUpTabContainer extends Component<Props, State> {
           </Right>
         </Header>
         <View style={{ margin: 20 }}>
-          <Icon
+          <MaterialCommunityIcons
             size={typography.empty_state_icon}
             name={'email-open-outline'}
             color={colors.grey2}
-            style={{ alignSelf: 'center', marginBottom: 30 }}
+            style={{ alignSelf: 'center', marginBottom: 10 }}
           />
+          <Text
+            style={{
+              color: colors.black,
+              marginBottom: 30,
+              textAlign: 'center',
+            }}>
+            {this.state.emailAddress}
+          </Text>
           <Text
             style={{
               color: colors.black,

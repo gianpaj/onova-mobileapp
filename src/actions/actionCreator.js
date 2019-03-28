@@ -342,6 +342,8 @@ const signup = (data: SignupData) => (dispatch: Dispatch) => {
       // if (analyticsEnabled) trackUser(userData)
     })
     .catch((error: APIError) => {
+      clearTimeout(timer);
+      Toast.hide();
       dispatch(
         handleErrorWithAlert(
           { type: SIGNUP_FAIL },

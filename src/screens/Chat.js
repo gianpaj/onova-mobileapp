@@ -20,6 +20,7 @@ import {
   Right,
 } from 'native-base';
 import Dialog from 'react-native-dialog';
+import ParsedText from 'react-native-parsed-text';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { NavigationActions } from 'react-navigation';
 import { GiftedChat, Bubble, SystemMessage } from 'react-native-gifted-chat';
@@ -38,6 +39,7 @@ import type { Order, ReduxState, PusherMessage, UserData } from '../types';
 import colors from '../config/colors';
 import settings from '../config/settings';
 import * as api from '../utils/api';
+import * as linking from '../utils/linking';
 
 const MARK_AS_READ_AFTER_MS = 300;
 const ONOVA_BOT_ID = '5bd1f7af46c62e6cdee546d0';
@@ -50,7 +52,7 @@ type Props = {
 
 type State = {
   buyerType: 'User' | 'UserWeb',
-  dialogVisible: boolean,
+  infoDialogVisible: boolean,
   partner: UserData,
   isLoading: boolean,
   // isTyping: boolean,
@@ -67,7 +69,8 @@ class ChatContainer extends Component<Props, State> {
 
   state = {
     buyerType: 'User',
-    dialogVisible: false,
+    infoDialogVisible: false,
+    userDialogVisible: false,
     partner: null,
     isLoading: true,
     // isTyping: false,
@@ -557,11 +560,11 @@ class ChatContainer extends Component<Props, State> {
     );
   };
 
-  goToProfile = () => {
-    const { partner, isWebUser } = this.state;
+  goToProfileOrShowWebUserInfo = () => {
+    const { buyerType, partner } = this.state;
     const { _id } = this.props.userData;
 
-    if (!isWebUser) return;
+    if (buyerType === 'UserWeb') return this.toggleUserDialog();
 
     let routeName = 'profileInStack';
     if (_id == partner._id) {
@@ -576,6 +579,39 @@ class ChatContainer extends Component<Props, State> {
 
     this.props.navigation.dispatch(navigateToProfile);
   };
+
+  // only for UserWeb
+  renderUserDialog = () => (
+    <React.Fragment>
+      <Dialog.Container
+        visible={this.state.userDialogVisible}
+        onBackdropPress={this.toggleUserDialog}
+        onBackButtonPress={this.toggleUserDialog}
+        renderToHardwareTextureAndroid>
+        <Dialog.Title>{I18n.t('home.alert_info_title')}</Dialog.Title>
+
+        <ParsedText
+          style={{ marginTop: 4, margin: 18 }}
+          parse={[
+            { type: 'url', style: st.url, onPress: linking.openURL },
+            {
+              pattern: /[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{2,3}[-\s\.]?[0-9]{2,3}/,
+              style: st.url,
+              onPress: linking.call,
+            },
+          ]}>
+          {/* eslint-disable-next-line react-native/no-raw-text */}
+          {I18n.t('chat.user_dialog.mobile_mumber') +
+            ': ' +
+            this.state.partner.mobileNumber}
+        </ParsedText>
+        <Dialog.Button
+          label={I18n.t('product.toast_warning_ok_button')}
+          onPress={this.toggleUserDialog}
+        />
+      </Dialog.Container>
+    </React.Fragment>
+  );
 
   renderBubble = props => {
     // this prevent the <MessageText /> from rendering when an image has been sent
@@ -632,15 +668,22 @@ class ChatContainer extends Component<Props, State> {
 
   _renderSeparatorHorizontal = () => <View style={st.separatorHorizontal} />;
 
-  toggleDialog = () =>
-    this.setState(prevState => ({ dialogVisible: !prevState.dialogVisible }));
+  toggleInfoDialog = () =>
+    this.setState(prevState => ({
+      infoDialogVisible: !prevState.infoDialogVisible,
+    }));
+
+  toggleUserDialog = () =>
+    this.setState(prevState => ({
+      userDialogVisible: !prevState.userDialogVisible,
+    }));
 
   renderInfoDialog = () => (
     <React.Fragment>
       <Dialog.Container
-        visible={this.state.dialogVisible}
-        onBackdropPress={this.toggleDialog}
-        onBackButtonPress={this.toggleDialog}
+        visible={this.state.infoDialogVisible}
+        onBackdropPress={this.toggleInfoDialog}
+        onBackButtonPress={this.toggleInfoDialog}
         renderToHardwareTextureAndroid>
         <Dialog.Title>{I18n.t('chat.alert_info_title')}</Dialog.Title>
 
@@ -649,7 +692,7 @@ class ChatContainer extends Component<Props, State> {
         </Text>
         <Dialog.Button
           label={I18n.t('product.toast_warning_ok_button')}
-          onPress={this.toggleDialog}
+          onPress={this.toggleInfoDialog}
         />
       </Dialog.Container>
     </React.Fragment>
@@ -680,10 +723,8 @@ class ChatContainer extends Component<Props, State> {
           <Body style={st.flex4AndCenter}>
             {partner && (
               <>
-                <Title
-                  withIcon
-                  // eslint-disable-next-line react-native/no-raw-text
-                  onPress={this.goToProfile}>
+                {/* eslint-disable-next-line react-native/no-raw-text */}
+                <Title withIcon onPress={this.goToProfileOrShowWebUserInfo}>
                   @{partner.username}
                 </Title>
                 <Info onPress={this.toggleDialog} />
@@ -744,6 +785,7 @@ class ChatContainer extends Component<Props, State> {
           />
         </View>
         {this.renderInfoDialog()}
+        {isWebUser && this.renderUserDialog()}
       </Container>
     );
   }
@@ -827,6 +869,10 @@ const st = StyleSheet.create({
     // borderRadius: 50, // FIXME:
     height: 50,
     width: 50,
+  },
+  url: {
+    color: colors.active,
+    textDecorationLine: 'underline',
   },
 });
 

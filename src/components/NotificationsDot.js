@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { connect } from 'react-redux';
-import { View, PixelRatio, Platform, StyleSheet } from 'react-native';
+import { PixelRatio, Platform, StyleSheet } from 'react-native';
 
 import type { ReduxState } from '../types';
 import { Avatar } from '../components';
@@ -19,34 +19,34 @@ class NotificationsDot extends React.Component<Props> {
     if (!userData) return null;
 
     return (
-      <View style={st.iconContainer}>
-        {/* {userData.notifications && <View style={st.dot} />} */}
-        <Avatar
-          style={st.avatarContainer}
-          size="verySmall"
-          withBorder={focused}
-          uri={userData.profilePic}
-          placeholderText={userData.username}
-        />
-        {/* https://docs.nativebase.io/Components.html#footer-tabs-badge-headref */}
-        {/* <Button active badge vertical>
-          <Badge ><Text>51</Text></Badge>
-          <Icon active name="navigate" />
-          <Text>Navigate</Text>
-        </Button> */}
-      </View>
+      <Avatar
+        style={styles.avatarContainer}
+        size="verySmall"
+        withBorder={focused}
+        uri={userData.profilePic}
+        placeholderText={userData.username}
+      />
     );
+    // <View style={st.iconContainer}>
+    /* {userData.notifications && <View style={st.dot} />} */
+    /* https://docs.nativebase.io/Components.html#footer-tabs-badge-headref */
+    /* <Button active badge vertical>
+        <Badge ><Text>51</Text></Badge>
+        <Icon active name="navigate" />
+        <Text>Navigate</Text>
+      </Button> */
+    // </View>
   }
 }
 
-const st = StyleSheet.create({
-  iconContainer: {
-    // zIndex: 0,
-    // flex: 1,
-    // alignSelf: 'stretch',
-    // justifyContent: 'space-around',
-    // alignItems: 'center',
-  },
+const styles = StyleSheet.create({
+  // iconContainer: {
+  //   zIndex: 0,
+  //   flex: 1,
+  //   alignSelf: 'stretch',
+  //   justifyContent: 'space-around',
+  //   alignItems: 'center',
+  // },
   // dot: {
   //   backgroundColor: colors.red,
   //   borderRadius: 15,

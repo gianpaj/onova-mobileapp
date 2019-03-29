@@ -48,6 +48,7 @@ type State = {
 };
 
 class ChatContainer extends Component<Props, State> {
+  didFocusListener;
   state = {
     hasError: false,
     isRefreshing: false,
@@ -61,36 +62,36 @@ class ChatContainer extends Component<Props, State> {
     //   ordersAndChats: [],
     //   isLoading: false,
     // });
-    if (pusherCurrentUser) {
-      this.getChatsAndTheirOrders()
-        .then(ordersAndChats =>
-          this.setState({
-            ordersAndChats,
-            isLoading: false,
-          })
-        )
-        .catch(err => {
-          this.setState({ hasError: true });
-          console.debug(err);
-          ui.showToast(err.message);
-        });
-    } else {
+    if (!pusherCurrentUser) {
       console.error('no pusherCurrentUser');
+      return;
     }
+    this.initialise();
 
-    this.props.navigation.addListener('didFocus', () => {
-      if (pusherCurrentUser) {
-        this.getChatsAndTheirOrders()
-          .then(ordersAndChats => this.setState({ ordersAndChats }))
-          .catch(err => {
-            console.debug(err);
-            this.setState({ hasError: true });
-          });
+    this.didFocusListener = this.props.navigation.addListener(
+      'didFocus',
+      () => {
+        if (pusherCurrentUser) this.initialise();
       }
-    });
+    );
   }
 
+  componentWillUnmount() {
+    this.didFocusListener.remove();
+  }
 
+  initialise = () => {
+    this.setState({ isLoading: true });
+    this.getChatsAndTheirOrders()
+      .then(ordersAndChats =>
+        this.setState({ ordersAndChats, isLoading: false })
+      )
+      .catch(err => {
+        this.setState({ hasError: true, isLoading: false });
+        console.debug(err);
+        ui.showToast(err.message);
+      });
+  };
 
   async getChatsAndTheirOrders(): Promise<Array<any>> {
     console.debug('getChatsAndTheirOrders');

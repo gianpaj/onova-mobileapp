@@ -290,30 +290,30 @@ export class SignUpTabContainer extends Component<Props, State> {
           style={[styles.container, { paddingVertical: this.keyboardHeight }]}>
           <FormInput
             ref={this.UserNameInput}
-            placeholder={I18n.t('signup.username_placeholder')}
-            onBlur={this._onBlurUser}
-            onFocus={this._onFocusUser}
-            value={this.state.username}
-            onChangeText={this.onUserChange}
             accessibilityLabel="username"
+            onBlur={this._onBlurUser}
+            onChangeText={this.onUserChange}
+            onFocus={this._onFocusUser}
+            placeholder={I18n.t('signup.username_placeholder')}
             textContentType="username"
             underlineColorAndroid={hasFocusUser ? colors.primary : colors.grey3}
+            value={this.state.username}
             {...this._inputProps}
           />
           <FormInput
             ref={this.EmailInput}
-            placeholder={I18n.t('signup.email_placeholder')}
+            accessibilityLabel="email address"
             keyboardType="email-address"
             onBlur={this._onBlurEmail}
-            onFocus={this._onFocusEmail}
-            value={this.state.emailAddress}
-            testID="EmailField"
             onChangeText={this.getHandler('emailAddress')}
-            accessibilityLabel="email address"
+            onFocus={this._onFocusEmail}
+            placeholder={I18n.t('signup.email_placeholder')}
+            testID="EmailField"
             textContentType="emailAddress"
             underlineColorAndroid={
               hasFocusEmail ? colors.primary : colors.grey3
             }
+            value={this.state.emailAddress}
             {...this._inputProps}
           />
           <View>

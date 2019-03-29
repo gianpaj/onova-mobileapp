@@ -251,6 +251,7 @@ export class LoginTabContainer extends React.Component<Props, State> {
       password,
       isPasswordVisible,
     } = this.state;
+    const { loading } = this.props;
 
     return (
       <Content testID="login-form">
@@ -263,35 +264,35 @@ export class LoginTabContainer extends React.Component<Props, State> {
           }}>
           <FormInput
             ref={this.EmailInput}
-            placeholder={I18n.t('login.email_placeholder')}
+            accessibilityLabel="email address"
             keyboardType="email-address"
             onBlur={this._onBlurEmail}
+            onChangeText={this.getHandler('emailAddress')}
             onFocus={this._onFocusEmail}
-            value={emailAddress}
+            placeholder={I18n.t('login.email_placeholder')}
             testID="EmailField"
             textContentType="emailAddress"
-            accessibilityLabel="email address"
-            onChangeText={this.getHandler('emailAddress')}
             underlineColorAndroid={
               hasFocusEmail ? colors.primary : colors.grey3
             }
+            value={emailAddress}
             {...this._inputProps}
           />
           <View>
             <FormInput
               ref={this.PwdInput}
-              secureTextEntry={!isPasswordVisible}
-              placeholder={I18n.t('login.password_placeholder')}
+              accessibilityLabel="password"
               onBlur={this._onBlurPass}
+              onChangeText={this.getHandler('password')}
               onFocus={this._onFocusPass}
-              value={password}
+              placeholder={I18n.t('login.password_placeholder')}
+              secureTextEntry={!isPasswordVisible}
               testID="PasswordField"
               textContentType="oneTimeCode" // FIXME:
-              accessibilityLabel="password"
-              onChangeText={this.getHandler('password')}
               underlineColorAndroid={
                 hasFocusPass ? colors.primary : colors.grey3
               }
+              value={password}
               {...this._inputProps}
               clearButtonMode="never"
             />
@@ -304,27 +305,11 @@ export class LoginTabContainer extends React.Component<Props, State> {
             />
           </View>
           <View style={{ marginTop: 15 }}>
-            {/* <AnimButton
-              ref={r => (this.loginBtn = r)}
-              disabled={disabled}
-              noRadius
-              style={[
-                styles.LoginButton,
-                {
-                  backgroundColor: this.backgroundColor,
-                },
-              ]}
-              {...buttonProps}
-              onPress={this.onLogin}
-              label={I18n.t('login.log_in_button')}
-              labelStyle={{ color: colors.white }}
-              testID="LoginButton"
-            /> */}
             <NBButton
               testID="loginButton"
               block
-              disabled={this.props.loading}
-              dark={!this.props.loading}
+              disabled={loading}
+              dark={!loading}
               onPress={this.onLogin}
               {...buttonProps}>
               <Text

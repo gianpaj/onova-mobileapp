@@ -90,108 +90,89 @@ class ChatContainer extends Component<Props, State> {
     });
   }
 
-  getChatsAndTheirOrders(): Promise<Array<any>> {
-    console.log('getChatsAndTheirOrders');
-    let orders;
-    const { token } = this.props;
-    const { userData } = this.props;
-    return new Promise((resolve, reject) => {
-      if (!pusherCurrentUser) return reject();
-      api
-        .getOrders(token)
-        .then(oo => {
-          orders = oo.filter(
-            (o: Order) =>
-              !['paid', 'cancelled', 'pending', 'reserved'].includes(o.status)
-          );
-          if (orders.length === 0) return resolve([]);
 
-          return pusherCurrentUser.getJoinableRooms();
-        })
-        .then((rooms: Array<any>) => [...rooms, ...pusherCurrentUser.rooms])
-        .then(allRooms => {
-          // let roomsAndTheirOrders = allRooms.filter(r => {
-          //   const o = orders.filter((o: Order) => getRoomName(o) == r.name);
-          //   if (o) return true;
-          //   return false;
-          // });
 
-          // filter chat rooms by checking if there is
-          // at least one room name == order generated name
-          const thisOrders = orders.map(o => getRoomName(o));
-          let roomsAndTheirOrders = allRooms.filter(function(r) {
-            return this.indexOf(r.name) >= 0;
-          }, thisOrders);
-          // add order and room objects
-          roomsAndTheirOrders = roomsAndTheirOrders.map(r => {
-            r.orders = orders.filter((o: Order) => getRoomName(o) == r.name);
-            return r;
-          });
+  async getChatsAndTheirOrders(): Promise<Array<any>> {
+    console.debug('getChatsAndTheirOrders');
+    const { token, userData } = this.props;
+    const orders = (await api.getOrders(token)).filter(
+      (o: Order) =>
+        !['paid', 'cancelled', 'pending', 'reserved'].includes(o.status)
+    );
+    if (orders.length === 0) return [];
 
-          return Promise.all(
-            roomsAndTheirOrders.map(async room => {
-              let msgs;
-              try {
-                await pusherCurrentUser.subscribeToRoom({
-                  roomId: room.id,
-                  hooks: { onMessage: () => null },
-                  messageLimit: 1,
-                });
-                msgs = await pusherCurrentUser.fetchMessages({
-                  roomId: room.id,
-                  direction: 'older',
-                  limit: 9,
-                });
-              } catch (err) {
-                throw new Error(err);
-              }
+    const rooms = await pusherCurrentUser.getJoinableRooms();
+    const allRooms = [...rooms, ...pusherCurrentUser.rooms];
 
-              let partner, unreadCount;
-              if (
-                room.orders.filter(o => o.buyerType == 'UserWeb').length > 0
-              ) {
-                partner = {
-                  _id: ONOVA_BOT_ID,
-                  name: `${room.orders[0].buyer.displayName} (web)`,
-                };
-              } else {
-                partner = room.users
-                  .filter(u => u.id !== ONOVA_BOT_ID)
-                  .find(u => u.id !== userData._id);
-                const cursor = await pusherCurrentUser.readCursor({
-                  roomId: room.id,
-                });
-                unreadCount = unreads(cursor, msgs) || 0;
-              }
-
-              const isPartnerOnline =
-                partner.presence && partner.presence.state == 'online';
-              return {
-                ...room,
-                // if no messages (very first order step)
-                lastMessage: msgs.length
-                  ? msgs[msgs.length - 1]
-                  : { createdAt: room.createdAt },
-                isPartnerOnline,
-                unreadCount,
-                partner,
-              };
-            })
-          );
-        })
-        .then(ordersAndChats => {
-          if (ordersAndChats.length > 1) {
-            return ordersAndChats.sort(
-              (a, b) =>
-                new Date(b.lastMessage.createdAt) -
-                new Date(a.lastMessage.createdAt)
-            );
-          }
-          return ordersAndChats;
-        })
-        .then(ordersAndChats => resolve(ordersAndChats))
-        .catch(e => reject(e));
+    // filter chat rooms by checking if there is
+    // at least one room name == order generated name
+    // console.log(orders);
+    const thisOrders = orders.map(o => getRoomName(o));
+    let roomsAndTheirOrders = allRooms.filter(function(r) {
+      return this.indexOf(r.name) >= 0;
+    }, thisOrders);
+    // add order and room objects
+    roomsAndTheirOrders = roomsAndTheirOrders.map(r => {
+      r.orders = orders.filter((o: Order) => getRoomName(o) == r.name);
+      return r;
     });
+
+    const ordersAndChats = await Promise.all(
+      roomsAndTheirOrders.map(async room => {
+        let msgs;
+        try {
+          await pusherCurrentUser.subscribeToRoom({
+            roomId: room.id,
+            hooks: { onMessage: () => null },
+            messageLimit: 1,
+          });
+          msgs = await pusherCurrentUser.fetchMessages({
+            roomId: room.id,
+            direction: 'older',
+            limit: 1,
+          });
+        } catch (err) {
+          throw new Error(err);
+        }
+
+        let partner, unreadCount;
+        if (room.orders.filter(o => o.buyerType == 'UserWeb').length > 0) {
+          partner = {
+            _id: ONOVA_BOT_ID,
+            name: `${room.orders[0].buyer.displayName} (web)`,
+          };
+        } else {
+          partner = room.users
+            .filter(u => u.id !== ONOVA_BOT_ID)
+            .find(u => u.id !== userData._id);
+          const cursor = await pusherCurrentUser.readCursor({
+            roomId: room.id,
+          });
+          unreadCount = unreads(cursor, msgs) || 0;
+        }
+
+        const isPartnerOnline =
+          partner.presence && partner.presence.state == 'online';
+        return {
+          ...room,
+          // if no messages (very first order step)
+          lastMessage: msgs.length
+            ? msgs[msgs.length - 1]
+            : { createdAt: room.createdAt },
+          isPartnerOnline,
+          unreadCount,
+          partner,
+        };
+      })
+    );
+
+    if (ordersAndChats.length > 1) {
+      ordersAndChats.sort(
+        (a, b) =>
+          new Date(b.lastMessage.createdAt) - new Date(a.lastMessage.createdAt)
+      );
+    }
+    return ordersAndChats;
   }
 
   goToChat = (roomId: string) => {

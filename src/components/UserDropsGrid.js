@@ -46,6 +46,7 @@ type State = {
 const { width, height } = Dimensions.get('window');
 
 class UserDropsGridComponent extends React.PureComponent<Props, State> {
+  didFocusListener;
   reqTimer = 0;
   firstFocus = true;
   state = {
@@ -61,14 +62,21 @@ class UserDropsGridComponent extends React.PureComponent<Props, State> {
       this.fetchItems();
     }
 
-    this.props.navigation.addListener('didFocus', () => {
-      if (this.props.shouldRefresh) {
-        setTimeout(() => {
-          this.fetchItems();
-          this.props.dispatch(disableRefresh());
-        }, 1000);
+    this.didFocusListener = this.props.navigation.addListener(
+      'didFocus',
+      () => {
+        if (this.props.shouldRefresh) {
+          setTimeout(() => {
+            this.fetchItems();
+            this.props.dispatch(disableRefresh());
+          }, 1000);
+        }
       }
-    });
+    );
+  }
+
+  componentWillUnmount() {
+    this.didFocusListener.remove();
   }
 
   componentDidUpdate() {

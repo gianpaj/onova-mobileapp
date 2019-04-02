@@ -100,6 +100,7 @@ type State = {
 const cyrillicRegex = /^$|^[\u0400-\u04FF\s]+$/;
 
 class CheckoutContainer extends Component<Props, State> {
+  didFocusListener;
   inputs = [];
   cancelToken: CancelTokenSource;
   _scrollView;
@@ -180,6 +181,7 @@ class CheckoutContainer extends Component<Props, State> {
   componentWillUnmount() {
     this.keyboardDidShowListener.remove();
     this.keyboardDidHideListener.remove();
+    this.didFocusListener.remove();
     // trigger Axios to reject the request
     this.cancelToken.cancel('operation_canceled');
 
@@ -240,12 +242,15 @@ class CheckoutContainer extends Component<Props, State> {
   }
 
   initializeListeners() {
-    this.props.navigation.addListener('didFocus', () => {
-      if (this.props.shouldRefresh) {
-        this.refresh();
-        this.props.dispatch(disableRefresh());
+    this.didFocusListener = this.props.navigation.addListener(
+      'didFocus',
+      () => {
+        if (this.props.shouldRefresh) {
+          this.refresh();
+          this.props.dispatch(disableRefresh());
+        }
       }
-    });
+    );
     this.props.dispatch(enableCancelOrder());
 
     this.keyboardDidShowListener = Keyboard.addListener(
@@ -617,7 +622,8 @@ class CheckoutContainer extends Component<Props, State> {
           </React.Fragment>
         ))}
       </Text>
-      <View style={{ flexDirection: 'row', padding: 10, justifyContent: 'center' }}>
+      <View
+        style={{ flexDirection: 'row', padding: 10, justifyContent: 'center' }}>
         <Image
           source={require('../assets/images/visa.png')}
           style={styles.mandatoryImage}

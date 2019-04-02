@@ -69,6 +69,7 @@ type State = {
 const { width, height } = Dimensions.get('window');
 
 class ImageGridComponent extends React.PureComponent<Props, State> {
+  didFocusListener;
   reqTimer = 0;
   state = {
     // itemHeight: 0,
@@ -88,16 +89,23 @@ class ImageGridComponent extends React.PureComponent<Props, State> {
       .catch(() => this.setState({ hasError: true }))
       .then(() => this.setState({ initializing: false }));
 
-    this.props.navigation.addListener('didFocus', () => {
-      if (this.props.shouldRefresh) {
-        setTimeout(() => {
-          this.fetchItems()
-            .catch(() => this.setState({ hasError: true }))
-            .then(() => this.setState({ initializing: false }));
-          this.props.dispatch(disableRefresh());
-        }, 1000);
+    this.didFocusListener = this.props.navigation.addListener(
+      'didFocus',
+      () => {
+        if (this.props.shouldRefresh) {
+          setTimeout(() => {
+            this.fetchItems()
+              .catch(() => this.setState({ hasError: true }))
+              .then(() => this.setState({ initializing: false }));
+            this.props.dispatch(disableRefresh());
+          }, 1000);
+        }
       }
-    });
+    );
+  }
+
+  componentWillUnmount() {
+    this.didFocusListener.remove();
   }
 
   refresh = async () => {

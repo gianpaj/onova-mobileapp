@@ -68,6 +68,7 @@ const { analyticsEnabled } = api;
 export class ProductContainer extends React.Component<Props, State> {
   anim: ?React$Element<*>;
   cancelToken;
+  didFocusListener;
   scrollView: Content;
   reqTimer = 0;
 
@@ -86,18 +87,22 @@ export class ProductContainer extends React.Component<Props, State> {
   componentDidMount() {
     this.refresh().then(() => this.setState({ loading: false }));
 
-    this.props.navigation.addListener('didFocus', () => {
-      if (this.props.shouldRefresh) {
-        setTimeout(() => {
-          this.refresh();
-        }, 1000);
+    this.didFocusListener = this.props.navigation.addListener(
+      'didFocus',
+      () => {
+        if (this.props.shouldRefresh) {
+          setTimeout(() => {
+            this.refresh();
+          }, 1000);
+        }
       }
-    });
+    );
   }
 
   componentWillUnmount() {
     // trigger Axios to reject the request
     this.cancelToken.cancel('operation_canceled');
+    this.didFocusListener.remove();
   }
 
   showActionSheetForProduct = () => {
@@ -474,11 +479,10 @@ export class ProductContainer extends React.Component<Props, State> {
                   </View>
                 </View>
                 <View style={styles.flex1} />
-                <Text style={styles.price}>
-                  {`${ui.formatCurrency(item.price, 0)} ${I18n.t(
-                    item.currency
-                  )}`}
-                </Text>
+                <Text style={styles.price}>{`${ui.formatCurrency(
+                  item.price,
+                  0
+                )} ${I18n.t(item.currency)}`}</Text>
               </View>
               <MediaView source={item.photoURIs} />
               <View

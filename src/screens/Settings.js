@@ -112,6 +112,7 @@ type State = {
 
 class SettingsContainer extends Component<Props, State> {
   cancelToken;
+  didFocusListener;
   inputs: Array<any> = [];
   state = {
     activeInputRef: null,
@@ -132,7 +133,7 @@ class SettingsContainer extends Component<Props, State> {
   async componentDidMount() {
     await this.refresh();
 
-    this.props.navigation.addListener('didFocus', () => {
+    this.didFocusListener = this.props.navigation.addListener('didFocus', () => {
       if (this.props.shouldRefresh) {
         this.refresh();
         this.props.dispatch(disableRefresh());
@@ -172,6 +173,7 @@ class SettingsContainer extends Component<Props, State> {
   componentWillUnmount() {
     // trigger Axios to reject the request
     this.cancelToken.cancel('operation_canceled');
+    this.didFocusListener.remove();
   }
 
   static getDerivedStateFromProps(props, state) {

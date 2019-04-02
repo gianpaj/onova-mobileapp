@@ -64,6 +64,7 @@ type State = {
 };
 
 class ChatContainer extends Component<Props, State> {
+  willFocusListener;
   sb;
   rejectProm;
 
@@ -85,22 +86,25 @@ class ChatContainer extends Component<Props, State> {
     let { params } = this.props.navigation.state;
 
     // refresh after leaving a review or archiving an order
-    this.props.navigation.addListener('willFocus', () => {
-      const { roomId, shouldRefresh } = this.state;
-      // do not initiate twice at the beginning
-      // OR
-      // when it should not refresh (review hasn't been added or order archived)
-      if (!roomId || !shouldRefresh) return;
+    this.willFocusListener = this.props.navigation.addListener(
+      'willFocus',
+      () => {
+        const { roomId, shouldRefresh } = this.state;
+        // do not initiate twice at the beginning
+        // OR
+        // when it should not refresh (review hasn't been added or order archived)
+        if (!roomId || !shouldRefresh) return;
 
-      // TODO: maybe only refresh the orders?
-      // this.fetchOrders(thisRoom)
+        // TODO: maybe only refresh the orders?
+        // this.fetchOrders(thisRoom)
 
-      this.setState({ isLoading: true }, () =>
-        this.initialise(roomId)
-          .then(this.setState({ isLoading: false, shouldRefresh: false }))
-          .catch(e => console.error(e))
-      );
-    });
+        this.setState({ isLoading: true }, () =>
+          this.initialise(roomId)
+            .then(this.setState({ isLoading: false, shouldRefresh: false }))
+            .catch(e => console.error(e))
+        );
+      }
+    );
 
     // for development on 'onova' Pusher Instance
     if (!params) {
@@ -134,6 +138,8 @@ class ChatContainer extends Component<Props, State> {
       this.rejectProm();
       this.rejectProm = null;
     }
+
+    this.willFocusListener.remove();
   }
 
   initialise(roomId: number, orderId?: string) {

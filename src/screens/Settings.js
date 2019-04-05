@@ -249,7 +249,7 @@ class SettingsContainer extends Component<Props, State> {
     // }
 
     // FIXME: state should be the number unformatted. useful also when comparing if number has been changed
-    if (mobileNumber) {
+    if (typeof mobileNumber === 'string') {
       data.mobileNumber = mobileNumber.replace(/\D/g, '');
     }
 

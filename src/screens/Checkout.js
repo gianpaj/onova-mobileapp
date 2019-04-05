@@ -357,7 +357,7 @@ class CheckoutContainer extends Component<Props, State> {
   updateShippingInfo(): Promise<any> {
     const { userData, token } = this.props;
     const { mobileNumber, shippingAddress } = this.state;
-    const data = { shippingAddress }
+    const data = { shippingAddress };
 
     // FIXME: state should be the mobileNumber unformatted. useful also to compare if number has been changed
 

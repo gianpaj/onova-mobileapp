@@ -2,23 +2,8 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import {
-  Platform,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  UIManager,
-  View,
-} from 'react-native';
-import {
-  Body,
-  Button as NBButton,
-  Container,
-  Content,
-  Icon as NBIcon,
-  Left,
-  Right,
-} from 'native-base';
+import { Platform, StyleSheet, Text, TouchableOpacity, UIManager, View } from 'react-native';
+import { Body, Button as NBButton, Container, Content, Icon as NBIcon, Left, Right } from 'native-base';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { FormInput, FormLabel } from 'react-native-elements';
 import type { NavigationScreenProp } from 'react-navigation';
@@ -29,29 +14,14 @@ import update from 'immutability-helper';
 // import Instabug from 'instabug-reactnative';
 import { KeyboardAccessoryNavigation } from 'react-native-keyboard-accessory';
 
-import {
-  Accordion,
-  CardView,
-  Header,
-  HR,
-  SearchableDropdown,
-  Title,
-} from '../components';
+import { Accordion, CardView, Header, HR, SearchableDropdown, Title } from '../components';
 
-import {
-  disableRefresh,
-  getPersonalUserData,
-  intro,
-} from '../actions/actionCreator';
+import { disableRefresh, getPersonalUserData, intro } from '../actions/actionCreator';
 
 import I18n from '../i18n';
 import colors from '../config/colors';
 import settings from '../config/settings';
-import {
-  validPassword,
-  validShippingAddress,
-  isPhoneNumberValid,
-} from '../utils/validators';
+import { validPassword, validShippingAddress, isPhoneNumberValid } from '../utils/validators';
 import * as api from '../utils/api';
 import * as ui from '../utils/ui';
 import * as linking from '../utils/linking';
@@ -76,15 +46,7 @@ if (!Object.is) {
 // allow empty string || cyrillic chars with whitespaces
 const cyrillicRegex = /^$|^[\u0400-\u04FF\s]+$/;
 
-import type {
-  City,
-  Department,
-  UserData,
-  Dispatch,
-  PaymentInfo,
-  ShippingAddress,
-  ReduxState,
-} from '../types';
+import type { City, Department, UserData, Dispatch, PaymentInfo, ShippingAddress, ReduxState } from '../types';
 
 type Props = {
   dispatch: Dispatch,
@@ -149,25 +111,20 @@ class SettingsContainer extends Component<Props, State> {
     this.setState({ cities });
 
     if (this.state.shippingAddress && this.state.shippingAddress.city) {
-      const departments = await api.getDepartments(
-        this.state.shippingAddress.city
-      );
+      const departments = await api.getDepartments(this.state.shippingAddress.city);
       this.setState({ departments });
     }
     this.setState({ isLoading: false });
 
     if (Platform.OS === 'android') {
-      UIManager.setLayoutAnimationEnabledExperimental &&
-        UIManager.setLayoutAnimationEnabledExperimental(true);
+      UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
     }
   }
 
   refresh = () => {
     const CancelToken = axios.CancelToken;
     this.cancelToken = CancelToken.source();
-    return this.props.dispatch(
-      getPersonalUserData({ cancelToken: this.cancelToken.token })
-    );
+    return this.props.dispatch(getPersonalUserData({ cancelToken: this.cancelToken.token }));
   };
 
   componentWillUnmount() {
@@ -215,9 +172,7 @@ class SettingsContainer extends Component<Props, State> {
         validPassword(password) ||
         // allow to delete the mobile number
         // FIXME: the logic should not return true if both the state.mobileNumber and userData.mobileNumber are empty
-        (!mobileNumber && mobileNumber !== userData.mobileNumber
-          ? isPhoneNumberValid(mobileNumber)
-          : false) ||
+        (!mobileNumber && mobileNumber !== userData.mobileNumber ? isPhoneNumberValid(mobileNumber) : false) ||
         (isEmail(emailAddress) && emailAddress !== userData.emailAddress) ||
         (username !== '' && username !== userData.username))
     );
@@ -225,13 +180,7 @@ class SettingsContainer extends Component<Props, State> {
 
   onSave = () => {
     const { userData, token } = this.props;
-    const {
-      emailAddress,
-      mobileNumber,
-      password,
-      shippingAddress,
-      username,
-    } = this.state;
+    const { emailAddress, mobileNumber, password, shippingAddress, username } = this.state;
     const data = {};
 
     this.setState({ pending: true });
@@ -263,14 +212,11 @@ class SettingsContainer extends Component<Props, State> {
         // console.log(res);
         // if we changed the email
         if (data.emailAddress) {
-          ui.showToast(
-            I18n.t('settings.alert_msg_email_address_changed'),
-            'success'
-          );
+          ui.showToast(I18n.t('settings.alert_msg_email_address_changed'), 'success');
         } else {
           ui.showToast(I18n.t('settings.alert_msg_settigs_changed'), 'success');
         }
-        this.props.navigation && this.props.navigation.goBack();
+        this.goBack()
       })
       .catch(err => {
         console.debug(err);
@@ -318,10 +264,7 @@ class SettingsContainer extends Component<Props, State> {
     });
 
   changeInputFocus(direction = 1) {
-    if (
-      (this.state.nextFocusDisabled && direction === 1) ||
-      (this.state.previousFocusDisabled && direction === -1)
-    ) {
+    if ((this.state.nextFocusDisabled && direction === 1) || (this.state.previousFocusDisabled && direction === -1)) {
       return;
     }
 
@@ -394,15 +337,13 @@ class SettingsContainer extends Component<Props, State> {
         itemsContainerStyle={styles.autocompleteItemContainers}
         itemStyle={styles.autocompleteItems}
         items={departments}
-        extra={
-          !city && (
-            <Text>{I18n.t('checkout.department_requirement_right')}</Text>
-          )
-        }
+        extra={!city && <Text>{I18n.t('checkout.department_requirement_right')}</Text>}
         {...props}
       />
     );
   };
+
+  goBack = () => this.props.navigation && this.props.navigation.goBack();
 
   render() {
     const { userData } = this.props;
@@ -425,12 +366,7 @@ class SettingsContainer extends Component<Props, State> {
       <Container>
         <Header>
           <Left style={styles.container}>
-            <NBButton
-              transparent
-              dark
-              onPress={() =>
-                this.props.navigation && this.props.navigation.goBack()
-              }>
+            <NBButton transparent dark onPress={this.goBack}>
               <NBIcon ios="ios-arrow-back" android="md-arrow-back" />
             </NBButton>
           </Left>
@@ -443,11 +379,7 @@ class SettingsContainer extends Component<Props, State> {
               disabled={!this.hasUnsavedChanges()}
               style={{ backgroundColor: colors.transparent }}
               onPress={this.onSave}>
-              <Icon
-                name="check"
-                style={!this.hasUnsavedChanges() && { color: colors.grey4 }}
-                size={28}
-              />
+              <Icon name="check" style={!this.hasUnsavedChanges() && { color: colors.grey4 }} size={28} />
             </NBButton>
           </Right>
         </Header>
@@ -501,11 +433,7 @@ class SettingsContainer extends Component<Props, State> {
                   placeholder: I18n.t('userInfo.department'),
                   onFocus: this.handleFocus.bind(this, 3),
                   onSubmitEditing: () => this.changeInputFocus(1),
-                  value:
-                    departments &&
-                    departments.find(
-                      d => d.id === shippingAddress.departmentNovaposhta
-                    ),
+                  value: departments && departments.find(d => d.id === shippingAddress.departmentNovaposhta),
                   render: this._renderDepartmentAutocomplete,
                 },
                 {
@@ -515,15 +443,12 @@ class SettingsContainer extends Component<Props, State> {
                   onFocus: this.handleFocus.bind(this, 4),
                   onChangeText: t => this.setState({ mobileNumber: t }),
                   type: 'phone',
-                  shouldShowError: () =>
-                    mobileNumber ? isPhoneNumberValid(mobileNumber) : true,
+                  shouldShowError: () => (mobileNumber ? isPhoneNumberValid(mobileNumber) : true),
                   textContentType: 'telephoneNumber',
                 },
               ]}
             />
-            <FormLabel labelStyle={[styles.label, { paddingBottom: 10 }]}>
-              {I18n.t('userInfo.paymentInfo')}
-            </FormLabel>
+            <FormLabel labelStyle={[styles.label, { paddingBottom: 10 }]}>{I18n.t('userInfo.paymentInfo')}</FormLabel>
             <View style={{ alignSelf: 'center' }}>
               <TouchableOpacity onPress={this.enterPaymentInfo}>
                 {Object.keys(userData.paymentInfo).length ? (
@@ -541,9 +466,7 @@ class SettingsContainer extends Component<Props, State> {
             {/* </View> */}
           </View>
           <View style={styles.padder}>
-            <FormLabel labelStyle={styles.label}>
-              {I18n.t('settings.username_label')}
-            </FormLabel>
+            <FormLabel labelStyle={styles.label}>{I18n.t('settings.username_label')}</FormLabel>
             <FormInput
               ref={el => (this.inputs[5] = el)}
               autoCorrect={false}
@@ -559,9 +482,7 @@ class SettingsContainer extends Component<Props, State> {
               onFocus={this.handleFocus.bind(this, 5)}
               onSubmitEditing={this.changeInputFocus.bind(this, 1)}
             />
-            <FormLabel labelStyle={styles.label}>
-              {I18n.t('settings.email_label')}
-            </FormLabel>
+            <FormLabel labelStyle={styles.label}>{I18n.t('settings.email_label')}</FormLabel>
             <FormInput
               ref={el => (this.inputs[6] = el)}
               autoCorrect={false}
@@ -575,9 +496,7 @@ class SettingsContainer extends Component<Props, State> {
               onFocus={this.handleFocus.bind(this, 6)}
               onSubmitEditing={this.changeInputFocus.bind(this, 1)}
             />
-            <FormLabel labelStyle={styles.label}>
-              {I18n.t('settings.password_label')}
-            </FormLabel>
+            <FormLabel labelStyle={styles.label}>{I18n.t('settings.password_label')}</FormLabel>
             <FormInput
               ref={el => (this.inputs[7] = el)}
               autoCorrect={false}
@@ -608,9 +527,7 @@ class SettingsContainer extends Component<Props, State> {
               hitSlop={linkHitSlop}
               accessibilityRole="link"
               onPress={() => this.props.navigation.navigate('markdownDoc')}>
-              <Text style={styles.labelLink}>
-                {I18n.t('settings.safe_purchase_rules')}
-              </Text>
+              <Text style={styles.labelLink}>{I18n.t('settings.safe_purchase_rules')}</Text>
             </TouchableOpacity>
           </View>
           {/* TODO: add Notifications switch */}

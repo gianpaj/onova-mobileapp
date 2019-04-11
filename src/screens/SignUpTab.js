@@ -442,6 +442,7 @@ const styles = StyleSheet.create({
     marginTop: 15,
   },
   link: {
+    color: colors.grey2,
     textDecorationLine: 'underline',
     textAlign: 'center',
   },

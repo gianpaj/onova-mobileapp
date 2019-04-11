@@ -23,8 +23,8 @@ class IntroScreens extends Component<Props> {
   render() {
     return (
       <Onboarding
-        skipLabel="Skip"
-        nextLabel="Next"
+        skipLabel={I18n.t('intro.skip')}
+        nextLabel={I18n.t('intro.next')}
         onSkip={this.onFinish}
         imageContainerStyles={{ marginTop: -36, paddingBottom: 36 }}
         bottomBarHighlight={false}

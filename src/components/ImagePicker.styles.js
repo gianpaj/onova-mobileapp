@@ -1,11 +1,7 @@
 // @flow
 
 import { Dimensions } from 'react-native';
-import type {
-  ViewStyleProp,
-  TextStyleProp,
-  ImageStyleProp,
-} from 'react-native/Libraries/StyleSheet/StyleSheet';
+import type { ViewStyleProp, TextStyleProp, ImageStyleProp } from 'react-native/Libraries/StyleSheet/StyleSheet';
 
 import colors from '../config/colors';
 import variables from './default.native';
@@ -56,7 +52,8 @@ export default {
     backgroundColor: colors.transparent,
     fontSize: 20,
     height: 20,
-    marginTop: -8,
+    left: 0.5,
+    lineHeight: 20,
     fontWeight: '300',
   },
   plusWrap: {
@@ -74,8 +71,9 @@ export default {
     borderColor: colors.grey3,
   },
   plusText: {
-    fontSize: 32,
     backgroundColor: colors.transparent,
+    lineHeight: 33,
+    fontSize: 32,
     fontWeight: '100',
     color: colors.grey2,
   },

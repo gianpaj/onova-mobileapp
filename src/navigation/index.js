@@ -1,18 +1,10 @@
 // @flow
 
 import React from 'react';
-import {
-  ActivityIndicator,
-  BackHandler,
-  ImageBackground,
-  StyleSheet,
-} from 'react-native';
+import { ActivityIndicator, BackHandler, ImageBackground, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
 import { addNavigationHelpers, NavigationActions } from 'react-navigation';
-import {
-  initializeListeners,
-  createReduxBoundAddListener,
-} from 'react-navigation-redux-helpers';
+import { initializeListeners, createReduxBoundAddListener } from 'react-navigation-redux-helpers';
 import { Button } from 'react-native-elements';
 
 import { checkLogin, intro } from '../actions/actionCreator';
@@ -25,6 +17,7 @@ import colors from '../config/colors';
 import I18n from '../i18n';
 
 import { addAuthBreadcrumb } from '../utils/analytics';
+import SafeAreaView from '../SafeArea';
 
 type Props = {
   checkedLoggedIn: boolean,
@@ -88,19 +81,13 @@ class AppNavigation extends React.PureComponent<Props, *> {
   };
 
   _renderLoading = (
-    <ImageBackground
-      source={require('../assets/images/bg.png')}
-      resizeMode="repeat"
-      style={styles.container}>
+    <ImageBackground source={require('../assets/images/bg.png')} resizeMode="repeat" style={styles.container}>
       <ActivityIndicator size="large" color={colors.black} />
     </ImageBackground>
   );
 
   _renderRetry = (
-    <ImageBackground
-      source={require('../assets/images/bg.png')}
-      resizeMode="repeat"
-      style={styles.container}>
+    <ImageBackground source={require('../assets/images/bg.png')} resizeMode="repeat" style={styles.container}>
       {/* TODO: add a cloud icon with stricking line */}
       {/* You're not connected to the Internet */}
       <Button
@@ -113,28 +100,22 @@ class AppNavigation extends React.PureComponent<Props, *> {
   );
 
   render() {
-    const {
-      dispatch,
-      navigationState,
-      isLoggedIn,
-      checkedLoggedIn,
-    } = this.props;
-    const state =
-      isLoggedIn == true
-        ? navigationState.stateForLoggedIn
-        : navigationState.stateForLoggedOut;
+    const { dispatch, navigationState, isLoggedIn, checkedLoggedIn } = this.props;
+    const state = isLoggedIn == true ? navigationState.stateForLoggedIn : navigationState.stateForLoggedOut;
 
     if (this.state.canReload) return this._renderRetry;
     if (isLoggedIn && !checkedLoggedIn) return this._renderLoading;
 
     return (
-      <NavigationStack
-        navigation={addNavigationHelpers({
-          dispatch,
-          state,
-          addListener,
-        })}
-      />
+      <SafeAreaView style={{ flex: 1 }} forceInset={{ bottom: 'never' }}>
+        <NavigationStack
+          navigation={addNavigationHelpers({
+            dispatch,
+            state,
+            addListener,
+          })}
+        />
+      </SafeAreaView>
     );
   }
 }

@@ -2,23 +2,8 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import {
-  Animated,
-  Keyboard,
-  Modal,
-  Platform,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
-import {
-  Content,
-  Right,
-  Left,
-  Body,
-  Button,
-  Icon as NBIcon,
-} from 'native-base';
+import { Animated, Keyboard, Modal, Platform, StyleSheet, Text, View } from 'react-native';
+import { Content, Right, Left, Body, Button, Icon as NBIcon } from 'native-base';
 import { FormInput } from 'react-native-elements';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -70,9 +55,7 @@ export class SignUpTabContainer extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
-    this.keyboardHeight = new Animated.Value(
-      FORM_VERTICAL_PADDING_KEYBOARD_VISIBLE
-    );
+    this.keyboardHeight = new Animated.Value(FORM_VERTICAL_PADDING_KEYBOARD_VISIBLE);
 
     this.UserNameInput = React.createRef();
     this.EmailInput = React.createRef();
@@ -91,14 +74,8 @@ export class SignUpTabContainer extends Component<Props, State> {
   }
 
   componentDidMount() {
-    this.keyboardWillShowSub = Keyboard.addListener(
-      'keyboardDidShow',
-      this.keyboardWillShow
-    );
-    this.keyboardWillHideSub = Keyboard.addListener(
-      'keyboardDidHide',
-      this.keyboardWillHide
-    );
+    this.keyboardWillShowSub = Keyboard.addListener('keyboardDidShow', this.keyboardWillShow);
+    this.keyboardWillHideSub = Keyboard.addListener('keyboardDidHide', this.keyboardWillHide);
   }
 
   componentWillUnmount() {
@@ -121,8 +98,7 @@ export class SignUpTabContainer extends Component<Props, State> {
       toValue: FORM_VERTICAL_PADDING_KEYBOARD_VISIBLE,
     }).start();
 
-  setVerifyAccountVisible = (visible: boolean) =>
-    this.setState({ isVerifyAccountModalVisible: visible });
+  setVerifyAccountVisible = (visible: boolean) => this.setState({ isVerifyAccountModalVisible: visible });
 
   onSignup = () => {
     if (this.props.loading || !this.UserNameInput || !this.EmailInput) return;
@@ -148,8 +124,7 @@ export class SignUpTabContainer extends Component<Props, State> {
       this.UserNameInput.current.shake();
       return this.UserNameInput.current.focus();
     } else if (!isEmail(emailAddress)) {
-      if (emailAddress.length > 0)
-        ui.showToast(I18n.t(prefix + 'email_invalid'), 'warning', '', 2);
+      if (emailAddress.length > 0) ui.showToast(I18n.t(prefix + 'email_invalid'), 'warning', '', 2);
       this.EmailInput.current.shake();
       return this.EmailInput.current.focus();
     } else if (!validPassword(password)) {
@@ -248,12 +223,7 @@ export class SignUpTabContainer extends Component<Props, State> {
 
   isDisabled() {
     const { emailAddress, password, username } = this.state;
-    return (
-      !isEmail(emailAddress) ||
-      !validPassword(password) ||
-      username.length < 3 ||
-      this.props.loading
-    );
+    return !isEmail(emailAddress) || !validPassword(password) || username.length < 3 || this.props.loading;
   }
 
   _inputProps = {
@@ -277,17 +247,11 @@ export class SignUpTabContainer extends Component<Props, State> {
   _onFocusPass = () => this.setState({ hasFocusPass: true });
 
   render() {
-    const {
-      hasFocusUser,
-      hasFocusEmail,
-      hasFocusPass,
-      isPasswordVisible,
-    } = this.state;
+    const { hasFocusUser, hasFocusEmail, hasFocusPass, isPasswordVisible } = this.state;
 
     return (
       <Content testID="signup-form">
-        <Animated.View
-          style={[styles.container, { paddingVertical: this.keyboardHeight }]}>
+        <Animated.View style={[styles.container, { paddingVertical: this.keyboardHeight }]}>
           <FormInput
             ref={this.UserNameInput}
             accessibilityLabel="username"
@@ -310,9 +274,7 @@ export class SignUpTabContainer extends Component<Props, State> {
             placeholder={I18n.t('signup.email_placeholder')}
             testID="EmailField"
             textContentType="emailAddress"
-            underlineColorAndroid={
-              hasFocusEmail ? colors.primary : colors.grey3
-            }
+            underlineColorAndroid={hasFocusEmail ? colors.primary : colors.grey3}
             value={this.state.emailAddress}
             {...this._inputProps}
           />
@@ -327,9 +289,7 @@ export class SignUpTabContainer extends Component<Props, State> {
               onChangeText={this.getHandler('password')}
               accessibilityLabel="password"
               textContentType="newPassword"
-              underlineColorAndroid={
-                hasFocusPass ? colors.primary : colors.grey3
-              }
+              underlineColorAndroid={hasFocusPass ? colors.primary : colors.grey3}
               {...this._inputProps}
               clearButtonMode="never"
             />
@@ -388,9 +348,7 @@ export class SignUpTabContainer extends Component<Props, State> {
               width: 320,
             }}>
             <Text>
-              <Text style={{ color: colors.grey4 }}>
-                {I18n.t('signup.terms_text_1')}
-              </Text>
+              <Text style={{ color: colors.grey4 }}>{I18n.t('signup.terms_text_1')}</Text>
               &nbsp;
               <Text onPress={this.openPrivacyPolicy} style={styles.link}>
                 {I18n.t('signup.terms_text_2')}
@@ -421,9 +379,7 @@ export class SignUpTabContainer extends Component<Props, State> {
           <Left />
           <Body />
           <Right>
-            <Button
-              transparent
-              onPress={() => this.setVerifyAccountVisible(false)}>
+            <Button transparent onPress={() => this.setVerifyAccountVisible(false)}>
               <NBIcon name="close" style={{ color: colors.black }} />
             </Button>
           </Right>

@@ -82,6 +82,7 @@ const StackNav = StackNavigator(
     headerMode: 'none',
     cardStyle: {
       backgroundColor: colors.white,
+      shadowColor: 'transparent',
     },
     navigationOptions: {
       gesturesEnabled: Platform.OS === 'ios',

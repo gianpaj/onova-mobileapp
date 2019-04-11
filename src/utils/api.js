@@ -65,11 +65,7 @@ export async function get(path: string, options?: Options): Promise<any> {
  * @param options Axios options (optional)
  * @returns Promise of response body
  */
-export async function post(
-  path: string,
-  body?: any,
-  options?: Options
-): Promise<any> {
+export async function post(path: string, body?: any, options?: Options): Promise<any> {
   const axiosOptions = getAxiosOptions(options);
   return bodyOf(request('post', path, body, axiosOptions));
 }
@@ -81,11 +77,7 @@ export async function post(
  * @param options Axios options (optional)
  * @returns Promise of response body
  */
-export async function put(
-  path: string,
-  body: any,
-  options?: Options
-): Promise<any> {
+export async function put(path: string, body: any, options?: Options): Promise<any> {
   const axiosOptions = getAxiosOptions(options);
   return bodyOf(request('put', path, body, axiosOptions));
 }
@@ -120,12 +112,7 @@ function getAxiosOptions(options): any {
  * @param body Anything that you can pass to JSON.stringify
  * @param options: Axios options
  */
-export async function request(
-  method: string,
-  path: string,
-  body: any,
-  options: Options
-) {
+export async function request(method: string, path: string, body: any, options: Options) {
   try {
     const response = await sendRequest(method, path, body, options);
     return handleResponse(path, response);
@@ -133,10 +120,7 @@ export async function request(
     if (!options.suppressRedBox) {
       logError(error, path, method);
     }
-    if (
-      error.message === 'Network request failed' ||
-      error.message.includes('timeout')
-    ) {
+    if (error.message === 'Network request failed' || error.message.includes('timeout')) {
       error.message = I18n.t('alerts.network_error');
     }
     throw error;
@@ -161,8 +145,7 @@ async function sendRequest(method, path, body, options) {
         return status >= 200 && status <= 500;
       },
     };
-    if (options.onUploadProgress)
-      allOptions.onUploadProgress = options.onUploadProgress;
+    if (options.onUploadProgress) allOptions.onUploadProgress = options.onUploadProgress;
     if (options.cancelToken) allOptions.cancelToken = options.cancelToken;
     if (body) allOptions.data = body;
 
@@ -224,15 +207,9 @@ async function bodyOf(requestPromise): Promise<any> {
 function logError(error, endpoint, method) {
   if (error.status) {
     const summary = `(${error.status} ${error.statusText}): ${error._bodyInit}`;
-    console.error(
-      `API request ${method.toUpperCase()} ${endpoint} responded with ${summary}`
-    );
+    console.error(`API request ${method.toUpperCase()} ${endpoint} responded with ${summary}`);
   } else {
-    console.error(
-      `API request ${method.toUpperCase()} ${endpoint} failed with message "${
-        error.message
-      }"`
-    );
+    console.error(`API request ${method.toUpperCase()} ${endpoint} failed with message "${error.message}"`);
   }
 }
 
@@ -252,10 +229,7 @@ export function getUserWeb(userId: string, token: string): Promise<UserData> {
   });
 }
 
-export function getFollowers(
-  userId: string,
-  token: string
-): Promise<Array<UserData> | Error> {
+export function getFollowers(userId: string, token: string): Promise<Array<UserData> | Error> {
   return new Promise((resolve, reject) => {
     get(`/api/users/${userId}/followers?limit=500`, { token })
       .then(res => resolve(res.data))
@@ -267,10 +241,7 @@ export function getSuggestions(token: string): Promise<any> {
   return get('/api/suggested-users/', { token });
 }
 
-export function getProduct(
-  uuid: string,
-  options: Options = {}
-): Promise<Product> {
+export function getProduct(uuid: string, options: Options = {}): Promise<Product> {
   return new Promise((resolve, reject) => {
     get(`/api/products/${uuid}`, options)
       .then(({ data }) => resolve(data))
@@ -319,21 +290,15 @@ export function getShippingCosts(
   return new Promise((resolve, reject) => {
     let weightQuery = '';
     if (weight) weightQuery = `&weight=${weight}`;
-    get(
-      `/api/shipping/costs/?price=${price}${weightQuery}&orderId=${orderId}&recipientOfficeID=${recipientOfficeID}`,
-      {
-        token,
-      }
-    )
+    get(`/api/shipping/costs/?price=${price}${weightQuery}&orderId=${orderId}&recipientOfficeID=${recipientOfficeID}`, {
+      token,
+    })
       .then(({ data }) => resolve(data))
       .catch(err => reject(err));
   });
 }
 
-export function createOrder(
-  uuid: string,
-  token: string
-): Promise<Order | Error> {
+export function createOrder(uuid: string, token: string): Promise<Order | Error> {
   return new Promise((resolve, reject) => {
     post('/api/orders', { product: uuid }, { token })
       .then(({ data }) => resolve(data))

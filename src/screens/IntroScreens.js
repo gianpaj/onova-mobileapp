@@ -29,13 +29,7 @@ class IntroScreens extends Component<Props> {
         imageContainerStyles={{ marginTop: -36, paddingBottom: 36 }}
         bottomBarHighlight={false}
         DoneButtonComponent={() => (
-          <MaterialIcons
-            color={colors.black}
-            name="check"
-            size={36}
-            style={{ left: -10 }}
-            onPress={this.onFinish}
-          />
+          <MaterialIcons color={colors.black} name="check" size={36} style={{ left: -10 }} onPress={this.onFinish} />
         )}
         pages={[
           {

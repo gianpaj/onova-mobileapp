@@ -24,11 +24,7 @@ export type Props = {
   enabled: boolean,
   files: Array<any>,
   onAddImageClick?: () => void,
-  onChange?: (
-    files: Array<any>,
-    operationType?: string,
-    index?: number
-  ) => void,
+  onChange?: (files: Array<any>, operationType?: string, index?: number) => void,
   onChangeOrder: (Array<any>) => void,
   onImageClick?: (index?: number, files?: Array<any>) => void,
   selectable?: boolean,
@@ -104,9 +100,8 @@ export default class ImagePicker extends React.Component<Props, State> {
         <SortableList
           data={files}
           horizontal
-          onChangeOrder={arr => (this.arr = arr)}
           onPressRow={this.onImageClick}
-          onReleaseRow={() => this.arr && onChangeOrder(this.arr)}
+          onReleaseRow={onChangeOrder}
           renderRow={this._renderRow}
           scrollEnabled={false}
           showsHorizontalScrollIndicator={false}
@@ -196,14 +191,8 @@ class Row extends React.Component<RowProps> {
           <ActivityIndicator size="small" style={[...style, styles.loader]} />
         ) : (
           <>
-            <Image
-              source={{ uri: data.url.replace('.jpg', '-thumb.jpg') }}
-              style={style}
-            />
-            <TouchableOpacity
-              onPress={removeImage}
-              style={styles.closeWrap}
-              activeOpacity={0.6}>
+            <Image source={{ uri: data.url.replace('.jpg', '-thumb.jpg') }} style={style} />
+            <TouchableOpacity onPress={removeImage} style={styles.closeWrap} activeOpacity={0.6}>
               <Text style={styles.closeText}>×</Text>
             </TouchableOpacity>
           </>

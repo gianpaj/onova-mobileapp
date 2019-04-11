@@ -2,43 +2,17 @@
 
 import React from 'react';
 import { connect } from 'react-redux';
-import {
-  Dimensions,
-  Platform,
-  StyleSheet,
-  View,
-  Text,
-  TouchableOpacity,
-} from 'react-native';
+import { Dimensions, Platform, StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import {
-  ActionSheet,
-  Body,
-  Button as NBButton,
-  Container,
-  Content,
-  Left,
-  Right,
-} from 'native-base';
+import { ActionSheet, Body, Button as NBButton, Container, Content, Left, Right } from 'native-base';
 import { FormLabel } from 'react-native-elements';
-import RadioForm, {
-  RadioButton,
-  RadioButtonInput,
-  RadioButtonLabel,
-} from 'react-native-simple-radio-button';
+import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from 'react-native-simple-radio-button';
 import ImagePicker from 'react-native-image-crop-picker';
 import { InputItem, TextareaItem, Toast } from 'antd-mobile-rn';
 import Foect from 'foect';
 import Dialog from 'react-native-dialog';
 
-import {
-  ImagePicker as AntImagePicker,
-  Header,
-  HR,
-  Info,
-  TagInput,
-  Title,
-} from '../components';
+import { ImagePicker as AntImagePicker, Header, HR, Info, TagInput, Title } from '../components';
 import { enableRefresh } from '../actions/actionCreator';
 import I18n from '../i18n';
 import colors from '../config/colors';
@@ -203,8 +177,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     if (global.__TESTING__) {
       return ImagePicker.openPicker()
         .then(() => {
-          const url =
-            'https://storage.googleapis.com/temp-uploads.onova.co/1537607915827.jpg';
+          const url = 'https://storage.googleapis.com/temp-uploads.onova.co/1537607915827.jpg';
           this.appendSinglePhoto(url, i);
         })
         .catch(() => this.goBackConditional());
@@ -228,14 +201,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
             ImagePicker.openPicker({
               ...imagePickerOptons,
               multiple: true,
-              smartAlbums: [
-                'UserLibrary',
-                'PhotoStream',
-                'Screenshots',
-                'Generic',
-                'Favorites',
-                'RecentlyAdded',
-              ],
+              smartAlbums: ['UserLibrary', 'PhotoStream', 'Screenshots', 'Generic', 'Favorites', 'RecentlyAdded'],
             })
               .then(response => this.appendPhotos(response, i))
               .catch(() => this.goBackConditional());
@@ -248,10 +214,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
   };
 
   async appendPhotos(response: Array<any> | any, i: number) {
-    if (
-      response.length &&
-      response.length + this.state.images.length > MAX_IMAGES
-    ) {
+    if (response.length && response.length + this.state.images.length > MAX_IMAGES) {
       Toast.fail(I18n.t('add_or_edit_item.too_many_images'));
       return console.debug('too many images');
     }
@@ -294,9 +257,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
 
     try {
       if (response.width < MIN_WIDTH || response.height < MIN_HEIGHT) {
-        throw new Error(
-          I18n.t('add_or_edit_item.image_too_small', { MIN_WIDTH, ...response })
-        );
+        throw new Error(I18n.t('add_or_edit_item.image_too_small', { MIN_WIDTH, ...response }));
       }
       // this.appendImageOrReplace({ isUploading: true }, i);
       // this.forceUpdate();
@@ -348,12 +309,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     const { images, tags } = this.state;
     const description = this.descriptionControl.value;
     const price = this.priceControl.value;
-    return (
-      description.length > 0 ||
-      images.length > 0 ||
-      price.length > 0 ||
-      tags.length > 0
-    );
+    return description.length > 0 || images.length > 0 || price.length > 0 || tags.length > 0;
   }
 
   goBack = () => this.props.navigation.goBack();
@@ -451,8 +407,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
       // OR if it doesn't match the regex
       if (
         textWithoutSeparators.length > settings.MAX_LENGTH_PER_TAG ||
-        (textWithoutSeparators.length > 1 &&
-          !settings.HASHTAG_REGEX.test(textWithoutSeparators))
+        (textWithoutSeparators.length > 1 && !settings.HASHTAG_REGEX.test(textWithoutSeparators))
       )
         return;
 
@@ -486,10 +441,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
   onlyOneBrand(text: string): boolean {
     text = text.toLowerCase();
     if (brands.brands.indexOf(text) == -1) return true;
-    if (
-      brands.brands.indexOf(text) > -1 &&
-      this.state.numberOfBrands < settings.MAX_BRAND_TAGS
-    ) {
+    if (brands.brands.indexOf(text) > -1 && this.state.numberOfBrands < settings.MAX_BRAND_TAGS) {
       this.setState({ numberOfBrands: this.state.numberOfBrands + 1 });
       return true;
     }
@@ -515,8 +467,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
       !pending &&
       images.length > 0 &&
       // if all the images have been uploaded
-      images.filter((i: any) => i.isUploading === false).length ===
-        images.length &&
+      images.filter((i: any) => i.isUploading === false).length === images.length &&
       // if the price is not empty
       price !== '' &&
       // if the description doesn't exceed the maximum length
@@ -532,12 +483,10 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
 
   onImageChange = (images: Array<any>) => this.setState({ images });
 
-  onImageChangeOrder = (array: Array<any>) => {
-    // TODO: use a single map function
-    const order = array.map(e => parseInt(e));
+  onImageChangeOrder = (rowKey, order: Array<Number>) => {
     const newOrder = [];
     for (let i = 0; i < order.length; i++) {
-      const o = order[i];
+      const o = parseInt(order[i]);
       newOrder.push(this.state.images[o]);
     }
     this.setState({ images: newOrder });
@@ -554,18 +503,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
   };
 
   render() {
-    const {
-      description,
-      grp_1,
-      grp_2,
-      images,
-      inEditMode,
-      isLoading,
-      isUploading,
-      price,
-      tags,
-      tagsText,
-    } = this.state;
+    const { description, grp_1, grp_2, images, inEditMode, isLoading, isUploading, price, tags, tagsText } = this.state;
 
     if (isLoading) return null;
 
@@ -580,11 +518,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
               <Header>
                 <Left style={styles.container}>
                   <NBButton transparent onPress={this.goBackConditional}>
-                    <MaterialIcons
-                      color={colors.black}
-                      name="close"
-                      size={28}
-                    />
+                    <MaterialIcons color={colors.black} name="close" size={28} />
                   </NBButton>
                 </Left>
                 <Body style={styles.flex2AndCenter}>
@@ -601,11 +535,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
                     transparent
                     style={{ backgroundColor: colors.transparent }}
                     onPress={() => form.submit()}>
-                    <MaterialIcons
-                      name="check"
-                      color={colors.black}
-                      size={28}
-                    />
+                    <MaterialIcons name="check" color={colors.black} size={28} />
                   </NBButton>
                 </Right>
               </Header>
@@ -614,12 +544,9 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
                   <AntImagePicker
                     files={images}
                     onImageClick={index => {
-                      !images[index].isUploading &&
-                        this.selectPhotoTapped(index);
+                      !images[index].isUploading && this.selectPhotoTapped(index);
                     }}
-                    onAddImageClick={() =>
-                      this.selectPhotoTapped(images.length)
-                    }
+                    onAddImageClick={() => this.selectPhotoTapped(images.length)}
                     selectable={images.length < 6}
                     imagePerRow={6}
                     enabled={!isUploading}
@@ -634,9 +561,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
                       flexDirection: 'row',
                       justifyContent: 'space-between',
                     }}>
-                    <FormLabel labelStyle={styles.label}>
-                      {I18n.t('add_or_edit_item.price_label')}
-                    </FormLabel>
+                    <FormLabel labelStyle={styles.label}>{I18n.t('add_or_edit_item.price_label')}</FormLabel>
                     <TouchableOpacity
                       hitSlop={{ top: 10, left: 5, bottom: 5, right: 10 }}
                       style={{ marginRight: 17 }}
@@ -644,11 +569,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
                       <Text>{I18n.t('add_or_edit_item.price_info')}</Text>
                     </TouchableOpacity>
                   </View>
-                  <Foect.Control
-                    name="price"
-                    required
-                    maxLength={8}
-                    checkPrice={{}}>
+                  <Foect.Control name="price" required maxLength={8} checkPrice={{}}>
                     {control => {
                       this.priceControl = control;
                       return (
@@ -664,12 +585,9 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
                             last
                             onBlur={control.markAsTouched}
                             onChange={v => {
-                              settings.PRICE_REGEX.test(v) &&
-                                control.onChange(v);
+                              settings.PRICE_REGEX.test(v) && control.onChange(v);
                             }}
-                            placeholder={I18n.t(
-                              'add_or_edit_item.price_placeholder'
-                            )}
+                            placeholder={I18n.t('add_or_edit_item.price_placeholder')}
                             returnKeyType="go"
                             type="number"
                             value={control.value}
@@ -677,18 +595,14 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
                           {/* FIXME: show price is invalid if reaches maxLength */}
                           {control.isTouched && control.isInvalid && (
                             <Text style={styles.minPrice}>
-                              {`${I18n.t('add_or_edit_item.min_price')} ${
-                                settings.MIN_PRICE
-                              } UAH`}
+                              {`${I18n.t('add_or_edit_item.min_price')} ${settings.MIN_PRICE} UAH`}
                             </Text>
                           )}
                         </View>
                       );
                     }}
                   </Foect.Control>
-                  <FormLabel labelStyle={styles.label}>
-                    {I18n.t('add_or_edit_item.description_label')}
-                  </FormLabel>
+                  <FormLabel labelStyle={styles.label}>{I18n.t('add_or_edit_item.description_label')}</FormLabel>
                   <Foect.Control
                     name="description"
                     required
@@ -710,35 +624,26 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
                           onChangeText={control.onChange.bind(this)}
                           rows={3}
                           style={styles.inputContainerNew}
-                          placeholder={I18n.t(
-                            'add_or_edit_item.description_placeholder'
-                          )}
+                          placeholder={I18n.t('add_or_edit_item.description_placeholder')}
                           value={control.value}
                         />
                       );
                     }}
                   </Foect.Control>
-                  <FormLabel labelStyle={styles.label}>
-                    {I18n.t('add_or_edit_item.hashtags_label')}
-                  </FormLabel>
+                  <FormLabel labelStyle={styles.label}>{I18n.t('add_or_edit_item.hashtags_label')}</FormLabel>
                   <TagInput
                     inputDefaultWidth={140}
                     labelExtractor={tag => tag}
                     maxHeight={2000}
                     onChange={this.changeTags}
                     onChangeText={this.changeTagsTest}
-                    onBlur={() =>
-                      this.changeTagsTest(this.state.tagsText + ',')
-                    }
+                    onBlur={() => this.changeTagsTest(this.state.tagsText + ',')}
                     tagColor={colors.primary}
                     tagTextColor="white"
                     text={tagsText}
                     value={tags}
                     inputProps={{
-                      placeholder:
-                        tags.length < 1
-                          ? I18n.t('add_or_edit_item.hashtags_placeholder')
-                          : '',
+                      placeholder: tags.length < 1 ? I18n.t('add_or_edit_item.hashtags_placeholder') : '',
                     }}
                   />
                 </React.Fragment>
@@ -824,10 +729,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
         <Dialog.Description style={{ textAlign: 'justify' }}>
           {I18n.t('add_or_edit_item.info_popup')}
         </Dialog.Description>
-        <Dialog.Button
-          label={I18n.t('product.toast_warning_ok_button')}
-          onPress={this.toggleInfoDialog}
-        />
+        <Dialog.Button label={I18n.t('product.toast_warning_ok_button')} onPress={this.toggleInfoDialog} />
       </Dialog.Container>
     </React.Fragment>
   );
@@ -844,16 +746,11 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
         onBackdropPress={this.togglePriceDialog}
         onBackButtonPress={this.togglePriceDialog}
         renderToHardwareTextureAndroid>
-        <Dialog.Title>
-          {I18n.t('add_or_edit_item.price_popup_title')}
-        </Dialog.Title>
+        <Dialog.Title>{I18n.t('add_or_edit_item.price_popup_title')}</Dialog.Title>
         <Dialog.Description style={{ textAlign: 'justify' }}>
           {I18n.t('add_or_edit_item.price_popup_body')}
         </Dialog.Description>
-        <Dialog.Button
-          label={I18n.t('product.toast_warning_ok_button')}
-          onPress={this.togglePriceDialog}
-        />
+        <Dialog.Button label={I18n.t('product.toast_warning_ok_button')} onPress={this.togglePriceDialog} />
       </Dialog.Container>
     </React.Fragment>
   );
@@ -914,9 +811,7 @@ const mapStateToProps: any = (state: ReduxState) => ({
   token: state.LoginReducer.token,
 });
 
-export const AddOrEditProduct = connect(mapStateToProps)(
-  AddOrEditProductScreen
-);
+export const AddOrEditProduct = connect(mapStateToProps)(AddOrEditProductScreen);
 
 Foect.Validators.add('checkPrice', (val: any) => {
   if (!val) return null; // valid

@@ -178,6 +178,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
       return ImagePicker.openPicker()
         .then(() => {
           const url = 'https://storage.googleapis.com/temp-uploads.onova.co/1537607915827.jpg';
+          // const url = 'https://placekitten.com/g/1440/1440';
           this.appendSinglePhoto(url, i);
         })
         .catch(() => this.goBackConditional());
@@ -223,7 +224,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
 
       if (response.length) {
         for (let j = 0; j < response.length; j++) {
-          this.appendImageOrReplace({ isUploading: true }, j);
+          this.appendImageOrReplace({ isUploading: true }, i + j);
         }
         this.forceUpdate();
         for (let j = 0; j < response.length; j++) {
@@ -294,13 +295,13 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
   // add or replace an existing photo
   appendImageOrReplace = (image: any, i: number) => {
     this.setState(prevState => {
+      const copy = [...prevState.images];
       if (prevState.images[i]) {
-        const copy = [...prevState.images];
         copy[i] = image;
         return { images: copy };
       }
 
-      return { images: [...prevState.images, image] };
+      return { images: [...copy, image] };
     });
   };
 

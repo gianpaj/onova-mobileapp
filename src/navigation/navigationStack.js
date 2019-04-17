@@ -26,7 +26,7 @@ import {
   SearchProductsResults,
   Settings,
   SignUpLogin,
-  Suggestions,
+  // Suggestions,
 } from '../screens';
 import colors from '../config/colors';
 import { TabsStack } from './navigationTabs';
@@ -76,7 +76,7 @@ const StackNav = StackNavigator(
     checkout: { screen: Checkout },
     enterCardInfo: { screen: EnterCardInfo },
     paymentView: { screen: PaymentView },
-    suggestions: { screen: Suggestions },
+    // suggestions: { screen: Suggestions },
   },
   {
     headerMode: 'none',

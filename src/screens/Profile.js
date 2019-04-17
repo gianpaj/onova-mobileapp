@@ -55,7 +55,7 @@ type State = {
   // rateAvg: number,
   username: string,
   index: number,
-  suggestions: Array<any>,
+  // suggestions: Array<any>,
   routes: Array<any>,
 };
 
@@ -78,7 +78,7 @@ class ProfileScreen extends React.Component<Props, State> {
     // rateAvg: -1,
     username: '',
     index: 0,
-    suggestions: [],
+    // suggestions: [],
     routes: [{ key: 'shop', title: I18n.t('profile.shop_tab') }, { key: 'drops', title: I18n.t('profile.drops_tab') }],
   };
 
@@ -133,9 +133,9 @@ class ProfileScreen extends React.Component<Props, State> {
           this.setState({ isFollowing: true });
         }
       } else {
-        const suggestions = await api.getSuggestions(token);
+        // const suggestions = await api.getSuggestions(token);
 
-        this.setState({ suggestions });
+        // this.setState({ suggestions });
         this.props.dispatch(getPersonalUserData());
       }
     } catch (err) {
@@ -379,14 +379,14 @@ class ProfileScreen extends React.Component<Props, State> {
     });
   };
 
-  goToSuggestions = () =>
-    this.props.navigation.navigate({
-      routeName: 'suggestions',
-      key: 'suggestions',
-    });
+  // goToSuggestions = () =>
+  //   this.props.navigation.navigate({
+  //     routeName: 'suggestions',
+  //     key: 'suggestions',
+  //   });
 
   renderUserNumbers = () => {
-    const { ordersAndReviewsCount, followersCount, followingCount, suggestions } = this.state;
+    const { ordersAndReviewsCount, followersCount, followingCount } = this.state;
 
     return (
       <View style={styles.userNumbers}>
@@ -402,14 +402,14 @@ class ProfileScreen extends React.Component<Props, State> {
           <Text style={styles.numbers}>{followingCount}</Text>
           <Text style={styles.label}>{I18n.t('profile.following_label')}</Text>
         </TouchableOpacity>
-        {this.isMe() && (
+        {/* {this.isMe() && (
           <TouchableOpacity onPress={this.goToSuggestions} style={styles.alignCenter}>
             <Text style={[styles.numbers, suggestions.new && suggestions.data.length ? { color: colors.red } : {}]}>
               {suggestions.data.length}
             </Text>
             <Text style={styles.label}>{I18n.t('profile.suggestions_label')}</Text>
           </TouchableOpacity>
-        )}
+        )} */}
       </View>
     );
   };

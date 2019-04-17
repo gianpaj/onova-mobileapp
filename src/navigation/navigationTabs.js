@@ -2,7 +2,8 @@
 
 import React from 'react';
 import { Platform } from 'react-native';
-import { TabNavigator } from 'react-navigation';
+import { TabBarBottom, TabNavigator } from 'react-navigation';
+
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import { Home, CreateDrop, ChatRooms, Profile, Search } from '../screens';
@@ -73,6 +74,7 @@ const tabBarConfiguration = {
     // labelStyle: !isiOS && { fontSize: 12 },
   },
   tabBarPosition: 'bottom',
+  tabBarComponent: TabBarBottom,
   animationEnabled: false,
   swipeEnabled: false,
   // initialLayout,

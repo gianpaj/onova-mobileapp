@@ -13,10 +13,7 @@ const initialState = {
   shouldCancelOrder: true,
 };
 
-export default function(
-  state: ScreenRefreshState = initialState,
-  action: Action
-) {
+export default function(state: ScreenRefreshState = initialState, action: Action) {
   switch (action.type) {
     case DO_REFRESH:
       return {

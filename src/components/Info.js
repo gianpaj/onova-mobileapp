@@ -13,16 +13,8 @@ type Props = {
 };
 
 const Info = (props: Props): React$Element<any> => (
-  <Button
-    hitSlop={{ top: 0, left: 15, bottom: 0, right: 20 }}
-    onPress={props.onPress}
-    style={styles.info}
-    transparent>
-    <MaterialCommunityIcons
-      color={props.color}
-      name="information-outline"
-      size={18}
-    />
+  <Button hitSlop={{ top: 0, left: 15, bottom: 0, right: 20 }} onPress={props.onPress} style={styles.info} transparent>
+    <MaterialCommunityIcons color={props.color} name="information-outline" size={18} />
   </Button>
 );
 

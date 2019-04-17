@@ -3,16 +3,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Platform, StyleSheet, Text, View } from 'react-native';
-import {
-  Body,
-  Button,
-  Container,
-  Content,
-  // Footer,
-  Icon,
-  Left,
-  Right,
-} from 'native-base';
+import { Body, Button, Container, Content, Icon, Left, Right } from 'native-base';
 import { TextareaItem, Toast } from 'antd-mobile-rn';
 import StarRating from 'react-native-star-rating';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -67,16 +58,10 @@ export class AddReviewContainer extends Component<Props, State> {
       const order: Order = await api.getOrder(orderId, token);
       const iAmTheSeller = _id.toString() === order.seller._id.toString();
       const iAmTheBuyer = _id.toString() === order.buyer._id.toString();
-      if (
-        (iAmTheSeller && order.archivedBySeller) ||
-        (iAmTheBuyer && order.archivedByBuyer)
-      ) {
+      if ((iAmTheSeller && order.archivedBySeller) || (iAmTheBuyer && order.archivedByBuyer)) {
         throw new Error(I18n.t('add_review.toast_msg_archived'));
       }
-      if (
-        (iAmTheSeller && order.reviewFromSeller) ||
-        (iAmTheBuyer && order.reviewFromBuyer)
-      ) {
+      if ((iAmTheSeller && order.reviewFromSeller) || (iAmTheBuyer && order.reviewFromBuyer)) {
         throw new Error(I18n.t('add_review.toast_msg_reviewed'));
       }
       this.setState({ isLoading: false, order });
@@ -113,11 +98,7 @@ export class AddReviewContainer extends Component<Props, State> {
     };
     if (text) body = { ...body, text };
     try {
-      const { data } = await api.post(
-        `/api/users/${userData._id}/reviews`,
-        body,
-        { token }
-      );
+      const { data } = await api.post(`/api/users/${userData._id}/reviews`, body, { token });
       console.debug(data);
       Toast.success(I18n.t('add_review.success_message'), 5);
       this.goBackAndRefresh();
@@ -129,23 +110,15 @@ export class AddReviewContainer extends Component<Props, State> {
 
   onArchive = () => {
     const { token } = this.props;
-    ui.showConfirmAlert(
-      I18n.t('add_review.alert_confirm_archive'),
-      '',
-      async () => {
-        try {
-          await api.put(
-            `/api/orders/${this.state.order.id}`,
-            { archive: true },
-            { token }
-          );
-          Toast.success(I18n.t('add_review.archived'), 3);
-          this.goBackAndRefresh();
-        } catch (error) {
-          console.error(error);
-        }
+    ui.showConfirmAlert(I18n.t('add_review.alert_confirm_archive'), '', async () => {
+      try {
+        await api.put(`/api/orders/${this.state.order.id}`, { archive: true }, { token });
+        Toast.success(I18n.t('add_review.archived'), 3);
+        this.goBackAndRefresh();
+      } catch (error) {
+        console.error(error);
       }
-    );
+    });
   };
 
   goBackAndRefresh() {
@@ -164,36 +137,23 @@ export class AddReviewContainer extends Component<Props, State> {
 
     // const targetUser = iAmTheSeller ? order.buyer : order.seller;
 
-    const canLeaveReview = [
-      'completed',
-      'failed_by_buyer',
-      'failed_by_seller',
-    ].includes(order.status);
+    const canLeaveReview = ['completed', 'failed_by_buyer', 'failed_by_seller'].includes(order.status);
 
     return (
       <Container>
         <Header>
           <Left style={styles.container}>
-            <Button
-              transparent
-              dark
-              onPress={() => this.props.navigation.goBack()}>
+            <Button transparent dark onPress={() => this.props.navigation.goBack()}>
               <Icon ios="ios-arrow-back" android="md-arrow-back" />
             </Button>
           </Left>
           <Body style={styles.flex2AndCenter}>
             <Title withIcon>{I18n.t('add_review.header')}</Title>
-            <Info
-              onPress={linking.openURL.bind(this, 'https://onova.co/drop.html')}
-            />
+            <Info onPress={linking.openURL.bind(this, 'https://onova.co/drop.html')} />
           </Body>
           <Right>
             <Button transparent dark disabled onPress={this.onArchive}>
-              <MaterialCommunityIcons
-                name="delete"
-                size={28}
-                color={canLeaveReview ? colors.black : colors.grey4}
-              />
+              <MaterialCommunityIcons name="delete" size={28} color={canLeaveReview ? colors.black : colors.grey4} />
             </Button>
           </Right>
         </Header>
@@ -218,18 +178,12 @@ export class AddReviewContainer extends Component<Props, State> {
                     <TextareaItem
                       editable={canLeaveReview}
                       count={settings.MAX_LENGTH_REVIEW}
-                      error={
-                        control.value.length > 0 &&
-                        control.value.trim().length < settings.MIN_LENGTH_REVIEW
-                      }
+                      error={control.value.length > 0 && control.value.trim().length < settings.MIN_LENGTH_REVIEW}
                       last
                       onChangeText={control.onChange}
                       placeholder={I18n.t('add_review.text_placeholder')}
                       rows={3}
-                      style={[
-                        styles.textInputContainer,
-                        canLeaveReview ? {} : { borderColor: colors.grey4 },
-                      ]}
+                      style={[styles.textInputContainer, canLeaveReview ? {} : { borderColor: colors.grey4 }]}
                       value={control.value}
                     />
                   )}
@@ -247,9 +201,7 @@ export class AddReviewContainer extends Component<Props, State> {
                         }}
                         disabled={!canLeaveReview}
                         emptyStar="md-star-outline"
-                        emptyStarColor={
-                          canLeaveReview ? colors.black : colors.grey4
-                        }
+                        emptyStarColor={canLeaveReview ? colors.black : colors.grey4}
                         fullStar="md-star"
                         fullStarColor={colors.black}
                         iconSet="Ionicons"
@@ -263,9 +215,7 @@ export class AddReviewContainer extends Component<Props, State> {
                           color: colors.red,
                           textAlign: 'center',
                         }}>
-                        {form.isSubmitted && control.isInvalid
-                          ? I18n.t('add_review.rating_error')
-                          : ' '}
+                        {form.isSubmitted && control.isInvalid ? I18n.t('add_review.rating_error') : ' '}
                       </Text>
                     </>
                   )}
@@ -280,9 +230,7 @@ export class AddReviewContainer extends Component<Props, State> {
                     alignSelf: 'center',
                   }}
                   onPress={() => form.submit()}>
-                  <Text style={styles.buttonText}>
-                    {I18n.t('add_review.button')}
-                  </Text>
+                  <Text style={styles.buttonText}>{I18n.t('add_review.button')}</Text>
                 </Button>
               </View>
             )}

@@ -8,10 +8,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Marquee, { MarqueeProps } from './Marquee';
 import colors from '../config/colors';
 
-import type {
-  ViewStyleProp,
-  TextStyleProp,
-} from 'react-native/Libraries/StyleSheet/StyleSheet';
+import type { ViewStyleProp, TextStyleProp } from 'react-native/Libraries/StyleSheet/StyleSheet';
 import type { Node } from 'react';
 
 interface INoticeBarStyle {
@@ -110,39 +107,23 @@ export default class NoticeBar extends React.Component<NoticeNativeProps, any> {
   };
 
   render() {
-    const {
-      buttonText,
-      children,
-      mode,
-      icon,
-      style,
-      action,
-      marqueeProps,
-    } = this.props;
+    const { buttonText, children, mode, icon, style, action, marqueeProps } = this.props;
 
     let operationDom: any = null;
     if (mode === 'button') {
       operationDom = (
         <TouchableOpacity onPress={this.onPress}>
-          <View style={styles.actionWrap}>
-            {action ? action : <Text style={styles.close}>{buttonText}</Text>}
-          </View>
+          <View style={styles.actionWrap}>{action ? action : <Text style={styles.close}>{buttonText}</Text>}</View>
         </TouchableOpacity>
       );
     } else if (mode === 'closable') {
       operationDom = (
         <TouchableOpacity onPress={this.onPress}>
-          <View style={styles.actionWrap}>
-            {action ? action : <Text style={styles.close}>×</Text>}
-          </View>
+          <View style={styles.actionWrap}>{action ? action : <Text style={styles.close}>×</Text>}</View>
         </TouchableOpacity>
       );
     } else if (mode === 'link') {
-      operationDom = (
-        <View style={styles.actionWrap}>
-          {action ? action : <Text style={styles.link}>∟</Text>}
-        </View>
-      );
+      operationDom = <View style={styles.actionWrap}>{action ? action : <Text style={styles.link}>∟</Text>}</View>;
     }
 
     const main = (
@@ -156,10 +137,6 @@ export default class NoticeBar extends React.Component<NoticeNativeProps, any> {
       </View>
     );
     if (!this.state.show) return null;
-    return mode === 'closable' ? (
-      main
-    ) : (
-      <TouchableOpacity onPress={this.onPress}>{main}</TouchableOpacity>
-    );
+    return mode === 'closable' ? main : <TouchableOpacity onPress={this.onPress}>{main}</TouchableOpacity>;
   }
 }

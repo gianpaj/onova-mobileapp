@@ -2,14 +2,7 @@
 // inspired by https://github.com/Osedea/react-native-interactive-avatar
 
 import React, { PureComponent } from 'react';
-import {
-  Image,
-  PixelRatio,
-  Platform,
-  StyleSheet,
-  View,
-  TouchableOpacity,
-} from 'react-native';
+import { Image, PixelRatio, Platform, StyleSheet, View, TouchableOpacity } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 // import { CachedImage } from 'react-native-cached-image';
 import ImagePicker from 'react-native-image-crop-picker';
@@ -136,11 +129,7 @@ export default class Avatar extends PureComponent<Props, *> {
       }
 
       Avatar = (
-        <GiftedAvatar
-          avatarStyle={allStyles}
-          user={{ name }}
-          textStyle={styles[`${size}AvatarPlaceHolderText`]}
-        />
+        <GiftedAvatar avatarStyle={allStyles} user={{ name }} textStyle={styles[`${size}AvatarPlaceHolderText`]} />
       );
     } else {
       Avatar = (
@@ -178,10 +167,7 @@ export default class Avatar extends PureComponent<Props, *> {
     }
 
     return (
-      <TouchableOpacity
-        onPress={() =>
-          onPress ? onPress() : interactive && this.handleInteractivePress()
-        }>
+      <TouchableOpacity onPress={() => (onPress ? onPress() : interactive && this.handleInteractivePress())}>
         {this.renderAvatarImage()}
       </TouchableOpacity>
     );

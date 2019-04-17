@@ -8,9 +8,7 @@ import PropTypes from 'prop-types';
 import colors from '../config/colors';
 
 const TitleContainer = (props: any): React$Element<any> => (
-  <Title
-    style={[styles.style, props.withIcon ? styles.withIcon : {}]}
-    {...props}>
+  <Title style={[styles.style, props.withIcon ? styles.withIcon : {}]} {...props}>
     {props.children}
   </Title>
 );

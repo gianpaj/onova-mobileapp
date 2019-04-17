@@ -39,16 +39,12 @@ class OrderStatus extends PureComponent<Props> {
 
     const shipped = {
       title: I18n.t('order_status.shipped'),
-      description: `${formatDate(order.dateShipped)} ${I18n.t(
-        'order_status.updated'
-      )}`,
+      description: `${formatDate(order.dateShipped)} ${I18n.t('order_status.updated')}`,
       status: 'finish',
     };
     const delivered = {
       title: I18n.t('order_status.delivered'),
-      description: `${formatDate(order.dateDelivered)} ${I18n.t(
-        'order_status.updated'
-      )}`,
+      description: `${formatDate(order.dateDelivered)} ${I18n.t('order_status.updated')}`,
       status: 'finish',
     };
     if (order.status == 'confirmed') {
@@ -74,9 +70,7 @@ class OrderStatus extends PureComponent<Props> {
       steps.push(delivered);
       steps.push({
         title: I18n.t('order_status.collected'),
-        description: `${formatDate(order.finalisedAt)} ${I18n.t(
-          'order_status.updated'
-        )}`,
+        description: `${formatDate(order.finalisedAt)} ${I18n.t('order_status.updated')}`,
         status: 'finish',
       });
     } else if (order.status == 'failed_by_buyer') {
@@ -85,17 +79,13 @@ class OrderStatus extends PureComponent<Props> {
       steps.push({
         // or refused (still not determined in API side)
         title: I18n.t('order_status.failed_to_collect'),
-        description: `${formatDate(order.finalisedAt)} ${I18n.t(
-          'order_status.updated'
-        )}`,
+        description: `${formatDate(order.finalisedAt)} ${I18n.t('order_status.updated')}`,
         status: 'error',
       });
     } else if (order.status == 'failed_by_seller') {
       steps.push({
         title: I18n.t('order_status.failed_to_ship'),
-        description: `${formatDate(order.finalisedAt)} ${I18n.t(
-          'order_status.updated'
-        )}`,
+        description: `${formatDate(order.finalisedAt)} ${I18n.t('order_status.updated')}`,
         status: 'error',
       });
     }
@@ -111,12 +101,7 @@ class OrderStatus extends PureComponent<Props> {
       <View style={[styles.container, this.props.style]}>
         <Steps>
           {steps.map((item: any, index: number) => (
-            <Step
-              key={index}
-              title={item.title}
-              description={item.description}
-              status={item.status}
-            />
+            <Step key={index} title={item.title} description={item.description} status={item.status} />
           ))}
         </Steps>
       </View>

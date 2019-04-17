@@ -2,16 +2,7 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import {
-  ActivityIndicator,
-  Keyboard,
-  Image,
-  Platform,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { ActivityIndicator, Keyboard, Image, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import {
   Body,
   Button as NBButton,
@@ -34,20 +25,9 @@ import update from 'immutability-helper';
 import axios from 'axios';
 import type { CancelTokenSource } from 'axios';
 
-import {
-  disableRefresh,
-  enableCancelOrder,
-  getPersonalUserData,
-} from '../actions/actionCreator';
+import { disableRefresh, enableCancelOrder, getPersonalUserData } from '../actions/actionCreator';
 
-import {
-  Accordion,
-  CardView,
-  Header,
-  HR,
-  SearchableDropdown,
-  Title,
-} from '../components';
+import { Accordion, CardView, Header, HR, SearchableDropdown, Title } from '../components';
 
 import colors from '../config/colors';
 import { isPhoneNumberValid, validShippingAddress } from '../utils/validators';
@@ -185,20 +165,11 @@ class CheckoutContainer extends Component<Props, State> {
     // trigger Axios to reject the request
     this.cancelToken.cancel('operation_canceled');
 
-    const {
-      shippingAddress,
-      mobileNumber,
-      cities,
-      departments,
-      order,
-    } = this.state;
+    const { shippingAddress, mobileNumber, cities, departments, order } = this.state;
 
     // cancel order when going back with Back button but not after successful payment
     if (order.id && this.props.shouldCancelOrder) this.onCancel();
-    if (
-      isPhoneNumberValid(mobileNumber) &&
-      validShippingAddress(shippingAddress, cities, departments)
-    ) {
+    if (isPhoneNumberValid(mobileNumber) && validShippingAddress(shippingAddress, cities, departments)) {
       this.updateShippingInfo();
     }
   }
@@ -242,25 +213,16 @@ class CheckoutContainer extends Component<Props, State> {
   }
 
   initializeListeners() {
-    this.didFocusListener = this.props.navigation.addListener(
-      'didFocus',
-      () => {
-        if (this.props.shouldRefresh) {
-          this.refresh();
-          this.props.dispatch(disableRefresh());
-        }
+    this.didFocusListener = this.props.navigation.addListener('didFocus', () => {
+      if (this.props.shouldRefresh) {
+        this.refresh();
+        this.props.dispatch(disableRefresh());
       }
-    );
+    });
     this.props.dispatch(enableCancelOrder());
 
-    this.keyboardDidShowListener = Keyboard.addListener(
-      'keyboardDidShow',
-      this._keyboardDidShow
-    );
-    this.keyboardDidHideListener = Keyboard.addListener(
-      'keyboardDidHide',
-      this._keyboardDidHide
-    );
+    this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this._keyboardDidShow);
+    this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this._keyboardDidHide);
   }
 
   _keyboardDidShow = () => this.setState({ showFooter: false });
@@ -270,9 +232,7 @@ class CheckoutContainer extends Component<Props, State> {
   refresh = () => {
     const CancelToken = axios.CancelToken;
     this.cancelToken = CancelToken.source();
-    this.props.dispatch(
-      getPersonalUserData({ cancelToken: this.cancelToken.token })
-    );
+    this.props.dispatch(getPersonalUserData({ cancelToken: this.cancelToken.token }));
   };
 
   handleFocus = (ref: number) =>
@@ -283,10 +243,7 @@ class CheckoutContainer extends Component<Props, State> {
     });
 
   changeInputFocus(direction: number = 1) {
-    if (
-      (this.state.nextFocusDisabled && direction === 1) ||
-      (this.state.previousFocusDisabled && direction === -1)
-    ) {
+    if ((this.state.nextFocusDisabled && direction === 1) || (this.state.previousFocusDisabled && direction === -1)) {
       return;
     }
 
@@ -388,11 +345,7 @@ class CheckoutContainer extends Component<Props, State> {
     const { token } = this.props;
     return new Promise((resolve, reject) => {
       api
-        .put(
-          `/api/orders/${this.state.order.id}`,
-          { status: 'cancelled' },
-          { token }
-        )
+        .put(`/api/orders/${this.state.order.id}`, { status: 'cancelled' }, { token })
         .then(() => {
           console.debug('order cancelled');
           resolve();
@@ -439,14 +392,7 @@ class CheckoutContainer extends Component<Props, State> {
     });
 
   canMakePayment = () => {
-    const {
-      cities,
-      departments,
-      mobileNumber,
-      pending,
-      shippingAddress,
-      cvc,
-    } = this.state;
+    const { cities, departments, mobileNumber, pending, shippingAddress, cvc } = this.state;
     const { paymentInfo } = this.props.userData;
     if (
       !pending &&
@@ -516,13 +462,7 @@ class CheckoutContainer extends Component<Props, State> {
           );
           if (department) {
             this.setState({ areFeesLoading: true });
-            const shippingFee = await api.getShippingCosts(
-              order.priceOfItem,
-              undefined,
-              order.id,
-              department,
-              token
-            );
+            const shippingFee = await api.getShippingCosts(order.priceOfItem, undefined, order.id, department, token);
             this.setState({ areFeesLoading: false, shippingFee });
           }
         }}
@@ -532,11 +472,7 @@ class CheckoutContainer extends Component<Props, State> {
         itemsContainerStyle={styles.autocompleteItemContainers}
         itemStyle={styles.autocompleteItems}
         items={departments}
-        extra={
-          !city && (
-            <Text>{I18n.t('checkout.department_requirement_right')}</Text>
-          )
-        }
+        extra={!city && <Text>{I18n.t('checkout.department_requirement_right')}</Text>}
         {...props}
       />
     );
@@ -558,22 +494,16 @@ class CheckoutContainer extends Component<Props, State> {
     return (
       <View style={styles.pricesContainer}>
         <View style={styles.row}>
-          <Text style={{ color: colors.black }}>
-            {I18n.t('checkout.total_row')}
-          </Text>
+          <Text style={{ color: colors.black }}>{I18n.t('checkout.total_row')}</Text>
           <View style={styles.innerRow}>
-            <Text style={[styles.price, styles.priceTotal]}>
-              {ui.formatCurrency(total)}{' '}
-            </Text>
+            <Text style={[styles.price, styles.priceTotal]}>{ui.formatCurrency(total)} </Text>
             <Text>{currency}</Text>
           </View>
         </View>
         <View style={styles.row}>
           <Text>{I18n.t('checkout.item_row')}</Text>
           <View style={styles.innerRow}>
-            <Text style={styles.price}>
-              {ui.formatCurrency(order.priceOfItem)}{' '}
-            </Text>
+            <Text style={styles.price}>{ui.formatCurrency(order.priceOfItem)} </Text>
             <Text>{currency}</Text>
           </View>
         </View>
@@ -619,23 +549,10 @@ class CheckoutContainer extends Component<Props, State> {
           </React.Fragment>
         ))}
       </Text>
-      <View
-        style={{ flexDirection: 'row', padding: 10, justifyContent: 'center' }}>
-        <Image
-          source={require('../assets/images/visa.png')}
-          style={styles.mandatoryImage}
-          resizeMode="contain"
-        />
-        <Image
-          source={require('../assets/images/mastercard.png')}
-          style={styles.mandatoryImage}
-          resizeMode="contain"
-        />
-        <Image
-          source={require('../assets/images/pci.png')}
-          style={styles.mandatoryImage}
-          resizeMode="contain"
-        />
+      <View style={{ flexDirection: 'row', padding: 10, justifyContent: 'center' }}>
+        <Image source={require('../assets/images/visa.png')} style={styles.mandatoryImage} resizeMode="contain" />
+        <Image source={require('../assets/images/mastercard.png')} style={styles.mandatoryImage} resizeMode="contain" />
+        <Image source={require('../assets/images/pci.png')} style={styles.mandatoryImage} resizeMode="contain" />
         <Image
           source={require('../assets/images/uapay.png')}
           style={[styles.mandatoryImage, { width: '15%' }]}
@@ -662,10 +579,7 @@ class CheckoutContainer extends Component<Props, State> {
       <Container>
         <Header>
           <Left style={styles.container}>
-            <NBButton
-              transparent
-              dark
-              onPress={() => this.props.navigation.goBack()}>
+            <NBButton transparent dark onPress={() => this.props.navigation.goBack()}>
               <NBIcon ios="ios-arrow-back" android="md-arrow-back" />
             </NBButton>
           </Left>
@@ -731,9 +645,7 @@ class CheckoutContainer extends Component<Props, State> {
                   },
                   {
                     placeholder: I18n.t('userInfo.city'),
-                    value: cities.find(
-                      city => city.id === shippingAddress.city
-                    ),
+                    value: cities.find(city => city.id === shippingAddress.city),
                     onFocus: this.handleFocus.bind(this, 2),
                     onSubmitEditing: () => this.changeInputFocus(1),
                     // textContentType: 'addressCity',
@@ -744,11 +656,7 @@ class CheckoutContainer extends Component<Props, State> {
                     placeholder: I18n.t('userInfo.department'),
                     onFocus: this.handleFocus.bind(this, 3),
                     onSubmitEditing: () => this.changeInputFocus(1),
-                    value:
-                      departments &&
-                      departments.find(
-                        d => d.id === shippingAddress.departmentNovaposhta
-                      ),
+                    value: departments && departments.find(d => d.id === shippingAddress.departmentNovaposhta),
                     error: !shippingAddress.departmentNovaposhta,
                     render: this._renderDepartmentAutocomplete,
                   },
@@ -759,15 +667,12 @@ class CheckoutContainer extends Component<Props, State> {
                     onFocus: this.handleFocus.bind(this, 4),
                     onChangeText: t => this.setState({ mobileNumber: t }),
                     type: 'phone',
-                    shouldShowError: () =>
-                      isPhoneNumberValid(mobileNumber.replace(/\D/g, '')),
+                    shouldShowError: () => isPhoneNumberValid(mobileNumber.replace(/\D/g, '')),
                     textContentType: 'telephoneNumber',
                   },
                 ]}
               />
-              <FormLabel labelStyle={[styles.label, { paddingBottom: 10 }]}>
-                {I18n.t('userInfo.paymentInfo')}
-              </FormLabel>
+              <FormLabel labelStyle={[styles.label, { paddingBottom: 10 }]}>{I18n.t('userInfo.paymentInfo')}</FormLabel>
               <View style={{ alignSelf: 'center' }}>
                 <TouchableOpacity onPress={this.goToEnterPaymentInfo}>
                   {Object.keys(userData.paymentInfo).length ? (
@@ -803,11 +708,7 @@ class CheckoutContainer extends Component<Props, State> {
                     ]}
                     onPress={this.onCheckout}
                     full>
-                    <Text
-                      style={[
-                        styles.payButtonText,
-                        this.canMakePayment() ? {} : { color: colors.white },
-                      ]}>
+                    <Text style={[styles.payButtonText, this.canMakePayment() ? {} : { color: colors.white }]}>
                       {I18n.t('checkout.payment_button')}
                     </Text>
                   </NBButton>

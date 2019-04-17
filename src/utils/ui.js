@@ -22,14 +22,8 @@ import {
  * @param buttonText text for the button to dismiss the Toast ('OK' default for both EN and UK)
  * @param duration seconds (default is 10)
  */
-export function showToast(
-  message: string,
-  type: string = '',
-  buttonText?: string,
-  duration: number = 10
-) {
-  if (!buttonText && type == 'success')
-    buttonText = I18n.t('product.toast_warning_ok_button');
+export function showToast(message: string, type: string = '', buttonText?: string, duration: number = 10) {
+  if (!buttonText && type == 'success') buttonText = I18n.t('product.toast_warning_ok_button');
 
   Toast.show({
     text: message,
@@ -81,16 +75,11 @@ export function formatTime(createdAt: Date): string {
 export function formatPhoneNumber(value: string): string {
   value = value.replace(/\D/g, '');
   if (value.length > 3)
-    value =
-      `(${value.substr(0, 3)}) ${value.substr(3, 3)} ` +
-      `${value.substr(6, 2)} ${value.substr(8)}`;
+    value = `(${value.substr(0, 3)}) ${value.substr(3, 3)} ` + `${value.substr(6, 2)} ${value.substr(8)}`;
   return value.trim();
 }
 
-export function formatCurrency(
-  value: string,
-  minDecimalPoints: number = 2
-): string {
+export function formatCurrency(value: string, minDecimalPoints: number = 2): string {
   if (!value) return 'n/a';
 
   return new Intl.NumberFormat('ua-UA', {

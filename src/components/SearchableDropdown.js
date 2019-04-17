@@ -94,13 +94,7 @@ export default class SearchableDropDown extends Component<*, State> {
   }
 
   onChangeText = (searchedText: string) => {
-    const {
-      disabled,
-      items,
-      onItemSelect,
-      onTextChange,
-      regexToMatch,
-    } = this.props;
+    const { disabled, items, onItemSelect, onTextChange, regexToMatch } = this.props;
     if (disabled) return;
     if (!searchedText) {
       setTimeout(() => {
@@ -117,9 +111,7 @@ export default class SearchableDropDown extends Component<*, State> {
       return;
     }
     // https://stackoverflow.com/a/3561711/728287
-    const cleanText = searchedText
-      .trim()
-      .replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&');
+    const cleanText = searchedText.trim().replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&');
     const regex = new RegExp(cleanText, 'i');
     const filteredItems = items.filter(item => regex.test(item.uk));
     // filteredItems.sort((a, b) => a > b);
@@ -168,8 +160,7 @@ export default class SearchableDropDown extends Component<*, State> {
     const { value } = this.props;
     const { currentVal } = this.state;
 
-    if (currentVal.uk && value && currentVal.uk !== value.uk)
-      this.props.onItemSelect(currentVal);
+    if (currentVal.uk && value && currentVal.uk !== value.uk) this.props.onItemSelect(currentVal);
     this.setState({ focus: false });
   };
 
@@ -216,9 +207,7 @@ export default class SearchableDropDown extends Component<*, State> {
           returnKeyType={returnKeyType}
           onSubmitEditing={onSubmitEditing}
           style={inputContainerStyle}
-          value={
-            this.state.focus ? this.state.currentVal.uk : value && value.uk
-          }
+          value={this.state.focus ? this.state.currentVal.uk : value && value.uk}
           error={error}
         />
         {this.renderList()}

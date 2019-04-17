@@ -2,24 +2,8 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import {
-  Dimensions,
-  Image,
-  StyleSheet,
-  Platform,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import {
-  Body,
-  Button,
-  Container,
-  Icon,
-  Left,
-  ListItem,
-  Right,
-} from 'native-base';
+import { Dimensions, Image, StyleSheet, Platform, Text, TouchableOpacity, View } from 'react-native';
+import { Body, Button, Container, Icon, Left, ListItem, Right } from 'native-base';
 import Dialog from 'react-native-dialog';
 import { Toast } from 'antd-mobile-rn';
 import StarRating from 'react-native-star-rating';
@@ -106,11 +90,7 @@ export class ConfirmOrderContainer extends Component<Props, State> {
 
     this.setState({ isPending: true });
     try {
-      await api.put(
-        `/api/orders/${this.state.order.id}`,
-        { reason, status: 'cancelled' },
-        { token }
-      );
+      await api.put(`/api/orders/${this.state.order.id}`, { reason, status: 'cancelled' }, { token });
       // console.warn('cancelled', this.state.order.id, reason);
       Toast.info(I18n.t('confirm_order.cancellation_success'));
       this.setState({ dialogVisible: false });
@@ -131,11 +111,7 @@ export class ConfirmOrderContainer extends Component<Props, State> {
 
     this.setState({ isPending: true });
     try {
-      const { data } = await api.put(
-        `/api/orders/${order.id}`,
-        { status: 'confirmed' },
-        { token }
-      );
+      const { data } = await api.put(`/api/orders/${order.id}`, { status: 'confirmed' }, { token });
       console.debug(data);
       Toast.hide();
       Toast.success(I18n.t('confirm_order.confirmation_success'), 5);
@@ -186,19 +162,13 @@ export class ConfirmOrderContainer extends Component<Props, State> {
     const uri = order.product.photoURIs[0].replace('.jpg', '-thumb.jpg');
     const { shippingAddress: buyerInfo } = order.buyer;
 
-    const rateAvg =
-      buyer.ratingsTotal !== 0
-        ? buyer.ratingsTotal / buyer.reviewsCount
-        : buyer.ratingsTotal;
+    const rateAvg = buyer.ratingsTotal !== 0 ? buyer.ratingsTotal / buyer.reviewsCount : buyer.ratingsTotal;
 
     return (
       <Container>
         <Header>
           <Left style={styles.container}>
-            <Button
-              transparent
-              dark
-              onPress={() => this.props.navigation.goBack()}>
+            <Button transparent dark onPress={() => this.props.navigation.goBack()}>
               <Icon ios="ios-arrow-back" android="md-arrow-back" />
             </Button>
           </Left>
@@ -209,9 +179,7 @@ export class ConfirmOrderContainer extends Component<Props, State> {
         </Header>
         <>
           <ListItem style={styles.itemOnTop}>
-            <TouchableOpacity
-              onPress={() => this.goToProduct(order.product)}
-              style={{ height: width / 5 }}>
+            <TouchableOpacity onPress={() => this.goToProduct(order.product)} style={{ height: width / 5 }}>
               <Image
                 style={[
                   styles.itemImage,
@@ -224,10 +192,7 @@ export class ConfirmOrderContainer extends Component<Props, State> {
               />
             </TouchableOpacity>
             <Body>
-              <Text style={styles.price}>{`${ui.formatCurrency(
-                order.priceOfItem,
-                0
-              )} ${I18n.t(order.currency)}`}</Text>
+              <Text style={styles.price}>{`${ui.formatCurrency(order.priceOfItem, 0)} ${I18n.t(order.currency)}`}</Text>
             </Body>
           </ListItem>
           <View style={styles.mainContainer}>
@@ -265,30 +230,16 @@ export class ConfirmOrderContainer extends Component<Props, State> {
               <Text style={styles.name}>
                 {buyerInfo.firstName} {buyerInfo.lastName}
               </Text>
-              {buyerType === 'UserWeb' && (
-                <Text style={{}}>+380 {buyer.mobileNumber}</Text>
-              )}
+              {buyerType === 'UserWeb' && <Text style={{}}>+380 {buyer.mobileNumber}</Text>}
             </TouchableOpacity>
             <Text numberOfLines={2} style={styles.messageText}>
               {I18n.t('confirm_order.buying_item_text')}
             </Text>
             <View style={styles.row}>
-              <Button
-                block
-                dark
-                disabled={isPending}
-                style={styles.buttonConfirm}
-                onPress={this.onConfirm}>
-                <Text style={styles.buttonText}>
-                  {I18n.t('confirm_order.confirm')}
-                </Text>
+              <Button block dark disabled={isPending} style={styles.buttonConfirm} onPress={this.onConfirm}>
+                <Text style={styles.buttonText}>{I18n.t('confirm_order.confirm')}</Text>
               </Button>
-              <Button
-                light
-                block
-                disabled={isPending}
-                style={styles.buttonCancel}
-                onPress={this.toggleDialog}>
+              <Button light block disabled={isPending} style={styles.buttonCancel} onPress={this.toggleDialog}>
                 <Text style={[styles.buttonText, { color: colors.black }]}>
                   {I18n.t('alerts.action_button_cancel')}
                 </Text>
@@ -301,8 +252,7 @@ export class ConfirmOrderContainer extends Component<Props, State> {
     );
   }
 
-  toggleDialog = () =>
-    this.setState(prevState => ({ dialogVisible: !prevState.dialogVisible }));
+  toggleDialog = () => this.setState(prevState => ({ dialogVisible: !prevState.dialogVisible }));
 
   renderCancelDialog = () => {
     const { dialogVisible, isPending } = this.state;
@@ -312,23 +262,15 @@ export class ConfirmOrderContainer extends Component<Props, State> {
         visible={dialogVisible}
         onBackdropPress={this.toggleDialog}
         onBackButtonPress={this.toggleDialog}>
-        <Dialog.Title style={{ color: colors.black }}>
-          {I18n.t('confirm_order.dialog_title')}
-        </Dialog.Title>
+        <Dialog.Title style={{ color: colors.black }}>{I18n.t('confirm_order.dialog_title')}</Dialog.Title>
         <Foect.Form onValidSubmit={this.onCancelSubmit}>
           {form => {
             // FIXME: :'(
             thisForm = form;
             return (
-              <Foect.Control
-                name="reason"
-                required
-                minLength={10}
-                maxLength={300}>
+              <Foect.Control name="reason" required minLength={10} maxLength={300}>
                 {control => {
-                  const hasError =
-                    (control.isTouched || form.isSubmitted) &&
-                    control.isInvalid;
+                  const hasError = (control.isTouched || form.isSubmitted) && control.isInvalid;
                   return (
                     <>
                       <Dialog.Input
@@ -337,9 +279,7 @@ export class ConfirmOrderContainer extends Component<Props, State> {
                         onChangeText={text => control.onChange(text)}
                         multiline
                         numberOfLines={2}
-                        underlineColorAndroid={
-                          hasError ? colors.red : colors.black
-                        }
+                        underlineColorAndroid={hasError ? colors.red : colors.black}
                         placeholder={I18n.t('confirm_order.reason_placeholder')}
                         value={control.value}
                       />

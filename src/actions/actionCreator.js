@@ -2,10 +2,7 @@
 
 import { Platform } from 'react-native';
 import { Toast } from 'antd-mobile-rn';
-import {
-  ChatManager,
-  TokenProvider,
-} from '@pusher/chatkit-client/react-native';
+import { ChatManager, TokenProvider } from '@pusher/chatkit-client/react-native';
 import { Sentry } from 'react-native-sentry';
 import Analytics from 'react-native-analytics-segment-io';
 
@@ -28,18 +25,9 @@ import {
   SIGNUP_PENDING,
   SIGNUP_SUCCESS,
 } from './actionTypes';
-import type {
-  Dispatch,
-  LoginData,
-  SignupData,
-  GetState,
-  UserData,
-} from '../types';
+import type { Dispatch, LoginData, SignupData, GetState, UserData } from '../types';
 import type { Options, APIError } from '../utils/api';
-import {
-  addNavigationBreadcrumb,
-  addErrorBreadcrumb,
-} from '../utils/analytics';
+import { addNavigationBreadcrumb, addErrorBreadcrumb } from '../utils/analytics';
 
 import { registerPushNotifications } from '../utils/push';
 import * as api from '../utils/api';
@@ -126,10 +114,7 @@ const login = (data: LoginData) => (dispatch: Dispatch) => {
 
 const PUSHER_CONN_TIMEOUT = 30 * 1000;
 
-const initializePusher = (
-  userData: UserData,
-  token: string
-): Promise<any | Error> => {
+const initializePusher = (userData: UserData, token: string): Promise<any | Error> => {
   return new Promise((resolve, reject) => {
     if (!enabledPusher) {
       console.log('%cskipping Pusher', 'color: green');
@@ -269,9 +254,7 @@ function trackUser(userData: UserData) {
   });
 }
 
-const checkLogin = (userData: UserData, token: string) => (
-  dispatch: Dispatch
-) => {
+const checkLogin = (userData: UserData, token: string) => (dispatch: Dispatch) => {
   console.debug('checkLogin');
   dispatch({ type: RELOAD_PENDING });
   return api
@@ -344,13 +327,7 @@ const signup = (data: SignupData) => (dispatch: Dispatch) => {
     .catch((error: APIError) => {
       clearTimeout(timer);
       Toast.hide();
-      dispatch(
-        handleErrorWithAlert(
-          { type: SIGNUP_FAIL },
-          error,
-          I18n.t('product.toast_warning_ok_button')
-        )
-      );
+      dispatch(handleErrorWithAlert({ type: SIGNUP_FAIL }, error, I18n.t('product.toast_warning_ok_button')));
       addErrorBreadcrumb({
         category: 'auth',
         error,
@@ -360,10 +337,7 @@ const signup = (data: SignupData) => (dispatch: Dispatch) => {
     });
 };
 
-const getPersonalUserData = (options?: Options = {}) => (
-  dispatch: Dispatch,
-  getState: GetState
-) => {
+const getPersonalUserData = (options?: Options = {}) => (dispatch: Dispatch, getState: GetState) => {
   const { token, data } = getState().LoginReducer;
   Toast.loading(I18n.t('alerts.loading_message'), 30);
   dispatch({ type: GETUSER_PENDING });
@@ -374,9 +348,7 @@ const getPersonalUserData = (options?: Options = {}) => (
     .then(() => Toast.hide());
 };
 
-const getUserData = (userId: string, options?: Options = {}) => (
-  dispatch: Dispatch
-) => (
+const getUserData = (userId: string, options?: Options = {}) => (dispatch: Dispatch) => (
   Toast.loading(I18n.t('alerts.loading_message'), 30),
   dispatch({ type: GETUSER_PENDING }),
   api
@@ -427,11 +399,7 @@ const logout = () => (dispatch: Dispatch) => {
   // }
 };
 
-const sendToken = (
-  pushToken: string,
-  userData: UserData,
-  token: string
-): Promise<any> => {
+const sendToken = (pushToken: string, userData: UserData, token: string): Promise<any> => {
   const data = {
     platform: Platform.OS,
     pushToken,
@@ -466,10 +434,7 @@ const handleErrorWithAlert = (data: any, error: any, buttonText?) => {
     } else if (error.message == 'invalid email') {
       error.message = I18n.t('alerts.email_error');
     }
-  } else if (
-    error.message.includes('timeout') ||
-    error.message === 'Network Error'
-  ) {
+  } else if (error.message.includes('timeout') || error.message === 'Network Error') {
     errorType = 'danger';
     error.message = I18n.t('alerts.network_error');
   } else {

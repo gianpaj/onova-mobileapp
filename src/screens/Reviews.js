@@ -43,12 +43,7 @@ class ReviewsContainer extends Component<Props, State> {
   _handleIndexChange = index => this.setState({ index });
 
   _renderTabBar = props => (
-    <TabBar
-      indicatorStyle={styles.indicator}
-      labelStyle={styles.label}
-      style={styles.tabbar}
-      {...props}
-    />
+    <TabBar indicatorStyle={styles.indicator} labelStyle={styles.label} style={styles.tabbar} {...props} />
   );
 
   _renderScene = SceneMap({
@@ -57,10 +52,7 @@ class ReviewsContainer extends Component<Props, State> {
   });
 
   onInfoIcon() {
-    Alert.alert(
-      I18n.t('reviews.alert_info_title'),
-      I18n.t('reviews.alert_info_body')
-    );
+    Alert.alert(I18n.t('reviews.alert_info_title'), I18n.t('reviews.alert_info_body'));
   }
 
   render() {
@@ -68,10 +60,7 @@ class ReviewsContainer extends Component<Props, State> {
       <Container>
         <Header hasTabs>
           <Left style={styles.container}>
-            <Button
-              transparent
-              dark
-              onPress={() => this.props.navigation.goBack()}>
+            <Button transparent dark onPress={() => this.props.navigation.goBack()}>
               <Icon ios="ios-arrow-back" android="md-arrow-back" />
             </Button>
           </Left>
@@ -79,11 +68,7 @@ class ReviewsContainer extends Component<Props, State> {
             <Title>{I18n.t('reviews.header')}</Title>
           </Body>
           <Right>
-            <Button
-              transparent
-              dark
-              style={{ marginLeft: 10 }}
-              onPress={this.onInfoIcon}>
+            <Button transparent dark style={{ marginLeft: 10 }} onPress={this.onInfoIcon}>
               <MaterialCommunityIcons name="information-outline" size={28} />
             </Button>
           </Right>

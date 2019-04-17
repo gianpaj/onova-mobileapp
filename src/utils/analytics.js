@@ -4,13 +4,7 @@ import { Sentry } from 'react-native-sentry';
 
 import { analyticsEnabled } from './api';
 
-export const addNavigationBreadcrumb = ({
-  message,
-  data,
-}: {
-  message?: string,
-  data?: any,
-}) => {
+export const addNavigationBreadcrumb = ({ message, data }: { message?: string, data?: any }) => {
   log(message || data);
   if (analyticsEnabled) {
     Sentry.captureBreadcrumb({
@@ -22,13 +16,7 @@ export const addNavigationBreadcrumb = ({
   }
 };
 
-export const addAuthBreadcrumb = ({
-  message,
-  data,
-}: {
-  message?: string,
-  data?: any,
-}) => {
+export const addAuthBreadcrumb = ({ message, data }: { message?: string, data?: any }) => {
   log(message || data);
   if (analyticsEnabled) {
     Sentry.captureBreadcrumb({
@@ -40,13 +28,7 @@ export const addAuthBreadcrumb = ({
   }
 };
 
-export const addPushNotifBreadcrumb = ({
-  message,
-  data,
-}: {
-  message?: string,
-  data?: any,
-}) => {
+export const addPushNotifBreadcrumb = ({ message, data }: { message?: string, data?: any }) => {
   log(message || data);
   if (analyticsEnabled) {
     Sentry.captureBreadcrumb({

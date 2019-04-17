@@ -38,9 +38,7 @@ export async function registerPushNotifications(): Promise<string> {
     console.error(error);
     throw error;
   }
-  const notificationOpen: NotificationOpen = await firebase
-    .notifications()
-    .getInitialNotification();
+  const notificationOpen: NotificationOpen = await firebase.notifications().getInitialNotification();
   if (notificationOpen) {
     console.debug('notificationOpen');
     // App was opened by a notification
@@ -60,10 +58,7 @@ export async function registerPushNotifications(): Promise<string> {
     const lastNotification = await AsyncStorage.getItem('lastNotification');
     if (lastNotification !== notification.notificationId) {
       navigate(notification);
-      await AsyncStorage.setItem(
-        'lastNotification',
-        notification.notificationId
-      );
+      await AsyncStorage.setItem('lastNotification', notification.notificationId);
     }
   }
   // App in Foreground and background
@@ -97,37 +92,30 @@ export async function registerPushNotifications(): Promise<string> {
 
   // only subscribe for messages on one place to fix "no completion handler" error is iOS
   if (onMessageSubscription == null) {
-    onMessageSubscription = firebase
-      .notifications()
-      .onNotification(async (msg: Notification) => {
-        const { title, body, data } = msg;
-        addPushNotifBreadcrumb({ data: { title, body, data } });
-        const notification = new firebase.notifications.Notification()
-          .setNotificationId(msg.notificationId)
-          .setTitle(msg.title)
-          .setBody(msg.body)
-          .setData(msg.data);
+    onMessageSubscription = firebase.notifications().onNotification(async (msg: Notification) => {
+      const { title, body, data } = msg;
+      addPushNotifBreadcrumb({ data: { title, body, data } });
+      const notification = new firebase.notifications.Notification()
+        .setNotificationId(msg.notificationId)
+        .setTitle(msg.title)
+        .setBody(msg.body)
+        .setData(msg.data);
 
-        if (Platform.OS === 'android') {
-          notification.android.setPriority(
-            parseInt(msg.data.priority) ||
-              firebase.notifications.Android.Priority.High
-          );
-          notification.android
-            .setSmallIcon('ic_stat_ic_notification')
-            .android.setChannelId('channelId');
-        }
-        // You've received a notification that hasn't been displayed by the OS
-        // To display it whilst the app is in the foreground, simply call the following
-        try {
-          await firebase.notifications().displayNotification(notification);
-        } catch (error) {
-          addErrorBreadcrumb({
-            category: 'push-notifications',
-            error,
-          });
-        }
-      });
+      if (Platform.OS === 'android') {
+        notification.android.setPriority(parseInt(msg.data.priority) || firebase.notifications.Android.Priority.High);
+        notification.android.setSmallIcon('ic_stat_ic_notification').android.setChannelId('channelId');
+      }
+      // You've received a notification that hasn't been displayed by the OS
+      // To display it whilst the app is in the foreground, simply call the following
+      try {
+        await firebase.notifications().displayNotification(notification);
+      } catch (error) {
+        addErrorBreadcrumb({
+          category: 'push-notifications',
+          error,
+        });
+      }
+    });
   }
   try {
     const token = await firebase.messaging().getToken();
@@ -168,11 +156,7 @@ async function navigate(notif) {
       addPushNotifBreadcrumb({
         message: `should navigate to: ${triggeredType} ${senderName}`,
       });
-      return NavigationService.navigate(
-        'profileInStack',
-        { _id: triggeredBy },
-        `profile-${senderName}`
-      );
+      return NavigationService.navigate('profileInStack', { _id: triggeredBy }, `profile-${senderName}`);
     }
     if (triggeredType == 'Product') {
       console.debug(productUuid);
@@ -180,22 +164,14 @@ async function navigate(notif) {
         message: `should navigate to: ${triggeredType} ${productUuid}`,
       });
       const product = await api.getProduct(productUuid);
-      return NavigationService.navigate(
-        'product',
-        product,
-        `product-${product.uuid}`
-      );
+      return NavigationService.navigate('product', product, `product-${product.uuid}`);
     }
     if (triggeredType == 'Room') {
       console.debug(triggeredBy);
       addPushNotifBreadcrumb({
         message: `should navigate to: ${triggeredType} ${triggeredBy}`,
       });
-      return NavigationService.navigate(
-        'chat',
-        { roomId: triggeredBy },
-        `chat-${triggeredBy}`
-      );
+      return NavigationService.navigate('chat', { roomId: triggeredBy }, `chat-${triggeredBy}`);
     }
     const extra = JSON.parse(notif.data.extra);
     if (triggeredType === 'Order') {
@@ -206,22 +182,14 @@ async function navigate(notif) {
       });
       // order needs confirmation
       if (extra.status == 'paid')
-        return NavigationService.navigate(
-          'confirmOrder',
-          { id: triggeredBy },
-          'confirmOrder'
-        );
+        return NavigationService.navigate('confirmOrder', { id: triggeredBy }, 'confirmOrder');
     }
     if (triggeredType === 'Drop') {
       console.debug(triggeredBy);
       addPushNotifBreadcrumb({
         message: `should navigate to: ${triggeredType} ${triggeredBy}`,
       });
-      return NavigationService.navigate(
-        'profileInStack',
-        { _id: triggeredBy, tab: 'drops' },
-        `profile-${senderName}`
-      );
+      return NavigationService.navigate('profileInStack', { _id: triggeredBy, tab: 'drops' }, `profile-${senderName}`);
     }
   }
 }

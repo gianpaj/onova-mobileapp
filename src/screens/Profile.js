@@ -2,25 +2,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import {
-  Dimensions,
-  Image,
-  Platform,
-  Share,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import {
-  ActionSheet,
-  Body,
-  Button as NBButton,
-  Container,
-  Icon as NBIcon,
-  Left,
-  Right,
-} from 'native-base';
+import { Dimensions, Image, Platform, Share, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ActionSheet, Body, Button as NBButton, Container, Icon as NBIcon, Left, Right } from 'native-base';
 import { NavigationActions } from 'react-navigation';
 import { TabView, TabBar } from 'react-native-tab-view';
 import type { NavigationScreenProp } from 'react-navigation';
@@ -30,13 +13,7 @@ import Analytics from 'react-native-analytics-segment-io';
 
 import I18n from '../i18n';
 
-import {
-  Avatar,
-  EditableText,
-  Header,
-  NotificationsDot,
-  Title,
-} from '../components';
+import { Avatar, EditableText, Header, NotificationsDot, Title } from '../components';
 import ShopTab from './ShopTab';
 import UserDropsTab from './UserDropsTab';
 import { getPersonalUserData, enableRefresh } from '../actions/actionCreator';
@@ -102,10 +79,7 @@ class ProfileScreen extends React.Component<Props, State> {
     username: '',
     index: 0,
     suggestions: [],
-    routes: [
-      { key: 'shop', title: I18n.t('profile.shop_tab') },
-      { key: 'drops', title: I18n.t('profile.drops_tab') },
-    ],
+    routes: [{ key: 'shop', title: I18n.t('profile.shop_tab') }, { key: 'drops', title: I18n.t('profile.drops_tab') }],
   };
 
   static navigationOptions = () => ({
@@ -173,10 +147,7 @@ class ProfileScreen extends React.Component<Props, State> {
   };
 
   componentDidMount() {
-    if (
-      this.props.navigation.state.params &&
-      this.props.navigation.state.params.tab == 'drops'
-    ) {
+    if (this.props.navigation.state.params && this.props.navigation.state.params.tab == 'drops') {
       this.setState({ index: 1 });
     }
 
@@ -302,10 +273,8 @@ class ProfileScreen extends React.Component<Props, State> {
             );
             break;
           case BUTTONS.indexOf(BLOCK):
-            ui.showConfirmAlert(
-              I18n.t('profile.alert_block_title'),
-              I18n.t('profile.alert_block_subtitle'),
-              () => this.onBlock()
+            ui.showConfirmAlert(I18n.t('profile.alert_block_title'), I18n.t('profile.alert_block_subtitle'), () =>
+              this.onBlock()
             );
             break;
 
@@ -367,8 +336,7 @@ class ProfileScreen extends React.Component<Props, State> {
   }
 
   // or from push notification
-  ifNavigatedFromProduct = () =>
-    this.props.navigation.state.params ? true : false;
+  ifNavigatedFromProduct = () => (this.props.navigation.state.params ? true : false);
 
   openNotifications = () =>
     // $FlowFixMe
@@ -418,12 +386,7 @@ class ProfileScreen extends React.Component<Props, State> {
     });
 
   renderUserNumbers = () => {
-    const {
-      ordersAndReviewsCount,
-      followersCount,
-      followingCount,
-      suggestions,
-    } = this.state;
+    const { ordersAndReviewsCount, followersCount, followingCount, suggestions } = this.state;
 
     return (
       <View style={styles.userNumbers}>
@@ -431,34 +394,20 @@ class ProfileScreen extends React.Component<Props, State> {
           <Text style={styles.numbers}>{ordersAndReviewsCount}</Text>
           <Text style={styles.label}>{I18n.t('profile.reviews_label')}</Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          onPress={this.goToFollowers}
-          style={styles.alignCenter}>
+        <TouchableOpacity onPress={this.goToFollowers} style={styles.alignCenter}>
           <Text style={styles.numbers}>{followersCount}</Text>
           <Text style={styles.label}>{I18n.t('profile.followers_label')}</Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          onPress={this.goToFollowing}
-          style={styles.alignCenter}>
+        <TouchableOpacity onPress={this.goToFollowing} style={styles.alignCenter}>
           <Text style={styles.numbers}>{followingCount}</Text>
           <Text style={styles.label}>{I18n.t('profile.following_label')}</Text>
         </TouchableOpacity>
         {this.isMe() && (
-          <TouchableOpacity
-            onPress={this.goToSuggestions}
-            style={styles.alignCenter}>
-            <Text
-              style={[
-                styles.numbers,
-                suggestions.new && suggestions.data.length
-                  ? { color: colors.red }
-                  : {},
-              ]}>
+          <TouchableOpacity onPress={this.goToSuggestions} style={styles.alignCenter}>
+            <Text style={[styles.numbers, suggestions.new && suggestions.data.length ? { color: colors.red } : {}]}>
               {suggestions.data.length}
             </Text>
-            <Text style={styles.label}>
-              {I18n.t('profile.suggestions_label')}
-            </Text>
+            <Text style={styles.label}>{I18n.t('profile.suggestions_label')}</Text>
           </TouchableOpacity>
         )}
       </View>
@@ -475,15 +424,7 @@ class ProfileScreen extends React.Component<Props, State> {
   };
 
   renderProfileTop() {
-    const {
-      bio,
-      displayName,
-      editing,
-      profilePic,
-      isFollowing,
-      isSaving,
-      username,
-    } = this.state;
+    const { bio, displayName, editing, profilePic, isFollowing, isSaving, username } = this.state;
     return (
       <View style={styles.profileTop}>
         <>
@@ -504,24 +445,12 @@ class ProfileScreen extends React.Component<Props, State> {
                     bordered
                     small
                     full
-                    style={
-                      editing
-                        ? [styles.editOrFollowButton, styles.saveButton]
-                        : styles.editOrFollowButton
-                    }
+                    style={editing ? [styles.editOrFollowButton, styles.saveButton] : styles.editOrFollowButton}
                     onPress={() => {
-                      editing
-                        ? this.onSave()
-                        : this.setState({ editing: !editing });
+                      editing ? this.onSave() : this.setState({ editing: !editing });
                     }}>
-                    <Text
-                      style={[
-                        styles.editOrFollowButtonText,
-                        editing && { color: colors.white },
-                      ]}>
-                      {editing
-                        ? I18n.t('profile.save_profile_button')
-                        : I18n.t('profile.edit_profile_button')}
+                    <Text style={[styles.editOrFollowButtonText, editing && { color: colors.white }]}>
+                      {editing ? I18n.t('profile.save_profile_button') : I18n.t('profile.edit_profile_button')}
                     </Text>
                   </NBButton>
                 </View>
@@ -533,19 +462,10 @@ class ProfileScreen extends React.Component<Props, State> {
                     bordered={isFollowing}
                     small
                     full
-                    style={[
-                      styles.editOrFollowButton,
-                      !isFollowing && { backgroundColor: colors.active },
-                    ]}
+                    style={[styles.editOrFollowButton, !isFollowing && { backgroundColor: colors.active }]}
                     onPress={this.onFollowOrUnfollow}>
-                    <Text
-                      style={[
-                        styles.editOrFollowButtonText,
-                        !isFollowing && { color: colors.white },
-                      ]}>
-                      {isFollowing
-                        ? I18n.t('profile.unfollow_button')
-                        : I18n.t('profile.follow_button')}
+                    <Text style={[styles.editOrFollowButtonText, !isFollowing && { color: colors.white }]}>
+                      {isFollowing ? I18n.t('profile.unfollow_button') : I18n.t('profile.follow_button')}
                     </Text>
                   </NBButton>
                 </View>
@@ -645,9 +565,7 @@ class ProfileScreen extends React.Component<Props, State> {
       <>
         <View>
           {this.shouldShowNoticeBar() && (
-            <NoticeBar
-              marqueeProps={{ loop: false, style: styles.noticeBar }}
-              icon={false}>
+            <NoticeBar marqueeProps={{ loop: false, style: styles.noticeBar }} icon={false}>
               {I18n.t('alerts.notice_bar_account_verification')}
             </NoticeBar>
           )}
@@ -674,11 +592,7 @@ class ProfileScreen extends React.Component<Props, State> {
               </NBButton>
             ) : (
               <NBButton transparent dark onPress={this.openNotifications}>
-                <NBIcon
-                  ios="ios-notifications"
-                  android="md-notifications"
-                  style={styles.icon}
-                />
+                <NBIcon ios="ios-notifications" android="md-notifications" style={styles.icon} />
               </NBButton>
             )}
           </Left>
@@ -692,18 +606,11 @@ class ProfileScreen extends React.Component<Props, State> {
             </NBButton>
             {!this.ifNavigatedFromProduct() && this.isMe() && (
               <NBButton transparent onPress={this.onGoToSettings}>
-                <NBIcon
-                  ios="ios-settings"
-                  android="md-settings"
-                  style={styles.icon}
-                />
+                <NBIcon ios="ios-settings" android="md-settings" style={styles.icon} />
               </NBButton>
             )}
             {!this.isMe() && (
-              <NBButton
-                transparent
-                dark
-                onPress={this.showReportUserActionSheet}>
+              <NBButton transparent dark onPress={this.showReportUserActionSheet}>
                 <NBIcon ios="ios-more" android="md-more" style={styles.icon} />
               </NBButton>
             )}

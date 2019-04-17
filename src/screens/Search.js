@@ -35,21 +35,13 @@ type State = {
 class SearchContainer extends Component<Props, State> {
   state = {
     index: 0,
-    routes: [
-      { key: 'tags', title: I18n.t('search.tags_tab') },
-      { key: 'sellers', title: I18n.t('search.shops_tab') },
-    ],
+    routes: [{ key: 'tags', title: I18n.t('search.tags_tab') }, { key: 'sellers', title: I18n.t('search.shops_tab') }],
   };
 
   _handleIndexChange = index => this.setState({ index });
 
   _renderTabBar = props => (
-    <TabBar
-      indicatorStyle={styles.indicator}
-      labelStyle={styles.label}
-      style={styles.tabbar}
-      {...props}
-    />
+    <TabBar indicatorStyle={styles.indicator} labelStyle={styles.label} style={styles.tabbar} {...props} />
   );
 
   _renderScene = ({ route }) => {

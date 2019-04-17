@@ -89,20 +89,14 @@ class Marquee extends React.PureComponent<MarqueeProps, any> {
     }).start(() => this.startMove());
 
   textChildren = (
-    <Text
-      onLayout={this.onLayout}
-      numberOfLines={1}
-      ellipsizeMode="tail"
-      style={this.props.style}>
+    <Text onLayout={this.onLayout} numberOfLines={1} ellipsizeMode="tail" style={this.props.style}>
       {this.props.text}
     </Text>
   );
 
   render() {
     return (
-      <View
-        style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}
-        onLayout={this.onLayoutContainer}>
+      <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }} onLayout={this.onLayoutContainer}>
         <Animated.View
           // eslint-disable-next-line react-native/no-inline-styles
           style={{

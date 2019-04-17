@@ -80,11 +80,7 @@ export class DropCard extends Component<Props> {
 
     return (
       <View style={styles.dropHeaderAndFooter}>
-        <Button
-          transparent
-          dark
-          onPress={() => this.shareDrop(drop)}
-          style={styles.shareIconButton}>
+        <Button transparent dark onPress={() => this.shareDrop(drop)} style={styles.shareIconButton}>
           <Icon ios="ios-share" android="md-share" style={styles.shareIcon} />
         </Button>
         {amITheSeller && (
@@ -98,13 +94,8 @@ export class DropCard extends Component<Props> {
             bordered={drop.amISubscribed}
             small
             full
-            style={[
-              styles.subscribeButton,
-              drop.amISubscribed && { backgroundColor: colors.bgDefault },
-            ]}
-            onPress={() =>
-              onSubscribeUnsubscribed && onSubscribeUnsubscribed(drop)
-            }>
+            style={[styles.subscribeButton, drop.amISubscribed && { backgroundColor: colors.bgDefault }]}
+            onPress={() => onSubscribeUnsubscribed && onSubscribeUnsubscribed(drop)}>
             <Text
               // eslint-disable-next-line
               style={[
@@ -112,13 +103,9 @@ export class DropCard extends Component<Props> {
                   fontSize: typography.font_button_size,
                   marginTop: -1,
                 },
-                drop.amISubscribed
-                  ? { color: colors.grey1 }
-                  : { color: colors.white },
+                drop.amISubscribed ? { color: colors.grey1 } : { color: colors.white },
               ]}>
-              {drop.amISubscribed
-                ? I18n.t('drops_feed.unsubscribe')
-                : I18n.t('drops_feed.subscribe')}
+              {drop.amISubscribed ? I18n.t('drops_feed.unsubscribe') : I18n.t('drops_feed.subscribe')}
             </Text>
           </Button>
         )}
@@ -175,29 +162,17 @@ export class DropCard extends Component<Props> {
     return (
       <>
         <List style={styles.dropHeaderAndFooter}>
-          <TouchableOpacity
-            style={styles.dropUserRow}
-            onPress={() => this.goToProfile(drop.seller)}>
-            <Avatar
-              size={'verySmall'}
-              uri={drop.seller.profilePic}
-              placeholderText={drop.seller.username}
-            />
+          <TouchableOpacity style={styles.dropUserRow} onPress={() => this.goToProfile(drop.seller)}>
+            <Avatar size={'verySmall'} uri={drop.seller.profilePic} placeholderText={drop.seller.username} />
             <Text style={styles.userName}>{drop.seller.username}</Text>
           </TouchableOpacity>
           {willDropIn15Mins ? (
-            <Countdown
-              size={14}
-              until={differenceInSeconds(scheduledAt, new Date())}
-            />
+            <Countdown size={14} until={differenceInSeconds(scheduledAt, new Date())} />
           ) : (
-            <Text style={styles.dateStrings}>
-              {format(scheduledAt, 'D MMM HH:mm')}
-            </Text>
+            <Text style={styles.dateStrings}>{format(scheduledAt, 'D MMM HH:mm')}</Text>
           )}
         </List>
-        <TouchableWithoutFeedback
-          onLongPress={() => isAdmin && this.onDeleteDrop(drop.uuid)}>
+        <TouchableWithoutFeedback onLongPress={() => isAdmin && this.onDeleteDrop(drop.uuid)}>
           <FlatList
             columnWrapperStyle={[styles.columnWrapper, { height: width / 3 }]}
             data={drop.products}

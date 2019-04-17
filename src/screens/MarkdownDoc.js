@@ -2,15 +2,7 @@
 
 import React from 'react';
 import { withNavigation } from 'react-navigation';
-import {
-  Body,
-  Button as NBButton,
-  Container,
-  Content,
-  Icon as NBIcon,
-  Left,
-  Right,
-} from 'native-base';
+import { Body, Button as NBButton, Container, Content, Icon as NBIcon, Left, Right } from 'native-base';
 import Markdown from 'react-native-markdown-renderer';
 
 import type { NavigationScreenProp } from 'react-navigation';

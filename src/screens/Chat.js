@@ -2,23 +2,8 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import {
-  ActivityIndicator,
-  FlatList,
-  Image,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import {
-  Body,
-  Button as NBButton,
-  Container,
-  Icon as NBIcon,
-  Left,
-  Right,
-} from 'native-base';
+import { ActivityIndicator, FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Body, Button as NBButton, Container, Icon as NBIcon, Left, Right } from 'native-base';
 import Dialog from 'react-native-dialog';
 import ParsedText from 'react-native-parsed-text';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -86,25 +71,22 @@ class ChatContainer extends Component<Props, State> {
     let { params } = this.props.navigation.state;
 
     // refresh after leaving a review or archiving an order
-    this.willFocusListener = this.props.navigation.addListener(
-      'willFocus',
-      () => {
-        const { roomId, shouldRefresh } = this.state;
-        // do not initiate twice at the beginning
-        // OR
-        // when it should not refresh (review hasn't been added or order archived)
-        if (!roomId || !shouldRefresh) return;
+    this.willFocusListener = this.props.navigation.addListener('willFocus', () => {
+      const { roomId, shouldRefresh } = this.state;
+      // do not initiate twice at the beginning
+      // OR
+      // when it should not refresh (review hasn't been added or order archived)
+      if (!roomId || !shouldRefresh) return;
 
-        // TODO: maybe only refresh the orders?
-        // this.fetchOrders(thisRoom)
+      // TODO: maybe only refresh the orders?
+      // this.fetchOrders(thisRoom)
 
-        this.setState({ isLoading: true }, () =>
-          this.initialise(roomId)
-            .then(this.setState({ isLoading: false, shouldRefresh: false }))
-            .catch(e => console.error(e))
-        );
-      }
-    );
+      this.setState({ isLoading: true }, () =>
+        this.initialise(roomId)
+          .then(this.setState({ isLoading: false, shouldRefresh: false }))
+          .catch(e => console.error(e))
+      );
+    });
 
     // for development on 'onova' Pusher Instance
     if (!params) {
@@ -127,10 +109,7 @@ class ChatContainer extends Component<Props, State> {
 
   componentWillUnmount() {
     // stop receiving events from the chat room
-    if (
-      pusherCurrentUser &&
-      pusherCurrentUser.roomSubscriptions[this.state.roomId]
-    )
+    if (pusherCurrentUser && pusherCurrentUser.roomSubscriptions[this.state.roomId])
       pusherCurrentUser.roomSubscriptions[this.state.roomId].cancel();
 
     // cancel initialise(). i.e. when the Chat screen is opened and closed quickly
@@ -168,11 +147,7 @@ class ChatContainer extends Component<Props, State> {
                     thisRoom = room;
                     return room;
                   })
-                  .then(room =>
-                    room.userIds
-                      .filter(id => id !== ONOVA_BOT_ID)
-                      .find(id => id !== userData._id)
-                  )
+                  .then(room => room.userIds.filter(id => id !== ONOVA_BOT_ID).find(id => id !== userData._id))
                   // if no user then it's a UserWeb
                   .then(user => user && api.getUser(user))
                   .then(partner => partner && this.setState({ partner }))
@@ -226,11 +201,7 @@ class ChatContainer extends Component<Props, State> {
                         return room;
                       })
                       .then(room =>
-                        api.getUser(
-                          room.userIds
-                            .filter(id => id !== ONOVA_BOT_ID)
-                            .find(id => id !== userData._id)
-                        )
+                        api.getUser(room.userIds.filter(id => id !== ONOVA_BOT_ID).find(id => id !== userData._id))
                       )
                       .then(partner => this.setState({ partner }))
                       .catch(err => {
@@ -322,11 +293,7 @@ class ChatContainer extends Component<Props, State> {
     let partner;
     // existing room
     if (room) {
-      partner = await api.getUser(
-        room.userIds
-          .filter(id => id !== ONOVA_BOT_ID)
-          .find(id => id !== userData._id)
-      );
+      partner = await api.getUser(room.userIds.filter(id => id !== ONOVA_BOT_ID).find(id => id !== userData._id));
     } else if (order.buyerType === 'UserWeb') {
       partner = {
         _id: ONOVA_BOT_ID,
@@ -352,10 +319,7 @@ class ChatContainer extends Component<Props, State> {
         .then(orders =>
           orders
             .filter((o: Order) => getRoomName(o) == thisRoom.name)
-            .filter(
-              (o: Order) =>
-                !['paid', 'cancelled', 'pending', 'reserved'].includes(o.status)
-            )
+            .filter((o: Order) => !['paid', 'cancelled', 'pending', 'reserved'].includes(o.status))
         )
         // show orders which i have not archived
         // AND
@@ -535,11 +499,7 @@ class ChatContainer extends Component<Props, State> {
   };
 
   renderSystemMessage = (props): React$Element<*> => (
-    <SystemMessage
-      {...props}
-      containerStyle={st.systemContainer}
-      textStyle={st.systemText}
-    />
+    <SystemMessage {...props} containerStyle={st.systemContainer} textStyle={st.systemText} />
   );
 
   renderSend = (props): React$Element<*> => {
@@ -561,9 +521,7 @@ class ChatContainer extends Component<Props, State> {
 
   renderActions = (props: any) => {
     if (this.state.buyerType === 'UserWeb') return null;
-    return (
-      <ChatActions {...props} uploadingImage={this.state.uploadingImage} />
-    );
+    return <ChatActions {...props} uploadingImage={this.state.uploadingImage} />;
   };
 
   goToProfileOrShowWebUserInfo = () => {
@@ -607,14 +565,9 @@ class ChatContainer extends Component<Props, State> {
             },
           ]}>
           {/* eslint-disable-next-line react-native/no-raw-text */}
-          {I18n.t('chat.user_dialog.mobile_mumber') +
-            ': ' +
-            this.state.partner.mobileNumber}
+          {I18n.t('chat.user_dialog.mobile_mumber') + ': ' + this.state.partner.mobileNumber}
         </ParsedText>
-        <Dialog.Button
-          label={I18n.t('product.toast_warning_ok_button')}
-          onPress={this.toggleUserDialog}
-        />
+        <Dialog.Button label={I18n.t('product.toast_warning_ok_button')} onPress={this.toggleUserDialog} />
       </Dialog.Container>
     </React.Fragment>
   );
@@ -658,9 +611,7 @@ class ChatContainer extends Component<Props, State> {
   }
 
   _renderOrderSquare = ({ item }: { item: Order }) => (
-    <TouchableOpacity
-      style={st.orderSquare}
-      onPress={() => this.goToAddReviewOrArchiveOrder(item.id)}>
+    <TouchableOpacity style={st.orderSquare} onPress={() => this.goToAddReviewOrArchiveOrder(item.id)}>
       <Image
         style={st.itemImage}
         source={{
@@ -693,13 +644,8 @@ class ChatContainer extends Component<Props, State> {
         renderToHardwareTextureAndroid>
         <Dialog.Title>{I18n.t('chat.alert_info_title')}</Dialog.Title>
 
-        <Text style={{ marginTop: 4, margin: 18 }}>
-          {I18n.t('chat.alert_info_body')}
-        </Text>
-        <Dialog.Button
-          label={I18n.t('product.toast_warning_ok_button')}
-          onPress={this.toggleInfoDialog}
-        />
+        <Text style={{ marginTop: 4, margin: 18 }}>{I18n.t('chat.alert_info_body')}</Text>
+        <Dialog.Button label={I18n.t('product.toast_warning_ok_button')} onPress={this.toggleInfoDialog} />
       </Dialog.Container>
     </React.Fragment>
   );
@@ -748,19 +694,13 @@ class ChatContainer extends Component<Props, State> {
               contentContainerStyle={{ flexGrow: 1 }}
               ItemSeparatorComponent={this._renderSeparatorHorizontal}
               renderItem={this._renderOrderSquare}
-              ListEmptyComponent={() => (
-                <Text style={st.noOrders}>{I18n.t('chat.no_orders')}</Text>
-              )}
+              ListEmptyComponent={() => <Text style={st.noOrders}>{I18n.t('chat.no_orders')}</Text>}
             />
           </View>
           <GiftedChat
             messages={messages}
             onSend={this.onSend}
-            placeholder={
-              isWebUser
-                ? I18n.t('chat.send_msg_placeholder_disabled')
-                : I18n.t('chat.send_msg_placeholder')
-            }
+            placeholder={isWebUser ? I18n.t('chat.send_msg_placeholder_disabled') : I18n.t('chat.send_msg_placeholder')}
             user={{
               _id: userData._id,
               name: userData.username,

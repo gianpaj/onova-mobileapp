@@ -3,15 +3,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-  Dimensions,
-  Image,
-  StyleSheet,
-  TouchableWithoutFeedback,
-  Platform,
-  View,
-  ViewPropTypes,
-} from 'react-native';
+import { Dimensions, Image, StyleSheet, TouchableWithoutFeedback, Platform, View, ViewPropTypes } from 'react-native';
 import Modal from 'react-native-modal';
 import ImageZoom from 'react-native-image-pan-zoom';
 
@@ -49,8 +41,7 @@ class MessageImage extends React.Component<*, State> {
     });
   }
 
-  _toggleModal = () =>
-    this.setState({ isModalVisible: !this.state.isModalVisible });
+  _toggleModal = () => this.setState({ isModalVisible: !this.state.isModalVisible });
 
   render() {
     const { image } = this.props.currentMessage;
@@ -63,11 +54,7 @@ class MessageImage extends React.Component<*, State> {
     return (
       <View style={this.props.containerStyle}>
         <TouchableWithoutFeedback onPress={this._toggleModal}>
-          <Image
-            {...this.props.imageProps}
-            style={[styles.image, this.props.imageStyle]}
-            source={{ uri }}
-          />
+          <Image {...this.props.imageProps} style={[styles.image, this.props.imageStyle]} source={{ uri }} />
         </TouchableWithoutFeedback>
         <Modal
           backdropOpacity={1}

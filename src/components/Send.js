@@ -2,12 +2,7 @@
 
 import PropTypes from 'prop-types';
 import React from 'react';
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  ViewPropTypes,
-} from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, ViewPropTypes } from 'react-native';
 
 export default function Send({
   text,

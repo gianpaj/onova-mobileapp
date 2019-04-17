@@ -74,26 +74,11 @@ export class Home extends PureComponent<Props, State> {
   _renderScene = ({ route }) => {
     switch (route.key) {
       case 'clothes':
-        return (
-          <ImageGrid
-            apiURL="/api/feed/flat/?categoryIds=0"
-            navigation={this.props.navigation}
-          />
-        );
+        return <ImageGrid apiURL="/api/feed/flat/?categoryIds=0" navigation={this.props.navigation} />;
       case 'shoes':
-        return (
-          <ImageGrid
-            apiURL="/api/feed/flat/?categoryIds=1"
-            navigation={this.props.navigation}
-          />
-        );
+        return <ImageGrid apiURL="/api/feed/flat/?categoryIds=1" navigation={this.props.navigation} />;
       case 'other':
-        return (
-          <ImageGrid
-            apiURL="/api/feed/flat/?categoryIds=2"
-            navigation={this.props.navigation}
-          />
-        );
+        return <ImageGrid apiURL="/api/feed/flat/?categoryIds=2" navigation={this.props.navigation} />;
       default:
         return null;
     }
@@ -117,11 +102,7 @@ export class Home extends PureComponent<Props, State> {
       <View testID="Home" style={{ flex: 1 }}>
         <Header hasTabs>
           <Left style={styles.container}>
-            <Button
-              transparent
-              dark
-              style={{ marginLeft: 5 }}
-              onPress={this.toggleDialog}>
+            <Button transparent dark style={{ marginLeft: 5 }} onPress={this.toggleDialog}>
               <MaterialCommunityIcons name="information-outline" size={18} />
             </Button>
           </Left>
@@ -150,8 +131,7 @@ export class Home extends PureComponent<Props, State> {
     );
   }
 
-  toggleDialog = () =>
-    this.setState(prevState => ({ dialogVisible: !prevState.dialogVisible }));
+  toggleDialog = () => this.setState(prevState => ({ dialogVisible: !prevState.dialogVisible }));
 
   renderInfoDialog = () => (
     <React.Fragment>
@@ -174,10 +154,7 @@ export class Home extends PureComponent<Props, State> {
           ]}>
           {I18n.t('home.alert_info_body')}
         </ParsedText>
-        <Dialog.Button
-          label={I18n.t('product.toast_warning_ok_button')}
-          onPress={this.toggleDialog}
-        />
+        <Dialog.Button label={I18n.t('product.toast_warning_ok_button')} onPress={this.toggleDialog} />
       </Dialog.Container>
     </React.Fragment>
   );

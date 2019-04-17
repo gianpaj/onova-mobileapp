@@ -81,9 +81,7 @@ export default class Accordion extends PureComponent<Props, State> {
         sections={[{ content: this.props.values }]}
         renderHeader={() => (
           <View style={styles.header}>
-            <FormLabel labelStyle={styles.label}>
-              {this.props.headerText}
-            </FormLabel>
+            <FormLabel labelStyle={styles.label}>{this.props.headerText}</FormLabel>
             <Animatable.View style={[styles.arrow, animatedStyle]}>
               <Ionicons name="ios-arrow-down" style={styles.icon} size={24} />
             </Animatable.View>

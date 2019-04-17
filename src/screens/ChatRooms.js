@@ -68,12 +68,9 @@ class ChatContainer extends Component<Props, State> {
     }
     this.initialise();
 
-    this.didFocusListener = this.props.navigation.addListener(
-      'didFocus',
-      () => {
-        if (pusherCurrentUser) this.initialise();
-      }
-    );
+    this.didFocusListener = this.props.navigation.addListener('didFocus', () => {
+      if (pusherCurrentUser) this.initialise();
+    });
   }
 
   componentWillUnmount() {
@@ -83,9 +80,7 @@ class ChatContainer extends Component<Props, State> {
   initialise = () => {
     this.setState({ isLoading: true });
     this.getChatsAndTheirOrders()
-      .then(ordersAndChats =>
-        this.setState({ ordersAndChats, isLoading: false })
-      )
+      .then(ordersAndChats => this.setState({ ordersAndChats, isLoading: false }))
       .catch(err => {
         this.setState({ hasError: true, isLoading: false });
         console.debug(err);
@@ -97,8 +92,7 @@ class ChatContainer extends Component<Props, State> {
     console.debug('getChatsAndTheirOrders');
     const { token, userData } = this.props;
     const orders = (await api.getOrders(token)).filter(
-      (o: Order) =>
-        !['paid', 'cancelled', 'pending', 'reserved'].includes(o.status)
+      (o: Order) => !['paid', 'cancelled', 'pending', 'reserved'].includes(o.status)
     );
     if (orders.length === 0) return [];
 
@@ -143,23 +137,18 @@ class ChatContainer extends Component<Props, State> {
             name: `${room.orders[0].buyer.displayName} (web)`,
           };
         } else {
-          partner = room.users
-            .filter(u => u.id !== ONOVA_BOT_ID)
-            .find(u => u.id !== userData._id);
+          partner = room.users.filter(u => u.id !== ONOVA_BOT_ID).find(u => u.id !== userData._id);
           const cursor = await pusherCurrentUser.readCursor({
             roomId: room.id,
           });
           unreadCount = unreads(cursor, msgs) || 0;
         }
 
-        const isPartnerOnline =
-          partner.presence && partner.presence.state == 'online';
+        const isPartnerOnline = partner.presence && partner.presence.state == 'online';
         return {
           ...room,
           // if no messages (very first order step)
-          lastMessage: msgs.length
-            ? msgs[msgs.length - 1]
-            : { createdAt: room.createdAt },
+          lastMessage: msgs.length ? msgs[msgs.length - 1] : { createdAt: room.createdAt },
           isPartnerOnline,
           unreadCount,
           partner,
@@ -168,10 +157,7 @@ class ChatContainer extends Component<Props, State> {
     );
 
     if (ordersAndChats.length > 1) {
-      ordersAndChats.sort(
-        (a, b) =>
-          new Date(b.lastMessage.createdAt) - new Date(a.lastMessage.createdAt)
-      );
+      ordersAndChats.sort((a, b) => new Date(b.lastMessage.createdAt) - new Date(a.lastMessage.createdAt));
     }
     return ordersAndChats;
   }
@@ -249,27 +235,17 @@ class ChatContainer extends Component<Props, State> {
           <View style={[st.flex1, st.content]}>
             <View style={st.contentHeader}>
               <View style={{ flexDirection: 'row' }}>
-                <Text style={[st.name, item.unreadCount > 0 && st.unread]}>
-                  {item.partner.name}
-                </Text>
-                {lastMessage.senderId !== -1 && item.isPartnerOnline && (
-                  <View style={st.onlineDot} />
-                )}
+                <Text style={[st.name, item.unreadCount > 0 && st.unread]}>{item.partner.name}</Text>
+                {lastMessage.senderId !== -1 && item.isPartnerOnline && <View style={st.onlineDot} />}
               </View>
               <Text style={[st.datetime, item.unreadCount > 0 && st.unread]}>
                 {ui.formatTime(lastMessage.createdAt)}
               </Text>
             </View>
             <View style={st.contentHeader}>
-              <Text
-                numberOfLines={1}
-                style={[st.text, item.unreadCount > 0 && st.unreadText]}>
+              <Text numberOfLines={1} style={[st.text, item.unreadCount > 0 && st.unreadText]}>
                 {from}
-                {lastMessage.attachment ? (
-                  <Feather name="camera" size={11} color={colors.grey3} />
-                ) : (
-                  lastMessage.text
-                )}
+                {lastMessage.attachment ? <Feather name="camera" size={11} color={colors.grey3} /> : lastMessage.text}
               </Text>
               {item.unreadCount > 0 && (
                 <Badge style={st.unreadBadge}>
@@ -298,11 +274,7 @@ class ChatContainer extends Component<Props, State> {
           color={colors.grey2}
           style={{ alignSelf: 'center', marginBottom: 30 }}
         />
-        <Text>
-          {this.state.hasError
-            ? I18n.t('chat_rooms.error')
-            : I18n.t('chat_rooms.empty_state_message')}
-        </Text>
+        <Text>{this.state.hasError ? I18n.t('chat_rooms.error') : I18n.t('chat_rooms.empty_state_message')}</Text>
       </View>
     );
   };
@@ -355,10 +327,7 @@ class ChatContainer extends Component<Props, State> {
               keyExtractor={this._keyExtractor}
               ListEmptyComponent={this.renderEmptyState}
               refreshControl={
-                <RefreshControl
-                  refreshing={this.state.isRefreshing}
-                  onRefresh={this.refreshOrdersAndChats}
-                />
+                <RefreshControl refreshing={this.state.isRefreshing} onRefresh={this.refreshOrdersAndChats} />
               }
               renderItem={this._renderRoomRow}
               style={st.root}
@@ -373,11 +342,7 @@ class ChatContainer extends Component<Props, State> {
 
 const unreads = (cursor, messages = {}) => {
   // compare the message id with the cursor position id
-  return (
-    (cursor &&
-      messages.map(a => a.id).filter(x => x > cursor.position).length) ||
-    undefined
-  );
+  return (cursor && messages.map(a => a.id).filter(x => x > cursor.position).length) || undefined;
 };
 
 const st = StyleSheet.create({

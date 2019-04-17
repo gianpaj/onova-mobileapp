@@ -2,15 +2,7 @@
 
 import React, { PureComponent } from 'react';
 
-import {
-  Dimensions,
-  Image,
-  Platform,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { Dimensions, Image, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import StarRating from 'react-native-star-rating';
 import { Body, ListItem } from 'native-base';
@@ -51,17 +43,13 @@ class ReviewCard extends PureComponent<Props> {
 
     const uri = order.product.photoURIs[0].replace('.jpg', '-thumb.jpg');
 
-    const heightContainer =
-      review && review.text && review.text.length > 30 ? 20 : 0;
+    const heightContainer = review && review.text && review.text.length > 30 ? 20 : 0;
 
     return (
       // FIXME: upgrade native-base
       <ListItem style={{ marginLeft: 0 }}>
         <View style={{ height: width / 4 + heightContainer }}>
-          <Image
-            style={[styles.itemImage, { width: width / 4, height: width / 4 }]}
-            source={{ uri }}
-          />
+          <Image style={[styles.itemImage, { width: width / 4, height: width / 4 }]} source={{ uri }} />
         </View>
         <Body>
           <View style={styles.contentRow}>
@@ -82,9 +70,7 @@ class ReviewCard extends PureComponent<Props> {
                 // eslint-disable-next-line
                 // containerStyle={{ alignSelf: 'center' }}
                 disabled
-                emptyStar={
-                  Platform.OS == 'ios' ? 'ios-star-outline' : 'md-star-outline'
-                }
+                emptyStar={Platform.OS == 'ios' ? 'ios-star-outline' : 'md-star-outline'}
                 emptyStarColor={colors.black}
                 fullStar={Platform.OS == 'ios' ? 'ios-star' : 'md-star'}
                 fullStarColor={colors.black}
@@ -105,10 +91,7 @@ class ReviewCard extends PureComponent<Props> {
             </Text>
           ) : (
             <Text
-              style={[
-                styles.statusText,
-                order.status == 'cancelled' ? { color: colors.red } : {},
-              ]}
+              style={[styles.statusText, order.status == 'cancelled' ? { color: colors.red } : {}]}
               numberOfLines={3}>
               {I18n.t(`reviews.${order.status}`)}
             </Text>

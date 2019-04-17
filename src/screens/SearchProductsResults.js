@@ -3,13 +3,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { StyleSheet, View } from 'react-native';
-import {
-  Body,
-  Button as NBButton,
-  Left,
-  Right,
-  Icon as NBIcon,
-} from 'native-base';
+import { Body, Button as NBButton, Left, Right, Icon as NBIcon } from 'native-base';
 
 import { Header, ImageGridSearch, Title } from '../components';
 
@@ -63,10 +57,7 @@ class SearchProductsResultsContainer extends Component<Props, State> {
       <View style={styles.flex1}>
         <Header>
           <Left style={styles.container}>
-            <NBButton
-              transparent
-              dark
-              onPress={() => this.props.navigation.goBack()}>
+            <NBButton transparent dark onPress={() => this.props.navigation.goBack()}>
               <NBIcon ios="ios-arrow-back" android="md-arrow-back" />
             </NBButton>
           </Left>
@@ -108,6 +99,4 @@ const mapStateToProps: any = (state: ReduxState) => ({
   userData: state.LoginReducer.data,
 });
 
-export const SearchProductsResults = connect(mapStateToProps)(
-  SearchProductsResultsContainer
-);
+export const SearchProductsResults = connect(mapStateToProps)(SearchProductsResultsContainer);

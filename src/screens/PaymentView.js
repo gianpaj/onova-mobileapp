@@ -64,14 +64,8 @@ class PaymentView extends Component<Props, State> {
   }
 
   initializeListeners() {
-    this.keyboardDidShowListener = Keyboard.addListener(
-      'keyboardDidShow',
-      this._keyboardDidShow
-    );
-    this.keyboardDidHideListener = Keyboard.addListener(
-      'keyboardDidHide',
-      this._keyboardDidHide
-    );
+    this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this._keyboardDidShow);
+    this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this._keyboardDidHide);
   }
 
   _keyboardDidShow = () => this.setState({ showFooter: false });
@@ -81,21 +75,14 @@ class PaymentView extends Component<Props, State> {
   async createPayment(): Promise<any> {
     const { token, navigation } = this.props;
     const { params } = navigation.state;
-    const { data } = await api.post(
-      `/api/orders/${params.orderId}/pay`,
-      { cvc: params.cvc },
-      { token }
-    );
+    const { data } = await api.post(`/api/orders/${params.orderId}/pay`, { cvc: params.cvc }, { token });
     return data.payment;
   }
 
   async getPaymentStatus() {
     const { token, navigation } = this.props;
     const { params } = navigation.state;
-    const { data } = await api.get(
-      `/api/orders/${params.orderId}/paymentStatus`,
-      { token }
-    );
+    const { data } = await api.get(`/api/orders/${params.orderId}/paymentStatus`, { token });
     return data;
   }
 
@@ -155,12 +142,8 @@ class PaymentView extends Component<Props, State> {
               <head><meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0"></head>
               <body>
                 <form action="${payment.url}" method="POST">
-                  <input name="TermUrl" value="${
-                    payment.redirectUrl
-                  }" type="hidden" /><br>
-                  <input name="PaReq" value="${
-                    payment.PaReq
-                  }" type="hidden" /><br>
+                  <input name="TermUrl" value="${payment.redirectUrl}" type="hidden" /><br>
+                  <input name="PaReq" value="${payment.PaReq}" type="hidden" /><br>
                   <script>
                     document.getElementsByTagName('form')[0].submit();
                   </script>
@@ -168,21 +151,13 @@ class PaymentView extends Component<Props, State> {
               </body></html>`,
           }}
           onNavigationStateChange={async e => {
-            if (
-              !e.url.startsWith('data:text/html') &&
-              e.url.indexOf('/api/payments/') > -1
-            ) {
+            if (!e.url.startsWith('data:text/html') && e.url.indexOf('/api/payments/') > -1) {
               this.onFinished();
               // console.warn(e);
             }
           }}
         />
-        {showFooter && (
-          <Button
-            title={I18n.t('checkout.go_back')}
-            onPress={() => this.props.navigation.goBack()}
-          />
-        )}
+        {showFooter && <Button title={I18n.t('checkout.go_back')} onPress={() => this.props.navigation.goBack()} />}
       </View>
     );
   }

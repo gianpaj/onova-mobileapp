@@ -21,4 +21,5 @@ export default {
   // INSTABUG_TOKEN: '***REMOVED***',
   // BRAINTREE_TOKENIZATION_KEY: 'sandbox_45rbtwk4_wpk6jkwxv5kpqp58',
   MIN_PRICE: 150, // valid including
+  NUM_HOURS_FOR_SELLER_TO_CONFIRM: 48,
 };

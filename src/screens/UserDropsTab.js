@@ -51,23 +51,10 @@ class UserDropsTabContainer extends React.Component<Props, {}> {
                 <Text>{I18n.t('drops_grid.empty_state_message_others')}</Text>
               ) : (
                 <>
-                  <MaterialCommunityIcons
-                    size={48}
-                    name="clock"
-                    color={colors.grey2}
-                    style={styles.emptyStateIcon}
-                  />
-                  <Text style={styles.boldText}>
-                    {I18n.t('drops_grid.empty_state_title')}
-                  </Text>
-                  <Text style={styles.centerText}>
-                    {I18n.t('drops_grid.empty_state_message_mine')}
-                  </Text>
-                  <NBButton
-                    block
-                    dark
-                    style={styles.searchButton}
-                    onPress={() => navigation.navigate('createDrop')}>
+                  <MaterialCommunityIcons size={48} name="clock" color={colors.grey2} style={styles.emptyStateIcon} />
+                  <Text style={styles.boldText}>{I18n.t('drops_grid.empty_state_title')}</Text>
+                  <Text style={styles.centerText}>{I18n.t('drops_grid.empty_state_message_mine')}</Text>
+                  <NBButton block dark style={styles.searchButton} onPress={() => navigation.navigate('createDrop')}>
                     <Text
                       // eslint-disable-next-line
                       style={{

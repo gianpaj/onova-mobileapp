@@ -3,10 +3,7 @@ import type { Store as ReduxStore } from 'redux';
 // import type { Reducers } from '../reducers';
 import type { Action as LoginAction, LoginState } from './loginReducer';
 import type { ScreenRefreshState } from '../reducers/screenRefreshReducer';
-import type {
-  Action as NavigationAction,
-  NavigationState,
-} from './navigationReducer';
+import type { Action as NavigationAction, NavigationState } from './navigationReducer';
 
 export type Drop = {
   _id: string,
@@ -21,12 +18,7 @@ export type Drop = {
   uuid: string,
 };
 
-export type ProductStatus =
-  | 'forsale'
-  | 'reserved'
-  | 'sold'
-  | 'banned'
-  | 'deleted';
+export type ProductStatus = 'forsale' | 'reserved' | 'sold' | 'banned' | 'deleted';
 
 export type Product = {
   categoryIds: Array<number>,
@@ -269,7 +261,5 @@ export type Store = ReduxStore<ReduxState, ReduxAction>;
 type PromiseAction = Promise<ReduxAction>;
 
 type ThunkAction = (dispatch: Dispatch, getState: GetState) => any;
-export type Dispatch = (
-  action: ReduxAction | ThunkAction | PromiseAction
-) => any;
+export type Dispatch = (action: ReduxAction | ThunkAction | PromiseAction) => any;
 export type GetState = () => ReduxState;

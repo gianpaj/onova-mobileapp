@@ -2,15 +2,7 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import {
-  Image,
-  Keyboard,
-  KeyboardAvoidingView,
-  Platform,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import { Image, Keyboard, KeyboardAvoidingView, Platform, StyleSheet, Text, View } from 'react-native';
 import { Body, Button, Icon, Left, Right, Container } from 'native-base';
 import { WebView } from 'react-native-webview';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -34,10 +26,7 @@ function JStoInject() {
   };
 
   patchedPostMessage.toString = function() {
-    return String(Object.hasOwnProperty).replace(
-      'hasOwnProperty',
-      'postMessage'
-    );
+    return String(Object.hasOwnProperty).replace('hasOwnProperty', 'postMessage');
   };
 
   window.postMessage = patchedPostMessage;
@@ -75,9 +64,7 @@ class EnterCardInfo extends Component<Props, State> {
 
   async componentDidMount() {
     const { params } = this.props.navigation.state;
-    const tokenForCardIFrame = await this.generateTokenForIFrame(
-      params && params.short
-    );
+    const tokenForCardIFrame = await this.generateTokenForIFrame(params && params.short);
     console.log(tokenForCardIFrame);
     this.setState({ tokenForCardIFrame });
     this.initializeListeners();
@@ -89,14 +76,8 @@ class EnterCardInfo extends Component<Props, State> {
   }
 
   initializeListeners() {
-    this.keyboardDidShowListener = Keyboard.addListener(
-      'keyboardDidShow',
-      this._keyboardDidShow
-    );
-    this.keyboardDidHideListener = Keyboard.addListener(
-      'keyboardDidHide',
-      this._keyboardDidHide
-    );
+    this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this._keyboardDidShow);
+    this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this._keyboardDidHide);
   }
 
   _keyboardDidShow = () => this.setState({ showFooter: false });
@@ -117,7 +98,7 @@ class EnterCardInfo extends Component<Props, State> {
 
       await api.put(
         `/api/users/${userData._id}`,
-        { paymentInfoPayload: data.payload },
+        { short: params && params.short, paymentInfoPayload: data.payload },
         { token }
       );
       this.props.dispatch(enableRefresh());
@@ -139,21 +120,9 @@ class EnterCardInfo extends Component<Props, State> {
           marginTop: -40,
           justifyContent: 'center',
         }}>
-        <Image
-          source={require('../assets/images/visa.png')}
-          style={styles.mandatoryImage}
-          resizeMode="contain"
-        />
-        <Image
-          source={require('../assets/images/mastercard.png')}
-          style={styles.mandatoryImage}
-          resizeMode="contain"
-        />
-        <Image
-          source={require('../assets/images/pci.png')}
-          style={styles.mandatoryImage}
-          resizeMode="contain"
-        />
+        <Image source={require('../assets/images/visa.png')} style={styles.mandatoryImage} resizeMode="contain" />
+        <Image source={require('../assets/images/mastercard.png')} style={styles.mandatoryImage} resizeMode="contain" />
+        <Image source={require('../assets/images/pci.png')} style={styles.mandatoryImage} resizeMode="contain" />
         <Image
           source={require('../assets/images/uapay.png')}
           style={[styles.mandatoryImage, { width: '15%' }]}
@@ -181,10 +150,7 @@ class EnterCardInfo extends Component<Props, State> {
       <Container>
         <Header>
           <Left style={styles.container}>
-            <Button
-              transparent
-              dark
-              onPress={() => this.props.navigation.goBack()}>
+            <Button transparent dark onPress={() => this.props.navigation.goBack()}>
               <Icon ios="ios-arrow-back" android="md-arrow-back" />
             </Button>
           </Left>
@@ -230,18 +196,11 @@ class EnterCardInfo extends Component<Props, State> {
                   size={64}
                   style={{ alignSelf: 'center' }}
                 />
-                <Text style={styles.paragraph}>
-                  {I18n.t('get_card_id.security')}
-                </Text>
+                <Text style={styles.paragraph}>{I18n.t('get_card_id.security')}</Text>
               </View>
             )}
-            <Button
-              full
-              style={{ backgroundColor: colors.active }}
-              onPress={this.onSubmit}>
-              <Text style={styles.saveBtn}>
-                {I18n.t('checkout.save_card_info')}
-              </Text>
+            <Button full style={{ backgroundColor: colors.active }} onPress={this.onSubmit}>
+              <Text style={styles.saveBtn}>{I18n.t('checkout.save_card_info')}</Text>
             </Button>
           </KeyboardAvoidingView>
         </View>

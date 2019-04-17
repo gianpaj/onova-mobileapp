@@ -216,7 +216,7 @@ class SettingsContainer extends Component<Props, State> {
         } else {
           ui.showToast(I18n.t('settings.alert_msg_settigs_changed'), 'success');
         }
-        this.goBack()
+        this.goBack();
       })
       .catch(err => {
         console.debug(err);

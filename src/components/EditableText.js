@@ -49,14 +49,7 @@ class EditableText extends PureComponent<Props, State> {
   };
 
   renderText() {
-    const {
-      placeholder,
-      placeholderColor,
-      showPlaceholder,
-      style,
-      text,
-      textProps,
-    } = this.props;
+    const { placeholder, placeholderColor, showPlaceholder, style, text, textProps } = this.props;
 
     return (
       <ParsedText
@@ -99,10 +92,7 @@ class EditableText extends PureComponent<Props, State> {
     </View>
   );
 
-  render = () =>
-    this.props.isTextEditable || this.props.loading
-      ? this.renderTextInput()
-      : this.renderText();
+  render = () => (this.props.isTextEditable || this.props.loading ? this.renderTextInput() : this.renderText());
 }
 
 const styles = StyleSheet.create({

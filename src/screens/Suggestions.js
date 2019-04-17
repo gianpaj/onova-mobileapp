@@ -101,9 +101,7 @@ export class SuggestionsContainer extends Component<Props, State> {
             uri={user.profilePic || ''}
             placeholderText={user.username}
             buttonActiveState={user.amIAFollower}
-            onButtonPress={() =>
-              this.onFollowOrUnfollow(user._id, user.amIAFollower)
-            }
+            onButtonPress={() => this.onFollowOrUnfollow(user._id, user.amIAFollower)}
             onPress={() => this.goToProfile(user)}
           />
           <Text style={styles.username} numberOfLines={1}>
@@ -127,9 +125,7 @@ export class SuggestionsContainer extends Component<Props, State> {
         color={colors.grey2}
         style={{ alignSelf: 'center', marginBottom: 30 }}
       />
-      <Text style={styles.boldText}>
-        {I18n.t('suggestions.empty_state_message_title')}
-      </Text>
+      <Text style={styles.boldText}>{I18n.t('suggestions.empty_state_message_title')}</Text>
       <Text>{I18n.t('suggestions.empty_state_message_body')}</Text>
     </View>
   );
@@ -157,10 +153,7 @@ export class SuggestionsContainer extends Component<Props, State> {
       <Container>
         <Header>
           <Left style={styles.container}>
-            <Button
-              transparent
-              dark
-              onPress={() => this.props.navigation.goBack()}>
+            <Button transparent dark onPress={() => this.props.navigation.goBack()}>
               <Icon ios="ios-arrow-back" android="md-arrow-back" />
             </Button>
           </Left>
@@ -177,21 +170,13 @@ export class SuggestionsContainer extends Component<Props, State> {
             keyExtractor={this._keyExtractor}
             ListEmptyComponent={this.renderEmptyState}
             renderItem={this._renderItem}
-            refreshControl={
-              <RefreshControl
-                refreshing={this.state.isRefreshing}
-                onRefresh={this.refreshSuggestions}
-              />
-            }
+            refreshControl={<RefreshControl refreshing={this.state.isRefreshing} onRefresh={this.refreshSuggestions} />}
             style={styles.root}
             contentContainerStyle={styles.contentContainer}
             numColumns={3}
             getItemLayout={this.getItemLayout}
             onLayout={this.onLayout}
-            columnWrapperStyle={[
-              styles.columnWrapper,
-              { height: this.state.itemHeight },
-            ]}
+            columnWrapperStyle={[styles.columnWrapper, { height: this.state.itemHeight }]}
           />
         )}
       </Container>

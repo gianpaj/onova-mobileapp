@@ -2,24 +2,8 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import {
-  ActivityIndicator,
-  FlatList,
-  Platform,
-  RefreshControl,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
-import {
-  Body,
-  Button,
-  Container,
-  Icon,
-  Left,
-  ListItem,
-  Right,
-} from 'native-base';
+import { ActivityIndicator, FlatList, Platform, RefreshControl, StyleSheet, Text, View } from 'react-native';
+import { Body, Button, Container, Icon, Left, ListItem, Right } from 'native-base';
 import { Icon as IconEL } from 'react-native-elements';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { withNavigation } from 'react-navigation';
@@ -32,13 +16,7 @@ import * as ui from '../utils/ui';
 
 const isiOS = Platform.OS === 'ios';
 
-import type {
-  UserData,
-  Notification,
-  ReduxState,
-  Product,
-  Order,
-} from '../types';
+import type { UserData, Notification, ReduxState, Product, Order } from '../types';
 
 import type { NavigationScreenProp } from 'react-navigation';
 
@@ -197,8 +175,7 @@ class NotificationsContainer extends Component<Props, State> {
             case 'Order':
               // or the ConfirmOrder screen should check if it can be confirmed ('paid' and not 'confirmed')
               // $FlowFixMe
-              if (item.data.status === 'paid')
-                this.goToConfirmOrder(item.triggeredBy);
+              if (item.data.status === 'paid') this.goToConfirmOrder(item.triggeredBy);
               break;
             case 'Drop':
               this.goToProfile(user, 'drops');
@@ -227,9 +204,7 @@ class NotificationsContainer extends Component<Props, State> {
           <Text style={styles.reviewText} numberOfLines={3}>
             {item.notifI18n}
             {/* for comment notifications */}
-            {item.triggeredType == 'Product' &&
-              item.triggeredBy &&
-              ': ' + item.data.text}
+            {item.triggeredType == 'Product' && item.triggeredBy && ': ' + item.data.text}
           </Text>
         </Body>
         <Right>
@@ -253,10 +228,7 @@ class NotificationsContainer extends Component<Props, State> {
       <Container>
         <Header>
           <Left style={styles.container}>
-            <Button
-              transparent
-              dark
-              onPress={() => this.props.navigation.goBack()}>
+            <Button transparent dark onPress={() => this.props.navigation.goBack()}>
               <Icon ios="ios-arrow-back" android="md-arrow-back" />
             </Button>
           </Left>
@@ -275,10 +247,7 @@ class NotificationsContainer extends Component<Props, State> {
             ListEmptyComponent={this.renderEmptyState}
             ListFooterComponent={this.renderFooter}
             refreshControl={
-              <RefreshControl
-                refreshing={this.state.isRefreshing}
-                onRefresh={this.refreshNotifications}
-              />
+              <RefreshControl refreshing={this.state.isRefreshing} onRefresh={this.refreshNotifications} />
             }
             renderItem={this._renderItem}
             style={styles.root}
@@ -294,9 +263,7 @@ const mapStateToProps: any = (state: ReduxState) => ({
   token: state.LoginReducer.token,
 });
 
-export const Notifications = withNavigation(
-  connect(mapStateToProps)(NotificationsContainer)
-);
+export const Notifications = withNavigation(connect(mapStateToProps)(NotificationsContainer));
 
 const styles = StyleSheet.create({
   container: {

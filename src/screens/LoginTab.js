@@ -12,14 +12,7 @@ import {
   View,
 } from 'react-native';
 import { FormInput } from 'react-native-elements';
-import {
-  Button as NBButton,
-  Content,
-  Right,
-  Left,
-  Body,
-  Icon as NBIcon,
-} from 'native-base';
+import { Button as NBButton, Content, Right, Left, Body, Icon as NBIcon } from 'native-base';
 import isEmail from 'validator/lib/isEmail';
 import { Toast } from 'antd-mobile-rn';
 // import AnimButton from 'react-native-micro-animated-button';
@@ -127,8 +120,7 @@ export class LoginTabContainer extends React.Component<Props, State> {
     emailAddress = emailAddress.trim();
 
     if (!isEmail(emailAddress)) {
-      if (emailAddress.length > 0)
-        ui.showToast(I18n.t('signup.alerts.email_invalid'), 'warning', '', 2);
+      if (emailAddress.length > 0) ui.showToast(I18n.t('signup.alerts.email_invalid'), 'warning', '', 2);
       this.EmailInput.current.shake();
       return this.EmailInput.current.focus();
     } else if (!password.length) {
@@ -244,13 +236,7 @@ export class LoginTabContainer extends React.Component<Props, State> {
   }
 
   render() {
-    const {
-      emailAddress,
-      hasFocusEmail,
-      hasFocusPass,
-      password,
-      isPasswordVisible,
-    } = this.state;
+    const { emailAddress, hasFocusEmail, hasFocusPass, password, isPasswordVisible } = this.state;
     const { loading } = this.props;
 
     return (
@@ -272,9 +258,7 @@ export class LoginTabContainer extends React.Component<Props, State> {
             placeholder={I18n.t('login.email_placeholder')}
             testID="EmailField"
             textContentType="emailAddress"
-            underlineColorAndroid={
-              hasFocusEmail ? colors.primary : colors.grey3
-            }
+            underlineColorAndroid={hasFocusEmail ? colors.primary : colors.grey3}
             value={emailAddress}
             {...this._inputProps}
           />
@@ -289,9 +273,7 @@ export class LoginTabContainer extends React.Component<Props, State> {
               secureTextEntry={!isPasswordVisible}
               testID="PasswordField"
               textContentType="oneTimeCode" // FIXME:
-              underlineColorAndroid={
-                hasFocusPass ? colors.primary : colors.grey3
-              }
+              underlineColorAndroid={hasFocusPass ? colors.primary : colors.grey3}
               value={password}
               {...this._inputProps}
               clearButtonMode="never"
@@ -324,9 +306,7 @@ export class LoginTabContainer extends React.Component<Props, State> {
               testID="openPwdResetModalButton"
               style={[styles.hr, { padding: 10, margin: 20 }]}
               onPress={() => this.setPwdResetModalVisible(true)}>
-              <Text style={{ color: colors.grey4 }}>
-                {I18n.t('login.forgot_password')}
-              </Text>
+              <Text style={{ color: colors.grey4 }}>{I18n.t('login.forgot_password')}</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -341,19 +321,13 @@ export class LoginTabContainer extends React.Component<Props, State> {
       <Modal
         animationType="slide"
         visible={this.state.verifyAccountModalVisible}
-        onRequestClose={() =>
-          this.setState({ verifyAccountModalVisible: false })
-        }>
+        onRequestClose={() => this.setState({ verifyAccountModalVisible: false })}>
         <>
           <Header transparent style={{ backgroundColor: colors.transparent }}>
             <Left />
             <Body />
             <Right>
-              <NBButton
-                transparent
-                onPress={() =>
-                  this.setState({ verifyAccountModalVisible: false })
-                }>
+              <NBButton transparent onPress={() => this.setState({ verifyAccountModalVisible: false })}>
                 <NBIcon name="close" style={{ color: colors.black }} />
               </NBButton>
             </Right>
@@ -365,9 +339,7 @@ export class LoginTabContainer extends React.Component<Props, State> {
               color={colors.grey2}
               style={{ alignSelf: 'center', marginBottom: 30 }}
             />
-            <Text style={{ color: colors.black, textAlign: 'center' }}>
-              {I18n.t('login.verify_account.title')}
-            </Text>
+            <Text style={{ color: colors.black, textAlign: 'center' }}>{I18n.t('login.verify_account.title')}</Text>
           </View>
         </>
       </Modal>
@@ -390,17 +362,13 @@ export class LoginTabContainer extends React.Component<Props, State> {
             <Left />
             <Body />
             <Right>
-              <NBButton
-                transparent
-                onPress={() => this.setPwdResetModalVisible(false)}>
+              <NBButton transparent onPress={() => this.setPwdResetModalVisible(false)}>
                 <NBIcon name="close" style={{ color: colors.black }} />
               </NBButton>
             </Right>
           </Header>
           <View style={{ margin: 20 }}>
-            <Text style={{ color: colors.black, fontWeight: 'bold' }}>
-              {I18n.t('login.reset_password.title')}
-            </Text>
+            <Text style={{ color: colors.black, fontWeight: 'bold' }}>{I18n.t('login.reset_password.title')}</Text>
             <Text>{I18n.t('login.reset_password.info')}</Text>
           </View>
 
@@ -420,9 +388,7 @@ export class LoginTabContainer extends React.Component<Props, State> {
             onSubmitEditing={this.onResetPassword}
             placeholder="Email"
             returnKeyType="go"
-            underlineColorAndroid={
-              hasFocusEmailReset ? colors.primary : colors.grey4
-            }
+            underlineColorAndroid={hasFocusEmailReset ? colors.primary : colors.grey4}
             value={this.state.emailReset}
           />
 

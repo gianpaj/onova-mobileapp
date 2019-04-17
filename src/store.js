@@ -50,10 +50,7 @@ const middlewares = [thunk, reactNavigation /*, analytics */];
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 function configureStore() {
-  const store = createStore(
-    rootReducer,
-    composeEnhancers(applyMiddleware(...middlewares))
-  );
+  const store = createStore(rootReducer, composeEnhancers(applyMiddleware(...middlewares)));
   const persistor = persistStore(store);
   // persistor.purge();
   return { persistor, store };

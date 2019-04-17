@@ -1,4 +1,3 @@
-import defaults from '../../utils/defaults';
 import settings from '../../config/settings';
 
 export default {
@@ -42,8 +41,7 @@ export default {
     alerts: {
       username_too_short: 'Please enter a longer username (min 3 chars)',
       username_too_long: 'Please enter a shorter username',
-      username_invalid:
-        'Please enter a valid username (only numbers, letters and _ .)',
+      username_invalid: 'Please enter a valid username (only numbers, letters and _ .)',
       email_invalid: 'Email is not valid',
       password_too_short: 'Please enter a longer password (min 8 chars)',
       password_too_long: 'Please enter a shorter password',
@@ -60,8 +58,7 @@ export default {
       button: 'Email instructions',
     },
     verify_account: {
-      title:
-        'One step left! Check your inbox for a confirmation email and click on the link.',
+      title: 'One step left! Check your inbox for a confirmation email and click on the link.',
     },
     retry: 'Try again',
   },
@@ -92,8 +89,7 @@ For any questions regarding payments please contact UAPAY at (044) 364-11-44`,
     reserved_button: 'Reserved',
     reserved_message: 'Check in 15 mins. It might be available again',
     alert_confirm_delete: 'Confirm deletion?',
-    toast_warning_on_unverified_account:
-      'Please verify your email address to buy an item. Check your inbox',
+    toast_warning_on_unverified_account: 'Please verify your email address to buy an item. Check your inbox',
     toast_warning_on_product_sold: 'This item is not longer for sale',
     toast_warning_ok_button: 'OK',
     alert_report_title: 'Report Item?',
@@ -103,8 +99,7 @@ For any questions regarding payments please contact UAPAY at (044) 364-11-44`,
     add_comment_placeholder: 'Add a comment',
     alert_confirm_deletion: 'Confirm deletion?',
     toast_warning_mention_not_found: 'User not found',
-    toast_warning_on_unverified_account:
-      'Please verify your email address to write a comment. Check your inbox',
+    toast_warning_on_unverified_account: 'Please verify your email address to write a comment. Check your inbox',
   },
   alerts: {
     email_error: 'An account with that email address does not exist',
@@ -125,10 +120,8 @@ For any questions regarding payments please contact UAPAY at (044) 364-11-44`,
     action_button_report: 'Report',
     action_button_share: 'Share',
     toast_uploading: 'Saving...',
-    notice_bar_account_verification:
-      'Check your inbox for a confirmation email',
-    notice_bar_location_not_gathered:
-      "Couldn't gather you location. It's needed to display the item city",
+    notice_bar_account_verification: 'Check your inbox for a confirmation email',
+    notice_bar_location_not_gathered: "Couldn't gather you location. It's needed to display the item city",
     notice_bar_location_not_gathered_button: 'Retry',
   },
   search: {
@@ -163,8 +156,7 @@ For any questions regarding payments please contact UAPAY at (044) 364-11-44`,
     price_popup_body:
       'Коли якусь річ успішно продано, UAPAY автоматично знімає від загальної вартості комісію, решта надходить на ваш рахунок',
     description_label: 'Description:',
-    description_placeholder:
-      'Please provide details such as brand, size and condition about the item',
+    description_placeholder: 'Please provide details such as brand, size and condition about the item',
     hashtags_label: '#tags:',
     hashtags_placeholder: 'adidas, 43',
     select_photo_source_camera: 'Camera',
@@ -197,8 +189,7 @@ For any questions regarding payments please contact UAPAY at (044) 364-11-44`,
     permission_title: 'Can we access your location?',
     permission_message: 'Onova uses your location when adding a new item',
     permission_alert_button_settings: 'Open Settings',
-    cannot_create_drop_alert:
-      'Please go to Settings first to enter your Shipping info, mobile number and card details',
+    cannot_create_drop_alert: 'Please go to Settings first to enter your Shipping info, mobile number and card details',
   },
   confirm_order: {
     header: 'Confirm order',
@@ -208,14 +199,12 @@ For any questions regarding payments please contact UAPAY at (044) 364-11-44`,
     dialog_title: 'Are you sure to cancel the order?',
     reason_placeholder: 'Write why you are cancelling the order',
     error_reason_is_mandatory: 'Please enter a reason',
-    confirmation_success:
-      "Awesome! Let's continue and get you the tracking number",
+    confirmation_success: "Awesome! Let's continue and get you the tracking number",
     cancellation_success: 'The order has been cancelled',
   },
   drops_grid: {
     empty_state_title: 'Make a Drop',
-    empty_state_message_mine:
-      'Schedule multiple items to be posted at the same time to create demand',
+    empty_state_message_mine: 'Schedule multiple items to be posted at the same time to create demand',
     empty_state_button_mine: 'Make a Drop',
     empty_state_message_others: 'There are no drops - yet',
   },
@@ -266,26 +255,23 @@ For any questions regarding payments please contact UAPAY at (044) 364-11-44`,
   },
   chat: {
     send_msg_placeholder: 'Type a message',
-    send_msg_placeholder_disabled:
-      'Cannot send a message to a buyer from the web',
+    send_msg_placeholder_disabled: 'Cannot send a message to a buyer from the web',
     no_orders: 'No orders',
     user_dialog: {
       mobile_mumber: 'Mobile number',
     },
     alert_info_title: 'Information',
-    alert_info_body:
-      'Press on the image of the item to see the current status of your order.',
+    alert_info_body: 'Press on the image of the item to see the current status of your order.',
   },
   get_card_id: {
     title: 'UAPAY',
-    security:
-      'Данні вашої картки закодовано і захищено UAPAY. Вони обслуговують також OLX, Bigl, Prom',
+    security: 'Данні вашої картки закодовано і захищено UAPAY. Вони обслуговують також OLX, Bigl, Prom',
   },
   checkout: {
     header: 'Checkout',
     success_msg: "Super! We'll now alert the seller. The confirmation should arrive within __time__ hours".replace(
       '__time__',
-      defaults.numHoursSellerHasToConfirm
+      settings.NUM_HOURS_FOR_SELLER_TO_CONFIRM
     ),
     department_requirement_right: 'Pick a city',
     payment_button: 'Make Payment',
@@ -321,8 +307,7 @@ For any questions regarding payments please contact UAPAY at (044) 364-11-44`,
         link: 'https://novaposhta.ua/uploads/misc/doc/Terms_of_Service.pdf',
       },
       {
-        p:
-          'публічним договором про надання послуг по організації перевезення відправлень,',
+        p: 'публічним договором про надання послуг по організації перевезення відправлень,',
         link: 'https://novaposhta.ua/uploads/misc/doc/public_offer.pdf',
       },
       {
@@ -365,10 +350,8 @@ For any questions regarding payments please contact UAPAY at (044) 364-11-44`,
     sold_tab: 'Sold',
     purchased_tab: 'Purchased',
     alert_info_title: 'Want more reviews?',
-    alert_info_body:
-      'To transfer your reviews from VK, Instagram, Facebook or similar, contact us at re@onova.co',
-    empty_state_message:
-      'To transfer your reviews from VK, Instagram, Facebook or similar, contact us at re@onova.co',
+    alert_info_body: 'To transfer your reviews from VK, Instagram, Facebook or similar, contact us at re@onova.co',
+    empty_state_message: 'To transfer your reviews from VK, Instagram, Facebook or similar, contact us at re@onova.co',
     completed: 'Successful transaction. No review left',
     cancelled: 'Seller cancelled the order',
     failed_by_buyer: 'Buyer failed to pick up or refused the item',
@@ -383,8 +366,7 @@ For any questions regarding payments please contact UAPAY at (044) 364-11-44`,
     password_label: 'Password:',
     password_placeholder: 'Password (minimum 8 characters)',
     sign_out_button: 'Sign out',
-    alert_msg_email_address_changed:
-      'The new email address requires to be valided. Please check your inbox',
+    alert_msg_email_address_changed: 'The new email address requires to be valided. Please check your inbox',
     alert_msg_settigs_changed: 'Your settings have been updated',
     safe_purchase_rules: 'Onova safe purchase rules',
     faq: 'FAQ',

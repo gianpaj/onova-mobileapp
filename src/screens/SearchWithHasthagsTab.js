@@ -5,11 +5,7 @@ import { connect } from 'react-redux';
 import { StyleSheet, Text, View } from 'react-native';
 import { Button as NBButton, Content } from 'native-base';
 import { SearchBar } from 'react-native-elements';
-import RadioForm, {
-  RadioButton,
-  RadioButtonInput,
-  RadioButtonLabel,
-} from 'react-native-simple-radio-button';
+import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from 'react-native-simple-radio-button';
 import { withNavigation } from 'react-navigation';
 
 import type { NavigationScreenProp } from 'react-navigation';
@@ -77,8 +73,7 @@ class SearchWithHasthagsTabContainer extends Component<Props, State> {
 
     // it can be empty and either category or type
     return (
-      (text.length && text.length >= settings.MIN_LENGTH_PER_TAG) ||
-      (!text.length && (grp_1 !== -1 || grp_2 !== -1))
+      (text.length && text.length >= settings.MIN_LENGTH_PER_TAG) || (!text.length && (grp_1 !== -1 || grp_2 !== -1))
       // isLoading == false
     );
   }
@@ -206,11 +201,7 @@ class SearchWithHasthagsTabContainer extends Component<Props, State> {
               width: 280,
             },
           ]}>
-          <NBButton
-            block
-            dark={this.isSearchEnabled()}
-            disabled={!this.isSearchEnabled()}
-            onPress={this.onSearch}>
+          <NBButton block dark={this.isSearchEnabled()} disabled={!this.isSearchEnabled()} onPress={this.onSearch}>
             <Text
               // eslint-disable-next-line
               style={{
@@ -251,6 +242,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export const SearchWithHasthagsTab = withNavigation(
-  connect(null)(SearchWithHasthagsTabContainer)
-);
+export const SearchWithHasthagsTab = withNavigation(connect(null)(SearchWithHasthagsTabContainer));

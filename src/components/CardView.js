@@ -4,14 +4,7 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import {
-  Image,
-  ImageBackground,
-  Platform,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import { Image, ImageBackground, Platform, StyleSheet, Text, View } from 'react-native';
 import colors from '../config/colors';
 
 // import defaultIcons from "./Icons";
@@ -83,20 +76,9 @@ export default class CardView extends Component {
   };
 
   render() {
-    const {
-      focused,
-      fontFamily,
-      imageFront,
-      number,
-      placeholder,
-      scale,
-    } = this.props;
+    const { focused, fontFamily, imageFront, number, placeholder, scale } = this.props;
 
-    const brand = /^4/.test(number)
-      ? 'visa'
-      : /^5[1-5]/.test(number)
-      ? 'mastercard'
-      : false;
+    const brand = /^4/.test(number) ? 'visa' : /^5[1-5]/.test(number) ? 'mastercard' : false;
 
     const containerSize = {
       ...BASE_SIZE,
@@ -113,23 +95,13 @@ export default class CardView extends Component {
 
     return (
       <View style={[s.cardContainer, containerSize]}>
-        <ImageBackground
-          style={[BASE_SIZE, s.cardFace, transform]}
-          source={imageFront}>
+        <ImageBackground style={[BASE_SIZE, s.cardFace, transform]} source={imageFront}>
           {brand && <Image style={s.icon} source={Icons[brand]} />}
           <Text
-            style={[
-              s.baseText,
-              { fontFamily },
-              s.number,
-              !number && s.placeholder,
-              focused === 'number' && s.focused,
-            ]}>
+            style={[s.baseText, { fontFamily }, s.number, !number && s.placeholder, focused === 'number' && s.focused]}>
             {!number ? placeholder.number : number}
           </Text>
-          <Text style={[s.baseText, { fontFamily }, s.expiry, s.placeholder]}>
-            {placeholder.expiry}
-          </Text>
+          <Text style={[s.baseText, { fontFamily }, s.expiry, s.placeholder]}>{placeholder.expiry}</Text>
         </ImageBackground>
       </View>
     );

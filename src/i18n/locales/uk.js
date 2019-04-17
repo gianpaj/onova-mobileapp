@@ -1,4 +1,3 @@
-import defaults from '../../utils/defaults';
 import settings from '../../config/settings';
 
 export default {
@@ -44,8 +43,7 @@ export default {
     alerts: {
       username_too_short: "Будь ласка введіть довше ім'я (мін 3 знаків)",
       username_too_long: "будь ласка введіть коротше ім'я",
-      username_invalid:
-        "Будь ласка введіть правильне ім'я (лише літери, цифри та _ .)",
+      username_invalid: "Будь ласка введіть правильне ім'я (лише літери, цифри та _ .)",
       email_invalid: 'Електронна адреса не дійсна',
       password_too_short: 'Будь ласка введіть довший пароль (мін 8 знаків)',
       password_too_long: 'Будь ласка введіть коротший пароль',
@@ -81,8 +79,7 @@ export default {
   image_grid: {
     error: 'Помилка завантаження інформації оголошення',
     empty_state_title: 'Ще немає речей для перегляду',
-    empty_state_body:
-      'Додавай інших користувачів в друзі щоб бачити що вони виставляють',
+    empty_state_body: 'Додавай інших користувачів в друзі щоб бачити що вони виставляють',
     empty_state_button: 'Знайти',
   },
   image_grid_search: {
@@ -104,8 +101,7 @@ export default {
     add_comment_placeholder: 'Прокоментувати',
     alert_confirm_deletion: 'Точно Видалити?',
     toast_warning_mention_not_found: 'Користувача не знайдено',
-    toast_warning_on_unverified_account:
-      'Підтвердіть свій профіль щоб коментувати',
+    toast_warning_on_unverified_account: 'Підтвердіть свій профіль щоб коментувати',
   },
   alerts: {
     email_error: 'Цей email не зареєстровано',
@@ -114,8 +110,7 @@ export default {
     network_error: 'Проблема з інтернетом',
     confirm_alert_button_cancel: 'відміна',
     confirm_alert_button_confirm: 'OK',
-    report_subtitle:
-      "Напишіть причину (обов'язково). Продавець цього не побачить",
+    report_subtitle: "Напишіть причину (обов'язково). Продавець цього не побачить",
     report_error: 'Мінімально 7 знаків',
     report_success: 'Дякую, що допомагаєте нам відсіювати поганих користувачів',
     action_button_close: 'Закрити',
@@ -126,10 +121,8 @@ export default {
     action_button_report: 'Поскаржитись',
     action_button_share: 'Поділитися',
     toast_uploading: 'Завантажуємо зображення...',
-    notice_bar_account_verification:
-      'Ми надіслали вам підтвердження на вказану електронну адресу',
-    notice_bar_location_not_gathered:
-      'Увімкніть геолокацію для відображення ваших речей',
+    notice_bar_account_verification: 'Ми надіслали вам підтвердження на вказану електронну адресу',
+    notice_bar_location_not_gathered: 'Увімкніть геолокацію для відображення ваших речей',
     notice_bar_location_not_gathered_button: 'Повторити',
   },
   search: {
@@ -164,8 +157,7 @@ export default {
     price_popup_body:
       'Коли якусь річ успішно продано, UAPAY автоматично знімає від загальної вартості комісію, решта надходить на ваш рахунок',
     description_label: 'Опис:',
-    description_placeholder:
-      'В якому стані річ, якого розміру, бренду і тому подібне',
+    description_placeholder: 'В якому стані річ, якого розміру, бренду і тому подібне',
     hashtags_label: '#tags:',
     hashtags_placeholder: 'adidas, 43',
     select_photo_source_camera: 'Камера',
@@ -198,8 +190,7 @@ export default {
     permission_title: 'Доступ до місцезнаходження',
     permission_message: 'Нам потрібно відображати де знаходяться речі.',
     permission_alert_button_settings: 'Відкрити налаштування',
-    cannot_create_drop_alert:
-      'Додай в Налаштуваннях свою поштову інформації та куди мають надходити кошти',
+    cannot_create_drop_alert: 'Додай в Налаштуваннях свою поштову інформації та куди мають надходити кошти',
   },
   confirm_order: {
     header: 'Підтвердити замовлення',
@@ -215,8 +206,7 @@ export default {
   },
   drops_grid: {
     empty_state_title: 'Створити дроп',
-    empty_state_message_mine:
-      'Завантаж кілька речей для одночасного виставлення у вказаний час',
+    empty_state_message_mine: 'Завантаж кілька речей для одночасного виставлення у вказаний час',
     empty_state_button_mine: 'Створити дроп',
     empty_state_message_others: 'Жодних запланованих Дропів',
   },
@@ -252,8 +242,7 @@ export default {
     alert_unsaved_changes_button_confirm: 'Так',
     alert_report_title: ' Поскаржитись на користувача?',
     alert_block_title: 'Заблокувати користувача?',
-    alert_block_subtitle:
-      'Тепер ви не будете бачити речей цього користувача, він не буде бачити ваших',
+    alert_block_subtitle: 'Тепер ви не будете бачити речей цього користувача, він не буде бачити ваших',
     alert_block_success: 'User blocked',
     shop_tab: 'Магазин',
     drops_tab: 'Дропи',
@@ -266,8 +255,7 @@ export default {
   },
   chat: {
     send_msg_placeholder: 'Повідомлення',
-    send_msg_placeholder_disabled:
-      'Повідомлення для покупців з сайту не можна надіслати',
+    send_msg_placeholder_disabled: 'Повідомлення для покупців з сайту не можна надіслати',
     no_orders: 'Немає замовлень',
     user_dialog: {
       mobile_mumber: 'Мобільний телефон',
@@ -278,14 +266,13 @@ export default {
   },
   get_card_id: {
     title: 'UAPAY',
-    security:
-      'Данні вашої картки закодовано і захищено UAPAY. Вони обслуговують також OLX, Bigl, Prom',
+    security: 'Данні вашої картки закодовано і захищено UAPAY. Вони обслуговують також OLX, Bigl, Prom',
   },
   checkout: {
     header: 'Купівля',
     success_msg: 'Ми надіслали замовлення продавцеві, чекай на підтвердження протягом __time__ годин'.replace(
       '__time__',
-      defaults.numHoursSellerHasToConfirm
+      settings.NUM_HOURS_FOR_SELLER_TO_CONFIRM
     ),
     department_requirement_right: 'Обери місто',
     payment_button: 'Придбати',
@@ -321,8 +308,7 @@ export default {
         link: 'https://novaposhta.ua/uploads/misc/doc/Terms_of_Service.pdf',
       },
       {
-        p:
-          'публічним договором про надання послуг по організації перевезення відправлень,',
+        p: 'публічним договором про надання послуг по організації перевезення відправлень,',
         link: 'https://novaposhta.ua/uploads/misc/doc/public_offer.pdf',
       },
       {
@@ -365,8 +351,7 @@ export default {
     sold_tab: 'Продано',
     purchased_tab: 'Куплено',
     alert_info_title: 'Потрібно більше відгуків?',
-    alert_info_body:
-      'Щоб перенести свої відгуки з VK, Instagram, Facebook або іншого місця напиши нам на re@onova.co',
+    alert_info_body: 'Щоб перенести свої відгуки з VK, Instagram, Facebook або іншого місця напиши нам на re@onova.co',
     empty_state_message:
       'Щоб перенести свої відгуки з VK, Instagram, Facebook або іншого місця напиши нам на re@onova.co',
     completed: 'Успішна покупка без відгуку',
@@ -383,8 +368,7 @@ export default {
     password_label: 'Пароль:',
     password_placeholder: 'Password (minimum 8 characters)',
     sign_out_button: 'Вийти',
-    alert_msg_email_address_changed:
-      'Новий email має бути підтверджено. Ми надіслали інструкції',
+    alert_msg_email_address_changed: 'Новий email має бути підтверджено. Ми надіслали інструкції',
     alert_msg_settigs_changed: 'Зміни збережено',
     safe_purchase_rules: 'Офіційні правила безпечної угоди',
     faq: 'Поширені запитання',

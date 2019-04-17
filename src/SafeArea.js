@@ -138,7 +138,8 @@ class SafeView extends Component {
   }
 
   render() {
-    const { forceInset = false, isLandscape, style, ...props } = this.props;
+    // eslint-disable-next-line no-unused-vars
+    const { forceInset, isLandscape, style, ...props } = this.props;
 
     const safeAreaStyle = this._getSafeAreaStyle();
 

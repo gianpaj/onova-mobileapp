@@ -2,22 +2,8 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import {
-  ActivityIndicator,
-  Dimensions,
-  FlatList,
-  Image,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
-import {
-  Body,
-  Button as NBButton,
-  Icon as NBIcon,
-  Left,
-  Right,
-} from 'native-base';
+import { ActivityIndicator, Dimensions, FlatList, Image, StyleSheet, Text, View } from 'react-native';
+import { Body, Button as NBButton, Icon as NBIcon, Left, Right } from 'native-base';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import { Header, DropCard, Title } from '../components';
@@ -136,18 +122,9 @@ class DropsFeed extends Component<Props, State> {
     return (
       <View style={styles.emptyContainer}>
         <>
-          <MaterialCommunityIcons
-            size={48}
-            name="clock"
-            color={colors.grey2}
-            style={styles.emptyStateIcon}
-          />
-          <Text style={styles.boldText}>
-            {I18n.t('drops_feed.empty_state_title')}
-          </Text>
-          <Text style={styles.centerText}>
-            {I18n.t('drops_feed.empty_state_message')}
-          </Text>
+          <MaterialCommunityIcons size={48} name="clock" color={colors.grey2} style={styles.emptyStateIcon} />
+          <Text style={styles.boldText}>{I18n.t('drops_feed.empty_state_title')}</Text>
+          <Text style={styles.centerText}>{I18n.t('drops_feed.empty_state_message')}</Text>
         </>
       </View>
     );
@@ -188,10 +165,7 @@ class DropsFeed extends Component<Props, State> {
       <View style={styles.flex1}>
         <Header>
           <Left style={styles.container}>
-            <NBButton
-              transparent
-              dark
-              onPress={() => this.props.navigation.goBack()}>
+            <NBButton transparent dark onPress={() => this.props.navigation.goBack()}>
               <NBIcon ios="ios-arrow-back" android="md-arrow-back" />
             </NBButton>
           </Left>
@@ -212,11 +186,7 @@ class DropsFeed extends Component<Props, State> {
             onRefresh={this.fetchItems}
             refreshing={isLoading}
             renderItem={props => (
-              <DropCard
-                amITheSeller={false}
-                onSubscribeUnsubscribed={this.onSubscribeUnsubscribed}
-                {...props}
-              />
+              <DropCard amITheSeller={false} onSubscribeUnsubscribed={this.onSubscribeUnsubscribed} {...props} />
             )}
           />
         )}

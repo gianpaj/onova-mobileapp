@@ -3,15 +3,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 
-import {
-  ActivityIndicator,
-  Dimensions,
-  Image,
-  FlatList,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import { ActivityIndicator, Dimensions, Image, FlatList, StyleSheet, Text, View } from 'react-native';
 
 import type { NavigationScreenProp } from 'react-navigation';
 
@@ -62,17 +54,14 @@ class UserDropsGridComponent extends React.PureComponent<Props, State> {
       this.fetchItems();
     }
 
-    this.didFocusListener = this.props.navigation.addListener(
-      'didFocus',
-      () => {
-        if (this.props.shouldRefresh) {
-          setTimeout(() => {
-            this.fetchItems();
-            this.props.dispatch(disableRefresh());
-          }, 1000);
-        }
+    this.didFocusListener = this.props.navigation.addListener('didFocus', () => {
+      if (this.props.shouldRefresh) {
+        setTimeout(() => {
+          this.fetchItems();
+          this.props.dispatch(disableRefresh());
+        }, 1000);
       }
-    );
+    });
   }
 
   componentWillUnmount() {
@@ -206,11 +195,7 @@ class UserDropsGridComponent extends React.PureComponent<Props, State> {
           onRefresh={this.fetchItems}
           refreshing={isLoading}
           renderItem={props => (
-            <DropCard
-              amITheSeller={amITheSeller}
-              onSubscribeUnsubscribed={this.onSubscribeUnsubscribed}
-              {...props}
-            />
+            <DropCard amITheSeller={amITheSeller} onSubscribeUnsubscribed={this.onSubscribeUnsubscribed} {...props} />
           )}
         />
       </View>

@@ -69,10 +69,7 @@ class ReviewsTabContainer extends Component<Props, State> {
       userId = this.props.navigation.state.params.userId;
     }
 
-    const { data } = await api.get(
-      `/api/users/${userId}/reviews?as=${this.props.as}`,
-      { token }
-    );
+    const { data } = await api.get(`/api/users/${userId}/reviews?as=${this.props.as}`, { token });
     // get the first image size and then setState `data` for the FlatList
     if (data && data.length) {
       // const uri = data[0].product.photoURIs[0].replace('.jpg', '-thumb.jpg');
@@ -125,12 +122,7 @@ class ReviewsTabContainer extends Component<Props, State> {
   _renderSeparator = () => <View style={styles.separator} />;
 
   _renderItem = ({ item }) => (
-    <ReviewCard
-      as={this.props.as}
-      onPress={this.goToProfile}
-      order={item}
-      userData={this.props.userData}
-    />
+    <ReviewCard as={this.props.as} onPress={this.goToProfile} order={item} userData={this.props.userData} />
   );
 
   render() {
@@ -142,12 +134,7 @@ class ReviewsTabContainer extends Component<Props, State> {
           keyExtractor={this._keyExtractor}
           ListEmptyComponent={this.renderEmptyState}
           renderItem={this._renderItem}
-          refreshControl={
-            <RefreshControl
-              refreshing={this.state.isRefreshing}
-              onRefresh={this.refreshReviews}
-            />
-          }
+          refreshControl={<RefreshControl refreshing={this.state.isRefreshing} onRefresh={this.refreshReviews} />}
           style={styles.root}
         />
       </View>
@@ -161,9 +148,7 @@ const mapStateToProps: any = (state: ReduxState) => ({
   userData: state.LoginReducer.data,
 });
 
-export const ReviewsTab = withNavigation(
-  connect(mapStateToProps)(ReviewsTabContainer)
-);
+export const ReviewsTab = withNavigation(connect(mapStateToProps)(ReviewsTabContainer));
 
 const styles = StyleSheet.create({
   emptyStateContainer: {

@@ -2,31 +2,13 @@
 
 import React from 'react';
 import { connect } from 'react-redux';
-import {
-  Alert,
-  Dimensions,
-  FlatList,
-  Image,
-  Platform,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { Alert, Dimensions, FlatList, Image, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { Toast } from 'antd-mobile-rn';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import Permissions from 'react-native-permissions';
 import RNAndroidLocationEnabler from 'react-native-android-location-enabler';
-import {
-  Body,
-  Button as NBButton,
-  Container,
-  Content,
-  Left,
-  List,
-  Right,
-} from 'native-base';
+import { Body, Button as NBButton, Container, Content, Left, List, Right } from 'native-base';
 import { format } from 'date-fns';
 
 import colors from '../config/colors';
@@ -67,9 +49,7 @@ const { width } = Dimensions.get('window');
 //   new Date().setMinutes(Math.ceil(new Date().getMinutes() / 5) * 5)
 // );
 const INC_MONTH = 1;
-const MAX_DATE = new Date(
-  new Date().setMonth(new Date().getMonth() + INC_MONTH)
-);
+const MAX_DATE = new Date(new Date().setMonth(new Date().getMonth() + INC_MONTH));
 
 const pickerProps = {
   confirmTextIOS: I18n.t('create_drop.ok'),
@@ -151,20 +131,8 @@ export class CreateDropScreen extends React.Component<Props, State> {
   }
 
   canCreateDrop() {
-    const {
-      mobileNumber,
-      paymentInfo: p,
-      shippingAddress: s,
-    } = this.props.userData;
-    return (
-      mobileNumber &&
-      p.last_four &&
-      p.method &&
-      s.firstName &&
-      s.lastName &&
-      s.city &&
-      s.departmentNovaposhta
-    );
+    const { mobileNumber, paymentInfo: p, shippingAddress: s } = this.props.userData;
+    return mobileNumber && p.last_four && p.method && s.firstName && s.lastName && s.city && s.departmentNovaposhta;
   }
 
   /**
@@ -173,48 +141,44 @@ export class CreateDropScreen extends React.Component<Props, State> {
    * @param {*} response 'authorized', 'denied', 'restricted' or 'undetermined'
    */
   alertForPermission(response: string) {
-    Alert.alert(
-      I18n.t('create_drop.permission_title'),
-      I18n.t('create_drop.permission_message'),
-      [
-        {
-          text: I18n.t('profile.alert_unsaved_changes_button_cancel'),
-          onPress: () => {
-            console.log('Permission denied');
-            // this.closeModal();
-          },
-          style: 'cancel',
+    Alert.alert(I18n.t('create_drop.permission_title'), I18n.t('create_drop.permission_message'), [
+      {
+        text: I18n.t('profile.alert_unsaved_changes_button_cancel'),
+        onPress: () => {
+          console.log('Permission denied');
+          // this.closeModal();
         },
-        response === 'undetermined'
-          ? {
-              text: I18n.t('profile.alert_unsaved_changes_button_confirm'),
-              onPress: this.requestPermission,
-            }
-          : {
-              // 'restricted' || 'denied'
-              text: I18n.t('create_drop.permission_alert_button_settings'),
-              onPress: () => {
-                if (Platform.OS === 'ios') {
-                  return Permissions.openSettings();
-                }
-                // android
-                RNAndroidLocationEnabler.promptForEnableLocationIfNeeded({
-                  interval: 10000,
-                  fastInterval: 5000,
-                })
-                  .then(() => this.getLocationAndInitiate())
-                  .catch(err => {
-                    // ERR00 : The user canceled the popup
-                    // ERR01 : If the Settings change are unavailable
-                    // ERR02 : If the popup has failed to open
-                    console.debug(err);
-                    // this.closeModal();
-                  });
-                // this.closeModal();
-              },
+        style: 'cancel',
+      },
+      response === 'undetermined'
+        ? {
+            text: I18n.t('profile.alert_unsaved_changes_button_confirm'),
+            onPress: this.requestPermission,
+          }
+        : {
+            // 'restricted' || 'denied'
+            text: I18n.t('create_drop.permission_alert_button_settings'),
+            onPress: () => {
+              if (Platform.OS === 'ios') {
+                return Permissions.openSettings();
+              }
+              // android
+              RNAndroidLocationEnabler.promptForEnableLocationIfNeeded({
+                interval: 10000,
+                fastInterval: 5000,
+              })
+                .then(() => this.getLocationAndInitiate())
+                .catch(err => {
+                  // ERR00 : The user canceled the popup
+                  // ERR01 : If the Settings change are unavailable
+                  // ERR02 : If the popup has failed to open
+                  console.debug(err);
+                  // this.closeModal();
+                });
+              // this.closeModal();
             },
-      ]
-    );
+          },
+    ]);
   }
 
   requestPermission = () => {
@@ -240,22 +204,17 @@ export class CreateDropScreen extends React.Component<Props, State> {
     return new Promise((resolve, reject) => {
       const timeout = 20; // seconds
       navigator.geolocation.getCurrentPosition(
-        ({ coords: { longitude, latitude } }) =>
-          resolve({ longitude, latitude }),
+        ({ coords: { longitude, latitude } }) => resolve({ longitude, latitude }),
         err => {
           // Location authorized but not setting is not enabled (only Android)
-          if (
-            err.message === 'No location provider available.' &&
-            Platform.OS === 'android'
-          ) {
+          if (err.message === 'No location provider available.' && Platform.OS === 'android') {
             return RNAndroidLocationEnabler.promptForEnableLocationIfNeeded({
               interval: 10000,
               fastInterval: 5000,
             })
               .then(() =>
                 navigator.geolocation.getCurrentPosition(
-                  ({ coords: { longitude, latitude } }) =>
-                    resolve({ longitude, latitude }),
+                  ({ coords: { longitude, latitude } }) => resolve({ longitude, latitude }),
                   err => {
                     throw err;
                   },
@@ -294,9 +253,7 @@ export class CreateDropScreen extends React.Component<Props, State> {
     const { products, location, pending } = this.state;
     return (
       // if any products have been uploaded
-      products.filter((i: any) => i.uploaded === true).length > 0 &&
-      location !== null &&
-      !pending
+      products.filter((i: any) => i.uploaded === true).length > 0 && location !== null && !pending
     );
   }
 
@@ -370,11 +327,7 @@ export class CreateDropScreen extends React.Component<Props, State> {
 
   setDate = (date: Date) => {
     this.setState(prevState => {
-      const datetime = new Date(prevState.datetime).setFullYear(
-        date.getFullYear(),
-        date.getMonth(),
-        date.getDate()
-      );
+      const datetime = new Date(prevState.datetime).setFullYear(date.getFullYear(), date.getMonth(), date.getDate());
       return { datetime: new Date(datetime) };
     });
     this._toggleDatePicker();
@@ -382,10 +335,7 @@ export class CreateDropScreen extends React.Component<Props, State> {
 
   setTime = (time: Date) => {
     this.setState(prevState => {
-      const datetime = new Date(prevState.datetime).setHours(
-        time.getHours(),
-        time.getMinutes()
-      );
+      const datetime = new Date(prevState.datetime).setHours(time.getHours(), time.getMinutes());
       return { datetime: new Date(datetime) };
     });
     this._toggleTimePicker();
@@ -394,10 +344,7 @@ export class CreateDropScreen extends React.Component<Props, State> {
   returnData = (product: Product) => {
     this.setState(prevState => {
       return {
-        products: [
-          ...prevState.products,
-          { ...product, uploaded: true, key: prevState.products.length + 1 },
-        ],
+        products: [...prevState.products, { ...product, uploaded: true, key: prevState.products.length + 1 }],
       };
     });
   };
@@ -420,11 +367,9 @@ export class CreateDropScreen extends React.Component<Props, State> {
       isTimePickerVisible: false,
     });
 
-  _toggleDatePicker = () =>
-    this.setState({ isDatePickerVisible: !this.state.isDatePickerVisible });
+  _toggleDatePicker = () => this.setState({ isDatePickerVisible: !this.state.isDatePickerVisible });
 
-  _toggleTimePicker = () =>
-    this.setState({ isTimePickerVisible: !this.state.isTimePickerVisible });
+  _toggleTimePicker = () => this.setState({ isTimePickerVisible: !this.state.isTimePickerVisible });
 
   // show alert prompt
   // if confirmed
@@ -442,13 +387,7 @@ export class CreateDropScreen extends React.Component<Props, State> {
   shouldShowNoLocationGatheredNoticeBar = () => this.state.location === null;
 
   render() {
-    let {
-      products,
-      datetime,
-      isLoading,
-      isDatePickerVisible,
-      isTimePickerVisible,
-    } = this.state;
+    let { products, datetime, isLoading, isDatePickerVisible, isTimePickerVisible } = this.state;
 
     const next = [
       {
@@ -469,9 +408,7 @@ export class CreateDropScreen extends React.Component<Props, State> {
           </Left>
           <Body style={styles.flex2AndCenter}>
             <Title withIcon>{I18n.t('create_drop.title')}</Title>
-            <Info
-              onPress={linking.openURL.bind(this, 'https://onova.co/drop.html')}
-            />
+            <Info onPress={linking.openURL.bind(this, 'https://onova.co/drop.html')} />
           </Body>
           <Right>
             <NBButton
@@ -481,11 +418,7 @@ export class CreateDropScreen extends React.Component<Props, State> {
               // style={{ backgroundColor: colors.transparent }}
               transparent
               onPress={this.onSendDrop}>
-              <MaterialIcons
-                name="check"
-                color={this.isButtonEnabled() ? colors.black : colors.grey4}
-                size={28}
-              />
+              <MaterialIcons name="check" color={this.isButtonEnabled() ? colors.black : colors.grey4} size={28} />
             </NBButton>
           </Right>
         </Header>
@@ -501,9 +434,7 @@ export class CreateDropScreen extends React.Component<Props, State> {
                   <NoticeBar
                     marqueeProps={{ loop: true, style: styles.noticeBar }}
                     mode="button"
-                    buttonText={I18n.t(
-                      'alerts.notice_bar_location_not_gathered_button'
-                    )}
+                    buttonText={I18n.t('alerts.notice_bar_location_not_gathered_button')}
                     onPress={this.getLocationAndInitiate}>
                     {I18n.t('alerts.notice_bar_location_not_gathered')}
                   </NoticeBar>
@@ -511,14 +442,10 @@ export class CreateDropScreen extends React.Component<Props, State> {
               )}
               <List>
                 <View style={styles.datesContainer}>
-                  <Text
-                    style={styles.dateStrings}
-                    onPress={this._toggleDatePicker}>
+                  <Text style={styles.dateStrings} onPress={this._toggleDatePicker}>
                     {format(datetime, 'D MMM')}
                   </Text>
-                  <Text
-                    style={styles.dateStrings}
-                    onPress={this._toggleTimePicker}>
+                  <Text style={styles.dateStrings} onPress={this._toggleTimePicker}>
                     {format(datetime, 'HH:mm')}
                   </Text>
                 </View>
@@ -568,10 +495,7 @@ export class CreateDropScreen extends React.Component<Props, State> {
             }}
             style={[styles.size, imagePickerStyle.image]}
           />
-          <TouchableOpacity
-            onPress={() => this.removeImage(product.key)}
-            style={styles.closeWrap}
-            activeOpacity={0.6}>
+          <TouchableOpacity onPress={() => this.removeImage(product.key)} style={styles.closeWrap} activeOpacity={0.6}>
             <Text style={imagePickerStyle.closeText}>×</Text>
           </TouchableOpacity>
         </>
@@ -579,12 +503,7 @@ export class CreateDropScreen extends React.Component<Props, State> {
         product.next && (
           <TouchableOpacity
             onPress={this.onNewItem}
-            style={[
-              imagePickerStyle.item,
-              styles.size,
-              imagePickerStyle.plusWrap,
-              imagePickerStyle.plusWrapNormal,
-            ]}>
+            style={[imagePickerStyle.item, styles.size, imagePickerStyle.plusWrap, imagePickerStyle.plusWrapNormal]}>
             <Text style={imagePickerStyle.plusText}>+</Text>
           </TouchableOpacity>
         )

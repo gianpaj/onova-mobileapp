@@ -32,15 +32,9 @@ const initialState: LoginState = {
   token: '',
 };
 
-export default function(
-  state: LoginState = initialState,
-  action: Action
-): LoginState {
+export default function(state: LoginState = initialState, action: Action): LoginState {
   let isAdmin = false;
-  if (
-    state.data &&
-    ['alex', 'onova', 'gianpaj'].includes(state.data.username)
-  ) {
+  if (state.data && ['alex', 'onova', 'gianpaj'].includes(state.data.username)) {
     isAdmin = true;
   }
 

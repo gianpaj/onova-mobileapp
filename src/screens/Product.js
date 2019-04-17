@@ -12,16 +12,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {
-  ActionSheet,
-  Body,
-  Button as NBButton,
-  Container,
-  Content,
-  Icon as NBIcon,
-  Left,
-  Right,
-} from 'native-base';
+import { ActionSheet, Body, Button as NBButton, Container, Content, Icon as NBIcon, Left, Right } from 'native-base';
 import { Button } from 'react-native-elements';
 import ParsedText from 'react-native-parsed-text';
 import { Modal } from 'antd-mobile-rn';
@@ -41,12 +32,7 @@ import { enableRefresh } from '../actions/actionCreator';
 
 import type { MapStateToProps } from 'react-redux';
 import type { NavigationScreenProp } from 'react-navigation';
-import type {
-  Dispatch,
-  Product as ProductType,
-  UserData,
-  ReduxState,
-} from '../types';
+import type { Dispatch, Product as ProductType, UserData, ReduxState } from '../types';
 
 type Props = {
   dispatch: Dispatch,
@@ -87,16 +73,13 @@ export class ProductContainer extends React.Component<Props, State> {
   componentDidMount() {
     this.refresh().then(() => this.setState({ loading: false }));
 
-    this.didFocusListener = this.props.navigation.addListener(
-      'didFocus',
-      () => {
-        if (this.props.shouldRefresh) {
-          setTimeout(() => {
-            this.refresh();
-          }, 1000);
-        }
+    this.didFocusListener = this.props.navigation.addListener('didFocus', () => {
+      if (this.props.shouldRefresh) {
+        setTimeout(() => {
+          this.refresh();
+        }, 1000);
       }
-    );
+    });
   }
 
   componentWillUnmount() {
@@ -147,13 +130,9 @@ export class ProductContainer extends React.Component<Props, State> {
             });
             break;
           case BUTTONS.indexOf(DELETE):
-            ui.showConfirmAlert(
-              I18n.t('product.alert_confirm_delete'),
-              '',
-              () => {
-                this.deleteItem();
-              }
-            );
+            ui.showConfirmAlert(I18n.t('product.alert_confirm_delete'), '', () => {
+              this.deleteItem();
+            });
             break;
           case BUTTONS.indexOf(SHARE):
             this.shareProduct();
@@ -185,10 +164,7 @@ export class ProductContainer extends React.Component<Props, State> {
       .then(async res => {
         // ios user shared it
         // android probably user shared it
-        if (
-          (Platform.OS === 'ios' && res.action !== Share.dismissedAction) ||
-          Platform.OS !== 'ios'
-        ) {
+        if ((Platform.OS === 'ios' && res.action !== Share.dismissedAction) || Platform.OS !== 'ios') {
           await this.onSuccessfulShare();
           return null;
         }
@@ -318,11 +294,7 @@ export class ProductContainer extends React.Component<Props, State> {
   onPressReserved = async () => {
     const { status } = await this.refresh();
     if (status === 'reserved') {
-      ui.showToast(
-        I18n.t('product.reserved_message'),
-        'warning',
-        I18n.t('product.toast_warning_ok_button')
-      );
+      ui.showToast(I18n.t('product.reserved_message'), 'warning', I18n.t('product.toast_warning_ok_button'));
     }
   };
 
@@ -366,8 +338,7 @@ export class ProductContainer extends React.Component<Props, State> {
           }
           throw Error(I18n.t('product.toast_warning_on_product_sold'));
         }
-        if (analyticsEnabled)
-          Analytics.track('press_buy', { uuid: product.uuid });
+        if (analyticsEnabled) Analytics.track('press_buy', { uuid: product.uuid });
 
         // this.props.navigation.navigate({
         //   routeName: 'chat',
@@ -384,13 +355,8 @@ export class ProductContainer extends React.Component<Props, State> {
         });
       })
       .catch(err => {
-        if (err.message === 'not_shared')
-          err.message = I18n.t('product.share_before');
-        ui.showToast(
-          err.message,
-          'warning',
-          I18n.t('product.toast_warning_ok_button')
-        );
+        if (err.message === 'not_shared') err.message = I18n.t('product.share_before');
+        ui.showToast(err.message, 'warning', I18n.t('product.toast_warning_ok_button'));
         console.log(err);
       })
       .then(() => {
@@ -441,10 +407,7 @@ export class ProductContainer extends React.Component<Props, State> {
       <Container>
         <Header>
           <Left>
-            <NBButton
-              transparent
-              dark
-              onPress={() => this.props.navigation.goBack()}>
+            <NBButton transparent dark onPress={() => this.props.navigation.goBack()}>
               <NBIcon ios="ios-arrow-back" android="md-arrow-back" />
             </NBButton>
           </Left>
@@ -469,20 +432,13 @@ export class ProductContainer extends React.Component<Props, State> {
                   />
                   <View style={{ marginLeft: 10, alignSelf: 'center' }}>
                     <TouchableOpacity onPress={this.goToProfileOfSeller}>
-                      <Text style={styles.username}>
-                        {item.seller.username}
-                      </Text>
+                      <Text style={styles.username}>{item.seller.username}</Text>
                     </TouchableOpacity>
-                    {item.locality ? (
-                      <Text style={styles.location}>{item.locality}</Text>
-                    ) : null}
+                    {item.locality ? <Text style={styles.location}>{item.locality}</Text> : null}
                   </View>
                 </View>
                 <View style={styles.flex1} />
-                <Text style={styles.price}>{`${ui.formatCurrency(
-                  item.price,
-                  0
-                )} ${I18n.t(item.currency)}`}</Text>
+                <Text style={styles.price}>{`${ui.formatCurrency(item.price, 0)} ${I18n.t(item.currency)}`}</Text>
               </View>
               <MediaView source={item.photoURIs} />
               <View
@@ -492,16 +448,8 @@ export class ProductContainer extends React.Component<Props, State> {
                   // negative margin for the carousel dots
                   thereIsACarousel && { marginTop: -28 },
                 ]}>
-                <NBButton
-                  transparent
-                  dark
-                  onPress={this.shareProduct}
-                  style={styles.shareIconButton}>
-                  <NBIcon
-                    ios="ios-share"
-                    android="md-share"
-                    style={styles.shareIcon}
-                  />
+                <NBButton transparent dark onPress={this.shareProduct} style={styles.shareIconButton}>
+                  <NBIcon ios="ios-share" android="md-share" style={styles.shareIcon} />
                 </NBButton>
                 {!this.isMyProduct() && (
                   <View style={[styles.bottomSection, { marginTop: -40 }]}>
@@ -561,13 +509,7 @@ export class ProductContainer extends React.Component<Props, State> {
                     // negative margin for the carousel dots
                     thereIsACarousel && { marginTop: 15 },
                   ]}>
-                  <Text
-                    style={[
-                      styles.description,
-                      item.tags && { marginBottom: 10 },
-                    ]}>
-                    {item.description}
-                  </Text>
+                  <Text style={[styles.description, item.tags && { marginBottom: 10 }]}>{item.description}</Text>
                   {item.tags && (
                     <ParsedText
                       parse={[

@@ -2,13 +2,7 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import {
-  FlatList,
-  StyleSheet,
-  Text,
-  TouchableHighlight,
-  View,
-} from 'react-native';
+import { FlatList, StyleSheet, Text, TouchableHighlight, View } from 'react-native';
 import { SearchBar, Icon } from 'react-native-elements';
 import { withNavigation } from 'react-navigation';
 
@@ -74,8 +68,7 @@ class SearchSellersTabContainer extends Component<Props, State> {
     this.setState({ text: text.trim() });
   };
 
-  isSearchEnabled = (): boolean =>
-    this.state.text.length > 2 && this.state.isLoading == false;
+  isSearchEnabled = (): boolean => this.state.text.length > 2 && this.state.isLoading == false;
 
   goToProfile = (user: UserData) => {
     // $FlowFixMe
@@ -89,11 +82,7 @@ class SearchSellersTabContainer extends Component<Props, State> {
   renderEmptyState = () =>
     this.state.showingResults && (
       <View style={styles.container}>
-        <Text>
-          {this.state.hasError
-            ? I18n.t('search.error')
-            : I18n.t('search.empty_state_message')}
-        </Text>
+        <Text>{this.state.hasError ? I18n.t('search.error') : I18n.t('search.empty_state_message')}</Text>
       </View>
     );
 
@@ -103,15 +92,9 @@ class SearchSellersTabContainer extends Component<Props, State> {
 
   // eslint-disable-next-line react/no-unused-prop-types
   _renderItem = ({ item: user }: { item: UserData }) => (
-    <TouchableHighlight
-      underlayColor={colors.grey4}
-      onPress={() => this.goToProfile(user)}>
+    <TouchableHighlight underlayColor={colors.grey4} onPress={() => this.goToProfile(user)}>
       <View style={styles.itemContainer}>
-        <Avatar
-          size={'verySmall'}
-          uri={user.profilePic}
-          placeholderText={user.username}
-        />
+        <Avatar size={'verySmall'} uri={user.profilePic} placeholderText={user.username} />
         <View style={[styles.flex1, styles.content]}>
           <View style={styles.contentHeader}>
             <Text style={styles.name}>{user.username}</Text>
@@ -155,10 +138,7 @@ class SearchSellersTabContainer extends Component<Props, State> {
               icon={{ type: 'feather', name: 'at-sign', color: colors.grey1 }}
               inputStyle={{
                 backgroundColor: colors.white,
-                color:
-                  this.isSearchEnabled() || isLoading
-                    ? colors.black
-                    : colors.red,
+                color: this.isSearchEnabled() || isLoading ? colors.black : colors.red,
               }}
               lightTheme
               maxLength={30}
@@ -219,6 +199,4 @@ const mapStateToProps: any = (state: ReduxState) => ({
   token: state.LoginReducer.token,
 });
 
-export const SearchSellersTab = withNavigation(
-  connect(mapStateToProps)(SearchSellersTabContainer)
-);
+export const SearchSellersTab = withNavigation(connect(mapStateToProps)(SearchSellersTabContainer));

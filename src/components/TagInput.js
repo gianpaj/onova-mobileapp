@@ -22,12 +22,7 @@ import type { ViewStyleProp } from 'react-native/Libraries/StyleSheet/StyleSheet
 
 const windowWidth = Dimensions.get('window').width;
 
-type KeyboardShouldPersistTapsProps =
-  | 'always'
-  | 'never'
-  | 'handled'
-  | false
-  | true;
+type KeyboardShouldPersistTapsProps = 'always' | 'never' | 'handled' | false | true;
 type RequiredProps<T> = {
   /**
    * An array of tags, which can be any type, as long as labelExtractor below
@@ -148,12 +143,7 @@ class TagInput<T> extends React.PureComponent<Props<T>, State> {
     maxHeight: 75,
   };
 
-  static inputWidth(
-    text: string,
-    spaceLeft: number,
-    inputDefaultWidth: number,
-    wrapperWidth: number
-  ) {
+  static inputWidth(text: string, spaceLeft: number, inputDefaultWidth: number, wrapperWidth: number) {
     if (text === '') {
       return inputDefaultWidth;
     } else if (spaceLeft >= 100) {
@@ -187,10 +177,7 @@ class TagInput<T> extends React.PureComponent<Props<T>, State> {
   }
 
   componentDidUpdate(nextProps: Props<T>, nextState: State) {
-    if (
-      this.props.onHeightChange &&
-      nextState.wrapperHeight !== this.state.wrapperHeight
-    ) {
+    if (this.props.onHeightChange && nextState.wrapperHeight !== this.state.wrapperHeight) {
       this.props.onHeightChange(nextState.wrapperHeight);
     }
   }
@@ -232,10 +219,7 @@ class TagInput<T> extends React.PureComponent<Props<T>, State> {
 
   scrollToEnd = () => {
     const scrollView = this.scrollView;
-    invariant(
-      scrollView,
-      'this.scrollView ref should exist before scrollToEnd called'
-    );
+    invariant(scrollView, 'this.scrollView ref should exist before scrollToEnd called');
     setTimeout(() => {
       scrollView.scrollToEnd({ animated: true });
     }, 0);
@@ -275,26 +259,17 @@ class TagInput<T> extends React.PureComponent<Props<T>, State> {
     ));
 
     return (
-      <TouchableWithoutFeedback
-        onPress={this.focus}
-        style={styles.container}
-        onLayout={this.measureWrapper}>
+      <TouchableWithoutFeedback onPress={this.focus} style={styles.container} onLayout={this.measureWrapper}>
         <View style={[styles.wrapper, { height: this.state.wrapperHeight }]}>
           <ScrollView
             ref={this.scrollViewRef}
             style={styles.tagInputContainerScroll}
             onContentSizeChange={this.onScrollViewContentSizeChange}
-            keyboardShouldPersistTaps={
-              ('handled': KeyboardShouldPersistTapsProps)
-            }
+            keyboardShouldPersistTaps={('handled': KeyboardShouldPersistTapsProps)}
             {...scrollViewProps}>
             <View style={styles.tagInputContainer}>
               {tags}
-              <View
-                style={[
-                  styles.textInputContainer,
-                  { width: this.state.inputWidth },
-                ]}>
+              <View style={[styles.textInputContainer, { width: this.state.inputWidth }]}>
                 <TextInput
                   ref={this.tagInputRef}
                   blurOnSubmit={false}
@@ -341,10 +316,7 @@ class TagInput<T> extends React.PureComponent<Props<T>, State> {
 
     const nextWrapperHeight = Math.min(this.props.maxHeight, h);
     if (nextWrapperHeight !== this.state.wrapperHeight) {
-      this.setState(
-        { wrapperHeight: nextWrapperHeight },
-        this.contentHeight < h ? this.scrollToEnd : undefined
-      );
+      this.setState({ wrapperHeight: nextWrapperHeight }, this.contentHeight < h ? this.scrollToEnd : undefined);
     } else if (this.contentHeight < h) {
       this.scrollToEnd();
     }
@@ -395,25 +367,13 @@ class Tag extends React.PureComponent<TagProps> {
   curPos: ?number = null;
 
   UNSAFE_componentWillReceiveProps(nextProps: TagProps) {
-    if (
-      !this.props.isLastTag &&
-      nextProps.isLastTag &&
-      this.curPos !== null &&
-      this.curPos !== undefined
-    ) {
+    if (!this.props.isLastTag && nextProps.isLastTag && this.curPos !== null && this.curPos !== undefined) {
       this.props.onLayoutLastTag(this.curPos);
     }
   }
 
   render() {
-    const {
-      editable,
-      label,
-      tagColor,
-      tagContainerStyle,
-      tagTextColor,
-      tagTextStyle,
-    } = this.props;
+    const { editable, label, tagColor, tagContainerStyle, tagTextColor, tagTextStyle } = this.props;
 
     return (
       <TouchableOpacity
@@ -433,9 +393,7 @@ class Tag extends React.PureComponent<TagProps> {
     this.props.removeIndex(this.props.index);
   };
 
-  onLayoutLastTag = (event: {
-    nativeEvent: { layout: { x: number, width: number } },
-  }) => {
+  onLayoutLastTag = (event: { nativeEvent: { layout: { x: number, width: number } } }) => {
     const layout = event.nativeEvent.layout;
     this.curPos = layout.width + layout.x;
     if (this.props.isLastTag) {

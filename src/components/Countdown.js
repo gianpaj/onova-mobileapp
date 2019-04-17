@@ -98,14 +98,7 @@ export default class Countdown extends React.Component<*, *> {
               height: size * 2.6,
             },
           ]}>
-          <Text
-            numberOfLines={1}
-            style={[
-              styles.digitTxt,
-              { fontSize: size },
-              { color: digitTxtColor },
-              style,
-            ]}>
+          <Text numberOfLines={1} style={[styles.digitTxt, { fontSize: size }, { color: digitTxtColor }, style]}>
             {digits}
           </Text>
         </View>

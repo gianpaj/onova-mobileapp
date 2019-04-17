@@ -110,14 +110,10 @@ class Comments extends React.Component<Props, State> {
           //   // report action
           //   break;
           case BUTTONS.indexOf(DELETE):
-            ui.showConfirmAlert(
-              I18n.t('comments.alert_confirm_deletion'),
-              '',
-              () => {
-                this.deleteComment(comment);
-                // this.forceUpdate();
-              }
-            );
+            ui.showConfirmAlert(I18n.t('comments.alert_confirm_deletion'), '', () => {
+              this.deleteComment(comment);
+              // this.forceUpdate();
+            });
             // report action
             break;
           default:
@@ -160,10 +156,7 @@ class Comments extends React.Component<Props, State> {
         placeholderText={c.user.username}
       />
       <TouchableWithoutFeedback
-        onLongPress={() =>
-          c.user._id == this.props.userData._id &&
-          this.showActionSheetForComment(c)
-        }>
+        onLongPress={() => c.user._id == this.props.userData._id && this.showActionSheetForComment(c)}>
         <View style={styles.content}>
           <View style={styles.commentHeader}>
             <TouchableOpacity onPress={() => this.props.goToProfile(c.user)}>
@@ -196,10 +189,7 @@ class Comments extends React.Component<Props, State> {
     if (!matches) return console.error('error');
 
     if (matches[2] == 'null') {
-      return ui.showToast(
-        I18n.t('comments.toast_warning_mention_not_found'),
-        'warning'
-      );
+      return ui.showToast(I18n.t('comments.toast_warning_mention_not_found'), 'warning');
     }
     // console.log(matches);
     // $FlowFixMe
@@ -245,12 +235,7 @@ class Comments extends React.Component<Props, State> {
         },
       ]}
       onPress={() => this.onSuggestionTap(user, hidePanel)}>
-      <Avatar
-        style={{ marginTop: 2 }}
-        size={'verySmall'}
-        uri={user.profilePic || ''}
-        placeholderText={user.username}
-      />
+      <Avatar style={{ marginTop: 2 }} size={'verySmall'} uri={user.profilePic || ''} placeholderText={user.username} />
       <View style={styles.userDetailsBox}>
         <Text style={styles.suggestionUsernameText}>@{user.username}</Text>
       </View>
@@ -301,8 +286,7 @@ class Comments extends React.Component<Props, State> {
     const { text, keyword, usersToMention } = this.state;
     const { userData } = this.props;
     // is the text not empty and not longer that the max
-    const showActiveOpacity =
-      text.trim().length < 1 || text.length == settings.MAX_LENGTH_COMMENT;
+    const showActiveOpacity = text.trim().length < 1 || text.length == settings.MAX_LENGTH_COMMENT;
 
     const shouldHideSuggestions = keyword == '@' || usersToMention.length == 0;
     return (
@@ -343,13 +327,7 @@ class Comments extends React.Component<Props, State> {
               borderRadius: 3,
               bottom: isiOS ? 40 : 0,
               // hack to hide empty suggestionsPanel for zero chars query or no results
-              top: isiOS
-                ? shouldHideSuggestions
-                  ? 1100
-                  : 'auto'
-                : shouldHideSuggestions
-                ? 1100
-                : 0,
+              top: isiOS ? (shouldHideSuggestions ? 1100 : 'auto') : shouldHideSuggestions ? 1100 : 0,
               left: isiOS ? -12 : 0,
               position: isiOS ? 'absolute' : 'relative',
               right: -47,
@@ -421,10 +399,7 @@ class Comments extends React.Component<Props, State> {
       .catch(e => {
         // this.setState({ addCommentError: true });
         if (e.message && e.message.indexOf('verify your account') > -1) {
-          ui.showToast(
-            I18n.t('comments.toast_warning_on_unverified_account'),
-            'warning'
-          );
+          ui.showToast(I18n.t('comments.toast_warning_on_unverified_account'), 'warning');
         } else {
           console.error(e);
         }

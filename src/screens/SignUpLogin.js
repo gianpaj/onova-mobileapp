@@ -36,12 +36,7 @@ class SignUpLoginContainer extends React.Component<Props, State> {
   _handleIndexChange = index => this.setState({ index });
 
   _renderTabBar = props => (
-    <TabBar
-      indicatorStyle={styles.indicator}
-      labelStyle={styles.label}
-      style={styles.tabbar}
-      {...props}
-    />
+    <TabBar indicatorStyle={styles.indicator} labelStyle={styles.label} style={styles.tabbar} {...props} />
   );
 
   _renderScene = SceneMap({

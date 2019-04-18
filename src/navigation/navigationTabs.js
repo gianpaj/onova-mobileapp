@@ -2,12 +2,14 @@
 
 import React from 'react';
 import { Platform } from 'react-native';
-import { TabBarBottom, TabNavigator } from 'react-navigation';
+import { TabNavigator } from 'react-navigation';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import { Home, CreateDrop, ChatRooms, Profile, Search } from '../screens';
 import colors from '../config/colors';
+
+import TabBarComponent from './TabBarComponent';
 
 // const initialLayout = {
 //   height: 0,
@@ -74,7 +76,7 @@ const tabBarConfiguration = {
     // labelStyle: !isiOS && { fontSize: 12 },
   },
   tabBarPosition: 'bottom',
-  tabBarComponent: TabBarBottom,
+  tabBarComponent: TabBarComponent,
   animationEnabled: false,
   swipeEnabled: false,
   // initialLayout,

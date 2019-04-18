@@ -76,10 +76,16 @@ export type UserData = {
 };
 
 export type PaymentInfo = {
-  card_token: string,
-  first_four: string,
-  last_four: string,
-  method: string,
+  short: {
+    card_token: string,
+    first_four: string,
+    last_four: string,
+  },
+  full: {
+    card_token: string,
+    first_four: string,
+    last_four: string,
+  },
 };
 
 export type ShippingAddress = {

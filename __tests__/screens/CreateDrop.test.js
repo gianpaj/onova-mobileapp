@@ -26,8 +26,10 @@ describe('CreateDrop screen', () => {
             accountStatus: 'verified',
             mobileNumber: '380677929197',
             paymentInfo: {
-              last_four: '1111',
-              method: 'uapay',
+              short: {
+                last_four: '1111',
+                method: 'uapay',
+              },
             },
             shippingAddress: {
               firstName: 'Джанфранко',
@@ -55,16 +57,12 @@ describe('CreateDrop screen', () => {
       });
       // $FlowExpectedError
       expect(state.images).toMatchSnapshot();
-      expect(
-        root.findByProps({ testID: 'sendDropButton' }).props.disabled
-      ).toBe(true);
+      expect(root.findByProps({ testID: 'sendDropButton' }).props.disabled).toBe(true);
     });
 
     it('should require min 1 product', async () => {
       await sleep(100);
-      expect(
-        root.findByProps({ testID: 'sendDropButton' }).props.disabled
-      ).toBe(true);
+      expect(root.findByProps({ testID: 'sendDropButton' }).props.disabled).toBe(true);
       const datetime = new Date();
       // $FlowExpectedError
       root.instance.setState({
@@ -72,16 +70,12 @@ describe('CreateDrop screen', () => {
         products: [
           {
             uploaded: true,
-            photos: [
-              'https://storage.googleapis.com/temp-uploads.onova.co/1537607915827.jpg',
-            ],
+            photos: ['https://storage.googleapis.com/temp-uploads.onova.co/1537607915827.jpg'],
             key: 1,
           },
         ],
       });
-      expect(
-        root.findByProps({ testID: 'sendDropButton' }).props.disabled
-      ).toBe(false);
+      expect(root.findByProps({ testID: 'sendDropButton' }).props.disabled).toBe(false);
     });
 
     // it.skip('should add a new item', async () => {

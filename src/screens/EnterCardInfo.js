@@ -89,16 +89,20 @@ class EnterCardInfo extends Component<Props, State> {
     return data;
   }
 
-  onFinished = async data => {
-    const { userData, token } = this.props;
+  onFinished = async ({ nativeEvent }) => {
+    const { userData, token, navigation } = this.props;
+    const { params } = navigation.state;
     try {
-      data = JSON.parse(data);
+      const data = JSON.parse(nativeEvent.data);
       // TODO: if TIMEOUT_ERROR reload
       if (data.name !== 'Success') throw Error(data);
 
       await api.put(
         `/api/users/${userData._id}`,
-        { short: params && params.short, paymentInfoPayload: data.payload },
+        {
+          short: params && params.short,
+          paymentInfoPayload: data.payload,
+        },
         { token }
       );
       this.props.dispatch(enableRefresh());
@@ -182,7 +186,7 @@ class EnterCardInfo extends Component<Props, State> {
                   </html>`,
                 }}
                 injectedJavaScript={`(${JStoInject.toString()}());`}
-                onMessage={event => this.onFinished(event.nativeEvent.data)}
+                onMessage={this.onFinished}
                 scrollEnabled={false} // ios
                 startInLoadingState
               />

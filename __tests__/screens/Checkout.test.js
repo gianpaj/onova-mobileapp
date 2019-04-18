@@ -35,8 +35,10 @@ describe('Checkout screen', () => {
       wrapper.setProps({
         userData: {
           paymentInfo: {
-            last_four: '1234',
-            method: 'uapay',
+            short: {
+              first_four: '1234',
+              last_four: '1234',
+            },
           },
         },
       });

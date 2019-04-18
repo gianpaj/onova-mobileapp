@@ -288,7 +288,7 @@ class CheckoutContainer extends Component<Props, State> {
           missing = I18n.t('checkout.missing.cardNumber');
           error = I18n.t('checkout.error_is_not_valid');
           this.inputs[5].focus();
-        } else if (!paymentInfo.last_four || !paymentInfo.method) {
+        } else if (!paymentInfo.full.last_four) {
           missing = I18n.t('checkout.missing.cardInfo');
         } else if (!isPhoneNumberValid(mobileNumber)) {
           missing = I18n.t('checkout.missing.mobileNumber');
@@ -356,10 +356,12 @@ class CheckoutContainer extends Component<Props, State> {
 
   formatCardInfo() {
     const {
-      paymentInfo: { first_four, last_four },
+      paymentInfo: {
+        full: { first_four, last_four },
+      },
     }: { paymentInfo: PaymentInfo } = this.props.userData;
 
-    const number = `${first_four || '****'} **** **** ${last_four}`;
+    const number = `${first_four || '****'} **** **** ${last_four || '****'}`;
 
     return {
       number,
@@ -396,8 +398,7 @@ class CheckoutContainer extends Component<Props, State> {
     const { paymentInfo } = this.props.userData;
     if (
       !pending &&
-      paymentInfo.last_four &&
-      paymentInfo.method &&
+      paymentInfo.full.last_four &&
       cvc.length === 3 &&
       // TODO: only be able to select from the list of cities
       validShippingAddress(shippingAddress, cities, departments) &&
@@ -675,7 +676,7 @@ class CheckoutContainer extends Component<Props, State> {
               <FormLabel labelStyle={[styles.label, { paddingBottom: 10 }]}>{I18n.t('userInfo.paymentInfo')}</FormLabel>
               <View style={{ alignSelf: 'center' }}>
                 <TouchableOpacity onPress={this.goToEnterPaymentInfo}>
-                  {Object.keys(userData.paymentInfo).length ? (
+                  {Object.keys(userData.paymentInfo.full).length ? (
                     <CardView {...this.formatCardInfo()} focused="number" />
                   ) : (
                     <CardView {...this.formatCardInfo()} />

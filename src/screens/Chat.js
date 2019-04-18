@@ -679,7 +679,7 @@ class ChatContainer extends Component<Props, State> {
                 <Title withIcon onPress={this.goToProfileOrShowWebUserInfo}>
                   @{partner.username}
                 </Title>
-                <Info onPress={this.toggleDialog} />
+                <Info onPress={this.toggleInfoDialog} />
               </>
             )}
           </Body>

@@ -130,7 +130,7 @@ class SettingsContainer extends Component<Props, State> {
   componentWillUnmount() {
     // trigger Axios to reject the request
     this.cancelToken.cancel('operation_canceled');
-    this.didFocusListener.remove();
+    this.didFocusListener && this.didFocusListener.remove();
   }
 
   static getDerivedStateFromProps(props, state) {
@@ -249,8 +249,8 @@ class SettingsContainer extends Component<Props, State> {
     number = '**** **** **** ****';
     if (paymentInfo) {
       const { full, short } = paymentInfo;
-      if (short.first_four) number = `${short.first_four} **** **** ${short.last_four}`;
-      if (full.first_four) number = `${full.first_four} **** **** ${full.last_four}`;
+      if (short && short.first_four) number = `${short.first_four} **** **** ${short.last_four}`;
+      if (full && full.first_four) number = `${full.first_four} **** **** ${full.last_four}`;
     }
 
     return {

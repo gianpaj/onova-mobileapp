@@ -418,8 +418,12 @@ export class ProductContainer extends React.Component<Props, State> {
             </NBButton>
           </Right>
         </Header>
+        {loading && (
+          <View style={styles.spinnerStyle}>
+            <ActivityIndicator size="large" />
+          </View>
+        )}
         <Content ref={this.scrollView} style={styles.flex1}>
-          {loading && <ActivityIndicator size="large" />}
           {item && (
             <>
               <View style={styles.topSection}>
@@ -548,6 +552,11 @@ const styles = StyleSheet.create({
     height: 50,
     flexDirection: 'row',
     marginLeft: 15,
+  },
+  spinnerStyle: {
+    alignItems: 'stretch',
+    flex: 1,
+    justifyContent: 'center',
   },
   avatar: {
     alignSelf: 'center',

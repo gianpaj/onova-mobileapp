@@ -82,7 +82,6 @@ describe('Checkout screen', () => {
         userData: {
           paymentInfo: {
             last_four: '1234',
-            method: 'uapay',
           },
         },
       });

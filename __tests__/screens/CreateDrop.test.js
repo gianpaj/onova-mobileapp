@@ -28,7 +28,6 @@ describe('CreateDrop screen', () => {
             paymentInfo: {
               short: {
                 last_four: '1111',
-                method: 'uapay',
               },
             },
             shippingAddress: {

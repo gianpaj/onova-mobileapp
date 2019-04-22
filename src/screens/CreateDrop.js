@@ -131,15 +131,11 @@ export class CreateDropScreen extends React.Component<Props, State> {
   }
 
   canCreateDrop() {
-    const {
-      mobileNumber,
-      paymentInfo: { short, full },
-      shippingAddress: s,
-    } = this.props.userData;
+    const { mobileNumber, paymentInfo, shippingAddress: s } = this.props.userData;
+
     return (
       mobileNumber &&
-      paymentInfo &&
-      (short.last_four || full.last_four) &&
+      ((paymentInfo.short && paymentInfo.short.last_four) || (paymentInfo.full && paymentInfo.full.last_four)) &&
       s.firstName &&
       s.lastName &&
       s.city &&

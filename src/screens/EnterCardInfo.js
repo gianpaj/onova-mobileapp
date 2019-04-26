@@ -49,6 +49,7 @@ type Props = {
 };
 
 type State = {
+  saveBtnDisabled: boolean,
   showFooter: boolean,
   tokenForCardIFrame: string,
 };
@@ -58,8 +59,9 @@ class EnterCardInfo extends Component<Props, State> {
   keyboardDidHideListener;
   _webviewRef = React.createRef();
   state = {
-    tokenForCardIFrame: '',
+    saveBtnDisabled: true,
     showFooter: true,
+    tokenForCardIFrame: '',
   };
 
   async componentDidMount() {
@@ -146,8 +148,10 @@ class EnterCardInfo extends Component<Props, State> {
     this._webviewRef.current.injectJavaScript(`(${script.toString()}());`);
   };
 
+  onIframeLoaded = () => this.setState({ saveBtnDisabled: false });
+
   render() {
-    const { showFooter, tokenForCardIFrame } = this.state;
+    const { showFooter, tokenForCardIFrame, saveBtnDisabled } = this.state;
 
     if (!tokenForCardIFrame) return null;
     return (
@@ -189,6 +193,7 @@ class EnterCardInfo extends Component<Props, State> {
                 onMessage={this.onFinished}
                 scrollEnabled={false} // ios
                 startInLoadingState
+                onLoadEnd={this.onIframeLoaded}
               />
             </View>
             {this.renderMandatory()}
@@ -203,7 +208,11 @@ class EnterCardInfo extends Component<Props, State> {
                 <Text style={styles.paragraph}>{I18n.t('get_card_id.security')}</Text>
               </View>
             )}
-            <Button full style={{ backgroundColor: colors.active }} onPress={this.onSubmit}>
+            <Button
+              disabled={saveBtnDisabled}
+              full
+              style={saveBtnDisabled ? {} : { backgroundColor: colors.active }}
+              onPress={this.onSubmit}>
               <Text style={styles.saveBtn}>{I18n.t('checkout.save_card_info')}</Text>
             </Button>
           </KeyboardAvoidingView>

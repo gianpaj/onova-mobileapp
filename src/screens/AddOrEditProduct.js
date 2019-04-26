@@ -237,7 +237,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
         await this.uploadImageTemporarilyAndAppend(response, i);
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
 
       ui.showToast(error.message || JSON.stringify(error), 'warning', '', 5);
     }
@@ -271,8 +271,8 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
       this.appendSinglePhoto(data, i);
     } catch (err) {
       this.removeSinglePhoto(i);
-      ui.showToast(err.message || JSON.stringify(err), 'warning', '', 5);
-      console.debug(err);
+      ui.showToast(typeof err.message == 'string' ? err.message : JSON.stringify(err), 'warning', '', 5);
+      console.error(err);
     }
   }
 

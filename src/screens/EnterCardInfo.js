@@ -95,7 +95,7 @@ class EnterCardInfo extends Component<Props, State> {
     try {
       const data = JSON.parse(nativeEvent.data);
       // TODO: if TIMEOUT_ERROR reload
-      if (data.name !== 'Success') throw Error(data);
+      if (data.name !== 'Success') throw Error(data.code);
 
       await api.put(
         `/api/users/${userData._id}`,

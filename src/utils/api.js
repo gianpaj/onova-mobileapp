@@ -7,9 +7,10 @@ import I18n from '../i18n';
 
 import type { City, Department, Order, Product, UserData } from '../types';
 
+const NODE_ENV = process.env.NODE_ENV;
 let config;
 let isProd = false;
-if (process.env.NODE_ENV === 'prod' || process.env.NODE_ENV === 'production') {
+if (NODE_ENV === 'prod' || NODE_ENV === 'production') {
   isProd = true;
   config = require('../../config-prod.json');
 } else {

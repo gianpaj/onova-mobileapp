@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { connect } from 'react-redux';
-import { PixelRatio, Platform, StyleSheet } from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
 
 import type { ReduxState } from '../types';
 import { Avatar } from '../components';
@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
     height: 25,
     width: 25,
     borderRadius: Platform.select({
-      ios: 25 / PixelRatio.get(),
+      ios: 25 / 2,
       android: 20,
     }),
   },

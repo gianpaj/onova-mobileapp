@@ -2,7 +2,7 @@
 // inspired by https://github.com/Osedea/react-native-interactive-avatar
 
 import React, { PureComponent } from 'react';
-import { Image, PixelRatio, Platform, StyleSheet, View, TouchableOpacity } from 'react-native';
+import { Image, Platform, StyleSheet, View, TouchableOpacity } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 // import { CachedImage } from 'react-native-cached-image';
 import ImagePicker from 'react-native-image-crop-picker';
@@ -197,7 +197,7 @@ const styles = StyleSheet.create({
     width: 30,
     height: 30,
     borderRadius: Platform.select({
-      ios: 30 / PixelRatio.get(),
+      ios: 30 / 2,
       android: 20,
     }),
   },
@@ -205,7 +205,7 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     borderRadius: Platform.select({
-      ios: 50 / PixelRatio.get(),
+      ios: 50 / 2,
       android: 26,
     }),
   },
@@ -213,7 +213,7 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: Platform.select({
-      ios: 60 / PixelRatio.get(),
+      ios: 60 / 2,
       android: 40,
     }),
   },
@@ -221,7 +221,7 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     borderRadius: Platform.select({
-      ios: 100 / PixelRatio.get(),
+      ios: 100 / 2,
       android: 63,
     }),
   },

@@ -797,10 +797,7 @@ const styles = StyleSheet.create({
     paddingRight: '5%',
   },
   radioButtonInput: {
-    marginHorizontal: '5%',
-    width: 60,
-    alignItems: 'center',
-    alignSelf: 'center',
+    width: 120,
   },
   minPrice: {
     color: colors.red,

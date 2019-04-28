@@ -2,10 +2,9 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Alert, Dimensions, StyleSheet } from 'react-native';
+import { Dimensions, StyleSheet } from 'react-native';
 import { Body, Container, Right, Left, Button, Icon } from 'native-base';
 import { TabView, TabBar, SceneMap } from 'react-native-tab-view';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import { ReviewsTab } from './ReviewsTab';
 import { Header, Title } from '../components';
@@ -51,10 +50,6 @@ class ReviewsContainer extends Component<Props, State> {
     purchased: () => <ReviewsTab as="buyer" />,
   });
 
-  onInfoIcon() {
-    Alert.alert(I18n.t('reviews.alert_info_title'), I18n.t('reviews.alert_info_body'));
-  }
-
   render() {
     return (
       <Container>
@@ -67,11 +62,7 @@ class ReviewsContainer extends Component<Props, State> {
           <Body style={styles.container}>
             <Title>{I18n.t('reviews.header')}</Title>
           </Body>
-          <Right>
-            <Button transparent dark style={{ marginLeft: 10 }} onPress={this.onInfoIcon}>
-              <MaterialCommunityIcons name="information-outline" size={28} />
-            </Button>
-          </Right>
+          <Right />
         </Header>
         <TabView
           navigationState={this.state}

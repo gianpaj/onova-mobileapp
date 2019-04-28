@@ -350,10 +350,7 @@ export default {
     header: 'Відгуки',
     sold_tab: 'Продано',
     purchased_tab: 'Куплено',
-    alert_info_title: 'Потрібно більше відгуків?',
-    alert_info_body: 'Щоб перенести свої відгуки з VK, Instagram, Facebook або іншого місця напиши нам на re@onova.co',
-    empty_state_message:
-      'Щоб перенести свої відгуки з VK, Instagram, Facebook або іншого місця напиши нам на re@onova.co',
+    empty_state_message: 'Наразі відсутні відгуки',
     completed: 'Успішна покупка без відгуку',
     cancelled: 'Продавець відмінив покупку',
     failed_by_buyer: 'Покупець не забрав покупку',

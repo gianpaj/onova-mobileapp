@@ -196,7 +196,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
           case 0:
             ImagePicker.openCamera({ ...imagePickerOptons })
               .then(response => this.appendPhotos(response, i))
-              .catch(() => this.goBackConditional());
+              .catch(e => e.code && e.code !== 'E_PICKER_CANCELLED' && this.goBackConditional());
             break;
           case 1:
             ImagePicker.openPicker({
@@ -205,7 +205,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
               smartAlbums: ['UserLibrary', 'PhotoStream', 'Screenshots', 'Generic', 'Favorites', 'RecentlyAdded'],
             })
               .then(response => this.appendPhotos(response, i))
-              .catch(() => this.goBackConditional());
+              .catch(e => e.code && e.code !== 'E_PICKER_CANCELLED' && this.goBackConditional());
             break;
           default:
             break;
@@ -319,22 +319,17 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     // const { inEditMode } = this.state;
     // if (!inEditMode /* && fields.touched() */) {
     // FIXME: check if the changes are different from loading from the API
-    if (this.hasUnsavedChanges()) {
-      ui.showConfirmAlert(
-        I18n.t('profile.alert_unsaved_changes_title'),
-        I18n.t('profile.alert_unsaved_changes_body'),
-        () => {
-          // on continue
-          this.goBack();
-        },
-        () => {},
-        I18n.t('profile.alert_unsaved_changes_button_cancel'),
-        I18n.t('profile.alert_unsaved_changes_button_confirm')
-      );
-    } else {
-      this.goBack();
+    if (!this.hasUnsavedChanges()) {
+      return this.goBack();
     }
-    // }
+    ui.showConfirmAlert(
+      I18n.t('profile.alert_unsaved_changes_title'),
+      I18n.t('profile.alert_unsaved_changes_body'),
+      () => this.goBack(), // on continue
+      () => {},
+      I18n.t('profile.alert_unsaved_changes_button_cancel'),
+      I18n.t('profile.alert_unsaved_changes_button_confirm')
+    );
   };
 
   onSave = async ({

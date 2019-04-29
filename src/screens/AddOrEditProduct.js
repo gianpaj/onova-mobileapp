@@ -588,8 +588,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
                             type="number"
                             value={control.value}
                           />
-                          {/* FIXME: show price is invalid if reaches maxLength */}
-                          {control.isTouched && control.isInvalid && (
+                          {control.isTouched && (control.errors.required || control.errors.checkPrice) && (
                             <Text style={styles.minPrice}>
                               {`${I18n.t('add_or_edit_item.min_price')} ${settings.MIN_PRICE} UAH`}
                             </Text>

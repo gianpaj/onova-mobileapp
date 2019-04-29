@@ -98,7 +98,11 @@ class ImageGridComponent extends React.PureComponent<Props, State> {
 
   refresh = async () => {
     const { refreshProfile } = this.props;
-    await Promise.all([refreshProfile && refreshProfile(), this.fetchItems()]);
+    try {
+      await Promise.all([refreshProfile && refreshProfile(), this.fetchItems()]);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   /**

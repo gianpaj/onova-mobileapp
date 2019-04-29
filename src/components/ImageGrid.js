@@ -3,16 +3,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import {
-  ActivityIndicator,
-  Dimensions,
-  Image,
-  FlatList,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { ActivityIndicator, Dimensions, Image, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import type { Node } from 'react';
 // import {
 //   CachedImage,
@@ -89,19 +80,16 @@ class ImageGridComponent extends React.PureComponent<Props, State> {
       .catch(() => this.setState({ hasError: true }))
       .then(() => this.setState({ initializing: false }));
 
-    this.didFocusListener = this.props.navigation.addListener(
-      'didFocus',
-      () => {
-        if (this.props.shouldRefresh) {
-          setTimeout(() => {
-            this.fetchItems()
-              .catch(() => this.setState({ hasError: true }))
-              .then(() => this.setState({ initializing: false }));
-            this.props.dispatch(disableRefresh());
-          }, 1000);
-        }
+    this.didFocusListener = this.props.navigation.addListener('didFocus', () => {
+      if (this.props.shouldRefresh) {
+        setTimeout(() => {
+          this.fetchItems()
+            .catch(() => this.setState({ hasError: true }))
+            .then(() => this.setState({ initializing: false }));
+          this.props.dispatch(disableRefresh());
+        }, 1000);
       }
-    );
+    });
   }
 
   componentWillUnmount() {
@@ -210,17 +198,14 @@ class ImageGridComponent extends React.PureComponent<Props, State> {
       params: item,
     });
 
-    if (this.props.navigation)
-      this.props.navigation.dispatch(navigateToProduct);
+    if (this.props.navigation) this.props.navigation.dispatch(navigateToProduct);
   }
 
   renderItem = ({ item }: any) => {
     const uri = item.photoURIs[0].replace('.jpg', '-thumb.jpg');
     return (
       <View style={styles.imageContainer} key={item.uuid}>
-        <TouchableOpacity
-          style={{ flex: 1 }}
-          onPress={() => this.onItemPress(item)}>
+        <TouchableOpacity style={{ flex: 1 }} onPress={() => this.onItemPress(item)}>
           {/* <ImageCacheProvider
             numberOfConcurrentPreloads={3}
             ttl={TTL} // num of seconds to cache the image url for
@@ -289,16 +274,9 @@ class ImageGridComponent extends React.PureComponent<Props, State> {
 
     return (
       <View style={styles.emptyContainer}>
-        <Text style={styles.boldText}>
-          {I18n.t('image_grid.empty_state_title')}
-        </Text>
-        <Text style={styles.centerText}>
-          {I18n.t('image_grid.empty_state_body')}
-        </Text>
-        <Button
-          block
-          style={styles.searchButton}
-          onPress={() => this.props.navigation.navigate('search')}>
+        <Text style={styles.boldText}>{I18n.t('image_grid.empty_state_title')}</Text>
+        <Text style={styles.centerText}>{I18n.t('image_grid.empty_state_body')}</Text>
+        <Button block style={styles.searchButton} onPress={() => this.props.navigation.navigate('search')}>
           <Text
             style={{
               fontSize: 16,

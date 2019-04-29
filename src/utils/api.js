@@ -160,29 +160,25 @@ async function sendRequest(method, path, body, options) {
  * Receives and reads a HTTP response
  */
 async function handleResponse(path, response) {
-  try {
-    const { status, data, headers } = response;
+  const { status, data, headers } = response;
 
-    // `axios` is configured to resolve even if HTTP status indicates failure.
-    // Re-route promise flow control to interpret error responses as failures
-    if (status >= 400) {
-      // const error = new Error({status: status, message: message});
+  // `axios` is configured to resolve even if HTTP status indicates failure.
+  // Re-route promise flow control to interpret error responses as failures
+  if (status >= 400) {
+    // const error = new Error({status: status, message: message});
 
-      let error = { status, message: data.message };
-      if (Object.keys(data).length > 1) {
-        error = { ...error, data };
-      }
-      throw error;
+    let error = { status, message: data.message };
+    if (Object.keys(data).length > 1) {
+      error = { ...error, data };
     }
-
-    return {
-      status,
-      headers,
-      body: data,
-    };
-  } catch (e) {
-    throw e;
+    throw error;
   }
+
+  return {
+    status,
+    headers,
+    body: data,
+  };
 }
 
 function getRequestHeaders(body): Headers {

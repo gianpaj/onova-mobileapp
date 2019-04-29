@@ -15,8 +15,8 @@ import colors from '../config/colors';
 const isiOS = Platform.OS === 'ios';
 
 const PICKER_OPTIONS = {
-  maxWidth: 700,
-  maxHeight: 700,
+  maxWidth: 350,
+  maxHeight: 350,
   cropping: true,
   cropperCircleOverlay: true,
   compressImageQuality: 0.7,
@@ -57,17 +57,15 @@ export default class Avatar extends PureComponent<Props, *> {
       ...PICKER_OPTIONS,
       // ...this.props.pickerOptions,
     })
-      .then((response: Image) => {
-        this.props.onChange && this.props.onChange(response);
-      })
+      .then((response: Image) => this.props.onChange && this.props.onChange(response))
       .catch(e => {
-        if (e.code == 'E_PICKER_CANCELLED') {
+        if (e.code === 'E_PICKER_CANCELLED') {
           if (this.props.onChangeFailed) {
             this.props.onChangeFailed();
           }
-        } else {
-          console.warn(e);
+          return;
         }
+        console.warn(e);
       });
   };
 

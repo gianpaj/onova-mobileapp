@@ -153,10 +153,7 @@ class ImageGridComponent extends React.PureComponent<Props, State> {
       const { token } = this.props;
       this.reqTimer = setTimeout(async () => {
         try {
-          const { data } = await api.get(
-            `${this.props.apiURL}&lastId=${lastId}&limit=${LIMIT}`,
-            { token }
-          );
+          const { data } = await api.get(`${this.props.apiURL}&lastId=${lastId}&limit=${LIMIT}`, { token });
 
           if (data.length == 0) {
             return this.setState({

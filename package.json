@@ -14,7 +14,8 @@
     "start-emulator": "cd $ANDROID_HOME/emulator && ./emulator -avd Nexus_5X_API_28 &",
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "storybook": "storybook start",
-    "test": "jest"
+    "test": "jest",
+    "fix-ios-simulator": "sed -i -e 's/startsWith/includes/g' node_modules/react-native/local-cli/runIOS/findMatchingSimulator.js"
   },
   "dependencies": {
     "@pusher/chatkit-client": "^1.2.2",

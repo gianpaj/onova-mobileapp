@@ -9,6 +9,7 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
+import Config from 'react-native-config';
 import { Body, Button, Left, Right } from 'native-base';
 import { TabView, TabBar } from 'react-native-tab-view';
 // import Analytics from 'react-native-analytics-segment-io';
@@ -108,7 +109,7 @@ export class Home extends PureComponent<Props, State> {
           </Left>
           <Body style={styles.container}>
             {/* eslint-disable-next-line react-native/no-raw-text */}
-            <Title>ONOVA</Title>
+            <Title>{Config.APP_NAME}</Title>
           </Body>
           <Right>
             <Button transparent onPress={this.goToDropsFeed}>

@@ -83,7 +83,6 @@
     "validator": "^10.9.0"
   },
   "devDependencies": {
-    "@babel/preset-flow": "^7.0.0",
     "@storybook/addon-actions": "^4.1.4",
     "@storybook/addon-knobs": "^4.1.4",
     "@storybook/addon-ondevice-knobs": "^4.1.4",

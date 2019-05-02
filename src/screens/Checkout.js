@@ -288,7 +288,7 @@ class CheckoutContainer extends Component<Props, State> {
           missing = I18n.t('checkout.missing.cardNumber');
           error = I18n.t('checkout.error_is_not_valid');
           this.inputs[5].focus();
-        } else if (!paymentInfo.full && paymentInfo.full.last_four) {
+        } else if (!(paymentInfo.full && paymentInfo.full.last_four)) {
           missing = I18n.t('checkout.missing.cardInfo');
         } else if (!isPhoneNumberValid(mobileNumber)) {
           missing = I18n.t('checkout.missing.mobileNumber');

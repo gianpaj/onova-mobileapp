@@ -26,7 +26,7 @@ yarn
 
 react-native run-ios
 # or
-yarn run start-emulator # for Android - only tested in Gian's laptop
+yarn run start-emulator # for Android - only tested on Gian's laptop
 # and
 react-native run-android
 
@@ -92,13 +92,15 @@ Currently supporting `Android 8.0 (SDK 27)` – for react-native-firebase
 
   This builds and uploads the source code to Sentry.io 🎉
 
-      yarn run build-android
+      yarn build-android-onova
+      yarn build-android-drop
 
 - Build release for internal testing ONLY
 
   This builds and skip uploading the source code to Sentry.io
 
-      SENTRY_SKIP_UPLOAD=true yarn run build-android
+      SENTRY_SKIP_UPLOAD=true yarn build-android-onova
+      SENTRY_SKIP_UPLOAD=true yarn build-android-drop
 
 <!-- * Deploy a new version to the Google Play
 

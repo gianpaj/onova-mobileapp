@@ -10,6 +10,7 @@ import {
   View,
 } from 'react-native';
 import Config from 'react-native-config';
+import { APP_NAME } from 'react-native-dotenv';
 import { Body, Button, Left, Right } from 'native-base';
 import { TabView, TabBar } from 'react-native-tab-view';
 // import Analytics from 'react-native-analytics-segment-io';

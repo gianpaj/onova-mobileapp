@@ -786,6 +786,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   radioButtonLabel: {
+    color: colors.grey1,
     marginBottom: 10,
     paddingLeft: '5%',
     paddingRight: '5%',

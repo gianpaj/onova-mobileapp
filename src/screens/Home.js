@@ -9,7 +9,6 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import Config from 'react-native-config';
 import { APP_NAME } from 'react-native-dotenv';
 import { Body, Button, Left, Right } from 'native-base';
 import { TabView, TabBar } from 'react-native-tab-view';
@@ -110,7 +109,7 @@ export class Home extends PureComponent<Props, State> {
           </Left>
           <Body style={styles.container}>
             {/* eslint-disable-next-line react-native/no-raw-text */}
-            <Title>{Config.APP_NAME}</Title>
+            <Title>{APP_NAME.toUpperCase()}</Title>
           </Body>
           <Right>
             <Button transparent onPress={this.goToDropsFeed}>

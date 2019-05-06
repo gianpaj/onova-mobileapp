@@ -6,13 +6,13 @@ import { Dimensions, Platform, StyleSheet, View, Text, TouchableOpacity } from '
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { ActionSheet, Body, Button as NBButton, Container, Content, Left, Right } from 'native-base';
 import { FormLabel } from 'react-native-elements';
-import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from 'react-native-simple-radio-button';
 import ImagePicker from 'react-native-image-crop-picker';
 import { InputItem, TextareaItem, Toast } from 'antd-mobile-rn';
 import Foect from 'foect';
 import Dialog from 'react-native-dialog';
 
 import { ImagePicker as AntImagePicker, Header, HR, Info, TagInput, Title } from '../components';
+import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from '../components/SimpleRadioButton';
 import { enableRefresh } from '../actions/actionCreator';
 import I18n from '../i18n';
 import colors from '../config/colors';

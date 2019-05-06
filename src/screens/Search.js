@@ -6,7 +6,7 @@ import { Dimensions, StyleSheet } from 'react-native';
 import { Body, Container, Left, Right } from 'native-base';
 import { TabView, TabBar } from 'react-native-tab-view';
 
-import { SearchWithHasthagsTab } from './SearchWithHasthagsTab';
+import { SearchByHashtagsTab } from './SearchByHashtagsTab';
 import { SearchSellersTab } from './SearchSellersTab';
 import { Header, Title } from '../components';
 
@@ -47,7 +47,7 @@ class SearchContainer extends Component<Props, State> {
   _renderScene = ({ route }) => {
     switch (route.key) {
       case 'tags':
-        return <SearchWithHasthagsTab />;
+        return <SearchByHashtagsTab />;
       case 'sellers':
         return <SearchSellersTab />;
       default:

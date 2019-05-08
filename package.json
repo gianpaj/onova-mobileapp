@@ -9,7 +9,7 @@
   "scripts": {
     "build-android": "cd android/ && ./gradlew assembleRelease",
     "nuke-android": "yarn nuke-bundler && cd android/ && ./gradlew clean && cd ..",
-    "start-android-drop": "ENVFILE=.env.drop react-native run-android --variant=dropDebug --appId com.drop.app",
+    "start-android-drop": "ENVFILE=.env.drop react-native run-android --variant=dropDebug --appId uno.drop.app",
     "start-android-onova": "ENVFILE=.env.onova react-native run-android --variant=onovaDebug --appId com.onova.app",
     "nuke-android": "cd android/ && ./gradlew clean",
     "nuke-bundler": "watchman watch-del-all && rm -rf $TMPDIR/react-* && rm -rf /tmp/haste-map-react-native-packager-* && rm -rf /tmp/metro-bundler-cache-*",

@@ -12,6 +12,7 @@ fastlane_require 'dotenv'
 # update_fastlane
 
 default_platform(:ios)
+identifier = CredentialsManager::AppfileConfig.try_fetch_value(:app_identifier)
 
 before_all do
   Dotenv.overload ".env"

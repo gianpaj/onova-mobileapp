@@ -17,7 +17,7 @@ import {
 } from 'react-native';
 import { ActionSheet, Button, Icon, List } from 'native-base';
 import { format, differenceInMinutes, differenceInSeconds } from 'date-fns';
-import { APP_NAME } from 'react-native-dotenv';
+import { URL } from 'react-native-dotenv';
 
 import Analytics from 'react-native-analytics-segment-io';
 
@@ -64,10 +64,7 @@ export class DropCard extends Component<Props> {
   _keyProductExtractor = (item): string => item._id;
 
   shareDrop(item: Drop) {
-    let url = `https://onova.co/${item.seller.username}/drop/${item.uuid}`;
-    if (APP_NAME == 'drop') {
-      url = `https://drop.uno/${item.seller.username}/drop/${item.uuid}`;
-    }
+    const url = `https://${URL}/${item.seller.username}/drop/${item.uuid}`;
     if (Platform.OS === 'ios') {
       Share.share({
         url,

@@ -11,8 +11,9 @@ import { Toast } from 'antd-mobile-rn';
 import axios from 'axios';
 import isEmail from 'validator/lib/isEmail';
 import update from 'immutability-helper';
-// import Instabug from 'instabug-reactnative';
 import { KeyboardAccessoryNavigation } from 'react-native-keyboard-accessory';
+import { URL } from 'react-native-dotenv';
+// import Instabug from 'instabug-reactnative';
 
 import { Accordion, CardView, Header, HR, SearchableDropdown, Title } from '../components';
 
@@ -522,7 +523,7 @@ class SettingsContainer extends Component<Props, State> {
               }}
               hitSlop={linkHitSlop}
               accessibilityRole="link"
-              onPress={linking.openURL.bind(this, 'https://onova.co/faq.html')}>
+              onPress={linking.openURL.bind(this, `https://${URL}/faq.html`)}>
               <Text style={styles.labelLink}>{I18n.t('settings.faq')}</Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -543,8 +544,8 @@ class SettingsContainer extends Component<Props, State> {
             <TouchableOpacity
               style={styles.padder}
               accessibilityRole="link"
-              onPress={linking.email.bind(this, 'mailto:hello@onova.co')}>
-              <Text style={styles.centerText}>hello@onova.co</Text>
+              onPress={linking.email.bind(this, `mailto:hello@${URL}`)}>
+              <Text style={styles.centerText}>hello@{URL}</Text>
             </TouchableOpacity>
             <Text style={styles.centerText}>{version}</Text>
           </View>

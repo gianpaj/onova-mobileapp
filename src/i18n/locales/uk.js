@@ -68,8 +68,6 @@ export default {
     clothes_tab: 'Одяг',
     shoes_tab: 'Взуття',
     other_tab: 'Аксесуари',
-    share:
-      'Android: https://play.google.com/store/apps/details?id=com.onova.app&hl=uk - Apple Store: https://itunes.apple.com/ua/app/onova/id1365771422?mt=8',
     alert_info_title: 'Підтримка',
     alert_info_body: `З будь якими питаннями щодо додатку телефонуйте до Onova
 (063) 419-75-03
@@ -96,6 +94,8 @@ export default {
     toast_warning_ok_button: 'ОК',
     alert_report_title: 'Поскаржитись на річ?',
     share_before: 'Запроси двох друзів щоб почати купувати на Онові',
+    share:
+      'Android: https://play.google.com/store/apps/details?id=com.onova.app&hl=uk - Apple Store: https://itunes.apple.com/ua/app/onova/id1365771422?mt=8',
   },
   comments: {
     add_comment_placeholder: 'Прокоментувати',

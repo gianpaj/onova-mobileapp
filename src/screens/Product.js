@@ -18,6 +18,7 @@ import ParsedText from 'react-native-parsed-text';
 import { Modal } from 'antd-mobile-rn';
 import axios from 'axios';
 import Analytics from 'react-native-analytics-segment-io';
+import { URL } from 'react-native-dotenv';
 // import LottieView from 'lottie-react-native';
 
 import { Avatar, Header, MediaView, Comments } from '../components';
@@ -147,13 +148,14 @@ export class ProductContainer extends React.Component<Props, State> {
 
   shareProduct = () => {
     const { item } = this.state;
+    const url = `https://${URL}/${item.seller.username}/${item.uuid}`;
     if (Platform.OS === 'ios') {
       Share.share({
-        url: `https://onova.co/${item.seller.username}/${item.uuid}`,
+        url: url,
       });
     } else {
       Share.share({
-        message: `https://onova.co/${item.seller.username}/${item.uuid}`,
+        message: url,
       });
     }
     if (analyticsEnabled) Analytics.track('press_share_product');

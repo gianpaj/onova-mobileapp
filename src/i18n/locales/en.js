@@ -1,3 +1,5 @@
+import { APP_NAME_CC, URL } from 'react-native-dotenv';
+
 import settings from '../../config/settings';
 
 export default {
@@ -66,10 +68,8 @@ export default {
     clothes_tab: 'Clothes',
     shoes_tab: 'Shoes',
     other_tab: 'Accessories',
-    share:
-      'Android: https://play.google.com/store/apps/details?id=com.onova.app&hl=uk - Apple Store: https://itunes.apple.com/ua/app/onova/id1365771422?mt=8',
     alert_info_title: 'Information',
-    alert_info_body: `For any questions regarding the app please contact Onova at
+    alert_info_body: `For any questions regarding the app please contact ${APP_NAME_CC}
 (063) 419-75-03
 
 For any questions regarding payments please contact UAPAY at (044) 364-11-44`,
@@ -93,7 +93,11 @@ For any questions regarding payments please contact UAPAY at (044) 364-11-44`,
     toast_warning_on_product_sold: 'This item is not longer for sale',
     toast_warning_ok_button: 'OK',
     alert_report_title: 'Report Item?',
-    share_before: 'Invite your friends to chat on Onova',
+    share_before: `Invite your friends to chat on ${APP_NAME_CC}`,
+    share:
+      APP_NAME_CC == 'Onova'
+        ? 'Android: https://play.google.com/store/apps/details?id=com.onova.app&hl=uk - Apple Store: https://itunes.apple.com/ua/app/onova/id1365771422?mt=8'
+        : 'Android: https://play.google.com/store/apps/details?id=uno.drop.app&hl=uk - Apple Store: https://itunes.apple.com/ua/app/drop/id1462884885?mt=8',
   },
   comments: {
     add_comment_placeholder: 'Add a comment',

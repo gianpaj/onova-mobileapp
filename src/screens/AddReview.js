@@ -8,6 +8,7 @@ import { TextareaItem, Toast } from 'antd-mobile-rn';
 import StarRating from 'react-native-star-rating';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Foect from 'foect';
+import { URL } from 'react-native-dotenv';
 
 import { OrderStatus, Header, Title, Info } from '../components';
 
@@ -149,7 +150,7 @@ export class AddReviewContainer extends Component<Props, State> {
           </Left>
           <Body style={styles.flex2AndCenter}>
             <Title withIcon>{I18n.t('add_review.header')}</Title>
-            <Info onPress={linking.openURL.bind(this, 'https://onova.co/drop.html')} />
+            <Info onPress={linking.openURL.bind(this, `https://${URL}/drop.html`)} />
           </Body>
           <Right>
             <Button transparent dark disabled onPress={this.onArchive}>

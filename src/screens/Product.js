@@ -162,38 +162,22 @@ export class ProductContainer extends React.Component<Props, State> {
   };
 
   onMandatoryShare(): Promise<null | Error> {
-    return Share.share({ message: I18n.t('home.share'), title: 'Share' })
-      .then(async res => {
-        // ios user shared it
-        // android probably user shared it
-        if ((Platform.OS === 'ios' && res.action !== Share.dismissedAction) || Platform.OS !== 'ios') {
-          await this.onSuccessfulShare();
-          return null;
-        }
-        throw new Error('not_shared');
-      })
-      .catch(e => {
-        console.warn(e);
-        return e;
-      });
+    return Share.share({
+      message: I18n.t('product.share'),
+      title: 'Share',
+    }).then(res => {
+      // ios user shared it
+      // android probably user shared it
+      if ((Platform.OS === 'ios' && res.action !== Share.dismissedAction) || Platform.OS !== 'ios') {
+        return this.onSuccessfulShare();
+      }
+      throw new Error('not_shared');
+    });
   }
 
   onSuccessfulShare = (): Promise<any> => {
     const { userData, token } = this.props;
-    return new Promise(async (resolve, reject) => {
-      try {
-        const res = await api.put(
-          `/api/users/${userData._id}`,
-          {
-            increaseShare: true,
-          },
-          { token }
-        );
-        resolve(res);
-      } catch (err) {
-        reject(err);
-      }
-    });
+    return api.put(`/api/users/${userData._id}`, { increaseShare: true }, { token });
   };
 
   onReport = async (text: string) => {

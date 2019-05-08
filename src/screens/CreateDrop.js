@@ -277,10 +277,8 @@ export class CreateDropScreen extends React.Component<Props, State> {
       ui.showConfirmAlert(
         I18n.t('profile.alert_unsaved_changes_title'),
         I18n.t('profile.alert_unsaved_changes_body'),
-        () => {
-          // on continue
-          this.closeModal();
-        },
+        // on continue
+        () => this.closeModal(),
         () => {},
         I18n.t('profile.alert_unsaved_changes_button_cancel'),
         I18n.t('profile.alert_unsaved_changes_button_confirm')

@@ -43,8 +43,8 @@
 		5819BC0C22786A4E00FBDFF8 /* libRNAnalyticsSegmentIO.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 94F7A3CDD35F4C0EB2C327AE /* libRNAnalyticsSegmentIO.a */; };
 		5819BC0E22786A4E00FBDFF8 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		5819BC0F22786A4E00FBDFF8 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
-		5819BC1022786A4E00FBDFF8 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 58D661B421B6BE350075B035 /* GoogleService-Info.plist */; };
-		58D661DA21B6BE350075B035 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 58D661B421B6BE350075B035 /* GoogleService-Info.plist */; };
+		587F824C2282EE0900502F83 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 587F824B2282EE0900502F83 /* GoogleService-Info.plist */; };
+		587F824E2282EE1300502F83 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 587F824D2282EE1300502F83 /* GoogleService-Info.plist */; };
 		6CC98770890349DA8724A4AD /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = B1DD153C120B497BB598FB67 /* libz.tbd */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 		ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */; };
@@ -368,7 +368,8 @@
 		531188D0E457F0B1F8730ED9 /* Pods-onovaTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-onovaTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-onovaTests/Pods-onovaTests.debug.xcconfig"; sourceTree = "<group>"; };
 		5819BC1722786A4E00FBDFF8 /* drop.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = drop.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5819BC1822786A4E00FBDFF8 /* drop-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "drop-Info.plist"; path = "/Users/gianfranco/onova/mobileapp/ios/drop-Info.plist"; sourceTree = "<absolute>"; };
-		58D661B421B6BE350075B035 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "onova/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		587F824B2282EE0900502F83 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "onova/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		587F824D2282EE1300502F83 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "drop/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		58D661DB21B6BE3F0075B035 /* onova.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = onova.entitlements; path = onova/onova.entitlements; sourceTree = "<group>"; };
 		5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
 		748BDCA736084F43AA063E14 /* libRNFirebase.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNFirebase.a; sourceTree = "<group>"; };
@@ -525,8 +526,8 @@
 		13B07FAE1A68108700A75B9A /* onova */ = {
 			isa = PBXGroup;
 			children = (
+				587F824B2282EE0900502F83 /* GoogleService-Info.plist */,
 				58D661DB21B6BE3F0075B035 /* onova.entitlements */,
-				58D661B421B6BE350075B035 /* GoogleService-Info.plist */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -571,6 +572,14 @@
 				2B192B86C708E47CB6B1EC61 /* libPods-drop.a */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		587F824A2282EDE900502F83 /* drop */ = {
+			isa = PBXGroup;
+			children = (
+				587F824D2282EE1300502F83 /* GoogleService-Info.plist */,
+			);
+			name = drop;
 			sourceTree = "<group>";
 		};
 		5887CA9F21B7E21B005DB433 /* Products */ = {
@@ -649,6 +658,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				587F824A2282EDE900502F83 /* drop */,
 				13B07FAE1A68108700A75B9A /* onova */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* onovaTests */,
@@ -1162,7 +1172,7 @@
 			files = (
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
-				58D661DA21B6BE350075B035 /* GoogleService-Info.plist in Resources */,
+				587F824C2282EE0900502F83 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1172,7 +1182,7 @@
 			files = (
 				5819BC0E22786A4E00FBDFF8 /* Images.xcassets in Resources */,
 				5819BC0F22786A4E00FBDFF8 /* LaunchScreen.xib in Resources */,
-				5819BC1022786A4E00FBDFF8 /* GoogleService-Info.plist in Resources */,
+				587F824E2282EE1300502F83 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1191,7 +1201,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export SENTRY_PROPERTIES=sentry.properties\nexport NODE_BINARY=node\n../node_modules/@sentry/cli/bin/sentry-cli react-native xcode ../node_modules/react-native/scripts/react-native-xcode.sh\n";
+			shellScript = "export ENVFILE=.env.onova\n# needed for react-native-config to work in together with react-native-dotenv\necho $ENVFILE > /tmp/envfile\nexport SENTRY_PROPERTIES=sentry.properties\nexport NODE_BINARY=node\n../node_modules/@sentry/cli/bin/sentry-cli react-native xcode ../node_modules/react-native/scripts/react-native-xcode.sh\n";
 		};
 		0549F150234BF939E3899A43 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1283,7 +1293,7 @@
 		};
 		46B2B43ECF5142E08CAFF7A5 /* Upload Debug Symbols to Sentry */ = {
 			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
+			buildActionMask = 8;
 			files = (
 			);
 			inputPaths = (
@@ -1291,7 +1301,7 @@
 			name = "Upload Debug Symbols to Sentry";
 			outputPaths = (
 			);
-			runOnlyForDeploymentPostprocessing = 0;
+			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
 			shellScript = "export SENTRY_PROPERTIES=sentry.properties\n../node_modules/@sentry/cli/bin/sentry-cli upload-dsym\n";
 		};
@@ -1329,11 +1339,11 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export SENTRY_PROPERTIES=sentry.properties\nexport NODE_BINARY=node\n../node_modules/@sentry/cli/bin/sentry-cli react-native xcode ../node_modules/react-native/scripts/react-native-xcode.sh\n";
+			shellScript = "export ENVFILE=.env.drop\n# needed for react-native-config to work in together with react-native-dotenv\necho $ENVFILE > /tmp/envfile\nexport SENTRY_PROPERTIES=sentry.properties\nexport NODE_BINARY=node\n../node_modules/@sentry/cli/bin/sentry-cli react-native xcode ../node_modules/react-native/scripts/react-native-xcode.sh\n";
 		};
 		5819BC1222786A4E00FBDFF8 /* Upload Debug Symbols to Sentry */ = {
 			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
+			buildActionMask = 8;
 			files = (
 			);
 			inputPaths = (
@@ -1341,7 +1351,7 @@
 			name = "Upload Debug Symbols to Sentry";
 			outputPaths = (
 			);
-			runOnlyForDeploymentPostprocessing = 0;
+			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
 			shellScript = "export SENTRY_PROPERTIES=sentry.properties\n../node_modules/@sentry/cli/bin/sentry-cli upload-dsym\n";
 		};

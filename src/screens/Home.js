@@ -86,7 +86,7 @@ export class Home extends PureComponent<Props, State> {
   };
 
   // onShare() {
-  //   Share.share({ message: I18n.t('home.share'), title: 'Share' });
+  //   Share.share({ message: I18n.t('product.share'), title: 'Share' });
   //   if (analyticsEnabled) Analytics.track('press_share_invite');
   // }
 

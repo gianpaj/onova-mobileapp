@@ -778,10 +778,18 @@
 							com.apple.Push = {
 								enabled = 1;
 							};
+							com.apple.SafariKeychain = {
+								enabled = 1;
+							};
 						};
 					};
 					5819BBF722786A4E00FBDFF8 = {
 						DevelopmentTeam = MJ2ZTANXK8;
+						SystemCapabilities = {
+							com.apple.SafariKeychain = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};

@@ -14,15 +14,11 @@ DropCard.defaultProps = {
     posted: false,
     products: [
       {
-        photoURIs: [
-          'https://assets.onova.co/products/8LOvCz1MR-1-1546028852413.jpg',
-        ],
+        photoURIs: ['https://assets.onova.co/products/8LOvCz1MR-1-1546028852413.jpg'],
         _id: '5c2687346657400c3ff4567b',
       },
       {
-        photoURIs: [
-          'https://assets.onova.co/products/8LOvCz1MR-1-1546028852413.jpg',
-        ],
+        photoURIs: ['https://assets.onova.co/products/8LOvCz1MR-1-1546028852413.jpg'],
         _id: '5c2687346657400c3ff4567c',
       },
     ],
@@ -40,8 +36,7 @@ DropCard.defaultProps = {
       accountStatus: 'verified',
       _id: '5afaa93daeeb1453812fc011',
       username: 'alex',
-      profilePic:
-        'http://assets.onova.co/users/5afaa93daeeb1453812fc011-1526385408286.jpg',
+      profilePic: 'http://assets.onova.co/users/5afaa93daeeb1453812fc011-1526385408286.jpg',
       displayName: 'Alex',
     },
     createdAt: '2018-12-28T20:27:32.932Z',

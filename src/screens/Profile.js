@@ -6,18 +6,18 @@ import { Dimensions, Image, Platform, Share, StyleSheet, Text, TouchableOpacity,
 import { ActionSheet, Body, Button as NBButton, Container, Icon as NBIcon, Left, Right } from 'native-base';
 import { NavigationActions } from 'react-navigation';
 import { TabView, TabBar } from 'react-native-tab-view';
-import type { NavigationScreenProp } from 'react-navigation';
-// import { Button } from 'react-native-elements';
+import { URL } from 'react-native-dotenv';
 import { Modal, NoticeBar, Toast } from 'antd-mobile-rn';
 import Analytics from 'react-native-analytics-segment-io';
 
-import I18n from '../i18n';
+import type { NavigationScreenProp } from 'react-navigation';
 
 import { Avatar, EditableText, Header, NotificationsDot, Title } from '../components';
 import ShopTab from './ShopTab';
 import UserDropsTab from './UserDropsTab';
 import { getPersonalUserData, enableRefresh } from '../actions/actionCreator';
 
+import I18n from '../i18n';
 import typography from '../config/typography';
 import colors from '../config/colors';
 import settings from '../config/settings';
@@ -511,10 +511,11 @@ class ProfileScreen extends React.Component<Props, State> {
   shareProfile = async () => {
     const { username } = this.state;
 
+    const url = `https://${URL}/${username}`;
     if (Platform.OS === 'ios') {
-      await Share.share({ url: `https://onova.co/${username}` });
+      await Share.share({ url });
     } else {
-      await Share.share({ message: `https://onova.co/${username}` });
+      await Share.share({ message: url });
     }
     if (analyticsEnabled) Analytics.track('press_share_profile');
   };

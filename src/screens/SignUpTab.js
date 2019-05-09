@@ -8,13 +8,14 @@ import { FormInput } from 'react-native-elements';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import isEmail from 'validator/lib/isEmail';
+import { URL } from 'react-native-dotenv';
 
-import I18n from '../i18n';
 import { Header } from '../components';
 
 import type { NavigationScreenProp } from 'react-navigation';
 import type { Dispatch, ReduxState } from '../types';
 
+import I18n from '../i18n';
 import { signup } from '../actions/actionCreator';
 import { validPassword } from '../utils/validators';
 import * as linking from '../utils/linking';
@@ -168,15 +169,15 @@ export class SignUpTabContainer extends Component<Props, State> {
     }));
 
   openPrivacyPolicy() {
-    linking.openURL('https://onova.co/privacy-policy.html');
+    linking.openURL(`https://${URL}/privacy-policy.html`);
   }
 
   openTerms() {
-    linking.openURL('https://onova.co/terms-and-condition.html');
+    linking.openURL(`https://${URL}/terms-and-condition.html`);
   }
 
   openSafePurchase() {
-    linking.openURL('https://onova.co/safe-purchase-rules.html');
+    linking.openURL(`https://${URL}/safe-purchase-rules.html`);
   }
 
   /*

@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>drop</string>
+	<string>onova</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -72,11 +72,11 @@
 	<key>NSCameraUsageDescription</key>
 	<string>Drop uses to your camera to add pictures when creating an item</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Drop uses your location to display where the item will be sold from.</string>
+	<string>Drop uses your location to display where your item will be sold from.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>Drop does not need this</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Drop uses your location to display where the item will be sold from.</string>
+	<string>Drop uses your location to display where your item will be sold from.</string>
 	<key>NSMotionUsageDescription</key>
 	<string>Drop does not need this</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>

@@ -4,13 +4,13 @@
 
 Onova
 
-- Android app: [link](https://play.google.com/store/apps/details?id=com.onova.app&hl=uk)
-- iOS app: [link](https://itunes.apple.com/ua/app/onova/id1365771422?mt=8)
+- Android app: [link](https://play.google.com/store/apps/details?id=uno.drop.app&hl=uk)
+- iOS app: [link](https://itunes.apple.com/ua/app/drop/id1462884885?mt=8)
 
 Drop
 
-- Android app: [link](https://play.google.com/store/apps/details?id=uno.drop.app&hl=uk)
-- iOS app: [link](https://itunes.apple.com/ua/app/drop/id1462884885?mt=8)
+- Android app: [link](https://play.google.com/store/apps/details?id=com.onova.app&hl=uk)
+- iOS app: [link](https://itunes.apple.com/ua/app/onova/id1365771422?mt=8)
 
 > Created using React Native CLI (`react-native`), not the Create React Native App (CRNA) or Expo client.
 

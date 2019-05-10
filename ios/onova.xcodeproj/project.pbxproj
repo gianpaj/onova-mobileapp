@@ -366,7 +366,7 @@
 		367813CBC9DFD2B619081182 /* libPods-onova.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-onova.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		39C0B9485E15AC1045623802 /* libPods-onovaTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-onovaTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		531188D0E457F0B1F8730ED9 /* Pods-onovaTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-onovaTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-onovaTests/Pods-onovaTests.debug.xcconfig"; sourceTree = "<group>"; };
-		5819BC1722786A4E00FBDFF8 /* drop.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = drop.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		5819BC1722786A4E00FBDFF8 /* onova.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = onova.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5819BC1822786A4E00FBDFF8 /* drop-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "drop-Info.plist"; path = "/Users/gianfranco/onova/mobileapp/ios/drop-Info.plist"; sourceTree = "<absolute>"; };
 		587F824B2282EE0900502F83 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "onova/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		587F824D2282EE1300502F83 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "drop/GoogleService-Info.plist"; sourceTree = "<group>"; };
@@ -526,7 +526,7 @@
 		13B07FAE1A68108700A75B9A /* onova */ = {
 			isa = PBXGroup;
 			children = (
-				587F824B2282EE0900502F83 /* GoogleService-Info.plist */,
+				587F824D2282EE1300502F83 /* GoogleService-Info.plist */,
 				58D661DB21B6BE3F0075B035 /* onova.entitlements */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
@@ -577,7 +577,7 @@
 		587F824A2282EDE900502F83 /* drop */ = {
 			isa = PBXGroup;
 			children = (
-				587F824D2282EE1300502F83 /* GoogleService-Info.plist */,
+				587F824B2282EE0900502F83 /* GoogleService-Info.plist */,
 			);
 			name = drop;
 			sourceTree = "<group>";
@@ -678,7 +678,7 @@
 			children = (
 				13B07F961A680F5B00A75B9A /* onova.app */,
 				00E356EE1AD99517003FC87E /* onovaTests.xctest */,
-				5819BC1722786A4E00FBDFF8 /* drop.app */,
+				5819BC1722786A4E00FBDFF8 /* onova.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -727,9 +727,9 @@
 			productReference = 00E356EE1AD99517003FC87E /* onovaTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		13B07F861A680F5B00A75B9A /* onova */ = {
+		13B07F861A680F5B00A75B9A /* drop */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "onova" */;
+			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "drop" */;
 			buildPhases = (
 				4D04360A2971991C024CE964 /* [CP] Check Pods Manifest.lock */,
 				13B07F871A680F5B00A75B9A /* Sources */,
@@ -743,14 +743,14 @@
 			);
 			dependencies = (
 			);
-			name = onova;
+			name = drop;
 			productName = "Hello World";
 			productReference = 13B07F961A680F5B00A75B9A /* onova.app */;
 			productType = "com.apple.product-type.application";
 		};
-		5819BBF722786A4E00FBDFF8 /* drop */ = {
+		5819BBF722786A4E00FBDFF8 /* onova */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 5819BC1422786A4E00FBDFF8 /* Build configuration list for PBXNativeTarget "drop" */;
+			buildConfigurationList = 5819BC1422786A4E00FBDFF8 /* Build configuration list for PBXNativeTarget "onova" */;
 			buildPhases = (
 				CFB4A88076AB8B842FCE9C42 /* [CP] Check Pods Manifest.lock */,
 				5819BBF922786A4E00FBDFF8 /* Sources */,
@@ -764,9 +764,9 @@
 			);
 			dependencies = (
 			);
-			name = drop;
+			name = onova;
 			productName = "Hello World";
-			productReference = 5819BC1722786A4E00FBDFF8 /* drop.app */;
+			productReference = 5819BC1722786A4E00FBDFF8 /* onova.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -875,9 +875,9 @@
 			);
 			projectRoot = "";
 			targets = (
-				13B07F861A680F5B00A75B9A /* onova */,
+				13B07F861A680F5B00A75B9A /* drop */,
 				00E356ED1AD99517003FC87E /* onovaTests */,
-				5819BBF722786A4E00FBDFF8 /* drop */,
+				5819BBF722786A4E00FBDFF8 /* onova */,
 			);
 		};
 /* End PBXProject section */
@@ -1303,7 +1303,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
-			shellScript = "export SENTRY_PROPERTIES=sentry.properties\n../node_modules/@sentry/cli/bin/sentry-cli upload-dsym\n";
+			shellScript = "#export SENTRY_PROPERTIES=sentry.properties\n../node_modules/@sentry/cli/bin/sentry-cli upload-dsym\n";
 		};
 		4D04360A2971991C024CE964 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1521,7 +1521,7 @@
 /* Begin PBXTargetDependency section */
 		00E356F51AD99517003FC87E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 13B07F861A680F5B00A75B9A /* onova */;
+			target = 13B07F861A680F5B00A75B9A /* drop */;
 			targetProxy = 00E356F41AD99517003FC87E /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -1604,7 +1604,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = AEDFB25EC39B0E4E33193168 /* Pods-onova.debug.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = OnovaAppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = DropAppIcon;
 				CODE_SIGN_ENTITLEMENTS = onova/onova.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
@@ -1631,7 +1631,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 7B3363D4FDF0B5CD7D353F7C /* Pods-onova.release.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = OnovaAppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = DropAppIcon;
 				CODE_SIGN_ENTITLEMENTS = onova/onova.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = MJ2ZTANXK8;
@@ -1657,7 +1657,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 841776A46B73C0A728D83660 /* Pods-drop.debug.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = DropAppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = OnovaAppIcon;
 				CODE_SIGN_ENTITLEMENTS = onova/onova.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
@@ -1687,7 +1687,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = FF93F789DEC9D6F2A6B530AD /* Pods-drop.release.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = DropAppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = OnovaAppIcon;
 				CODE_SIGN_ENTITLEMENTS = onova/onova.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = MJ2ZTANXK8;
@@ -1823,7 +1823,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "onova" */ = {
+		13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "drop" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				13B07F941A680F5B00A75B9A /* Debug */,
@@ -1832,7 +1832,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		5819BC1422786A4E00FBDFF8 /* Build configuration list for PBXNativeTarget "drop" */ = {
+		5819BC1422786A4E00FBDFF8 /* Build configuration list for PBXNativeTarget "onova" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				5819BC1522786A4E00FBDFF8 /* Debug */,

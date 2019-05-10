@@ -96,8 +96,8 @@ For any questions regarding payments please contact UAPAY at (044) 364-11-44`,
     share_before: `Invite your friends to chat on ${APP_NAME_CC}`,
     share:
       APP_NAME_CC == 'Onova'
-        ? 'Android: https://play.google.com/store/apps/details?id=com.onova.app&hl=uk - Apple Store: https://itunes.apple.com/ua/app/onova/id1365771422?mt=8'
-        : 'Android: https://play.google.com/store/apps/details?id=uno.drop.app&hl=uk - Apple Store: https://itunes.apple.com/ua/app/drop/id1462884885?mt=8',
+        ? 'Android: https://play.google.com/store/apps/details?id=uno.drop.app&hl=uk - Apple Store: https://itunes.apple.com/ua/app/drop/id1462884885?mt=8'
+        : 'Android: https://play.google.com/store/apps/details?id=com.onova.app&hl=uk - Apple Store: https://itunes.apple.com/ua/app/onova/id1365771422?mt=8',
   },
   comments: {
     add_comment_placeholder: 'Add a comment',

@@ -200,12 +200,12 @@ android {
     productFlavors {
         drop {
             resValue "string", "app_name", "drop"
-            applicationId "uno.drop.app"
+            applicationId "com.onova.app"
         }
 
         onova {
             resValue "string", "app_name", "onova"
-            applicationId "com.onova.app"
+            applicationId "uno.drop.app"
            // Pre-compile run ENVFILE=.env.onova
         }
    }

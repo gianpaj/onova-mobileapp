@@ -28,7 +28,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
+               BlueprintIdentifier = "5819BBF722786A4E00FBDFF8"
                BuildableName = "onova.app"
                BlueprintName = "onova"
                ReferencedContainer = "container:onova.xcodeproj">
@@ -70,7 +70,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
+            BlueprintIdentifier = "5819BBF722786A4E00FBDFF8"
             BuildableName = "onova.app"
             BlueprintName = "onova"
             ReferencedContainer = "container:onova.xcodeproj">
@@ -93,7 +93,7 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
+            BlueprintIdentifier = "5819BBF722786A4E00FBDFF8"
             BuildableName = "onova.app"
             BlueprintName = "onova"
             ReferencedContainer = "container:onova.xcodeproj">
@@ -108,16 +108,15 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
-      <BuildableProductRunnable
-         runnableDebuggingMode = "0">
+      <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "onova.app"
-            BlueprintName = "onova"
-            ReferencedContainer = "container:onova.xcodeproj">
+            BlueprintIdentifier = "83CBBA2D1A601D0E00E9B192"
+            BuildableName = "libReact.a"
+            BlueprintName = "React"
+            ReferencedContainer = "container:../node_modules/react-native/React/React.xcodeproj">
          </BuildableReference>
-      </BuildableProductRunnable>
+      </MacroExpansion>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">

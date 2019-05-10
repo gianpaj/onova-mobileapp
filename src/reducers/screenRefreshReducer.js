@@ -1,6 +1,6 @@
 // @flow
 
-import { DO_REFRESH, DONOT_REFRESH } from '../actions/actionTypes';
+import { DO_REFRESH, DONOT_REFRESH, DONOT_CANCEL_ORDER, DO_CANCEL_ORDER } from '../actions/actionTypes';
 import type { Action } from '../types/loginReducer';
 
 export type ScreenRefreshState = {
@@ -27,13 +27,13 @@ export default function(state: ScreenRefreshState = initialState, action: Action
         shouldRefresh: false,
       };
 
-    case 'DO_CANCEL_ORDER':
+    case DO_CANCEL_ORDER:
       return {
         ...state,
         shouldCancelOrder: true,
       };
 
-    case 'DONOT_CANCEL_ORDER':
+    case DONOT_CANCEL_ORDER:
       return {
         ...state,
         shouldCancelOrder: false,

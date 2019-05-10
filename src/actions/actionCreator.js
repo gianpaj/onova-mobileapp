@@ -10,6 +10,8 @@ import type { PusherUser } from '@pusher/chatkit-client';
 import {
   DO_REFRESH,
   DONOT_REFRESH,
+  DO_CANCEL_ORDER,
+  DONOT_CANCEL_ORDER,
   GETUSER_FAIL,
   GETUSER_PENDING,
   GETUSER_SUCCESS,
@@ -354,9 +356,7 @@ const getUserData = (userId: string, options?: Options = {}) => (dispatch: Dispa
   api
     .get(`/api/users/${userId}`, options)
     .then((res: UserData) => dispatch({ type: GETUSER_SUCCESS, payload: res }))
-    .catch(err => {
-      dispatch(handleErrorWithAlert({ type: GETUSER_FAIL }, err));
-    })
+    .catch(err => dispatch(handleErrorWithAlert({ type: GETUSER_FAIL }, err)))
     .then(() => Toast.hide())
 );
 
@@ -455,9 +455,9 @@ const enableRefresh = () => ({ type: DO_REFRESH });
 
 const disableRefresh = () => ({ type: DONOT_REFRESH });
 
-const enableCancelOrder = () => ({ type: 'DO_CANCEL_ORDER' });
+const enableCancelOrder = () => ({ type: DO_CANCEL_ORDER });
 
-const disableCancelOrder = () => ({ type: 'DONOT_CANCEL_ORDER' });
+const disableCancelOrder = () => ({ type: DONOT_CANCEL_ORDER });
 
 /*
 const displayNotification = (notification: any) => (

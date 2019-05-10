@@ -41,6 +41,7 @@ describe('Signup action', () => {
             sharedCount: 0,
             tokens: [],
             username: 'firstperson',
+            types: ['reseller'],
           },
           token:
             'JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YjQ2MTdmMzA2NDEzYzc4OWFjZWZhN2QiLCJhY2NvdW50U3RhdHVzIjoibm90dmVyaWZpZWQiLCJlbWFpbEFkZHJlc3MiOiJnaWFucGErdGVzdEBnbWFpbC5jb20iLCJmb2xsb3dlcnNDb3VudCI6MCwiZm9sbG93aW5nQ291bnQiOjAsInJhdGluZ3NUb3RhbCI6MCwicmV2aWV3c0NvdW50IjowLCJzaGFyZWRDb3VudCI6MCwidG9rZW5zIjpbXSwidXNlcm5hbWUiOiJmaXJzdHBlcnNvbiIsImlhdCI6MTUzMTMyMDMwN30.aOdpVtldfLKYeuqt_bIN-n4Ckhid860CCJmKlWHV7s8',

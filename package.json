@@ -7,10 +7,6 @@
     "url": "https://bitbucket.org/onova/mobileapp.git"
   },
   "scripts": {
-    "build-android": "cd android/ && ./gradlew assembleRelease",
-    "nuke-android": "yarn nuke-bundler && cd android/ && ./gradlew clean && cd ..",
-    "start-android-drop": "ENVFILE=.env.drop react-native run-android --variant=dropDebug --appId uno.drop.app",
-    "start-android-onova": "ENVFILE=.env.onova react-native run-android --variant=onovaDebug --appId com.onova.app",
     "build-android-drop": "ENVFILE=.env.drop cd android/ && ./gradlew assembleDropRelease",
     "build-android-onova": "ENVFILE=.env.onova cd android/ && ./gradlew assembleOnovaRelease",
     "start-android-drop": "ENVFILE=.env.drop react-native run-android --variant=dropDebug --appId com.onova.app",

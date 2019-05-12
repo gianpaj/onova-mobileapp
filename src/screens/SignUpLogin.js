@@ -5,6 +5,7 @@ import { Dimensions, StyleSheet, View } from 'react-native';
 import { TabView, TabBar, SceneMap } from 'react-native-tab-view';
 import { Container } from 'native-base';
 import I18n from 'react-native-i18n';
+import { APP_NAME } from 'react-native-dotenv';
 
 import { Title } from '../components';
 
@@ -49,7 +50,7 @@ class SignUpLoginContainer extends React.Component<Props, State> {
       <Container>
         <View style={styles.header}>
           {/* eslint-disable-next-line react-native/no-raw-text */}
-          <Title>ONOVA</Title>
+          <Title>{APP_NAME.toUpperCase()}</Title>
         </View>
         <TabView
           navigationState={this.state}

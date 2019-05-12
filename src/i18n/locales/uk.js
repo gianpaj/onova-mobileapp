@@ -1,3 +1,5 @@
+import { APP_NAME_CC, URL } from 'react-native-dotenv';
+
 import settings from '../../config/settings';
 
 export default {
@@ -68,10 +70,8 @@ export default {
     clothes_tab: 'Одяг',
     shoes_tab: 'Взуття',
     other_tab: 'Аксесуари',
-    share:
-      'Android: https://play.google.com/store/apps/details?id=com.onova.app&hl=uk - Apple Store: https://itunes.apple.com/ua/app/onova/id1365771422?mt=8',
     alert_info_title: 'Підтримка',
-    alert_info_body: `З будь якими питаннями щодо додатку телефонуйте до Onova
+    alert_info_body: `З будь якими питаннями щодо додатку телефонуйте до ${APP_NAME_CC}
 (063) 419-75-03
 
 З будь якими питаннями щодо платежів телефонуйте до UAPAY (044) 364-11-44`,
@@ -95,7 +95,11 @@ export default {
     toast_warning_on_product_sold: 'Цю річ вже продано',
     toast_warning_ok_button: 'ОК',
     alert_report_title: 'Поскаржитись на річ?',
-    share_before: 'Запроси двох друзів щоб почати купувати на Онові',
+    share_before: `Запроси двох друзів щоб почати купувати на ${APP_NAME_CC}`,
+    share:
+      APP_NAME_CC == 'Onova'
+        ? 'Android: https://play.google.com/store/apps/details?id=com.onova.app&hl=uk - Apple Store: https://itunes.apple.com/ua/app/onova/id1365771422?mt=8'
+        : 'Android: https://play.google.com/store/apps/details?id=uno.drop.app&hl=uk - Apple Store: https://itunes.apple.com/ua/app/drop/id1462884885?mt=8',
   },
   comments: {
     add_comment_placeholder: 'Прокоментувати',
@@ -316,11 +320,10 @@ export default {
       },
       {
         p: 'Правила надання сервісу Безпечна покупка.',
-        link: 'https://onova.co/safe-purchase-rules.html',
+        link: `https://${URL}/safe-purchase-rules.html`,
       },
     ],
-    paragraph_2:
-      'Надання інформації про платіжну картку безпечне, Onova не зберігає ці дані. Зберігання та обробка відбувається на стороні нашого фінансового партнера, UAPAY, який пройшов аудит і отримав сертифікат PCI DSS 3.2, який гарантує повну безпеку ваших даних.',
+    paragraph_2: `Надання інформації про платіжну картку безпечне, ${APP_NAME_CC} не зберігає ці дані. Зберігання та обробка відбувається на стороні нашого фінансового партнера, UAPAY, який пройшов аудит і отримав сертифікат PCI DSS 3.2, який гарантує повну безпеку ваших даних.`,
   },
   userInfo: {
     firstName: "Ім'я",

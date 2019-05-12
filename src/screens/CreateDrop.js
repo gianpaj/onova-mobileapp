@@ -10,6 +10,7 @@ import Permissions from 'react-native-permissions';
 import RNAndroidLocationEnabler from 'react-native-android-location-enabler';
 import { Body, Button as NBButton, Container, Content, Left, List, Right } from 'native-base';
 import { format } from 'date-fns';
+import { URL } from 'react-native-dotenv';
 
 import colors from '../config/colors';
 import { Header, NoticeBar, Info, Title } from '../components';
@@ -276,10 +277,8 @@ export class CreateDropScreen extends React.Component<Props, State> {
       ui.showConfirmAlert(
         I18n.t('profile.alert_unsaved_changes_title'),
         I18n.t('profile.alert_unsaved_changes_body'),
-        () => {
-          // on continue
-          this.closeModal();
-        },
+        // on continue
+        () => this.closeModal(),
         () => {},
         I18n.t('profile.alert_unsaved_changes_button_cancel'),
         I18n.t('profile.alert_unsaved_changes_button_confirm')
@@ -416,7 +415,7 @@ export class CreateDropScreen extends React.Component<Props, State> {
           </Left>
           <Body style={styles.flex2AndCenter}>
             <Title withIcon>{I18n.t('create_drop.title')}</Title>
-            <Info onPress={linking.openURL.bind(this, 'https://onova.co/drop.html')} />
+            <Info onPress={linking.openURL.bind(this, `https://${URL}/drop.html`)} />
           </Body>
           <Right>
             <NBButton

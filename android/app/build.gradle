@@ -1,5 +1,14 @@
 apply plugin: "com.android.application"
 
+project.ext.envConfigFiles = [
+    onovaDebug: ".env.onova",
+    onovaRelease: ".env.onova",
+    dropDebug: ".env.drop",
+    dropRelease: ".env.drop"
+]
+
+apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.gradle";
+
 import com.android.build.OutputFile
 import groovy.json.JsonSlurper
 
@@ -74,7 +83,8 @@ import groovy.json.JsonSlurper
  */
 
 project.ext.react = [
-    entryFile: "index.js"
+    entryFile: "index.js",
+    extraPackagerArgs: ['--reset-cache']
 ]
 
 apply from: "../../node_modules/react-native/react.gradle"
@@ -135,7 +145,8 @@ android {
     // buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
-        applicationId "com.onova.app"
+        // applicationId "com.onova"
+        applicationId project.env.get("APP_ID")
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode googleVer
@@ -144,7 +155,8 @@ android {
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
-        multiDexEnabled true // in order to make react-native-analytics-segment-io work
+        multiDexEnabled true // for react-native-analytics-segment-io
+        // resValue "string", "build_config_package", "com.onova"
     }
     splits {
         abi {
@@ -184,6 +196,19 @@ android {
             }
         }
     }
+    flavorDimensions "version"
+    productFlavors {
+        drop {
+            resValue "string", "app_name", "drop"
+            applicationId "com.onova.app"
+        }
+
+        onova {
+            resValue "string", "app_name", "onova"
+            applicationId "uno.drop.app"
+           // Pre-compile run ENVFILE=.env.onova
+        }
+   }
 }
 
 dependencies {
@@ -210,6 +235,7 @@ dependencies {
     implementation project(':react-native-android-location-enabler')
     implementation project(':react-native-gesture-handler')
     implementation project(':react-native-reanimated')
+    implementation project(':react-native-config')
 }
 
 // Run this once to be able to run the application with BUCK

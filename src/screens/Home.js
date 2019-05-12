@@ -9,6 +9,7 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
+import { APP_NAME } from 'react-native-dotenv';
 import { Body, Button, Left, Right } from 'native-base';
 import { TabView, TabBar } from 'react-native-tab-view';
 // import Analytics from 'react-native-analytics-segment-io';
@@ -85,7 +86,7 @@ export class Home extends PureComponent<Props, State> {
   };
 
   // onShare() {
-  //   Share.share({ message: I18n.t('home.share'), title: 'Share' });
+  //   Share.share({ message: I18n.t('product.share'), title: 'Share' });
   //   if (analyticsEnabled) Analytics.track('press_share_invite');
   // }
 
@@ -108,7 +109,7 @@ export class Home extends PureComponent<Props, State> {
           </Left>
           <Body style={styles.container}>
             {/* eslint-disable-next-line react-native/no-raw-text */}
-            <Title>ONOVA</Title>
+            <Title>{APP_NAME.toUpperCase()}</Title>
           </Body>
           <Right>
             <Button transparent onPress={this.goToDropsFeed}>

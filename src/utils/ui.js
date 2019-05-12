@@ -38,6 +38,8 @@ export function showToast(message: string, type: string = '', buttonText?: strin
 /**
  * Show React Native Alert
  *
+ * TODO: use promise
+ *
  * @param title
  * @param message
  * @param onContinue

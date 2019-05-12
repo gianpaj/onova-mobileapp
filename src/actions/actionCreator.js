@@ -5,11 +5,14 @@ import { Toast } from 'antd-mobile-rn';
 import { ChatManager, TokenProvider } from '@pusher/chatkit-client/react-native';
 import { Sentry } from 'react-native-sentry';
 import Analytics from 'react-native-analytics-segment-io';
+import { APP_NAME } from 'react-native-dotenv';
 
 import type { PusherUser } from '@pusher/chatkit-client';
 import {
   DO_REFRESH,
   DONOT_REFRESH,
+  DO_CANCEL_ORDER,
+  DONOT_CANCEL_ORDER,
   GETUSER_FAIL,
   GETUSER_PENDING,
   GETUSER_SUCCESS,
@@ -293,6 +296,7 @@ const signup = (data: SignupData) => (dispatch: Dispatch) => {
       username: data.username,
       emailAddress: data.emailAddress,
       password: data.password,
+      type: APP_NAME === 'drop' ? 'reseller' : 'designer',
     })
     .then(res => {
       clearTimeout(timer);
@@ -354,9 +358,7 @@ const getUserData = (userId: string, options?: Options = {}) => (dispatch: Dispa
   api
     .get(`/api/users/${userId}`, options)
     .then((res: UserData) => dispatch({ type: GETUSER_SUCCESS, payload: res }))
-    .catch(err => {
-      dispatch(handleErrorWithAlert({ type: GETUSER_FAIL }, err));
-    })
+    .catch(err => dispatch(handleErrorWithAlert({ type: GETUSER_FAIL }, err)))
     .then(() => Toast.hide())
 );
 
@@ -455,9 +457,9 @@ const enableRefresh = () => ({ type: DO_REFRESH });
 
 const disableRefresh = () => ({ type: DONOT_REFRESH });
 
-const enableCancelOrder = () => ({ type: 'DO_CANCEL_ORDER' });
+const enableCancelOrder = () => ({ type: DO_CANCEL_ORDER });
 
-const disableCancelOrder = () => ({ type: 'DONOT_CANCEL_ORDER' });
+const disableCancelOrder = () => ({ type: DONOT_CANCEL_ORDER });
 
 /*
 const displayNotification = (notification: any) => (

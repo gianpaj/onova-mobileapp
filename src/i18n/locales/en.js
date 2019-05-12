@@ -1,3 +1,5 @@
+import { APP_NAME_CC, URL } from 'react-native-dotenv';
+
 import settings from '../../config/settings';
 
 export default {
@@ -66,10 +68,8 @@ export default {
     clothes_tab: 'Clothes',
     shoes_tab: 'Shoes',
     other_tab: 'Accessories',
-    share:
-      'Android: https://play.google.com/store/apps/details?id=com.onova.app&hl=uk - Apple Store: https://itunes.apple.com/ua/app/onova/id1365771422?mt=8',
     alert_info_title: 'Information',
-    alert_info_body: `For any questions regarding the app please contact Onova at
+    alert_info_body: `For any questions regarding the app please contact ${APP_NAME_CC}
 (063) 419-75-03
 
 For any questions regarding payments please contact UAPAY at (044) 364-11-44`,
@@ -93,7 +93,11 @@ For any questions regarding payments please contact UAPAY at (044) 364-11-44`,
     toast_warning_on_product_sold: 'This item is not longer for sale',
     toast_warning_ok_button: 'OK',
     alert_report_title: 'Report Item?',
-    share_before: 'Invite your friends to chat on Onova',
+    share_before: `Invite your friends to chat on ${APP_NAME_CC}`,
+    share:
+      APP_NAME_CC == 'Onova'
+        ? 'Android: https://play.google.com/store/apps/details?id=uno.drop.app&hl=uk - Apple Store: https://itunes.apple.com/ua/app/drop/id1462884885?mt=8'
+        : 'Android: https://play.google.com/store/apps/details?id=com.onova.app&hl=uk - Apple Store: https://itunes.apple.com/ua/app/onova/id1365771422?mt=8',
   },
   comments: {
     add_comment_placeholder: 'Add a comment',
@@ -108,10 +112,10 @@ For any questions regarding payments please contact UAPAY at (044) 364-11-44`,
     network_error: 'Connectivity issue. Please check your internetz',
     confirm_alert_button_cancel: 'Cancel',
     confirm_alert_button_confirm: 'Confirm',
-    // `Thank you for helping keep the Onova community safe and fun for everyone. Remember, we don't reveal who submitted reports to the seller.`
     report_subtitle: 'Enter reason (required). The seller will not be notified',
     report_error: 'Please give a longer reason. Min 7 characters',
-    report_success: 'Thank you for helping keep the Onova community safe',
+    report_success: `Thank you for helping keep the ${APP_NAME_CC} community safe`,
+    // `Thank you for helping keep the ${APP_NAME_CC} community safe and fun for everyone. Remember, we don't reveal who submitted reports to the seller`
     action_button_close: 'Close',
     action_button_block: 'Block',
     action_button_cancel: 'Cancel',
@@ -187,7 +191,7 @@ For any questions regarding payments please contact UAPAY at (044) 364-11-44`,
     select: 'Select a date when you want the collection',
     success: 'Your collection has been scheduled!',
     permission_title: 'Can we access your location?',
-    permission_message: 'Onova uses your location when adding a new item',
+    permission_message: `${APP_NAME_CC} uses your location to display where the item will be sold from.`,
     permission_alert_button_settings: 'Open Settings',
     cannot_create_drop_alert: 'Please go to Settings first to enter your Shipping info, mobile number and card details',
   },
@@ -241,8 +245,7 @@ For any questions regarding payments please contact UAPAY at (044) 364-11-44`,
     alert_unsaved_changes_button_confirm: 'YES',
     alert_report_title: 'Report User?',
     alert_block_title: 'Block user?',
-    alert_block_subtitle:
-      "They won't be able to find your profile or items. Onova won't let them know you blocked them",
+    alert_block_subtitle: `They won't be able to find your profile or items. ${APP_NAME_CC} won't let them know you blocked them`,
     alert_block_success: 'User blocked',
     shop_tab: 'Shop',
     drops_tab: 'Collections',
@@ -315,11 +318,10 @@ For any questions regarding payments please contact UAPAY at (044) 364-11-44`,
       },
       {
         p: 'Правила надання сервісу Безпечна покупка.',
-        link: 'https://onova.co/safe-purchase-rules.html',
+        link: `https://${URL}/safe-purchase-rules.html`,
       },
     ],
-    paragraph_2:
-      'Надання інформації про платіжну картку безпечне, Onova не зберігає ці дані. Зберігання та обробка відбувається на стороні нашого фінансового партнера, UAPAY, який пройшов аудит і отримав сертифікат PCI DSS 3.2, який гарантує повну безпеку ваших даних.',
+    paragraph_2: `Надання інформації про платіжну картку безпечне, ${APP_NAME_CC} не зберігає ці дані. Зберігання та обробка відбувається на стороні нашого фінансового партнера, UAPAY, який пройшов аудит і отримав сертифікат PCI DSS 3.2, який гарантує повну безпеку ваших даних.`,
   },
   userInfo: {
     firstName: "Ім'я",
@@ -366,7 +368,7 @@ For any questions regarding payments please contact UAPAY at (044) 364-11-44`,
     sign_out_button: 'Sign out',
     alert_msg_email_address_changed: 'The new email address requires to be valided. Please check your inbox',
     alert_msg_settigs_changed: 'Your settings have been updated',
-    safe_purchase_rules: 'Onova safe purchase rules',
+    safe_purchase_rules: `${APP_NAME_CC} safe purchase rules`,
     faq: 'FAQ',
   },
   add_review: {

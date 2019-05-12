@@ -5,12 +5,13 @@ import { connect } from 'react-redux';
 import { StyleSheet, Text, View } from 'react-native';
 import { Button as NBButton, Content } from 'native-base';
 import { SearchBar } from 'react-native-elements';
-import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from 'react-native-simple-radio-button';
 import { withNavigation } from 'react-navigation';
 
 import type { NavigationScreenProp } from 'react-navigation';
 
 import I18n from '../i18n';
+import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from '../components/SimpleRadioButton';
+import { HR } from '../components';
 import colors from '../config/colors';
 import settings from '../config/settings';
 import { category_radio_grp_1, category_radio_grp_2 } from '../utils/ui';
@@ -26,7 +27,7 @@ type State = {
   grp_2: number,
 };
 
-class SearchWithHasthagsTabContainer extends Component<Props, State> {
+class SearchByHashtagsTabContainer extends Component<Props, State> {
   search: { current: any };
   constructor(props: Props) {
     super(props);
@@ -142,28 +143,29 @@ class SearchWithHasthagsTabContainer extends Component<Props, State> {
               {category_radio_grp_1.map((option, i) => (
                 <RadioButton labelHorizontal={false} key={i}>
                   <RadioButtonLabel
-                    labelHorizontal
-                    obj={option}
                     index={i}
-                    onPress={this.setCategories}
+                    labelHorizontal
                     labelStyle={styles.radioButtonLabel}
+                    obj={option}
+                    onPress={this.setCategories}
                   />
                   <RadioButtonInput
-                    obj={option}
-                    index={i}
-                    isSelected={grp_1 == i}
-                    onPress={this.setCategories}
                     borderWidth={2}
                     buttonInnerColor={colors.black}
                     buttonOuterColor={colors.black}
-                    buttonSize={19}
                     buttonOuterSize={19}
+                    buttonSize={19}
                     buttonWrapStyle={styles.radioButtonInput}
+                    index={i}
+                    isSelected={grp_1 == i}
+                    obj={option}
+                    onPress={this.setCategories}
                   />
                 </RadioButton>
               ))}
             </RadioForm>
           </View>
+          <HR color={colors.grey5} />
           <View style={styles.grps}>
             <RadioForm animation formHorizontal>
               {category_radio_grp_2.map((option, i) => (
@@ -232,14 +234,14 @@ const styles = StyleSheet.create({
   radioButtonLabel: {
     color: colors.grey1,
     marginBottom: 10,
-    paddingLeft: 0,
     textAlign: 'center',
-    width: 75,
+    paddingLeft: 0,
+    flex: 1,
   },
   radioButtonInput: {
-    width: 75,
     marginBottom: 15,
+    width: 110,
   },
 });
 
-export const SearchWithHasthagsTab = withNavigation(connect(null)(SearchWithHasthagsTabContainer));
+export const SearchByHashtagsTab = withNavigation(connect(null)(SearchByHashtagsTabContainer));

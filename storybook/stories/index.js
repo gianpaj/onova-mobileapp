@@ -118,25 +118,17 @@ storiesOf('ReviewCard', module)
       onPress={action('clicked-reviewee')}
       review={{
         ...REVIEW,
-        text:
-          'Ответственный покупатель! Сделка прошло отлично! Только положительные эмоции',
+        text: 'Ответственный покупатель! Сделка прошло отлично! Только положительные эмоции',
       }}
     />
   ))
   .add('with a short review text', () => (
-    <ReviewCard
-      onPress={action('clicked-reviewee')}
-      review={{ ...REVIEW, text: 'Ответственный покупатель!' }}
-    />
+    <ReviewCard onPress={action('clicked-reviewee')} review={{ ...REVIEW, text: 'Ответственный покупатель!' }} />
   ))
-  .add('with NO review text', () => (
-    <ReviewCard onPress={action('clicked-reviewee')} review={{ ...REVIEW }} />
-  ));
+  .add('with NO review text', () => <ReviewCard onPress={action('clicked-reviewee')} review={{ ...REVIEW }} />);
 
 storiesOf('ImagePicker', module)
-  .add('with no images', () => (
-    <ImagePicker imagePerRow={6} enabled onChangeOrder={() => {}} />
-  ))
+  .add('with no images', () => <ImagePicker imagePerRow={6} enabled onChangeOrder={() => {}} />)
   .add('with images from iPhone Simulator', () => (
     <ImagePicker
       files={[
@@ -174,10 +166,9 @@ storiesOf('ImagePicker', module)
 
 const orderConfirmed = { datePaid: new Date(), status: 'confirmed' };
 
-const OrderStatusStory = storiesOf('OrderStatus', module).add(
-  'confirmed',
-  () => <OrderStatus order={orderConfirmed} />
-);
+const OrderStatusStory = storiesOf('OrderStatus', module).add('confirmed', () => (
+  <OrderStatus order={orderConfirmed} />
+));
 const orderShipped = {
   ...orderConfirmed,
   dateShipped: new Date(),
@@ -202,18 +193,14 @@ const orderFailedByBuyer = {
   finalisedAt: new Date(),
   status: 'failed_by_buyer',
 };
-OrderStatusStory.add('failed_by_buyer', () => (
-  <OrderStatus order={orderFailedByBuyer} />
-));
+OrderStatusStory.add('failed_by_buyer', () => <OrderStatus order={orderFailedByBuyer} />);
 // failed to ship
 const orderFailedBySeller = {
   ...orderConfirmed,
   finalisedAt: new Date(),
   status: 'failed_by_seller',
 };
-OrderStatusStory.add('failed_by_seller', () => (
-  <OrderStatus order={orderFailedBySeller} />
-));
+OrderStatusStory.add('failed_by_seller', () => <OrderStatus order={orderFailedBySeller} />);
 
 storiesOf('DropCard', module)
   // .addDecorator(getStory => <Provider story={getStory()} />)

@@ -6,3 +6,7 @@ team_id("MJ2ZTANXK8") # Developer Portal Team ID
 
 # For more information about the Appfile, see:
 #     https://docs.fastlane.tools/advanced/#appfile
+
+for_lane :drop do
+  app_identifier('uno.drop.app')
+end

@@ -161,7 +161,8 @@ export default {
     price_popup_body:
       'Коли якусь річ успішно продано, UAPAY автоматично знімає від загальної вартості комісію, решта надходить на ваш рахунок',
     description_label: 'Опис:',
-    description_placeholder: 'В якому стані річ, якого розміру, бренду і тому подібне',
+    description_placeholder_onova: 'Опишіть деталі виробу',
+    description_placeholder_drop: 'В якому стані річ, якого розміру, бренду і тому подібне',
     hashtags_label: '#tags:',
     hashtags_placeholder: 'adidas, 43',
     select_photo_source_camera: 'Камера',

@@ -10,6 +10,7 @@ import ImagePicker from 'react-native-image-crop-picker';
 import { InputItem, TextareaItem, Toast } from 'antd-mobile-rn';
 import Foect from 'foect';
 import Dialog from 'react-native-dialog';
+import { APP_NAME } from 'react-native-dotenv';
 
 import { ImagePicker as AntImagePicker, Header, HR, Info, TagInput, Title } from '../components';
 import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from '../components/SimpleRadioButton';
@@ -619,7 +620,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
                           onChangeText={control.onChange.bind(this)}
                           rows={3}
                           style={styles.inputContainerNew}
-                          placeholder={I18n.t('add_or_edit_item.description_placeholder')}
+                          placeholder={I18n.t(`add_or_edit_item.description_placeholder_${APP_NAME}`)}
                           value={control.value}
                         />
                       );

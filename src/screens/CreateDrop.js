@@ -98,7 +98,10 @@ export class CreateDropScreen extends React.Component<Props, State> {
       }
     } catch (error) {
       this.closeModal();
-      this.props.navigation.navigate('settings');
+      this.props.navigation.navigate({
+        key: 'settings',
+        routeName: 'settings',
+      });
       clearTimeout(loader);
       Toast.hide();
       // TODO: translate error

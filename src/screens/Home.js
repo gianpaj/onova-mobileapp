@@ -4,8 +4,6 @@ import colors from '../config/colors';
 import React, { PureComponent } from 'react';
 import {
   Dimensions,
-  // Share,
-  // Platform,
   StyleSheet,
   View,
 } from 'react-native';

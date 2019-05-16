@@ -95,6 +95,8 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
   priceControl;
   priceInput;
   descriptionControl;
+  grp_1;
+  grp_2;
   numberOfBrands = 0;
 
   state = {
@@ -335,13 +337,19 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
   onSave = async ({
     price,
     description,
+    grp_1,
+    grp_2,
   }: {
     // eslint-disable-next-line react/no-unused-prop-types
     price: string,
     // eslint-disable-next-line react/no-unused-prop-types
     description: string,
+    // eslint-disable-next-line react/no-unused-prop-types
+    grp_1: number,
+    // eslint-disable-next-line react/no-unused-prop-types
+    grp_2: number,
   }) => {
-    if (!this.canSave({ price, description })) return;
+    if (!this.canSave({ price, description, grp_1, grp_2 })) return;
 
     this.setState({ pending: true });
 
@@ -350,7 +358,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     }
 
     Toast.loading(I18n.t('alerts.toast_uploading'), 30);
-    const { grp_1, grp_2, images, inEditMode, tags, uuid } = this.state;
+    const { images, inEditMode, tags, uuid } = this.state;
 
     const data: any = {
       categoryIds: grp_1.toString(),
@@ -463,15 +471,21 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
   canSave({
     price,
     description,
+    grp_1,
+    grp_2,
   }: {
     // eslint-disable-next-line react/no-unused-prop-types
     price: string,
     // eslint-disable-next-line react/no-unused-prop-types
     description: string,
+    // eslint-disable-next-line react/no-unused-prop-types
+    grp_1: number,
+    // eslint-disable-next-line react/no-unused-prop-types
+    grp_2: number,
   }): boolean {
     // const tagsPattern = /^(\b[a-z][a-z0-9]*)$/i;
 
-    const { images, pending } = this.state;
+    const { images, pending, tags } = this.state;
     // return true if all of these are true
     return (
       !pending &&
@@ -483,11 +497,11 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
       // if the description doesn't exceed the maximum length
       description.trim().length >= settings.MIN_LENGTH_DESCRIPTION &&
       // if there's the minimum required of tags
-      this.state.tags.length >= settings.MIN_TAGS &&
+      tags.length >= settings.MIN_TAGS &&
       // if there's a clothing category selected
-      this.state.grp_1 > -1 &&
+      grp_1 > -1 &&
       // if there's a clothing type selected
-      this.state.grp_2 > -1
+      grp_2 > -1
     );
   }
 
@@ -510,6 +524,12 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     if (Object.keys(errors.description).length) {
       this.descriptionControl.markAsTouched();
     }
+    if (Object.keys(errors.grp_1).length) {
+      this.grp_1.markAsTouched();
+    }
+    if (Object.keys(errors.grp_2).length) {
+      this.grp_2.markAsTouched();
+    }
   };
 
   render() {
@@ -521,7 +541,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
       <React.Fragment>
         <Foect.Form
           onValidSubmit={this.onSave}
-          defaultValue={{ description, price }}
+          defaultValue={{ description, price, grp_1, grp_2 }}
           onInvalidSubmit={this.onInvalidSubmit}>
           {form => (
             <Container>
@@ -658,59 +678,69 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
                 </React.Fragment>
                 <View style={styles.grps}>
                   <RadioForm animation formHorizontal>
-                    {ui.category_radio_grp_1.map((option, i) => (
-                      <RadioButton labelHorizontal={false} key={i}>
-                        <RadioButtonLabel
-                          index={i}
-                          labelHorizontal
-                          labelStyle={styles.radioButtonLabel}
-                          obj={option}
-                          onPress={grp_1 => this.setState({ grp_1 })}
-                        />
-                        <RadioButtonInput
-                          testID={`grp_1_input_${i}`}
-                          borderWidth={2}
-                          buttonInnerColor={colors.black}
-                          buttonOuterColor={colors.black}
-                          buttonOuterSize={19}
-                          buttonSize={19}
-                          buttonWrapStyle={styles.radioButtonInput}
-                          index={i}
-                          isSelected={grp_1 === i}
-                          obj={option}
-                          onPress={grp_1 => this.setState({ grp_1 })}
-                        />
-                      </RadioButton>
-                    ))}
+                    <Foect.Control name="grp_1" required pattern={/^[012]$/}>
+                      {control => {
+                        this.grp_1 = control;
+                        return ui.category_radio_grp_1.map((option, i) => (
+                          <RadioButton labelHorizontal={false} key={i}>
+                            <RadioButtonLabel
+                              index={i}
+                              labelHorizontal
+                              labelStyle={styles.radioButtonLabel}
+                              obj={option}
+                              onPress={control.onChange}
+                            />
+                            <RadioButtonInput
+                              testID={`grp_1_input_${i}`}
+                              borderWidth={2}
+                              buttonInnerColor={colors.black}
+                              buttonOuterColor={control.isTouched && control.isInvalid ? colors.red : colors.black}
+                              buttonOuterSize={19}
+                              buttonSize={19}
+                              buttonWrapStyle={styles.radioButtonInput}
+                              index={i}
+                              isSelected={control.value == i}
+                              obj={option}
+                              onPress={control.onChange}
+                            />
+                          </RadioButton>
+                        ));
+                      }}
+                    </Foect.Control>
                   </RadioForm>
                 </View>
                 <HR color={colors.grey5} />
                 <View style={[styles.grps, { marginBottom: 20 }]}>
                   <RadioForm animation formHorizontal>
-                    {ui.category_radio_grp_2.map((option, i) => (
-                      <RadioButton labelHorizontal={false} key={i}>
-                        <RadioButtonLabel
-                          index={i}
-                          labelHorizontal
-                          labelStyle={styles.radioButtonLabel}
-                          obj={option}
-                          onPress={grp_2 => this.setState({ grp_2 })}
-                        />
-                        <RadioButtonInput
-                          testID={`grp_2_input_${i}`}
-                          borderWidth={2}
-                          buttonInnerColor={colors.black}
-                          buttonOuterColor={colors.black}
-                          buttonOuterSize={19}
-                          buttonSize={19}
-                          buttonWrapStyle={styles.radioButtonInput}
-                          index={i}
-                          isSelected={grp_2 == i}
-                          obj={option}
-                          onPress={grp_2 => this.setState({ grp_2 })}
-                        />
-                      </RadioButton>
-                    ))}
+                    <Foect.Control name="grp_2" required pattern={/^[012]$/}>
+                      {control => {
+                        this.grp_2 = control;
+                        return ui.category_radio_grp_2.map((option, i) => (
+                          <RadioButton labelHorizontal={false} key={i}>
+                            <RadioButtonLabel
+                              index={i}
+                              labelHorizontal
+                              labelStyle={styles.radioButtonLabel}
+                              obj={option}
+                              onPress={control.onChange}
+                            />
+                            <RadioButtonInput
+                              testID={`grp_2_input_${i}`}
+                              borderWidth={2}
+                              buttonInnerColor={colors.black}
+                              buttonOuterColor={control.isTouched && control.isInvalid ? colors.red : colors.black}
+                              buttonOuterSize={19}
+                              buttonSize={19}
+                              buttonWrapStyle={styles.radioButtonInput}
+                              index={i}
+                              isSelected={control.value == i}
+                              obj={option}
+                              onPress={control.onChange}
+                            />
+                          </RadioButton>
+                        ));
+                      }}
+                    </Foect.Control>
                   </RadioForm>
                 </View>
               </Content>

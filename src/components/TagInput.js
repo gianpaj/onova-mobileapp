@@ -146,7 +146,8 @@ class TagInput<T> extends React.PureComponent<Props<T>, State> {
   static inputWidth(text: string, spaceLeft: number, inputDefaultWidth: number, wrapperWidth: number) {
     if (text === '') {
       return inputDefaultWidth;
-    } else if (spaceLeft >= 100) {
+    }
+    if (spaceLeft >= 100) {
       return spaceLeft - 10;
     }
     return wrapperWidth;
@@ -389,12 +390,10 @@ class Tag extends React.PureComponent<TagProps> {
     );
   }
 
-  onPress = () => {
-    this.props.removeIndex(this.props.index);
-  };
+  onPress = () => this.props.removeIndex(this.props.index);
 
-  onLayoutLastTag = (event: { nativeEvent: { layout: { x: number, width: number } } }) => {
-    const layout = event.nativeEvent.layout;
+  onLayoutLastTag = event => {
+    const { layout } = event.nativeEvent;
     this.curPos = layout.width + layout.x;
     if (this.props.isLastTag) {
       this.props.onLayoutLastTag(this.curPos);

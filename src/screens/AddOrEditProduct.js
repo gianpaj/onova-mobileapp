@@ -82,7 +82,6 @@ type State = {
   inEditMode: boolean,
   isLoading: boolean,
   isUploading: boolean,
-  numberOfBrands: number,
   order: Array<number>,
   pending: boolean,
   price: string,
@@ -96,6 +95,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
   priceControl;
   priceInput;
   descriptionControl;
+  numberOfBrands = 0;
 
   state = {
     dialogInfoVisible: false,
@@ -107,7 +107,6 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     inEditMode: false,
     isLoading: true,
     isUploading: false,
-    numberOfBrands: 0,
     order: [],
     pending: false,
     price: '',
@@ -392,13 +391,27 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
   changeTags = (tags: Array<string>) => {
     // if there no are any brands in the hashtags
     const found = this.state.tags.some(r => brands.brands.indexOf(r) >= 0);
-    if (!found) this.setState({ numberOfBrands: 0 });
+    if (!found) this.numberOfBrands = 0;
 
     this.setState({ tags });
   };
 
   changeTagsTest = (tagsText: string): Promise<void> => {
     return new Promise(resolve => {
+      // text has multiple spaces
+      const textHasBeenPasted = tagsText.split(' ').filter(s => Boolean(s)).length > 1;
+      if (textHasBeenPasted) {
+        const onBrandTags = tagsText.split(' ').filter(s => Boolean(s) && this.onlyOneBrand(s));
+        const uniqueTags = new Set([...this.state.tags, ...onBrandTags]);
+        return this.setState(
+          {
+            tags: Array.from(uniqueTags),
+            tagsText: '',
+          },
+          () => resolve()
+        );
+      }
+
       const textWithoutSeparators = tagsText.replace(/,|;| | \n/gi, '');
       // if the tag is longer the maximum
       // OR if it doesn't match the regex
@@ -438,8 +451,8 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
   onlyOneBrand(text: string): boolean {
     text = text.toLowerCase();
     if (brands.brands.indexOf(text) == -1) return true;
-    if (brands.brands.indexOf(text) > -1 && this.state.numberOfBrands < settings.MAX_BRAND_TAGS) {
-      this.setState({ numberOfBrands: this.state.numberOfBrands + 1 });
+    if (brands.brands.indexOf(text) > -1 && this.numberOfBrands < settings.MAX_BRAND_TAGS) {
+      this.numberOfBrands++;
       return true;
     }
     return false;

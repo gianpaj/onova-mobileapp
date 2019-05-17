@@ -43,8 +43,6 @@
 		5819BC0C22786A4E00FBDFF8 /* libRNAnalyticsSegmentIO.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 94F7A3CDD35F4C0EB2C327AE /* libRNAnalyticsSegmentIO.a */; };
 		5819BC0E22786A4E00FBDFF8 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		5819BC0F22786A4E00FBDFF8 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
-		583EC266228EBA84008B2885 /* onova-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5819BC1822786A4E00FBDFF8 /* onova-Info.plist */; };
-		583EC28E228EBA8C008B2885 /* drop-info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB61A68108700A75B9A /* drop-info.plist */; };
 		587F824C2282EE0900502F83 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 587F824B2282EE0900502F83 /* GoogleService-Info.plist */; };
 		587F824E2282EE1300502F83 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 587F824D2282EE1300502F83 /* GoogleService-Info.plist */; };
 		6CC6155C944D0F7D713B0753 /* libPods-drop.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B192B86C708E47CB6B1EC61 /* libPods-drop.a */; };
@@ -56,7 +54,6 @@
 		DD2B751496E7FB53D4DE94E5 /* libPods-onovaTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 39C0B9485E15AC1045623802 /* libPods-onovaTests.a */; };
 		E4E1826340B34F19B6DA0C95 /* libPods-onova.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 367813CBC9DFD2B619081182 /* libPods-onova.a */; };
 		F50E828497CC4DAA90B3DC55 /* libRNAnalyticsSegmentIO.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 94F7A3CDD35F4C0EB2C327AE /* libRNAnalyticsSegmentIO.a */; };
-		FC83F733345F61028AE6DB99 /* libPods-drop.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B192B86C708E47CB6B1EC61 /* libPods-drop.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -443,7 +440,6 @@
 				5819BC0A22786A4E00FBDFF8 /* libz.tbd in Frameworks */,
 				5819BC0B22786A4E00FBDFF8 /* libRNFirebase.a in Frameworks */,
 				5819BC0C22786A4E00FBDFF8 /* libRNAnalyticsSegmentIO.a in Frameworks */,
-				FC83F733345F61028AE6DB99 /* libPods-drop.a in Frameworks */,
 				7F7792F8BD001B50D035C7B1 /* libPods-onova.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1181,7 +1177,6 @@
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
 				587F824C2282EE0900502F83 /* GoogleService-Info.plist in Resources */,
-				583EC266228EBA84008B2885 /* onova-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1189,7 +1184,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				583EC28E228EBA8C008B2885 /* drop-info.plist in Resources */,
 				5819BC0E22786A4E00FBDFF8 /* Images.xcassets in Resources */,
 				5819BC0F22786A4E00FBDFF8 /* LaunchScreen.xib in Resources */,
 				587F824E2282EE1300502F83 /* GoogleService-Info.plist in Resources */,

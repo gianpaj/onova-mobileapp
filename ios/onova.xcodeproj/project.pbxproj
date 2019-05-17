@@ -43,6 +43,8 @@
 		5819BC0C22786A4E00FBDFF8 /* libRNAnalyticsSegmentIO.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 94F7A3CDD35F4C0EB2C327AE /* libRNAnalyticsSegmentIO.a */; };
 		5819BC0E22786A4E00FBDFF8 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		5819BC0F22786A4E00FBDFF8 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
+		583EC266228EBA84008B2885 /* onova-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5819BC1822786A4E00FBDFF8 /* onova-Info.plist */; };
+		583EC28E228EBA8C008B2885 /* drop-info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB61A68108700A75B9A /* drop-info.plist */; };
 		587F824C2282EE0900502F83 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 587F824B2282EE0900502F83 /* GoogleService-Info.plist */; };
 		587F824E2282EE1300502F83 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 587F824D2282EE1300502F83 /* GoogleService-Info.plist */; };
 		6CC6155C944D0F7D713B0753 /* libPods-drop.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B192B86C708E47CB6B1EC61 /* libPods-drop.a */; };
@@ -357,7 +359,7 @@
 		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = onova/AppDelegate.m; sourceTree = "<group>"; };
 		13B07FB21A68108700A75B9A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = onova/Images.xcassets; sourceTree = "<group>"; };
-		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = onova/Info.plist; sourceTree = "<group>"; };
+		13B07FB61A68108700A75B9A /* drop-info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "drop-info.plist"; path = "onova/drop-info.plist"; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = onova/main.m; sourceTree = "<group>"; };
 		146833FF1AC3E56700842450 /* React.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = React.xcodeproj; path = "../node_modules/react-native/React/React.xcodeproj"; sourceTree = "<group>"; };
 		2030C606DF8F683D85B933BD /* Pods-onovaTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-onovaTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-onovaTests/Pods-onovaTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -369,7 +371,7 @@
 		39C0B9485E15AC1045623802 /* libPods-onovaTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-onovaTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		531188D0E457F0B1F8730ED9 /* Pods-onovaTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-onovaTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-onovaTests/Pods-onovaTests.debug.xcconfig"; sourceTree = "<group>"; };
 		5819BC1722786A4E00FBDFF8 /* onova.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = onova.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		5819BC1822786A4E00FBDFF8 /* drop-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "drop-Info.plist"; path = "/Users/gianfranco/onova/mobileapp/ios/drop-Info.plist"; sourceTree = "<absolute>"; };
+		5819BC1822786A4E00FBDFF8 /* onova-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "onova-Info.plist"; path = "/Users/gianfranco/onova/mobileapp/ios/onova-Info.plist"; sourceTree = "<absolute>"; };
 		583EC249228EB703008B2885 /* uk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = uk; path = uk.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		587F824B2282EE0900502F83 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "onova/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		587F824D2282EE1300502F83 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "drop/GoogleService-Info.plist"; sourceTree = "<group>"; };
@@ -537,8 +539,8 @@
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
-				13B07FB61A68108700A75B9A /* Info.plist */,
 				13B07FB11A68108700A75B9A /* LaunchScreen.xib */,
+				5819BC1822786A4E00FBDFF8 /* onova-Info.plist */,
 				13B07FB71A68108700A75B9A /* main.m */,
 			);
 			name = onova;
@@ -583,6 +585,7 @@
 			isa = PBXGroup;
 			children = (
 				587F824B2282EE0900502F83 /* GoogleService-Info.plist */,
+				13B07FB61A68108700A75B9A /* drop-info.plist */,
 			);
 			name = drop;
 			sourceTree = "<group>";
@@ -671,7 +674,6 @@
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				936B1FEE67F8B619E1DF7DB8 /* Pods */,
 				58D6620C21B6C3D30075B035 /* Recovered References */,
-				5819BC1822786A4E00FBDFF8 /* drop-Info.plist */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -1179,6 +1181,7 @@
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
 				587F824C2282EE0900502F83 /* GoogleService-Info.plist in Resources */,
+				583EC266228EBA84008B2885 /* onova-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1186,6 +1189,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				583EC28E228EBA8C008B2885 /* drop-info.plist in Resources */,
 				5819BC0E22786A4E00FBDFF8 /* Images.xcassets in Resources */,
 				5819BC0F22786A4E00FBDFF8 /* LaunchScreen.xib in Resources */,
 				587F824E2282EE1300502F83 /* GoogleService-Info.plist in Resources */,
@@ -1621,7 +1625,7 @@
 					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
 					"$(SRCROOT)/../node_modules/react-native-analytics-segment-io/ios/RNAnalyticsSegmentIO",
 				);
-				INFOPLIST_FILE = onova/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/onova/drop-info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -1647,7 +1651,7 @@
 					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
 					"$(SRCROOT)/../node_modules/react-native-analytics-segment-io/ios/RNAnalyticsSegmentIO",
 				);
-				INFOPLIST_FILE = onova/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/onova/drop-info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -1674,7 +1678,7 @@
 					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
 					"$(SRCROOT)/../node_modules/react-native-analytics-segment-io/ios/RNAnalyticsSegmentIO",
 				);
-				INFOPLIST_FILE = "$(SRCROOT)/drop-Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/onova-Info.plist";
 				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "-traditional";
 				INFOPLIST_PREFIX_HEADER = "$(SRCROOT)/../node_modules/react-native-config/ios/ReactNativeConfig/GeneratedInfoPlistDotEnv.h";
 				INFOPLIST_PREPROCESS = YES;
@@ -1703,7 +1707,7 @@
 					"$(SRCROOT)/../node_modules/react-native-firebase/ios/RNFirebase/**",
 					"$(SRCROOT)/../node_modules/react-native-analytics-segment-io/ios/RNAnalyticsSegmentIO",
 				);
-				INFOPLIST_FILE = "$(SRCROOT)/drop-Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/onova-Info.plist";
 				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "-traditional";
 				INFOPLIST_PREFIX_HEADER = "$(SRCROOT)/../node_modules/react-native-config/ios/ReactNativeConfig/GeneratedInfoPlistDotEnv.h";
 				INFOPLIST_PREPROCESS = YES;

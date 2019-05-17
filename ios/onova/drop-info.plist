@@ -64,27 +64,27 @@
 		</dict>
 	</dict>
 	<key>NSAppleMusicUsageDescription</key>
-	<string>Onova does not need this</string>
+	<string>Drop does not need this</string>
 	<key>NSBluetoothPeripheralUsageDescription</key>
-	<string>Onova does not need this</string>
+	<string>Drop does not need this</string>
 	<key>NSCalendarsUsageDescription</key>
-	<string>Onova does not need this</string>
+	<string>Drop does not need this</string>
 	<key>NSCameraUsageDescription</key>
-	<string>Onova uses to your camera to add pictures when creating an item</string>
+	<string>Drop uses to your camera to add pictures when creating an item</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Onova uses your location to display where your item will be sold from.</string>
+	<string>Drop uses your location to display where your item will be sold from.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Onova does not need this</string>
+	<string>Drop does not need this</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Onova uses your location to display where your item will be sold from.</string>
+	<string>Drop uses your location to display where your item will be sold from.</string>
 	<key>NSMotionUsageDescription</key>
-	<string>Onova does not need this</string>
+	<string>Drop does not need this</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>Onova does not need this</string>
+	<string>Drop does not need this</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Onova uses to your photo library to add selected pictures when creating an item</string>
+	<string>Drop uses to your photo library to add selected pictures when creating an item</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
-	<string>Onova does not need this</string>
+	<string>Drop does not need this</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Ionicons.ttf</string>

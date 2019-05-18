@@ -52,7 +52,6 @@
 		ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */; };
 		BF0D5F0F5D92E1DDD467FC89 /* libPods-onova.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 367813CBC9DFD2B619081182 /* libPods-onova.a */; };
 		DD2B751496E7FB53D4DE94E5 /* libPods-onovaTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 39C0B9485E15AC1045623802 /* libPods-onovaTests.a */; };
-		E4E1826340B34F19B6DA0C95 /* libPods-onova.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 367813CBC9DFD2B619081182 /* libPods-onova.a */; };
 		F50E828497CC4DAA90B3DC55 /* libRNAnalyticsSegmentIO.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 94F7A3CDD35F4C0EB2C327AE /* libRNAnalyticsSegmentIO.a */; };
 /* End PBXBuildFile section */
 
@@ -416,7 +415,6 @@
 				6CC98770890349DA8724A4AD /* libz.tbd in Frameworks */,
 				2B9B6F07E6A843528E41E9EC /* libRNFirebase.a in Frameworks */,
 				F50E828497CC4DAA90B3DC55 /* libRNAnalyticsSegmentIO.a in Frameworks */,
-				E4E1826340B34F19B6DA0C95 /* libPods-onova.a in Frameworks */,
 				6CC6155C944D0F7D713B0753 /* libPods-drop.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

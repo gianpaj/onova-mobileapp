@@ -2,11 +2,7 @@
 import colors from '../config/colors';
 
 import React, { PureComponent } from 'react';
-import {
-  Dimensions,
-  StyleSheet,
-  View,
-} from 'react-native';
+import { Dimensions, StyleSheet, View } from 'react-native';
 import { APP_NAME } from 'react-native-dotenv';
 import { Body, Button, Left, Right } from 'native-base';
 import { TabView, TabBar } from 'react-native-tab-view';

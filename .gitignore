@@ -21,7 +21,6 @@ DerivedData
 *.ipa
 *.xcuserstate
 project.xcworkspace
-*.dSYM.zip
 
 # Android/IntelliJ
 #
@@ -42,9 +41,8 @@ buck-out/
 \.buckd/
 *.keystore
 
-# iOS pods
-ios/Pods/*
-!ios/Pods/Manifest.lock
+# CocoaPods
+/ios/Pods/
 
 # fastlane
 #

@@ -20,7 +20,8 @@
     "start-onova": "ENVFILE=.env.onova node node_modules/react-native/local-cli/cli.js start",
     "start-emulator": "cd $ANDROID_HOME/emulator && ./emulator -avd Nexus_5X_API_28 &",
     "storybook": "storybook start",
-    "test": "jest"
+    "test": "jest",
+    "postinstall": "node ./stfu.js"
   },
   "dependencies": {
     "@pusher/chatkit-client": "^1.2.2",

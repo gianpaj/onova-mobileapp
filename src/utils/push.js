@@ -1,6 +1,7 @@
 // @flow
 
-import { AsyncStorage, Platform } from 'react-native';
+import { Platform } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 import firebase from 'react-native-firebase';
 import type { Notification, NotificationOpen } from 'react-native-firebase';
 // import Instabug from 'instabug-reactnative';

@@ -10,6 +10,7 @@ import com.heanoria.library.reactnative.locationenabler.RNAndroidLocationEnabler
 import com.leo_pharma.analytics.AnalyticsPackage;
 import com.horcrux.svg.SvgPackage;
 import com.reactnativecommunity.webview.RNCWebViewPackage;
+import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
 import com.AlexanderZaytsev.RNI18n.RNI18nPackage;
 import com.reactnative.ivpusic.imagepicker.PickerPackage;
 import io.invertase.firebase.RNFirebasePackage;
@@ -43,6 +44,7 @@ public class MainApplication extends Application implements ReactApplication {
             new AnalyticsPackage(),
             new SvgPackage(),
             new RNCWebViewPackage(),
+            new AsyncStoragePackage(),
             new RNI18nPackage(),
             new PickerPackage(),
             new RNFirebasePackage(),

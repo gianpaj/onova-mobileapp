@@ -148,7 +148,7 @@ class EnterCardInfo extends Component<Props, State> {
     this._webviewRef.current.injectJavaScript(`(${script.toString()}());`);
   };
 
-  onIframeLoaded = () => this.setState({ saveBtnDisabled: false });
+  enableSaveButton = () => this.setState({ saveBtnDisabled: false });
 
   render() {
     const { showFooter, tokenForCardIFrame, saveBtnDisabled } = this.state;
@@ -194,7 +194,7 @@ class EnterCardInfo extends Component<Props, State> {
                 onMessage={this.onFinished}
                 scrollEnabled={false} // ios
                 startInLoadingState
-                onLoadEnd={this.onIframeLoaded}
+                onLoadEnd={this.enableSaveButton}
                 useWebKit // use WKWebView instead of UIWebView
               />
             </View>
@@ -210,13 +210,23 @@ class EnterCardInfo extends Component<Props, State> {
                 <Text style={styles.paragraph}>{I18n.t('get_card_id.security')}</Text>
               </View>
             )}
-            <Button
-              disabled={saveBtnDisabled}
-              full
-              style={saveBtnDisabled ? {} : { backgroundColor: colors.active }}
-              onPress={this.onSubmit}>
-              <Text style={styles.saveBtn}>{I18n.t('checkout.save_card_info')}</Text>
-            </Button>
+            <View
+              style={
+                showFooter
+                  ? {}
+                  : Platform.select({
+                      android: {},
+                      ios: { flex: 1, bottom: -20 },
+                    })
+              }>
+              <Button
+                disabled={saveBtnDisabled}
+                full
+                style={saveBtnDisabled ? {} : { backgroundColor: colors.active }}
+                onPress={this.onSubmit}>
+                <Text style={styles.saveBtn}>{I18n.t('checkout.save_card_info')}</Text>
+              </Button>
+            </View>
           </KeyboardAvoidingView>
         </View>
       </Container>

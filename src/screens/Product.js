@@ -97,20 +97,61 @@ export class ProductContainer extends React.Component<Props, State> {
     const SHARE = I18n.t('alerts.action_button_share');
 
     let BUTTONS = [REPORT, SHARE, CANCEL];
+    let BUTTONSArr = [REPORT, SHARE, CANCEL];
+
+    if (Platform.OS === 'android') {
+      BUTTONS = [
+        {
+          icon: 'md-warning',
+          iconColor: 'red',
+          text: REPORT,
+        },
+        {
+          icon: 'md-share',
+          text: SHARE,
+        },
+        {
+          icon: 'close',
+          text: CANCEL,
+        },
+      ];
+    }
 
     if (this.isMyProduct()) {
       BUTTONS = [DELETE, EDIT, SHARE, CANCEL];
+      BUTTONSArr = [DELETE, EDIT, SHARE, CANCEL];
+      if (Platform.OS === 'android') {
+        BUTTONS = [
+          {
+            icon: 'md-trash',
+            iconColor: 'red',
+            text: DELETE,
+          },
+          {
+            icon: 'md-create',
+            text: EDIT,
+          },
+          {
+            icon: 'md-share',
+            text: SHARE,
+          },
+          {
+            icon: 'md-close',
+            text: CANCEL,
+          },
+        ];
+      }
     }
 
     ActionSheet.show(
       {
         options: BUTTONS,
         destructiveButtonIndex: 0,
-        cancelButtonIndex: BUTTONS.indexOf(CANCEL),
+        cancelButtonIndex: BUTTONSArr.indexOf(CANCEL),
       },
       buttonIndex => {
         switch (buttonIndex) {
-          case BUTTONS.indexOf(REPORT):
+          case BUTTONSArr.indexOf(REPORT):
             Modal.prompt(
               I18n.t('product.alert_report_title'),
               I18n.t('alerts.report_subtitle'),
@@ -125,17 +166,17 @@ export class ProductContainer extends React.Component<Props, State> {
               ''
             );
             break;
-          case BUTTONS.indexOf(EDIT):
+          case BUTTONSArr.indexOf(EDIT):
             this.props.navigation.navigate('addOrEditProduct', {
               item: this.state.item,
             });
             break;
-          case BUTTONS.indexOf(DELETE):
+          case BUTTONSArr.indexOf(DELETE):
             ui.showConfirmAlert(I18n.t('product.alert_confirm_delete'), '', () => {
               this.deleteItem();
             });
             break;
-          case BUTTONS.indexOf(SHARE):
+          case BUTTONSArr.indexOf(SHARE):
             this.shareProduct();
             break;
           default:

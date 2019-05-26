@@ -3,7 +3,7 @@
 import React from 'react';
 import { Dimensions, Image, Modal, StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
 import ImageViewer from 'react-native-image-zoom-viewer';
-// eslint-disable-next-line
+// eslint-disable-next-line import/default
 import Swiper from 'react-native-swiper';
 import colors from '../config/colors';
 

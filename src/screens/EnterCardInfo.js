@@ -189,11 +189,13 @@ class EnterCardInfo extends Component<Props, State> {
                     </body>
                   </html>`,
                 }}
+                hideKeyboardAccessoryView
                 injectedJavaScript={`(${JStoInject.toString()}());`}
                 onMessage={this.onFinished}
                 scrollEnabled={false} // ios
                 startInLoadingState
                 onLoadEnd={this.onIframeLoaded}
+                useWebKit // use WKWebView instead of UIWebView
               />
             </View>
             {this.renderMandatory()}

@@ -74,7 +74,7 @@ PODS:
     - React/Core (= 0.59.8)
   - react-native-config (0.11.7):
     - React
-  - react-native-webview (2.14.0):
+  - react-native-webview (5.10.0):
     - React
   - React/Core (0.59.8):
     - yoga (= 0.59.8.React)
@@ -268,6 +268,6 @@ SPEC CHECKSUMS:
   SentryReactNative: 4c4ac0518ba34bb90832af4ceb8f2e9db861c1ed
   yoga: 128daf064cacaede0c3bb27424b6b4c71052e6cd
 
-PODFILE CHECKSUM: d29b90389ecd2fcfc4f51a9512e095cd6bf39a7d
+PODFILE CHECKSUM: 7e4ff8e029408cb4a83a95c5b85473e172698215
 
 COCOAPODS: 1.5.3

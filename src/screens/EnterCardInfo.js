@@ -19,23 +19,23 @@ import I18n from '../i18n';
 import colors from '../config/colors';
 
 function JStoInject() {
-  var originalPostMessage = window.postMessage;
+  // var originalpostMessage = window.postMessage;
 
-  var patchedPostMessage = function(message, targetOrigin, transfer) {
-    originalPostMessage(message, targetOrigin, transfer);
-  };
+  // var patchedPostMessage = function(message, targetOrigin, transfer) {
+  //   originalPostMessage(message, targetOrigin, transfer);
+  // };
 
-  patchedPostMessage.toString = function() {
-    return String(Object.hasOwnProperty).replace('hasOwnProperty', 'postMessage');
-  };
+  // patchedPostMessage.toString = function() {
+  //   return String(Object.hasOwnProperty).replace('hasOwnProperty', 'postMessage');
+  // };
 
-  window.postMessage = patchedPostMessage;
+  // window.postMessage = patchedPostMessage;
 
   // alert('injected');
 
   function listener(event) {
     if (event.data && event.data.name !== 'Validation') {
-      window.postMessage(JSON.stringify(event.data));
+      window.ReactNativeWebView.postMessage(JSON.stringify(event.data));
     }
   }
   window.addEventListener('message', listener, false);

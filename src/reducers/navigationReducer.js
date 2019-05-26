@@ -6,7 +6,7 @@ import { INTRO, LOGIN_SUCCESS, LOGOUT, RELOAD_SUCCESS, SIGNUP_SUCCESS } from '..
 
 import type { Action, NavigationState } from '../types/navigationReducer';
 
-const ActionForLoggedOut = NavigationStack.router.getActionForPathAndParams('signuplogin');
+const ActionForLoggedOut = NavigationStack.router.getActionForPathAndParams('introScreens');
 
 const ActionForLoggedIn = NavigationActions.reset({
   index: 0,

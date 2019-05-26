@@ -80,13 +80,13 @@ class AppNavigation extends React.PureComponent<Props, *> {
     return true;
   };
 
-  _renderLoading = (
+  _renderLoading = () => (
     <ImageBackground source={require('../assets/images/bg.png')} resizeMode="repeat" style={styles.container}>
       <ActivityIndicator size="large" color={colors.black} />
     </ImageBackground>
   );
 
-  _renderRetry = (
+  _renderRetry = () => (
     <ImageBackground source={require('../assets/images/bg.png')} resizeMode="repeat" style={styles.container}>
       {/* TODO: add a cloud icon with stricking line */}
       {/* You're not connected to the Internet */}
@@ -101,10 +101,11 @@ class AppNavigation extends React.PureComponent<Props, *> {
 
   render() {
     const { dispatch, navigationState, isLoggedIn, checkedLoggedIn } = this.props;
-    const state = isLoggedIn == true ? navigationState.stateForLoggedIn : navigationState.stateForLoggedOut;
 
-    if (this.state.canReload) return this._renderRetry;
-    if (isLoggedIn && !checkedLoggedIn) return this._renderLoading;
+    if (this.state.canReload) return this._renderRetry();
+    if (isLoggedIn && !checkedLoggedIn) return this._renderLoading();
+
+    const state = isLoggedIn == true ? navigationState.stateForLoggedIn : navigationState.stateForLoggedOut;
 
     return (
       <SafeAreaView style={{ flex: 1 }} forceInset={{ bottom: 'never' }}>

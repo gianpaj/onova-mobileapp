@@ -18,14 +18,12 @@ const initialLayout = {
   width: Dimensions.get('window').width,
 };
 
-type Props = {};
-
 type State = {
   index: number,
   routes: Array<any>,
 };
 
-class SignUpLoginContainer extends React.Component<Props, State> {
+class SignUpLoginContainer extends React.Component<{}, State> {
   state = {
     index: 0,
     routes: [

@@ -51,7 +51,7 @@ export default class MediaView extends React.Component<Props, State> {
   // singleImageHasLoaded = () => this.setState({ singleImageLoaded: true });
 
   render() {
-    const { source } = this.props;
+    const { source: images } = this.props;
     const {
       imageHeight,
       currentImageIndex,
@@ -60,8 +60,7 @@ export default class MediaView extends React.Component<Props, State> {
       // hasError,
     } = this.state;
 
-    if (source.length > 1) {
-      const images = source;
+    if (images.length > 1) {
       return (
         <View style={{ height: imageHeight + 35 }}>
           <Swiper
@@ -73,21 +72,12 @@ export default class MediaView extends React.Component<Props, State> {
             index={currentImageIndex}
             activeDotColor={colors.dkGreyBg}>
             {images.map((image, i) => (
-              <TouchableWithoutFeedback
-                key={i}
-                onPress={() => this.openModal(i)}>
-                <Image
-                  source={{ uri: image }}
-                  style={{ width, height: imageHeight }}
-                  resizeMode="contain"
-                />
+              <TouchableWithoutFeedback key={i} onPress={() => this.openModal(i)}>
+                <Image source={{ uri: image }} style={{ width, height: imageHeight }} resizeMode="contain" />
               </TouchableWithoutFeedback>
             ))}
           </Swiper>
-          <Modal
-            visible={isModalVisible}
-            transparent
-            onRequestClose={() => this.setState({ isModalVisible: false })}>
+          <Modal visible={isModalVisible} transparent onRequestClose={() => this.setState({ isModalVisible: false })}>
             <ImageViewer
               enableSwipeDown
               onCancel={() => this.setState({ isModalVisible: false })}
@@ -107,9 +97,7 @@ export default class MediaView extends React.Component<Props, State> {
 
     return (
       <>
-        <TouchableWithoutFeedback
-          style={{ borderWidth: 1 }}
-          onPress={() => this.openModal(0)}>
+        <TouchableWithoutFeedback style={{ borderWidth: 1 }} onPress={() => this.openModal(0)}>
           {/* TODO: show gray low-res thumb while loading */}
           {/* {isiOS && !singleImageLoaded && !hasError && (
               <Image
@@ -121,7 +109,7 @@ export default class MediaView extends React.Component<Props, State> {
               />
             )} */}
           <Image
-            source={{ uri: source[0] }}
+            source={{ uri: images[0] }}
             style={{ width, height: this.state.imageHeight }}
             resizeMode={'contain'}
             // onLoadEnd={this.singleImageHasLoaded}
@@ -136,7 +124,7 @@ export default class MediaView extends React.Component<Props, State> {
             enableSwipeDown
             renderIndicator={() => null}
             onCancel={() => this.setState({ isModalVisible: false })}
-            imageUrls={[{ url: source[0] }]}
+            imageUrls={[{ url: images[0] }]}
           />
         </Modal>
       </>

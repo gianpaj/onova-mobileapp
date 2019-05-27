@@ -33,6 +33,8 @@ function JStoInject() {
 
   // alert('injected');
 
+  // TODO autofocus on input field inside iframe
+
   function listener(event) {
     if (event.data && event.data.name !== 'Validation') {
       window.ReactNativeWebView.postMessage(JSON.stringify(event.data));

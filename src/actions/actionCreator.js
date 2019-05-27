@@ -2,6 +2,7 @@
 
 import { Platform } from 'react-native';
 import { Toast } from 'antd-mobile-rn';
+import { Toast as ToastNB } from 'native-base';
 import { ChatManager, TokenProvider } from '@pusher/chatkit-client/react-native';
 import { Sentry } from 'react-native-sentry';
 import Analytics from 'react-native-analytics-segment-io';
@@ -410,7 +411,12 @@ const sendToken = (pushToken: string, userData: UserData, token: string): Promis
   // hack iOS01: to allow the login to continue even though the user denied permission
   if (typeof pushToken !== 'string') return Promise.resolve();
   if (__DEV__) {
-    if (isProd) console.warn('sendToken skipped');
+    ToastNB.show({
+      text: 'sendToken skipped',
+      type: 'warning',
+    });
+    console.debug('sendToken skipped');
+
     return Promise.resolve();
   }
 

@@ -178,9 +178,13 @@ android {
     }
     buildTypes {
         release {
+            // Enables code shrinking, obfuscation, and optimization
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
             signingConfig signingConfigs.release
+            // Enables resource shrinking, which is performed by the
+            // Android Gradle plugin.
+            // shrinkResources true
         }
     }
     // applicationVariants are e.g. debug, release

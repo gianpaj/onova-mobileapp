@@ -3,16 +3,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import {
-  ActivityIndicator,
-  Dimensions,
-  FlatList,
-  Image,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { ActivityIndicator, Dimensions, FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 // import {
 //   CachedImage,
 //   ImageCacheProvider,

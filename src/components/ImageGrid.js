@@ -112,18 +112,16 @@ class ImageGridComponent extends React.PureComponent<Props, State> {
     const loader = setTimeout(() => {
       this.setState({ isLoading: true });
     }, 300);
-    const { token } = this.props;
+    const { apiURL, token } = this.props;
 
     try {
-      const { data } = await api.get(`${this.props.apiURL}&limit=${LIMIT}`, {
+      const { data } = await api.get(`${apiURL}&limit=${LIMIT}`, {
         token,
       });
       clearTimeout(loader);
       const lastItem = data[data.length - 1];
       this.setState({
         items: data,
-        isLoading: false,
-        isRefreshing: false,
         lastId: data.length ? lastItem._id : '',
         theEnd: false,
       });
@@ -132,11 +130,14 @@ class ImageGridComponent extends React.PureComponent<Props, State> {
       this.setState({
         items: [],
         hasError: true,
-        isLoading: false,
-        isRefreshing: false,
       });
       console.error(err);
       throw err;
+    } finally {
+      this.setState({
+        isLoading: false,
+        isRefreshing: false,
+      });
     }
   };
 
@@ -150,18 +151,13 @@ class ImageGridComponent extends React.PureComponent<Props, State> {
     }
 
     this.setState({ isRefreshing: true }, async () => {
-      const { token } = this.props;
+      const { apiURL, token } = this.props;
       this.reqTimer = setTimeout(async () => {
         try {
-          const { data } = await api.get(`${this.props.apiURL}&lastId=${lastId}&limit=${LIMIT}`, { token });
+          const { data } = await api.get(`${apiURL}&lastId=${lastId}&limit=${LIMIT}`, { token });
 
-          if (data.length == 0) {
-            return this.setState({
-              isRefreshing: false,
-              isLoading: false,
-              theEnd: true,
-            });
-          }
+          if (data.length === 0) return this.setState({ theEnd: true });
+
           const lastItem = data[data.length - 1];
 
           const map = items.map(i => i._id);
@@ -171,17 +167,18 @@ class ImageGridComponent extends React.PureComponent<Props, State> {
           this.setState({
             items: [...items, ...filtered],
             lastId: lastItem._id,
-            isRefreshing: false,
-            isLoading: false,
           });
         } catch (err) {
           this.setState({
             items: [],
             hasError: true,
+          });
+          console.error(err);
+        } finally {
+          this.setState({
             isRefreshing: false,
             isLoading: false,
           });
-          console.error(err);
         }
       }, 200);
     });
@@ -243,7 +240,6 @@ class ImageGridComponent extends React.PureComponent<Props, State> {
           keyExtractor={this._keyExtractor}
           ListEmptyComponent={this.renderEmptyState}
           numColumns={3}
-          // $FlowFixMe
           onRefresh={this.refresh}
           refreshing={isLoading}
           renderItem={this.renderItem}

@@ -20,6 +20,7 @@ type Props = {
 function IntroScreens(props: Props) {
   return (
     <Onboarding
+      controlStatusBar={false}
       skipLabel={I18n.t('intro.skip')}
       nextLabel={I18n.t('intro.next')}
       onSkip={() => props.dispatch(logout())}

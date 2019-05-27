@@ -18,6 +18,8 @@ target 'onova' do
     'RCTNetwork',
     'RCTWebSocket', # Needed for debugging
     'RCTAnimation', # Needed for FlatList and animations running on native UI thread
+    'RCTSettings', # A wrapper for NSUserDefaults, a persistent key-value store available only on iOS.
+    'RCTLinkingIOS',
     # Add any other subspecs you want to use in your project
   ]
 

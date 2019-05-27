@@ -111,7 +111,11 @@ PODS:
   - React/RCTImage (0.59.8):
     - React/Core
     - React/RCTNetwork
+  - React/RCTLinkingIOS (0.59.8):
+    - React/Core
   - React/RCTNetwork (0.59.8):
+    - React/Core
+  - React/RCTSettings (0.59.8):
     - React/Core
   - React/RCTText (0.59.8):
     - React/Core
@@ -164,7 +168,9 @@ DEPENDENCIES:
   - React/DevSupport (from `../node_modules/react-native`)
   - React/RCTAnimation (from `../node_modules/react-native`)
   - React/RCTImage (from `../node_modules/react-native`)
+  - React/RCTLinkingIOS (from `../node_modules/react-native`)
   - React/RCTNetwork (from `../node_modules/react-native`)
+  - React/RCTSettings (from `../node_modules/react-native`)
   - React/RCTText (from `../node_modules/react-native`)
   - React/RCTWebSocket (from `../node_modules/react-native`)
   - ReactNativePermissions (from `../node_modules/react-native-permissions`)
@@ -268,6 +274,6 @@ SPEC CHECKSUMS:
   SentryReactNative: 4c4ac0518ba34bb90832af4ceb8f2e9db861c1ed
   yoga: 128daf064cacaede0c3bb27424b6b4c71052e6cd
 
-PODFILE CHECKSUM: 7e4ff8e029408cb4a83a95c5b85473e172698215
+PODFILE CHECKSUM: 314a50e28c3d01ddbb51ba2a74283d3edd141c61
 
 COCOAPODS: 1.5.3

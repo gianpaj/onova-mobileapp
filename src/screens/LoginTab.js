@@ -366,6 +366,7 @@ export class LoginTabContainer extends React.Component<Props, State> {
 
           <FormInput
             ref={this.PwdReset}
+            accessibilityLabel="email address"
             autoCapitalize="none"
             autoCorrect={false}
             autoFocus
@@ -374,6 +375,7 @@ export class LoginTabContainer extends React.Component<Props, State> {
             containerStyle={{ margin: 10 }}
             inputStyle={styles.input}
             keyboardType="email-address"
+            textContentType="emailAddress"
             onBlur={this._onBlurEmailReset}
             onChangeText={t => this.setState({ emailReset: t })}
             onFocus={this._onFocusEmailReset}

@@ -18,22 +18,24 @@ type Props = {
 };
 
 type State = {
-  isLoading: boolean,
-  terms?: any,
+  terms: {
+    grp_1: number,
+    grp_2: number,
+    tag: String,
+  },
 };
 
 class SearchProductsResultsContainer extends Component<Props, State> {
   state = {
-    isLoading: true,
+    terms: null,
   };
-
   componentDidMount() {
     const { params } = this.props.navigation.state;
     let terms;
 
     // for development
     if (!params) {
-      // find shoes
+      // find clothes
       terms = { grp_1: 0, grp_2: -1, tag: '' };
     } else {
       terms = params;
@@ -50,8 +52,8 @@ class SearchProductsResultsContainer extends Component<Props, State> {
     category_radio_grp_2.find(g => g.value == num).label;
 
   render() {
-    if (!this.state.terms) return null;
     const { terms } = this.state;
+    if (!terms) return null;
 
     return (
       <View style={styles.flex1}>

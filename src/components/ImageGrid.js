@@ -3,16 +3,16 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { ActivityIndicator, Dimensions, Image, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import type { Node } from 'react';
+import { ActivityIndicator, Dimensions, FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 // import {
 //   CachedImage,
 //   ImageCacheProvider,
 //   ImageCacheManager,
 // } from 'react-native-cached-image';
-import { NavigationActions } from 'react-navigation';
 import { Button } from 'native-base';
+import { NavigationActions } from 'react-navigation';
 
+import type { Node } from 'react';
 import type { NavigationScreenProp } from 'react-navigation';
 import type { Dispatch } from '../types';
 
@@ -47,7 +47,6 @@ type Props = {
 };
 
 type State = {
-  // itemHeight: number,
   hasError: boolean,
   initializing: boolean,
   isLoading: boolean,
@@ -63,7 +62,6 @@ class ImageGridComponent extends React.PureComponent<Props, State> {
   didFocusListener;
   reqTimer = 0;
   state = {
-    // itemHeight: 0,
     hasError: false,
     initializing: true,
     isLoading: false,
@@ -118,7 +116,6 @@ class ImageGridComponent extends React.PureComponent<Props, State> {
       const { data } = await api.get(`${apiURL}&limit=${LIMIT}`, {
         token,
       });
-      clearTimeout(loader);
       const lastItem = data[data.length - 1];
       this.setState({
         items: data,
@@ -126,7 +123,6 @@ class ImageGridComponent extends React.PureComponent<Props, State> {
         theEnd: false,
       });
     } catch (err) {
-      clearTimeout(loader);
       this.setState({
         items: [],
         hasError: true,
@@ -134,6 +130,7 @@ class ImageGridComponent extends React.PureComponent<Props, State> {
       console.error(err);
       throw err;
     } finally {
+      clearTimeout(loader);
       this.setState({
         isLoading: false,
         isRefreshing: false,

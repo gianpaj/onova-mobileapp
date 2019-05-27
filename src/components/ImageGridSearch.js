@@ -39,7 +39,6 @@ type State = {
   initializing: boolean,
   isLoading: boolean,
   isRefreshing: boolean,
-  itemHeight: number,
   items: Array<any>,
   lastId: string,
   theEnd: boolean,
@@ -48,14 +47,13 @@ type State = {
 const { width, height } = Dimensions.get('window');
 
 class ImageGridSearchComponent extends React.Component<Props, State> {
-  reqTimer: ?TimeoutID;
+  reqTimer = 0;
 
   state = {
     hasError: false,
     initializing: true,
     isLoading: false,
     isRefreshing: false,
-    itemHeight: 0,
     items: [],
     lastId: '',
     theEnd: false,
@@ -73,46 +71,44 @@ class ImageGridSearchComponent extends React.Component<Props, State> {
   /**
    * used when pulling and refreshing AND when initially
    */
-  fetchItems = (): Promise<any> => {
-    const { tag, grp_1, grp_2 } = this.props.terms;
-    this.setState({ isLoading: true });
-    const { token } = this.props;
+  fetchItems = async () => {
+    const loader = setTimeout(() => {
+      this.setState({ isLoading: true });
+    }, 300);
+    const { token, terms } = this.props;
+    const { tag, grp_1, grp_2 } = terms;
     const tagQuery = tag == '' ? '' : `tag=${tag}`;
     const categoryQuery = grp_1 == -1 ? '' : `&categoryIds=${grp_1}`;
     const typeQuery = grp_2 == -1 ? '' : `&typeIds=${grp_2}`;
 
-    return api
-      .get(
-        `/api/search/?${tagQuery}${categoryQuery}${typeQuery}&limit=${LIMIT}`,
-        {
-          token,
-        }
-      )
-      .then(({ data }) => {
-        const lastItem = data[data.length - 1];
-        this.setState({
-          isLoading: false,
-          isRefreshing: false,
-          items: data,
-          lastId: data.length ? lastItem._id : '',
-          theEnd: false,
-        });
-      })
-      .catch(e => {
-        // if the hashtag is incorrect format (e.g #111)
-        if (e.message.indexOf('fails to match the required pattern') > -1) {
-          return this.setState({
-            isLoading: false,
-            isRefreshing: false,
-          });
-        }
-        this.setState({
-          hasError: true,
-          isLoading: false,
-          isRefreshing: false,
-        });
-        console.error(e);
+    try {
+      const { data } = await api.get(`/api/search/?${tagQuery}${categoryQuery}${typeQuery}&limit=${LIMIT}`, {
+        token,
       });
+      const lastItem = data[data.length - 1];
+      this.setState({
+        items: data,
+        lastId: data.length ? lastItem._id : '',
+        theEnd: false,
+      });
+    } catch (err) {
+      // if the hashtag is incorrect format (e.g #111)
+      if (err.message.indexOf('fails to match the required pattern') > -1) {
+        return;
+      }
+      this.setState({
+        items: [],
+        hasError: true,
+      });
+      console.error(err);
+      throw err;
+    } finally {
+      clearTimeout(loader);
+      this.setState({
+        isLoading: false,
+        isRefreshing: false,
+      });
+    }
   };
 
   loadMore = () => {
@@ -137,13 +133,8 @@ class ImageGridSearchComponent extends React.Component<Props, State> {
             { token }
           );
 
-          if (data.length == 0) {
-            return this.setState({
-              isRefreshing: false,
-              isLoading: false,
-              theEnd: true,
-            });
-          }
+          if (data.length === 0) return this.setState({ theEnd: true });
+
           const lastItem = data[data.length - 1];
 
           const map = items.map(i => i._id);
@@ -153,16 +144,18 @@ class ImageGridSearchComponent extends React.Component<Props, State> {
           this.setState({
             items: [...items, ...filtered],
             lastId: lastItem._id,
-            isRefreshing: false,
-            isLoading: false,
           });
         } catch (err) {
           this.setState({
+            items: [],
             hasError: true,
+          });
+          console.error(err);
+        } finally {
+          this.setState({
             isRefreshing: false,
             isLoading: false,
           });
-          console.error(err);
         }
       }, 200);
     });
@@ -171,7 +164,7 @@ class ImageGridSearchComponent extends React.Component<Props, State> {
   // onLayout = () => this.setState({ itemHeight: width / 3 });
 
   getItemLayout = (data: any, index: number) => {
-    const { itemHeight } = this.state;
+    const itemHeight = width / 3;
     return { length: itemHeight, offset: itemHeight * index, index };
   };
 
@@ -182,17 +175,14 @@ class ImageGridSearchComponent extends React.Component<Props, State> {
       params: item,
     });
 
-    if (this.props.navigation)
-      this.props.navigation.dispatch(navigateToProduct);
+    if (this.props.navigation) this.props.navigation.dispatch(navigateToProduct);
   }
 
   renderItem = ({ item }: any) => {
     const uri = item.photoURIs[0].replace('.jpg', '-thumb.jpg');
     return (
       <View style={styles.imageContainer} key={item.uuid}>
-        <TouchableOpacity
-          style={{ flex: 1 }}
-          onPress={() => this.onItemPress(item)}>
+        <TouchableOpacity style={{ flex: 1 }} onPress={() => this.onItemPress(item)}>
           {/* <ImageCacheProvider
             numberOfConcurrentPreloads={3}
             ttl={TTL} // num of seconds to cache the image url for
@@ -225,7 +215,7 @@ class ImageGridSearchComponent extends React.Component<Props, State> {
           columnWrapperStyle={[styles.columnWrapper, { height: width / 3 }]}
           data={items}
           getItemLayout={this.getItemLayout}
-          initialNumToRender={12}
+          initialNumToRender={6}
           keyExtractor={this._keyExtractor}
           ListEmptyComponent={this.renderEmptyState}
           numColumns={3}
@@ -238,6 +228,7 @@ class ImageGridSearchComponent extends React.Component<Props, State> {
           windowSize={6}
           onEndReached={this.loadMore}
           onEndReachedThreshold={0.1}
+          horizontal={false}
         />
       </View>
     );
@@ -264,12 +255,8 @@ class ImageGridSearchComponent extends React.Component<Props, State> {
           color={colors.grey2}
           style={{ alignSelf: 'center', marginBottom: 30 }}
         />
-        <Text style={styles.boldText}>
-          {I18n.t('image_grid_search.empty_state_title')}
-        </Text>
-        <Text style={styles.centerText}>
-          {I18n.t('image_grid_search.empty_state_body')}
-        </Text>
+        <Text style={styles.boldText}>{I18n.t('image_grid_search.empty_state_title')}</Text>
+        <Text style={styles.centerText}>{I18n.t('image_grid_search.empty_state_body')}</Text>
       </View>
     );
   };

@@ -66,12 +66,16 @@ class EnterCardInfo extends Component<Props, State> {
     tokenForCardIFrame: '',
   };
 
-  async componentDidMount() {
+  componentDidMount() {
+    this.initializeListeners();
+    this.getToken().then(token => console.log(token));
+  }
+
+  async getToken() {
     const { params } = this.props.navigation.state;
     const tokenForCardIFrame = await this.generateTokenForIFrame(params && params.short);
-    console.log(tokenForCardIFrame);
     this.setState({ tokenForCardIFrame });
-    this.initializeListeners();
+    return tokenForCardIFrame;
   }
 
   componentWillUnmount() {
@@ -98,7 +102,6 @@ class EnterCardInfo extends Component<Props, State> {
     const { params } = navigation.state;
     try {
       const data = JSON.parse(nativeEvent.data);
-      // TODO: if TIMEOUT_ERROR reload
       if (data.name !== 'Success') throw Error(data.code);
 
       await api.put(
@@ -113,6 +116,12 @@ class EnterCardInfo extends Component<Props, State> {
       // return to previous screen (Settings or Checkout)
       this.props.navigation.goBack();
     } catch (error) {
+      if (error.message === 'TIMELIMIT_ERROR') {
+        ui.showToast('Reloading', 'warning');
+        this.getToken();
+        this._webviewRef.current.reload();
+        return;
+      }
       ui.showToast(error.message, 'danger');
       console.error(JSON.stringify(error));
     }

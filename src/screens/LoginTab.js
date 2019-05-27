@@ -2,15 +2,7 @@
 
 import React from 'react';
 import { connect } from 'react-redux';
-import {
-  // Animated,
-  Modal,
-  Platform,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { Modal, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { FormInput } from 'react-native-elements';
 import { Button as NBButton, Content, Right, Left, Body, Icon as NBIcon } from 'native-base';
 import isEmail from 'validator/lib/isEmail';

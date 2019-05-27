@@ -11,12 +11,12 @@ const X_WIDTH = 375;
 const X_HEIGHT = 812;
 const XSMAX_WIDTH = 414;
 const XSMAX_HEIGHT = 896;
-const PAD_WIDTH = 768;
+// const PAD_WIDTH = 768;
 // const PAD_HEIGHT = 1024;
-const IPADPRO11_WIDTH = 834;
-const IPADPRO11_HEIGHT = 1194;
-const IPADPRO129_HEIGHT = 1024;
-const IPADPRO129_WIDTH = 1366;
+// const IPADPRO11_WIDTH = 834;
+// const IPADPRO11_HEIGHT = 1194;
+// const IPADPRO129_HEIGHT = 1024;
+// const IPADPRO129_WIDTH = 1366;
 
 const { height: D_HEIGHT, width: D_WIDTH } = Dimensions.get('window');
 
@@ -33,32 +33,32 @@ const isIPhoneX = (() => {
   );
 })();
 
-const isNewIPadPro = (() => {
-  if (Platform.OS !== 'ios') return false;
+// const isNewIPadPro = (() => {
+//   if (Platform.OS !== 'ios') return false;
 
-  return (
-    (D_HEIGHT === IPADPRO11_HEIGHT && D_WIDTH === IPADPRO11_WIDTH) ||
-    (D_HEIGHT === IPADPRO11_WIDTH && D_WIDTH === IPADPRO11_HEIGHT) ||
-    ((D_HEIGHT === IPADPRO129_HEIGHT && D_WIDTH === IPADPRO129_WIDTH) ||
-      (D_HEIGHT === IPADPRO129_WIDTH && D_WIDTH === IPADPRO129_HEIGHT))
-  );
-})();
+//   return (
+//     (D_HEIGHT === IPADPRO11_HEIGHT && D_WIDTH === IPADPRO11_WIDTH) ||
+//     (D_HEIGHT === IPADPRO11_WIDTH && D_WIDTH === IPADPRO11_HEIGHT) ||
+//     ((D_HEIGHT === IPADPRO129_HEIGHT && D_WIDTH === IPADPRO129_WIDTH) ||
+//       (D_HEIGHT === IPADPRO129_WIDTH && D_WIDTH === IPADPRO129_HEIGHT))
+//   );
+// })();
 
-const isIPad = (() => {
-  if (Platform.OS !== 'ios' || isIPhoneX) return false;
+// const isIPad = (() => {
+//   if (Platform.OS !== 'ios' || isIPhoneX) return false;
 
-  // if portrait and width is smaller than iPad width
-  if (D_HEIGHT > D_WIDTH && D_WIDTH < PAD_WIDTH) {
-    return false;
-  }
+//   // if portrait and width is smaller than iPad width
+//   if (D_HEIGHT > D_WIDTH && D_WIDTH < PAD_WIDTH) {
+//     return false;
+//   }
 
-  // if landscape and height is smaller that iPad height
-  if (D_WIDTH > D_HEIGHT && D_HEIGHT < PAD_WIDTH) {
-    return false;
-  }
+//   // if landscape and height is smaller that iPad height
+//   if (D_WIDTH > D_HEIGHT && D_HEIGHT < PAD_WIDTH) {
+//     return false;
+//   }
 
-  return true;
-})();
+//   return true;
+// })();
 
 let _customStatusBarHeight = null;
 const statusBarHeight = isLandscape => {
@@ -83,13 +83,13 @@ const statusBarHeight = isLandscape => {
     return isLandscape ? 0 : 44;
   }
 
-  if (isNewIPadPro) {
-    return 24;
-  }
+  // if (isNewIPadPro) {
+  //   return 24;
+  // }
 
-  if (isIPad) {
-    return 20;
-  }
+  // if (isIPad) {
+  //   return 20;
+  // }
 
   // return isLandscape ? 0 : 20;
   return 0;
@@ -330,9 +330,9 @@ class SafeView extends Component {
           return isLandscape ? 24 : 34;
         }
 
-        if (isNewIPadPro) {
-          return 20;
-        }
+        // if (isNewIPadPro) {
+        //   return 20;
+        // }
 
         return 0;
       }

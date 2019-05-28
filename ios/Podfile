@@ -44,6 +44,7 @@ target 'onova' do
   pod 'GoogleAppMeasurement', '~> 5.3.0'
   pod 'react-native-config', :path => '../node_modules/react-native-config'
   pod 'RNCAsyncStorage', :path => '../node_modules/@react-native-community/async-storage'
+  pod 'react-native-fast-image', :path => '../node_modules/react-native-fast-image'
   # segment.com
   pod 'Analytics', '~> 3.6.10'
   # Device-based integration
@@ -98,6 +99,7 @@ target 'drop' do
   pod 'GoogleAppMeasurement', '~> 5.3.0'
   pod 'react-native-config', :path => '../node_modules/react-native-config'
   pod 'RNCAsyncStorage', :path => '../node_modules/@react-native-community/async-storage'
+  pod 'react-native-fast-image', :path => '../node_modules/react-native-fast-image'
   # segment.com
   pod 'Analytics', '~> 3.6.10'
   # Device-based integration

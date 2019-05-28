@@ -267,9 +267,9 @@ export class ProductContainer extends React.Component<Props, State> {
     // for development
     if (!params) {
       // local
-      uuid = 'SJewilLU8z';
-      // // prod
-      // uuid = 'ry1yDIj6G';
+      // uuid = 'SJewilLU8z';
+      // prod
+      uuid = 'SBLQo57m6';
     } else {
       uuid = params.uuid;
     }

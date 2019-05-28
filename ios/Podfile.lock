@@ -107,6 +107,8 @@ PODS:
     - React/cxxreact
     - React/jsi
   - React/jsinspector (0.59.8)
+  - React/RCTActionSheet (0.59.8):
+    - React/Core
   - React/RCTAnimation (0.59.8):
     - React/Core
   - React/RCTBlob (0.59.8):
@@ -173,6 +175,7 @@ DEPENDENCIES:
   - React/Core (from `../node_modules/react-native`)
   - React/CxxBridge (from `../node_modules/react-native`)
   - React/DevSupport (from `../node_modules/react-native`)
+  - React/RCTActionSheet (from `../node_modules/react-native`)
   - React/RCTAnimation (from `../node_modules/react-native`)
   - React/RCTImage (from `../node_modules/react-native`)
   - React/RCTLinkingIOS (from `../node_modules/react-native`)
@@ -286,6 +289,6 @@ SPEC CHECKSUMS:
   SentryReactNative: 4c4ac0518ba34bb90832af4ceb8f2e9db861c1ed
   yoga: 128daf064cacaede0c3bb27424b6b4c71052e6cd
 
-PODFILE CHECKSUM: afa9d6420e86eabde0f9374be5d35514fa96ff35
+PODFILE CHECKSUM: 0dfdf27e7129225217347fb768fefebecaa2919d
 
 COCOAPODS: 1.5.3

@@ -28,4 +28,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Info;
+export default React.memo(Info);

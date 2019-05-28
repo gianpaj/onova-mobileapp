@@ -8,4 +8,4 @@ const HeaderContainer = (props: any): React$Element<any> => (
   <Header androidStatusBarColor={colors.primary} style={{ backgroundColor: colors.bgDefault }} {...props} />
 );
 
-export default HeaderContainer;
+export default React.memo(HeaderContainer);

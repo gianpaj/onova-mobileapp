@@ -12,31 +12,27 @@ type Props = {
   userData: any,
 };
 
-class NotificationsDot extends React.Component<Props> {
-  render() {
-    const { userData, focused } = this.props;
+function NotificationsDot({ userData, focused }: Props) {
+  if (!userData) return null;
 
-    if (!userData) return null;
-
-    return (
-      <Avatar
-        style={styles.avatarContainer}
-        size="verySmall"
-        withBorder={focused}
-        uri={userData.profilePic}
-        placeholderText={userData.username}
-      />
-    );
-    // <View style={st.iconContainer}>
-    /* {userData.notifications && <View style={st.dot} />} */
-    /* https://docs.nativebase.io/Components.html#footer-tabs-badge-headref */
-    /* <Button active badge vertical>
-        <Badge ><Text>51</Text></Badge>
-        <Icon active name="navigate" />
-        <Text>Navigate</Text>
-      </Button> */
-    // </View>
-  }
+  return (
+    <Avatar
+      style={styles.avatarContainer}
+      size="verySmall"
+      withBorder={focused}
+      uri={userData.profilePic}
+      placeholderText={userData.username}
+    />
+  );
+  // <View style={st.iconContainer}>
+  /* {userData.notifications && <View style={st.dot} />} */
+  /* https://docs.nativebase.io/Components.html#footer-tabs-badge-headref */
+  /* <Button active badge vertical>
+      <Badge ><Text>51</Text></Badge>
+      <Icon active name="navigate" />
+      <Text>Navigate</Text>
+    </Button> */
+  // </View>
 }
 
 const styles = StyleSheet.create({
@@ -71,4 +67,4 @@ const mapStateToProps: any = (state: ReduxState) => ({
   userData: state.LoginReducer.data,
 });
 
-export default connect(mapStateToProps)(NotificationsDot);
+export default connect(mapStateToProps)(React.memo(NotificationsDot));

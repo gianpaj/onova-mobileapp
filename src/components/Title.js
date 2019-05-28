@@ -31,4 +31,4 @@ TitleContainer.defaultProps = {
   withIcon: false,
 };
 
-export default TitleContainer;
+export default React.memo(TitleContainer);

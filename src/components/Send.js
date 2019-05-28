@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, ViewPropTypes } from 'react-native';
 
-export default function Send({
+function Send({
   text,
   containerStyle,
   onSend,
@@ -32,6 +32,8 @@ export default function Send({
     </TouchableOpacity>
   );
 }
+
+export default React.memo(Send);
 
 const styles = StyleSheet.create({
   container: {

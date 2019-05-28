@@ -12,11 +12,7 @@ type Props = {
 
 const HR = (props: Props): React$Element<any> => (
   <View
-    style={[
-      styles.hr,
-      props.color && { borderColor: props.color },
-      { width: `${props.full ? '100%' : '89.5%'}` },
-    ]}
+    style={[styles.hr, props.color && { borderColor: props.color }, { width: `${props.full ? '100%' : '89.5%'}` }]}
   />
 );
 
@@ -33,4 +29,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HR;
+export default React.memo(HR);

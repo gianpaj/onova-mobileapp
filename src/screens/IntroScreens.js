@@ -59,4 +59,4 @@ function IntroScreens(props: Props) {
   );
 }
 
-export default connect()(IntroScreens);
+export default connect()(React.memo(IntroScreens));

@@ -230,7 +230,7 @@ RadioButtonInput.defaultProps = {
   disabled: false,
 };
 
-function RadioButtonLabel(props) {
+function RadioButtonLabelComponent(props) {
   return (
     <TouchableWithoutFeedback
       accessible={props.accessible}
@@ -256,11 +256,14 @@ function RadioButtonLabel(props) {
   );
 }
 
+const RadioButtonLabel = React.memo(RadioButtonLabelComponent);
+
 const Style = StyleSheet.create({
   radioWrap: {
     flexDirection: 'row',
     marginBottom: 5,
   },
+  // eslint-disable-next-line react-native/no-color-literals
   radio: {
     justifyContent: 'center',
     alignItems: 'center',
@@ -283,6 +286,7 @@ const Style = StyleSheet.create({
     borderRadius: 10,
   },
 
+  // eslint-disable-next-line react-native/no-color-literals
   radioActive: {
     width: 20,
     height: 20,

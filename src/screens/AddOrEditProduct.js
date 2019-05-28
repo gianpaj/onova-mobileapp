@@ -27,8 +27,8 @@ const { width } = Dimensions.get('window');
 
 const brands = require('../assets/brands.json');
 
-const MIN_WIDTH = 1440;
-const MIN_HEIGHT = 1440;
+const MIN_WIDTH = 1000;
+const MIN_HEIGHT = 1000;
 const IMAGE_WIDTH = 2560;
 const IMAGE_HEIGHT = 2560;
 const MAX_IMAGES = 6;

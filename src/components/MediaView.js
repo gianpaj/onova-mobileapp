@@ -7,6 +7,7 @@ import Modal from 'react-native-modal';
 // eslint-disable-next-line import/default
 import Swiper from 'react-native-swiper';
 import FastImage from 'react-native-fast-image';
+
 import colors from '../config/colors';
 
 const { width } = Dimensions.get('window');
@@ -73,9 +74,11 @@ export default class MediaView extends React.Component<Props, State> {
       // hasError,
     } = this.state;
 
+    const thumb = images[0].replace('.jpg', '-thumb.jpg');
+
     if (images.length > 1) {
       return (
-        <View style={{ height: imageHeight + 35 }}>
+        <View style={{ height: (loaded ? imageHeight : width) + 35 }}>
           <Swiper
             ref={this._swiper}
             autoplay={false}
@@ -87,15 +90,28 @@ export default class MediaView extends React.Component<Props, State> {
             {images.map((image, i) => (
               <TouchableWithoutFeedback key={i} onPress={() => this.openModal(i)}>
                 {/* <Image source={{ uri: image }} style={{ width, height: imageHeight }} resizeMode="contain" /> */}
-                <FastImage
-                  style={{ width, height: imageHeight }}
-                  source={{
-                    uri: image,
-                    priority: i === 0 ? FastImage.priority.high : FastImage.priority.low,
-                  }}
-                  resizeMode={FastImage.resizeMode.contain}
-                  onLoad={e => i === 0 && this.onLoad(e)}
-                />
+                <View>
+                  {!loaded && i === 0 && (
+                    <FastImage
+                      style={{ width, height: width }}
+                      source={{
+                        uri: thumb,
+                        cache: FastImage.cacheControl.cacheOnly, // FIXME:
+                      }}
+                      resizeMode={FastImage.resizeMode.contain}
+                    />
+                  )}
+                  <FastImage
+                    style={{ width, height: imageHeight }}
+                    source={{
+                      uri: image,
+                      priority: i === 0 ? FastImage.priority.high : FastImage.priority.low,
+                    }}
+                    resizeMode={FastImage.resizeMode.contain}
+                    onLoadEnd={this.handleImgLoaded}
+                    onLoad={this.onLoad}
+                  />
+                </View>
               </TouchableWithoutFeedback>
             ))}
           </Swiper>
@@ -133,16 +149,17 @@ export default class MediaView extends React.Component<Props, State> {
       );
     }
 
-    const thumb = images[0].replace('.jpg', '-thumb.jpg');
-
     return (
       <>
-        <TouchableWithoutFeedback style={{ borderWidth: 1 }} onPress={() => this.openModal(0)}>
+        <TouchableWithoutFeedback onPress={() => this.openModal(0)}>
           <View>
             {!loaded && (
               <FastImage
                 style={{ width, height: width }}
-                source={{ uri: thumb }}
+                source={{
+                  uri: thumb,
+                  cache: FastImage.cacheControl.cacheOnly, // FIXME:
+                }}
                 // resizeMode={FastImage.resizeMode.cover}
               />
             )}

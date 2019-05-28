@@ -39,7 +39,6 @@ const { width, height } = Dimensions.get('window');
 
 class UserDropsGridComponent extends React.PureComponent<Props, State> {
   didFocusListener;
-  reqTimer = 0;
   firstFocus = true;
   state = {
     hasError: false,

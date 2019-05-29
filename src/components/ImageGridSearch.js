@@ -3,12 +3,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { ActivityIndicator, Dimensions, FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-// import {
-//   CachedImage,
-//   ImageCacheProvider,
-//   // ImageCacheManager,
-// } from 'react-native-cached-image'
+import { ActivityIndicator, Dimensions, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { NavigationActions } from 'react-navigation';
 
@@ -181,19 +177,14 @@ class ImageGridSearchComponent extends React.Component<Props, State> {
   renderItem = ({ item }: any) => {
     const uri = item.photoURIs[0].replace('.jpg', '-thumb.jpg');
     return (
-      <View style={styles.imageContainer} key={item.uuid}>
-        <TouchableOpacity style={{ flex: 1 }} onPress={() => this.onItemPress(item)}>
-          {/* <ImageCacheProvider
-            numberOfConcurrentPreloads={3}
-            ttl={TTL} // num of seconds to cache the image url for
-            defaultSource={isLoading}
-            // urlsToPreload={this.state.images}
-          >
-            <CachedImage style={styles.image} source={{ uri }} />
-          </ImageCacheProvider> */}
-          <Image style={styles.image} source={{ uri }} />
-        </TouchableOpacity>
-      </View>
+      <TouchableOpacity style={styles.imageContainer} key={item.uuid} onPress={() => this.onItemPress(item)}>
+        {/* <Image style={styles.image} source={{ uri }} /> */}
+        <FastImage
+          style={styles.image}
+          source={{ uri }}
+          // resizeMode={FastImage.resizeMode.contain}
+        />
+      </TouchableOpacity>
     );
   };
 

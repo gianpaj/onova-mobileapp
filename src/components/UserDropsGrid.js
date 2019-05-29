@@ -3,7 +3,8 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 
-import { ActivityIndicator, Dimensions, Image, FlatList, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Dimensions, FlatList, StyleSheet, Text, View } from 'react-native';
+import FastImage from 'react-native-fast-image';
 
 import type { NavigationScreenProp } from 'react-navigation';
 
@@ -139,7 +140,11 @@ class UserDropsGridComponent extends React.PureComponent<Props, State> {
     const uri = item.photoURIs[0].replace('.jpg', '-thumb.jpg');
     return (
       <View style={styles.imageContainer} key={item._id}>
-        <Image style={styles.image} source={{ uri }} />
+        <FastImage
+          style={styles.image}
+          source={{ uri }}
+          // resizeMode={FastImage.resizeMode.contain}
+        />
       </View>
     );
   };

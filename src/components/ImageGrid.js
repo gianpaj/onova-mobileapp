@@ -3,12 +3,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { ActivityIndicator, Dimensions, FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-// import {
-//   CachedImage,
-//   ImageCacheProvider,
-//   ImageCacheManager,
-// } from 'react-native-cached-image';
+import { ActivityIndicator, Dimensions, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import { Button } from 'native-base';
 import { NavigationActions } from 'react-navigation';
 
@@ -199,9 +195,8 @@ class ImageGridComponent extends React.PureComponent<Props, State> {
   renderItem = ({ item }: any) => {
     const uri = item.photoURIs[0].replace('.jpg', '-thumb.jpg');
     return (
-      <View style={styles.imageContainer} key={item.uuid}>
-        <TouchableOpacity style={{ flex: 1 }} onPress={() => this.onItemPress(item)}>
-          {/* <ImageCacheProvider
+      <TouchableOpacity style={styles.imageContainer} key={item.uuid} onPress={() => this.onItemPress(item)}>
+        {/* <ImageCacheProvider
             numberOfConcurrentPreloads={3}
             ttl={TTL} // num of seconds to cache the image url for
             defaultSource={isLoading}
@@ -209,9 +204,12 @@ class ImageGridComponent extends React.PureComponent<Props, State> {
           >
             <CachedImage style={styles.image} source={{ uri }} />
           </ImageCacheProvider> */}
-          <Image style={styles.image} source={{ uri }} />
-        </TouchableOpacity>
-      </View>
+        <FastImage
+          style={styles.image}
+          source={{ uri }}
+          // resizeMode={FastImage.resizeMode.contain}
+        />
+      </TouchableOpacity>
     );
   };
 

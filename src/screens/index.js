@@ -9,7 +9,7 @@ import { CreateDrop } from '../screens/CreateDrop';
 import { ConfirmOrder } from '../screens/ConfirmOrder';
 import DropsFeed from '../screens/DropsFeed';
 import { Home } from '../screens/Home';
-import IntroScreens from '../screens/IntroScreens';
+// import IntroScreens from '../screens/IntroScreens';
 import { Followers } from '../screens/Followers';
 import { Following } from '../screens/Following';
 // import { Suggestions } from '../screens/Suggestions';
@@ -38,7 +38,7 @@ export {
   Following,
   EnterCardInfo,
   Home,
-  IntroScreens,
+  // IntroScreens,
   Notifications,
   MarkdownDoc,
   PaymentView,

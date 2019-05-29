@@ -4,7 +4,7 @@ import {
   GETUSER_FAIL,
   GETUSER_PENDING,
   GETUSER_SUCCESS,
-  INTRO,
+  // INTRO,
   LOGIN_FAIL,
   LOGIN_PENDING,
   LOGIN_SUCCESS,
@@ -112,13 +112,13 @@ export default function(state: LoginState = initialState, action: Action): Login
         checkedLoggedIn: false,
       };
 
-    case INTRO:
-      return {
-        ...state,
-        hasError: true,
-        loading: false,
-        isVerifyAccountModalVisible: false,
-      };
+    // case INTRO:
+    //   return {
+    //     ...state,
+    //     hasError: true,
+    //     loading: false,
+    //     isVerifyAccountModalVisible: false,
+    //   };
 
     // case GOOGLE_LOGIN_PENDING:
     //   return {

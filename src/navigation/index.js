@@ -65,10 +65,10 @@ class AppNavigation extends React.PureComponent<Props, *> {
         addAuthBreadcrumb({ data: e });
         console.debug(e);
       });
-    } else {
-      addAuthBreadcrumb({ message: 'not logged in' });
-      dispatch(intro());
+      return;
     }
+    addAuthBreadcrumb({ message: 'not logged in' });
+    dispatch(intro());
   };
 
   componentWillUnmount() {

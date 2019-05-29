@@ -15,7 +15,7 @@ import {
   Followers,
   Following,
   EnterCardInfo,
-  IntroScreens,
+  // IntroScreens,
   Notifications,
   MarkdownDoc,
   PaymentView,
@@ -36,7 +36,7 @@ const StackNav = StackNavigator(
     signuplogin: {
       screen: SignUpLogin,
     },
-    introScreens: { screen: IntroScreens },
+    // introScreens: { screen: IntroScreens },
     product: {
       screen: Product,
       path: 'product/:productUUID',

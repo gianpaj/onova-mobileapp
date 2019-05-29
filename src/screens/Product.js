@@ -66,13 +66,22 @@ export class ProductContainer extends React.Component<Props, State> {
 
   state = {
     item: null,
-    loading: true,
+    loading: false,
     loadingBuy: false,
     // likeAnimValue: new Animated.Value(0.35),
   };
 
   componentDidMount() {
-    this.refresh().then(() => this.setState({ loading: false }));
+    this.reqTimer = setTimeout(() => {
+      this.setState({ loading: true });
+    }, 1000);
+
+    this.refresh().then(() => {
+      if (this.reqTimer) {
+        clearTimeout(this.reqTimer);
+      }
+      this.setState({ loading: false });
+    });
 
     this.didFocusListener = this.props.navigation.addListener('didFocus', () => {
       if (this.props.shouldRefresh) {
@@ -87,6 +96,7 @@ export class ProductContainer extends React.Component<Props, State> {
     // trigger Axios to reject the request
     this.cancelToken.cancel('operation_canceled');
     this.didFocusListener.remove();
+    if (this.reqTimer) clearTimeout(this.reqTimer);
   }
 
   showActionSheetForProduct = () => {

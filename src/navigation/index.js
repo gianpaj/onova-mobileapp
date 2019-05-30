@@ -7,7 +7,7 @@ import { addNavigationHelpers, NavigationActions } from 'react-navigation';
 import { initializeListeners, createReduxBoundAddListener } from 'react-navigation-redux-helpers';
 import { Button } from 'react-native-elements';
 
-import { checkLogin, intro } from '../actions/actionCreator';
+import { checkLogin, logout } from '../actions/actionCreator';
 import NavigationStack from './navigationStack';
 import NavigationService from './NavigationService';
 
@@ -58,7 +58,7 @@ class AppNavigation extends React.PureComponent<Props, *> {
       // checking again if user is still logged in
       dispatch(checkLogin(userData, token)).catch(e => {
         if (e.message === 'Invalid user') {
-          dispatch(intro());
+          dispatch(logout());
         } else {
           this.setState({ canReload: true });
         }
@@ -68,7 +68,7 @@ class AppNavigation extends React.PureComponent<Props, *> {
       return;
     }
     addAuthBreadcrumb({ message: 'not logged in' });
-    dispatch(intro());
+    dispatch(logout());
   };
 
   componentWillUnmount() {

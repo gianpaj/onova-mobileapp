@@ -17,7 +17,7 @@ import { URL } from 'react-native-dotenv';
 
 import { Accordion, CardView, Header, HR, SearchableDropdown, Title } from '../components';
 
-import { disableRefresh, getPersonalUserData, intro } from '../actions/actionCreator';
+import { disableRefresh, getPersonalUserData, logout } from '../actions/actionCreator';
 
 import I18n from '../i18n';
 import colors from '../config/colors';
@@ -242,7 +242,7 @@ class SettingsContainer extends Component<Props, State> {
     return this.setState({ username });
   };
 
-  onSignout = () => this.props.dispatch(intro());
+  onSignout = () => this.props.dispatch(logout());
 
   formatCardInfo() {
     const { paymentInfo }: { paymentInfo: PaymentInfo } = this.props.userData;

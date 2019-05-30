@@ -125,10 +125,6 @@ export class LoginTabContainer extends React.Component<Props, State> {
     });
   };
 
-  // googleSignin() {
-  //   this.props.dispatch(loginWithGoogle());
-  // }
-
   setPwdResetModalVisible(visible: boolean) {
     this.setState(({ emailReset, emailAddress }) => ({
       emailReset: emailReset ? emailReset : emailAddress,

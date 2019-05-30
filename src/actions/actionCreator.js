@@ -17,7 +17,7 @@ import {
   GETUSER_FAIL,
   GETUSER_PENDING,
   GETUSER_SUCCESS,
-  INTRO,
+  // INTRO,
   LOGIN_FAIL,
   LOGIN_PENDING,
   LOGIN_SUCCESS,
@@ -45,12 +45,6 @@ const { isProd, analyticsEnabled, config } = api;
 const enabledPusher = isProd == true;
 // const enabledPusher = false;
 
-const intro = () => (dispatch: Dispatch) => {
-  addNavigationBreadcrumb({ message: INTRO });
-  // TODO: dispatch only one action to send back to Intro screens
-  dispatch(logout());
-  dispatch({ type: INTRO });
-};
 
 const login = (data: LoginData) => (dispatch: Dispatch) => {
   dispatch({ type: LOGIN_PENDING });
@@ -202,46 +196,6 @@ const initializePusher = (userData: UserData, token: string): Promise<any | Erro
   });
 };
 
-// function onNewMessage(params) {
-//   console.log(params);
-// }
-
-/* @DISABLED
-const loginWithGoogle = () => (dispatch: Dispatch) => {
-  dispatch({ type: GOOGLE_LOGIN_PENDING });
-
-  GoogleSignin.hasPlayServices({ autoResolve: true });
-  GoogleSignin.configure({
-    iosClientId:
-      '530398476253-s5dfiv2ilfn1nbrhk5otj8k2mnne101l.apps.googleusercontent.com', // only for iOS
-  });
-  return GoogleSignin.signIn()
-    .then((user: GoogleUser) => {
-      const provider = firebase.auth.GoogleAuthProvider;
-      const credential = provider.credential(user.idToken);
-      return firebase
-        .auth()
-        .signInWithCredential(credential)
-        .then(user => {
-          console.log('signed in with Google');
-          const userData = {
-            emailAddress: user.email,
-            provider: 'google',
-          };
-          dispatch({ type: LOGIN_SUCCESS, payload: userData });
-        })
-        .catch(error => {
-          dispatch({ type: LOGIN_FAIL, payload: error });
-          console.error(`Login fail with error: ${error}`);
-        });
-    })
-    .catch(error => {
-      if (error.code == -5) console.debug('User cancelled Google Login');
-      dispatch({ type: LOGIN_FAIL, payload: error });
-    });
-};
-*/
-
 function trackUser(userData: UserData) {
   Analytics.identify(userData._id, {
     email: userData.emailAddress,
@@ -364,18 +318,9 @@ const getUserData = (userId: string, options?: Options = {}) => (dispatch: Dispa
 );
 
 const logout = () => (dispatch: Dispatch) => {
-  // const sb = SendBird.getInstance();
-  // if (sb) {
-  //   sb.disconnect(() => console.debug('SendBird: disconnected'));
-  //   if (Platform.OS === 'ios') {
-  //     setBadgeNumber(0).then(() => {
-  //       console.debug('push badge reset to 0');
-  //     });
-  //   }
-  //   sb.unregisterPushTokenAllForCurrentUser(() =>
-  //     console.debug('SendBird: unregisterPushToken')
-  //   );
-  // }
+  addNavigationBreadcrumb({ message: LOGOUT });
+  // dispatch({ type: INTRO });
+
   if (currentUser) {
     currentUser.disconnect();
     console.log('disconnected from Pusher');
@@ -391,15 +336,6 @@ const logout = () => (dispatch: Dispatch) => {
   }
 
   return dispatch({ type: LOGOUT });
-
-  // const provider = getState().LoginReducer.data.provider;
-  // if (provider == 'email') {
-  //   return dispatch({ type: LOGOUT });
-  // } else if (data.provider == 'google') {
-  //   return GoogleSignin.signOut()
-  //     .then(() => firebase.auth().signOut())
-  //     .then(dispatch({ type: LOGOUT }));
-  // }
 };
 
 const sendToken = (pushToken: string, userData: UserData, token: string): Promise<any> => {
@@ -488,8 +424,6 @@ const displayNotification = (notification: any) => (
 export {
   initializePusher,
   login,
-  intro,
-  // loginWithGoogle,
   checkLogin,
   signup,
   sendToken,

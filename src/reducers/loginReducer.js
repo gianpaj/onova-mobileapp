@@ -28,7 +28,6 @@ const initialState: LoginState = {
   isLoggedIn: false,
   isVerifyAccountModalVisible: false,
   loading: false,
-  // loadingGoogleLogin: false,
   token: '',
 };
 
@@ -89,7 +88,6 @@ export default function(state: LoginState = initialState, action: Action): Login
         isLoggedIn: false,
         isVerifyAccountModalVisible: false,
         loading: false,
-        // loadingGoogleLogin: false,
         token: '',
       };
 
@@ -120,17 +118,6 @@ export default function(state: LoginState = initialState, action: Action): Login
     //     isVerifyAccountModalVisible: false,
     //   };
 
-    // case GOOGLE_LOGIN_PENDING:
-    //   return {
-    //     ...state,
-    //     data: null,
-    //     hasError: false,
-    //     isLoggedIn: false,
-    //     loading: false,
-    //     loadingGoogleLogin: true,
-    //     // errorMsg: null,
-    //   };
-
     case LOGOUT:
       return {
         ...state,
@@ -138,7 +125,6 @@ export default function(state: LoginState = initialState, action: Action): Login
         token: '',
         isLoggedIn: false,
         loading: false,
-        // loadingGoogleLogin: false,
       };
 
     case GETUSER_PENDING:

@@ -274,7 +274,7 @@ export class LoginTabContainer extends React.Component<Props, State> {
               onPress={this.onPasswordToggle}
             />
           </View>
-          <View style={{ marginTop: 15 }}>
+          <View style={{ marginTop: 20 }}>
             <NBButton
               testID="loginButton"
               block

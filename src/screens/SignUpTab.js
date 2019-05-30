@@ -99,8 +99,6 @@ export class SignUpTabContainer extends Component<Props, State> {
       toValue: FORM_VERTICAL_PADDING_KEYBOARD_VISIBLE,
     }).start();
 
-  setVerifyAccountVisible = (visible: boolean) => this.setState({ isVerifyAccountModalVisible: visible });
-
   onSignup = () => {
     if (this.props.loading || !this.UserNameInput || !this.EmailInput) return;
 
@@ -157,17 +155,6 @@ export class SignUpTabContainer extends Component<Props, State> {
       .catch(err => console.debug(err));
   };
 
-  onUserChange = (username: string) => {
-    if (settings.USERNAME_REGEX.test(username)) this.setState({ username });
-  };
-
-  getHandler = (key: string) => (val: any) => this.setState({ [key]: val });
-
-  onPasswordToggle = () =>
-    this.setState(prevState => ({
-      isPasswordVisible: !prevState.isPasswordVisible,
-    }));
-
   openPrivacyPolicy() {
     linking.openURL(`https://${URL}/privacy-policy.html`);
   }
@@ -180,63 +167,21 @@ export class SignUpTabContainer extends Component<Props, State> {
     linking.openURL(`https://${URL}/safe-purchase-rules.html`);
   }
 
-  /*
-  componentWillUpdate(nextProps, nextState) {
-    // const { loading } = nextProps;
-    const {
-      emailAddress: emailAddressNext,
-      password: passwordNext,
-      disabled: disabledNext,
-      username: usernameNext,
-    } = nextState;
-    const { emailAddress, password, disabled, username } = this.state;
-
-    // if (!loading && this.signupBtn) {
-    //   this.signupBtn.reset();
-    // }
-
-    if (
-      emailAddressNext !== emailAddress ||
-      passwordNext !== password ||
-      usernameNext !== username ||
-      disabledNext !== disabled
-    ) {
-      if (
-        !isEmail(emailAddressNext) ||
-        !validPassword(passwordNext) ||
-        usernameNext.length < 3
-        // loading
-      ) {
-        // this.setState({ disabled: true });
-        Animated.timing(this.animatedValue, {
-          toValue: 0,
-          duration: 300,
-        }).start();
-      } else {
-        // this.setState({ disabled: false });
-        Animated.timing(this.animatedValue, {
-          toValue: 1,
-          duration: 300,
-        }).start();
-      }
-    }
-  }*/
-
   isDisabled() {
     const { emailAddress, password, username } = this.state;
     return !isEmail(emailAddress) || !validPassword(password) || username.length < 3 || this.props.loading;
   }
 
-  _inputProps = {
-    autoCapitalize: 'none',
-    autoCorrect: false,
-    blurOnSubmit: false,
-    clearButtonMode: 'while-editing',
-    editable: !this.props.loading,
-    inputStyle: styles.input,
-    onSubmitEditing: this.onSignup,
-    returnKeyType: 'go',
-  };
+  setVerifyAccountVisible = (visible: boolean) => this.setState({ isVerifyAccountModalVisible: visible });
+
+  onUserChange = (username: string) => settings.USERNAME_REGEX.test(username) && this.setState({ username });
+
+  getHandler = (key: string) => (val: any) => this.setState({ [key]: val });
+
+  onPasswordToggle = () =>
+    this.setState(prevState => ({
+      isPasswordVisible: !prevState.isPasswordVisible,
+    }));
 
   _onBlurUser = () => this.setState({ hasFocusUser: false });
   _onFocusUser = () => this.setState({ hasFocusUser: true });
@@ -247,8 +192,19 @@ export class SignUpTabContainer extends Component<Props, State> {
   _onBlurPass = () => this.setState({ hasFocusPass: false });
   _onFocusPass = () => this.setState({ hasFocusPass: true });
 
+  _inputProps = {
+    autoCapitalize: 'none',
+    autoCorrect: false,
+    blurOnSubmit: false,
+    clearButtonMode: 'while-editing',
+    editable: !this.props.loading,
+    onSubmitEditing: this.onSignup,
+    returnKeyType: 'go',
+  };
+
   render() {
     const { hasFocusUser, hasFocusEmail, hasFocusPass, isPasswordVisible } = this.state;
+    const { loading } = this.props;
 
     return (
       <Content testID="signup-form">
@@ -302,115 +258,90 @@ export class SignUpTabContainer extends Component<Props, State> {
               onPress={this.onPasswordToggle}
             />
           </View>
-          <View style={styles.mt15}>
-            {/* <AnimButton
-              ref={r => (this.signupBtn = r)}
-              disabled={this.state.disabled}
-              style={[
-                styles.SignupButton,
-                {
-                  backgroundColor: this.backgroundColor,
-                  // elevation: this.animatedValue, // android
-                  // shadowOpacity: this.animatedValue, // ios
-                },
-              ]}
-              {...buttonProps}
-              onPress={this.onSignup}
-              label={I18n.t('signup.sign_up_button')}
-              labelStyle={{ color: colors.white }}
-              accessibilityLabel={I18n.t('signup.sign_up_button')}
-            /> */}
+          <View style={styles.mt20}>
             <Button
               testID="signUpButton"
               block
-              disabled={this.props.loading}
-              dark={!this.props.loading}
-              // style={[
-              //   {
-              //     backgroundColor: this.backgroundColor,
-              //   },
-              // ]}
+              disabled={loading}
+              dark={!loading}
               {...buttonProps}
               onPress={this.onSignup}>
-              <Text
-                // eslint-disable-next-line
-                style={{
-                  fontSize: typography.font_button_size,
-                  color: colors.white,
-                }}>
-                {I18n.t('signup.sign_up_button')}
+              <Text style={styles.signUpButtonText}>{I18n.t('signup.sign_up_button')}</Text>
+            </Button>
+            <Button
+              testID="skipButton"
+              block
+              disabled={loading}
+              dark={!loading}
+              bordered
+              style={styles.mt20}
+              {...buttonProps}
+              onPress={this.onKip}>
+              <Text style={[styles.skipButtonText, loading ? { color: colors.grey3 } : {}]}>
+                {I18n.t('signup.skip')}
               </Text>
             </Button>
           </View>
-          <View
-            style={{
-              alignSelf: 'center',
-              paddingVertical: 20,
-              width: 320,
-            }}>
-            <Text>
-              <Text style={{ color: colors.grey4 }}>{I18n.t('signup.terms_text_1')}</Text>
-              &nbsp;
-              <Text onPress={this.openPrivacyPolicy} style={styles.link}>
-                {I18n.t('signup.terms_text_2')}
-              </Text>
-              <Text>&nbsp;</Text>
-              <Text onPress={this.openTerms} style={styles.link}>
-                {I18n.t('signup.terms_text_3')}
-              </Text>
-              <Text>&nbsp;</Text>
-              <Text onPress={this.openSafePurchase} style={styles.link}>
-                {I18n.t('signup.terms_text_4')}
-              </Text>
-            </Text>
-          </View>
+          {this.renderFooterText()}
         </Animated.View>
         {this.renderVerifyAccountModal()}
       </Content>
     );
   }
 
-  renderVerifyAccountModal = () => (
-    <Modal
-      animationType="slide"
-      visible={this.state.isVerifyAccountModalVisible}
-      onRequestClose={() => this.setVerifyAccountVisible(false)}>
-      <>
-        <Header transparent style={{ backgroundColor: colors.transparent }}>
-          <Left />
-          <Body />
-          <Right>
-            <Button transparent onPress={() => this.setVerifyAccountVisible(false)}>
-              <NBIcon name="close" style={{ color: colors.black }} />
-            </Button>
-          </Right>
-        </Header>
-        <View style={{ margin: 20 }}>
-          <MaterialCommunityIcons
-            size={typography.empty_state_icon}
-            name={'email-open-outline'}
-            color={colors.grey2}
-            style={{ alignSelf: 'center', marginBottom: 10 }}
-          />
-          <Text
-            style={{
-              color: colors.black,
-              marginBottom: 30,
-              textAlign: 'center',
-            }}>
-            {this.state.emailAddress}
+  renderFooterText() {
+    return (
+      <View style={styles.footer}>
+        <Text>
+          <Text style={{ color: colors.grey4 }}>{I18n.t('signup.terms_text_1')}</Text>
+          &nbsp;
+          <Text onPress={this.openPrivacyPolicy} style={styles.link}>
+            {I18n.t('signup.terms_text_2')}
           </Text>
-          <Text
-            style={{
-              color: colors.black,
-              textAlign: 'center',
-            }}>
-            {I18n.t('login.verify_account.title')}
+          <Text>&nbsp;</Text>
+          <Text onPress={this.openTerms} style={styles.link}>
+            {I18n.t('signup.terms_text_3')}
           </Text>
-        </View>
-      </>
-    </Modal>
-  );
+          <Text>&nbsp;</Text>
+          <Text onPress={this.openSafePurchase} style={styles.link}>
+            {I18n.t('signup.terms_text_4')}
+          </Text>
+        </Text>
+      </View>
+    );
+  }
+
+  renderVerifyAccountModal() {
+    return (
+      <Modal
+        animationType="slide"
+        visible={this.state.isVerifyAccountModalVisible}
+        onRequestClose={() => this.setVerifyAccountVisible(false)}>
+        <>
+          <Header transparent style={{ backgroundColor: colors.transparent }}>
+            <Left />
+            <Body />
+            <Right>
+              <Button transparent onPress={() => this.setVerifyAccountVisible(false)}>
+                <NBIcon name="close" style={{ color: colors.black }} />
+              </Button>
+            </Right>
+          </Header>
+          <View style={styles.m20}>
+            <MaterialCommunityIcons
+              size={50}
+              name={'email-open-outline'}
+              color={colors.grey2}
+              style={styles.verificationEmailIcon}
+            />
+            <Text style={styles.emailAddressToVerify}>{this.state.emailAddress}</Text>
+            <Text style={styles.verificationMessage}>{I18n.t('login.verify_account.title')}</Text>
+            {/* TODO: add re-send button */}
+          </View>
+        </>
+      </Modal>
+    );
+  }
 }
 
 const buttonProps = {
@@ -429,9 +360,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: '80%',
   },
-  input: {
+  signUpButtonText: {
+    color: colors.white,
+    fontSize: typography.font_button_size,
+  },
+  skipButtonText: {
     color: colors.black,
-    width: '100%',
+    fontSize: typography.font_button_size,
   },
   pwdIcon: {
     position: 'absolute',
@@ -439,12 +374,33 @@ const styles = StyleSheet.create({
     right: 20,
     zIndex: 10,
   },
-  mt15: {
-    marginTop: 15,
+  m20: {
+    margin: 20,
+  },
+  mt20: {
+    marginTop: 20,
+  },
+  footer: {
+    alignSelf: 'center',
+    paddingVertical: 20,
+    width: 320,
+  },
+  verificationEmailIcon: {
+    alignSelf: 'center',
+    marginBottom: 10,
   },
   link: {
     color: colors.grey2,
     textDecorationLine: 'underline',
+    textAlign: 'center',
+  },
+  emailAddressToVerify: {
+    color: colors.black,
+    marginBottom: 30,
+    textAlign: 'center',
+  },
+  verificationMessage: {
+    color: colors.black,
     textAlign: 'center',
   },
 });

@@ -10,10 +10,8 @@ export const call = (phoneNumber: string): void => {
         : Linking.openURL(`tel:${phoneNumber}`);
     })
     .catch(err => {
-      console.log(err);
-      Alert.alert(
-        `Something went wrong opening this telephone link 😯: ${phoneNumber}`
-      );
+      console.error(err);
+      Alert.alert(`Something went wrong opening this telephone link 😯: ${phoneNumber}`);
     });
 };
 
@@ -25,20 +23,26 @@ export const email = (email: string): void => {
         : Linking.openURL(`mailto:${email}`);
     })
     .catch(err => {
-      console.log(err);
+      console.error(err);
       Alert.alert(`Something went wrong opening this mailto link 😯: ${email}`);
     });
 };
 
 export const openURL = (url: string): void => {
-  Linking.canOpenURL(url)
+  let fullURL = url;
+  // Prepending http:// to a URL that doesn't already contain http://
+  if (!/^https?:\/\//i.test(url)) {
+    fullURL = 'http://' + url;
+  }
+  Linking.canOpenURL(fullURL)
     .then(supported => {
-      return !supported
-        ? Alert.alert(`We can't open the following url 😯: ${url}`)
-        : Linking.openURL(url);
+      if (supported) return Linking.openURL(fullURL);
+      Alert.alert(`😯\nWe can't open:\n${fullURL}`);
     })
     .catch(err => {
-      console.log(err);
-      Alert.alert(`Something went wrong opening this url 😯: ${url}`);
+      console.error(err);
+      Alert.alert(`😯\nSomething went wrong opening:\n${fullURL}`);
     });
 };
+
+export const URLpattern = /(https?:\/\/|www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&\/=]*[-a-zA-Z0-9@:%_\+~#?&\/=])*/i;

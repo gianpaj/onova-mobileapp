@@ -23,7 +23,7 @@ import { Reviews } from '../screens/Reviews';
 import { Search } from '../screens/Search';
 import { SearchProductsResults } from '../screens/SearchProductsResults';
 import { Settings } from '../screens/Settings';
-import { SignUpLogin } from '../screens/SignUpLogin';
+import { SignUpLoginTabs } from './SignUpLoginTabs';
 
 export {
   AddOrEditProduct,
@@ -48,6 +48,6 @@ export {
   Search,
   SearchProductsResults,
   Settings,
-  SignUpLogin,
+  SignUpLoginTabs,
   // Suggestions,
 };

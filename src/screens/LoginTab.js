@@ -12,8 +12,6 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import I18n from '../i18n';
 
-import type { NavigationScreenProp } from 'react-navigation';
-
 import { Header } from '../components';
 import { login } from '../actions/actionCreator';
 import * as api from '../utils/api';
@@ -55,7 +53,6 @@ if (__DEV__ && !global.__TESTING__) {
 type Props = {
   dispatch: Dispatch,
   loading: boolean,
-  navigation?: NavigationScreenProp<*>,
 };
 
 type State = {

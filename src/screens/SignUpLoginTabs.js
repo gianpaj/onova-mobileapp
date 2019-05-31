@@ -23,7 +23,7 @@ type State = {
   routes: Array<any>,
 };
 
-class SignUpLoginContainer extends React.Component<{}, State> {
+class SignUpLoginTabsContainer extends React.Component<{}, State> {
   state = {
     index: 0,
     routes: [
@@ -39,13 +39,13 @@ class SignUpLoginContainer extends React.Component<{}, State> {
   );
 
   _renderScene = SceneMap({
-    signup: SignUpTab,
+    signup: props => <SignUpTab {...props} isInAppAuth={this.props.isInAppAuth} />,
     login: LoginTab,
   });
 
   render() {
     return (
-      <Container>
+      <Container style={{ backgroundColor: colors.semitransparent }}>
         <View style={styles.header}>
           {/* eslint-disable-next-line react-native/no-raw-text */}
           <Title>{APP_NAME.toUpperCase()}</Title>
@@ -62,15 +62,16 @@ class SignUpLoginContainer extends React.Component<{}, State> {
   }
 }
 
-export const SignUpLogin = SignUpLoginContainer;
+export const SignUpLoginTabs = SignUpLoginTabsContainer;
 
 const styles = StyleSheet.create({
   header: {
     alignItems: 'center',
-    margin: 40,
+    marginTop: 30,
+    marginBottom: 40,
   },
   tabbar: {
-    backgroundColor: colors.bgDefault,
+    backgroundColor: colors.transparent,
   },
   label: {
     color: colors.black,

@@ -14,11 +14,12 @@ import type { UserData, ReduxState } from '../types';
 import type { NavigationScreenProp } from 'react-navigation';
 
 type Props = {
-  userData: UserData,
-  navigation: NavigationScreenProp<*>,
-  userid: string,
   header: React.ReactElement,
+  navigation: NavigationScreenProp<*>,
   refreshProfile: () => Promise<any>,
+  skippedLogin: boolean,
+  userData: UserData,
+  userid: string,
 };
 
 class ShopTabContainer extends React.Component<Props, {}> {
@@ -30,12 +31,11 @@ class ShopTabContainer extends React.Component<Props, {}> {
   }
 
   isMe(): boolean {
-    const navState = this.props.navigation.state;
-    if (!navState.params) {
-      return true;
-    }
+    const { navigation, skippedLogin, userData } = this.props;
+    if (!navigation.state.params) return true;
+    if (skippedLogin) return false;
 
-    return navState.params._id === this.props.userData._id;
+    return navigation.state.params._id === userData._id;
   }
 
   render() {
@@ -110,6 +110,7 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps: any = (state: ReduxState) => ({
+  skippedLogin: state.LoginReducer.skippedLogin,
   userData: state.LoginReducer.data,
 });
 

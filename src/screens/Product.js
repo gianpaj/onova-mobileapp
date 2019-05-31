@@ -341,8 +341,10 @@ export class ProductContainer extends React.Component<Props, State> {
   };
 
   onPressBuy = () => {
-    const { item } = this.state;
-    if (this.state.loadingBuy || !item) return;
+    const { item, loadingBuy } = this.state;
+    if (loadingBuy || !item) return;
+
+    if (this.props.skippedLogin) this.props.dispatch(openLoginModal());
 
     // check if product is still `forsale`
     this.setState({ loadingBuy: true });

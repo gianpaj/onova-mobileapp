@@ -1,5 +1,8 @@
 // @flow
-import { StackNavigator } from 'react-navigation';
+
+import React from 'react';
+
+import { StackNavigator, SwitchNavigator } from 'react-navigation';
 import { Animated, Easing, Platform } from 'react-native';
 import CardStackStyleInterpolator from 'react-navigation/src/views/CardStack/CardStackStyleInterpolator';
 
@@ -25,7 +28,7 @@ import {
   Search,
   SearchProductsResults,
   Settings,
-  SignUpLogin,
+  SignUpLoginTabs,
   // Suggestions,
 } from '../screens';
 import colors from '../config/colors';
@@ -34,7 +37,7 @@ import { TabsStack } from './navigationTabs';
 const StackNav = StackNavigator(
   {
     signuplogin: {
-      screen: SignUpLogin,
+      screen: SignUpLoginTabs,
     },
     // introScreens: { screen: IntroScreens },
     product: {
@@ -114,4 +117,51 @@ StackNav.router.getStateForAction = (action, state) => {
   return prevGetStateForActionStackNav(action, state);
 };
 
-export default StackNav;
+// create custom transitioner without the opacity animation, ie. for iOS
+function forVertical(props) {
+  const { layout, position, scene } = props;
+
+  const index = scene.index;
+  const height = layout.initHeight;
+
+  const translateX = 0;
+  const translateY = position.interpolate({
+    inputRange: ([index - 1, index, index + 1]: Array<number>),
+    outputRange: ([height, 0, 0]: Array<number>),
+  });
+
+  return {
+    transform: [{ translateX }, { translateY }],
+  };
+}
+
+const AppStack = StackNavigator(
+  {
+    tabs: {
+      screen: StackNav,
+    },
+    inAppAuth: {
+      screen: props => <SignUpLoginTabs {...props} isInAppAuth />,
+    },
+  },
+  {
+    headerMode: 'none',
+    mode: 'modal', // Only works on iOS, has no effect on Android.
+    transitionConfig: () => ({ screenInterpolator: forVertical }),
+    cardStyle: {
+      backgroundColor: 'transparent',
+    },
+  }
+);
+
+// Main Navigator
+const AppNavigator = SwitchNavigator({
+  signuplogin: {
+    screen: SignUpLoginTabs,
+  },
+  App: {
+    screen: AppStack,
+  },
+});
+
+export default AppNavigator;

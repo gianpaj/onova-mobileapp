@@ -45,7 +45,6 @@ const { isProd, analyticsEnabled, config } = api;
 const enabledPusher = isProd == true;
 // const enabledPusher = false;
 
-
 const login = (data: LoginData) => (dispatch: Dispatch) => {
   dispatch({ type: LOGIN_PENDING });
   Toast.loading('', 30);
@@ -317,7 +316,7 @@ const getUserData = (userId: string, options?: Options = {}) => (dispatch: Dispa
     .then(() => Toast.hide())
 );
 
-const logout = () => (dispatch: Dispatch) => {
+const logout = () => {
   addNavigationBreadcrumb({ message: LOGOUT });
   // dispatch({ type: INTRO });
 
@@ -335,7 +334,7 @@ const logout = () => (dispatch: Dispatch) => {
     Analytics.reset();
   }
 
-  return dispatch({ type: LOGOUT });
+  return { type: LOGOUT };
 };
 
 const skip = () => (dispatch: Dispatch) => {
@@ -407,23 +406,6 @@ const enableCancelOrder = () => ({ type: DO_CANCEL_ORDER });
 
 const disableCancelOrder = () => ({ type: DONOT_CANCEL_ORDER });
 
-/*
-const displayNotification = (notification: any) => (
-  dispatch: Dispatch,
-  getState: GetState
-) => {
-  const routes = getState().NavigationReducer.stateForLoggedIn.routes;
-  const routeName = routes[routes.length - 1].routeName;
-  console.log(routeName);
-  // if we're NOT on the chat route/screen of the push notification, display the push
-  if (routeName == 'chat') {
-    const { params } = routes[routes.length - 1];
-    console.log(params);
-  } else {
-    firebase.notifications().displayNotification(notification);
-  }
-};
-*/
 
 export {
   initializePusher,
@@ -440,5 +422,4 @@ export {
   disableRefresh,
   enableCancelOrder,
   disableCancelOrder,
-  // displayNotification,
 };

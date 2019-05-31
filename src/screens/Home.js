@@ -102,6 +102,9 @@ class HomeComponent extends PureComponent<Props, State> {
   // }
 
   goToDropsFeed = () => {
+    if (this.props.skippedLogin) {
+      return this.props.navigation.navigate('inAppAuth');
+    }
     // $FlowFixMe
     this.props.navigation.navigate({
       routeName: 'dropsFeed',
@@ -113,21 +116,21 @@ class HomeComponent extends PureComponent<Props, State> {
     return (
       <View testID="Home" style={{ flex: 1 }}>
         <Header hasTabs>
-          <Left style={styles.container}>
+          <Left>
             <Button transparent dark style={{ marginLeft: 5 }} onPress={this.toggleDialog}>
               <MaterialCommunityIcons name="information-outline" size={18} />
             </Button>
           </Left>
-          <Body style={styles.container}>
+          <Body>
             {/* eslint-disable-next-line react-native/no-raw-text */}
             <Title>{APP_NAME.toUpperCase()}</Title>
           </Body>
           <Right>
-            {!this.props.skippedLogin && (
-              <Button transparent onPress={this.goToDropsFeed}>
-                <Megaphone width={19} height={19} />
-              </Button>
-            )}
+            {/* {!this.props.skippedLogin && ( */}
+            <Button transparent onPress={this.goToDropsFeed}>
+              <Megaphone width={19} height={19} />
+            </Button>
+            {/* )} */}
           </Right>
         </Header>
         <TabView

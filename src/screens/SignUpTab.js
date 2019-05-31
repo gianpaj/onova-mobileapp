@@ -4,6 +4,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Animated, Keyboard, Modal, Platform, StyleSheet, Text, View } from 'react-native';
 import { Content, Right, Left, Body, Button, Icon as NBIcon } from 'native-base';
+import { NavigationActions } from 'react-navigation';
 import { FormInput } from 'react-native-elements';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -12,7 +13,6 @@ import { URL } from 'react-native-dotenv';
 
 import { Header } from '../components';
 
-import type { NavigationScreenProp } from 'react-navigation';
 import type { Dispatch, ReduxState } from '../types';
 
 import I18n from '../i18n';
@@ -27,7 +27,7 @@ import typography from '../config/typography';
 type Props = {
   dispatch: Dispatch,
   loading: boolean,
-  navigation?: NavigationScreenProp<*>,
+  isInAppAuth: boolean,
   isVerifyAccountModalVisible: boolean,
 };
 
@@ -100,6 +100,11 @@ export class SignUpTabContainer extends Component<Props, State> {
     }).start();
 
   onSkip = () => this.props.dispatch(skip());
+
+  onCancel = () => {
+    const backAction = NavigationActions.back();
+    this.props.dispatch(backAction); // close modal
+  };
 
   onSignup = () => {
     if (this.props.loading || !this.UserNameInput || !this.EmailInput) return;
@@ -206,7 +211,7 @@ export class SignUpTabContainer extends Component<Props, State> {
 
   render() {
     const { hasFocusUser, hasFocusEmail, hasFocusPass, isPasswordVisible } = this.state;
-    const { loading } = this.props;
+    const { loading, isInAppAuth } = this.props;
 
     return (
       <Content testID="signup-form">
@@ -270,19 +275,35 @@ export class SignUpTabContainer extends Component<Props, State> {
               onPress={this.onSignup}>
               <Text style={styles.signUpButtonText}>{I18n.t('signup.sign_up_button')}</Text>
             </Button>
-            <Button
-              testID="skipButton"
-              block
-              disabled={loading}
-              dark={!loading}
-              bordered
-              style={styles.mt20}
-              {...buttonProps}
-              onPress={this.onSkip}>
-              <Text style={[styles.skipButtonText, loading ? { color: colors.grey3 } : {}]}>
-                {I18n.t('signup.skip')}
-              </Text>
-            </Button>
+            {isInAppAuth ? (
+              <Button
+                testID="closeButton"
+                block
+                disabled={loading}
+                dark={!loading}
+                bordered
+                style={styles.mt20}
+                {...buttonProps}
+                onPress={this.onCancel}>
+                <Text style={[styles.skipButtonText, loading ? { color: colors.grey3 } : {}]}>
+                  {I18n.t('signup.close')}
+                </Text>
+              </Button>
+            ) : (
+              <Button
+                testID="skipButton"
+                block
+                disabled={loading}
+                dark={!loading}
+                bordered
+                style={styles.mt20}
+                {...buttonProps}
+                onPress={this.onSkip}>
+                <Text style={[styles.skipButtonText, loading ? { color: colors.grey3 } : {}]}>
+                  {I18n.t('signup.skip')}
+                </Text>
+              </Button>
+            )}
           </View>
           {this.renderFooterText()}
         </Animated.View>

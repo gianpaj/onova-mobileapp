@@ -27,6 +27,7 @@ export default {
   red: '#ff001e',
   green: '#00ff55',
   transparent: 'transparent',
+  semitransparent: '#ffffffee',
 };
 
 /**

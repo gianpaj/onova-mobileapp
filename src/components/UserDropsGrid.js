@@ -185,7 +185,7 @@ class UserDropsGridComponent extends React.PureComponent<Props, State> {
 
     if (!hasError && isLoading) return this.renderLoading();
 
-    const amITheSeller = userData.username === username;
+    const amITheSeller = userData && userData.username === username;
 
     return (
       <View style={styles.container}>

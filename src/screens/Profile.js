@@ -87,16 +87,18 @@ class ProfileScreen extends React.Component<Props, State> {
   });
 
   refresh = async (): Promise<any> => {
-    const { params } = this.props.navigation.state;
-    const { userData, token } = this.props;
+    const { userData, token, navigation, skippedLogin } = this.props;
+    const { params } = navigation.state;
 
     // const CancelToken = axios.CancelToken;
     // this.cancelToken = CancelToken.source();
     try {
-      let userId = userData._id;
+      let userId;
       // if the screen was navigated with an userID
       if (params && params._id) {
         userId = params._id;
+      } else {
+        userId = userData._id;
       }
       const res: UserData = await api.get(`/api/users/${userId}`);
       const {
@@ -105,7 +107,6 @@ class ProfileScreen extends React.Component<Props, State> {
         displayName,
         followersCount,
         followingCount,
-        // ratingsTotal,
         ordersAndReviewsCount,
         profilePic,
         username,
@@ -117,15 +118,13 @@ class ProfileScreen extends React.Component<Props, State> {
         displayName,
         followersCount,
         followingCount,
-        // rateAvg:
-        //   ratingsTotal == 0 ? ratingsTotal : ratingsTotal / reviewsCount,
         ordersAndReviewsCount,
         profilePic,
         username,
       });
 
       // if it's not me
-      if (params && params._id !== userData._id) {
+      if (params && userData && params._id !== userData._id) {
         const { data } = await api.get(`/api/users/${userId}/follow`, {
           token,
         });
@@ -136,7 +135,7 @@ class ProfileScreen extends React.Component<Props, State> {
         // const suggestions = await api.getSuggestions(token);
 
         // this.setState({ suggestions });
-        this.props.dispatch(getPersonalUserData());
+        if (!skippedLogin) this.props.dispatch(getPersonalUserData());
       }
     } catch (err) {
       if (err.message == 'Not following') {
@@ -147,7 +146,8 @@ class ProfileScreen extends React.Component<Props, State> {
   };
 
   componentDidMount() {
-    if (this.props.navigation.state.params && this.props.navigation.state.params.tab == 'drops') {
+    const { navigation } = this.props;
+    if (navigation.state.params && navigation.state.params.tab == 'drops') {
       this.setState({ index: 1 });
     }
 
@@ -329,10 +329,12 @@ class ProfileScreen extends React.Component<Props, State> {
   };
 
   isMe(): boolean {
-    const { params } = this.props.navigation.state;
+    const { userData, navigation, skippedLogin } = this.props;
+    const { params } = navigation.state;
     if (!params) return true;
+    if (skippedLogin) return false;
 
-    return params._id == this.props.userData._id;
+    return params._id == userData._id;
   }
 
   // or from push notification
@@ -578,10 +580,9 @@ class ProfileScreen extends React.Component<Props, State> {
 
   render() {
     const { username, isFetching } = this.state;
+    const { navigation, userData, skippedLogin } = this.props;
 
-    const { navigation, userData } = this.props;
-
-    if (isFetching || !userData) return null;
+    if (isFetching || (!userData && !skippedLogin)) return null;
 
     return (
       <Container>
@@ -725,8 +726,9 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps: any = (state: ReduxState) => ({
-  userData: state.LoginReducer.data,
+  skippedLogin: state.LoginReducer.skippedLogin,
   token: state.LoginReducer.token,
+  userData: state.LoginReducer.data,
 });
 
 export const Profile = connect(mapStateToProps)(ProfileScreen);

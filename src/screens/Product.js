@@ -9,6 +9,7 @@ import ParsedText from 'react-native-parsed-text';
 import { Modal } from 'antd-mobile-rn';
 import axios from 'axios';
 import Analytics from 'react-native-analytics-segment-io';
+import { NavigationActions } from 'react-navigation';
 import { URL } from 'react-native-dotenv';
 // import LottieView from 'lottie-react-native';
 
@@ -308,11 +309,13 @@ export class ProductContainer extends React.Component<Props, State> {
   goToProfile = (user: UserData) => {
     if (!user._id) return;
 
-    this.props.navigation.navigate({
+    const navigateToProfile = NavigationActions.push({
       routeName: 'profileInStack',
       params: user,
       key: `profile-${user.username}`,
     });
+
+    if (this.props.navigation) this.props.navigation.dispatch(navigateToProfile);
   };
 
   hasUserShared(): Promise<boolean> {

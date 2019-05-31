@@ -184,7 +184,7 @@ class ImageGridComponent extends React.PureComponent<Props, State> {
   };
 
   onItemPress(item: any) {
-    const navigateToProduct = NavigationActions.navigate({
+    const navigateToProduct = NavigationActions.push({
       routeName: 'product',
       key: `product-${item.uuid}`,
       params: item,

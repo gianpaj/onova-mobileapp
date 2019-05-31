@@ -16,7 +16,7 @@ import type { NavigationScreenProp } from 'react-navigation';
 import type { Dispatch, ReduxState } from '../types';
 
 import I18n from '../i18n';
-import { signup } from '../actions/actionCreator';
+import { signup, skip } from '../actions/actionCreator';
 import { validPassword } from '../utils/validators';
 import * as linking from '../utils/linking';
 import * as ui from '../utils/ui';
@@ -98,6 +98,8 @@ export class SignUpTabContainer extends Component<Props, State> {
       duration: event ? event.duration : 250,
       toValue: FORM_VERTICAL_PADDING_KEYBOARD_VISIBLE,
     }).start();
+
+  onSkip = () => this.props.dispatch(skip());
 
   onSignup = () => {
     if (this.props.loading || !this.UserNameInput || !this.EmailInput) return;
@@ -276,7 +278,7 @@ export class SignUpTabContainer extends Component<Props, State> {
               bordered
               style={styles.mt20}
               {...buttonProps}
-              onPress={this.onKip}>
+              onPress={this.onSkip}>
               <Text style={[styles.skipButtonText, loading ? { color: colors.grey3 } : {}]}>
                 {I18n.t('signup.skip')}
               </Text>

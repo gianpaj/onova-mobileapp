@@ -7,7 +7,7 @@ import { addNavigationHelpers, NavigationActions } from 'react-navigation';
 import { initializeListeners, createReduxBoundAddListener } from 'react-navigation-redux-helpers';
 import { Button } from 'react-native-elements';
 
-import { checkLogin, logout } from '../actions/actionCreator';
+import { checkLogin, logout, skip } from '../actions/actionCreator';
 import NavigationStack from './navigationStack';
 import NavigationService from './NavigationService';
 
@@ -22,6 +22,7 @@ import SafeAreaView from '../SafeArea';
 type Props = {
   checkedLoggedIn: boolean,
   dispatch: Dispatch,
+  skippedLogin: boolean,
   isLoggedIn: boolean,
   navigationState: NavigationState,
   userData?: UserData,
@@ -51,19 +52,20 @@ class AppNavigation extends React.PureComponent<Props, *> {
   }
 
   onCheckLogin = () => {
-    const { dispatch, isLoggedIn, userData, token } = this.props;
+    const { dispatch, isLoggedIn, userData, token, skippedLogin } = this.props;
 
     if (isLoggedIn && userData && token) {
       this.setState({ canReload: false });
       // checking again if user is still logged in
       dispatch(checkLogin(userData, token)).catch(e => {
-        if (e.message === 'Invalid user') {
-          dispatch(logout());
-        } else {
-          this.setState({ canReload: true });
-        }
         addAuthBreadcrumb({ data: e });
         console.debug(e);
+        if (e.message === 'Invalid user') {
+          addAuthBreadcrumb({ message: 'Invalid user' });
+          dispatch(logout());
+          return;
+        }
+        this.setState({ canReload: true });
       });
       return;
     }
@@ -140,6 +142,7 @@ const styles = StyleSheet.create({
 const mapStateToProps: any = (state: ReduxState) => ({
   checkedLoggedIn: state.LoginReducer.checkedLoggedIn,
   isLoggedIn: state.LoginReducer.isLoggedIn,
+  skippedLogin: state.LoginReducer.skippedLogin,
   navigationState: state.NavigationReducer,
   token: state.LoginReducer.token,
   userData: state.LoginReducer.data,

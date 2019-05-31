@@ -28,6 +28,7 @@ const initialState: LoginState = {
   isLoggedIn: false,
   isVerifyAccountModalVisible: false,
   loading: false,
+  skippedLogin: false,
   token: '',
 };
 
@@ -55,6 +56,18 @@ export default function(state: LoginState = initialState, action: Action): Login
         ...state,
         isVerifyAccountModalVisible: true,
         loading: false,
+        skippedLogin: false,
+      };
+
+    case 'SKIP':
+      return {
+        ...state,
+        isAdmin: false,
+        isLoggedIn: true,
+        skippedLogin: true,
+        isVerifyAccountModalVisible: false,
+        checkedLoggedIn: true,
+        loading: false,
       };
 
     case LOGIN_SUCCESS:
@@ -64,6 +77,7 @@ export default function(state: LoginState = initialState, action: Action): Login
         checkedLoggedIn: true,
         isLoggedIn: true,
         loading: false,
+        skippedLogin: false,
       };
       if (action.payload) {
         const { token, ...noToken } = action.payload;
@@ -100,7 +114,13 @@ export default function(state: LoginState = initialState, action: Action): Login
       };
 
     case RELOAD_SUCCESS:
-      return { ...state, hasError: false, isAdmin, checkedLoggedIn: true };
+      return {
+        ...state,
+        hasError: false,
+        isAdmin,
+        checkedLoggedIn: true,
+        skippedLogin: false,
+      };
 
     case RELOAD_FAIL:
       return {

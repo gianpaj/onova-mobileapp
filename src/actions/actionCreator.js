@@ -338,6 +338,10 @@ const logout = () => (dispatch: Dispatch) => {
   return dispatch({ type: LOGOUT });
 };
 
+const skip = () => (dispatch: Dispatch) => {
+  return dispatch({ type: 'SKIP' });
+};
+
 const sendToken = (pushToken: string, userData: UserData, token: string): Promise<any> => {
   const data = {
     platform: Platform.OS,
@@ -430,6 +434,7 @@ export {
   getPersonalUserData,
   getUserData,
   logout,
+  skip,
   currentUser,
   enableRefresh,
   disableRefresh,

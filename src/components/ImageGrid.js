@@ -37,6 +37,7 @@ type Props = {
   emptyState?: Node,
   navigation?: NavigationScreenProp<*>,
   shouldRefresh?: boolean,
+  skippedLogin: boolean,
   header: React.ReactElement,
   token?: string,
   refreshProfile?: () => Promise<any>,

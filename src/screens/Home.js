@@ -1,7 +1,8 @@
 // @flow
-import colors from '../config/colors';
 
 import React, { PureComponent } from 'react';
+
+import { connect } from 'react-redux';
 import { Dimensions, StyleSheet, View } from 'react-native';
 import { APP_NAME } from 'react-native-dotenv';
 import { Body, Button, Left, Right } from 'native-base';
@@ -15,6 +16,7 @@ import I18n from '../i18n';
 import { Header, ImageGrid, Title } from '../components';
 // import * as api from '../utils/api';
 import * as linking from '../utils/linking';
+import colors from '../config/colors';
 
 import Megaphone from '../assets/svg/megaphone';
 
@@ -28,6 +30,7 @@ const initialLayout = {
 
 type Props = {
   navigation?: NavigationScreenProp<*>,
+  skippedLogin: Boolean,
 };
 
 type State = {
@@ -42,7 +45,7 @@ type State = {
 
 // const { analyticsEnabled } = api;
 
-export class Home extends PureComponent<Props, State> {
+class HomeComponent extends PureComponent<Props, State> {
   state = {
     index: 0,
     dialogVisible: false,
@@ -67,13 +70,27 @@ export class Home extends PureComponent<Props, State> {
   );
 
   _renderScene = ({ route }) => {
+    const { navigation, skippedLogin } = this.props;
+    if (skippedLogin) {
+      switch (route.key) {
+        case 'clothes':
+          return <ImageGrid apiURL="/api/products/?categoryIds=0" navigation={navigation} />;
+        case 'shoes':
+          return <ImageGrid apiURL="/api/products/?categoryIds=1" navigation={navigation} />;
+        case 'other':
+          return <ImageGrid apiURL="/api/products/?categoryIds=2" navigation={navigation} />;
+        default:
+          return null;
+      }
+    }
+
     switch (route.key) {
       case 'clothes':
-        return <ImageGrid apiURL="/api/feed/flat/?categoryIds=0" navigation={this.props.navigation} />;
+        return <ImageGrid apiURL="/api/feed/flat/?categoryIds=0" navigation={navigation} />;
       case 'shoes':
-        return <ImageGrid apiURL="/api/feed/flat/?categoryIds=1" navigation={this.props.navigation} />;
+        return <ImageGrid apiURL="/api/feed/flat/?categoryIds=1" navigation={navigation} />;
       case 'other':
-        return <ImageGrid apiURL="/api/feed/flat/?categoryIds=2" navigation={this.props.navigation} />;
+        return <ImageGrid apiURL="/api/feed/flat/?categoryIds=2" navigation={navigation} />;
       default:
         return null;
     }
@@ -106,9 +123,11 @@ export class Home extends PureComponent<Props, State> {
             <Title>{APP_NAME.toUpperCase()}</Title>
           </Body>
           <Right>
-            <Button transparent onPress={this.goToDropsFeed}>
-              <Megaphone width={19} height={19} />
-            </Button>
+            {!this.props.skippedLogin && (
+              <Button transparent onPress={this.goToDropsFeed}>
+                <Megaphone width={19} height={19} />
+              </Button>
+            )}
           </Right>
         </Header>
         <TabView
@@ -154,6 +173,14 @@ export class Home extends PureComponent<Props, State> {
     </React.Fragment>
   );
 }
+
+const mapStateToProps = (state: any) => ({
+  token: state.LoginReducer.token,
+  skippedLogin: state.LoginReducer.skippedLogin,
+  shouldRefresh: state.RefresherReducer.shouldRefresh,
+});
+
+export const Home = connect(mapStateToProps)(HomeComponent);
 
 // const STATUS_BAR_HEIGHT = Platform.OS === 'ios' ? 20 : 0;
 

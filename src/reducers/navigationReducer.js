@@ -30,6 +30,7 @@ const navigationReducer = (state: NavigationState = initialState, action: Action
     case RELOAD_SUCCESS:
     case LOGIN_SUCCESS:
     case SIGNUP_SUCCESS:
+    case 'SKIP':
       return {
         ...state,
         stateForLoggedIn: NavigationStack.router.getStateForAction(ActionForLoggedIn, stateForLoggedOut),

@@ -1,11 +1,6 @@
 // @flow
 
-import {
-  LOGIN_SUCCESS,
-  LOGOUT,
-  RELOAD_SUCCESS,
-  SIGNUP_SUCCESS,
-} from '../../src/actions/actionTypes';
+import { LOGIN_SUCCESS, LOGOUT, RELOAD_SUCCESS, SIGNUP_SUCCESS } from '../../src/actions/actionTypes';
 
 import navigationReducer from '../../src/reducers/navigationReducer';
 

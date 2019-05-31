@@ -20,6 +20,7 @@ import * as api from '../utils/api';
 import * as linking from '../utils/linking';
 import * as ui from '../utils/ui';
 import { getPersonalUserData } from '../actions/actionCreator';
+import { store } from '../App';
 
 import type { Dispatch, UserData, ReduxState, Product } from '../types';
 
@@ -63,6 +64,16 @@ export class CreateDropScreen extends React.Component<Props, State> {
   static navigationOptions = (props: any) => ({
     // navigate to the screen instead of showing as a normal tab screen
     tabBarOnPress: ({ scene }: any) => {
+      // FIXME: hack
+      const state: ReduxState = store.getState();
+      if (state.LoginReducer.skippedLogin) {
+        console.warn('skippedLogin');
+        props.navigation.navigate({
+          routeName: 'inAppAuth',
+          key: 'inAppAuth',
+        });
+        return;
+      }
       if (!scene.focused) {
         props.navigation.navigate({
           routeName: 'createDrop',
@@ -73,26 +84,24 @@ export class CreateDropScreen extends React.Component<Props, State> {
   });
 
   state = {
-    datetime: this.initialDate,
+    datetime: new Date(),
     isDatePickerVisible: false,
     isTimePickerVisible: false,
     isLoading: true,
     location: null,
     pending: false,
-    hidden: true,
     products: [],
   };
 
   async componentDidMount() {
-    if (this.props.skippedLogin) {
-      // FIXME: do not flickr
-      this.props.navigation.goBack();
-      setTimeout(() => {
-        this.props.navigation.navigate('inAppAuth');
-      }, 300);
-      return;
-    }
-    this.setState({ hidden: false });
+    // if (this.props.skippedLogin) {
+    //   // FIXME: do not flickr
+    //   this.props.navigation.goBack();
+    //   setTimeout(() => {
+    //     this.props.navigation.navigate('inAppAuth');
+    //   }, 300);
+    //   return;
+    // }
     const loader = setTimeout(() => {
       Toast.loading(I18n.t('alerts.loading_message'), 20);
     }, 500);
@@ -407,7 +416,7 @@ export class CreateDropScreen extends React.Component<Props, State> {
   shouldShowNoLocationGatheredNoticeBar = () => this.state.location === null;
 
   render() {
-    let { products, datetime, hidden, isLoading, isDatePickerVisible, isTimePickerVisible } = this.state;
+    let { products, datetime, isLoading, isDatePickerVisible, isTimePickerVisible } = this.state;
 
     const next = [
       {
@@ -417,8 +426,6 @@ export class CreateDropScreen extends React.Component<Props, State> {
       },
     ];
     products = [...products, ...next];
-
-    if (hidden) return null;
 
     return (
       <Container>

@@ -40,7 +40,7 @@ const StackNav = StackNavigator(
     // introScreens: { screen: IntroScreens },
     product: {
       screen: Product,
-      path: 'product/:productUUID',
+      // path: 'product/:productUUID', // deep linking
     },
     tabs: { screen: TabsStack },
     addOrEditProduct: {
@@ -66,9 +66,7 @@ const StackNav = StackNavigator(
     following: { screen: Following },
     search: { screen: Search },
     searchProductsResults: { screen: SearchProductsResults },
-    profileInStack: {
-      screen: Profile,
-    },
+    profileInStack: { screen: Profile },
     chatRooms: { screen: ChatRooms },
     chat: {
       screen: Chat,
@@ -119,7 +117,7 @@ StackNav.router.getStateForAction = (action, state) => {
 function forVertical(props) {
   const { layout, position, scene } = props;
 
-  const index = scene.index;
+  const { index } = scene;
   const height = layout.initHeight;
 
   const translateX = 0;
@@ -154,12 +152,8 @@ const AppStack = StackNavigator(
 
 // Main Navigator
 const AppNavigator = SwitchNavigator({
-  signuplogin: {
-    screen: SignUpLoginTabs,
-  },
-  App: {
-    screen: AppStack,
-  },
+  signuplogin: { screen: SignUpLoginTabs },
+  app: { screen: AppStack },
 });
 
 export default AppNavigator;

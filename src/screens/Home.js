@@ -122,15 +122,12 @@ class HomeComponent extends PureComponent<Props, State> {
             </Button>
           </Left>
           <Body>
-            {/* eslint-disable-next-line react-native/no-raw-text */}
             <Title>{APP_NAME.toUpperCase()}</Title>
           </Body>
           <Right>
-            {/* {!this.props.skippedLogin && ( */}
             <Button transparent onPress={this.goToDropsFeed}>
               <Megaphone width={19} height={19} />
             </Button>
-            {/* )} */}
           </Right>
         </Header>
         <TabView

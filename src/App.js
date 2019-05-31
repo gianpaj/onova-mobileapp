@@ -13,7 +13,7 @@ import AppNavigation from './navigation';
 import colors from './config/colors';
 import { analyticsEnabled, config } from './utils/api';
 
-const { store, persistor } = configureStore();
+export const { store, persistor } = configureStore();
 const segmentOptions = {
   // track app lifecycle events such as "Application Installed", "Application Updated" and "Application Opened".
   [AnalyticsConstants.trackApplicationLifecycleEvents]: true,

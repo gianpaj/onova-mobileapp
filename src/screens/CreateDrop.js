@@ -30,6 +30,7 @@ type Props = {
   navigation: NavigationScreenProp<*>,
   token: string,
   userData: UserData,
+  skippedLogin: boolean,
 };
 
 type State = {
@@ -59,20 +60,17 @@ const pickerProps = {
 };
 
 export class CreateDropScreen extends React.Component<Props, State> {
-  static navigationOptions = (props: any) => {
-    return {
-      // navigate to the screen instead of showing as a normal tab screen
-      tabBarOnPress: ({ scene }: any) => {
-        if (!scene.focused) {
-          props.navigation.navigate({
-            routeName: 'createDrop',
-            key: 'createDrop',
-          });
-        }
-      },
-    };
-  };
-  initialDate = new Date();
+  static navigationOptions = (props: any) => ({
+    // navigate to the screen instead of showing as a normal tab screen
+    tabBarOnPress: ({ scene }: any) => {
+      if (!scene.focused) {
+        props.navigation.navigate({
+          routeName: 'createDrop',
+          key: 'createDrop',
+        });
+      }
+    },
+  });
 
   state = {
     datetime: this.initialDate,
@@ -81,15 +79,27 @@ export class CreateDropScreen extends React.Component<Props, State> {
     isLoading: true,
     location: null,
     pending: false,
+    hidden: true,
     products: [],
   };
 
   async componentDidMount() {
+    if (this.props.skippedLogin) {
+      // FIXME: do not flickr
+      this.props.navigation.goBack();
+      setTimeout(() => {
+        this.props.navigation.navigate('inAppAuth');
+      }, 300);
+      return;
+    }
+    this.setState({ hidden: false });
     const loader = setTimeout(() => {
       Toast.loading(I18n.t('alerts.loading_message'), 20);
     }, 500);
 
-    // check if we user has payment and settings info
+    this.initialDate = new Date();
+
+    // check if user has payment and settings info
     try {
       await this.props.dispatch(getPersonalUserData());
       clearTimeout(loader);
@@ -397,7 +407,7 @@ export class CreateDropScreen extends React.Component<Props, State> {
   shouldShowNoLocationGatheredNoticeBar = () => this.state.location === null;
 
   render() {
-    let { products, datetime, isLoading, isDatePickerVisible, isTimePickerVisible } = this.state;
+    let { products, datetime, hidden, isLoading, isDatePickerVisible, isTimePickerVisible } = this.state;
 
     const next = [
       {
@@ -407,6 +417,8 @@ export class CreateDropScreen extends React.Component<Props, State> {
       },
     ];
     products = [...products, ...next];
+
+    if (hidden) return null;
 
     return (
       <Container>
@@ -585,6 +597,7 @@ const styles = StyleSheet.create({
 
 const mapStateToProps: any = (state: ReduxState) => ({
   userData: state.LoginReducer.data,
+  skippedLogin: state.LoginReducer.skippedLogin,
   token: state.LoginReducer.token,
 });
 

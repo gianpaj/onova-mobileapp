@@ -146,9 +146,20 @@ class ProfileScreen extends React.Component<Props, State> {
   };
 
   componentDidMount() {
-    const { navigation } = this.props;
+    const { navigation, skippedLogin } = this.props;
     if (navigation.state.params && navigation.state.params.tab == 'drops') {
       this.setState({ index: 1 });
+    }
+
+    if (skippedLogin && !navigation.state.params) {
+      this.props = {
+        ...this.props,
+        userData: {
+          // onova user
+          _id: '5afb40d0741c953ef07a616f',
+          accountStatus: 'verified',
+        },
+      };
     }
 
     this.refresh()
@@ -331,8 +342,8 @@ class ProfileScreen extends React.Component<Props, State> {
   isMe(): boolean {
     const { userData, navigation, skippedLogin } = this.props;
     const { params } = navigation.state;
-    if (!params) return true;
     if (skippedLogin) return false;
+    if (!params) return true;
 
     return params._id == userData._id;
   }

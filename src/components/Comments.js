@@ -3,7 +3,6 @@
 import React from 'react';
 import {
   ActivityIndicator,
-  // Animated,
   Dimensions,
   FlatList,
   Platform,

@@ -30,7 +30,7 @@ const initialLayout = {
 
 type Props = {
   navigation?: NavigationScreenProp<*>,
-  skippedLogin: Boolean,
+  skippedLogin: boolean,
 };
 
 type State = {

@@ -2,16 +2,7 @@
 
 import React from 'react';
 import { connect } from 'react-redux';
-import {
-  ActivityIndicator,
-  // Animated,
-  Platform,
-  Share,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { ActivityIndicator, Platform, Share, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { ActionSheet, Body, Button as NBButton, Container, Content, Icon as NBIcon, Left, Right } from 'native-base';
 import { Button } from 'react-native-elements';
 import ParsedText from 'react-native-parsed-text';
@@ -39,6 +30,7 @@ type Props = {
   dispatch: Dispatch,
   navigation: NavigationScreenProp<*>,
   shouldRefresh: boolean,
+  skippedLogin: boolean,
   token: string,
   userData: UserData,
 };
@@ -100,6 +92,7 @@ export class ProductContainer extends React.Component<Props, State> {
   }
 
   showActionSheetForProduct = () => {
+    const { skippedLogin } = this.props;
     const DELETE = I18n.t('alerts.action_button_delete');
     const EDIT = I18n.t('alerts.action_button_edit');
     const CANCEL = I18n.t('alerts.action_button_cancel');
@@ -126,8 +119,11 @@ export class ProductContainer extends React.Component<Props, State> {
         },
       ];
     }
-
-    if (this.isMyProduct()) {
+    if (skippedLogin) {
+      // remove Report options
+      BUTTONS.splice(0, 1);
+      BUTTONSArr.splice(0, 1);
+    } else if (this.isMyProduct()) {
       BUTTONS = [DELETE, EDIT, SHARE, CANCEL];
       BUTTONSArr = [DELETE, EDIT, SHARE, CANCEL];
       if (Platform.OS === 'android') {
@@ -200,15 +196,21 @@ export class ProductContainer extends React.Component<Props, State> {
   shareProduct = () => {
     const { item } = this.state;
     const url = `https://${URL}/${item.seller.username}/${item.uuid}`;
+    let promise;
     if (Platform.OS === 'ios') {
-      Share.share({
-        url: url,
-      });
+      promise = Share.share({ url: url });
     } else {
-      Share.share({
-        message: url,
-      });
+      promise = Share.share({ message: url });
     }
+    promise.then(res => {
+      if (this.props.skippedLogin) return;
+      // ios user shared it
+      // android probably user shared it
+      if ((Platform.OS === 'ios' && res.action !== Share.dismissedAction) || Platform.OS !== 'ios') {
+        return this.onSuccessfulShare();
+      }
+      throw new Error('not_shared');
+    });
     if (analyticsEnabled) Analytics.track('press_share_product');
   };
 
@@ -404,8 +406,9 @@ export class ProductContainer extends React.Component<Props, State> {
   };
 
   isMyProduct(): boolean | null {
-    if (!this.state.item) return null;
-    return this.state.item.seller._id == this.props.userData._id;
+    const { userData, skippedLogin } = this.props;
+    if (!this.state.item || skippedLogin) return null;
+    return this.state.item.seller._id == userData._id;
   }
 
   // onPressLike = () => {
@@ -429,6 +432,7 @@ export class ProductContainer extends React.Component<Props, State> {
 
   render() {
     const { item, loading, loadingBuy } = this.state;
+    const { navigation, skippedLogin, userData, token } = this.props;
 
     // join array of tags and add the `#` char for rendering
     let tags;
@@ -444,7 +448,7 @@ export class ProductContainer extends React.Component<Props, State> {
       <Container>
         <Header>
           <Left>
-            <NBButton transparent dark onPress={() => this.props.navigation.goBack()}>
+            <NBButton transparent dark onPress={() => navigation.goBack()}>
               <NBIcon ios="ios-arrow-back" android="md-arrow-back" />
             </NBButton>
           </Left>
@@ -565,13 +569,15 @@ export class ProductContainer extends React.Component<Props, State> {
                     </ParsedText>
                   )}
                 </View>
-                <Comments
-                  uuid={item.uuid}
-                  userData={this.props.userData}
-                  token={this.props.token}
-                  scrollView={this.scrollView}
-                  goToProfile={this.goToProfile}
-                />
+                {!skippedLogin && (
+                  <Comments
+                    uuid={item.uuid}
+                    userData={userData}
+                    token={token}
+                    scrollView={this.scrollView}
+                    goToProfile={this.goToProfile}
+                  />
+                )}
               </View>
             </>
           )}
@@ -677,8 +683,8 @@ const styles = StyleSheet.create({
 
 const mapStateToProps: MapStateToProps<*, *, *> = (state: ReduxState) => ({
   shouldRefresh: state.RefresherReducer.shouldRefresh,
+  skippedLogin: state.LoginReducer.skippedLogin,
   token: state.LoginReducer.token,
-  userData: state.LoginReducer.data,
 });
 
 export const Product = connect(mapStateToProps)(ProductContainer);

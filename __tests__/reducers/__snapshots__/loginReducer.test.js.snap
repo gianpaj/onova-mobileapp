@@ -10,6 +10,7 @@ Object {
   "isLoggedIn": false,
   "isVerifyAccountModalVisible": false,
   "loading": false,
+  "skippedLogin": false,
   "token": "",
 }
 `;
@@ -24,6 +25,7 @@ Object {
   "isLoggedIn": false,
   "isVerifyAccountModalVisible": false,
   "loading": false,
+  "skippedLogin": false,
   "token": "",
 }
 `;
@@ -41,6 +43,7 @@ Object {
   "isLoggedIn": false,
   "isVerifyAccountModalVisible": false,
   "loading": false,
+  "skippedLogin": false,
   "token": "",
 }
 `;
@@ -55,6 +58,7 @@ Object {
   "isLoggedIn": false,
   "isVerifyAccountModalVisible": false,
   "loading": false,
+  "skippedLogin": false,
   "token": "",
 }
 `;
@@ -69,6 +73,7 @@ Object {
   "isLoggedIn": false,
   "isVerifyAccountModalVisible": false,
   "loading": false,
+  "skippedLogin": false,
   "token": "",
 }
 `;
@@ -83,6 +88,7 @@ Object {
   "isLoggedIn": false,
   "isVerifyAccountModalVisible": false,
   "loading": true,
+  "skippedLogin": false,
   "token": "",
 }
 `;
@@ -99,6 +105,7 @@ Object {
   "isLoggedIn": true,
   "isVerifyAccountModalVisible": false,
   "loading": false,
+  "skippedLogin": false,
   "token": "myJWTAuthtoken",
 }
 `;
@@ -113,6 +120,7 @@ Object {
   "isLoggedIn": false,
   "isVerifyAccountModalVisible": false,
   "loading": false,
+  "skippedLogin": false,
   "token": "",
 }
 `;
@@ -127,6 +135,7 @@ Object {
   "isLoggedIn": false,
   "isVerifyAccountModalVisible": false,
   "loading": false,
+  "skippedLogin": false,
   "token": "",
 }
 `;
@@ -141,6 +150,7 @@ Object {
   "isLoggedIn": false,
   "isVerifyAccountModalVisible": false,
   "loading": false,
+  "skippedLogin": false,
   "token": "",
 }
 `;
@@ -155,6 +165,7 @@ Object {
   "isLoggedIn": false,
   "isVerifyAccountModalVisible": false,
   "loading": false,
+  "skippedLogin": false,
   "token": "",
 }
 `;
@@ -169,6 +180,7 @@ Object {
   "isLoggedIn": false,
   "isVerifyAccountModalVisible": false,
   "loading": true,
+  "skippedLogin": false,
   "token": "",
 }
 `;
@@ -183,6 +195,7 @@ Object {
   "isLoggedIn": false,
   "isVerifyAccountModalVisible": true,
   "loading": false,
+  "skippedLogin": false,
   "token": "",
 }
 `;

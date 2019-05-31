@@ -343,33 +343,31 @@ export class ProductContainer extends React.Component<Props, State> {
   onPressBuy = () => {
     const { item, loadingBuy } = this.state;
     if (loadingBuy || !item) return;
-
-    if (this.props.skippedLogin) this.props.dispatch(openLoginModal());
+    if (this.props.skippedLogin) return this.props.navigation.navigate('inAppAuth');
 
     // check if product is still `forsale`
     this.setState({ loadingBuy: true });
 
     this.hasUserShared()
-      .then(async hasShared => {
-        if (!hasShared) {
-          await new Promise((resolve, reject) => {
-            ui.showConfirmAlert(
-              I18n.t('product.share_before'),
-              '',
-              async () => {
-                try {
-                  await this.onMandatoryShare();
-                  resolve();
-                } catch (err) {
-                  reject(err);
-                }
-              },
-              () => this.setState({ loadingBuy: false }),
-              I18n.t('alerts.confirm_alert_button_cancel'),
-              I18n.t('product.toast_warning_ok_button')
-            );
-          });
-        }
+      .then(hasShared => {
+        if (hasShared) return;
+        return new Promise((resolve, reject) => {
+          ui.showConfirmAlert(
+            I18n.t('product.share_before'),
+            '',
+            async () => {
+              try {
+                await this.onMandatoryShare();
+                resolve();
+              } catch (err) {
+                reject(err);
+              }
+            },
+            () => this.setState({ loadingBuy: false }),
+            I18n.t('alerts.confirm_alert_button_cancel'),
+            I18n.t('product.toast_warning_ok_button')
+          );
+        });
       })
       .then(() => api.getProduct(item.uuid))
       .then((product: ProductType) => {
@@ -689,6 +687,7 @@ const styles = StyleSheet.create({
 const mapStateToProps: MapStateToProps<*, *, *> = (state: ReduxState) => ({
   shouldRefresh: state.RefresherReducer.shouldRefresh,
   skippedLogin: state.LoginReducer.skippedLogin,
+  userData: state.LoginReducer.data,
   token: state.LoginReducer.token,
 });
 

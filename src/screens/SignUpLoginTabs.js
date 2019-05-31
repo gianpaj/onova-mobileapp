@@ -23,7 +23,7 @@ type State = {
   routes: Array<any>,
 };
 
-class SignUpLoginTabsContainer extends React.Component<{}, State> {
+export class SignUpLoginTabs extends React.Component<{}, State> {
   state = {
     index: 0,
     routes: [
@@ -61,8 +61,6 @@ class SignUpLoginTabsContainer extends React.Component<{}, State> {
     );
   }
 }
-
-export const SignUpLoginTabs = SignUpLoginTabsContainer;
 
 const styles = StyleSheet.create({
   header: {

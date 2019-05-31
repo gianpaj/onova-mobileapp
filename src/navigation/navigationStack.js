@@ -36,9 +36,7 @@ import { TabsStack } from './navigationTabs';
 
 const StackNav = StackNavigator(
   {
-    signuplogin: {
-      screen: SignUpLoginTabs,
-    },
+    signuplogin: { screen: SignUpLoginTabs },
     // introScreens: { screen: IntroScreens },
     product: {
       screen: Product,

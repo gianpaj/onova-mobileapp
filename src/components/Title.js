@@ -1,8 +1,8 @@
 // @flow
 
 import React from 'react';
-import { Title } from 'native-base';
 import { StyleSheet } from 'react-native';
+import { Title } from 'native-base';
 import PropTypes from 'prop-types';
 
 import colors from '../config/colors';
@@ -16,6 +16,7 @@ const TitleContainer = (props: any): React$Element<any> => (
 const styles = StyleSheet.create({
   style: {
     color: colors.black,
+    paddingLeft: 0,
   },
   withIcon: {
     // marginLeft: 22,

@@ -62,18 +62,17 @@ const pickerProps = {
 
 export class CreateDropScreen extends React.Component<Props, State> {
   static navigationOptions = (props: any) => ({
-    // navigate to the screen instead of showing as a normal tab screen
     tabBarOnPress: ({ scene }: any) => {
       // FIXME: hack
       const state: ReduxState = store.getState();
       if (state.LoginReducer.skippedLogin) {
-        console.warn('skippedLogin');
         props.navigation.navigate({
           routeName: 'inAppAuth',
           key: 'inAppAuth',
         });
         return;
       }
+      // navigate to the screen instead of showing as a normal tab screen
       if (!scene.focused) {
         props.navigation.navigate({
           routeName: 'createDrop',

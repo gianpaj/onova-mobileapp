@@ -19,6 +19,7 @@ import * as api from '../utils/api';
 import * as ui from '../utils/ui';
 import { Header, Avatar, Title } from '../components';
 import { getRoomName } from './Chat';
+import { store } from '../App';
 
 import { currentUser as pusherCurrentUser } from '../actions/actionCreator';
 
@@ -39,6 +40,19 @@ type State = {
 };
 
 class ChatContainer extends Component<Props, State> {
+  static navigationOptions = (props: any) => ({
+    tabBarOnPress: () => {
+      // FIXME: hack
+      const state: ReduxState = store.getState();
+      if (state.LoginReducer.skippedLogin) {
+        props.navigation.navigate({
+          routeName: 'inAppAuth',
+          key: 'inAppAuth',
+        });
+        return;
+      }
+    },
+  });
   didFocusListener;
   state = {
     hasError: false,

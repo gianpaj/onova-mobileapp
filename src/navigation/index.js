@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react';
-import { ActivityIndicator, BackHandler, ImageBackground, StyleSheet } from 'react-native';
+import { ActivityIndicator, BackHandler, ImageBackground, StyleSheet, Platform } from 'react-native';
 import { connect } from 'react-redux';
 import { addNavigationHelpers, NavigationActions } from 'react-navigation';
 import { initializeListeners, createReduxBoundAddListener } from 'react-navigation-redux-helpers';

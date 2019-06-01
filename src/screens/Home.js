@@ -120,12 +120,12 @@ class HomeComponent extends PureComponent<Props, State> {
     return (
       <View testID="Home" style={{ flex: 1 }}>
         <Header hasTabs>
-          <Left>
+          <Left style={styles.container}>
             <Button transparent dark style={{ marginLeft: 5 }} onPress={this.toggleDialog}>
               <MaterialCommunityIcons name="information-outline" size={18} />
             </Button>
           </Left>
-          <Body>
+          <Body style={styles.container}>
             <Title>{APP_NAME.toUpperCase()}</Title>
           </Body>
           <Right>

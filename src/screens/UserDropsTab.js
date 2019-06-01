@@ -36,6 +36,12 @@ class UserDropsTabContainer extends React.Component<Props, {}> {
     return navigation.state.params._id === userData._id;
   }
 
+  onCreateDrop = () => {
+    const { navigation, skippedLogin } = this.props;
+    if (skippedLogin) return navigation.navigate('inAppAuth');
+    navigation.navigate('createDrop');
+  };
+
   render() {
     const { navigation, username } = this.props;
 
@@ -55,7 +61,7 @@ class UserDropsTabContainer extends React.Component<Props, {}> {
                   <MaterialCommunityIcons size={48} name="clock" color={colors.grey2} style={styles.emptyStateIcon} />
                   <Text style={styles.boldText}>{I18n.t('drops_grid.empty_state_title')}</Text>
                   <Text style={styles.centerText}>{I18n.t('drops_grid.empty_state_message_mine')}</Text>
-                  <NBButton block dark style={styles.searchButton} onPress={() => navigation.navigate('createDrop')}>
+                  <NBButton block dark style={styles.createDropButton} onPress={this.onCreateDrop}>
                     <Text
                       // eslint-disable-next-line
                       style={{
@@ -83,6 +89,9 @@ const styles = StyleSheet.create({
   centerText: {
     marginTop: 5,
   },
+  createDropButton: {
+    marginTop: 20,
+  },
   emptyContainer: {
     alignItems: 'center',
     flex: 1,
@@ -95,9 +104,6 @@ const styles = StyleSheet.create({
   },
   flex1: {
     flex: 1,
-  },
-  searchButton: {
-    marginTop: 20,
   },
 });
 

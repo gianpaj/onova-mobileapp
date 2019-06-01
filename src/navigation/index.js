@@ -53,7 +53,10 @@ class AppNavigation extends React.PureComponent<Props, *> {
   }
 
   onCheckLogin = () => {
-    const { dispatch, isLoggedIn, userData, token, skippedLogin } = this.props;
+    const { dispatch, isLoggedIn, userData, token } = this.props;
+
+    // for devepment - remove so you'll have to skip every time and stay as guest
+    // if (this.props.skippedLogin) return dispatch(skip());
 
     if (isLoggedIn && userData && token) {
       this.setState({ canReload: false });
@@ -127,17 +130,17 @@ class AppNavigation extends React.PureComponent<Props, *> {
 
 const styles = StyleSheet.create({
   container: {
+    alignItems: 'center',
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
   },
   retryButtonContainer: {
     backgroundColor: colors.primary,
     minWidth: 160,
   },
   retryButtonText: {
-    fontSize: 16,
     color: colors.white,
+    fontSize: 16,
   },
 });
 

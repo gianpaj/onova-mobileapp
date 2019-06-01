@@ -604,7 +604,12 @@ class ProfileScreen extends React.Component<Props, State> {
                 <NBIcon ios="ios-arrow-back" android="md-arrow-back" />
               </NBButton>
             ) : (
-              <NBButton transparent dark onPress={this.openNotifications}>
+              <NBButton
+                style={skippedLogin && { opacity: 0.2 }}
+                disabled={skippedLogin}
+                transparent
+                dark
+                onPress={this.openNotifications}>
                 <NBIcon ios="ios-notifications" android="md-notifications" style={styles.icon} />
               </NBButton>
             )}

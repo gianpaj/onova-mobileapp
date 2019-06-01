@@ -557,7 +557,11 @@ class ChatContainer extends Component<Props, State> {
         <ParsedText
           style={{ marginTop: 4, margin: 18 }}
           parse={[
-            { pattern: linking.URLpattern, style: st.url, onPress: linking.openURL },
+            {
+              pattern: linking.URLpattern,
+              style: st.url,
+              onPress: linking.openURL,
+            },
             {
               pattern: /[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{2,3}[-\s\.]?[0-9]{2,3}/,
               style: st.url,

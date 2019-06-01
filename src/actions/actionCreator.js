@@ -406,7 +406,6 @@ const enableCancelOrder = () => ({ type: DO_CANCEL_ORDER });
 
 const disableCancelOrder = () => ({ type: DONOT_CANCEL_ORDER });
 
-
 export {
   initializePusher,
   login,

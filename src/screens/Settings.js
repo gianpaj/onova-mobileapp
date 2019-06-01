@@ -545,7 +545,10 @@ class SettingsContainer extends Component<Props, State> {
               style={styles.padder}
               accessibilityRole="link"
               onPress={linking.email.bind(this, `mailto:hello@${URL}`)}>
-              <Text style={styles.centerText}>hello@{URL}</Text>
+              <Text style={styles.centerText}>
+                hello@
+                {URL}
+              </Text>
             </TouchableOpacity>
             <Text style={styles.centerText}>{version}</Text>
           </View>

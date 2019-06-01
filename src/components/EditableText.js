@@ -54,7 +54,13 @@ class EditableText extends PureComponent<Props, State> {
     return (
       <ParsedText
         {...textProps}
-        parse={[{ pattern: linking.URLpattern, style: styles.url, onPress: linking.openURL }]}
+        parse={[
+          {
+            pattern: linking.URLpattern,
+            style: styles.url,
+            onPress: linking.openURL,
+          },
+        ]}
         style={[style, !text && { color: placeholderColor }]}>
         {text || (showPlaceholder ? placeholder : '')}
       </ParsedText>

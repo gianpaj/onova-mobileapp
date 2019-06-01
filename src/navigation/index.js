@@ -43,12 +43,13 @@ class AppNavigation extends React.PureComponent<Props, *> {
   componentDidMount() {
     initializeListeners('root', this.props.nav);
 
-    BackHandler.addEventListener('hardwareBackPress', this.onBackPress);
-
     // FIXME: horrible hack
     NavigationService.setDispatcher(this.props.dispatch);
 
     this.onCheckLogin();
+
+    if (Platform.OS === 'ios') return;
+    BackHandler.addEventListener('hardwareBackPress', this.onBackPress);
   }
 
   onCheckLogin = () => {
@@ -74,6 +75,7 @@ class AppNavigation extends React.PureComponent<Props, *> {
   };
 
   componentWillUnmount() {
+    if (Platform.OS === 'ios') return;
     BackHandler.removeEventListener('hardwareBackPress', this.onBackPress);
   }
 

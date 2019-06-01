@@ -1,5 +1,7 @@
 // @flow
 
+import { APP_NAME } from 'react-native-dotenv';
+
 import {
   GETUSER_FAIL,
   GETUSER_PENDING,
@@ -61,9 +63,11 @@ export default function(state: LoginState = initialState, action: Action): Login
       };
 
     case SKIPPED:
+      // eslint-disable-next-line no-unused-vars
+      const { token, ...noToken } = action.payload;
       return {
         ...state,
-        data: null,
+        data: noToken,
         isAdmin: false,
         isLoggedIn: true,
         skippedLogin: true,

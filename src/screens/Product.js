@@ -409,9 +409,9 @@ export class ProductContainer extends React.Component<Props, State> {
   };
 
   isMyProduct(): boolean | null {
-    const { userData, skippedLogin } = this.props;
-    if (!this.state.item || skippedLogin) return null;
-    return this.state.item.seller._id == userData._id;
+    const { item } = this.state;
+    if (!item) return false;
+    return item.seller._id == this.props.userData._id;
   }
 
   // onPressLike = () => {

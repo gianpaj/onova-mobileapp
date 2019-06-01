@@ -3,35 +3,32 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Platform, StyleSheet } from 'react-native';
-// eslint-disable-next-line import/default
-import UserAvatar from 'react-native-user-avatar';
-import { APP_NAME } from 'react-native-dotenv';
+// import UserAvatar from 'react-native-user-avatar';
 
-import type { ReduxState } from '../types';
+import type { ReduxState, UserData } from '../types';
 import { Avatar } from '../components';
-import colors from '../config/colors';
 
 type Props = {
   focused: boolean,
-  userData: any,
+  userData: UserData,
 };
 
 function NotificationsDot({ userData, focused }: Props) {
   // textColor
   // imageStyle
   // defaultName
-  if (!userData) {
-    const color = APP_NAME === 'onova' ? colors.black : colors.redDrop;
-    return (
-      <UserAvatar
-        color={color}
-        size="30"
-        fontDecrease={2}
-        name={APP_NAME.slice(0, 1).toUpperCase()}
-        containerStyle={focused ? { borderColor: colors.grey5 } : {}}
-      />
-    );
-  }
+  // if (skippedLogin) {
+  //   const color = APP_NAME === 'onova' ? colors.black : colors.redDrop;
+  //   return (
+  //     <UserAvatar
+  //       color={color}
+  //       size="30"
+  //       fontDecrease={2}
+  //       name={APP_NAME.slice(0, 1).toUpperCase()}
+  //       containerStyle={focused ? { borderColor: colors.grey5 } : {}}
+  //     />
+  //   );
+  // }
 
   return (
     <Avatar

@@ -6,7 +6,7 @@ import { Dimensions, Image, Platform, Share, StyleSheet, Text, TouchableOpacity,
 import { ActionSheet, Body, Button as NBButton, Container, Icon as NBIcon, Left, Right } from 'native-base';
 import { NavigationActions } from 'react-navigation';
 import { TabView, TabBar } from 'react-native-tab-view';
-import { URL } from 'react-native-dotenv';
+import { URL, APP_NAME } from 'react-native-dotenv';
 import { Modal, NoticeBar, Toast } from 'antd-mobile-rn';
 import Analytics from 'react-native-analytics-segment-io';
 
@@ -101,7 +101,6 @@ class ProfileScreen extends React.Component<Props, State> {
       } else {
         userId = userData._id;
       }
-      const res: UserData = await api.get(`/api/users/${userId}`);
       const {
         _id,
         bio,
@@ -111,7 +110,7 @@ class ProfileScreen extends React.Component<Props, State> {
         ordersAndReviewsCount,
         profilePic,
         username,
-      } = res;
+      }: UserData = await api.get(`/api/users/${userId}`);
 
       this.setState({
         _id,
@@ -124,6 +123,8 @@ class ProfileScreen extends React.Component<Props, State> {
         username,
       });
 
+      if (skippedLogin) return;
+
       // if it's not me
       if (params && userData && params._id !== userData._id) {
         const { data } = await api.get(`/api/users/${userId}/follow`, { token });
@@ -135,7 +136,7 @@ class ProfileScreen extends React.Component<Props, State> {
       // const suggestions = await api.getSuggestions(token);
 
       // this.setState({ suggestions });
-      if (!skippedLogin) this.props.dispatch(getPersonalUserData());
+      this.props.dispatch(getPersonalUserData());
     } catch (err) {
       if (err.message == 'Not following') return;
       throw err;
@@ -143,20 +144,9 @@ class ProfileScreen extends React.Component<Props, State> {
   };
 
   componentDidMount() {
-    const { navigation, skippedLogin } = this.props;
+    const { navigation } = this.props;
     if (navigation.state.params && navigation.state.params.tab == 'drops') {
       this.setState({ index: 1 });
-    }
-
-    if (skippedLogin && !navigation.state.params) {
-      this.props = {
-        ...this.props,
-        userData: {
-          // onova user
-          _id: '5afb40d0741c953ef07a616f',
-          accountStatus: 'verified',
-        },
-      };
     }
 
     this.refresh()
@@ -192,10 +182,18 @@ class ProfileScreen extends React.Component<Props, State> {
     this.props.navigation.dispatch(navigateToSettings);
   };
 
+  onEditOrSave = () => {
+    const { navigation, skippedLogin } = this.props;
+    if (skippedLogin) return navigation.navigate('inAppAuth');
+    this.state.editing ? this.onSave() : this.setState({ editing: !editing });
+  };
+
   onSave = () => {
     this.setState({ isSaving: true });
-    const { userData, token } = this.props;
+    const { userData, token, navigation, skippedLogin } = this.props;
     const { bio, displayName, profilePic } = this.state;
+
+    if (skippedLogin) return navigation.navigate('inAppAuth');
     const formData = new FormData();
 
     formData.append('bio', bio);
@@ -330,10 +328,13 @@ class ProfileScreen extends React.Component<Props, State> {
     }
   };
 
+  /**
+   * return true if you're in your profile (logged in or not)
+   */
   isMe(): boolean {
     const { userData, navigation, skippedLogin } = this.props;
     const { params } = navigation.state;
-    if (skippedLogin) return false;
+    if (skippedLogin) return params ? false : true;
     if (!params) return true;
 
     return params._id == userData._id;
@@ -459,9 +460,7 @@ class ProfileScreen extends React.Component<Props, State> {
                     small
                     full
                     style={editing ? [styles.editOrFollowButton, styles.saveButton] : styles.editOrFollowButton}
-                    onPress={() => {
-                      editing ? this.onSave() : this.setState({ editing: !editing });
-                    }}>
+                    onPress={this.onEditOrSave}>
                     <Text style={[styles.editOrFollowButtonText, editing && { color: colors.white }]}>
                       {editing ? I18n.t('profile.save_profile_button') : I18n.t('profile.edit_profile_button')}
                     </Text>

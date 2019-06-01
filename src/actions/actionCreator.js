@@ -339,7 +339,10 @@ const logout = () => {
 };
 
 const skip = () => (dispatch: Dispatch) => {
-  return dispatch({ type: SKIPPED });
+  const userId = APP_NAME == 'onova' ? '5afb40d0741c953ef07a616f' : '5cd41dba3fb2da4b20f427d3';
+  return api.get(`/api/users/${userId}`).then((res: UserData) => dispatch({ type: SKIPPED, payload: res }));
+  // .catch(err => dispatch(handleErrorWithAlert({ type: GETUSER_FAIL }, err)))
+  // return dispatch({ type: SKIPPED });
 };
 
 const sendToken = (pushToken: string, userData: UserData, token: string): Promise<any> => {

@@ -28,9 +28,10 @@ class UserDropsTabContainer extends React.Component<Props, {}> {
   }
 
   isMe(): boolean {
-    const { navigation, skippedLogin, userData } = this.props;
-    if (!navigation.state.params) return true;
-    if (skippedLogin) return false;
+    const { userData, navigation, skippedLogin } = this.props;
+    const { params } = navigation.state;
+    if (skippedLogin) return params ? false : true;
+    if (!params) return true;
 
     return navigation.state.params._id === userData._id;
   }

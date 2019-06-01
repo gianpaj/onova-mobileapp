@@ -342,13 +342,22 @@ const st = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
   },
+  content: {
+    marginLeft: 16,
+  },
+  contentHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 6,
+  },
+  datetime: {
+    color: colors.grey1,
+    fontSize: 12,
+  },
   emptyContainer: {
     alignItems: 'center',
     flex: 1,
     justifyContent: 'center',
-  },
-  root: {
-    height: '100%',
   },
   flex1: {
     flex: 1,
@@ -359,45 +368,8 @@ const st = StyleSheet.create({
     paddingRight: 16,
     paddingVertical: 12,
   },
-  content: {
-    marginLeft: 16,
-  },
   name: {
     color: colors.black,
-  },
-  unread: {
-    fontWeight: 'bold',
-  },
-  unreadText: {
-    fontWeight: 'bold',
-    marginRight: 20,
-  },
-  datetime: {
-    color: colors.grey1,
-    fontSize: 12,
-  },
-  contentHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 6,
-  },
-  // orderCircle: {
-  //   marginHorizontal: 10,
-  //   marginVertical: 4,
-  // },
-  // itemImage: {
-  //   borderRadius: 50,
-  //   borderWidth: 2,
-  //   borderColor: colors.white,
-  //   height: '100%',
-  //   width: '100%',
-  // },
-  separator: {
-    backgroundColor: colors.grey5,
-    height: StyleSheet.hairlineWidth,
-  },
-  separatorHorizontal: {
-    width: 1,
   },
   onlineDot: {
     backgroundColor: colors.green,
@@ -405,6 +377,19 @@ const st = StyleSheet.create({
     height: 4,
     width: 4,
     zIndex: 2,
+  },
+  root: {
+    height: '100%',
+  },
+  separator: {
+    backgroundColor: colors.grey5,
+    height: StyleSheet.hairlineWidth,
+  },
+  separatorHorizontal: {
+    width: 1,
+  },
+  unread: {
+    fontWeight: 'bold',
   },
   unreadBadge: {
     backgroundColor: colors.active,
@@ -417,6 +402,21 @@ const st = StyleSheet.create({
     color: colors.white,
     fontSize: 13,
   },
+  unreadText: {
+    fontWeight: 'bold',
+    marginRight: 20,
+  },
+  // orderCircle: {
+  //   marginHorizontal: 10,
+  //   marginVertical: 4,
+  // },
+  // itemImage: {
+  //   borderRadius: 50,
+  //   borderWidth: 2,
+  //   borderColor: colors.white,
+  //   height: '100%',
+  //   width: '100%',
+  // },
 });
 
 const mapStateToProps: any = (state: ReduxState) => ({

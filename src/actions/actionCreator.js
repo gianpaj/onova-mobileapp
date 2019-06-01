@@ -28,6 +28,7 @@ import {
   SIGNUP_FAIL,
   SIGNUP_PENDING,
   SIGNUP_SUCCESS,
+  SKIPPED,
 } from './actionTypes';
 import type { Dispatch, LoginData, SignupData, GetState, UserData } from '../types';
 import type { Options, APIError } from '../utils/api';
@@ -42,8 +43,8 @@ let currentUser: PusherUser;
 
 const { isProd, analyticsEnabled, config } = api;
 
-const enabledPusher = isProd == true;
-// const enabledPusher = false;
+// const enabledPusher = isProd == true;
+const enabledPusher = false;
 
 const login = (data: LoginData) => (dispatch: Dispatch) => {
   dispatch({ type: LOGIN_PENDING });
@@ -338,7 +339,7 @@ const logout = () => {
 };
 
 const skip = () => (dispatch: Dispatch) => {
-  return dispatch({ type: 'SKIP' });
+  return dispatch({ type: SKIPPED });
 };
 
 const sendToken = (pushToken: string, userData: UserData, token: string): Promise<any> => {

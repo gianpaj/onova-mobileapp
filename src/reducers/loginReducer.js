@@ -15,6 +15,7 @@ import {
   SIGNUP_FAIL,
   SIGNUP_PENDING,
   SIGNUP_SUCCESS,
+  SKIPPED,
 } from '../actions/actionTypes';
 import type { Action, LoginState } from '../types/loginReducer';
 
@@ -59,9 +60,10 @@ export default function(state: LoginState = initialState, action: Action): Login
         skippedLogin: false,
       };
 
-    case 'SKIP':
+    case SKIPPED:
       return {
         ...state,
+        data: null,
         isAdmin: false,
         isLoggedIn: true,
         skippedLogin: true,

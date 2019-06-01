@@ -8,6 +8,7 @@ import {
   LOGOUT,
   RELOAD_SUCCESS,
   SIGNUP_SUCCESS,
+  SKIPPED,
 } from '../actions/actionTypes';
 
 import type { Action, NavigationState } from '../types/navigationReducer';
@@ -30,7 +31,7 @@ const navigationReducer = (state: NavigationState = initialState, action: Action
     case RELOAD_SUCCESS:
     case LOGIN_SUCCESS:
     case SIGNUP_SUCCESS:
-    case 'SKIP':
+    case SKIPPED:
       return {
         ...state,
         stateForLoggedIn: NavigationStack.router.getStateForAction(ActionForLoggedIn, stateForLoggedOut),

@@ -72,13 +72,17 @@ class HomeComponent extends PureComponent<Props, State> {
   _renderScene = ({ route }) => {
     const { navigation, skippedLogin } = this.props;
     if (skippedLogin) {
+      let sellerType = 'designer';
+      if (APP_NAME === 'drop') {
+        // sellerType = 'reseller';
+      }
       switch (route.key) {
         case 'clothes':
-          return <ImageGrid apiURL="/api/products/?categoryIds=0" navigation={navigation} />;
+          return <ImageGrid apiURL={`/api/products/?categoryIds=0&sellerType=${sellerType}`} navigation={navigation} />;
         case 'shoes':
-          return <ImageGrid apiURL="/api/products/?categoryIds=1" navigation={navigation} />;
+          return <ImageGrid apiURL={`/api/products/?categoryIds=1&sellerType=${sellerType}`} navigation={navigation} />;
         case 'other':
-          return <ImageGrid apiURL="/api/products/?categoryIds=2" navigation={navigation} />;
+          return <ImageGrid apiURL={`/api/products/?categoryIds=2&sellerType=${sellerType}`} navigation={navigation} />;
         default:
           return null;
       }

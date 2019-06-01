@@ -604,7 +604,7 @@ class ProfileScreen extends React.Component<Props, State> {
               </NBButton>
             ) : (
               <NBButton
-                style={skippedLogin && { opacity: 0.2 }}
+                style={skippedLogin ? { opacity: 0.2 } : {}}
                 disabled={skippedLogin}
                 transparent
                 dark
@@ -628,7 +628,7 @@ class ProfileScreen extends React.Component<Props, State> {
             )}
             {!this.isMe() && (
               <NBButton
-                style={skippedLogin && { opacity: 0.2 }}
+                style={skippedLogin ? { opacity: 0.2 } : {}}
                 disabled={skippedLogin}
                 transparent
                 dark

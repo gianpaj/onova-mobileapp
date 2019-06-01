@@ -40,19 +40,22 @@ type State = {
 };
 
 class ChatContainer extends Component<Props, State> {
-  static navigationOptions = (props: any) => ({
-    tabBarOnPress: () => {
-      // FIXME: hack
-      const state: ReduxState = store.getState();
-      if (state.LoginReducer.skippedLogin) {
-        props.navigation.navigate({
-          routeName: 'inAppAuth',
-          key: 'inAppAuth',
-        });
-        return;
-      }
-    },
-  });
+  static navigationOptions = (props: any) => {
+    const state: ReduxState = store.getState();
+    if (state.LoginReducer.skippedLogin) {
+      return {
+        tabBarOnPress: () => {
+          // FIXME: hack
+          console.warn('tabBarOnPress');
+          props.navigation.navigate({
+            routeName: 'inAppAuth',
+            key: 'inAppAuth',
+          });
+          return;
+        },
+      };
+    }
+  };
   didFocusListener;
   state = {
     hasError: false,

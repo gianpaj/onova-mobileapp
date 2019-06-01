@@ -36,10 +36,9 @@ if (!Object.is) {
       // Steps 1-5, 7-10
       // Steps 6.b-6.e: +0 != -0
       return x !== 0 || 1 / x === 1 / y;
-    } else {
-      // Step 6.a: NaN == NaN
-      return x !== x && y !== y;
     }
+    // Step 6.a: NaN == NaN
+    return x !== x && y !== y;
   };
 }
 
@@ -52,9 +51,10 @@ import type { City, Department, UserData, Dispatch, PaymentInfo, ShippingAddress
 type Props = {
   dispatch: Dispatch,
   navigation?: NavigationScreenProp<*>,
-  userData: UserData,
-  token: string,
   shouldRefresh?: boolean,
+  skippedLogin?: boolean,
+  token: string,
+  userData: UserData,
 };
 
 type State = {
@@ -123,6 +123,7 @@ class SettingsContainer extends Component<Props, State> {
   }
 
   refresh = () => {
+    if (this.props.skippedLogin) return;
     const CancelToken = axios.CancelToken;
     this.cancelToken = CancelToken.source();
     return this.props.dispatch(getPersonalUserData({ cancelToken: this.cancelToken.token }));
@@ -130,7 +131,7 @@ class SettingsContainer extends Component<Props, State> {
 
   componentWillUnmount() {
     // trigger Axios to reject the request
-    this.cancelToken.cancel('operation_canceled');
+    this.cancelToken && this.cancelToken.cancel('operation_canceled');
     this.didFocusListener && this.didFocusListener.remove();
   }
 
@@ -276,15 +277,21 @@ class SettingsContainer extends Component<Props, State> {
     this.inputs[focusingRef] && this.inputs[focusingRef].focus();
   }
 
-  enterPaymentInfo = () =>
-    this.props.navigation.navigate({
+  enterPaymentInfo = () => {
+    const { skippedLogin, navigation } = this.props;
+
+    if (skippedLogin) return navigation.navigate('inAppAuth');
+
+    navigation.navigate({
       routeName: 'enterCardInfo',
       key: 'enterCardInfo',
       params: { short: true },
     });
+  };
 
   _renderCityAutocomplete = props => {
-    const { cities } = this.state;
+    const { pending, cities, shippingAddress } = this.state;
+    const { skippedLogin } = this.props;
 
     return (
       <SearchableDropdown
@@ -299,16 +306,11 @@ class SettingsContainer extends Component<Props, State> {
           }
 
           // reset the department field after selecting a new city
-          if (this.state.shippingAddress.city !== id) {
-            this.autoCompleteRef.onChangeText('');
-          }
+          if (shippingAddress.city !== id) this.autoCompleteRef.onChangeText('');
 
-          this.setState(
-            update(this.state, {
-              shippingAddress: { city: { $set: id } },
-            })
-          );
+          this.setState(update(this.state, { shippingAddress: { city: { $set: id } } }));
         }}
+        disabled={pending || skippedLogin}
         itemsContainerStyle={styles.autocompleteItemContainers}
         itemStyle={styles.autocompleteItems}
         // TODO: color in red if !cities.indexOf(query)
@@ -321,7 +323,8 @@ class SettingsContainer extends Component<Props, State> {
   };
 
   _renderDepartmentAutocomplete = props => {
-    const { shippingAddress, departments, cities } = this.state;
+    const { pending, shippingAddress, departments, cities } = this.state;
+    const { skippedLogin } = this.props;
 
     const city = cities.find(city => city.id === shippingAddress.city);
     return (
@@ -329,13 +332,9 @@ class SettingsContainer extends Component<Props, State> {
         ref={el => (this.autoCompleteRef = el)}
         refProp={el => (this.inputs[3] = el)}
         onItemSelect={({ id }) =>
-          this.setState(
-            update(this.state, {
-              shippingAddress: { departmentNovaposhta: { $set: id } },
-            })
-          )
+          this.setState(update(this.state, { shippingAddress: { departmentNovaposhta: { $set: id } } }))
         }
-        disabled={!departments}
+        disabled={!departments || pending || skippedLogin}
         // TODO: color in red if !department.indexOf(query)
         inputContainerStyle={styles.autocompleteContainers}
         itemsContainerStyle={styles.autocompleteItemContainers}
@@ -350,7 +349,7 @@ class SettingsContainer extends Component<Props, State> {
   goBack = () => this.props.navigation && this.props.navigation.goBack();
 
   render() {
-    const { userData } = this.props;
+    const { userData, skippedLogin } = this.props;
     const {
       cities,
       departments,
@@ -365,6 +364,15 @@ class SettingsContainer extends Component<Props, State> {
     } = this.state;
 
     if (isLoading || !userData) return null;
+
+    const inputProps = {
+      autoCapitalize: 'none',
+      autoCorrect: false,
+      clearButtonMode: 'while-editing',
+      containerStyle: styles.inputContainer,
+      editable: !pending && !skippedLogin,
+      inputStyle: styles.input,
+    };
 
     return (
       <Container>
@@ -397,15 +405,12 @@ class SettingsContainer extends Component<Props, State> {
                   ref: el => (this.inputs[0] = el),
                   placeholder: I18n.t('userInfo.firstName'),
                   value: shippingAddress.firstName,
+                  editable: !pending && !skippedLogin,
                   onFocus: this.handleFocus.bind(this, 0),
                   onSubmitEditing: () => this.changeInputFocus(1),
                   onChangeText: t => {
                     if (cyrillicRegex.test(t))
-                      this.setState(
-                        update(this.state, {
-                          shippingAddress: { firstName: { $set: t } },
-                        })
-                      );
+                      this.setState(update(this.state, { shippingAddress: { firstName: { $set: t } } }));
                   },
                   textContentType: 'givenName',
                 },
@@ -413,15 +418,12 @@ class SettingsContainer extends Component<Props, State> {
                   ref: el => (this.inputs[1] = el),
                   placeholder: I18n.t('userInfo.lastName'),
                   value: shippingAddress.lastName,
+                  editable: !pending && !skippedLogin,
                   onFocus: this.handleFocus.bind(this, 1),
                   onSubmitEditing: () => this.changeInputFocus(1),
                   onChangeText: t => {
                     if (cyrillicRegex.test(t))
-                      this.setState(
-                        update(this.state, {
-                          shippingAddress: { lastName: { $set: t } },
-                        })
-                      );
+                      this.setState(update(this.state, { shippingAddress: { lastName: { $set: t } } }));
                   },
                   textContentType: 'streetAddressLine2',
                 },
@@ -444,6 +446,7 @@ class SettingsContainer extends Component<Props, State> {
                   ref: el => (this.inputs[4] = el),
                   placeholder: I18n.t('userInfo.mobileNumber'),
                   value: ui.formatPhoneNumber(mobileNumber),
+                  editable: !pending && !skippedLogin,
                   onFocus: this.handleFocus.bind(this, 4),
                   onChangeText: t => this.setState({ mobileNumber: t }),
                   type: 'phone',
@@ -473,46 +476,34 @@ class SettingsContainer extends Component<Props, State> {
             <FormLabel labelStyle={styles.label}>{I18n.t('settings.username_label')}</FormLabel>
             <FormInput
               ref={el => (this.inputs[5] = el)}
-              autoCorrect={false}
-              autoCapitalize="none"
-              containerStyle={styles.inputContainer}
-              editable={!pending}
-              inputStyle={styles.input}
               onChangeText={t => this.onUserChange(t)}
               placeholder={I18n.t('settings.username_placeholder')}
               value={username}
-              clearButtonMode="while-editing"
               shake={usernameError}
               onFocus={this.handleFocus.bind(this, 5)}
               onSubmitEditing={this.changeInputFocus.bind(this, 1)}
+              {...inputProps}
             />
             <FormLabel labelStyle={styles.label}>{I18n.t('settings.email_label')}</FormLabel>
             <FormInput
               ref={el => (this.inputs[6] = el)}
-              autoCorrect={false}
-              containerStyle={styles.inputContainer}
-              editable={!pending}
-              inputStyle={styles.input}
               onChangeText={t => this.setState({ emailAddress: t })}
               placeholder={I18n.t('settings.email_placeholder')}
               value={emailAddress}
-              clearButtonMode="while-editing"
               onFocus={this.handleFocus.bind(this, 6)}
               onSubmitEditing={this.changeInputFocus.bind(this, 1)}
+              {...inputProps}
             />
             <FormLabel labelStyle={styles.label}>{I18n.t('settings.password_label')}</FormLabel>
             <FormInput
+              disa
               ref={el => (this.inputs[7] = el)}
-              autoCorrect={false}
-              containerStyle={styles.inputContainer}
-              editable={!pending}
-              inputStyle={styles.input}
               onChangeText={t => this.setState({ password: t })}
               secureTextEntry
               placeholder={I18n.t('settings.password_placeholder')}
               value={password}
-              clearButtonMode="while-editing"
               onFocus={this.handleFocus.bind(this, 7)}
+              {...inputProps}
             />
             <HR full />
             <TouchableOpacity
@@ -630,6 +621,7 @@ const styles = StyleSheet.create({
 
 const mapStateToProps: any = (state: ReduxState) => ({
   userData: state.LoginReducer.data,
+  skippedLogin: state.LoginReducer.skippedLogin,
   token: state.LoginReducer.token,
   shouldRefresh: state.RefresherReducer.shouldRefresh,
 });

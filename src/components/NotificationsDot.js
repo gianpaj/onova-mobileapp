@@ -30,6 +30,8 @@ function NotificationsDot({ userData, focused }: Props) {
   //   );
   // }
 
+  if (!userData) return null;
+
   return (
     <Avatar
       style={styles.avatarContainer}

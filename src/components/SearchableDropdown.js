@@ -4,20 +4,10 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import {
-  Keyboard,
-  FlatList,
-  Text,
-  // TextInput,
-  // StyleSheet,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { Keyboard, FlatList, Text, TouchableOpacity, View } from 'react-native';
 import { InputItem } from 'antd-mobile-rn';
 
 import type { Node } from 'react';
-
-// import colors from '../config/colors';
 
 const LIMIT_BY = 20;
 
@@ -47,7 +37,7 @@ export default class SearchableDropDown extends Component<*, State> {
     onFocus: PropTypes.func,
     onItemSelect: PropTypes.func.isRequired,
     onSubmitEditing: PropTypes.func,
-    onTextChange: PropTypes.func,
+    // onTextChange: PropTypes.func,
     placeholder: PropTypes.string,
     placeholderTextColor: PropTypes.string,
     returnKeyType: PropTypes.string,
@@ -74,10 +64,11 @@ export default class SearchableDropDown extends Component<*, State> {
   _keyExtractor = item => item.id;
 
   renderList = () => {
-    if (!this.state.focus || !this.state.items.length) return;
+    const { items, focus } = this.state;
+    if (!focus || !items.length) return;
     return (
       <FlatList
-        data={this.state.items}
+        data={items}
         keyboardShouldPersistTaps="always"
         keyExtractor={this._keyExtractor}
         renderItem={this.renderItems}
@@ -94,7 +85,7 @@ export default class SearchableDropDown extends Component<*, State> {
   }
 
   onChangeText = (searchedText: string) => {
-    const { disabled, items, onItemSelect, onTextChange, regexToMatch } = this.props;
+    const { disabled, items, onItemSelect, regexToMatch } = this.props;
     if (disabled) return;
     if (!searchedText) {
       setTimeout(() => {
@@ -121,11 +112,11 @@ export default class SearchableDropDown extends Component<*, State> {
       items: filteredItems.slice(0, LIMIT_BY),
     });
 
-    if (onTextChange) {
-      // setTimeout(() => {
-      //   onTextChange(searchedText);
-      // }, 0);
-    }
+    // if (onTextChange) {
+    //   // setTimeout(() => {
+    //   //   onTextChange(searchedText);
+    //   // }, 0);
+    // }
   };
 
   // FIXME: do not render the component again if there are no changes
@@ -150,7 +141,6 @@ export default class SearchableDropDown extends Component<*, State> {
         this.setState({ currentVal: item });
         Keyboard.dismiss();
         this.props.onItemSelect(item);
-        // setTimeout(() => this.props.onItemSelect(item), 0);
       }}>
       <Text style={this.props.itemTextStyle}>{item.uk}</Text>
     </TouchableOpacity>
@@ -177,25 +167,26 @@ export default class SearchableDropDown extends Component<*, State> {
   render() {
     const {
       containerStyle,
+      disabled,
       error,
       extra,
       inputContainerStyle,
       onSubmitEditing,
       placeholder,
       placeholderTextColor,
-      returnKeyType,
       refProp,
+      returnKeyType,
       value,
     } = this.props;
 
     return (
-      // keyboardShouldpersist="always"
       <View style={containerStyle}>
         <InputItem
           ref={e => {
             this.input = e;
             refProp(e);
           }}
+          editable={!disabled}
           autoCorrect={false}
           clearButtonMode="while-editing"
           extra={extra}
@@ -215,10 +206,3 @@ export default class SearchableDropDown extends Component<*, State> {
     );
   }
 }
-
-// const styles = StyleSheet.create({
-//   separator: {
-//     height: StyleSheet.hairlineWidth,
-//     backgroundColor: colors.grey5,
-//   },
-// });

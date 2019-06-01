@@ -67,7 +67,7 @@ export default function(state: LoginState = initialState, action: Action): Login
       const { token, ...noToken } = action.payload;
       return {
         ...state,
-        data: noToken,
+        data: { ...noToken, shippingAddress: {}, paymentInfo: { short: {}, full: {} } },
         isAdmin: false,
         isLoggedIn: true,
         skippedLogin: true,

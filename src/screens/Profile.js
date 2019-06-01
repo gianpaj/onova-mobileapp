@@ -623,7 +623,12 @@ class ProfileScreen extends React.Component<Props, State> {
               </NBButton>
             )}
             {!this.isMe() && (
-              <NBButton transparent dark onPress={this.showReportUserActionSheet}>
+              <NBButton
+                style={skippedLogin && { opacity: 0.2 }}
+                disabled={skippedLogin}
+                transparent
+                dark
+                onPress={this.showReportUserActionSheet}>
                 <NBIcon ios="ios-more" android="md-more" style={styles.icon} />
               </NBButton>
             )}

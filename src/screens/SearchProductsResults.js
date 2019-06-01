@@ -1,7 +1,6 @@
 // @flow
 
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import { StyleSheet, View } from 'react-native';
 import { Body, Button as NBButton, Left, Right, Icon as NBIcon } from 'native-base';
 
@@ -11,7 +10,6 @@ import I18n from '../i18n';
 import { category_radio_grp_1, category_radio_grp_2 } from '../utils/ui';
 
 import type { NavigationScreenProp } from 'react-navigation';
-import type { ReduxState } from '../types';
 
 type Props = {
   navigation: NavigationScreenProp<*>,
@@ -25,7 +23,7 @@ type State = {
   },
 };
 
-class SearchProductsResultsContainer extends Component<Props, State> {
+export class SearchProductsResults extends Component<Props, State> {
   state = {
     terms: null,
   };
@@ -96,9 +94,3 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 });
-
-const mapStateToProps: any = (state: ReduxState) => ({
-  userData: state.LoginReducer.data,
-});
-
-export const SearchProductsResults = connect(mapStateToProps)(SearchProductsResultsContainer);

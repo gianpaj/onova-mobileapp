@@ -3,16 +3,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import {
-  ActivityIndicator,
-  FlatList,
-  // Image,
-  RefreshControl,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { ActivityIndicator, FlatList, RefreshControl, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Badge, Body, Container, Left, Right } from 'native-base';
 import { NavigationActions } from 'react-navigation';
 // import { AnimatedCircularProgress } from 'react-native-circular-progress';
@@ -363,10 +354,10 @@ const st = StyleSheet.create({
     flex: 1,
   },
   itemContainer: {
+    flexDirection: 'row',
     paddingLeft: 19,
     paddingRight: 16,
     paddingVertical: 12,
-    flexDirection: 'row',
   },
   content: {
     marginLeft: 16,
@@ -382,8 +373,8 @@ const st = StyleSheet.create({
     marginRight: 20,
   },
   datetime: {
-    fontSize: 12,
     color: colors.grey1,
+    fontSize: 12,
   },
   contentHeader: {
     flexDirection: 'row',
@@ -402,8 +393,8 @@ const st = StyleSheet.create({
   //   width: '100%',
   // },
   separator: {
-    height: StyleSheet.hairlineWidth,
     backgroundColor: colors.grey5,
+    height: StyleSheet.hairlineWidth,
   },
   separatorHorizontal: {
     width: 1,

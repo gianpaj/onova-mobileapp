@@ -179,11 +179,11 @@ const styles = StyleSheet.create({
     borderColor: colors.white,
     borderRadius: 25,
     height: 40,
-    width: 40,
-    padding: 5,
     justifyContent: 'center',
+    padding: 5,
     right: -8,
     top: -19,
+    width: 40,
   },
   /* eslint-disable */
   miniAvatar: {

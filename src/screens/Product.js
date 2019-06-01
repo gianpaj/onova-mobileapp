@@ -591,33 +591,85 @@ export class ProductContainer extends React.Component<Props, State> {
 }
 
 const styles = StyleSheet.create({
-  flex1: {
-    flex: 1,
-  },
-  topSection: {
-    height: 50,
-    flexDirection: 'row',
-    marginLeft: 15,
-  },
-  spinnerStyle: {
-    alignItems: 'stretch',
-    flex: 1,
-    justifyContent: 'center',
-  },
   avatar: {
     alignSelf: 'center',
   },
-  username: {
+  bottomSection: {
+    flexDirection: 'row',
+    height: 54,
+    marginRight: 0,
+  },
+  buyButton: {
+    backgroundColor: colors.red,
+    borderRadius: 2,
+    paddingVertical: 8,
+  },
+  buyButtonContainer: {
+    marginLeft: 0,
+    marginRight: 0,
+  },
+  description: {
     color: colors.black,
+    fontSize: typography.font_body_size,
+  },
+  flex1: {
+    flex: 1,
+  },
+  hashtag: {
+    color: colors.active,
   },
   location: {
     marginTop: -2,
+  },
+  marginVertical: {
+    marginBottom: 20,
+    marginTop: 10,
+  },
+  padder: {
+    paddingHorizontal: 10,
   },
   price: {
     alignSelf: 'center',
     color: colors.black,
     fontSize: 16,
     marginRight: 15,
+  },
+  reservedButton: {
+    backgroundColor: colors.secondary,
+    borderRadius: 2,
+    paddingHorizontal: 4,
+    paddingVertical: 8,
+  },
+  row: {
+    flexDirection: 'row',
+  },
+  shareIcon: {
+    color: colors.grey1,
+    fontSize: 27,
+    marginLeft: 0,
+    marginRight: 0,
+  },
+  shareIconButton: {
+    marginLeft: -10,
+    paddingBottom: Platform.select({
+      ios: 5,
+      android: 0,
+    }),
+    paddingHorizontal: 10,
+    zIndex: 999,
+  },
+  spinnerStyle: {
+    alignItems: 'stretch',
+    flex: 1,
+    justifyContent: 'center',
+  },
+  topSection: {
+    flexDirection: 'row',
+    height: 50,
+    marginLeft: 15,
+  },
+  username: {
+    color: colors.black,
   },
   // iconSave: {
   //   marginTop: 12,
@@ -626,62 +678,10 @@ const styles = StyleSheet.create({
   //   // marginLeft: 20,
   //   marginTop: 12,
   // },
-  shareIconButton: {
-    paddingBottom: Platform.select({
-      ios: 5,
-      android: 0,
-    }),
-    marginLeft: -10,
-    paddingHorizontal: 10,
-    zIndex: 999,
-  },
-  shareIcon: {
-    color: colors.grey1,
-    fontSize: 27,
-    marginRight: 0,
-    marginLeft: 0,
-  },
-  buyButton: {
-    backgroundColor: colors.red,
-    borderRadius: 2,
-    paddingVertical: 8,
-  },
-  reservedButton: {
-    backgroundColor: colors.secondary,
-    borderRadius: 2,
-    paddingHorizontal: 4,
-    paddingVertical: 8,
-  },
-  buyButtonContainer: {
-    marginRight: 0,
-    marginLeft: 0,
-  },
-  bottomSection: {
-    height: 54,
-    flexDirection: 'row',
-    marginRight: 0,
-  },
-  marginVertical: {
-    marginTop: 10,
-    marginBottom: 20,
-  },
-  padder: {
-    paddingHorizontal: 10,
-  },
-  description: {
-    fontSize: typography.font_body_size,
-    color: colors.black,
-  },
-  row: {
-    flexDirection: 'row',
-  },
   // timeAgo: {
   //   color: colors.grey3,
   //   fontSize: 12,
   // },
-  hashtag: {
-    color: colors.active,
-  },
 });
 
 const mapStateToProps: MapStateToProps<*, *, *> = (state: ReduxState) => ({

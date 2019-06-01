@@ -87,13 +87,13 @@ class SearchProductsResultsContainer extends Component<Props, State> {
 }
 
 const styles = StyleSheet.create({
-  flex1: {
-    flex: 1,
-  },
   container: {
     alignItems: 'stretch',
     flex: 1,
     justifyContent: 'center',
+  },
+  flex1: {
+    flex: 1,
   },
 });
 

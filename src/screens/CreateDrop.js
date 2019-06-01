@@ -544,31 +544,17 @@ export class CreateDropScreen extends React.Component<Props, State> {
 const MARGIN = 1;
 
 const styles = StyleSheet.create({
-  flex1: {
-    flex: 1,
-  },
-  flex2AndCenter: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flex: 2,
-    flexDirection: 'row',
-  },
   closeWrap: {
-    width: 16,
-    height: 16,
+    alignItems: 'center',
     backgroundColor: colors.grey2,
     borderRadius: 8,
-    position: 'absolute',
-    top: 4 + 7,
-    right: 4 + 7,
+    height: 16,
     justifyContent: 'center',
-    alignItems: 'center',
     overflow: 'hidden',
-  },
-  row: {
-    flexDirection: 'column',
-    alignItems: 'center',
-    borderRadius: 4,
+    position: 'absolute',
+    right: 4 + 7,
+    top: 4 + 7,
+    width: 16,
   },
   columnWrapper: {
     flex: 1,
@@ -576,13 +562,10 @@ const styles = StyleSheet.create({
     marginHorizontal: -MARGIN * 2,
     marginBottom: 0,
   },
-  noticeBar: {
-    fontSize: 15,
-    color: colors.grey1,
-  },
-  list: {
-    flex: 1,
-    marginTop: -1,
+  dateStrings: {
+    color: colors.black,
+    fontSize: 18,
+    paddingHorizontal: 20,
   },
   datesContainer: {
     flexDirection: 'row',
@@ -590,15 +573,32 @@ const styles = StyleSheet.create({
     marginTop: 10,
     paddingVertical: 25,
   },
-  dateStrings: {
-    color: colors.black,
-    paddingHorizontal: 20,
-    fontSize: 18,
+  flex1: {
+    flex: 1,
+  },
+  flex2AndCenter: {
+    alignItems: 'center',
+    flex: 2,
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  list: {
+    flex: 1,
+    marginTop: -1,
+  },
+  noticeBar: {
+    color: colors.grey1,
+    fontSize: 15,
+  },
+  row: {
+    alignItems: 'center',
+    borderRadius: 4,
+    flexDirection: 'column',
   },
   size: {
-    width: width / 3 - 20,
     height: width / 3 - 20,
     margin: 10,
+    width: width / 3 - 20,
   },
 });
 

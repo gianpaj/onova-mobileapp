@@ -262,25 +262,27 @@ export default connect(mapStateToProps)(ImageGridSearchComponent);
 const MARGIN = 1;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-  },
-  centerText: {
-    textAlign: 'center',
-  },
   boldText: {
     fontWeight: 'bold',
   },
-  list: {
-    flex: 1,
-    marginTop: -1,
+  centerText: {
+    textAlign: 'center',
   },
   columnWrapper: {
     flex: 1,
     flexDirection: 'row',
     marginHorizontal: -MARGIN * 2,
     marginBottom: 0,
+  },
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  emptyContainer: {
+    alignItems: 'center',
+    height: height - 250,
+    justifyContent: 'center',
+    padding: 20,
   },
   image: {
     flex: 1,
@@ -291,10 +293,8 @@ const styles = StyleSheet.create({
   imageContainer: {
     alignItems: 'stretch',
   },
-  emptyContainer: {
-    alignItems: 'center',
-    height: height - 250,
-    justifyContent: 'center',
-    padding: 20,
+  list: {
+    flex: 1,
+    marginTop: -1,
   },
 });

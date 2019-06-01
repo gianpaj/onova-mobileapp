@@ -122,23 +122,23 @@ export default class Accordion extends PureComponent<Props, State> {
 }
 
 const styles = StyleSheet.create({
+  arrow: {
+    alignSelf: 'flex-start',
+    marginTop: 13,
+  },
   header: {
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: '95%',
   },
+  icon: {
+    marginTop: -5,
+    top: 5,
+  },
   label: {
     color: colors.black,
     fontWeight: '600',
     paddingBottom: 10,
-  },
-  arrow: {
-    marginTop: 13,
-    alignSelf: 'flex-start',
-  },
-  icon: {
-    marginTop: -5,
-    top: 5,
   },
 });

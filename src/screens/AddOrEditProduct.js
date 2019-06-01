@@ -796,51 +796,51 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    alignItems: 'stretch',
-    flex: 1,
-    justifyContent: 'center',
-  },
   body: {
     alignItems: 'flex-start',
     height: width / 6 + 10,
     marginHorizontal: 17,
     paddingTop: 18,
   },
+  container: {
+    alignItems: 'stretch',
+    flex: 1,
+    justifyContent: 'center',
+  },
   flex2AndCenter: {
     alignItems: 'center',
-    justifyContent: 'center',
     flex: 2,
     flexDirection: 'row',
-  },
-  label: {
-    fontWeight: '600',
-    color: colors.black,
-  },
-  inputContainerNew: {
-    backgroundColor: colors.transparent,
-    marginTop: 0,
-    marginHorizontal: 12,
-    marginBottom: 28,
+    justifyContent: 'center',
   },
   grps: {
     alignItems: 'center',
-    left: -7,
     justifyContent: 'center',
+    left: -7,
     width: '100%',
+  },
+  inputContainerNew: {
+    backgroundColor: colors.transparent,
+    marginBottom: 28,
+    marginHorizontal: 12,
+    marginTop: 0,
+  },
+  label: {
+    color: colors.black,
+    fontWeight: '600',
+  },
+  minPrice: {
+    color: colors.red,
+    paddingLeft: 12,
+  },
+  radioButtonInput: {
+    width: 120,
   },
   radioButtonLabel: {
     color: colors.grey1,
     marginBottom: 10,
     paddingLeft: '5%',
     paddingRight: '5%',
-  },
-  radioButtonInput: {
-    width: 120,
-  },
-  minPrice: {
-    color: colors.red,
-    paddingLeft: 12,
   },
 });
 

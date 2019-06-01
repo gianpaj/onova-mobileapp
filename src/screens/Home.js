@@ -197,6 +197,10 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
   },
+  header: {
+    backgroundColor: colors.bgDefault,
+    elevation: 2,
+  },
   indicator: {
     backgroundColor: colors.primary,
   },
@@ -204,10 +208,6 @@ const styles = StyleSheet.create({
     color: colors.primary,
     fontWeight: '400',
     marginHorizontal: 0,
-  },
-  header: {
-    backgroundColor: colors.bgDefault,
-    elevation: 2,
   },
   tab: {
     width: initialLayout.width / 3,

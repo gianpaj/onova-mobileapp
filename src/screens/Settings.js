@@ -573,10 +573,42 @@ class SettingsContainer extends Component<Props, State> {
 const linkHitSlop = { top: 10, left: 5, bottom: 10, right: 10 };
 
 const styles = StyleSheet.create({
+  autocompleteContainers: {
+    borderBottomWidth: 0,
+  },
+  autocompleteItemContainers: {
+    // top: -30,
+    // backgroundColor: colors.white,
+    // zIndex: 10,
+    alignSelf: 'center',
+    borderColor: colors.grey4,
+    borderRadius: 2,
+    borderWidth: 1,
+    width: 323,
+  },
+  autocompleteItems: {
+    marginHorizontal: 10,
+    marginTop: 2,
+    paddingHorizontal: 5,
+    paddingVertical: 10,
+    // backgroundColor: colors.grey6,
+  },
+  centerText: {
+    color: colors.grey4,
+    paddingVertical: 10,
+  },
   container: {
     alignItems: 'stretch',
     flex: 1,
     justifyContent: 'center',
+  },
+  input: {
+    color: colors.black,
+    width: '100%',
+  },
+  inputContainer: {
+    borderBottomWidth: 0,
+    marginVertical: 10,
   },
   label: {
     color: colors.black,
@@ -587,45 +619,13 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: '600',
   },
-  input: {
-    color: colors.black,
-    width: '100%',
-  },
   padder: {
     padding: 10,
-  },
-  inputContainer: {
-    borderBottomWidth: 0,
-    marginVertical: 10,
-  },
-  centerText: {
-    color: colors.grey4,
-    paddingVertical: 10,
   },
   // secureText: {
   //   color: colors.grey2,
   //   paddingBottom: 0,
   // },
-  autocompleteItemContainers: {
-    // top: -30,
-    // backgroundColor: colors.white,
-    // zIndex: 10,
-    alignSelf: 'center',
-    borderColor: colors.grey4,
-    borderWidth: 1,
-    borderRadius: 2,
-    width: 323,
-  },
-  autocompleteItems: {
-    paddingVertical: 10,
-    paddingHorizontal: 5,
-    marginTop: 2,
-    marginHorizontal: 10,
-    // backgroundColor: colors.grey6,
-  },
-  autocompleteContainers: {
-    borderBottomWidth: 0,
-  },
 });
 
 const mapStateToProps: any = (state: ReduxState) => ({

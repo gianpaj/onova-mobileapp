@@ -758,32 +758,28 @@ export function getRoomName(o: Order): string {
 
 const st = StyleSheet.create({
   container: {
+    alignItems: 'center',
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
-  },
-  flex4AndCenter: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flex: 4,
-    flexDirection: 'row',
   },
   containerHeader: {
     alignItems: 'stretch',
     flex: 1,
     justifyContent: 'center',
   },
-  orderSquaresContainer: {
-    height: 50 + 16 + 1,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderColor: colors.grey5,
-    paddingVertical: 4,
-    paddingLeft: 8,
+  flex1: {
+    flex: 1,
   },
-  orderSquare: {
-    borderBottomWidth: 2,
-    borderColor: colors.active,
-    marginBottom: 3,
+  flex4AndCenter: {
+    alignItems: 'center',
+    flex: 4,
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  itemImage: {
+    // borderRadius: 50, // FIXME:
+    height: 50,
+    width: 50,
   },
   noOrders: {
     alignSelf: 'center',
@@ -791,19 +787,31 @@ const st = StyleSheet.create({
     flex: 1,
     textAlign: 'center',
   },
-  flex1: {
-    flex: 1,
+  orderSquare: {
+    borderBottomWidth: 2,
+    borderColor: colors.active,
+    marginBottom: 3,
+  },
+  orderSquaresContainer: {
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderColor: colors.grey5,
+    height: 50 + 16 + 1,
+    paddingLeft: 8,
+    paddingVertical: 4,
   },
   send: {
     marginBottom: 10,
     marginRight: 10,
   },
+  separatorHorizontal: {
+    width: 1,
+  },
   systemContainer: {
     backgroundColor: colors.primary,
-    borderRadius: 5,
     borderColor: colors.active,
-    marginVertical: 15,
+    borderRadius: 5,
     marginHorizontal: 65,
+    marginVertical: 15,
     padding: 5,
   },
   systemText: {
@@ -811,14 +819,6 @@ const st = StyleSheet.create({
     fontSize: 15,
     fontWeight: '400',
     textAlign: 'center',
-  },
-  separatorHorizontal: {
-    width: 1,
-  },
-  itemImage: {
-    // borderRadius: 50, // FIXME:
-    height: 50,
-    width: 50,
   },
   url: {
     color: colors.active,

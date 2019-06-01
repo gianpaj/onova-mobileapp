@@ -85,8 +85,12 @@ class ShopTabContainer extends React.Component<Props, {}> {
 }
 
 const styles = StyleSheet.create({
-  flex1: {
-    flex: 1,
+  boldText: {
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  centerText: {
+    marginTop: 5,
   },
   emptyContainer: {
     alignItems: 'center',
@@ -98,12 +102,8 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginBottom: 16,
   },
-  boldText: {
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  centerText: {
-    marginTop: 5,
+  flex1: {
+    flex: 1,
   },
   searchButton: {
     marginTop: 20,

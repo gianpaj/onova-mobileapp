@@ -252,6 +252,10 @@ export const AddReview = connect(mapStateToProps)(AddReviewContainer);
 const widthFields = 280;
 
 const styles = StyleSheet.create({
+  buttonText: {
+    color: colors.white,
+    fontSize: 16,
+  },
   container: {
     alignItems: 'stretch',
     flex: 1,
@@ -259,9 +263,9 @@ const styles = StyleSheet.create({
   },
   flex2AndCenter: {
     alignItems: 'center',
-    justifyContent: 'center',
     flex: 2,
     flexDirection: 'row',
+    justifyContent: 'center',
   },
   textInputContainer: {
     alignSelf: 'center',
@@ -271,9 +275,5 @@ const styles = StyleSheet.create({
     }),
     fontSize: typography.font_body_size,
     width: widthFields + 10,
-  },
-  buttonText: {
-    fontSize: 16,
-    color: colors.white,
   },
 });

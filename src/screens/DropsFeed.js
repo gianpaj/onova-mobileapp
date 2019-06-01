@@ -198,29 +198,18 @@ class DropsFeed extends Component<Props, State> {
 const MARGIN = 1;
 
 const styles = StyleSheet.create({
-  flex1: {
-    flex: 1,
-  },
-  container: {
-    alignItems: 'stretch',
-    flex: 1,
-    justifyContent: 'center',
+  boldText: {
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
   centerText: {
     marginTop: 5,
     textAlign: 'center',
   },
-  image: {
-    flex: 1,
-    margin: MARGIN,
-    width: (width + MARGIN * 2) / 3,
-  },
-  imageContainer: {
+  container: {
     alignItems: 'stretch',
-  },
-  separator: {
-    height: StyleSheet.hairlineWidth,
-    backgroundColor: colors.grey5,
+    flex: 1,
+    justifyContent: 'center',
   },
   emptyContainer: {
     alignItems: 'center',
@@ -232,9 +221,20 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginBottom: 15,
   },
-  boldText: {
-    fontWeight: 'bold',
-    textAlign: 'center',
+  flex1: {
+    flex: 1,
+  },
+  image: {
+    flex: 1,
+    margin: MARGIN,
+    width: (width + MARGIN * 2) / 3,
+  },
+  imageContainer: {
+    alignItems: 'stretch',
+  },
+  separator: {
+    backgroundColor: colors.grey5,
+    height: StyleSheet.hairlineWidth,
   },
 });
 

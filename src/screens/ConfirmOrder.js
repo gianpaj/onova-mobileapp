@@ -325,57 +325,57 @@ const mapStateToProps: any = (state: ReduxState) => ({
 export const ConfirmOrder = connect(mapStateToProps)(ConfirmOrderContainer);
 
 const styles = StyleSheet.create({
+  buttonCancel: {
+    marginTop: 15,
+    paddingHorizontal: 20,
+  },
+  buttonConfirm: {
+    marginRight: 15,
+    marginTop: 15,
+    paddingHorizontal: 20,
+  },
+  buttonText: {
+    color: colors.white,
+    fontSize: typography.font_button_size,
+  },
   container: {
     alignItems: 'stretch',
     flex: 1,
     justifyContent: 'center',
   },
+  dialogErrorText: {
+    color: colors.red,
+    marginBottom: 15,
+    textAlign: 'center',
+  },
+  itemImage: {
+    borderColor: colors.grey4,
+    borderWidth: StyleSheet.hairlineWidth,
+  },
   itemOnTop: {
     marginLeft: 0,
-    paddingTop: 0,
     paddingBottom: 0,
+    paddingTop: 0,
   },
   mainContainer: {
-    padding: 10,
     alignItems: 'center',
     justifyContent: 'center',
+    padding: 10,
+  },
+  messageText: {
+    fontSize: typography.font_body_size * 1.5,
+    paddingBottom: 10,
+    paddingTop: 30,
   },
   name: {
     fontWeight: 'bold',
-  },
-  row: {
-    padding: 5,
-    flexDirection: 'row',
-  },
-  itemImage: {
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor: colors.grey4,
   },
   price: {
     alignSelf: 'center',
     fontSize: typography.font_body_size,
   },
-  messageText: {
-    paddingTop: 30,
-    paddingBottom: 10,
-    fontSize: typography.font_body_size * 1.5,
-  },
-  buttonConfirm: {
-    marginTop: 15,
-    marginRight: 15,
-    paddingHorizontal: 20,
-  },
-  buttonCancel: {
-    marginTop: 15,
-    paddingHorizontal: 20,
-  },
-  buttonText: {
-    fontSize: typography.font_button_size,
-    color: colors.white,
-  },
-  dialogErrorText: {
-    marginBottom: 15,
-    color: colors.red,
-    textAlign: 'center',
+  row: {
+    flexDirection: 'row',
+    padding: 5,
   },
 });

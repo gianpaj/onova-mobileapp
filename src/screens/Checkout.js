@@ -734,27 +734,63 @@ class CheckoutContainer extends Component<Props, State> {
 }
 
 const styles = StyleSheet.create({
+  autocompleteContainers: {
+    borderBottomWidth: 0,
+  },
+  autocompleteItemContainers: {
+    // top: -30,
+    // backgroundColor: colors.white,
+    // zIndex: 10,
+    alignSelf: 'center',
+    borderColor: colors.grey4,
+    borderRadius: 2,
+    borderWidth: 1,
+    width: 323,
+  },
+  autocompleteItems: {
+    marginHorizontal: 10,
+    marginTop: 2,
+    paddingHorizontal: 5,
+    paddingVertical: 10,
+    // backgroundColor: colors.grey6,
+  },
   container: {
     alignItems: 'stretch',
     flex: 1,
     justifyContent: 'center',
   },
-  payButtonText: {
-    color: colors.black,
-    fontWeight: '600',
-    fontSize: Platform.select({
-      android: 18,
-      ios: 16,
+  innerRow: {
+    alignItems: 'baseline',
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    minWidth: Platform.select({
+      android: 160,
+      ios: 130,
     }),
   },
   label: {
     color: colors.black,
     fontWeight: '600',
   },
-  pricesContainer: {
-    alignItems: 'flex-end',
-    alignSelf: 'center',
-    padding: 10,
+  link: {
+    color: colors.grey3,
+    textDecorationLine: 'underline',
+  },
+  mandatoryImage: {
+    height: 50,
+    margin: 10,
+    width: '20%',
+  },
+  paragraph: {
+    color: colors.grey4,
+  },
+  payButtonText: {
+    color: colors.black,
+    fontSize: Platform.select({
+      android: 18,
+      ios: 16,
+    }),
+    fontWeight: '600',
   },
   price: {
     fontFamily: Platform.select({
@@ -768,51 +804,15 @@ const styles = StyleSheet.create({
     color: colors.black,
     fontWeight: '600',
   },
+  pricesContainer: {
+    alignItems: 'flex-end',
+    alignSelf: 'center',
+    padding: 10,
+  },
   row: {
     alignItems: 'baseline',
     flexDirection: 'row',
     justifyContent: 'space-between',
-  },
-  innerRow: {
-    alignItems: 'baseline',
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    minWidth: Platform.select({
-      android: 160,
-      ios: 130,
-    }),
-  },
-  autocompleteItemContainers: {
-    // top: -30,
-    // backgroundColor: colors.white,
-    // zIndex: 10,
-    alignSelf: 'center',
-    borderColor: colors.grey4,
-    borderWidth: 1,
-    borderRadius: 2,
-    width: 323,
-  },
-  autocompleteItems: {
-    paddingVertical: 10,
-    paddingHorizontal: 5,
-    marginTop: 2,
-    marginHorizontal: 10,
-    // backgroundColor: colors.grey6,
-  },
-  autocompleteContainers: {
-    borderBottomWidth: 0,
-  },
-  paragraph: {
-    color: colors.grey4,
-  },
-  link: {
-    color: colors.grey3,
-    textDecorationLine: 'underline',
-  },
-  mandatoryImage: {
-    margin: 10,
-    width: '20%',
-    height: 50,
   },
 });
 

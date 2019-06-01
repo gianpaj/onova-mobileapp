@@ -256,25 +256,25 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
   },
-  saveBtn: {
-    color: colors.white,
-    fontWeight: '600',
-    fontSize: Platform.select({
-      android: 18,
-      ios: 16,
-    }),
-  },
   mandatoryImage: {
+    height: 50,
     margin: 10,
     width: '20%',
-    height: 50,
   },
   paragraph: {
     color: colors.grey1,
     fontWeight: '500',
-    textAlign: 'center',
     marginHorizontal: 20,
     marginTop: 15,
+    textAlign: 'center',
+  },
+  saveBtn: {
+    color: colors.white,
+    fontSize: Platform.select({
+      android: 18,
+      ios: 16,
+    }),
+    fontWeight: '600',
   },
 });
 

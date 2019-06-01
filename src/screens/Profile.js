@@ -33,10 +33,11 @@ const initialLayout = {
 
 type Props = {
   dispatch: Dispatch,
-  navigation: NavigationScreenProp<*>,
-  userData: UserData,
   imageGrid: any,
+  navigation: NavigationScreenProp<*>,
+  skippedLogin: boolean,
   token: string,
+  userData: UserData,
 };
 
 type State = {
@@ -46,17 +47,17 @@ type State = {
   editing: boolean,
   followersCount: number,
   followingCount: number,
-  isFollowing: boolean,
-  isSaving: boolean,
+  index: number,
   isFetching: boolean,
+  isFollowing: boolean,
   isRefreshing: boolean,
+  isSaving: boolean,
   ordersAndReviewsCount: number,
   profilePic: string | Image,
   // rateAvg: number,
-  username: string,
-  index: number,
-  // suggestions: Array<any>,
   routes: Array<any>,
+  username: string,
+  // suggestions: Array<any>,
 };
 
 const { analyticsEnabled } = api;
@@ -69,15 +70,15 @@ class ProfileScreen extends React.Component<Props, State> {
     editing: false,
     followersCount: -1,
     followingCount: -1,
+    index: 0,
+    isFetching: true,
     isFollowing: false,
     isRefreshing: false,
     isSaving: false,
-    isFetching: true,
     ordersAndReviewsCount: -1,
     profilePic: '',
     // rateAvg: -1,
     username: '',
-    index: 0,
     // suggestions: [],
     routes: [{ key: 'shop', title: I18n.t('profile.shop_tab') }, { key: 'drops', title: I18n.t('profile.drops_tab') }],
   };
@@ -125,22 +126,18 @@ class ProfileScreen extends React.Component<Props, State> {
 
       // if it's not me
       if (params && userData && params._id !== userData._id) {
-        const { data } = await api.get(`/api/users/${userId}/follow`, {
-          token,
-        });
+        const { data } = await api.get(`/api/users/${userId}/follow`, { token });
         if (data.following == params._id) {
           this.setState({ isFollowing: true });
         }
-      } else {
-        // const suggestions = await api.getSuggestions(token);
-
-        // this.setState({ suggestions });
-        if (!skippedLogin) this.props.dispatch(getPersonalUserData());
-      }
-    } catch (err) {
-      if (err.message == 'Not following') {
         return;
       }
+      // const suggestions = await api.getSuggestions(token);
+
+      // this.setState({ suggestions });
+      if (!skippedLogin) this.props.dispatch(getPersonalUserData());
+    } catch (err) {
+      if (err.message == 'Not following') return;
       throw err;
     }
   };
@@ -323,13 +320,7 @@ class ProfileScreen extends React.Component<Props, State> {
   onBlock = async () => {
     const { token } = this.props;
     try {
-      await api.post(
-        '/api/block',
-        {
-          targetUser: this.state._id,
-        },
-        { token }
-      );
+      await api.post('/api/block', { targetUser: this.state._id }, { token });
       this.props.dispatch(enableRefresh());
       ui.showToast(I18n.t('profile.alert_block_success'), '', 'OK');
       this.props.navigation.goBack();
@@ -644,32 +635,59 @@ class ProfileScreen extends React.Component<Props, State> {
 }
 
 const styles = StyleSheet.create({
-  flex1: {
-    flex: 1,
+  alignCenter: {
+    alignItems: 'center',
+  },
+  avatarContainer: {
+    marginTop: 4,
   },
   container: {
     alignItems: 'stretch',
     flex: 1,
     justifyContent: 'center',
   },
+  editOrFollowButton: {
+    backgroundColor: colors.bgDefault,
+    borderColor: colors.greyOutline,
+    borderRadius: 5,
+    marginVertical: 10,
+  },
+  editOrFollowButtonText: {
+    color: colors.grey1,
+  },
+  flex1: {
+    flex: 1,
+  },
   flex2AndCenter: {
     alignItems: 'center',
-    justifyContent: 'center',
     flex: 2,
     flexDirection: 'row',
-  },
-  alignCenter: {
-    alignItems: 'center',
-  },
-  row: {
-    flexDirection: 'row',
+    justifyContent: 'center',
   },
   icon: {
     color: colors.grey1,
     fontSize: 27,
   },
-  avatarContainer: {
-    marginTop: 4,
+  indicator: {
+    backgroundColor: colors.primary,
+  },
+  label: {
+    color: colors.grey2,
+    fontSize: Platform.select({
+      ios: 13,
+      android: 14,
+    }),
+  },
+  noticeBar: {
+    color: colors.grey2,
+    textAlign: 'center',
+    width: '34.5%',
+  },
+  numbers: {
+    color: colors.primary,
+    fontSize: 18,
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
   profileRight: {
     alignSelf: 'flex-start',
@@ -688,43 +706,11 @@ const styles = StyleSheet.create({
     // shadowRadius: 0.5,
     zIndex: 1,
   },
-  userNumbers: {
+  row: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginTop: 10,
-  },
-  numbers: {
-    color: colors.primary,
-    fontSize: 18,
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  label: {
-    color: colors.grey2,
-    fontSize: Platform.select({
-      ios: 13,
-      android: 14,
-    }),
-  },
-  editOrFollowButton: {
-    marginVertical: 10,
-    backgroundColor: colors.bgDefault,
-    borderColor: colors.greyOutline,
-    borderRadius: 5,
-  },
-  editOrFollowButtonText: {
-    color: colors.grey1,
   },
   saveButton: {
     backgroundColor: colors.active,
-  },
-  noticeBar: {
-    color: colors.grey2,
-    textAlign: 'center',
-    width: '34.5%',
-  },
-  indicator: {
-    backgroundColor: colors.primary,
   },
   tabBarlabel: {
     color: colors.black,
@@ -733,6 +719,11 @@ const styles = StyleSheet.create({
   tabbar: {
     backgroundColor: colors.bgDefault,
     elevation: 2,
+  },
+  userNumbers: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginTop: 10,
   },
 });
 

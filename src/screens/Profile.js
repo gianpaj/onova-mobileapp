@@ -354,9 +354,11 @@ class ProfileScreen extends React.Component<Props, State> {
   }
 
   goToReviews = () => {
+    const { navigation, skippedLogin } = this.props;
+    if (skippedLogin) return navigation.navigate('inAppAuth');
     const { _id } = this.state;
     // $FlowFixMe
-    this.props.navigation.navigate({
+    navigation.navigate({
       routeName: 'reviews',
       params: { userId: _id },
       key: `reviews-${_id}`,
@@ -364,9 +366,11 @@ class ProfileScreen extends React.Component<Props, State> {
   };
 
   goToFollowers = () => {
+    const { navigation, skippedLogin } = this.props;
+    if (skippedLogin) return navigation.navigate('inAppAuth');
     const { _id } = this.state;
     // $FlowFixMe
-    this.props.navigation.navigate({
+    navigation.navigate({
       routeName: 'followers',
       params: { userId: _id },
       key: `followers-${_id}`,
@@ -374,9 +378,11 @@ class ProfileScreen extends React.Component<Props, State> {
   };
 
   goToFollowing = () => {
+    const { navigation, skippedLogin } = this.props;
+    if (skippedLogin) return navigation.navigate('inAppAuth');
     const { _id } = this.state;
     // $FlowFixMe
-    this.props.navigation.navigate({
+    navigation.navigate({
       routeName: 'following',
       params: { userId: _id },
       key: `following-${_id}`,
@@ -419,7 +425,10 @@ class ProfileScreen extends React.Component<Props, State> {
   };
 
   onFollowOrUnfollow = () => {
-    const { token } = this.props;
+    const { token, skippedLogin } = this.props;
+
+    if (skippedLogin) return this.props.navigation.navigate('inAppAuth');
+
     const followOrUnfollow = !this.state.isFollowing ? 'follow' : 'unfollow';
     api
       .post(`/api/users/${this.state._id}/${followOrUnfollow}`, {}, { token })

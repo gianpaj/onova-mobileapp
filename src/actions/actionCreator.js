@@ -43,8 +43,8 @@ let currentUser: PusherUser;
 
 const { isProd, analyticsEnabled, config } = api;
 
-// const enabledPusher = isProd == true;
-const enabledPusher = false;
+const enabledPusher = isProd == true;
+// const enabledPusher = false;
 
 const login = (data: LoginData) => (dispatch: Dispatch) => {
   dispatch({ type: LOGIN_PENDING });

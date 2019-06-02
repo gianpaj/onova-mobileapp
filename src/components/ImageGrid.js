@@ -299,11 +299,6 @@ export default withNavigation(
 const MARGIN = 1;
 
 const styles = StyleSheet.create({
-  container: {
-    alignItems: 'stretch',
-    flex: 1,
-    justifyContent: 'center',
-  },
   boldText: {
     fontWeight: 'bold',
   },
@@ -311,21 +306,22 @@ const styles = StyleSheet.create({
     marginTop: 5,
     textAlign: 'center',
   },
-  searchButton: {
-    alignSelf: 'center',
-    backgroundColor: colors.primary,
-    marginTop: 20,
-    minWidth: 260,
-  },
-  list: {
-    flex: 1,
-    marginTop: -1,
-  },
   columnWrapper: {
     flex: 1,
     flexDirection: 'row',
     marginHorizontal: -MARGIN * 2,
     marginBottom: 0,
+  },
+  container: {
+    alignItems: 'stretch',
+    flex: 1,
+    justifyContent: 'center',
+  },
+  emptyContainer: {
+    alignItems: 'center',
+    height: height - 250,
+    justifyContent: 'center',
+    padding: 20,
   },
   image: {
     flex: 1,
@@ -336,10 +332,14 @@ const styles = StyleSheet.create({
   imageContainer: {
     alignItems: 'stretch',
   },
-  emptyContainer: {
-    alignItems: 'center',
-    height: height - 250,
-    justifyContent: 'center',
-    padding: 20,
+  list: {
+    flex: 1,
+    marginTop: -1,
+  },
+  searchButton: {
+    alignSelf: 'center',
+    backgroundColor: colors.primary,
+    marginTop: 20,
+    minWidth: 260,
   },
 });

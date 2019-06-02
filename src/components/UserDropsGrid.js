@@ -244,14 +244,14 @@ export default withNavigation(connect(mapStateToProps)(UserDropsGridComponent));
 const MARGIN = 1;
 
 const styles = StyleSheet.create({
+  centerText: {
+    marginTop: 5,
+    textAlign: 'center',
+  },
   container: {
     alignItems: 'stretch',
     flex: 1,
     justifyContent: 'center',
-  },
-  centerText: {
-    marginTop: 5,
-    textAlign: 'center',
   },
   image: {
     flex: 1,
@@ -262,7 +262,7 @@ const styles = StyleSheet.create({
     alignItems: 'stretch',
   },
   separator: {
-    height: StyleSheet.hairlineWidth,
     backgroundColor: colors.grey5,
+    height: StyleSheet.hairlineWidth,
   },
 });

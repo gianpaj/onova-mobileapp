@@ -418,18 +418,18 @@ const buttonProps = {
 };
 
 const styles = StyleSheet.create({
+  hr: {
+    alignSelf: 'center',
+    margin: 10,
+  },
   input: {
     color: colors.black,
     width: '100%',
   },
   pwdIcon: {
     position: 'absolute',
-    top: 7,
     right: 20,
+    top: 7,
     zIndex: 10,
-  },
-  hr: {
-    alignSelf: 'center',
-    margin: 10,
   },
 });

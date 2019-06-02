@@ -157,7 +157,7 @@ class SearchByHashtagsTabContainer extends Component<Props, State> {
                     buttonSize={19}
                     buttonWrapStyle={styles.radioButtonInput}
                     index={i}
-                    isSelected={grp_1 == i}
+                    isSelected={grp_1 === option.value}
                     obj={option}
                     onPress={this.setCategories}
                   />
@@ -223,24 +223,24 @@ const styles = StyleSheet.create({
   flex1: {
     flex: 1,
   },
-  padder: {
-    padding: 10,
-  },
   grps: {
     alignItems: 'center',
     justifyContent: 'center',
     width: '100%',
   },
-  radioButtonLabel: {
-    color: colors.grey1,
-    marginBottom: 10,
-    textAlign: 'center',
-    paddingLeft: 0,
-    flex: 1,
+  padder: {
+    padding: 10,
   },
   radioButtonInput: {
     marginBottom: 15,
     width: 110,
+  },
+  radioButtonLabel: {
+    color: colors.grey1,
+    flex: 1,
+    marginBottom: 10,
+    paddingLeft: 0,
+    textAlign: 'center',
   },
 });
 

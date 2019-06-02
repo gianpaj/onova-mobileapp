@@ -70,6 +70,7 @@ export default {
     clothes_tab: 'Одяг',
     shoes_tab: 'Взуття',
     other_tab: 'Аксесуари',
+    home_tab: 'Для дому',
     alert_info_title: 'Підтримка',
     alert_info_body: `З будь якими питаннями щодо додатку телефонуйте до ${APP_NAME_CC}
 (063) 419-75-03
@@ -143,6 +144,7 @@ export default {
     clothes: 'Одяг',
     shoes: 'Взуття',
     other_cat: 'Аксесуари',
+    home: 'Для дому', // only for Onova
     men: 'Чоловіче',
     women: 'Жіноче',
     other_type: 'Інше',

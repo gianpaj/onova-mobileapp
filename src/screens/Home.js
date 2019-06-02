@@ -52,7 +52,7 @@ class HomeComponent extends PureComponent<Props, State> {
     routes: [
       { key: 'clothes', title: I18n.t('home.clothes_tab') },
       { key: 'shoes', title: I18n.t('home.shoes_tab') },
-      { key: 'other', title: I18n.t('home.other_tab') },
+      { key: 'other', title: I18n.t('home.home_tab') },
     ],
   };
 
@@ -93,8 +93,8 @@ class HomeComponent extends PureComponent<Props, State> {
         return <ImageGrid apiURL="/api/feed/flat/?categoryIds=0" navigation={navigation} />;
       case 'shoes':
         return <ImageGrid apiURL="/api/feed/flat/?categoryIds=1" navigation={navigation} />;
-      case 'other':
-        return <ImageGrid apiURL="/api/feed/flat/?categoryIds=2" navigation={navigation} />;
+      case 'other': // home
+        return <ImageGrid apiURL="/api/feed/flat/?categoryIds=3" navigation={navigation} />;
       default:
         return null;
     }

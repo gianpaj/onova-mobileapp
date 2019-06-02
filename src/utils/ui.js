@@ -2,6 +2,7 @@
 
 import { Alert } from 'react-native';
 import { Toast } from 'native-base';
+import { APP_NAME } from 'react-native-dotenv';
 global.Intl = require('intl');
 require('intl/locale-data/jsonp/ru-UA.js');
 
@@ -94,11 +95,20 @@ export function sleep(ms: number): Promise<any> {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-export const category_radio_grp_1 = [
+let categories = [
   { label: I18n.t('categories.clothes'), value: 0 },
   { label: I18n.t('categories.shoes'), value: 1 },
   { label: I18n.t('categories.other_cat'), value: 2 },
 ];
+if (APP_NAME == 'onova') {
+  categories = [
+    { label: I18n.t('categories.clothes'), value: 0 },
+    { label: I18n.t('categories.shoes'), value: 1 },
+    { label: I18n.t('categories.home'), value: 3 },
+  ];
+}
+
+export const category_radio_grp_1 = categories;
 
 export const category_radio_grp_2 = [
   { label: I18n.t('categories.men'), value: 0 },

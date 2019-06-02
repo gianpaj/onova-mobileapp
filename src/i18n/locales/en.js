@@ -37,6 +37,7 @@ export default {
     password_placeholder: 'Password (minimum 8 characters)',
     sign_up_button: 'Create account',
     skip: 'Skip',
+    close: 'Close',
     terms_text_1: 'By pressing Create account you agree to the',
     terms_text_2: 'Privacy Policy,',
     terms_text_3: 'Terms,',
@@ -69,6 +70,7 @@ export default {
     clothes_tab: 'Clothes',
     shoes_tab: 'Shoes',
     other_tab: 'Accessories',
+    home_tab: 'For Home',
     alert_info_title: 'Information',
     alert_info_body: `For any questions regarding the app please contact ${APP_NAME_CC}
 (063) 419-75-03
@@ -143,6 +145,7 @@ For any questions regarding payments please contact UAPAY at (044) 364-11-44`,
     clothes: 'Clothes',
     shoes: 'Shoes',
     other_cat: 'Accessories',
+    home: 'For Home', // only for Onova
     men: 'Men',
     women: 'Women',
     other_type: 'Other',

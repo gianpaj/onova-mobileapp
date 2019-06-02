@@ -678,7 +678,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
                 </React.Fragment>
                 <View style={styles.grps}>
                   <RadioForm animation formHorizontal>
-                    <Foect.Control name="grp_1" required pattern={/^[012]$/}>
+                    <Foect.Control name="grp_1" required pattern={/^[0123]$/}>
                       {control => {
                         this.grp_1 = control;
                         return ui.category_radio_grp_1.map((option, i) => (
@@ -699,7 +699,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
                               buttonSize={19}
                               buttonWrapStyle={styles.radioButtonInput}
                               index={i}
-                              isSelected={control.value == i}
+                              isSelected={control.value === option.value}
                               obj={option}
                               onPress={control.onChange}
                             />

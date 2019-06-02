@@ -184,8 +184,9 @@ class ProfileScreen extends React.Component<Props, State> {
 
   onEditOrSave = () => {
     const { navigation, skippedLogin } = this.props;
+    const { editing } = this.state;
     if (skippedLogin) return navigation.navigate('inAppAuth');
-    this.state.editing ? this.onSave() : this.setState({ editing: !editing });
+    editing ? this.onSave() : this.setState({ editing: !editing });
   };
 
   onSave = () => {

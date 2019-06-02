@@ -44,6 +44,7 @@ export default function(state: LoginState = initialState, action: Action): Login
   switch (action.type) {
     case LOGIN_PENDING:
     case SIGNUP_PENDING:
+    case 'SKIP_PENDING':
       return {
         ...state,
         checkedLoggedIn: false,
@@ -74,6 +75,15 @@ export default function(state: LoginState = initialState, action: Action): Login
         isVerifyAccountModalVisible: false,
         checkedLoggedIn: true,
         loading: false,
+      };
+
+    case 'SKIPPED_FAIL':
+      return {
+        ...state,
+        isLoggedIn: true,
+        skippedLogin: true,
+        fetchLoading: false,
+        hasError: true,
       };
 
     case LOGIN_SUCCESS:

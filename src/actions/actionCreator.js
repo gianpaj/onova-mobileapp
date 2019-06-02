@@ -340,8 +340,16 @@ const logout = () => {
 
 const skip = () => (dispatch: Dispatch) => {
   const userId = APP_NAME == 'onova' ? '5afb40d0741c953ef07a616f' : '5cd41dba3fb2da4b20f427d3';
-  return api.get(`/api/users/${userId}`).then((res: UserData) => dispatch({ type: SKIPPED, payload: res }));
-  // .catch(err => dispatch(handleErrorWithAlert({ type: GETUSER_FAIL }, err)))
+  dispatch({ type: 'SKIP_PENDING' });
+  Toast.loading('', 30);
+  return api
+    .get(`/api/users/${userId}`)
+    .then((res: UserData) => {
+      addAuthBreadcrumb({ message: 'skipped' });
+      dispatch({ type: SKIPPED, payload: res });
+    })
+    .catch(err => dispatch(handleErrorWithAlert({ type: 'SKIPPED_FAIL' }, err)))
+    .finally(() => Toast.hide());
   // return dispatch({ type: SKIPPED });
 };
 

@@ -107,10 +107,10 @@ class AppNavigation extends React.PureComponent<Props, *> {
   );
 
   render() {
-    const { dispatch, navigationState, isLoggedIn, checkedLoggedIn } = this.props;
+    const { dispatch, navigationState, isLoggedIn, skippedLogin, checkedLoggedIn } = this.props;
 
     if (this.state.canReload) return this._renderRetry();
-    if (isLoggedIn && !checkedLoggedIn) return this._renderLoading();
+    if ((isLoggedIn && !checkedLoggedIn) || (!isLoggedIn && skippedLogin)) return this._renderLoading();
 
     const state = isLoggedIn == true ? navigationState.stateForLoggedIn : navigationState.stateForLoggedOut;
 

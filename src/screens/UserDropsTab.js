@@ -43,7 +43,7 @@ class UserDropsTabContainer extends React.Component<Props, {}> {
   };
 
   render() {
-    const { navigation, username } = this.props;
+    const { username } = this.props;
 
     return (
       <View style={styles.flex1}>
@@ -51,7 +51,6 @@ class UserDropsTabContainer extends React.Component<Props, {}> {
           focused
           ref={this.imageGrid}
           username={username}
-          navigation={navigation}
           emptyState={
             <View style={styles.emptyContainer}>
               {!this.isMe() ? (

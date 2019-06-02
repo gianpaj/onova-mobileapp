@@ -55,8 +55,8 @@ class AppNavigation extends React.PureComponent<Props, *> {
   onCheckLogin = () => {
     const { dispatch, isLoggedIn, userData, token } = this.props;
 
-    // for devepment - remove so you'll have to skip every time and stay as guest
     // if (this.props.skippedLogin) return dispatch(skip());
+    // for development - remove so you'll have to skip every time and stay as guest
 
     if (isLoggedIn && userData && token) {
       this.setState({ canReload: false });

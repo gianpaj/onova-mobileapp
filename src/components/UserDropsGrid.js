@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 
 import { ActivityIndicator, Dimensions, FlatList, StyleSheet, Text, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
+import { withNavigation } from 'react-navigation';
 
 import type { NavigationScreenProp } from 'react-navigation';
 
@@ -238,7 +239,7 @@ const mapStateToProps = (state: any) => ({
   userData: state.LoginReducer.data,
 });
 
-export default connect(mapStateToProps)(UserDropsGridComponent);
+export default withNavigation(connect(mapStateToProps)(UserDropsGridComponent));
 
 const MARGIN = 1;
 

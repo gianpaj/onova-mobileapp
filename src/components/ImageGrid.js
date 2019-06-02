@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { ActivityIndicator, Dimensions, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { Button } from 'native-base';
-import { NavigationActions } from 'react-navigation';
+import { NavigationActions, withNavigation } from 'react-navigation';
 
 import type { Node } from 'react';
 import type { NavigationScreenProp } from 'react-navigation';
@@ -37,7 +37,6 @@ type Props = {
   emptyState?: Node,
   navigation?: NavigationScreenProp<*>,
   shouldRefresh?: boolean,
-  skippedLogin: boolean,
   header: React.ReactElement,
   token?: string,
   refreshProfile?: () => Promise<any>,
@@ -288,12 +287,14 @@ const mapStateToProps = (state: any) => ({
   shouldRefresh: state.RefresherReducer.shouldRefresh,
 });
 
-export default connect(
-  mapStateToProps,
-  null,
-  null,
-  { withRef: true }
-)(ImageGridComponent);
+export default withNavigation(
+  connect(
+    mapStateToProps,
+    null,
+    null,
+    { withRef: true }
+  )(ImageGridComponent)
+);
 
 const MARGIN = 1;
 

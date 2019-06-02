@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { ActivityIndicator, Dimensions, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { NavigationActions } from 'react-navigation';
+import { NavigationActions, withNavigation } from 'react-navigation';
 
 import type { NavigationScreenProp } from 'react-navigation';
 
@@ -257,7 +257,7 @@ const mapStateToProps = (state: any) => ({
   token: state.LoginReducer.token,
 });
 
-export default connect(mapStateToProps)(ImageGridSearchComponent);
+export default withNavigation(connect(mapStateToProps)(ImageGridSearchComponent));
 
 const MARGIN = 1;
 

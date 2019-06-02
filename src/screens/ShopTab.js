@@ -46,14 +46,13 @@ class ShopTabContainer extends React.Component<Props, {}> {
   };
 
   render() {
-    const { navigation, userid, header, refreshProfile } = this.props;
+    const { userid, header, refreshProfile } = this.props;
 
     return (
       <View style={styles.flex1}>
         <ImageGrid
           ref={this.imageGrid}
           apiURL={`/api/products?userid=${userid}`}
-          navigation={navigation}
           header={header}
           refreshProfile={refreshProfile}
           emptyState={

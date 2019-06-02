@@ -78,7 +78,7 @@ export class SearchProductsResults extends Component<Props, State> {
           </Body>
           <Right />
         </Header>
-        <ImageGridSearch terms={terms} navigation={this.props.navigation} />
+        <ImageGridSearch terms={terms} />
       </View>
     );
   }

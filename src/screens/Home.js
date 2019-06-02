@@ -81,19 +81,18 @@ class HomeComponent extends PureComponent<Props, State> {
   );
 
   _renderScene = ({ route }) => {
-    const { navigation, skippedLogin } = this.props;
-    if (skippedLogin) {
+    if (this.props.skippedLogin) {
       let sellerType = 'designer';
       if (APP_NAME === 'drop') {
         sellerType = 'reseller';
       }
       switch (route.key) {
         case 0:
-          return <ImageGrid apiURL={`/api/products/?categoryIds=0&sellerType=${sellerType}`} navigation={navigation} />;
+          return <ImageGrid apiURL={`/api/products/?categoryIds=0&sellerType=${sellerType}`} />;
         case 1:
-          return <ImageGrid apiURL={`/api/products/?categoryIds=1&sellerType=${sellerType}`} navigation={navigation} />;
+          return <ImageGrid apiURL={`/api/products/?categoryIds=1&sellerType=${sellerType}`} />;
         case 2:
-          return <ImageGrid apiURL={`/api/products/?categoryIds=2&sellerType=${sellerType}`} navigation={navigation} />;
+          return <ImageGrid apiURL={`/api/products/?categoryIds=2&sellerType=${sellerType}`} />;
         default:
           return null;
       }
@@ -101,11 +100,11 @@ class HomeComponent extends PureComponent<Props, State> {
 
     switch (route.key) {
       case 0:
-        return <ImageGrid apiURL="/api/feed/flat/?categoryIds=0" navigation={navigation} />;
+        return <ImageGrid apiURL="/api/feed/flat/?categoryIds=0" />;
       case 1: // accessories
-        return <ImageGrid apiURL="/api/feed/flat/?categoryIds=2" navigation={navigation} />;
+        return <ImageGrid apiURL="/api/feed/flat/?categoryIds=2" />;
       case 2: // home
-        return <ImageGrid apiURL="/api/feed/flat/?categoryIds=3" navigation={navigation} />;
+        return <ImageGrid apiURL="/api/feed/flat/?categoryIds=3" />;
       default:
         return null;
     }

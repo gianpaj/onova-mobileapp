@@ -205,6 +205,7 @@ export class SignUpTabContainer extends Component<Props, State> {
     blurOnSubmit: false,
     clearButtonMode: 'while-editing',
     editable: !this.props.loading,
+    inputStyle: styles.input,
     onSubmitEditing: this.onSignup,
     returnKeyType: 'go',
   };
@@ -383,6 +384,37 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: '80%',
   },
+  emailAddressToVerify: {
+    color: colors.black,
+    marginBottom: 30,
+    textAlign: 'center',
+  },
+  footer: {
+    alignSelf: 'center',
+    paddingVertical: 20,
+    width: 320,
+  },
+  input: {
+    color: colors.black,
+    width: '100%',
+  },
+  link: {
+    color: colors.grey2,
+    textAlign: 'center',
+    textDecorationLine: 'underline',
+  },
+  m20: {
+    margin: 20,
+  },
+  mt20: {
+    marginTop: 20,
+  },
+  pwdIcon: {
+    position: 'absolute',
+    right: 20,
+    top: 7,
+    zIndex: 10,
+  },
   signUpButtonText: {
     color: colors.white,
     fontSize: typography.font_button_size,
@@ -391,36 +423,9 @@ const styles = StyleSheet.create({
     color: colors.black,
     fontSize: typography.font_button_size,
   },
-  pwdIcon: {
-    position: 'absolute',
-    top: 7,
-    right: 20,
-    zIndex: 10,
-  },
-  m20: {
-    margin: 20,
-  },
-  mt20: {
-    marginTop: 20,
-  },
-  footer: {
-    alignSelf: 'center',
-    paddingVertical: 20,
-    width: 320,
-  },
   verificationEmailIcon: {
     alignSelf: 'center',
     marginBottom: 10,
-  },
-  link: {
-    color: colors.grey2,
-    textDecorationLine: 'underline',
-    textAlign: 'center',
-  },
-  emailAddressToVerify: {
-    color: colors.black,
-    marginBottom: 30,
-    textAlign: 'center',
   },
   verificationMessage: {
     color: colors.black,

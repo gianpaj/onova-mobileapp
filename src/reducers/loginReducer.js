@@ -77,15 +77,6 @@ export default function(state: LoginState = initialState, action: Action): Login
         loading: false,
       };
 
-    case 'SKIPPED_FAIL':
-      return {
-        ...state,
-        isLoggedIn: true,
-        skippedLogin: true,
-        fetchLoading: false,
-        hasError: true,
-      };
-
     case LOGIN_SUCCESS:
       const thisState = {
         ...state,
@@ -108,6 +99,7 @@ export default function(state: LoginState = initialState, action: Action): Login
         };
       }
 
+    case 'SKIPPED_FAIL':
     case LOGIN_FAIL:
     case SIGNUP_FAIL:
       return {
@@ -116,6 +108,7 @@ export default function(state: LoginState = initialState, action: Action): Login
         data: null,
         hasError: true,
         isLoggedIn: false,
+        skippedLogin: false,
         isVerifyAccountModalVisible: false,
         loading: false,
         token: '',
@@ -161,6 +154,7 @@ export default function(state: LoginState = initialState, action: Action): Login
         token: '',
         isLoggedIn: false,
         loading: false,
+        skippedLogin: false,
       };
 
     case GETUSER_PENDING:

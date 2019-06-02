@@ -32,7 +32,7 @@ import {
 } from './actionTypes';
 import type { Dispatch, LoginData, SignupData, GetState, UserData } from '../types';
 import type { Options, APIError } from '../utils/api';
-import { addNavigationBreadcrumb, addErrorBreadcrumb } from '../utils/analytics';
+import { addAuthBreadcrumb, addNavigationBreadcrumb, addErrorBreadcrumb } from '../utils/analytics';
 
 import { registerPushNotifications } from '../utils/push';
 import * as api from '../utils/api';
@@ -342,7 +342,7 @@ const skip = () => (dispatch: Dispatch) => {
   const userId = APP_NAME == 'onova' ? '5afb40d0741c953ef07a616f' : '5cd41dba3fb2da4b20f427d3';
   dispatch({ type: 'SKIP_PENDING' });
   Toast.loading('', 30);
-  return api
+  api
     .get(`/api/users/${userId}`)
     .then((res: UserData) => {
       addAuthBreadcrumb({ message: 'skipped' });
@@ -350,7 +350,6 @@ const skip = () => (dispatch: Dispatch) => {
     })
     .catch(err => dispatch(handleErrorWithAlert({ type: 'SKIPPED_FAIL' }, err)))
     .finally(() => Toast.hide());
-  // return dispatch({ type: SKIPPED });
 };
 
 const sendToken = (pushToken: string, userData: UserData, token: string): Promise<any> => {

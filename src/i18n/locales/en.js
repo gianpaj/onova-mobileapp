@@ -36,7 +36,7 @@ export default {
     email_placeholder: 'Email',
     password_placeholder: 'Password (minimum 8 characters)',
     sign_up_button: 'Create account',
-    skip: 'Skip',
+    skip: 'Browse as Guest',
     close: 'Close',
     terms_text_1: 'By pressing Create account you agree to the',
     terms_text_2: 'Privacy Policy,',

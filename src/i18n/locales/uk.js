@@ -38,6 +38,8 @@ export default {
     email_placeholder: 'Email',
     password_placeholder: 'Password (мін 8 знаків)',
     sign_up_button: 'Створити профіль',
+    skip: 'Зайти як гість',
+    close: 'Закрити',
     terms_text_1: 'Натискаючи зареєструватись ви погоджуєтесь з',
     terms_text_2: 'Політикою Конфіденційності,',
     terms_text_3: 'Умовами надання послуг,',

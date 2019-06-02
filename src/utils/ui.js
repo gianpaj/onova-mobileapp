@@ -103,7 +103,7 @@ let categories = [
 if (APP_NAME == 'onova') {
   categories = [
     { label: I18n.t('categories.clothes'), value: 0 },
-    { label: I18n.t('categories.shoes'), value: 1 },
+    { label: I18n.t('categories.other_cat'), value: 2 },
     { label: I18n.t('categories.home'), value: 3 },
   ];
 }

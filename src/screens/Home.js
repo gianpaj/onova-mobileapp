@@ -46,15 +46,26 @@ type State = {
 // const { analyticsEnabled } = api;
 
 class HomeComponent extends PureComponent<Props, State> {
-  state = {
-    index: 0,
-    dialogVisible: false,
-    routes: [
-      { key: 'clothes', title: I18n.t('home.clothes_tab') },
-      { key: 'shoes', title: I18n.t('home.shoes_tab') },
-      { key: 'other', title: I18n.t('home.home_tab') },
-    ],
-  };
+  constructor(props: Props) {
+    super(props);
+
+    this.state = {
+      index: 0,
+      dialogVisible: false,
+      routes: [
+        { key: 0, title: I18n.t('home.clothes_tab') },
+        { key: 1, title: I18n.t('home.shoes_tab') },
+        { key: 'other', title: I18n.t('home.other_tab') },
+      ],
+    };
+    if (APP_NAME == 'onova') {
+      this.state.routes = [
+        { key: 0, title: I18n.t('home.clothes_tab') },
+        { key: 1, title: I18n.t('home.other_tab') },
+        { key: 2, title: I18n.t('home.home_tab') },
+      ];
+    }
+  }
 
   _handleIndexChange = (index: number) => this.setState({ index });
 
@@ -74,14 +85,14 @@ class HomeComponent extends PureComponent<Props, State> {
     if (skippedLogin) {
       let sellerType = 'designer';
       if (APP_NAME === 'drop') {
-        // sellerType = 'reseller';
+        sellerType = 'reseller';
       }
       switch (route.key) {
-        case 'clothes':
+        case 0:
           return <ImageGrid apiURL={`/api/products/?categoryIds=0&sellerType=${sellerType}`} navigation={navigation} />;
-        case 'shoes':
+        case 1:
           return <ImageGrid apiURL={`/api/products/?categoryIds=1&sellerType=${sellerType}`} navigation={navigation} />;
-        case 'other':
+        case 2:
           return <ImageGrid apiURL={`/api/products/?categoryIds=2&sellerType=${sellerType}`} navigation={navigation} />;
         default:
           return null;
@@ -89,11 +100,11 @@ class HomeComponent extends PureComponent<Props, State> {
     }
 
     switch (route.key) {
-      case 'clothes':
+      case 0:
         return <ImageGrid apiURL="/api/feed/flat/?categoryIds=0" navigation={navigation} />;
-      case 'shoes':
-        return <ImageGrid apiURL="/api/feed/flat/?categoryIds=1" navigation={navigation} />;
-      case 'other': // home
+      case 1: // accessories
+        return <ImageGrid apiURL="/api/feed/flat/?categoryIds=2" navigation={navigation} />;
+      case 2: // home
         return <ImageGrid apiURL="/api/feed/flat/?categoryIds=3" navigation={navigation} />;
       default:
         return null;

@@ -209,7 +209,7 @@ android {
             applicationId "uno.drop.app"
            // Pre-compile run ENVFILE=.env.onova
         }
-   }
+    }
 }
 
 dependencies {

@@ -88,10 +88,7 @@ project.ext.react = [
 ]
 
 apply from: "../../node_modules/react-native/react.gradle"
-
-if(!System.getenv('SENTRY_SKIP_UPLOAD')) {
-    apply from: "../../node_modules/react-native-sentry/sentry.gradle"
-}
+apply from: "../../node_modules/react-native-sentry/sentry.gradle"
 
 def getPassword(String account, String keyChain) {
     def stdout = new ByteArrayOutputStream()

@@ -65,7 +65,7 @@
     "react-native-parsed-text": "^0.0.21",
     "react-native-permissions": "^1.1.1",
     "react-native-reanimated": "^1.0.1",
-    "react-native-sentry": "^0.40.0",
+    "react-native-sentry": "^0.43.1",
     "react-native-simple-markdown": "^1.1.0",
     "react-native-sortable-list": "^0.0.23",
     "react-native-star-rating": "^1.1.0",

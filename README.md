@@ -97,21 +97,19 @@ Currently supporting `Android 8.0 (SDK 27)` – for react-native-firebase
 
 - Build release APK
 
-  This builds and uploads the source code to Sentry.io 🎉
+  This builds and uploads the sourcemap files to Sentry.io 🎉
 
       yarn build-android-onova
       yarn build-android-drop
 
 - Build release for internal testing ONLY
 
-  This builds and skip uploading the source code to Sentry.io
-
-      SENTRY_SKIP_UPLOAD=true yarn build-android-onova
-      SENTRY_SKIP_UPLOAD=true yarn build-android-drop
+      yarn run-android-onova
+      yarn run-android-drop
 
 <!-- * Deploy a new version to the Google Play
 
-  Build and sends the source code to Sentry.io and sends a msg on Slack the #bots-dev-onova channel once finished 🎉
+  Build and sends the sourcemap files to Sentry.io and sends a msg on Slack the #bots-dev-onova channel once finished 🎉
 
       fastlane deploy -->
 
@@ -125,7 +123,7 @@ Currently supporting `Android 8.0 (SDK 27)` – for react-native-firebase
 
 1.  Archive a build
 
-This builds and uploads the source code to Sentry.io 🎉
+This builds and uploads the sourcemap files to Sentry.io 🎉
 
 ## Tools
 

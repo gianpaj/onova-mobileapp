@@ -117,6 +117,7 @@ export default class MediaView extends React.Component<Props, State> {
           </Swiper>
           <Modal
             isVisible={isModalVisible}
+            onBackButtonPress={this.hideModal}
             // onSwipeComplete={this.hideModal}
             // swipeDirection={['up', 'down']}
             style={styles.modal}>
@@ -175,26 +176,20 @@ export default class MediaView extends React.Component<Props, State> {
         </TouchableWithoutFeedback>
         <Modal
           isVisible={isModalVisible}
+          backdropOpacity={1}
+          onBackButtonPress={this.hideModal}
           onSwipeComplete={this.hideModal}
-          style={styles.modal}
-          swipeDirection={['up', 'down']}>
-          <ImageViewer
-            enableSwipeDown
-            imageUrls={[{ url: images[0] }]}
-            onCancel={this.hideModal}
-            renderIndicator={() => null}
-            renderImage={() => (
-              <FastImage
-                style={{
-                  width,
-                  height: imageHeight,
-                }}
-                source={{
-                  uri: images[0],
-                  cache: FastImage.cacheControl.cacheOnly, // FIXME:
-                }}
-              />
-            )}
+          swipeDirection={'down'}
+          style={styles.modal}>
+          <FastImage
+            style={{
+              width,
+              height: imageHeight,
+            }}
+            source={{
+              uri: images[0],
+              cache: FastImage.cacheControl.cacheOnly, // FIXME:
+            }}
           />
         </Modal>
       </>
@@ -203,10 +198,10 @@ export default class MediaView extends React.Component<Props, State> {
 }
 
 const styles = StyleSheet.create({
-  pagination: {
-    bottom: 0,
-  },
   modal: {
     margin: 0,
+  },
+  pagination: {
+    bottom: 0,
   },
 });

@@ -699,9 +699,10 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
                               buttonSize={19}
                               buttonWrapStyle={styles.radioButtonInput}
                               index={i}
-                              isSelected={control.value === option.value}
+                              isSelected={control.value == option.value}
                               obj={option}
-                              onPress={control.onChange}
+                              // FIXME: issue in foect library
+                              onPress={e => control.onChange(e.toString())}
                             />
                           </RadioButton>
                         ));

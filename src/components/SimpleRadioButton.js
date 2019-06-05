@@ -84,7 +84,7 @@ class RadioForm extends Component {
       renderContent = this.props.children;
     }
     return (
-      <View style={[Style.radioFrom, this.props.style, this.props.formHorizontal && Style.formHorizontal]}>
+      <View style={[styles.radioFrom, this.props.style, this.props.formHorizontal && styles.formHorizontal]}>
         {renderContent}
       </View>
     );
@@ -131,7 +131,7 @@ class RadioButton extends PureComponent {
         : '';
     let testIDIndex = this.props.testID && testIDIndex !== -1 ? this.props.testID.split(testIDIndex + 1) : '';
 
-    const wrapStyle = [Style.radioWrap, !this.props.labelHorizontal && Style.labelVerticalWrap, this.props.style];
+    const wrapStyle = [styles.radioWrap, !this.props.labelHorizontal && styles.labelVerticalWrap, this.props.style];
     let renderContent = false;
     renderContent = children ? (
       <View style={wrapStyle}>{children}</View>
@@ -185,15 +185,15 @@ function RadioButtonInput(props) {
   const c = (
     <View
       style={[
-        Style.radioNormal,
-        props.isSelected && Style.radioActive,
+        styles.radioNormal,
+        props.isSelected && styles.radioActive,
         props.isSelected && innerSize,
         props.isSelected && { backgroundColor: innerColor },
       ]}
     />
   );
   const radioStyle = [
-    Style.radio,
+    styles.radio,
     {
       borderColor: outerColor,
       borderWidth,
@@ -237,15 +237,14 @@ function RadioButtonLabelComponent(props) {
       accessibilityLabel={props.accessibilityLabel}
       testID={props.testID}
       onPress={() => {
-        if (!props.disabled) {
-          props.onPress(props.obj.value, props.index);
-        }
+        if (props.disabled) return;
+        props.onPress(props.obj.value, props.index);
       }}>
-      <View style={[props.labelWrapStyle, Style.labelWrapStyle]}>
+      <View style={[props.labelWrapStyle, styles.labelWrapStyle]}>
         <Text
           style={[
-            Style.radioLabel,
-            !props.labelHorizontal && Style.labelVertical,
+            styles.radioLabel,
+            !props.labelHorizontal && styles.labelVertical,
             { color: props.labelColor },
             props.labelStyle,
           ]}>
@@ -258,58 +257,44 @@ function RadioButtonLabelComponent(props) {
 
 const RadioButtonLabel = React.memo(RadioButtonLabelComponent);
 
-const Style = StyleSheet.create({
-  radioWrap: {
+const styles = StyleSheet.create({
+  formHorizontal: {
     flexDirection: 'row',
-    marginBottom: 5,
   },
-  // eslint-disable-next-line react-native/no-color-literals
-  radio: {
-    justifyContent: 'center',
-    alignItems: 'center',
-
-    width: 30,
-    height: 30,
-
-    alignSelf: 'center',
-
-    borderColor: '#2196f3',
-    borderRadius: 30,
+  labelVertical: {
+    paddingLeft: 0,
   },
-
-  radioLabel: {
-    paddingLeft: 10,
-    lineHeight: 20,
-  },
-
-  radioNormal: {
-    borderRadius: 10,
-  },
-
-  // eslint-disable-next-line react-native/no-color-literals
-  radioActive: {
-    width: 20,
-    height: 20,
-    backgroundColor: '#2196f3',
-  },
-
-  labelWrapStyle: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    alignSelf: 'center',
-  },
-
   labelVerticalWrap: {
     flexDirection: 'column',
     // paddingLeft: 10,
   },
-
-  labelVertical: {
-    paddingLeft: 0,
-  },
-
-  formHorizontal: {
+  labelWrapStyle: {
+    alignItems: 'center',
+    alignSelf: 'center',
     flexDirection: 'row',
+  },
+  radio: {
+    alignItems: 'center',
+    alignSelf: 'center',
+    borderRadius: 30,
+    height: 30,
+    justifyContent: 'center',
+    width: 30,
+  },
+  radioActive: {
+    height: 20,
+    width: 20,
+  },
+  radioLabel: {
+    lineHeight: 20,
+    paddingLeft: 10,
+  },
+  radioNormal: {
+    borderRadius: 10,
+  },
+  radioWrap: {
+    flexDirection: 'row',
+    marginBottom: 5,
   },
 });
 

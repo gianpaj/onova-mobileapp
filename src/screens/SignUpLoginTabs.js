@@ -1,6 +1,7 @@
 // @flow
 
 import React from 'react';
+
 import { Dimensions, StyleSheet, View } from 'react-native';
 import { TabView, TabBar, SceneMap } from 'react-native-tab-view';
 import { Container } from 'native-base';

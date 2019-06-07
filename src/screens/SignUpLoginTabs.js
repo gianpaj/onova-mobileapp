@@ -19,12 +19,16 @@ const initialLayout = {
   width: Dimensions.get('window').width,
 };
 
+type Props = {
+  isInAppAuth: boolean,
+};
+
 type State = {
   index: number,
   routes: Array<any>,
 };
 
-export class SignUpLoginTabs extends React.Component<{}, State> {
+export class SignUpLoginTabs extends React.Component<Props, State> {
   state = {
     index: 0,
     routes: [
@@ -66,17 +70,17 @@ export class SignUpLoginTabs extends React.Component<{}, State> {
 const styles = StyleSheet.create({
   header: {
     alignItems: 'center',
-    marginTop: 30,
     marginBottom: 40,
+    marginTop: 30,
   },
-  tabbar: {
-    backgroundColor: colors.transparent,
+  indicator: {
+    backgroundColor: colors.black,
   },
   label: {
     color: colors.black,
     fontWeight: '400',
   },
-  indicator: {
-    backgroundColor: colors.black,
+  tabbar: {
+    backgroundColor: colors.transparent,
   },
 });

@@ -183,7 +183,7 @@ class Row extends React.Component<RowProps> {
   render() {
     const { data, removeImage } = this.props;
 
-    const style = [square, { margin: imageMargin - 1 }, styles.image];
+    const style = [square, styles.image, { margin: imageMargin - 1 }];
 
     return (
       <Animated.View style={[styles.row, this._style]}>
@@ -208,12 +208,12 @@ const styles = StyleSheet.create({
     ...imagePickerStyle.image,
     margin: imageMargin,
   },
-  row: {
-    flexDirection: 'column',
-    alignItems: 'center',
-  },
   loader: {
-    borderWidth: 1,
     borderColor: colors.grey5,
+    borderWidth: 1,
+  },
+  row: {
+    alignItems: 'center',
+    flexDirection: 'column',
   },
 });

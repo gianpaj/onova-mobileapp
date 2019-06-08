@@ -12,38 +12,38 @@ import colors from '../config/colors';
 const BASE_SIZE = { width: 300, height: 190 };
 
 const s = StyleSheet.create({
+  baseText: {
+    backgroundColor: colors.transparent,
+    color: colors.grey4,
+  },
   cardContainer: {},
   cardFace: {},
-  baseText: {
-    color: colors.grey4,
-    backgroundColor: colors.transparent,
-  },
-  icon: {
+  expiry: {
+    bottom: 20,
+    fontSize: 16,
+    left: 220,
     position: 'absolute',
-    top: 15,
-    right: 15,
-    width: 60,
-    height: 40,
-    resizeMode: 'contain',
-  },
-  placeholder: {
-    color: colors.grey3,
   },
   focused: {
-    fontWeight: 'bold',
     color: colors.white,
+    fontWeight: 'bold',
+  },
+  icon: {
+    height: 40,
+    position: 'absolute',
+    resizeMode: 'contain',
+    right: 15,
+    top: 15,
+    width: 60,
   },
   number: {
     fontSize: 21,
+    left: 28,
     position: 'absolute',
     top: 95,
-    left: 28,
   },
-  expiry: {
-    fontSize: 16,
-    position: 'absolute',
-    bottom: 20,
-    left: 220,
+  placeholder: {
+    color: colors.grey3,
   },
 });
 

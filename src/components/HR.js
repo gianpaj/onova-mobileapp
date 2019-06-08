@@ -23,8 +23,8 @@ HR.defaultProps = {
 const styles = StyleSheet.create({
   hr: {
     alignSelf: 'center',
-    borderTopWidth: StyleSheet.hairlineWidth,
     borderColor: colors.grey4,
+    borderTopWidth: StyleSheet.hairlineWidth,
     marginVertical: 10,
   },
 });

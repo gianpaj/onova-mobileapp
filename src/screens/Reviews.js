@@ -84,14 +84,14 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
   },
-  tabbar: {
-    backgroundColor: colors.white,
+  indicator: {
+    backgroundColor: colors.primary,
   },
   label: {
     color: colors.black,
     fontWeight: '400',
   },
-  indicator: {
-    backgroundColor: colors.primary,
+  tabbar: {
+    backgroundColor: colors.white,
   },
 });

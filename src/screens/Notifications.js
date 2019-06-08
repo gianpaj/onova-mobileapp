@@ -266,17 +266,14 @@ const mapStateToProps: any = (state: ReduxState) => ({
 export const Notifications = withNavigation(connect(mapStateToProps)(NotificationsContainer));
 
 const styles = StyleSheet.create({
+  avatarContainer: {
+    marginHorizontal: 10,
+    top: -10,
+  },
   container: {
     alignItems: 'stretch',
     flex: 1,
     justifyContent: 'center',
-  },
-  root: {
-    height: '100%',
-  },
-  separator: {
-    height: StyleSheet.hairlineWidth,
-    backgroundColor: colors.grey6,
   },
   contentRow: {
     flexDirection: 'row',
@@ -288,18 +285,21 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     width: '85%',
   },
-  avatarContainer: {
-    marginHorizontal: 10,
-    top: -10,
-  },
-  time: {
-    fontSize: 12,
-    color: colors.grey2,
-    marginTop: 5,
-  },
   reviewText: {
     flex: 1,
     textAlignVertical: 'bottom', // android
     paddingBottom: 0,
+  },
+  root: {
+    height: '100%',
+  },
+  separator: {
+    backgroundColor: colors.grey6,
+    height: StyleSheet.hairlineWidth,
+  },
+  time: {
+    color: colors.grey2,
+    fontSize: 12,
+    marginTop: 5,
   },
 });

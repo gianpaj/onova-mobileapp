@@ -405,6 +405,43 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  tag: {
+    borderRadius: 2,
+    height: 28,
+    justifyContent: 'center',
+    marginRight: 3,
+    marginTop: 3,
+    padding: Platform.select({
+      android: 8,
+      ios: 4,
+    }),
+    paddingLeft: 8,
+  },
+  tagInputContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+  tagInputContainerScroll: {
+    flex: 1,
+  },
+  tagText: {
+    fontSize: Platform.select({
+      android: 18,
+      ios: 15,
+    }),
+  },
+  textInput: {
+    flex: 0.6,
+    fontSize: 18,
+    height: 60,
+    marginBottom: 6,
+    textAlignVertical: 'center',
+  },
+  textInputContainer: {
+    height: 60,
+    marginTop: 2,
+  },
   wrapper: {
     alignItems: 'flex-start',
     flex: 1,
@@ -412,43 +449,6 @@ const styles = StyleSheet.create({
     marginBottom: 2,
     marginTop: 3,
     marginHorizontal: 20,
-  },
-  tagInputContainerScroll: {
-    flex: 1,
-  },
-  tagInputContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-  },
-  textInputContainer: {
-    height: 60,
-    marginTop: 2,
-  },
-  textInput: {
-    height: 60,
-    fontSize: 18,
-    flex: 0.6,
-    marginBottom: 6,
-    textAlignVertical: 'center',
-  },
-  tag: {
-    justifyContent: 'center',
-    marginTop: 3,
-    marginRight: 3,
-    padding: Platform.select({
-      android: 8,
-      ios: 4,
-    }),
-    paddingLeft: 8,
-    height: 28,
-    borderRadius: 2,
-  },
-  tagText: {
-    fontSize: Platform.select({
-      android: 18,
-      ios: 15,
-    }),
   },
 });
 

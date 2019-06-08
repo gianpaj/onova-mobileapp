@@ -111,10 +111,10 @@ export default class ChatActions extends React.PureComponent<Props, State> {
 
 const styles = StyleSheet.create({
   container: {
-    width: 28,
     height: 28,
-    marginLeft: 10,
     marginBottom: 5,
+    marginLeft: 10,
     top: -5,
+    width: 28,
   },
 });

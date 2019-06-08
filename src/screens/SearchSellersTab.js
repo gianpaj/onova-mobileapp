@@ -168,15 +168,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
   },
-  flex1: {
-    flex: 1,
-  },
-  itemContainer: {
-    paddingLeft: 19,
-    paddingRight: 16,
-    paddingVertical: 12,
-    flexDirection: 'row',
-  },
   content: {
     marginLeft: 16,
   },
@@ -185,13 +176,22 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginBottom: 6,
   },
+  flex1: {
+    flex: 1,
+  },
+  itemContainer: {
+    flexDirection: 'row',
+    paddingLeft: 19,
+    paddingRight: 16,
+    paddingVertical: 12,
+  },
   name: {
     color: colors.grey1,
     fontWeight: '800',
   },
   separator: {
-    height: StyleSheet.hairlineWidth,
     backgroundColor: colors.grey5,
+    height: StyleSheet.hairlineWidth,
   },
 });
 

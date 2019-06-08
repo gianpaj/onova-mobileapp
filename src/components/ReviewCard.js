@@ -108,18 +108,15 @@ class ReviewCard extends PureComponent<Props> {
 export default ReviewCard;
 
 const styles = StyleSheet.create({
-  itemImage: {
-    marginHorizontal: 15,
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor: colors.grey4,
-  },
   contentRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: 6,
   },
-  username: {
-    color: colors.grey1,
+  itemImage: {
+    borderColor: colors.grey4,
+    borderWidth: StyleSheet.hairlineWidth,
+    marginHorizontal: 15,
   },
   reviewText: {
     flex: 1,
@@ -130,5 +127,8 @@ const styles = StyleSheet.create({
     fontStyle: 'italic',
     // textAlignVertical: 'bottom', // android
     paddingBottom: 5,
+  },
+  username: {
+    color: colors.grey1,
   },
 });

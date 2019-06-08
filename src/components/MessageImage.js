@@ -91,10 +91,10 @@ export default MessageImage;
 
 const styles = StyleSheet.create({
   image: {
-    width: 150,
-    height: 100,
     borderRadius: 13,
+    height: 100,
     margin: 3,
+    width: 150,
   },
 });
 

@@ -84,16 +84,16 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
   },
-  tabbar: {
-    backgroundColor: colors.bgDefault,
-    elevation: 2,
+  indicator: {
+    backgroundColor: colors.black,
   },
   label: {
     color: colors.black,
     fontWeight: '400',
   },
-  indicator: {
-    backgroundColor: colors.black,
+  tabbar: {
+    backgroundColor: colors.bgDefault,
+    elevation: 2,
   },
 });
 

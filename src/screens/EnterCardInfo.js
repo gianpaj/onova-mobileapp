@@ -194,9 +194,7 @@ class EnterCardInfo extends Component<Props, State> {
                   html: `<html>
                     <head><meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0"></head>
                     <body style="background: white; margin-bottom: -5px">
-                      <iframe id="uapayFrame" style="border: 0; height: 220px; width: 100%" src="${
-                        api.config.URL_BASE
-                      }/api/iframe/${tokenForCardIFrame}"></iframe>
+                      <iframe id="uapayFrame" style="border: 0; height: 220px; width: 100%" src="${api.config.URL_BASE}/api/iframe/${tokenForCardIFrame}"></iframe>
                     </body>
                   </html>`,
                 }}

@@ -60,7 +60,7 @@ const GALLERY =
 
 const CANCEL = I18n.t('add_or_edit_item.select_photo_source_cancel');
 
-type Image = {
+export type Image = {
   url: string,
   id: number,
   isUploading: boolean,
@@ -576,7 +576,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
                     onImageClick={index => {
                       !images[index].isUploading && this.selectPhotoTapped(index);
                     }}
-                    onAddImageClick={() => this.selectPhotoTapped(images.length)}
+                    onAddImageClick={this.selectPhotoTapped}
                     selectable={images.length < 6}
                     imagePerRow={6}
                     enabled={!isUploading}

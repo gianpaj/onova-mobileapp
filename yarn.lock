@@ -11107,10 +11107,9 @@ react-native-simple-markdown@^1.1.0:
     lodash "^4.15.0"
     simple-markdown "git://github.com/CharlesMangwa/simple-markdown.git"
 
-react-native-sortable-list@^0.0.23:
+react-native-sortable-list@kganser/react-native-sortable-list:
   version "0.0.23"
-  resolved "https://registry.yarnpkg.com/react-native-sortable-list/-/react-native-sortable-list-0.0.23.tgz#9a63d0fffb5442ea686aa0576c1ee9113714fdbf"
-  integrity sha512-qfjTWk9878gQCc3do4cqc3MlDEFmQRd98UuvDDwMIjhAGtIFnOWozp6KTv9zTJ3QBqe9VbvtswuK0rpXFgGzew==
+  resolved "https://codeload.github.com/kganser/react-native-sortable-list/tar.gz/0f330b249f846f65a5a4d576de8c3dab079532c7"
   dependencies:
     prop-types "^15.5.10"
 

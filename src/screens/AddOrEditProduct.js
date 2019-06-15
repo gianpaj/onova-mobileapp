@@ -164,17 +164,14 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
 
   selectPhotoTapped = (i: number = 0) => {
     // development
-    // this.appendSinglePhoto(
-    //   'https://storage.googleapis.com/assets.onova.co/products/MS8mGgiHPi-1-1542904777176.jpg',
-    //   0
-    // );
+    // this.appendSinglePhoto('https://storage.googleapis.com/assets.onova.co/products/MS8mGgiHPi-1-1542904777176.jpg', Math.round(1+Math.random() * 100));
     // this.appendSinglePhoto(
     //   'https://storage.googleapis.com/assets.onova.co/products/saxBKnrTO-1-1542904778726.jpg',
-    //   1
+    //   Math.round(2 + Math.random() * 100)
     // );
     // return this.appendSinglePhoto(
     //   'https://storage.googleapis.com/assets.onova.co/products/e3X8Z2hehL-1-1542904778086.jpg',
-    //   2
+    //   Math.round(7 + Math.random() * 100)
     // );
     if (global.__TESTING__) {
       return ImagePicker.openPicker()

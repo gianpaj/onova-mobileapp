@@ -44,23 +44,23 @@ public class MainApplication extends Application implements ReactApplication {
     @Override
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
-          new MainReactPackage(),
-            new CodePush(getResources().getString(R.string.reactNativeCodePush_androidDeploymentKey), getApplicationContext(), BuildConfig.DEBUG),
-            new AnalyticsPackage(),
-            new AsyncStoragePackage(),
-            new FastImageViewPackage(),
-            new PickerPackage(),
-            new ReactNativeConfigPackage(),
-            new ReanimatedPackage(),
-            new RNAndroidLocationEnablerPackage(),
-            new RNCWebViewPackage(),
-            new RNFirebaseMessagingPackage(),
-            new RNFirebaseNotificationsPackage(),
-            new RNFirebasePackage(),
-            new RNGestureHandlerPackage(),
-            new RNI18nPackage(),
-            new RNSentryPackage(),
-            new SvgPackage()
+        new MainReactPackage(),
+        new CodePush(BuildConfig.CODEPUSH_KEY, getApplicationContext(), BuildConfig.DEBUG),
+        new AnalyticsPackage(),
+        new AsyncStoragePackage(),
+        new FastImageViewPackage(),
+        new PickerPackage(),
+        new ReactNativeConfigPackage(),
+        new ReanimatedPackage(),
+        new RNAndroidLocationEnablerPackage(),
+        new RNCWebViewPackage(),
+        new RNFirebaseMessagingPackage(),
+        new RNFirebaseNotificationsPackage(),
+        new RNFirebasePackage(),
+        new RNGestureHandlerPackage(),
+        new RNI18nPackage(),
+        new RNSentryPackage(),
+        new SvgPackage()
       );
     }
 

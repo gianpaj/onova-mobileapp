@@ -1,6 +1,9 @@
 // @flow
 
 import React, { Component } from 'react';
+
+// eslint-disable-next-line import/default
+import codePush from 'react-native-code-push';
 import { connect } from 'react-redux';
 import { Platform, StyleSheet, Text, TouchableOpacity, UIManager, View } from 'react-native';
 import { Body, Button as NBButton, Container, Content, Icon as NBIcon, Left, Right } from 'native-base';
@@ -60,6 +63,7 @@ type Props = {
 type State = {
   activeInputRef: any,
   cities: ?Array<City>,
+  codePushVersion: string,
   departments: ?Array<Department>,
   emailAddress: string,
   isLoading: boolean,
@@ -79,9 +83,10 @@ class SettingsContainer extends Component<Props, State> {
   inputs: Array<any> = [];
   state = {
     activeInputRef: null,
-    emailAddress: '',
     cities: null,
+    codePushVersion: '',
     departments: null,
+    emailAddress: '',
     isLoading: true,
     mobileNumber: '',
     nextFocusDisabled: false,
@@ -115,7 +120,9 @@ class SettingsContainer extends Component<Props, State> {
       const departments = await api.getDepartments(this.state.shippingAddress.city);
       this.setState({ departments });
     }
-    this.setState({ isLoading: false });
+    const update = await codePush.getUpdateMetadata();
+    if (update) this.setState({ isLoading: false, codePushVersion: update.label });
+    else this.setState({ isLoading: false, codePushVersion: 'debug' });
 
     if (Platform.OS === 'android') {
       UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -352,6 +359,7 @@ class SettingsContainer extends Component<Props, State> {
     const { userData, skippedLogin } = this.props;
     const {
       cities,
+      codePushVersion,
       departments,
       emailAddress,
       isLoading,
@@ -541,7 +549,9 @@ class SettingsContainer extends Component<Props, State> {
                 {URL}
               </Text>
             </TouchableOpacity>
-            <Text style={styles.centerText}>{version}</Text>
+            <Text style={styles.centerText}>
+              {version} - {codePushVersion}
+            </Text>
           </View>
           {/* <HR full /> */}
           {/* <NBButton light full onPress={() => Instabug.invoke()}>

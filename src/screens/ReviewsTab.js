@@ -162,15 +162,15 @@ const styles = StyleSheet.create({
     margin: 18,
     textAlign: 'center',
   },
-  root: {
-    height: '100%',
-  },
   flex1: {
     flex: 1,
   },
+  root: {
+    height: '100%',
+  },
   separator: {
-    height: StyleSheet.hairlineWidth,
     backgroundColor: colors.grey5,
+    height: StyleSheet.hairlineWidth,
   },
   url: {
     color: colors.active,

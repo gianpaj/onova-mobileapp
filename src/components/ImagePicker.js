@@ -15,6 +15,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import isEqual from 'lodash.isequal';
 import imagePickerStyle from './ImagePicker.styles';
 import SortableList from 'react-native-sortable-list';
 
@@ -31,9 +32,9 @@ export type Props = {
   imagePerRow: number,
 };
 
-type State = {
-  visible: boolean,
-};
+// type State = {
+//   visible: boolean,
+// };
 
 const { width } = Dimensions.get('window');
 
@@ -45,9 +46,9 @@ const widthOfContainer = width - 16 * 2;
 export default class ImagePicker extends React.Component<Props, State> {
   arr: Array<any>;
 
-  state = {
-    visible: false,
-  };
+  // state = {
+  //   visible: false,
+  // };
 
   static defaultProps = {
     selectable: true,
@@ -64,10 +65,17 @@ export default class ImagePicker extends React.Component<Props, State> {
     };
   }
 
-  showPicker = () => {
-    if (this.props.onAddImageClick) return this.props.onAddImageClick();
+  shouldComponentUpdate(nextProps: Props) {
+    if (!isEqual(nextProps.files, this.props.files)) {
+      return true;
+    }
+    return false;
+  }
 
-    this.setState({ visible: true });
+  showPicker = () => {
+    if (this.props.onAddImageClick) return this.props.onAddImageClick(this.props.files.length);
+
+    // this.setState({ visible: true });
   };
 
   addImage(imageObj: any) {
@@ -80,7 +88,7 @@ export default class ImagePicker extends React.Component<Props, State> {
     if (onChange) onChange(newImages, 'add');
   }
 
-  removeImage = (idx: number): void => {
+  onRemoveImage = (idx: number): void => {
     const { files, onChange } = this.props;
     const copy = [...files];
     copy.splice(idx, 1);
@@ -130,18 +138,20 @@ export default class ImagePicker extends React.Component<Props, State> {
       data={data}
       index={index}
       imagePerRow={this.props.imagePerRow}
-      removeImage={() => this.props.enabled && this.removeImage(index)}
+      onRemoveImage={() => this.props.enabled && this.onRemoveImage(index)}
     />
   );
 }
 
 type RowProps = {
   active: boolean,
+  // TODO: import Image from AddOrdEditProduct
   data: {
     url: string,
+    id: number,
     isUploading: boolean,
   },
-  removeImage: () => any,
+  onRemoveImage: () => any,
 };
 
 class Row extends React.Component<RowProps> {
@@ -181,7 +191,7 @@ class Row extends React.Component<RowProps> {
   }
 
   render() {
-    const { data, removeImage } = this.props;
+    const { data, onRemoveImage } = this.props;
 
     const style = [square, styles.image, { margin: imageMargin - 1 }];
 
@@ -192,7 +202,7 @@ class Row extends React.Component<RowProps> {
         ) : (
           <>
             <Image source={{ uri: data.url.replace('.jpg', '-thumb.jpg') }} style={style} />
-            <TouchableOpacity onPress={removeImage} style={styles.closeWrap} activeOpacity={0.6}>
+            <TouchableOpacity onPress={onRemoveImage} style={styles.closeWrap} activeOpacity={0.6}>
               <Text style={styles.closeText}>×</Text>
             </TouchableOpacity>
           </>

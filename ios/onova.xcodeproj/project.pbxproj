@@ -52,7 +52,6 @@
 		6CC6155C944D0F7D713B0753 /* libPods-drop.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B192B86C708E47CB6B1EC61 /* libPods-drop.a */; };
 		6CC98770890349DA8724A4AD /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = B1DD153C120B497BB598FB67 /* libz.tbd */; };
 		7F7792F8BD001B50D035C7B1 /* libPods-onova.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 367813CBC9DFD2B619081182 /* libPods-onova.a */; };
-		DD2B751496E7FB53D4DE94E5 /* libPods-onovaTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 39C0B9485E15AC1045623802 /* libPods-onovaTests.a */; };
 		F50E828497CC4DAA90B3DC55 /* libRNAnalyticsSegmentIO.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 94F7A3CDD35F4C0EB2C327AE /* libRNAnalyticsSegmentIO.a */; };
 /* End PBXBuildFile section */
 
@@ -359,14 +358,12 @@
 		13B07FB61A68108700A75B9A /* drop-info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "drop-info.plist"; path = "onova/drop-info.plist"; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = onova/main.m; sourceTree = "<group>"; };
 		146833FF1AC3E56700842450 /* React.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = React.xcodeproj; path = "../node_modules/react-native/React/React.xcodeproj"; sourceTree = "<group>"; };
-		2030C606DF8F683D85B933BD /* Pods-onovaTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-onovaTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-onovaTests/Pods-onovaTests.release.xcconfig"; sourceTree = "<group>"; };
 		24921AD9C877412B990D74BC /* RNAnalyticsSegmentIO.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNAnalyticsSegmentIO.xcodeproj; path = "../node_modules/react-native-analytics-segment-io/ios/RNAnalyticsSegmentIO.xcodeproj"; sourceTree = "<group>"; };
 		2B192B86C708E47CB6B1EC61 /* libPods-drop.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-drop.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D16E6891FA4F8E400B85C8A /* libReact.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libReact.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		301BE995B2EF4EECB31DA84F /* RNFirebase.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNFirebase.xcodeproj; path = "../node_modules/react-native-firebase/ios/RNFirebase.xcodeproj"; sourceTree = "<group>"; };
 		367813CBC9DFD2B619081182 /* libPods-onova.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-onova.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		39C0B9485E15AC1045623802 /* libPods-onovaTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-onovaTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		531188D0E457F0B1F8730ED9 /* Pods-onovaTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-onovaTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-onovaTests/Pods-onovaTests.debug.xcconfig"; sourceTree = "<group>"; };
 		5819BC1722786A4E00FBDFF8 /* onova.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = onova.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5819BC1822786A4E00FBDFF8 /* onova-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "onova-Info.plist"; path = "/Users/gianfranco/onova/mobileapp/ios/onova-Info.plist"; sourceTree = "<absolute>"; };
 		583EC249228EB703008B2885 /* uk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = uk; path = uk.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
@@ -393,7 +390,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				140ED2AC1D01E1AD002B40FF /* libReact.a in Frameworks */,
-				DD2B751496E7FB53D4DE94E5 /* libPods-onovaTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -691,8 +687,6 @@
 		936B1FEE67F8B619E1DF7DB8 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				531188D0E457F0B1F8730ED9 /* Pods-onovaTests.debug.xcconfig */,
-				2030C606DF8F683D85B933BD /* Pods-onovaTests.release.xcconfig */,
 				AEDFB25EC39B0E4E33193168 /* Pods-onova.debug.xcconfig */,
 				7B3363D4FDF0B5CD7D353F7C /* Pods-onova.release.xcconfig */,
 				841776A46B73C0A728D83660 /* Pods-drop.debug.xcconfig */,
@@ -717,7 +711,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "onovaTests" */;
 			buildPhases = (
-				A715E586A274921295315B5A /* [CP] Check Pods Manifest.lock */,
 				00E356EA1AD99517003FC87E /* Sources */,
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
@@ -1361,28 +1354,6 @@
 			shellPath = /bin/sh;
 			shellScript = "export SENTRY_PROPERTIES=sentry.properties\n../node_modules/@sentry/cli/bin/sentry-cli upload-dsym\n";
 		};
-		A715E586A274921295315B5A /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-onovaTests-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
 		B1384345C8E9D0BD2E1BDFBC /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1548,7 +1519,6 @@
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 531188D0E457F0B1F8730ED9 /* Pods-onovaTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -1580,7 +1550,6 @@
 		};
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2030C606DF8F683D85B933BD /* Pods-onovaTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;

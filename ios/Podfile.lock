@@ -1,6 +1,12 @@
 PODS:
   - Analytics (3.6.10)
+  - Base64 (1.1.2)
   - boost-for-react-native (1.63.0)
+  - CodePush (5.6.0):
+    - Base64 (~> 1.1)
+    - JWT (~> 3.0.0-beta.7)
+    - React
+    - SSZipArchive (~> 2.1)
   - DoubleConversion (1.1.6)
   - Firebase/Core (5.11.0):
     - Firebase/CoreOnly
@@ -62,6 +68,8 @@ PODS:
     - GoogleUtilities/Logger
   - GoogleUtilities/UserDefaults (5.8.0):
     - GoogleUtilities/Logger
+  - JWT (3.0.0-beta.11):
+    - Base64 (~> 1.1.2)
   - Mixpanel (3.4.5)
   - nanopb (0.3.901):
     - nanopb/decode (= 0.3.901)
@@ -144,7 +152,7 @@ PODS:
     - React
   - RNSVG (9.4.0):
     - React
-  - RNVectorIcons (6.4.2):
+  - RNVectorIcons (6.5.0):
     - React
   - RSKImageCropper (2.2.1)
   - SDWebImage (5.0.4):
@@ -159,10 +167,12 @@ PODS:
   - SentryReactNative (0.43.1):
     - React
     - Sentry (~> 4.1.3)
+  - SSZipArchive (2.2.2)
   - yoga (0.59.9.React)
 
 DEPENDENCIES:
   - Analytics (~> 3.6.10)
+  - CodePush (from `../node_modules/react-native-code-push`)
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
   - Firebase/Core (~> 5.11.0)
   - Firebase/Messaging (~> 5.11.0)
@@ -198,6 +208,7 @@ DEPENDENCIES:
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
     - Analytics
+    - Base64
     - boost-for-react-native
     - Firebase
     - FirebaseAnalytics
@@ -207,6 +218,7 @@ SPEC REPOS:
     - FirebaseMessaging
     - GoogleAppMeasurement
     - GoogleUtilities
+    - JWT
     - Mixpanel
     - nanopb
     - Protobuf
@@ -215,8 +227,11 @@ SPEC REPOS:
     - SDWebImage
     - Segment-Mixpanel
     - Sentry
+    - SSZipArchive
 
 EXTERNAL SOURCES:
+  CodePush:
+    :path: "../node_modules/react-native-code-push"
   DoubleConversion:
     :podspec: "../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec"
   Folly:
@@ -254,7 +269,9 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Analytics: 63744ad4afa65c3bcdcdb7a94b62515bde5b3900
+  Base64: cecfb41a004124895a7bcee567a89bae5a89d49b
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
+  CodePush: f6b348759cdc42c734d9c3a46ceb2997c270b12e
   DoubleConversion: bb338842f62ab1d708ceb63ec3d999f0f3d98ecd
   Firebase: b48f9e653da971ecce5b8c749684bc8bb2d26bd3
   FirebaseAnalytics: 63202d2665de4e6adcbdce189135255d8b5962ba
@@ -266,6 +283,7 @@ SPEC CHECKSUMS:
   glog: aefd1eb5dda2ab95ba0938556f34b98e2da3a60d
   GoogleAppMeasurement: 5029d78f2b438bd30ffb44e6c558b57c21622727
   GoogleUtilities: 04fce34bcd5620c1ee76fb79172105c74a4df335
+  JWT: 05028b9624591bba9681bb57df2c5f95fa258bad
   Mixpanel: 85c865c57456de42f66d7c29cd1b060b41ebe279
   nanopb: 2901f78ea1b7b4015c860c2fdd1ea2fee1a18d48
   Protobuf: 3f617b9a6e73605565086864c9bc26b2bf2dd5a3
@@ -281,14 +299,15 @@ SPEC CHECKSUMS:
   RNImageCropPicker: 32ca4b9fef4e1b7b85ba69494242122948117e06
   RNReanimated: 45d9313b7a62318ed00d60a811937321e43e076e
   RNSVG: 4834be1d644eb77f0e3f6de851881b83758a3124
-  RNVectorIcons: 8c52e1e8da1153613fdef44748e865c25556cb9c
+  RNVectorIcons: 66af4d5c8ff4f584c7b7cd9c4b0780920f27fce2
   RSKImageCropper: 98296ad26b41753f796b6898d015509598f13d97
   SDWebImage: c739016e4bdf0a4a1f9a04b5e0385395ad63a282
   Segment-Mixpanel: edded29dfc288e62f0fae20c9b42a3c50d0639b9
   Sentry: 4e8a17b61ddd116f89536cc81d567fdee1ebca96
   SentryReactNative: fc630be25b30c1a494b478ba1fa38f761cc6da20
+  SSZipArchive: fa16b8cc4cdeceb698e5e5d9f67e9558532fbf23
   yoga: 128daf064cacaede0c3bb27424b6b4c71052e6cd
 
-PODFILE CHECKSUM: 0dfdf27e7129225217347fb768fefebecaa2919d
+PODFILE CHECKSUM: 7bd9f0a414e6d08239a38db99861942355bbd542
 
 COCOAPODS: 1.5.3

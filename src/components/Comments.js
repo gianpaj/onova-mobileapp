@@ -423,13 +423,13 @@ class Comments extends React.Component<Props, State> {
 
 const styles = StyleSheet.create({
   containerComment: {
-    paddingVertical: 5,
-    flexDirection: 'row',
     alignItems: 'flex-start',
+    flexDirection: 'row',
+    paddingVertical: 5,
   },
   content: {
-    marginLeft: 16,
     flex: 1,
+    marginLeft: 16,
   },
   commentHeader: {
     flexDirection: 'row',
@@ -442,8 +442,8 @@ const styles = StyleSheet.create({
     lineHeight: 16,
   },
   time: {
-    fontSize: 12,
     color: colors.grey2,
+    fontSize: 12,
     marginTop: 5,
   },
   username: {
@@ -451,17 +451,17 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   addCommentInputContainer: {
+    marginHorizontal: 10,
     paddingVertical: Platform.select({
       ios: 5,
     }),
-    marginHorizontal: 10,
     width: width - 49 - 60,
   },
   addCommentContainer: {
-    borderTopWidth: StyleSheet.hairlineWidth,
     borderColor: colors.grey6,
-    marginVertical: 4,
+    borderTopWidth: StyleSheet.hairlineWidth,
     flexDirection: 'row',
+    marginVertical: 4,
     paddingVertical: Platform.select({
       ios: 10,
     }),
@@ -474,8 +474,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   separator: {
-    height: StyleSheet.hairlineWidth,
     backgroundColor: colors.grey5,
+    height: StyleSheet.hairlineWidth,
   },
   // timeAgo: {
   //   color: colors.grey3,
@@ -488,8 +488,8 @@ const styles = StyleSheet.create({
     paddingRight: 15,
   },
   suggestionUsernameText: {
-    fontSize: 12,
     color: colors.grey2,
+    fontSize: 12,
   },
   mention: {
     color: colors.active,

@@ -88,6 +88,7 @@ project.ext.react = [
 ]
 
 apply from: "../../node_modules/react-native/react.gradle"
+apply from: "../../node_modules/react-native-code-push/android/codepush.gradle"
 apply from: "../../node_modules/react-native-sentry/sentry.gradle"
 
 def getPassword(String account, String keyChain) {
@@ -138,6 +139,7 @@ def enableProguardInReleaseBuilds = false
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -174,6 +176,10 @@ android {
       }
     }
     buildTypes {
+        debug {
+            // Note: CodePush updates should not be tested in Debug mode as they are overriden by the RN packager. However, because CodePush checks for updates in all modes, we must supply a key.
+            buildConfigField "String", "CODEPUSH_KEY", '""'
+        }
         release {
             // Enables code shrinking, obfuscation, and optimization
             minifyEnabled enableProguardInReleaseBuilds
@@ -202,17 +208,19 @@ android {
         drop {
             resValue "string", "app_name", "drop"
             applicationId "com.onova.app"
+            buildConfigField "String", "CODEPUSH_KEY", '"***REMOVED***"'
         }
 
         onova {
             resValue "string", "app_name", "onova"
             applicationId "uno.drop.app"
-           // Pre-compile run ENVFILE=.env.onova
+            buildConfigField "String", "CODEPUSH_KEY", '"***REMOVED***"'
         }
     }
 }
 
 dependencies {
+    implementation project(':react-native-code-push')
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
     implementation "com.facebook.react:react-native:+" // From node_modules

@@ -126,22 +126,22 @@ export default class Countdown extends React.Component<*, *> {
 }
 
 const styles = StyleSheet.create({
-  timeCont: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-  },
   digitCont: {
     alignItems: 'center',
     borderRadius: 5,
     justifyContent: 'center',
     marginHorizontal: 0,
   },
+  digitTxt: {
+    color: colors.red,
+    fontVariant: ['tabular-nums'],
+  },
   doubleDigitCont: {
     alignItems: 'center',
     justifyContent: 'center',
   },
-  digitTxt: {
-    color: colors.red,
-    fontVariant: ['tabular-nums'],
+  timeCont: {
+    flexDirection: 'row',
+    justifyContent: 'center',
   },
 });

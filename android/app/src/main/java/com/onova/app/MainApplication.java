@@ -3,6 +3,7 @@ package com.onova.app;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.microsoft.codepush.react.CodePush;
 import com.AlexanderZaytsev.RNI18n.RNI18nPackage;
 import com.dylanvann.fastimage.FastImageViewPackage;
 import com.facebook.react.ReactNativeHost;
@@ -29,6 +30,12 @@ import java.util.List;
 public class MainApplication extends Application implements ReactApplication {
 
   private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
+
+    @Override
+    protected String getJSBundleFile() {
+      return CodePush.getJSBundleFile();
+    }
+
     @Override
     public boolean getUseDeveloperSupport() {
       return BuildConfig.DEBUG;
@@ -37,22 +44,23 @@ public class MainApplication extends Application implements ReactApplication {
     @Override
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
-          new MainReactPackage(),
-            new AnalyticsPackage(),
-            new AsyncStoragePackage(),
-            new FastImageViewPackage(),
-            new PickerPackage(),
-            new ReactNativeConfigPackage(),
-            new ReanimatedPackage(),
-            new RNAndroidLocationEnablerPackage(),
-            new RNCWebViewPackage(),
-            new RNFirebaseMessagingPackage(),
-            new RNFirebaseNotificationsPackage(),
-            new RNFirebasePackage(),
-            new RNGestureHandlerPackage(),
-            new RNI18nPackage(),
-            new RNSentryPackage(),
-            new SvgPackage()
+        new MainReactPackage(),
+        new CodePush(BuildConfig.CODEPUSH_KEY, getApplicationContext(), BuildConfig.DEBUG),
+        new AnalyticsPackage(),
+        new AsyncStoragePackage(),
+        new FastImageViewPackage(),
+        new PickerPackage(),
+        new ReactNativeConfigPackage(),
+        new ReanimatedPackage(),
+        new RNAndroidLocationEnablerPackage(),
+        new RNCWebViewPackage(),
+        new RNFirebaseMessagingPackage(),
+        new RNFirebaseNotificationsPackage(),
+        new RNFirebasePackage(),
+        new RNGestureHandlerPackage(),
+        new RNI18nPackage(),
+        new RNSentryPackage(),
+        new SvgPackage()
       );
     }
 

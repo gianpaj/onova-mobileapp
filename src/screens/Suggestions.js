@@ -203,20 +203,23 @@ export const Suggestions = connect(mapStateToProps)(whyyyy);
 const MARGIN = 1;
 
 const styles = StyleSheet.create({
+  boldText: {
+    fontWeight: 'bold',
+  },
+  columnWrapper: {
+    flex: 1,
+    flexDirection: 'row',
+    marginHorizontal: -MARGIN * 2,
+    marginBottom: -MARGIN * 2,
+  },
   container: {
     alignItems: 'stretch',
     flex: 1,
     justifyContent: 'center',
   },
   contentContainer: {
-    paddingVertical: 20,
     paddingHorizontal: 5,
-  },
-  root: {
-    flex: 1,
-  },
-  boldText: {
-    fontWeight: 'bold',
+    paddingVertical: 20,
   },
   emptyContainer: {
     alignItems: 'center',
@@ -224,11 +227,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: 20,
   },
-  columnWrapper: {
+  root: {
     flex: 1,
-    flexDirection: 'row',
-    marginHorizontal: -MARGIN * 2,
-    marginBottom: -MARGIN * 2,
   },
   username: {
     color: colors.black,

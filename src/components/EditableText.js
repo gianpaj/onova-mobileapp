@@ -102,12 +102,12 @@ class EditableText extends PureComponent<Props, State> {
 }
 
 const styles = StyleSheet.create({
+  spinnerStyle: {
+    position: 'absolute',
+  },
   textInputContainer: {
     // borderBottomWidth: StyleSheet.hairlineWidth,
     marginBottom: -StyleSheet.hairlineWidth,
-  },
-  spinnerStyle: {
-    position: 'absolute',
   },
   url: {
     color: colors.active,

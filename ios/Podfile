@@ -55,11 +55,7 @@ target 'onova' do
   pod 'RNReanimated', :path => '../node_modules/react-native-reanimated'
   pod 'RNGestureHandler', :path => '../node_modules/react-native-gesture-handler'
 
-  target 'onovaTests' do
-    inherit! :search_paths
-    # Pods for testing
-  end
-
+  pod 'CodePush', :path => '../node_modules/react-native-code-push'
 end
 
 target 'drop' do
@@ -112,6 +108,8 @@ target 'drop' do
   # for react-native-tab-view
   pod 'RNReanimated', :path => '../node_modules/react-native-reanimated'
   pod 'RNGestureHandler', :path => '../node_modules/react-native-gesture-handler'
+
+  pod 'CodePush', :path => '../node_modules/react-native-code-push'
 end
 
 post_install do |installer|

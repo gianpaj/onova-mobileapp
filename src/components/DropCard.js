@@ -208,11 +208,21 @@ const styles = StyleSheet.create({
     marginHorizontal: -MARGIN * 2,
     marginBottom: 0,
   },
-  subscribeButton: {
-    paddingHorizontal: 10,
-    backgroundColor: colors.active,
-    borderColor: colors.greyOutline,
-    borderRadius: 5,
+  dateStrings: {
+    color: colors.black,
+    fontSize: typography.font_body_size,
+  },
+  dropHeaderAndFooter: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+    paddingVertical: 15,
+  },
+  dropUserRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   image: {
     flex: 1,
@@ -222,24 +232,11 @@ const styles = StyleSheet.create({
   imageContainer: {
     alignItems: 'stretch',
   },
-  dropUserRow: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  userName: {
-    paddingLeft: 10,
-  },
-  dropHeaderAndFooter: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingVertical: 15,
-  },
-  dateStrings: {
-    color: colors.black,
-    fontSize: typography.font_body_size,
+  shareIcon: {
+    color: colors.grey1,
+    fontSize: 27,
+    marginLeft: 0,
+    marginRight: 0,
   },
   shareIconButton: {
     // paddingBottom: Platform.select({
@@ -251,10 +248,13 @@ const styles = StyleSheet.create({
     marginLeft: 0,
     // paddingHorizontal: 10,
   },
-  shareIcon: {
-    color: colors.grey1,
-    fontSize: 27,
-    marginRight: 0,
-    marginLeft: 0,
+  subscribeButton: {
+    backgroundColor: colors.active,
+    borderColor: colors.greyOutline,
+    borderRadius: 5,
+    paddingHorizontal: 10,
+  },
+  userName: {
+    paddingLeft: 10,
   },
 });

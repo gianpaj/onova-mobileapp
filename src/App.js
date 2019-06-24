@@ -23,6 +23,12 @@ const segmentOptions = {
   [AnalyticsConstants.enableAdvertisingTracking]: false,
 };
 
+codePush.getUpdateMetadata().then(update => {
+  if (update) {
+    Sentry.setVersion(update.appVersion + '-codepush:' + update.label);
+  }
+});
+
 class App extends React.Component<*> {
   constructor() {
     super();

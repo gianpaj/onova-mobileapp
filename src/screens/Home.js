@@ -55,13 +55,13 @@ class HomeComponent extends PureComponent<Props, State> {
       routes: [
         { key: 0, title: I18n.t('home.clothes_tab') },
         { key: 1, title: I18n.t('home.shoes_tab') },
-        { key: 'other', title: I18n.t('home.other_tab') },
+        { key: 2, title: I18n.t('home.other_tab') }, // accessories
       ],
     };
     if (APP_NAME == 'onova') {
       this.state.routes = [
         { key: 0, title: I18n.t('home.clothes_tab') },
-        { key: 1, title: I18n.t('home.other_tab') },
+        { key: 1, title: I18n.t('home.other_tab') }, // accessories
         { key: 2, title: I18n.t('home.home_tab') },
       ];
     }

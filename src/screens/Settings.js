@@ -121,7 +121,8 @@ class SettingsContainer extends Component<Props, State> {
       this.setState({ departments });
     }
     const update = await codePush.getUpdateMetadata();
-    this.setState({ isLoading: false, codePushVersion: update.label });
+    if (update) this.setState({ isLoading: false, codePushVersion: update.label });
+    else this.setState({ isLoading: false, codePushVersion: 'debug' });
 
     if (Platform.OS === 'android') {
       UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);

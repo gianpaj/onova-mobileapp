@@ -56,12 +56,6 @@ target 'onova' do
   pod 'RNGestureHandler', :path => '../node_modules/react-native-gesture-handler'
 
   pod 'CodePush', :path => '../node_modules/react-native-code-push'
-
-  target 'onovaTests' do
-    inherit! :search_paths
-    # Pods for testing
-  end
-
 end
 
 target 'drop' do

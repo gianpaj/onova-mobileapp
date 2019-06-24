@@ -152,7 +152,7 @@ PODS:
     - React
   - RNSVG (9.4.0):
     - React
-  - RNVectorIcons (6.4.2):
+  - RNVectorIcons (6.5.0):
     - React
   - RSKImageCropper (2.2.1)
   - SDWebImage (5.0.4):
@@ -299,7 +299,7 @@ SPEC CHECKSUMS:
   RNImageCropPicker: 32ca4b9fef4e1b7b85ba69494242122948117e06
   RNReanimated: 45d9313b7a62318ed00d60a811937321e43e076e
   RNSVG: 4834be1d644eb77f0e3f6de851881b83758a3124
-  RNVectorIcons: 8c52e1e8da1153613fdef44748e865c25556cb9c
+  RNVectorIcons: 66af4d5c8ff4f584c7b7cd9c4b0780920f27fce2
   RSKImageCropper: 98296ad26b41753f796b6898d015509598f13d97
   SDWebImage: c739016e4bdf0a4a1f9a04b5e0385395ad63a282
   Segment-Mixpanel: edded29dfc288e62f0fae20c9b42a3c50d0639b9
@@ -308,6 +308,6 @@ SPEC CHECKSUMS:
   SSZipArchive: fa16b8cc4cdeceb698e5e5d9f67e9558532fbf23
   yoga: 128daf064cacaede0c3bb27424b6b4c71052e6cd
 
-PODFILE CHECKSUM: a4755c7f871e5abf2ea7fe9c6fd56a148413a5f2
+PODFILE CHECKSUM: 7bd9f0a414e6d08239a38db99861942355bbd542
 
 COCOAPODS: 1.5.3

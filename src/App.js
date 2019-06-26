@@ -24,7 +24,7 @@ const segmentOptions = {
 };
 
 codePush.getUpdateMetadata().then(update => {
-  if (update) {
+  if (update && analyticsEnabled) {
     Sentry.setVersion(update.appVersion + '-codepush:' + update.label);
   }
 });

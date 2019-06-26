@@ -72,13 +72,12 @@ class ImageGridSearchComponent extends React.Component<Props, State> {
       this.setState({ isLoading: true });
     }, 300);
     const { token, terms } = this.props;
-    const { tag, grp_1, grp_2 } = terms;
+    const { tag, grp_1 } = terms;
     const tagQuery = tag == '' ? '' : `tag=${tag}`;
     const categoryQuery = grp_1 == -1 ? '' : `&categoryIds=${grp_1}`;
-    const typeQuery = grp_2 == -1 ? '' : `&typeIds=${grp_2}`;
 
     try {
-      const { data } = await api.get(`/api/search/?${tagQuery}${categoryQuery}${typeQuery}&limit=${LIMIT}`, {
+      const { data } = await api.get(`/api/search/?${tagQuery}${categoryQuery}&limit=${LIMIT}`, {
         token,
       });
       const lastItem = data[data.length - 1];
@@ -112,10 +111,9 @@ class ImageGridSearchComponent extends React.Component<Props, State> {
 
     if (theEnd || isRefreshing) return;
 
-    const { tag, grp_1, grp_2 } = this.props.terms;
+    const { tag, grp_1 } = this.props.terms;
     const tagQuery = tag == '' ? '' : `tag=${tag}`;
     const categoryQuery = grp_1 == -1 ? '' : `&categoryIds=${grp_1}`;
-    const typeQuery = grp_2 == -1 ? '' : `&typeIds=${grp_2}`;
 
     if (this.reqTimer) {
       clearTimeout(this.reqTimer);
@@ -124,10 +122,9 @@ class ImageGridSearchComponent extends React.Component<Props, State> {
       const { token } = this.props;
       this.reqTimer = setTimeout(async () => {
         try {
-          const { data } = await api.get(
-            `/api/search/?${tagQuery}${categoryQuery}${typeQuery}&lastId=${lastId}&limit=${LIMIT}`,
-            { token }
-          );
+          const { data } = await api.get(`/api/search/?${tagQuery}${categoryQuery}&lastId=${lastId}&limit=${LIMIT}`, {
+            token,
+          });
 
           if (data.length === 0) return this.setState({ theEnd: true });
 

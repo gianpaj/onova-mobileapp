@@ -11,10 +11,9 @@ import type { NavigationScreenProp } from 'react-navigation';
 
 import I18n from '../i18n';
 import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from '../components/SimpleRadioButton';
-import { HR } from '../components';
 import colors from '../config/colors';
 import settings from '../config/settings';
-import { category_radio_grp_1, category_radio_grp_2 } from '../utils/ui';
+import { category_radio_grp_1, category_radio_grp_2, category_radio_grp_3 } from '../utils/ui';
 
 type Props = {
   navigation: NavigationScreenProp<*>,
@@ -24,7 +23,6 @@ type State = {
   isLoading: boolean,
   text: string,
   grp_1: number,
-  grp_2: number,
 };
 
 class SearchByHashtagsTabContainer extends Component<Props, State> {
@@ -38,13 +36,12 @@ class SearchByHashtagsTabContainer extends Component<Props, State> {
     isLoading: false,
     text: '',
     grp_1: -1,
-    grp_2: -1,
   };
 
   onSearch = () => {
     if (!this.isSearchEnabled()) return;
 
-    const { text, grp_1, grp_2 } = this.state;
+    const { text, grp_1 } = this.state;
 
     this.search.current.blur();
 
@@ -55,31 +52,30 @@ class SearchByHashtagsTabContainer extends Component<Props, State> {
     this.props.navigation.navigate({
       routeName: 'searchProductsResults',
       params: {
-        tag: text,
+        tag: text.trim(),
         grp_1,
-        grp_2,
       },
-      key: `searchProductsResults`,
+      key: 'searchProductsResults',
     });
   };
 
-  onChangeText = (text: string) => this.setState({ text: text.trim() });
+  onChangeText = (text: string) => this.setState({ text });
 
   isSearchEnabled(): boolean {
     // if the hash tag is not empty needs have a mininum length
 
     // OR
 
-    const { text, grp_1, grp_2 } = this.state;
+    const { text, grp_1 } = this.state;
 
     // it can be empty and either category or type
     return (
-      (text.length && text.length >= settings.MIN_LENGTH_PER_TAG) || (!text.length && (grp_1 !== -1 || grp_2 !== -1))
+      (text.trim().length && text.trim().length >= settings.MIN_LENGTH_PER_TAG) || (!text.length && grp_1 !== -1)
       // isLoading == false
     );
   }
 
-  setCategories = (grp_1: number) => {
+  setCategory = (grp_1: number) => {
     if (this.state.isLoading) return;
 
     // if the same category is pressed
@@ -88,17 +84,8 @@ class SearchByHashtagsTabContainer extends Component<Props, State> {
     this.setState({ grp_1 });
   };
 
-  setTypes = (grp_2: number) => {
-    if (this.state.isLoading) return;
-
-    // if the same type is pressed
-    if (this.state.grp_2 == grp_2) grp_2 = -1;
-
-    this.setState({ grp_2 });
-  };
-
   render() {
-    const { isLoading, text, grp_1, grp_2 } = this.state;
+    const { isLoading, text, grp_1 } = this.state;
 
     return (
       <Content style={styles.flex1}>
@@ -144,50 +131,58 @@ class SearchByHashtagsTabContainer extends Component<Props, State> {
                 <RadioButton labelHorizontal={false} key={i}>
                   <RadioButtonLabel
                     index={i}
-                    labelHorizontal
                     labelStyle={styles.radioButtonLabel}
                     obj={option}
-                    onPress={this.setCategories}
+                    onPress={this.setCategory}
                   />
                   <RadioButtonInput
-                    borderWidth={2}
-                    buttonInnerColor={colors.black}
-                    buttonOuterColor={colors.black}
-                    buttonOuterSize={19}
-                    buttonSize={19}
-                    buttonWrapStyle={styles.radioButtonInput}
+                    {...RadioButtonInputProps}
                     index={i}
                     isSelected={grp_1 === option.value}
                     obj={option}
-                    onPress={this.setCategories}
+                    onPress={this.setCategory}
                   />
                 </RadioButton>
               ))}
             </RadioForm>
           </View>
-          <HR color={colors.grey5} />
           <View style={styles.grps}>
             <RadioForm animation formHorizontal>
               {category_radio_grp_2.map((option, i) => (
                 <RadioButton labelHorizontal={false} key={i}>
                   <RadioButtonLabel
-                    labelHorizontal
                     obj={option}
                     index={i}
-                    onPress={this.setTypes}
+                    onPress={this.setCategory}
                     labelStyle={styles.radioButtonLabel}
                   />
                   <RadioButtonInput
+                    {...RadioButtonInputProps}
+                    index={i}
+                    isSelected={grp_1 === option.value}
+                    obj={option}
+                    onPress={this.setCategory}
+                  />
+                </RadioButton>
+              ))}
+            </RadioForm>
+          </View>
+          <View style={styles.grps}>
+            <RadioForm animation formHorizontal>
+              {category_radio_grp_3.map((option, i) => (
+                <RadioButton labelHorizontal={false} key={i}>
+                  <RadioButtonLabel
                     obj={option}
                     index={i}
-                    isSelected={grp_2 == i}
-                    onPress={this.setTypes}
-                    borderWidth={2}
-                    buttonInnerColor={colors.black}
-                    buttonOuterColor={colors.black}
-                    buttonSize={19}
-                    buttonOuterSize={19}
-                    buttonWrapStyle={styles.radioButtonInput}
+                    onPress={this.setCategory}
+                    labelStyle={styles.radioButtonLabel}
+                  />
+                  <RadioButtonInput
+                    {...RadioButtonInputProps}
+                    index={i}
+                    isSelected={grp_1 === option.value}
+                    obj={option}
+                    onPress={this.setCategory}
                   />
                 </RadioButton>
               ))}
@@ -243,5 +238,14 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 });
+
+const RadioButtonInputProps = {
+  borderWidth: 2,
+  buttonInnerColor: colors.black,
+  buttonOuterColor: colors.black,
+  buttonOuterSize: 19,
+  buttonSize: 19,
+  buttonWrapStyle: styles.radioButtonInput,
+};
 
 export const SearchByHashtagsTab = withNavigation(connect(null)(SearchByHashtagsTabContainer));

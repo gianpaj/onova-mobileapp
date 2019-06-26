@@ -143,13 +143,15 @@ export default {
     username_placeholder: 'username',
   },
   categories: {
-    clothes: 'Одяг',
-    shoes: 'Взуття',
-    other_cat: 'Аксесуари',
-    home: 'Для дому', // only for Onova
-    men: 'Чоловіче',
-    women: 'Жіноче',
-    other_type: 'Інше',
+    clothes_men: 'Чоловіче',
+    clothes_women: 'Жіноче',
+    clothes_shoes: 'Взуття',
+    accessories_jewelry: 'Прикраси',
+    accessories_bags: 'Сумки',
+    accessories_accessories: 'Аксесуари',
+    forhome_forniture: 'Меблі',
+    forhome_art: 'мистецтво',
+    forhome_interior: 'Побут',
   },
   add_or_edit_item: {
     add_item_header: 'Додати',

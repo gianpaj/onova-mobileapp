@@ -5,11 +5,11 @@ import { StyleSheet, View } from 'react-native';
 import { Body, Button as NBButton, Left, Right, Icon as NBIcon } from 'native-base';
 
 import { Header, ImageGridSearch, Title } from '../components';
-
-import I18n from '../i18n';
-import { category_radio_grp_1, category_radio_grp_2 } from '../utils/ui';
+import { category_radio_grp_1, category_radio_grp_2, category_radio_grp_3 } from '../utils/ui';
 
 import type { NavigationScreenProp } from 'react-navigation';
+
+const categories = category_radio_grp_1.concat(category_radio_grp_2).concat(category_radio_grp_3);
 
 type Props = {
   navigation: NavigationScreenProp<*>,
@@ -18,7 +18,6 @@ type Props = {
 type State = {
   terms: {
     grp_1: number,
-    grp_2: number,
     tag: String,
   },
 };
@@ -27,6 +26,7 @@ export class SearchProductsResults extends Component<Props, State> {
   state = {
     terms: null,
   };
+
   componentDidMount() {
     const { params } = this.props.navigation.state;
     let terms;
@@ -34,7 +34,7 @@ export class SearchProductsResults extends Component<Props, State> {
     // for development
     if (!params) {
       // find clothes
-      terms = { grp_1: 0, grp_2: -1, tag: '' };
+      terms = { grp_1: 0, tag: '' };
     } else {
       terms = params;
     }
@@ -43,11 +43,7 @@ export class SearchProductsResults extends Component<Props, State> {
 
   getCategoryLabel = (num: number): string =>
     // $FlowFixMe
-    category_radio_grp_1.find(g => g.value == num).label;
-
-  getTypeLabel = (num: number): string =>
-    // $FlowFixMe
-    category_radio_grp_2.find(g => g.value == num).label;
+    categories.find(g => g.value == num).label;
 
   render() {
     const { terms } = this.state;
@@ -65,15 +61,9 @@ export class SearchProductsResults extends Component<Props, State> {
             {terms.tag && terms.grp_1 == -1 && terms.grp_2 == -1 ? (
               // eslint-disable-next-line react-native/no-raw-text
               <Title>#{terms.tag}</Title>
-            ) : // searching for category (clothes, shoes or other)
-            terms.tag == '' && terms.grp_1 !== -1 && terms.grp_2 == -1 ? (
-              <Title>{this.getCategoryLabel(terms.grp_1)}</Title>
-            ) : // searching for type (men, women or other)
-            terms.tag == '' && terms.grp_1 == -1 && terms.grp_2 !== -1 ? (
-              <Title>{this.getTypeLabel(terms.grp_2)}</Title>
             ) : (
-              // else, a combination
-              <Title>{I18n.t('search.header')}</Title>
+              // searching for category (clothes, shoes or other)
+              terms.tag == '' && terms.grp_1 !== -1 && <Title>{this.getCategoryLabel(terms.grp_1)}</Title>
             )}
           </Body>
           <Right />

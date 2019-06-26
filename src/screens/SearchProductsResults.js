@@ -9,7 +9,7 @@ import { category_radio_grp_1, category_radio_grp_2, category_radio_grp_3 } from
 
 import type { NavigationScreenProp } from 'react-navigation';
 
-const categories = category_radio_grp_1.concat(category_radio_grp_2).concat(category_radio_grp_3);
+const categories = [...category_radio_grp_1, ...category_radio_grp_2, ...category_radio_grp_3];
 
 type Props = {
   navigation: NavigationScreenProp<*>,

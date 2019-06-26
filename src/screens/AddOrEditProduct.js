@@ -77,7 +77,6 @@ type State = {
   dialogPriceVisible: boolean,
   description: string,
   grp_1: number,
-  grp_2: number,
   images: Array<Image>,
   inEditMode: boolean,
   isLoading: boolean,
@@ -96,7 +95,6 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
   priceInput;
   descriptionControl;
   grp_1;
-  grp_2;
   numberOfBrands = 0;
 
   state = {
@@ -104,7 +102,6 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     dialogPriceVisible: false,
     description: '',
     grp_1: -1,
-    grp_2: -1,
     images: [],
     inEditMode: false,
     isLoading: true,
@@ -142,7 +139,6 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
         return this.setState({
           description: item.description,
           grp_1: item.categoryIds[0],
-          grp_2: item.typeIds[0],
           images,
           isLoading: false,
           price: item.price,
@@ -335,7 +331,6 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     price,
     description,
     grp_1,
-    grp_2,
   }: {
     // eslint-disable-next-line react/no-unused-prop-types
     price: string,
@@ -343,10 +338,8 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     description: string,
     // eslint-disable-next-line react/no-unused-prop-types
     grp_1: number,
-    // eslint-disable-next-line react/no-unused-prop-types
-    grp_2: number,
   }) => {
-    if (!this.canSave({ price, description, grp_1, grp_2 })) return;
+    if (!this.canSave({ price, description, grp_1 })) return;
 
     this.setState({ pending: true });
 
@@ -363,7 +356,6 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
       photos: images.map(i => i.url),
       price,
       tags: JSON.stringify(tags),
-      typeIds: grp_2.toString(),
     };
 
     try {
@@ -469,7 +461,6 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     price,
     description,
     grp_1,
-    grp_2,
   }: {
     // eslint-disable-next-line react/no-unused-prop-types
     price: string,
@@ -477,8 +468,6 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     description: string,
     // eslint-disable-next-line react/no-unused-prop-types
     grp_1: number,
-    // eslint-disable-next-line react/no-unused-prop-types
-    grp_2: number,
   }): boolean {
     // const tagsPattern = /^(\b[a-z][a-z0-9]*)$/i;
 
@@ -495,10 +484,8 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
       description.trim().length >= settings.MIN_LENGTH_DESCRIPTION &&
       // if there's the minimum required of tags
       tags.length >= settings.MIN_TAGS &&
-      // if there's a clothing category selected
-      grp_1 > -1 &&
-      // if there's a clothing type selected
-      grp_2 > -1
+      // if there's an product category selected
+      grp_1 > -1
     );
   }
 
@@ -524,13 +511,10 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     if (Object.keys(errors.grp_1).length) {
       this.grp_1.markAsTouched();
     }
-    if (Object.keys(errors.grp_2).length) {
-      this.grp_2.markAsTouched();
-    }
   };
 
   render() {
-    const { description, grp_1, grp_2, images, inEditMode, isLoading, isUploading, price, tags, tagsText } = this.state;
+    const { description, grp_1, images, inEditMode, isLoading, isUploading, price, tags, tagsText } = this.state;
 
     if (isLoading) return null;
 
@@ -538,7 +522,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
       <React.Fragment>
         <Foect.Form
           onValidSubmit={this.onSave}
-          defaultValue={{ description, price, grp_1, grp_2 }}
+          defaultValue={{ description, price, grp_1 }}
           onInvalidSubmit={this.onInvalidSubmit}>
           {form => (
             <Container>
@@ -674,72 +658,55 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
                   />
                 </React.Fragment>
                 <View style={styles.grps}>
-                  <RadioForm animation formHorizontal>
-                    <Foect.Control name="grp_1" required pattern={/^[0123]$/}>
-                      {control => {
-                        this.grp_1 = control;
-                        return ui.category_radio_grp_1.map((option, i) => (
-                          <RadioButton labelHorizontal={false} key={i}>
-                            <RadioButtonLabel
-                              index={i}
-                              labelHorizontal
-                              labelStyle={styles.radioButtonLabel}
-                              obj={option}
-                              onPress={control.onChange}
-                            />
-                            <RadioButtonInput
-                              testID={`grp_1_input_${i}`}
-                              borderWidth={2}
-                              buttonInnerColor={colors.black}
-                              buttonOuterColor={control.isTouched && control.isInvalid ? colors.red : colors.black}
-                              buttonOuterSize={19}
-                              buttonSize={19}
-                              buttonWrapStyle={styles.radioButtonInput}
-                              index={i}
-                              isSelected={control.value == option.value}
-                              obj={option}
-                              // FIXME: issue in foect library
-                              onPress={e => control.onChange(e.toString())}
-                            />
-                          </RadioButton>
-                        ));
-                      }}
-                    </Foect.Control>
-                  </RadioForm>
-                </View>
-                <HR color={colors.grey5} />
-                <View style={[styles.grps, { marginBottom: 20 }]}>
-                  <RadioForm animation formHorizontal>
-                    <Foect.Control name="grp_2" required pattern={/^[012]$/}>
-                      {control => {
-                        this.grp_2 = control;
-                        return ui.category_radio_grp_2.map((option, i) => (
-                          <RadioButton labelHorizontal={false} key={i}>
-                            <RadioButtonLabel
-                              index={i}
-                              labelHorizontal
-                              labelStyle={styles.radioButtonLabel}
-                              obj={option}
-                              onPress={control.onChange}
-                            />
-                            <RadioButtonInput
-                              testID={`grp_2_input_${i}`}
-                              borderWidth={2}
-                              buttonInnerColor={colors.black}
-                              buttonOuterColor={control.isTouched && control.isInvalid ? colors.red : colors.black}
-                              buttonOuterSize={19}
-                              buttonSize={19}
-                              buttonWrapStyle={styles.radioButtonInput}
-                              index={i}
-                              isSelected={control.value == i}
-                              obj={option}
-                              onPress={control.onChange}
-                            />
-                          </RadioButton>
-                        ));
-                      }}
-                    </Foect.Control>
-                  </RadioForm>
+                  <Foect.Control name="grp_1" required pattern={/^\d+$/}>
+                    {control => {
+                      this.grp_1 = control;
+                      return (
+                        <>
+                          <RadioForm animation formHorizontal>
+                            {ui.category_radio_grp_1.map((option, i) => (
+                              <RadioButton labelHorizontal={false} key={i}>
+                                <RadioButtonLabel
+                                  index={i}
+                                  labelStyle={styles.radioButtonLabel}
+                                  obj={option}
+                                  onPress={control.onChange}
+                                />
+                                {/* // FIXME: issue in foect library? */}
+                                <RadioButtonInput {...RadioButtonInputProps(control, option)} index={i} />
+                              </RadioButton>
+                            ))}
+                          </RadioForm>
+                          <RadioForm animation formHorizontal style={{ marginTop: 20 }}>
+                            {ui.category_radio_grp_2.map((option, i) => (
+                              <RadioButton labelHorizontal={false} key={i}>
+                                <RadioButtonLabel
+                                  index={i}
+                                  labelStyle={styles.radioButtonLabel}
+                                  obj={option}
+                                  onPress={control.onChange}
+                                />
+                                <RadioButtonInput {...RadioButtonInputProps(control, option)} index={i} />
+                              </RadioButton>
+                            ))}
+                          </RadioForm>
+                          <RadioForm animation formHorizontal style={{ marginTop: 20 }}>
+                            {ui.category_radio_grp_3.map((option, i) => (
+                              <RadioButton labelHorizontal={false} key={i}>
+                                <RadioButtonLabel
+                                  index={i}
+                                  labelStyle={styles.radioButtonLabel}
+                                  obj={option}
+                                  onPress={control.onChange}
+                                />
+                                <RadioButtonInput {...RadioButtonInputProps(control, option)} index={i} />
+                              </RadioButton>
+                            ))}
+                          </RadioForm>
+                        </>
+                      );
+                    }}
+                  </Foect.Control>
                 </View>
               </Content>
             </Container>
@@ -751,10 +718,9 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     );
   }
 
-  toggleInfoDialog = () =>
-    this.setState(prevState => ({
-      dialogInfoVisible: !prevState.dialogInfoVisible,
-    }));
+  toggleInfoDialog = () => this.setState(prevState => ({ dialogInfoVisible: !prevState.dialogInfoVisible }));
+
+  togglePriceDialog = () => this.setState(prevState => ({ dialogPriceVisible: !prevState.dialogPriceVisible }));
 
   renderInfoDialog = () => (
     <React.Fragment>
@@ -770,11 +736,6 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
       </Dialog.Container>
     </React.Fragment>
   );
-
-  togglePriceDialog = () =>
-    this.setState(prevState => ({
-      dialogPriceVisible: !prevState.dialogPriceVisible,
-    }));
 
   renderPriceDialog = () => (
     <React.Fragment>
@@ -840,6 +801,18 @@ const styles = StyleSheet.create({
     paddingLeft: '5%',
     paddingRight: '5%',
   },
+});
+
+const RadioButtonInputProps = (control, option) => ({
+  borderWidth: 2,
+  buttonInnerColor: colors.black,
+  buttonOuterColor: control.isTouched && control.isInvalid ? colors.red : colors.black,
+  buttonOuterSize: 19,
+  buttonSize: 19,
+  buttonWrapStyle: styles.radioButtonInput,
+  isSelected: control.value == option.value,
+  obj: option,
+  onPress: control.onChange,
 });
 
 const mapStateToProps: any = (state: ReduxState) => ({

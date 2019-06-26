@@ -95,9 +95,9 @@ export function sleep(ms: number): Promise<any> {
 }
 
 export const category_radio_grp_1 = [
-  { label: I18n.t('categories.clothes'), value: 0 },
-  { label: I18n.t('categories.shoes'), value: 1 },
-  { label: I18n.t('categories.other_cat'), value: 2 },
+  { label: I18n.t('categories.clothes_men'), value: 0 },
+  { label: I18n.t('categories.clothes_women'), value: 1 },
+  { label: I18n.t('categories.clothes_shoes'), value: 2 },
 ];
 
 export const category_radio_grp_2 = [

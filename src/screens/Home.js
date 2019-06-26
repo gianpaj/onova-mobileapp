@@ -87,24 +87,24 @@ class HomeComponent extends PureComponent<Props, State> {
         sellerType = 'reseller';
       }
       switch (route.key) {
-        case 0:
-          return <ImageGrid apiURL={`/api/products/?categoryIds=0&sellerType=${sellerType}`} />;
-        case 1:
-          return <ImageGrid apiURL={`/api/products/?categoryIds=1&sellerType=${sellerType}`} />;
-        case 2:
-          return <ImageGrid apiURL={`/api/products/?categoryIds=2&sellerType=${sellerType}`} />;
+        case 0: // clothes
+          return <ImageGrid apiURL={`/api/products/?categoryIds=[0,1,2]&sellerType=${sellerType}`} />;
+        case 1: // accessories
+          return <ImageGrid apiURL={`/api/products/?categoryIds=[10,11,12]&sellerType=${sellerType}`} />;
+        case 2: // for home
+          return <ImageGrid apiURL={`/api/products/?categoryIds=[20,21,22]&sellerType=${sellerType}`} />;
         default:
           return null;
       }
     }
 
     switch (route.key) {
-      case 0:
-        return <ImageGrid apiURL="/api/feed/flat/?categoryIds=0" />;
+      case 0: // clothes
+        return <ImageGrid apiURL="/api/feed/flat/?categoryIds=[0,1,2]" />;
       case 1: // accessories
-        return <ImageGrid apiURL="/api/feed/flat/?categoryIds=2" />;
-      case 2: // home
-        return <ImageGrid apiURL="/api/feed/flat/?categoryIds=3" />;
+        return <ImageGrid apiURL="/api/feed/flat/?categoryIds=[10,11,12]" />;
+      case 2: // for home
+        return <ImageGrid apiURL="/api/feed/flat/?categoryIds=[20,21,22]" />;
       default:
         return null;
     }

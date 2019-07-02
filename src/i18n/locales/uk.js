@@ -162,6 +162,7 @@ export default {
     edit_item_header: 'Редагувати',
     price_label: 'Ціна:',
     price_placeholder: `${settings.MIN_PRICE} ГРН`,
+    min_price: 'Мінімальна ціна Х',
     price_info: 'Комісія',
     price_popup_title: 'Комісія 5%+10грн',
     price_popup_body:
@@ -169,6 +170,8 @@ export default {
     description_label: 'Опис:',
     description_placeholder_onova: 'Опишіть деталі виробу',
     description_placeholder_drop: 'В якому стані річ, якого розміру, бренду і тому подібне',
+    quantity_label: 'Кількість:',
+    min_quantity: 'Мінімальна кількість',
     hashtags_label: '#tags:',
     hashtags_placeholder: 'adidas, 43',
     select_photo_source_camera: 'Камера',
@@ -178,7 +181,6 @@ export default {
     too_many_images: 'Дозвелоно максимум 6 зображень',
     image_too_small:
       'Зображення низької якості. Мінімальна ширина та висота {{MIN_WIDTH}} px. Надане зображення {{width}}x{{height}} px',
-    min_price: 'Мінімальна ціна Х',
     info_popup: `Чим якісніші твої фотографії тим більше ймовірності в тебе щось придбають:
 
 1. Фон

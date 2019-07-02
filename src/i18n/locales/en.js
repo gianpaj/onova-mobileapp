@@ -161,6 +161,7 @@ For any questions regarding payments please contact UAPAY at (044) 364-11-44`,
     edit_item_header: 'Edit Item',
     price_label: 'Price:',
     price_placeholder: `min ${settings.MIN_PRICE} UAH`,
+    min_price: 'The minimum price is',
     price_info: 'Комісія',
     price_popup_title: 'Комісія 5%+10грн',
     price_popup_body:
@@ -168,6 +169,8 @@ For any questions regarding payments please contact UAPAY at (044) 364-11-44`,
     description_label: 'Description:',
     description_placeholder_onova: 'Please provide details such as brand and size',
     description_placeholder_drop: 'Please provide details such as brand, size and condition about the item',
+    quantity_label: 'Quantity:',
+    min_quantity: 'The minimum quantity is',
     hashtags_label: '#tags:',
     hashtags_placeholder: 'adidas, 43',
     select_photo_source_camera: 'Camera',
@@ -177,7 +180,6 @@ For any questions regarding payments please contact UAPAY at (044) 364-11-44`,
     too_many_images: 'An item cannot have more than 6 images',
     image_too_small:
       'The image is too small. The min width and height is {{MIN_WIDTH}} px. The image is {{width}}x{{height}} px',
-    min_price: 'The minimum price is',
     info_popup: `Чим якісніші твої фотографії тим більше ймовірності в тебе щось придбають:
 
 1. Фон

@@ -12,7 +12,7 @@ import Foect from 'foect';
 import Dialog from 'react-native-dialog';
 import { APP_NAME } from 'react-native-dotenv';
 
-import { ImagePicker as AntImagePicker, Header, HR, Info, TagInput, Title } from '../components';
+import { ImagePicker as AntImagePicker, Header, Info, TagInput, Title } from '../components';
 import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from '../components/SimpleRadioButton';
 import { enableRefresh } from '../actions/actionCreator';
 import I18n from '../i18n';
@@ -73,9 +73,9 @@ type Props = {
 };
 
 type State = {
+  description: string,
   dialogInfoVisible: boolean,
   dialogPriceVisible: boolean,
-  description: string,
   grp_1: number,
   images: Array<Image>,
   inEditMode: boolean,
@@ -85,6 +85,7 @@ type State = {
   pending: boolean,
   price: string,
   progress: number,
+  quantity: number,
   tags: Array<string>,
   tagsText: string,
   uuid: string,
@@ -110,6 +111,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     pending: false,
     price: '',
     progress: 0,
+    quantity: '1',
     tags: [],
     tagsText: '',
     uuid: '',
@@ -142,6 +144,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
           images,
           isLoading: false,
           price: item.price,
+          quantity: item.quantity,
           tags: item.tags,
           uuid: item.uuid,
         });
@@ -331,15 +334,14 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     price,
     description,
     grp_1,
+    quantity,
   }: {
-    // eslint-disable-next-line react/no-unused-prop-types
     price: string,
-    // eslint-disable-next-line react/no-unused-prop-types
     description: string,
-    // eslint-disable-next-line react/no-unused-prop-types
     grp_1: number,
+    quantity: string,
   }) => {
-    if (!this.canSave({ price, description, grp_1 })) return;
+    if (!this.canSave({ price, description, grp_1, quantity })) return;
 
     this.setState({ pending: true });
 
@@ -355,6 +357,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
       description: description.trim(),
       photos: images.map(i => i.url),
       price,
+      quantity,
       tags: JSON.stringify(tags),
     };
 
@@ -456,18 +459,16 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
   }
 
   // numbers only, one dot and 2 decimal points
-
   canSave({
     price,
     description,
     grp_1,
+    quantity,
   }: {
-    // eslint-disable-next-line react/no-unused-prop-types
     price: string,
-    // eslint-disable-next-line react/no-unused-prop-types
     description: string,
-    // eslint-disable-next-line react/no-unused-prop-types
     grp_1: number,
+    quantity: string,
   }): boolean {
     // const tagsPattern = /^(\b[a-z][a-z0-9]*)$/i;
 
@@ -485,7 +486,8 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
       // if there's the minimum required of tags
       tags.length >= settings.MIN_TAGS &&
       // if there's an product category selected
-      grp_1 > -1
+      grp_1 > -1 &&
+      parseInt(quantity) > 0
     );
   }
 
@@ -514,7 +516,18 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
   };
 
   render() {
-    const { description, grp_1, images, inEditMode, isLoading, isUploading, price, tags, tagsText } = this.state;
+    const {
+      description,
+      grp_1,
+      images,
+      inEditMode,
+      isLoading,
+      isUploading,
+      price,
+      quantity,
+      tags,
+      tagsText,
+    } = this.state;
 
     if (isLoading) return null;
 
@@ -522,7 +535,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
       <React.Fragment>
         <Foect.Form
           onValidSubmit={this.onSave}
-          defaultValue={{ description, price, grp_1 }}
+          defaultValue={{ description, price, grp_1, quantity }}
           onInvalidSubmit={this.onInvalidSubmit}>
           {form => (
             <Container>
@@ -604,9 +617,35 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
                             value={control.value}
                           />
                           {control.isTouched && (control.errors.required || control.errors.checkPrice) && (
-                            <Text style={styles.minPrice}>
+                            <Text style={styles.minError}>
                               {`${I18n.t('add_or_edit_item.min_price')} ${settings.MIN_PRICE} UAH`}
                             </Text>
+                          )}
+                        </View>
+                      );
+                    }}
+                  </Foect.Control>
+                  <FormLabel labelStyle={styles.label}>{I18n.t('add_or_edit_item.quantity_label')}</FormLabel>
+                  <Foect.Control name="quantity" required maxLength={1} checkQuantity={{}}>
+                    {control => {
+                      // this.priceControl = control;
+                      return (
+                        <View style={{ paddingLeft: 6 }}>
+                          <InputItem
+                            autoCorrect={false}
+                            blurOnSubmit={false}
+                            clearButtonMode="while-editing"
+                            error={control.isTouched && control.isInvalid}
+                            // onErrorClick={ show toast with }
+                            last
+                            onBlur={control.markAsTouched}
+                            onChange={control.onChange}
+                            returnKeyType="go"
+                            type="number"
+                            value={control.value}
+                          />
+                          {control.isTouched && control.errors.required && (
+                            <Text style={styles.minError}>{`${I18n.t('add_or_edit_item.min_quantity')} 1`}</Text>
                           )}
                         </View>
                       );
@@ -788,7 +827,7 @@ const styles = StyleSheet.create({
     color: colors.black,
     fontWeight: '600',
   },
-  minPrice: {
+  minError: {
     color: colors.red,
     paddingLeft: 12,
   },
@@ -827,6 +866,16 @@ Foect.Validators.add('checkPrice', (val: any) => {
   if (parseFloat(val) < settings.MIN_PRICE) {
     // error
     return { checkPrice: true };
+    // valid
+  } else return null;
+});
+
+Foect.Validators.add('checkQuantity', (val: any) => {
+  if (!val) return null; // valid
+
+  if (isNaN(val) || parseInt(val) < 1) {
+    // error
+    return { checkQuantity: true };
     // valid
   } else return null;
 });

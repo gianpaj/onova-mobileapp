@@ -3,7 +3,7 @@
 import React from 'react';
 import { ActivityIndicator, StyleSheet, TouchableOpacity, Platform } from 'react-native';
 import ImagePicker from 'react-native-image-crop-picker';
-import Icon from 'react-native-vector-icons/Feather';
+import Feather from 'react-native-vector-icons/Feather';
 
 // import I18n from '../i18n';
 import colors from '../config/colors';
@@ -103,7 +103,7 @@ export default class ChatActions extends React.PureComponent<Props, State> {
 
     return (
       <TouchableOpacity style={styles.container}>
-        <Icon name="camera" size={22} onPress={this.pickImage} color={colors.grey3} />
+        <Feather name="camera" size={22} onPress={this.pickImage} color={colors.grey3} />
       </TouchableOpacity>
     );
   }

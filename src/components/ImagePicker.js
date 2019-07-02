@@ -16,8 +16,10 @@ import {
   View,
 } from 'react-native';
 import isEqual from 'lodash.isequal';
-import imagePickerStyle from './ImagePicker.styles';
 import SortableList from 'react-native-sortable-list';
+import Feather from 'react-native-vector-icons/Feather';
+
+import imagePickerStyle from './ImagePicker.styles';
 
 import colors from '../config/colors';
 
@@ -125,7 +127,8 @@ export default class ImagePicker extends React.Component<Props, State> {
               styles.plusWrap,
               styles.plusWrapNormal,
             ]}>
-            <Text style={styles.plusText}>+</Text>
+            {/* <Text >+</Text> */}
+            <Feather style={styles.plusCamera} name="camera" size={22} onPress={this.pickImage} color={colors.grey3} />
           </TouchableOpacity>
         )}
       </View>
@@ -221,6 +224,9 @@ const styles = StyleSheet.create({
   loader: {
     borderColor: colors.grey5,
     borderWidth: 1,
+  },
+  plusCamera: {
+    marginTop: 1,
   },
   row: {
     alignItems: 'center',

@@ -289,12 +289,12 @@ export class ProductContainer extends React.Component<Props, State> {
     console.debug('product uuid:', uuid);
     return api
       .getProduct(uuid, { cancelToken: this.cancelToken.token })
-      .then(data => {
-        if (data.status !== 'forsale' && data.status !== 'reserved') {
+      .then(product => {
+        if (product.status !== 'forsale') {
           return this.props.navigation.goBack();
         }
-        this.setState({ item: data });
-        return data;
+        this.setState({ item: product });
+        return product;
       })
       .catch(e => console.error(e));
   }
@@ -333,12 +333,12 @@ export class ProductContainer extends React.Component<Props, State> {
     });
   }
 
-  onPressReserved = async () => {
-    const { status } = await this.refresh();
-    if (status === 'reserved') {
-      ui.showToast(I18n.t('product.reserved_message'), 'warning', I18n.t('product.toast_warning_ok_button'));
-    }
-  };
+  // onPressReserved = async () => {
+  //   const { status } = await this.refresh();
+  //   if (status === 'reserved') {
+  //     ui.showToast(I18n.t('product.reserved_message'), 'warning', I18n.t('product.toast_warning_ok_button'));
+  //   }
+  // };
 
   onPressBuy = () => {
     const { item, loadingBuy } = this.state;
@@ -373,11 +373,11 @@ export class ProductContainer extends React.Component<Props, State> {
       .then((product: ProductType) => {
         // TODO: if the product is reserved to me open the checkout (e.g. if closed the app and want to finish paying) - not visible at the moment
         // if product status is not longer for sale while looking at an item (ie. a second person presses buy faster)
-        if (product.status !== 'forsale') {
+        if (product.status !== 'forsale' || product.quantity < 1) {
           // this.refresh();
-          if (product.status === 'reserved') {
-            throw Error(I18n.t('product.reserved_message'));
-          }
+          // if (product.status === 'reserved') {
+          //   throw Error(I18n.t('product.reserved_message'));
+          // }
           throw Error(I18n.t('product.toast_warning_on_product_sold'));
         }
         if (analyticsEnabled) Analytics.track('press_buy', { uuid: product.uuid });
@@ -533,19 +533,19 @@ export class ProductContainer extends React.Component<Props, State> {
                         loading={loadingBuy}
                       />
                     )}
-                    {item.status === 'reserved' && (
+                    {/* {item.status === 'reserved' && (
                       <Button
-                        buttonStyle={styles.reservedButton}
-                        containerViewStyle={styles.buyButtonContainer}
-                        onPress={this.onPressReserved}
-                        rightIcon={{
-                          name: 'timer-sand',
-                          type: 'material-community',
+                        // buttonStyle={styles.reservedButton}
+                        // containerViewStyle={styles.buyButtonContainer}
+                        // onPress={this.onPressReserved}
+                        // rightIcon={{
+                        //   name: 'timer-sand',
+                        //   type: 'material-community',
                         }}
                         textStyle={{ paddingLeft: 10 }}
                         title={I18n.t('product.reserved_button')}
                       />
-                    )}
+                    )} */}
                   </View>
                 )}
                 {/* <View style={styles.bottomSectionAfter}>
@@ -634,12 +634,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginRight: 15,
   },
-  reservedButton: {
-    backgroundColor: colors.secondary,
-    borderRadius: 2,
-    paddingHorizontal: 4,
-    paddingVertical: 8,
-  },
+  // reservedButton: {
+  //   backgroundColor: colors.secondary,
+  //   borderRadius: 2,
+  //   paddingHorizontal: 4,
+  //   paddingVertical: 8,
+  // },
   row: {
     flexDirection: 'row',
   },

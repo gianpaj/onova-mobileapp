@@ -21,19 +21,32 @@ export type Drop = {
 export type ProductStatus = 'forsale' | 'reserved' | 'sold' | 'banned' | 'deleted';
 
 export type Product = {
+  _id: string,
   categoryIds: Array<number>,
   comments?: Array<Comment>,
   createdAt: string,
   currency: string,
   description: string,
+  dropId: string,
+  location: {
+    type: string,
+    coordinates: {
+      latitude: ?number,
+      longitude: ?number,
+    },
+  },
   locality: string,
   photoURIs: Array<string>,
   price: string,
+  quantity: number,
+  reservedDate: string,
   seller: UserData,
   status: ProductStatus,
   tags?: Array<string>,
   typeIds: Array<number>,
+  updatedAt: string,
   uuid: string,
+  weight: Number,
 };
 
 export type Comment = {

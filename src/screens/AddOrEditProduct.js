@@ -144,7 +144,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
           images,
           isLoading: false,
           price: item.price,
-          quantity: item.quantity,
+          quantity: item.quantity.toString(),
           tags: item.tags,
           uuid: item.uuid,
         });
@@ -357,7 +357,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
       description: description.trim(),
       photos: images.map(i => i.url),
       price,
-      quantity,
+      quantity: parseInt(quantity),
       tags: JSON.stringify(tags),
     };
 

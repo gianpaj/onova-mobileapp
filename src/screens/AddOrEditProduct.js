@@ -91,6 +91,8 @@ type State = {
   uuid: string,
 };
 
+let inEditMode = false;
+
 export class AddOrEditProductScreen extends React.Component<Props, State> {
   priceControl;
   priceInput;
@@ -127,6 +129,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     // edit mode
     if (params && params.item) {
       this.setState({ inEditMode: true });
+      inEditMode = true;
       try {
         const item = await api.getProduct(params.item.uuid);
         // console.warn(item);
@@ -152,6 +155,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
         console.error(error);
       }
     }
+    inEditMode = false;
     // adding a new item
     this.setState({ isLoading: false });
     this.selectPhotoTapped(0);
@@ -472,10 +476,9 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
   }): boolean {
     // const tagsPattern = /^(\b[a-z][a-z0-9]*)$/i;
 
-    const { images, pending, tags } = this.state;
+    const { inEditMode, images, pending, tags } = this.state;
     // return true if all of these are true
-    return (
-      !pending &&
+    return !pending &&
       images.length > 0 &&
       // if all the images have been uploaded
       images.filter((i: any) => i.isUploading === false).length === images.length &&
@@ -487,8 +490,9 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
       tags.length >= settings.MIN_TAGS &&
       // if there's an product category selected
       grp_1 > -1 &&
-      parseInt(quantity) > 0
-    );
+      parseInt(quantity) > inEditMode
+      ? 0
+      : -1;
   }
 
   onImageChange = (images: Array<any>) => this.setState({ images });
@@ -645,7 +649,9 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
                             value={control.value}
                           />
                           {control.isTouched && control.errors.required && (
-                            <Text style={styles.minError}>{`${I18n.t('add_or_edit_item.min_quantity')} 1`}</Text>
+                            <Text style={styles.minError}>{`${I18n.t('add_or_edit_item.min_quantity')} ${
+                              inEditMode ? 0 : 1
+                            }`}</Text>
                           )}
                         </View>
                       );
@@ -873,7 +879,7 @@ Foect.Validators.add('checkPrice', (val: any) => {
 Foect.Validators.add('checkQuantity', (val: any) => {
   if (!val) return null; // valid
 
-  if (isNaN(val) || parseInt(val) < 1) {
+  if (isNaN(val) || parseInt(val) < (inEditMode ? 0 : 1)) {
     // error
     return { checkQuantity: true };
     // valid

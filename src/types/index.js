@@ -18,7 +18,7 @@ export type Drop = {
   uuid: string,
 };
 
-export type ProductStatus = 'forsale' | 'reserved' | 'sold' | 'banned' | 'deleted';
+export type ProductStatus = 'forsale' | 'sold' | 'banned' | 'deleted';
 
 export type Product = {
   _id: string,
@@ -39,7 +39,6 @@ export type Product = {
   photoURIs: Array<string>,
   price: string,
   quantity: number,
-  reservedDate: string,
   seller: UserData,
   status: ProductStatus,
   tags?: Array<string>,

@@ -189,12 +189,8 @@ function getRequestHeaders(body): Headers {
 }
 
 async function bodyOf(requestPromise): Promise<any> {
-  try {
-    const response = await requestPromise;
-    return response.body;
-  } catch (e) {
-    throw e;
-  }
+  const response = await requestPromise;
+  return response.body;
 }
 
 /**

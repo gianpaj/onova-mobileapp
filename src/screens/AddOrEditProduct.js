@@ -478,7 +478,8 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
 
     const { inEditMode, images, pending, tags } = this.state;
     // return true if all of these are true
-    return !pending &&
+    return (
+      !pending &&
       images.length > 0 &&
       // if all the images have been uploaded
       images.filter((i: any) => i.isUploading === false).length === images.length &&
@@ -490,9 +491,8 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
       tags.length >= settings.MIN_TAGS &&
       // if there's an product category selected
       grp_1 > -1 &&
-      parseInt(quantity) > inEditMode
-      ? 0
-      : -1;
+      parseInt(quantity) > (inEditMode ? -1 : 0)
+    );
   }
 
   onImageChange = (images: Array<any>) => this.setState({ images });

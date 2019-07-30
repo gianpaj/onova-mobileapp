@@ -150,7 +150,7 @@ export default {
     accessories_bags: 'Сумки',
     accessories_accessories: 'Аксесуари',
     forhome_forniture: 'Меблі',
-    forhome_art: 'мистецтво',
+    forhome_art: 'Мистецтво',
     forhome_interior: 'Побут',
   },
   add_or_edit_item: {

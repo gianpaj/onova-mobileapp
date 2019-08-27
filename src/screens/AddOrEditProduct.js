@@ -491,7 +491,8 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
       tags.length >= settings.MIN_TAGS &&
       // if there's an product category selected
       grp_1 > -1 &&
-      parseInt(quantity) > (inEditMode ? -1 : 0)
+      parseInt(quantity) > (inEditMode ? -1 : 0) &&
+      parseInt(quantity) <= 99
     );
   }
 
@@ -630,7 +631,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
                     }}
                   </Foect.Control>
                   <FormLabel labelStyle={styles.label}>{I18n.t('add_or_edit_item.quantity_label')}</FormLabel>
-                  <Foect.Control name="quantity" required maxLength={1} checkQuantity={{}}>
+                  <Foect.Control name="quantity" required checkQuantity={{}}>
                     {control => {
                       // this.priceControl = control;
                       return (
@@ -879,7 +880,7 @@ Foect.Validators.add('checkPrice', (val: any) => {
 Foect.Validators.add('checkQuantity', (val: any) => {
   if (!val) return null; // valid
 
-  if (isNaN(val) || parseInt(val) < (inEditMode ? 0 : 1)) {
+  if (isNaN(val) || parseInt(val) < (inEditMode ? 0 : 1) || parseInt(val) > 99) {
     // error
     return { checkQuantity: true };
     // valid

@@ -181,15 +181,24 @@ export default class MediaView extends React.Component<Props, State> {
           onSwipeComplete={this.hideModal}
           swipeDirection={'down'}
           style={styles.modal}>
-          <FastImage
-            style={{
-              width,
-              height: imageHeight,
-            }}
-            source={{
-              uri: images[0],
-              cache: FastImage.cacheControl.cacheOnly, // FIXME:
-            }}
+          <ImageViewer
+            enableSwipeDown
+            onCancel={this.hideModal}
+            imageUrls={images.map(i => ({ url: i }))}
+            index={0}
+            renderIndicator={() => null}
+            renderImage={props => (
+              <FastImage
+                style={{
+                  width,
+                  height: imageHeight,
+                }}
+                source={{
+                  uri: props.source.uri,
+                  cache: FastImage.cacheControl.cacheOnly, // FIXME:
+                }}
+              />
+            )}
           />
         </Modal>
       </>

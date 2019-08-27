@@ -107,7 +107,7 @@ export const category_radio_grp_2 = [
 ];
 
 export const category_radio_grp_3 = [
-  { label: I18n.t('categories.forhome_forniture'), value: 20 },
+  { label: I18n.t('categories.forhome_furniture'), value: 20 },
   { label: I18n.t('categories.forhome_art'), value: 21 },
   { label: I18n.t('categories.forhome_interior'), value: 22 },
 ];

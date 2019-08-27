@@ -149,7 +149,7 @@ export default {
     accessories_jewelry: 'Прикраси',
     accessories_bags: 'Сумки',
     accessories_accessories: 'Аксесуари',
-    forhome_forniture: 'Меблі',
+    forhome_furniture: 'Меблі',
     forhome_art: 'Мистецтво',
     forhome_interior: 'Побут',
   },

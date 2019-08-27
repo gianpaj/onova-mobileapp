@@ -8,7 +8,11 @@
   },
   "scripts": {
     "build-android-drop": "cd android/ && ENVFILE=.env.drop ./gradlew bundleDropRelease",
+    "build-android-drop-codepush": "ENVFILE=.env.drop appcenter codepush release-react --app gianpaj/drop-android --target-binary-version 1.9.0 --extra-bundler-option=\"--reset-cache\"",
     "build-android-onova": "cd android/ && ENVFILE=.env.onova ./gradlew bundleOnovaRelease",
+    "build-android-onova-codepush": "ENVFILE=.env.onova appcenter codepush release-react --app gianpaj/onova-android --target-binary-version 1.9.0 --extra-bundler-option=\"--reset-cache\"",
+    "build-ios-drop-codepush": "ENVFILE=.env.drop appcenter codepush release-react --plist-file-prefix drop --app gianpaj/drop-ios --extra-bundler-option=\"--reset-cache\"",
+    "build-ios-onova-codepush": "ENVFILE=.env.onova appcenter codepush release-react --plist-file-prefix onova --app gianpaj/onova-ios --extra-bundler-option=\"--reset-cache\"",
     "run-android-drop": "ENVFILE=.env.drop react-native run-android --variant=dropDebug --appId com.onova.app",
     "run-android-onova": "ENVFILE=.env.onova react-native run-android --variant=onovaDebug --appId uno.drop.app",
     "nuke-bundler": "watchman watch-del-all && rm -rf $TMPDIR/react-* && rm -rf /tmp/haste-map-react-native-packager-* && rm -rf /tmp/metro-bundler-cache-*",

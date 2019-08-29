@@ -51,11 +51,15 @@ target 'onova' do
   # Device-based integration
   pod 'Segment-Mixpanel'
 
+  pod 'Stripe', '~> 14.0.0'
+
   # for react-native-tab-view
   pod 'RNReanimated', :path => '../node_modules/react-native-reanimated'
   pod 'RNGestureHandler', :path => '../node_modules/react-native-gesture-handler'
 
   pod 'CodePush', :path => '../node_modules/react-native-code-push'
+  pod 'tipsi-stripe', :path => '../node_modules/tipsi-stripe'
+
 end
 
 target 'drop' do

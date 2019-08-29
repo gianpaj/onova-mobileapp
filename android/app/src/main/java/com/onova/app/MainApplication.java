@@ -3,6 +3,7 @@ package com.onova.app;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.gettipsi.stripe.StripeReactPackage;
 import com.microsoft.codepush.react.CodePush;
 import com.AlexanderZaytsev.RNI18n.RNI18nPackage;
 import com.dylanvann.fastimage.FastImageViewPackage;
@@ -45,6 +46,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
         new MainReactPackage(),
+        new StripeReactPackage(),
         new CodePush(BuildConfig.CODEPUSH_KEY, getApplicationContext(), BuildConfig.DEBUG),
         new AnalyticsPackage(),
         new AsyncStoragePackage(),

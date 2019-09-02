@@ -368,7 +368,7 @@ For any questions regarding payments please contact UAPAY at (044) 364-11-44`,
   },
   settings: {
     header: 'Settings',
-    auto_posting: 'Enable Instagram Auto-posting',
+    auto_posting: 'Instagram Auto-posting',
     username_label: 'Username:',
     username_placeholder: 'Edit your username',
     email_label: 'Email:',

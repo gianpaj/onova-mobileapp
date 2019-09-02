@@ -169,6 +169,7 @@ class SettingsContainer extends Component<Props, State> {
       cities,
       departments,
       emailAddress,
+      enableInstagramAutoPosting,
       mobileNumber,
       password,
       pending,
@@ -176,18 +177,30 @@ class SettingsContainer extends Component<Props, State> {
       username,
     } = this.state;
 
-    return (
+    const mobileNumberClean = mobileNumber.replace(/\D+/g, '');
+
+    const isShippingAddressValidIfUpdated =
+      shippingAddress &&
+      shippingAddress.city &&
+      (shippingAddress.city !== userData.shippingAddress.city ||
+        shippingAddress.firstName !== userData.shippingAddress.firstName ||
+        shippingAddress.lastName !== userData.shippingAddress.lastName ||
+        shippingAddress.departmentNovaposhta !== userData.shippingAddress.departmentNovaposhta) &&
+      cities &&
+      validShippingAddress(shippingAddress, cities, departments);
+
+    const isMobilePhoneUpdatedOrCleared = mobileNumberClean
+      ? mobileNumberClean !== userData.mobileNumber && isPhoneNumberValid(mobileNumber)
+      : userData.mobileNumber && true;
+
+    return Boolean(
       !pending &&
-      ((shippingAddress &&
-        shippingAddress.city &&
-        cities &&
-        validShippingAddress(shippingAddress, cities, departments)) ||
-        validPassword(password) ||
-        // allow to delete the mobile number
-        // FIXME: the logic should not return true if both the state.mobileNumber and userData.mobileNumber are empty
-        (!mobileNumber && mobileNumber !== userData.mobileNumber ? isPhoneNumberValid(mobileNumber) : false) ||
-        (isEmail(emailAddress) && emailAddress !== userData.emailAddress) ||
-        (username !== '' && username !== userData.username))
+        (isShippingAddressValidIfUpdated ||
+          (password && validPassword(password)) ||
+          isMobilePhoneUpdatedOrCleared ||
+          (isEmail(emailAddress) && emailAddress !== userData.emailAddress) ||
+          (username !== '' && username !== userData.username) ||
+          enableInstagramAutoPosting !== userData.settings.enableInstagramAutoPosting)
     );
   };
 

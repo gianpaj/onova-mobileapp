@@ -13,13 +13,13 @@ function validPassword(password: string) {
  * TODO: determine business logic.
  */
 function validShippingAddress(s: ShippingAddress, cities: Array<City>, departments: Array<Department>) {
-  return (
+  return Boolean(
     s.firstName !== '' &&
-    s.lastName !== '' &&
-    cities &&
-    cities.find(city => city.id === s.city) &&
-    departments &&
-    departments.find(d => d.id === s.departmentNovaposhta)
+      s.lastName !== '' &&
+      cities &&
+      cities.find(city => city.id === s.city) &&
+      departments &&
+      departments.find(d => d.id === s.departmentNovaposhta)
   );
 }
 

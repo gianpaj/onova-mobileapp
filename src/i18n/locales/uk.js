@@ -370,6 +370,7 @@ export default {
   },
   settings: {
     header: 'Налаштування',
+    auto_posting: 'Увімкнути репостинг з інстаграму',
     username_label: 'Username:',
     username_placeholder: 'Редагувати username',
     email_label: 'Email:',

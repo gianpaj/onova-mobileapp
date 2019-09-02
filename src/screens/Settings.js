@@ -6,11 +6,12 @@ import React, { Component } from 'react';
 import codePush from 'react-native-code-push';
 import { connect } from 'react-redux';
 import { Platform, StyleSheet, Text, TouchableOpacity, UIManager, View } from 'react-native';
-import { Body, Button as NBButton, Container, Content, Icon as NBIcon, Left, Right } from 'native-base';
+import { Body, Button as NBButton, Container, Content, Icon as NBIcon, Left, Right, Switch } from 'native-base';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { FormInput, FormLabel } from 'react-native-elements';
 import type { NavigationScreenProp } from 'react-navigation';
-import { Toast } from 'antd-mobile-rn';
+import { Toast, List } from 'antd-mobile-rn';
+import listItemStyle from 'antd-mobile-rn/lib/list/style/index.native';
 import axios from 'axios';
 import isEmail from 'validator/lib/isEmail';
 import update from 'immutability-helper';
@@ -88,6 +89,7 @@ class SettingsContainer extends Component<Props, State> {
     departments: null,
     emailAddress: '',
     isLoading: true,
+    enableInstagramAutoPosting: null,
     mobileNumber: '',
     nextFocusDisabled: false,
     password: '',
@@ -144,11 +146,13 @@ class SettingsContainer extends Component<Props, State> {
 
   static getDerivedStateFromProps(props, state) {
     if (state.isLoading) {
+      const { userData } = props;
       return {
-        shippingAddress: props.userData.shippingAddress,
-        username: props.userData.username,
-        emailAddress: props.userData.emailAddress,
-        mobileNumber: props.userData.mobileNumber,
+        emailAddress: userData.emailAddress,
+        mobileNumber: userData.mobileNumber,
+        shippingAddress: userData.shippingAddress,
+        username: userData.username,
+        ...{ enableInstagramAutoPosting: userData.settings ? userData.settings.enableInstagramAutoPosting : {} },
       };
     }
 
@@ -189,10 +193,12 @@ class SettingsContainer extends Component<Props, State> {
 
   onSave = () => {
     const { userData, token } = this.props;
-    const { emailAddress, mobileNumber, password, shippingAddress, username } = this.state;
+    const { emailAddress, mobileNumber, password, shippingAddress, username, enableInstagramAutoPosting } = this.state;
     const data = {};
 
     this.setState({ pending: true });
+
+    data.enableInstagramAutoPosting = enableInstagramAutoPosting;
 
     if (username !== '') data.username = username;
 
@@ -237,6 +243,8 @@ class SettingsContainer extends Component<Props, State> {
         this.setState({ pending: false });
       });
   };
+
+  onIGAutoPostingSwitchChange = val => this.setState({ enableInstagramAutoPosting: val });
 
   onUserChange = (username: string) => {
     if (!settings.USERNAME_REGEX.test(username)) {
@@ -367,6 +375,7 @@ class SettingsContainer extends Component<Props, State> {
       password,
       pending,
       shippingAddress,
+      enableInstagramAutoPosting,
       username,
       usernameError,
     } = this.state;
@@ -405,6 +414,18 @@ class SettingsContainer extends Component<Props, State> {
         </Header>
         <Content>
           <View style={styles.padder}>
+            <List.Item
+              styles={{
+                ...listItemStyle,
+                Line: {
+                  ...listItemStyle.Line,
+                  borderBottomWidth: 0,
+                },
+              }}
+              extra={<Switch value={enableInstagramAutoPosting} onValueChange={this.onIGAutoPostingSwitchChange} />}>
+              <Text>{I18n.t('settings.auto_posting')}</Text>
+            </List.Item>
+            <HR full />
             <Accordion
               // TODO: auto expand if the shipping address fields are invalid or not valid
               headerText={I18n.t('userInfo.shippingAddress')}

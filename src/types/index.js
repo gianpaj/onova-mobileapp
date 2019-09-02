@@ -82,6 +82,9 @@ export type UserData = {
   pushToken: ?string,
   ratingsTotal: number,
   reviewsCount: number,
+  settings: ?{
+    enableInstagramAutoPosting: ?Boolean,
+  },
   shippingAddress?: ShippingAddress,
   token: string,
   username: string,

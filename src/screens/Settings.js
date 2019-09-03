@@ -16,9 +16,10 @@ import isEmail from 'validator/lib/isEmail';
 import update from 'immutability-helper';
 import { KeyboardAccessoryNavigation } from 'react-native-keyboard-accessory';
 import { URL } from 'react-native-dotenv';
+import Dialog from 'react-native-dialog';
 // import Instabug from 'instabug-reactnative';
 
-import { Accordion, CardView, Header, HR, SearchableDropdown, Title } from '../components';
+import { Accordion, CardView, Header, HR, SearchableDropdown, Title, Info } from '../components';
 
 import { disableRefresh, getPersonalUserData, logout } from '../actions/actionCreator';
 
@@ -65,6 +66,7 @@ type State = {
   cities: ?Array<City>,
   codePushVersion: string,
   departments: ?Array<Department>,
+  dialogInfoVisible: boolean,
   emailAddress: string,
   instagram: string,
   instagramError: boolean,
@@ -88,10 +90,11 @@ class SettingsContainer extends Component<Props, State> {
     cities: null,
     codePushVersion: '',
     departments: null,
+    dialogInfoVisible: false,
     emailAddress: '',
-    isLoading: true,
     instagram: '',
     instagramError: false,
+    isLoading: true,
     mobileNumber: '',
     nextFocusDisabled: false,
     password: '',
@@ -392,6 +395,22 @@ class SettingsContainer extends Component<Props, State> {
 
   goBack = () => this.props.navigation && this.props.navigation.goBack();
 
+  toggleInfoDialog = () => this.setState(prevState => ({ dialogInfoVisible: !prevState.dialogInfoVisible }));
+
+  renderInfoDialog = () => (
+    <React.Fragment>
+      <Dialog.Container
+        visible={this.state.dialogInfoVisible}
+        onBackdropPress={this.toggleInfoDialog}
+        onBackButtonPress={this.toggleInfoDialog}
+        renderToHardwareTextureAndroid>
+        <Dialog.Title>{I18n.t('settings.instagram_label')}</Dialog.Title>
+        <Dialog.Description style={{ textAlign: 'left' }}>{I18n.t('settings.ig_info_dialog')}</Dialog.Description>
+        <Dialog.Button label={I18n.t('product.toast_warning_ok_button')} onPress={this.toggleInfoDialog} />
+      </Dialog.Container>
+    </React.Fragment>
+  );
+
   render() {
     const { userData, skippedLogin } = this.props;
     const {
@@ -520,7 +539,12 @@ class SettingsContainer extends Component<Props, State> {
             {/* </View> */}
           </View>
           <View style={styles.padder}>
-            <FormLabel labelStyle={styles.label}>{I18n.t('settings.instagram_label')}</FormLabel>
+            <View style={styles.flexRow}>
+              <FormLabel containerStyle={{}} labelStyle={styles.label}>
+                {I18n.t('settings.instagram_label')}
+              </FormLabel>
+              <Info color={colors.black} style={styles.infoIcon} onPress={this.toggleInfoDialog} />
+            </View>
             <FormInput
               ref={el => (this.inputs[5] = el)}
               onChangeText={this.onIGChange}
@@ -616,6 +640,7 @@ class SettingsContainer extends Component<Props, State> {
             onPrevious={this.changeInputFocus.bind(this, -1)}
           />
         )}
+        {this.renderInfoDialog()}
       </Container>
     );
   }
@@ -653,6 +678,17 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
   },
+  flexRow: {
+    alignItems: 'baseline',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingRight: 18,
+  },
+  infoIcon: {
+    height: '100%',
+    paddingBottom: 0,
+    paddingTop: 0,
+  },
   input: {
     color: colors.black,
     width: '100%',
@@ -673,10 +709,6 @@ const styles = StyleSheet.create({
   padder: {
     padding: 10,
   },
-  // secureText: {
-  //   color: colors.grey2,
-  //   paddingBottom: 0,
-  // },
 });
 
 const mapStateToProps: any = (state: ReduxState) => ({

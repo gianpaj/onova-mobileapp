@@ -370,7 +370,8 @@ export default {
   },
   settings: {
     header: 'Налаштування',
-    auto_posting: 'Репостинг з інстаграму',
+    instagram_label: 'Інстаграм:',
+    instagram_placeholder: 'Ваш юзернейм в інстаграмі',
     username_label: 'Username:',
     username_placeholder: 'Редагувати username',
     email_label: 'Email:',
@@ -382,6 +383,13 @@ export default {
     alert_msg_settigs_changed: 'Зміни збережено',
     safe_purchase_rules: 'Офіційні правила безпечної угоди',
     faq: 'Поширені запитання',
+    ig_info_dialog: `Напишіть ваш юзернейм з інстаграму без @, щоб автоматично дублювати оголошення на онові з інстаграму
+
+Пост з інстаграму має містити:
+- хештег #onova
+- ціну в описі (наприклад '400грн', або '400uah', або '₴400')
+    
+Ваш пост автоматично продублюється протягом 5хв`,
   },
   add_review: {
     header: 'Відгук',

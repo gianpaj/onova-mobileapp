@@ -6,12 +6,11 @@ import React, { Component } from 'react';
 import codePush from 'react-native-code-push';
 import { connect } from 'react-redux';
 import { Platform, StyleSheet, Text, TouchableOpacity, UIManager, View } from 'react-native';
-import { Body, Button as NBButton, Container, Content, Icon as NBIcon, Left, Right, Switch } from 'native-base';
+import { Body, Button as NBButton, Container, Content, Icon as NBIcon, Left, Right } from 'native-base';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { FormInput, FormLabel } from 'react-native-elements';
 import type { NavigationScreenProp } from 'react-navigation';
-import { Toast, List } from 'antd-mobile-rn';
-import listItemStyle from 'antd-mobile-rn/lib/list/style/index.native';
+import { Toast } from 'antd-mobile-rn';
 import axios from 'axios';
 import isEmail from 'validator/lib/isEmail';
 import update from 'immutability-helper';
@@ -67,6 +66,8 @@ type State = {
   codePushVersion: string,
   departments: ?Array<Department>,
   emailAddress: string,
+  instagram: string,
+  instagramError: boolean,
   isLoading: boolean,
   mobileNumber: string,
   nextFocusDisabled: boolean,
@@ -89,7 +90,8 @@ class SettingsContainer extends Component<Props, State> {
     departments: null,
     emailAddress: '',
     isLoading: true,
-    enableInstagramAutoPosting: null,
+    instagram: '',
+    instagramError: false,
     mobileNumber: '',
     nextFocusDisabled: false,
     password: '',
@@ -152,7 +154,7 @@ class SettingsContainer extends Component<Props, State> {
         mobileNumber: userData.mobileNumber,
         shippingAddress: userData.shippingAddress,
         username: userData.username,
-        ...{ enableInstagramAutoPosting: userData.settings ? userData.settings.enableInstagramAutoPosting : {} },
+        ...{ instagram: userData.scraping ? userData.scraping.instagram : {} },
       };
     }
 
@@ -169,7 +171,7 @@ class SettingsContainer extends Component<Props, State> {
       cities,
       departments,
       emailAddress,
-      enableInstagramAutoPosting,
+      instagram,
       mobileNumber,
       password,
       pending,
@@ -191,7 +193,11 @@ class SettingsContainer extends Component<Props, State> {
 
     const isMobilePhoneUpdatedOrCleared = mobileNumberClean
       ? mobileNumberClean !== userData.mobileNumber && isPhoneNumberValid(mobileNumber)
-      : userData.mobileNumber && true;
+      : userData.mobileNumber;
+
+    const isIGUsernameUpdatedOrCleared = instagram
+      ? instagram !== userData.scraping.instagram
+      : userData.scraping && userData.scraping.instagram;
 
     return Boolean(
       !pending &&
@@ -200,18 +206,18 @@ class SettingsContainer extends Component<Props, State> {
           isMobilePhoneUpdatedOrCleared ||
           (isEmail(emailAddress) && emailAddress !== userData.emailAddress) ||
           (username !== '' && username !== userData.username) ||
-          enableInstagramAutoPosting !== userData.settings.enableInstagramAutoPosting)
+          isIGUsernameUpdatedOrCleared)
     );
   };
 
   onSave = () => {
     const { userData, token } = this.props;
-    const { emailAddress, mobileNumber, password, shippingAddress, username, enableInstagramAutoPosting } = this.state;
+    const { emailAddress, mobileNumber, password, shippingAddress, username, instagram } = this.state;
     const data = {};
 
     this.setState({ pending: true });
 
-    data.enableInstagramAutoPosting = enableInstagramAutoPosting;
+    data.instagram = instagram;
 
     if (username !== '') data.username = username;
 
@@ -257,7 +263,17 @@ class SettingsContainer extends Component<Props, State> {
       });
   };
 
-  onIGAutoPostingSwitchChange = val => this.setState({ enableInstagramAutoPosting: val });
+  onIGChange = (instagram: string) => {
+    if (!settings.USERNAME_REGEX.test(instagram)) {
+      this.setState({ instagramError: true });
+
+      setTimeout(() => {
+        this.setState({ instagramError: false });
+      }, 100);
+    }
+
+    return this.setState({ instagram });
+  };
 
   onUserChange = (username: string) => {
     if (!settings.USERNAME_REGEX.test(username)) {
@@ -293,7 +309,7 @@ class SettingsContainer extends Component<Props, State> {
     this.setState({
       activeInputRef: ref,
       previousFocusDisabled: ref === 0,
-      nextFocusDisabled: ref === 7,
+      nextFocusDisabled: ref === 8,
     });
 
   changeInputFocus(direction = 1) {
@@ -383,12 +399,13 @@ class SettingsContainer extends Component<Props, State> {
       codePushVersion,
       departments,
       emailAddress,
+      instagram,
+      instagramError,
       isLoading,
       mobileNumber = '',
       password,
       pending,
       shippingAddress,
-      enableInstagramAutoPosting,
       username,
       usernameError,
     } = this.state;
@@ -427,18 +444,6 @@ class SettingsContainer extends Component<Props, State> {
         </Header>
         <Content>
           <View style={styles.padder}>
-            <List.Item
-              styles={{
-                ...listItemStyle,
-                Line: {
-                  ...listItemStyle.Line,
-                  borderBottomWidth: 0,
-                },
-              }}
-              extra={<Switch value={enableInstagramAutoPosting} onValueChange={this.onIGAutoPostingSwitchChange} />}>
-              <Text>{I18n.t('settings.auto_posting')}</Text>
-            </List.Item>
-            <HR full />
             <Accordion
               // TODO: auto expand if the shipping address fields are invalid or not valid
               headerText={I18n.t('userInfo.shippingAddress')}
@@ -515,36 +520,47 @@ class SettingsContainer extends Component<Props, State> {
             {/* </View> */}
           </View>
           <View style={styles.padder}>
-            <FormLabel labelStyle={styles.label}>{I18n.t('settings.username_label')}</FormLabel>
+            <FormLabel labelStyle={styles.label}>{I18n.t('settings.instagram_label')}</FormLabel>
             <FormInput
               ref={el => (this.inputs[5] = el)}
-              onChangeText={t => this.onUserChange(t)}
+              onChangeText={this.onIGChange}
+              placeholder={I18n.t('settings.instagram_placeholder')}
+              value={instagram}
+              shake={instagramError}
+              onFocus={this.handleFocus.bind(this, 5)}
+              onSubmitEditing={this.changeInputFocus.bind(this, 1)}
+              {...inputProps}
+            />
+            <FormLabel labelStyle={styles.label}>{I18n.t('settings.username_label')}</FormLabel>
+            <FormInput
+              ref={el => (this.inputs[6] = el)}
+              onChangeText={this.onUserChange}
               placeholder={I18n.t('settings.username_placeholder')}
               value={username}
               shake={usernameError}
-              onFocus={this.handleFocus.bind(this, 5)}
+              onFocus={this.handleFocus.bind(this, 6)}
               onSubmitEditing={this.changeInputFocus.bind(this, 1)}
               {...inputProps}
             />
             <FormLabel labelStyle={styles.label}>{I18n.t('settings.email_label')}</FormLabel>
             <FormInput
-              ref={el => (this.inputs[6] = el)}
+              ref={el => (this.inputs[7] = el)}
               onChangeText={t => this.setState({ emailAddress: t })}
               placeholder={I18n.t('settings.email_placeholder')}
               value={emailAddress}
-              onFocus={this.handleFocus.bind(this, 6)}
+              onFocus={this.handleFocus.bind(this, 7)}
               onSubmitEditing={this.changeInputFocus.bind(this, 1)}
               {...inputProps}
             />
             <FormLabel labelStyle={styles.label}>{I18n.t('settings.password_label')}</FormLabel>
             <FormInput
               disa
-              ref={el => (this.inputs[7] = el)}
+              ref={el => (this.inputs[8] = el)}
               onChangeText={t => this.setState({ password: t })}
               secureTextEntry
               placeholder={I18n.t('settings.password_placeholder')}
               value={password}
-              onFocus={this.handleFocus.bind(this, 7)}
+              onFocus={this.handleFocus.bind(this, 8)}
               {...inputProps}
             />
             <HR full />

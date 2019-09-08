@@ -40,6 +40,7 @@ export default class Accordion extends PureComponent<Props, State> {
 
   state = {
     activeSections: [],
+    expanded: false,
   };
 
   static defaultProps = {
@@ -56,16 +57,27 @@ export default class Accordion extends PureComponent<Props, State> {
     if (this.props.expanded) this.toggle([0]);
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props.expanded && !prevState.expanded) {
+      this.setState({ expanded: true });
+      this.toggle([0]);
+    } else if (!this.props.expanded && prevState.expanded) {
+      this.setState({ expanded: false });
+      this.toggle([]);
+    }
+  }
+
   toggle = (i: Array<number>) => {
-    this.setState({ activeSections: i });
+    const expanded = i[0] === 0;
+    this.setState({ activeSections: i, expanded });
     Animated.timing(this.animatedValue, {
-      toValue: i[0] === 0 ? 1 : 0,
+      toValue: expanded ? 1 : 0,
       duration: this.props.duration,
       useNativeDriver: true,
     }).start();
   };
 
-  render() {
+  renderHeader = () => {
     const interpolateRotation = this.animatedValue.interpolate({
       inputRange: [0, 1],
       outputRange: ['0deg', '180deg'],
@@ -74,19 +86,23 @@ export default class Accordion extends PureComponent<Props, State> {
       transform: [{ rotate: interpolateRotation }],
     };
     return (
+      <View style={styles.header}>
+        <FormLabel labelStyle={styles.label}>{this.props.headerText}</FormLabel>
+        <Animatable.View style={[styles.arrow, animatedStyle]}>
+          <Ionicons name="ios-arrow-down" style={styles.icon} size={24} />
+        </Animatable.View>
+      </View>
+    );
+  };
+
+  render() {
+    return (
       <CollapsibleAccordion
         activeSections={this.state.activeSections}
         onChange={this.toggle}
         touchableProps={{ underlayColor: 'transparent' }}
         sections={[{ content: this.props.values }]}
-        renderHeader={() => (
-          <View style={styles.header}>
-            <FormLabel labelStyle={styles.label}>{this.props.headerText}</FormLabel>
-            <Animatable.View style={[styles.arrow, animatedStyle]}>
-              <Ionicons name="ios-arrow-down" style={styles.icon} size={24} />
-            </Animatable.View>
-          </View>
-        )}
+        renderHeader={this.renderHeader}
         renderContent={section =>
           section.content.map((c, i) => {
             const props = {

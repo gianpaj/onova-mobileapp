@@ -58,6 +58,7 @@ type Props = {
 };
 
 type State = {
+  accordionExpanded: boolean,
   areFeesLoading: boolean,
   cvc: string,
   cities: ?Array<City>,
@@ -89,6 +90,7 @@ class CheckoutContainer extends Component<Props, State> {
   keyboardDidHideListener;
 
   state = {
+    accordionExpanded: true,
     areFeesLoading: false,
     cvc: '',
     cities: null,
@@ -118,7 +120,7 @@ class CheckoutContainer extends Component<Props, State> {
 
     // for development
     if (!item) {
-      item = { uuid: 'kSJn1hKZx' };
+      item = { uuid: '13jGR_pLT' };
       // prod (alex item)
       // item = { uuid: 'GoSdu69xp' };
     }
@@ -246,8 +248,12 @@ class CheckoutContainer extends Component<Props, State> {
     if ((this.state.nextFocusDisabled && direction === 1) || (this.state.previousFocusDisabled && direction === -1)) {
       return;
     }
-
     const focusingRef = this.state.activeInputRef + direction;
+
+    // open the accordion if the field selected is firstName...mobileNumber
+    // close if Instagram username, etc.
+    this.toggleAccordion(focusingRef < 5);
+
     this.inputs[focusingRef] && this.inputs[focusingRef].focus();
   }
 
@@ -565,9 +571,13 @@ class CheckoutContainer extends Component<Props, State> {
     </>
   );
 
+  toggleAccordion = value =>
+    this.setState({ accordionExpanded: typeof value === 'boolean' ? value : !this.state.accordionExpanded });
+
   render() {
     const { userData } = this.props;
     const {
+      accordionExpanded,
       cvc,
       cities,
       departments,
@@ -609,7 +619,7 @@ class CheckoutContainer extends Component<Props, State> {
               {this.renderPricingContainer()}
               <HR full />
               <Accordion
-                expanded
+                expanded={accordionExpanded}
                 headerText={I18n.t('userInfo.shippingAddress')}
                 values={[
                   {

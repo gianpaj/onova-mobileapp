@@ -1,13 +1,14 @@
 // @flow
 
-import React, { PureComponent } from 'react';
-import type { Node, Ref } from 'react';
+import React, { Component } from 'react';
 import { Animated, StyleSheet, View } from 'react-native';
 import CollapsibleAccordion from 'react-native-collapsible/Accordion';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { FormLabel } from 'react-native-elements';
 import { InputItem } from 'antd-mobile-rn';
 import * as Animatable from 'react-native-animatable';
+
+import type { Node, Ref } from 'react';
 
 import colors from '../config/colors';
 
@@ -35,7 +36,7 @@ type State = {
   activeSections: Array<number>,
 };
 
-export default class Accordion extends PureComponent<Props, State> {
+export default class Accordion extends Component<Props, State> {
   animatedValue: Animated.Value;
 
   state = {
@@ -55,6 +56,15 @@ export default class Accordion extends PureComponent<Props, State> {
 
   componentDidMount() {
     if (this.props.expanded) this.toggle([0]);
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    if (
+      this.props.expanded !== nextProps.expanded ||
+      this.state.activeSections.length !== nextState.activeSections.length
+    )
+      return true;
+    return false;
   }
 
   componentDidUpdate(prevProps, prevState) {

@@ -318,10 +318,11 @@ class SettingsContainer extends Component<Props, State> {
     });
 
   changeInputFocus(direction: number = 1) {
-    if ((this.state.nextFocusDisabled && direction === 1) || (this.state.previousFocusDisabled && direction === -1)) {
+    const { activeInputRef, nextFocusDisabled, previousFocusDisabled } = this.state;
+    if ((nextFocusDisabled && direction === 1) || (previousFocusDisabled && direction === -1)) {
       return;
     }
-    const focusingRef = this.state.activeInputRef + direction;
+    const focusingRef = activeInputRef + direction;
 
     // open the accordion if the field selected is firstName...mobileNumber
     // close if Instagram username, etc.

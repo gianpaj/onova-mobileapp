@@ -368,6 +368,8 @@ For any questions regarding payments please contact UAPAY at (044) 364-11-44`,
   },
   settings: {
     header: 'Settings',
+    instagram_label: 'Instagram:',
+    instagram_placeholder: 'Instagram username for auto-posting',
     username_label: 'Username:',
     username_placeholder: 'Edit your username',
     email_label: 'Email:',
@@ -379,6 +381,12 @@ For any questions regarding payments please contact UAPAY at (044) 364-11-44`,
     alert_msg_settigs_changed: 'Your settings have been updated',
     safe_purchase_rules: `${APP_NAME_CC} safe purchase rules`,
     faq: 'FAQ',
+    ig_info_dialog: `Enter your instagram username (without @) to automatically post on Onova when you make a new Instagram post.
+
+Instagram post needs:
+- #onova hashtag in the description
+- the price in the description. For example: 'Scarf for 400 UAH', 'Scarf for 400 грн' or 'Scarf for ₴100'
+- Note it might take 5 minutes for the Onova item to appear.`,
   },
   add_review: {
     header: 'Review',

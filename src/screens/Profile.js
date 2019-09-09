@@ -6,7 +6,7 @@ import { Dimensions, Image, Platform, Share, StyleSheet, Text, TouchableOpacity,
 import { ActionSheet, Body, Button as NBButton, Container, Icon as NBIcon, Left, Right } from 'native-base';
 import { NavigationActions } from 'react-navigation';
 import { TabView, TabBar } from 'react-native-tab-view';
-import { URL, APP_NAME } from 'react-native-dotenv';
+import { URL } from 'react-native-dotenv';
 import { Modal, NoticeBar, Toast } from 'antd-mobile-rn';
 import Analytics from 'react-native-analytics-segment-io';
 

@@ -16,9 +16,10 @@ import isEmail from 'validator/lib/isEmail';
 import update from 'immutability-helper';
 import { KeyboardAccessoryNavigation } from 'react-native-keyboard-accessory';
 import { URL } from 'react-native-dotenv';
+import Dialog from 'react-native-dialog';
 // import Instabug from 'instabug-reactnative';
 
-import { Accordion, CardView, Header, HR, SearchableDropdown, Title } from '../components';
+import { Accordion, CardView, Header, HR, SearchableDropdown, Title, Info } from '../components';
 
 import { disableRefresh, getPersonalUserData, logout } from '../actions/actionCreator';
 
@@ -66,7 +67,10 @@ type State = {
   cities: ?Array<City>,
   codePushVersion: string,
   departments: ?Array<Department>,
+  dialogInfoVisible: boolean,
   emailAddress: string,
+  instagram: string,
+  instagramError: boolean,
   isLoading: boolean,
   mobileNumber: string,
   nextFocusDisabled: boolean,
@@ -88,7 +92,10 @@ class SettingsContainer extends Component<Props, State> {
     cities: null,
     codePushVersion: '',
     departments: null,
+    dialogInfoVisible: false,
     emailAddress: '',
+    instagram: '',
+    instagramError: false,
     isLoading: true,
     mobileNumber: '',
     nextFocusDisabled: false,
@@ -146,11 +153,13 @@ class SettingsContainer extends Component<Props, State> {
 
   static getDerivedStateFromProps(props, state) {
     if (state.isLoading) {
+      const { userData } = props;
       return {
-        shippingAddress: props.userData.shippingAddress,
-        username: props.userData.username,
-        emailAddress: props.userData.emailAddress,
-        mobileNumber: props.userData.mobileNumber,
+        emailAddress: userData.emailAddress,
+        mobileNumber: userData.mobileNumber,
+        shippingAddress: userData.shippingAddress,
+        username: userData.username,
+        ...{ instagram: userData.scraping ? userData.scraping.instagram : {} },
       };
     }
 
@@ -167,6 +176,7 @@ class SettingsContainer extends Component<Props, State> {
       cities,
       departments,
       emailAddress,
+      instagram,
       mobileNumber,
       password,
       pending,
@@ -174,27 +184,45 @@ class SettingsContainer extends Component<Props, State> {
       username,
     } = this.state;
 
-    return (
+    const mobileNumberClean = mobileNumber.replace(/\D+/g, '');
+
+    const isShippingAddressValidIfUpdated =
+      shippingAddress &&
+      shippingAddress.city &&
+      (shippingAddress.city !== userData.shippingAddress.city ||
+        shippingAddress.firstName !== userData.shippingAddress.firstName ||
+        shippingAddress.lastName !== userData.shippingAddress.lastName ||
+        shippingAddress.departmentNovaposhta !== userData.shippingAddress.departmentNovaposhta) &&
+      cities &&
+      validShippingAddress(shippingAddress, cities, departments);
+
+    const isMobilePhoneUpdatedOrCleared = mobileNumberClean
+      ? mobileNumberClean !== userData.mobileNumber && isPhoneNumberValid(mobileNumber)
+      : userData.mobileNumber;
+
+    const isIGUsernameUpdatedOrCleared = instagram
+      ? instagram !== userData.scraping.instagram
+      : userData.scraping && userData.scraping.instagram;
+
+    return Boolean(
       !pending &&
-      ((shippingAddress &&
-        shippingAddress.city &&
-        cities &&
-        validShippingAddress(shippingAddress, cities, departments)) ||
-        validPassword(password) ||
-        // allow to delete the mobile number
-        // FIXME: the logic should not return true if both the state.mobileNumber and userData.mobileNumber are empty
-        (!mobileNumber && mobileNumber !== userData.mobileNumber ? isPhoneNumberValid(mobileNumber) : false) ||
-        (isEmail(emailAddress) && emailAddress !== userData.emailAddress) ||
-        (username !== '' && username !== userData.username))
+        (isShippingAddressValidIfUpdated ||
+          (password && validPassword(password)) ||
+          isMobilePhoneUpdatedOrCleared ||
+          (isEmail(emailAddress) && emailAddress !== userData.emailAddress) ||
+          (username !== '' && username !== userData.username) ||
+          isIGUsernameUpdatedOrCleared)
     );
   };
 
   onSave = () => {
     const { userData, token } = this.props;
-    const { emailAddress, mobileNumber, password, shippingAddress, username } = this.state;
+    const { emailAddress, mobileNumber, password, shippingAddress, username, instagram } = this.state;
     const data = {};
 
     this.setState({ pending: true });
+
+    data.instagram = instagram;
 
     if (username !== '') data.username = username;
 
@@ -240,6 +268,18 @@ class SettingsContainer extends Component<Props, State> {
       });
   };
 
+  onIGChange = (instagram: string) => {
+    if (!settings.USERNAME_REGEX.test(instagram)) {
+      this.setState({ instagramError: true });
+
+      setTimeout(() => {
+        this.setState({ instagramError: false });
+      }, 100);
+    }
+
+    return this.setState({ instagram });
+  };
+
   onUserChange = (username: string) => {
     if (!settings.USERNAME_REGEX.test(username)) {
       this.setState({ usernameError: true });
@@ -274,7 +314,7 @@ class SettingsContainer extends Component<Props, State> {
     this.setState({
       activeInputRef: ref,
       previousFocusDisabled: ref === 0,
-      nextFocusDisabled: ref === 7,
+      nextFocusDisabled: ref === 8,
     });
 
   changeInputFocus(direction: number = 1) {
@@ -364,6 +404,22 @@ class SettingsContainer extends Component<Props, State> {
   toggleAccordion = value =>
     this.setState({ accordionExpanded: typeof value === 'boolean' ? value : !this.state.accordionExpanded });
 
+  toggleInfoDialog = () => this.setState(prevState => ({ dialogInfoVisible: !prevState.dialogInfoVisible }));
+
+  renderInfoDialog = () => (
+    <React.Fragment>
+      <Dialog.Container
+        visible={this.state.dialogInfoVisible}
+        onBackdropPress={this.toggleInfoDialog}
+        onBackButtonPress={this.toggleInfoDialog}
+        renderToHardwareTextureAndroid>
+        <Dialog.Title>{I18n.t('settings.instagram_label')}</Dialog.Title>
+        <Dialog.Description style={{ textAlign: 'left' }}>{I18n.t('settings.ig_info_dialog')}</Dialog.Description>
+        <Dialog.Button label={I18n.t('product.toast_warning_ok_button')} onPress={this.toggleInfoDialog} />
+      </Dialog.Container>
+    </React.Fragment>
+  );
+
   render() {
     const { userData, skippedLogin } = this.props;
     const {
@@ -372,6 +428,8 @@ class SettingsContainer extends Component<Props, State> {
       codePushVersion,
       departments,
       emailAddress,
+      instagram,
+      instagramError,
       isLoading,
       mobileNumber = '',
       password,
@@ -492,36 +550,52 @@ class SettingsContainer extends Component<Props, State> {
             {/* </View> */}
           </View>
           <View style={styles.padder}>
-            <FormLabel labelStyle={styles.label}>{I18n.t('settings.username_label')}</FormLabel>
+            <View style={styles.flexRow}>
+              <FormLabel containerStyle={{}} labelStyle={styles.label}>
+                {I18n.t('settings.instagram_label')}
+              </FormLabel>
+              <Info color={colors.black} style={styles.infoIcon} onPress={this.toggleInfoDialog} />
+            </View>
             <FormInput
               ref={el => (this.inputs[5] = el)}
-              onChangeText={t => this.onUserChange(t)}
+              onChangeText={this.onIGChange}
+              placeholder={I18n.t('settings.instagram_placeholder')}
+              value={instagram}
+              shake={instagramError}
+              onFocus={this.handleFocus.bind(this, 5)}
+              onSubmitEditing={this.changeInputFocus.bind(this, 1)}
+              {...inputProps}
+            />
+            <FormLabel labelStyle={styles.label}>{I18n.t('settings.username_label')}</FormLabel>
+            <FormInput
+              ref={el => (this.inputs[6] = el)}
+              onChangeText={this.onUserChange}
               placeholder={I18n.t('settings.username_placeholder')}
               value={username}
               shake={usernameError}
-              onFocus={this.handleFocus.bind(this, 5)}
+              onFocus={this.handleFocus.bind(this, 6)}
               onSubmitEditing={this.changeInputFocus.bind(this, 1)}
               {...inputProps}
             />
             <FormLabel labelStyle={styles.label}>{I18n.t('settings.email_label')}</FormLabel>
             <FormInput
-              ref={el => (this.inputs[6] = el)}
+              ref={el => (this.inputs[7] = el)}
               onChangeText={t => this.setState({ emailAddress: t })}
               placeholder={I18n.t('settings.email_placeholder')}
               value={emailAddress}
-              onFocus={this.handleFocus.bind(this, 6)}
+              onFocus={this.handleFocus.bind(this, 7)}
               onSubmitEditing={this.changeInputFocus.bind(this, 1)}
               {...inputProps}
             />
             <FormLabel labelStyle={styles.label}>{I18n.t('settings.password_label')}</FormLabel>
             <FormInput
               disa
-              ref={el => (this.inputs[7] = el)}
+              ref={el => (this.inputs[8] = el)}
               onChangeText={t => this.setState({ password: t })}
               secureTextEntry
               placeholder={I18n.t('settings.password_placeholder')}
               value={password}
-              onFocus={this.handleFocus.bind(this, 7)}
+              onFocus={this.handleFocus.bind(this, 8)}
               {...inputProps}
             />
             <HR full />
@@ -577,6 +651,7 @@ class SettingsContainer extends Component<Props, State> {
             onPrevious={this.changeInputFocus.bind(this, -1)}
           />
         )}
+        {this.renderInfoDialog()}
       </Container>
     );
   }
@@ -614,6 +689,17 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
   },
+  flexRow: {
+    alignItems: 'baseline',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingRight: 18,
+  },
+  infoIcon: {
+    height: '100%',
+    paddingBottom: 0,
+    paddingTop: 0,
+  },
   input: {
     color: colors.black,
     width: '100%',
@@ -634,10 +720,6 @@ const styles = StyleSheet.create({
   padder: {
     padding: 10,
   },
-  // secureText: {
-  //   color: colors.grey2,
-  //   paddingBottom: 0,
-  // },
 });
 
 const mapStateToProps: any = (state: ReduxState) => ({

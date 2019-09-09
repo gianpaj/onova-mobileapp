@@ -253,13 +253,19 @@ class SettingsContainer extends Component<Props, State> {
         if (data.emailAddress) {
           ui.showToast(I18n.t('settings.alert_msg_email_address_changed'), 'success');
         } else {
-          ui.showToast(I18n.t('settings.alert_msg_settigs_changed'), 'success');
+          ui.showToast(I18n.t('settings.alert_msg_settings_changed'), 'success');
         }
         this.goBack();
       })
       .catch(err => {
         console.debug(err);
-        ui.showToast(err.message, 'danger');
+        if (err.message.includes('Please enter your shipping address')) {
+          ui.showToast(I18n.t('settings.alert_msg_email_address_changed'), 'danger');
+        } else if (err.message.includes('Please enter your payment information')) {
+          ui.showToast(I18n.t('settings.alert_msg_email_address_changed'), 'danger');
+        } else {
+          ui.showToast(err.message, 'danger');
+        }
       })
       // final
       .then(() => {
@@ -451,6 +457,9 @@ class SettingsContainer extends Component<Props, State> {
       inputStyle: styles.input,
     };
 
+    const hasPaymentInfo =
+      Object.keys(userData.paymentInfo.short).length || Object.keys(userData.paymentInfo.full).length;
+
     return (
       <Container>
         <Header>
@@ -536,7 +545,7 @@ class SettingsContainer extends Component<Props, State> {
             <FormLabel labelStyle={[styles.label, { paddingBottom: 10 }]}>{I18n.t('userInfo.paymentInfo')}</FormLabel>
             <View style={{ alignSelf: 'center' }}>
               <TouchableOpacity onPress={this.enterPaymentInfo}>
-                {Object.keys(userData.paymentInfo.short).length || Object.keys(userData.paymentInfo.full).length ? (
+                {hasPaymentInfo ? (
                   <CardView {...this.formatCardInfo()} focused="number" />
                 ) : (
                   <CardView {...this.formatCardInfo()} />

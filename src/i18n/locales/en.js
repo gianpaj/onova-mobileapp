@@ -378,7 +378,11 @@ For any questions regarding payments please contact UAPAY at (044) 364-11-44`,
     password_placeholder: 'Password (minimum 8 characters)',
     sign_out_button: 'Sign out',
     alert_msg_email_address_changed: 'The new email address requires to be valided. Please check your inbox',
-    alert_msg_settigs_changed: 'Your settings have been updated',
+    alert_msg_settings_changed: 'Your settings have been updated',
+    alert_msg_insta_payment_required:
+      'Please enter your payment information before saving your Instagram username for scraping',
+    alert_msg_insta_shipping_required:
+      'Please enter your shipping address before saving your Instagram username for scraping',
     safe_purchase_rules: `${APP_NAME_CC} safe purchase rules`,
     faq: 'FAQ',
     ig_info_dialog: `Enter your instagram username (without @) to automatically post on Onova when you make a new Instagram post.

@@ -380,7 +380,9 @@ export default {
     password_placeholder: 'Password (minimum 8 characters)',
     sign_out_button: 'Вийти',
     alert_msg_email_address_changed: 'Новий email має бути підтверджено. Ми надіслали інструкції',
-    alert_msg_settigs_changed: 'Зміни збережено',
+    alert_msg_settings_changed: 'Зміни збережено',
+    alert_msg_insta_payment_required: 'Будь ласка вкажіть платіжні данні спочатку',
+    alert_msg_insta_shipping_required: 'Будь ласка вкажіть свою адресу спочатку',
     safe_purchase_rules: 'Офіційні правила безпечної угоди',
     faq: 'Поширені запитання',
     ig_info_dialog: `Напишіть ваш юзернейм з інстаграму без @, щоб автоматично дублювати оголошення на онові з інстаграму
@@ -388,7 +390,7 @@ export default {
 Пост з інстаграму має містити:
 - хештег #onova
 - ціну в описі (наприклад '400грн', або '400uah', або '₴400')
-    
+
 Ваш пост автоматично продублюється протягом 5хв`,
   },
   add_review: {

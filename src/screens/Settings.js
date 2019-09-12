@@ -184,7 +184,8 @@ class SettingsContainer extends Component<Props, State> {
       username,
     } = this.state;
 
-    const mobileNumberClean = mobileNumber.replace(/\D+/g, '');
+    let mobileNumberClean;
+    if (mobileNumber) mobileNumberClean = mobileNumber.replace(/\D+/g, '');
 
     const isShippingAddressValidIfUpdated =
       shippingAddress &&

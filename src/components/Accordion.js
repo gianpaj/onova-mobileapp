@@ -1,14 +1,13 @@
 // @flow
 
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
+import type { Node, Ref } from 'react';
 import { Animated, StyleSheet, View } from 'react-native';
 import CollapsibleAccordion from 'react-native-collapsible/Accordion';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { FormLabel } from 'react-native-elements';
 import { InputItem } from 'antd-mobile-rn';
 import * as Animatable from 'react-native-animatable';
-
-import type { Node, Ref } from 'react';
 
 import colors from '../config/colors';
 
@@ -36,12 +35,11 @@ type State = {
   activeSections: Array<number>,
 };
 
-export default class Accordion extends Component<Props, State> {
+export default class Accordion extends PureComponent<Props, State> {
   animatedValue: Animated.Value;
 
   state = {
     activeSections: [],
-    expanded: false,
   };
 
   static defaultProps = {
@@ -58,36 +56,16 @@ export default class Accordion extends Component<Props, State> {
     if (this.props.expanded) this.toggle([0]);
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
-    if (
-      this.props.expanded !== nextProps.expanded ||
-      this.state.activeSections.length !== nextState.activeSections.length
-    )
-      return true;
-    return false;
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    if (this.props.expanded && !prevState.expanded) {
-      this.setState({ expanded: true });
-      this.toggle([0]);
-    } else if (!this.props.expanded && prevState.expanded) {
-      this.setState({ expanded: false });
-      this.toggle([]);
-    }
-  }
-
   toggle = (i: Array<number>) => {
-    const expanded = i[0] === 0;
-    this.setState({ activeSections: i, expanded });
+    this.setState({ activeSections: i });
     Animated.timing(this.animatedValue, {
-      toValue: expanded ? 1 : 0,
+      toValue: i[0] === 0 ? 1 : 0,
       duration: this.props.duration,
       useNativeDriver: true,
     }).start();
   };
 
-  renderHeader = () => {
+  render() {
     const interpolateRotation = this.animatedValue.interpolate({
       inputRange: [0, 1],
       outputRange: ['0deg', '180deg'],
@@ -96,23 +74,19 @@ export default class Accordion extends Component<Props, State> {
       transform: [{ rotate: interpolateRotation }],
     };
     return (
-      <View style={styles.header}>
-        <FormLabel labelStyle={styles.label}>{this.props.headerText}</FormLabel>
-        <Animatable.View style={[styles.arrow, animatedStyle]}>
-          <Ionicons name="ios-arrow-down" style={styles.icon} size={24} />
-        </Animatable.View>
-      </View>
-    );
-  };
-
-  render() {
-    return (
       <CollapsibleAccordion
         activeSections={this.state.activeSections}
         onChange={this.toggle}
         touchableProps={{ underlayColor: 'transparent' }}
         sections={[{ content: this.props.values }]}
-        renderHeader={this.renderHeader}
+        renderHeader={() => (
+          <View style={styles.header}>
+            <FormLabel labelStyle={styles.label}>{this.props.headerText}</FormLabel>
+            <Animatable.View style={[styles.arrow, animatedStyle]}>
+              <Ionicons name="ios-arrow-down" style={styles.icon} size={24} />
+            </Animatable.View>
+          </View>
+        )}
         renderContent={section =>
           section.content.map((c, i) => {
             const props = {

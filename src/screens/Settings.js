@@ -62,7 +62,6 @@ type Props = {
 };
 
 type State = {
-  accordionExpanded: boolean,
   activeInputRef: any,
   cities: ?Array<City>,
   codePushVersion: string,
@@ -87,7 +86,6 @@ class SettingsContainer extends Component<Props, State> {
   didFocusListener;
   inputs: Array<any> = [];
   state = {
-    accordionExpanded: false,
     activeInputRef: null,
     cities: null,
     codePushVersion: '',
@@ -324,17 +322,12 @@ class SettingsContainer extends Component<Props, State> {
       nextFocusDisabled: ref === 8,
     });
 
-  changeInputFocus(direction: number = 1) {
-    const { activeInputRef, nextFocusDisabled, previousFocusDisabled } = this.state;
-    if ((nextFocusDisabled && direction === 1) || (previousFocusDisabled && direction === -1)) {
+  changeInputFocus(direction = 1) {
+    if ((this.state.nextFocusDisabled && direction === 1) || (this.state.previousFocusDisabled && direction === -1)) {
       return;
     }
-    const focusingRef = activeInputRef + direction;
 
-    // open the accordion if the field selected is firstName...mobileNumber
-    // close if Instagram username, etc.
-    this.toggleAccordion(focusingRef < 5);
-
+    const focusingRef = this.state.activeInputRef + direction;
     this.inputs[focusingRef] && this.inputs[focusingRef].focus();
   }
 
@@ -409,9 +402,6 @@ class SettingsContainer extends Component<Props, State> {
 
   goBack = () => this.props.navigation && this.props.navigation.goBack();
 
-  toggleAccordion = value =>
-    this.setState({ accordionExpanded: typeof value === 'boolean' ? value : !this.state.accordionExpanded });
-
   toggleInfoDialog = () => this.setState(prevState => ({ dialogInfoVisible: !prevState.dialogInfoVisible }));
 
   renderInfoDialog = () => (
@@ -431,7 +421,6 @@ class SettingsContainer extends Component<Props, State> {
   render() {
     const { userData, skippedLogin } = this.props;
     const {
-      accordionExpanded,
       cities,
       codePushVersion,
       departments,
@@ -485,7 +474,6 @@ class SettingsContainer extends Component<Props, State> {
         <Content>
           <View style={styles.padder}>
             <Accordion
-              expanded={accordionExpanded}
               // TODO: auto expand if the shipping address fields are invalid or not valid
               headerText={I18n.t('userInfo.shippingAddress')}
               values={[

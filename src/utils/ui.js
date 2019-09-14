@@ -5,6 +5,8 @@ import { Toast } from 'native-base';
 global.Intl = require('intl');
 require('intl/locale-data/jsonp/ru-UA.js');
 
+import { APP_NAME } from 'react-native-dotenv';
+
 import I18n from '../i18n';
 
 // prettier-ignore
@@ -49,7 +51,7 @@ export function showConfirmAlert(
   title: string,
   message: string,
   onContinue: () => void | Promise<any>,
-  onDismiss?: () => void = () => {},
+  onDismiss?: () => void = () => { },
   cancelText: string = I18n.t('alerts.confirm_alert_button_cancel'),
   confirmText: string = I18n.t('alerts.confirm_alert_button_confirm')
 ) {
@@ -94,7 +96,7 @@ export function sleep(ms: number): Promise<any> {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-export const category_radio_grp_1 = [
+const category_radio_grp_1_onova = [
   { label: I18n.t('categories.clothes_men'), value: 0 },
   { label: I18n.t('categories.clothes_women'), value: 1 },
   { label: I18n.t('categories.clothes_shoes'), value: 2 },
@@ -112,8 +114,10 @@ export const category_radio_grp_3 = [
   { label: I18n.t('categories.forhome_interior'), value: 22 },
 ];
 
-// export const category_radio_grp_2 = [
-//   { label: I18n.t('categories.men'), value: 0 },
-//   { label: I18n.t('categories.women'), value: 1 },
-//   { label: I18n.t('categories.other_type'), value: 2 },
-// ];
+const category_radio_grp_1_drop = [
+  { label: I18n.t('categories.clothes'), value: 0 },
+  { label: I18n.t('categories.shoes'), value: 2 },
+  { label: I18n.t('categories.other_cat'), value: 12 },
+];
+
+export const category_radio_grp_1 = APP_NAME == 'onova' ? category_radio_grp_1_onova : category_radio_grp_1_drop;

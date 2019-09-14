@@ -152,6 +152,10 @@ export default {
     forhome_furniture: 'Меблі',
     forhome_art: 'Мистецтво',
     forhome_interior: 'Побут',
+    // drop
+    clothes: 'Одяг',
+    shoes: 'Взуття',
+    other_cat: 'Аксесуари',
   },
   add_or_edit_item: {
     add_item_header: 'Додати',

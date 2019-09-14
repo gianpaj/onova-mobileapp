@@ -151,6 +151,11 @@ For any questions regarding payments please contact UAPAY at (044) 364-11-44`,
     forhome_furniture: 'Furniture',
     forhome_art: 'Art',
     forhome_interior: 'Interior',
+    // drop
+    clothes: 'Clothes',
+    shoes: 'Shoes',
+    other_cat: 'Other',
+    // other_type: 'Other',
   },
   add_or_edit_item: {
     add_item_header: 'Add Item',

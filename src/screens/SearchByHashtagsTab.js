@@ -6,6 +6,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { Button as NBButton, Content } from 'native-base';
 import { SearchBar } from 'react-native-elements';
 import { withNavigation } from 'react-navigation';
+import { APP_NAME } from 'react-native-dotenv';
 
 import type { NavigationScreenProp } from 'react-navigation';
 
@@ -84,8 +85,105 @@ class SearchByHashtagsTabContainer extends Component<Props, State> {
     this.setState({ grp_1 });
   };
 
+  renderCategories() {
+    const { grp_1 } = this.state;
+    if (APP_NAME == 'drop') {
+      return (
+        <View style={styles.grps}>
+          <RadioForm animation formHorizontal>
+            {category_radio_grp_1.map((option, i) => (
+              <RadioButton labelHorizontal={false} key={i}>
+                <RadioButtonLabel
+                  index={i}
+                  labelStyle={styles.radioButtonLabel}
+                  obj={option}
+                  onPress={this.setCategory}
+                />
+                <RadioButtonInput
+                  {...RadioButtonInputProps}
+                  index={i}
+                  isSelected={grp_1 === option.value}
+                  obj={option}
+                  onPress={this.setCategory}
+                />
+              </RadioButton>
+            ))}
+          </RadioForm>
+        </View>
+      );
+    }
+    return (
+      <>
+        <View style={styles.grps}>
+          <RadioForm animation formHorizontal>
+            {category_radio_grp_1.map((option, i) => (
+              <RadioButton labelHorizontal={false} key={i}>
+                <RadioButtonLabel
+                  index={i}
+                  labelStyle={styles.radioButtonLabel}
+                  obj={option}
+                  onPress={this.setCategory}
+                />
+                <RadioButtonInput
+                  {...RadioButtonInputProps}
+                  index={i}
+                  isSelected={grp_1 === option.value}
+                  obj={option}
+                  onPress={this.setCategory}
+                />
+              </RadioButton>
+            ))}
+          </RadioForm>
+        </View>
+
+        <View style={styles.grps}>
+          <RadioForm animation formHorizontal>
+            {category_radio_grp_2.map((option, i) => (
+              <RadioButton labelHorizontal={false} key={i}>
+                <RadioButtonLabel
+                  obj={option}
+                  index={i}
+                  onPress={this.setCategory}
+                  labelStyle={styles.radioButtonLabel}
+                />
+                <RadioButtonInput
+                  {...RadioButtonInputProps}
+                  index={i}
+                  isSelected={grp_1 === option.value}
+                  obj={option}
+                  onPress={this.setCategory}
+                />
+              </RadioButton>
+            ))}
+          </RadioForm>
+        </View>
+        <View style={styles.grps}>
+          <RadioForm animation formHorizontal>
+            {category_radio_grp_3.map((option, i) => (
+              <RadioButton labelHorizontal={false} key={i}>
+                <RadioButtonLabel
+                  obj={option}
+                  index={i}
+                  onPress={this.setCategory}
+                  labelStyle={styles.radioButtonLabel}
+                />
+                <RadioButtonInput
+                  {...RadioButtonInputProps}
+                  index={i}
+                  isSelected={grp_1 === option.value}
+                  obj={option}
+                  onPress={this.setCategory}
+                />
+              </RadioButton>
+            ))}
+          </RadioForm>
+        </View>
+      </>
+    );
+  }
+
   render() {
-    const { isLoading, text, grp_1 } = this.state;
+    const { isLoading, text } = this.state;
 
     return (
       <Content style={styles.flex1}>
@@ -125,69 +223,7 @@ class SearchByHashtagsTabContainer extends Component<Props, State> {
               value={text}
             />
           </View>
-          <View style={styles.grps}>
-            <RadioForm animation formHorizontal>
-              {category_radio_grp_1.map((option, i) => (
-                <RadioButton labelHorizontal={false} key={i}>
-                  <RadioButtonLabel
-                    index={i}
-                    labelStyle={styles.radioButtonLabel}
-                    obj={option}
-                    onPress={this.setCategory}
-                  />
-                  <RadioButtonInput
-                    {...RadioButtonInputProps}
-                    index={i}
-                    isSelected={grp_1 === option.value}
-                    obj={option}
-                    onPress={this.setCategory}
-                  />
-                </RadioButton>
-              ))}
-            </RadioForm>
-          </View>
-          <View style={styles.grps}>
-            <RadioForm animation formHorizontal>
-              {category_radio_grp_2.map((option, i) => (
-                <RadioButton labelHorizontal={false} key={i}>
-                  <RadioButtonLabel
-                    obj={option}
-                    index={i}
-                    onPress={this.setCategory}
-                    labelStyle={styles.radioButtonLabel}
-                  />
-                  <RadioButtonInput
-                    {...RadioButtonInputProps}
-                    index={i}
-                    isSelected={grp_1 === option.value}
-                    obj={option}
-                    onPress={this.setCategory}
-                  />
-                </RadioButton>
-              ))}
-            </RadioForm>
-          </View>
-          <View style={styles.grps}>
-            <RadioForm animation formHorizontal>
-              {category_radio_grp_3.map((option, i) => (
-                <RadioButton labelHorizontal={false} key={i}>
-                  <RadioButtonLabel
-                    obj={option}
-                    index={i}
-                    onPress={this.setCategory}
-                    labelStyle={styles.radioButtonLabel}
-                  />
-                  <RadioButtonInput
-                    {...RadioButtonInputProps}
-                    index={i}
-                    isSelected={grp_1 === option.value}
-                    obj={option}
-                    onPress={this.setCategory}
-                  />
-                </RadioButton>
-              ))}
-            </RadioForm>
-          </View>
+          {this.renderCategories()}
         </>
         <View
           style={[

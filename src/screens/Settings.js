@@ -34,7 +34,7 @@ import * as linking from '../utils/linking';
 import { version } from '../../package.json';
 
 if (!Object.is) {
-  Object.is = function(x, y) {
+  Object.is = function (x, y) {
     // SameValue algorithm
     if (x === y) {
       // Steps 1-5, 7-10
@@ -157,7 +157,7 @@ class SettingsContainer extends Component<Props, State> {
         mobileNumber: userData.mobileNumber,
         shippingAddress: userData.shippingAddress,
         username: userData.username,
-        ...{ instagram: userData.scraping ? userData.scraping.instagram : {} },
+        ...{ instagram: userData.scraping ? userData.scraping.instagram : '' },
       };
     }
 
@@ -199,18 +199,24 @@ class SettingsContainer extends Component<Props, State> {
       ? mobileNumberClean !== userData.mobileNumber && isPhoneNumberValid(mobileNumber)
       : userData.mobileNumber;
 
-    const isIGUsernameUpdatedOrCleared = instagram
-      ? instagram !== userData.scraping.instagram
-      : userData.scraping && userData.scraping.instagram;
+    let isIGUsernameUpdatedOrCleared;
+    if (instagram && userData.scraping) {
+      isIGUsernameUpdatedOrCleared = instagram !== userData.scraping.instagram;
+    } else if (userData.scraping) {
+      isIGUsernameUpdatedOrCleared = Boolean(userData.scraping.instagram)
+    }
+    // const isIGUsernameUpdatedOrCleared = instagram
+    //   ? instagram !== userData.scraping.instagram
+    //   : userData.scraping && userData.scraping.instagram;
 
     return Boolean(
       !pending &&
-        (isShippingAddressValidIfUpdated ||
-          (password && validPassword(password)) ||
-          isMobilePhoneUpdatedOrCleared ||
-          (isEmail(emailAddress) && emailAddress !== userData.emailAddress) ||
-          (username !== '' && username !== userData.username) ||
-          isIGUsernameUpdatedOrCleared)
+      (isShippingAddressValidIfUpdated ||
+        (password && validPassword(password)) ||
+        isMobilePhoneUpdatedOrCleared ||
+        (isEmail(emailAddress) && emailAddress !== userData.emailAddress) ||
+        (username !== '' && username !== userData.username) ||
+        isIGUsernameUpdatedOrCleared)
     );
   };
 
@@ -537,8 +543,8 @@ class SettingsContainer extends Component<Props, State> {
                 {hasPaymentInfo ? (
                   <CardView {...this.formatCardInfo()} focused="number" />
                 ) : (
-                  <CardView {...this.formatCardInfo()} />
-                )}
+                    <CardView {...this.formatCardInfo()} />
+                  )}
               </TouchableOpacity>
             </View>
             {/* <View style={styles.padder}> */}

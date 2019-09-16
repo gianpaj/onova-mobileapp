@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { Image, Keyboard, KeyboardAvoidingView, Platform, StyleSheet, Text, View } from 'react-native';
 import { Body, Button, Icon, Left, Right, Container } from 'native-base';
 import { WebView } from 'react-native-webview';
+import { Header as RNHeader } from 'react-navigation';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import { enableRefresh } from '../actions/actionCreator';
@@ -182,6 +183,7 @@ class EnterCardInfo extends Component<Props, State> {
           <KeyboardAvoidingView
             behavior={Platform.select({ android: null, ios: 'padding' })}
             enabled
+            keyboardVerticalOffset={RNHeader.HEIGHT}
             style={{
               flex: 1,
               marginTop: 20,
@@ -219,23 +221,13 @@ class EnterCardInfo extends Component<Props, State> {
                 <Text style={styles.paragraph}>{I18n.t('get_card_id.security')}</Text>
               </View>
             )}
-            <View
-              style={
-                showFooter
-                  ? {}
-                  : Platform.select({
-                      android: {},
-                      ios: { flex: 1, bottom: -20 },
-                    })
-              }>
-              <Button
-                disabled={saveBtnDisabled}
-                full
-                style={saveBtnDisabled ? {} : { backgroundColor: colors.active }}
-                onPress={this.onSubmit}>
-                <Text style={styles.saveBtn}>{I18n.t('checkout.save_card_info')}</Text>
-              </Button>
-            </View>
+            <Button
+              disabled={saveBtnDisabled}
+              full
+              style={saveBtnDisabled ? {} : { backgroundColor: colors.active }}
+              onPress={this.onSubmit}>
+              <Text style={styles.saveBtn}>{I18n.t('checkout.save_card_info')}</Text>
+            </Button>
           </KeyboardAvoidingView>
         </View>
       </Container>

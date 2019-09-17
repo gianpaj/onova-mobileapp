@@ -265,9 +265,9 @@ class SettingsContainer extends Component<Props, State> {
       .catch(err => {
         console.debug(err);
         if (err.message.includes('Please enter your shipping address')) {
-          ui.showToast(I18n.t('settings.alert_msg_email_address_changed'), 'danger');
+          ui.showToast(I18n.t('settings.alert_msg_insta_shipping_required'), 'danger');
         } else if (err.message.includes('Please enter your payment information')) {
-          ui.showToast(I18n.t('settings.alert_msg_email_address_changed'), 'danger');
+          ui.showToast(I18n.t('settings.alert_msg_insta_payment_required'), 'danger');
         } else {
           ui.showToast(err.message, 'danger');
         }

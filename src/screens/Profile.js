@@ -168,7 +168,7 @@ class ProfileScreen extends React.Component<Props, State> {
         this.setState({ editing: false });
         this.goToSettings();
       },
-      () => {},
+      () => { },
       I18n.t('profile.alert_unsaved_changes_button_cancel'),
       I18n.t('profile.alert_unsaved_changes_button_confirm')
     );
@@ -197,9 +197,9 @@ class ProfileScreen extends React.Component<Props, State> {
     if (skippedLogin) return navigation.navigate('inAppAuth');
     const formData = new FormData();
 
-    formData.append('bio', bio);
+    formData.append('bio', bio || '');
 
-    formData.append('displayName', displayName);
+    formData.append('displayName', displayName || '');
 
     if (profilePic && profilePic.path !== undefined) {
       // $FlowFixMe

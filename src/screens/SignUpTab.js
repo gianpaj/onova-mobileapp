@@ -3,7 +3,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Animated, Keyboard, Modal, Platform, StyleSheet, Text, View } from 'react-native';
-import { Content, Right, Left, Body, Button, Icon as NBIcon } from 'native-base';
+import { Content, Right, Left, Body, Button } from 'native-base';
 import { NavigationActions } from 'react-navigation';
 import { FormInput } from 'react-native-elements';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -11,7 +11,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import isEmail from 'validator/lib/isEmail';
 import { URL } from 'react-native-dotenv';
 
-import { Header } from '../components';
+import { Header, Icon } from '../components';
 
 import type { Dispatch, ReduxState } from '../types';
 
@@ -347,7 +347,7 @@ export class SignUpTabContainer extends Component<Props, State> {
             <Body />
             <Right>
               <Button transparent onPress={() => this.setVerifyAccountVisible(false)}>
-                <NBIcon name="close" style={{ color: colors.black }} />
+                <Icon name="close" />
               </Button>
             </Right>
           </Header>
@@ -429,6 +429,7 @@ const styles = StyleSheet.create({
   },
   verificationMessage: {
     color: colors.black,
+    lineHeight: 30,
     textAlign: 'center',
   },
 });

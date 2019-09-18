@@ -3,10 +3,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { ActivityIndicator, Dimensions, FlatList, Image, StyleSheet, Text, View } from 'react-native';
-import { Body, Button as NBButton, Icon as NBIcon, Left, Right } from 'native-base';
+import { Body, Button as NBButton, Left, Right } from 'native-base';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import { Header, DropCard, Title } from '../components';
+import { Header, Icon, DropCard, Title } from '../components';
 
 import I18n from '../i18n';
 import colors from '../config/colors';
@@ -166,7 +166,7 @@ class DropsFeed extends Component<Props, State> {
         <Header>
           <Left style={styles.container}>
             <NBButton transparent onPress={() => this.props.navigation.goBack()}>
-              <NBIcon ios="ios-arrow-back" android="md-arrow-back" />
+              <Icon ios="ios-arrow-back" android="md-arrow-back" />
             </NBButton>
           </Left>
           <Body style={styles.container}>

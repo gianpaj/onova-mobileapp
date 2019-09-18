@@ -3,13 +3,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { ActivityIndicator, FlatList, Platform, RefreshControl, StyleSheet, Text, View } from 'react-native';
-import { Body, Button, Container, Icon, Left, ListItem, Right } from 'native-base';
+import { Body, Button, Container, Left, ListItem, Right } from 'native-base';
 import { Icon as IconEL } from 'react-native-elements';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { withNavigation } from 'react-navigation';
 
 import I18n from '../i18n';
-import { Avatar, Header, Title } from '../components';
+import { Avatar, Header, Icon, Title } from '../components';
 import colors from '../config/colors';
 import * as api from '../utils/api';
 import * as ui from '../utils/ui';
@@ -228,7 +228,7 @@ class NotificationsContainer extends Component<Props, State> {
       <Container>
         <Header>
           <Left style={styles.container}>
-            <Button transparent dark onPress={() => this.props.navigation.goBack()}>
+            <Button transparent onPress={() => this.props.navigation.goBack()}>
               <Icon ios="ios-arrow-back" android="md-arrow-back" />
             </Button>
           </Left>

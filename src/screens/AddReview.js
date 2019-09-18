@@ -10,7 +10,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import Foect from 'foect';
 import { URL } from 'react-native-dotenv';
 
-import { OrderStatus, Header, Title, Info } from '../components';
+import { OrderStatus, Header, Icon, Title, Info } from '../components';
 
 import I18n from '../i18n';
 import colors from '../config/colors';
@@ -146,7 +146,7 @@ export class AddReviewContainer extends Component<Props, State> {
         <Header>
           <Left style={styles.container}>
             <Button transparent onPress={() => this.props.navigation.goBack()}>
-              <Icon style={{ color: colors.black }} ios="ios-arrow-back" android="md-arrow-back" />
+              <Icon ios="ios-arrow-back" android="md-arrow-back" />
             </Button>
           </Left>
           <Body style={styles.flex2AndCenter}>

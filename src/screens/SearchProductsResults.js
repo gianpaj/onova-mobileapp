@@ -2,9 +2,9 @@
 
 import React, { Component } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Body, Button as NBButton, Left, Right, Icon as NBIcon } from 'native-base';
+import { Body, Button as NBButton, Left, Right } from 'native-base';
 
-import { Header, ImageGridSearch, Title } from '../components';
+import { Header, Icon, ImageGridSearch, Title } from '../components';
 import { category_radio_grp_1, category_radio_grp_2, category_radio_grp_3 } from '../utils/ui';
 
 import type { NavigationScreenProp } from 'react-navigation';
@@ -53,8 +53,8 @@ export class SearchProductsResults extends Component<Props, State> {
       <View style={styles.flex1}>
         <Header>
           <Left style={styles.container}>
-            <NBButton transparent dark onPress={() => this.props.navigation.goBack()}>
-              <NBIcon ios="ios-arrow-back" android="md-arrow-back" />
+            <NBButton transparent onPress={() => this.props.navigation.goBack()}>
+              <Icon ios="ios-arrow-back" android="md-arrow-back" />
             </NBButton>
           </Left>
           <Body style={styles.container}>

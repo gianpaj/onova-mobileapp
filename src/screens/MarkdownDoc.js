@@ -2,13 +2,13 @@
 
 import React from 'react';
 import { withNavigation } from 'react-navigation';
-import { Body, Button as NBButton, Container, Content, Icon as NBIcon, Left, Right } from 'native-base';
+import { Body, Button as NBButton, Container, Content, Left, Right } from 'native-base';
 import Markdown from 'react-native-markdown-renderer';
 import { APP_NAME_CC, URL } from 'react-native-dotenv';
 
 import type { NavigationScreenProp } from 'react-navigation';
 
-import { Header, Title } from '../components';
+import { Header, Title, Icon } from '../components';
 
 import colors from '../config/colors';
 
@@ -81,8 +81,8 @@ const MarkdownDoc = (props: Props): React$Element<any> => (
   <Container>
     <Header>
       <Left style={{ flex: 1 }}>
-        <NBButton transparent dark onPress={() => props.navigation.goBack()}>
-          <NBIcon ios="ios-arrow-back" android="md-arrow-back" />
+        <NBButton transparent onPress={() => props.navigation.goBack()}>
+          <Icon ios="ios-arrow-back" android="md-arrow-back" />
         </NBButton>
       </Left>
       <Body

@@ -4,7 +4,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Modal, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { FormInput } from 'react-native-elements';
-import { Button as NBButton, Content, Right, Left, Body, Icon as NBIcon } from 'native-base';
+import { Button as NBButton, Content, Right, Left, Body } from 'native-base';
 import isEmail from 'validator/lib/isEmail';
 import { Toast } from 'antd-mobile-rn';
 // import AnimButton from 'react-native-micro-animated-button';
@@ -12,7 +12,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import I18n from '../i18n';
 
-import { Header } from '../components';
+import { Header, Icon } from '../components';
 import { login } from '../actions/actionCreator';
 import * as api from '../utils/api';
 import * as ui from '../utils/ui';
@@ -314,7 +314,7 @@ export class LoginTabContainer extends React.Component<Props, State> {
             <Body />
             <Right>
               <NBButton transparent onPress={() => this.setState({ verifyAccountModalVisible: false })}>
-                <NBIcon name="close" style={{ color: colors.black }} />
+                <Icon name="close" />
               </NBButton>
             </Right>
           </Header>
@@ -349,7 +349,7 @@ export class LoginTabContainer extends React.Component<Props, State> {
             <Body />
             <Right>
               <NBButton transparent onPress={() => this.setPwdResetModalVisible(false)}>
-                <NBIcon name="close" style={{ color: colors.black }} />
+                <Icon name="close" />
               </NBButton>
             </Right>
           </Header>

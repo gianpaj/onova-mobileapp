@@ -6,8 +6,8 @@ import React, { Component } from 'react';
 import codePush from 'react-native-code-push';
 import { connect } from 'react-redux';
 import { Platform, StyleSheet, Text, TouchableOpacity, UIManager, View } from 'react-native';
-import { Body, Button as NBButton, Container, Content, Icon as NBIcon, Left, Right } from 'native-base';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import { Body, Button as NBButton, Container, Content, Left, Right } from 'native-base';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { FormInput, FormLabel } from 'react-native-elements';
 import type { NavigationScreenProp } from 'react-navigation';
 import { Toast } from 'antd-mobile-rn';
@@ -19,7 +19,7 @@ import { URL } from 'react-native-dotenv';
 import Dialog from 'react-native-dialog';
 // import Instabug from 'instabug-reactnative';
 
-import { Accordion, CardView, Header, HR, SearchableDropdown, Title, Info } from '../components';
+import { Accordion, CardView, Header, HR, Icon, SearchableDropdown, Title, Info } from '../components';
 
 import { disableRefresh, getPersonalUserData, logout } from '../actions/actionCreator';
 
@@ -460,8 +460,8 @@ class SettingsContainer extends Component<Props, State> {
       <Container>
         <Header>
           <Left style={styles.container}>
-            <NBButton transparent dark onPress={this.goBack}>
-              <NBIcon ios="ios-arrow-back" android="md-arrow-back" />
+            <NBButton transparent onPress={this.goBack}>
+              <Icon ios="ios-arrow-back" android="md-arrow-back" />
             </NBButton>
           </Left>
           <Body style={styles.container}>
@@ -473,7 +473,7 @@ class SettingsContainer extends Component<Props, State> {
               disabled={!this.hasUnsavedChanges()}
               style={{ backgroundColor: colors.transparent }}
               onPress={this.onSave}>
-              <Icon name="check" style={!this.hasUnsavedChanges() && { color: colors.grey4 }} size={28} />
+              <MaterialIcons name="check" style={!this.hasUnsavedChanges() && { color: colors.grey4 }} size={28} />
             </NBButton>
           </Right>
         </Header>

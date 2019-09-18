@@ -3,11 +3,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Dimensions, StyleSheet } from 'react-native';
-import { Body, Container, Right, Left, Button, Icon } from 'native-base';
+import { Body, Container, Right, Left, Button } from 'native-base';
 import { TabView, TabBar, SceneMap } from 'react-native-tab-view';
 
 import { ReviewsTab } from './ReviewsTab';
-import { Header, Title } from '../components';
+import { Header, Icon, Title } from '../components';
 
 import I18n from '../i18n';
 import colors from '../config/colors';
@@ -55,7 +55,7 @@ class ReviewsContainer extends Component<Props, State> {
       <Container>
         <Header hasTabs>
           <Left style={styles.container}>
-            <Button transparent dark onPress={() => this.props.navigation.goBack()}>
+            <Button transparent onPress={() => this.props.navigation.goBack()}>
               <Icon ios="ios-arrow-back" android="md-arrow-back" />
             </Button>
           </Left>

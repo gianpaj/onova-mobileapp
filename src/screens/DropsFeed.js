@@ -165,7 +165,7 @@ class DropsFeed extends Component<Props, State> {
       <View style={styles.flex1}>
         <Header>
           <Left style={styles.container}>
-            <NBButton transparent dark onPress={() => this.props.navigation.goBack()}>
+            <NBButton transparent onPress={() => this.props.navigation.goBack()}>
               <NBIcon ios="ios-arrow-back" android="md-arrow-back" />
             </NBButton>
           </Left>

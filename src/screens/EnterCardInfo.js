@@ -3,7 +3,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Image, Keyboard, KeyboardAvoidingView, Platform, StyleSheet, Text, View } from 'react-native';
-import { Body, Button, Icon, Left, Right, Container } from 'native-base';
+import { Body, Button, Left, Right, Container } from 'native-base';
 import { WebView } from 'react-native-webview';
 import { Header as RNHeader } from 'react-navigation';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -13,7 +13,7 @@ import { enableRefresh } from '../actions/actionCreator';
 import type { NavigationScreenProp } from 'react-navigation';
 import type { Dispatch, UserData, ReduxState } from '../types';
 
-import { Header, Title } from '../components';
+import { Header, Icon, Title } from '../components';
 import * as api from '../utils/api';
 import * as ui from '../utils/ui';
 import I18n from '../i18n';
@@ -69,12 +69,12 @@ class EnterCardInfo extends Component<Props, State> {
 
   componentDidMount() {
     this.initializeListeners();
-    this.getToken().then(token => console.log(token));
+    this.getToken().then(token => console.debug(token));
   }
 
   async getToken() {
     const { params } = this.props.navigation.state;
-    const tokenForCardIFrame = await this.generateTokenForIFrame(params && params.short);
+    const tokenForCardIFrame = await this.generateTokenForIFrame(Boolean(params && params.short));
     this.setState({ tokenForCardIFrame });
     return tokenForCardIFrame;
   }
@@ -170,7 +170,7 @@ class EnterCardInfo extends Component<Props, State> {
       <Container>
         <Header>
           <Left style={styles.container}>
-            <Button transparent dark onPress={() => this.props.navigation.goBack()}>
+            <Button transparent onPress={() => this.props.navigation.goBack()}>
               <Icon ios="ios-arrow-back" android="md-arrow-back" />
             </Button>
           </Left>

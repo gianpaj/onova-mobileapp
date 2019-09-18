@@ -3,13 +3,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Dimensions, Image, StyleSheet, Platform, Text, TouchableOpacity, View } from 'react-native';
-import { Body, Button, Container, Icon, Left, ListItem, Right } from 'native-base';
+import { Body, Button, Container, Left, ListItem, Right } from 'native-base';
 import Dialog from 'react-native-dialog';
 import { Toast } from 'antd-mobile-rn';
 import StarRating from 'react-native-star-rating';
 import Foect from 'foect';
 
-import { Avatar, Header, Title } from '../components';
+import { Avatar, Header, Icon, Title } from '../components';
 
 import I18n from '../i18n';
 import colors from '../config/colors';
@@ -50,7 +50,7 @@ export class ConfirmOrderContainer extends Component<Props, State> {
 
     const params = this.props.navigation.state.params;
     // for development
-    let orderId = '5bdb16b06a7aef00de9da76b';
+    let orderId = '5d15e061c0176f4444a98cf2';
 
     if (params) {
       orderId = params.id;
@@ -168,7 +168,7 @@ export class ConfirmOrderContainer extends Component<Props, State> {
       <Container>
         <Header>
           <Left style={styles.container}>
-            <Button transparent dark onPress={() => this.props.navigation.goBack()}>
+            <Button transparent onPress={() => this.props.navigation.goBack()}>
               <Icon ios="ios-arrow-back" android="md-arrow-back" />
             </Button>
           </Left>

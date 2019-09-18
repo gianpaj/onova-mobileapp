@@ -390,14 +390,14 @@ For any questions regarding payments please contact UAPAY at (044) 364-11-44`,
       'Please enter your shipping address before saving your Instagram username for scraping',
     safe_purchase_rules: `${APP_NAME_CC} safe purchase rules`,
     faq: 'FAQ',
-    ig_info_dialog: `Enter your instagram username (without @) to automatically post on Onova when you make a new Instagram post.
+    ig_info_dialog: `Enter your Instagram username (without @) to automatically post on Onova when you make a new Instagram post.
 
 Instagram post needs:
-- the price in the description. For example: 'Scarf for 400 UAH', 'Scarf for 400 грн' or 'Scarf for ₴100'
-- if you have Instagram posts which do not have a price you might need to edit them
-- you will also have to set the category
+- the price in the description. For example: 'Scarf for 1000 UAH', 'Scarf for 1000 грн' or 'Scarf for ₴1000'
+- if you didn't not write a price you will need to edit your items
+- you might also have to set the category
 
-Note: it might take 5 minutes for the Onova items to appear.`,
+Note: it might take some time for the Onova items to appear.`,
   },
   add_review: {
     header: 'Review',

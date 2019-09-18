@@ -3,7 +3,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Platform, StyleSheet, Text, View } from 'react-native';
-import { Body, Button, Container, Content, Icon, Left, Right } from 'native-base';
+import { Body, Button, Container, Content, Left, Right } from 'native-base';
 import { TextareaItem, Toast } from 'antd-mobile-rn';
 import StarRating from 'react-native-star-rating';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';

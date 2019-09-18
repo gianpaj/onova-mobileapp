@@ -46,7 +46,6 @@ class ChatContainer extends Component<Props, State> {
       return {
         tabBarOnPress: () => {
           // FIXME: hack
-          console.warn('tabBarOnPress');
           props.navigation.navigate({
             routeName: 'inAppAuth',
             key: 'inAppAuth',
@@ -111,7 +110,7 @@ class ChatContainer extends Component<Props, State> {
     // at least one room name == order generated name
     // console.log(orders);
     const thisOrders = orders.map(o => getRoomName(o));
-    let roomsAndTheirOrders = allRooms.filter(function(r) {
+    let roomsAndTheirOrders = allRooms.filter(function (r) {
       return this.indexOf(r.name) >= 0;
     }, thisOrders);
     // add order and room objects

@@ -132,7 +132,7 @@ class FollowersContainer extends Component<Props, State> {
         size={48}
         name={'account-multiple-plus'}
         color={colors.grey2}
-        style={{ alignSelf: 'center', marginBottom: 30 }}
+        style={styles.emptyStateIcon}
       />
       <Text style={styles.boldText}>{I18n.t('followers.empty_state_message_title')}</Text>
       <Text>{I18n.t('followers.empty_state_message_body')}</Text>
@@ -218,6 +218,7 @@ const styles = StyleSheet.create({
   columnWrapper: {
     flex: 1,
     flexDirection: 'row',
+    paddingVertical: 10,
   },
   container: {
     alignItems: 'stretch',
@@ -233,6 +234,10 @@ const styles = StyleSheet.create({
     height: 250,
     justifyContent: 'center',
     padding: 20,
+  },
+  emptyStateIcon: {
+    alignSelf: 'center',
+    marginBottom: 30,
   },
   itemContainer: {
     width: itemWidth,

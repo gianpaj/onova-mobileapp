@@ -11,6 +11,7 @@ import UserDropsGrid from './UserDropsGrid';
 import EditableText from './EditableText';
 import Header from './Header';
 import HR from './HR';
+import Icon from './Icon';
 import Info from './Info';
 import ImageGrid from './ImageGrid';
 import ImageGridSearch from './ImageGridSearch';
@@ -36,6 +37,7 @@ export {
   EditableText,
   Header,
   HR,
+  Icon,
   Info,
   ImageGrid,
   ImageGridSearch,

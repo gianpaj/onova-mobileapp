@@ -41,7 +41,7 @@ type State = {
   data: Array<UserData>,
   isRefreshing: boolean,
   isLoading: boolean,
-  itemHeight: number,
+  // itemHeight: number,
 };
 
 class FollowingContainer extends Component<Props, State> {
@@ -49,7 +49,7 @@ class FollowingContainer extends Component<Props, State> {
     isRefreshing: false,
     isLoading: true,
     data: [],
-    itemHeight: -1,
+    // itemHeight: -1,
   };
 
   async componentDidMount() {
@@ -64,8 +64,10 @@ class FollowingContainer extends Component<Props, State> {
 
   async getFollowing(): Promise<any> {
     const { token, navigation } = this.props;
-    // for development
-    let userId = '5ac5ebcd939b7f1712b92baf';
+    // for development - locally
+    // let userId = '5ac5ebcd939b7f1712b92baf';
+    // alex user in prod
+    let userId = '5afaa93daeeb1453812fc011';
 
     if (navigation.state.params) {
       userId = navigation.state.params.userId;
@@ -102,7 +104,7 @@ class FollowingContainer extends Component<Props, State> {
 
     const shouldShowButton = user._id !== _id;
     return (
-      <TouchableOpacity style={{ width: initialLayout.width / 3 }} onPress={() => this.goToProfile(user)}>
+      <TouchableOpacity style={styles.itemContainer} onPress={() => this.goToProfile(user)}>
         <View style={{ alignItems: 'center' }}>
           <Avatar
             size={'medium'}
@@ -171,30 +173,30 @@ class FollowingContainer extends Component<Props, State> {
         {this.state.isLoading ? (
           this.renderLoading
         ) : (
-          <FlatList
-            data={this.state.data}
-            keyExtractor={this._keyExtractor}
-            ListEmptyComponent={this.renderEmptyState}
-            renderItem={this._renderItem}
-            refreshControl={<RefreshControl refreshing={this.state.isRefreshing} onRefresh={this.refreshFollowing} />}
-            style={styles.root}
-            contentContainerStyle={styles.contentContainer}
-            numColumns={3}
-            getItemLayout={this.getItemLayout}
-            onLayout={this.onLayout}
-            columnWrapperStyle={[styles.columnWrapper, { height: this.state.itemHeight }]}
-          />
-        )}
+            <FlatList
+              data={this.state.data}
+              keyExtractor={this._keyExtractor}
+              ListEmptyComponent={this.renderEmptyState}
+              renderItem={this._renderItem}
+              refreshControl={<RefreshControl refreshing={this.state.isRefreshing} onRefresh={this.refreshFollowing} />}
+              style={styles.root}
+              contentContainerStyle={styles.contentContainer}
+              numColumns={3}
+              // getItemLayout={this.getItemLayout}
+              onLayout={this.onLayout}
+              columnWrapperStyle={styles.columnWrapper}
+            />
+          )}
       </Container>
     );
   }
 
-  onLayout = () => this.setState({ itemHeight: initialLayout.width / 3 });
+  // onLayout = () => this.setState({ itemHeight: initialLayout.width / 3 });
 
-  getItemLayout = (data: any, index: number) => {
-    const { itemHeight } = this.state;
-    return { length: itemHeight, offset: itemHeight * index, index };
-  };
+  // getItemLayout = (data: any, index: number) => {
+  //   const { itemHeight } = this.state;
+  //   return { length: itemHeight, offset: itemHeight * index, index };
+  // };
 }
 
 const mapStateToProps: any = (state: ReduxState) => ({
@@ -204,7 +206,8 @@ const mapStateToProps: any = (state: ReduxState) => ({
 
 export const Following = connect(mapStateToProps)(withNavigation(connect(mapStateToProps)(FollowingContainer)));
 
-const MARGIN = 1;
+const gutterWidth = 5;
+const itemWidth = (initialLayout.width - gutterWidth * 2) / 3;
 
 const styles = StyleSheet.create({
   boldText: {
@@ -213,8 +216,7 @@ const styles = StyleSheet.create({
   columnWrapper: {
     flex: 1,
     flexDirection: 'row',
-    marginHorizontal: -MARGIN * 2,
-    marginBottom: -MARGIN * 2,
+    paddingVertical: 10,
   },
   container: {
     alignItems: 'stretch',
@@ -222,7 +224,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   contentContainer: {
-    paddingHorizontal: 5,
+    paddingHorizontal: gutterWidth,
     paddingVertical: 20,
   },
   emptyContainer: {
@@ -234,6 +236,9 @@ const styles = StyleSheet.create({
   emptyStateIcon: {
     alignSelf: 'center',
     marginBottom: 30,
+  },
+  itemContainer: {
+    width: itemWidth,
   },
   root: {
     flex: 1,

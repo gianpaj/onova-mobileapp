@@ -3,7 +3,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { ActivityIndicator, FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { Body, Button as NBButton, Container, Icon as NBIcon, Left, Right } from 'native-base';
+import { Body, Button as NBButton, Container, Left, Right } from 'native-base';
 import Dialog from 'react-native-dialog';
 import ParsedText from 'react-native-parsed-text';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -16,7 +16,7 @@ import I18n from '../i18n';
 import type { NavigationScreenProp } from 'react-navigation';
 
 import { addErrorBreadcrumb } from '../utils/analytics';
-import { Header, Send, Info, Title } from '../components';
+import { Header, Send, Info, Title, Icon } from '../components';
 import ChatActions from '../components/ChatActions';
 import MessageImage from '../components/MessageImage';
 
@@ -672,8 +672,8 @@ class ChatContainer extends Component<Props, State> {
       <Container style={st.flex1}>
         <Header>
           <Left style={st.containerHeader}>
-            <NBButton transparent dark onPress={() => navigation.goBack()}>
-              <NBIcon ios="ios-arrow-back" android="md-arrow-back" />
+            <NBButton transparent onPress={() => navigation.goBack()}>
+              <Icon ios="ios-arrow-back" android="md-arrow-back" />
             </NBButton>
           </Left>
           <Body style={st.flex4AndCenter}>

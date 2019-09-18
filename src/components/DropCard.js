@@ -45,7 +45,7 @@ type Props = {
   token: string,
 };
 
-export class DropCard extends Component<Props> {
+export class DropCardComponent extends Component<Props> {
   // eslint-disable-next-line react/no-unused-prop-types
   renderItem = ({ item }: { item: Product }) => {
     const uri = item.photoURIs[0].replace('.jpg', '-thumb.jpg');
@@ -82,7 +82,7 @@ export class DropCard extends Component<Props> {
 
     return (
       <View style={styles.dropHeaderAndFooter}>
-        <Button transparent dark onPress={() => this.shareDrop(drop)} style={styles.shareIconButton}>
+        <Button transparent onPress={() => this.shareDrop(drop)} style={styles.shareIconButton}>
           <Icon ios="ios-share" android="md-share" style={styles.shareIcon} />
         </Button>
         {amITheSeller && (
@@ -171,8 +171,8 @@ export class DropCard extends Component<Props> {
           {willDropIn15Mins ? (
             <Countdown size={14} until={differenceInSeconds(scheduledAt, new Date())} />
           ) : (
-            <Text style={styles.dateStrings}>{format(scheduledAt, 'D MMM HH:mm')}</Text>
-          )}
+              <Text style={styles.dateStrings}>{format(scheduledAt, 'D MMM HH:mm')}</Text>
+            )}
         </List>
         <TouchableWithoutFeedback onLongPress={() => isAdmin && this.onDeleteDrop(drop.uuid)}>
           <FlatList
@@ -197,7 +197,7 @@ const mapStateToProps: any = (state: ReduxState) => ({
   token: state.LoginReducer.token,
 });
 
-export default withNavigation(connect(mapStateToProps)(DropCard));
+export default withNavigation(connect(mapStateToProps)(DropCardComponent));
 
 const MARGIN = 1;
 
@@ -243,13 +243,13 @@ const styles = StyleSheet.create({
     //   ios: 5,
     //   android: 0,
     // }),
-    paddingTop: 0,
-    marginTop: -5,
     marginLeft: 0,
+    marginTop: -5,
+    paddingTop: 0,
     // paddingHorizontal: 10,
   },
   subscribeButton: {
-    backgroundColor: colors.active,
+    backgroundColor: colors.black,
     borderColor: colors.greyOutline,
     borderRadius: 5,
     paddingHorizontal: 10,

@@ -50,7 +50,8 @@ export class AddReviewContainer extends Component<Props, State> {
 
     // for development
     if (!params) {
-      orderId = '5bed82ab61d3476321aa9aac';
+      // Alex order in prod
+      orderId = '5d15e061c0176f4444a98cf2';
     } else {
       orderId = params.orderId;
     }
@@ -144,8 +145,8 @@ export class AddReviewContainer extends Component<Props, State> {
       <Container>
         <Header>
           <Left style={styles.container}>
-            <Button transparent dark onPress={() => this.props.navigation.goBack()}>
-              <Icon ios="ios-arrow-back" android="md-arrow-back" />
+            <Button transparent onPress={() => this.props.navigation.goBack()}>
+              <Icon style={{ color: colors.black }} ios="ios-arrow-back" android="md-arrow-back" />
             </Button>
           </Left>
           <Body style={styles.flex2AndCenter}>
@@ -153,7 +154,7 @@ export class AddReviewContainer extends Component<Props, State> {
             <Info onPress={linking.openURL.bind(this, `https://${URL}/drop.html`)} />
           </Body>
           <Right>
-            <Button transparent dark disabled onPress={this.onArchive}>
+            <Button transparent disabled onPress={this.onArchive}>
               <MaterialCommunityIcons name="delete" size={28} color={canLeaveReview ? colors.black : colors.grey4} />
             </Button>
           </Right>

@@ -3,7 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { Dimensions, Image, Platform, Share, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { ActionSheet, Body, Button as NBButton, Container, Icon as NBIcon, Left, Right } from 'native-base';
+import { ActionSheet, Body, Button as NBButton, Container, Left, Right } from 'native-base';
 import { NavigationActions } from 'react-navigation';
 import { TabView, TabBar } from 'react-native-tab-view';
 import { URL } from 'react-native-dotenv';
@@ -12,7 +12,7 @@ import Analytics from 'react-native-analytics-segment-io';
 
 import type { NavigationScreenProp } from 'react-navigation';
 
-import { Avatar, EditableText, Header, NotificationsDot, Title } from '../components';
+import { Avatar, EditableText, Header, Icon, NotificationsDot, Title } from '../components';
 import ShopTab from './ShopTab';
 import UserDropsTab from './UserDropsTab';
 import { getPersonalUserData, enableRefresh } from '../actions/actionCreator';
@@ -468,21 +468,21 @@ class ProfileScreen extends React.Component<Props, State> {
                   </NBButton>
                 </View>
               ) : (
-                <View style={styles.profileRight}>
-                  {this.renderUserNumbers()}
-                  <NBButton
-                    transparent
-                    bordered={isFollowing}
-                    small
-                    full
-                    style={[styles.editOrFollowButton, !isFollowing && { backgroundColor: colors.active }]}
-                    onPress={this.onFollowOrUnfollow}>
-                    <Text style={[styles.editOrFollowButtonText, !isFollowing && { color: colors.white }]}>
-                      {isFollowing ? I18n.t('profile.unfollow_button') : I18n.t('profile.follow_button')}
-                    </Text>
-                  </NBButton>
-                </View>
-              )}
+                  <View style={styles.profileRight}>
+                    {this.renderUserNumbers()}
+                    <NBButton
+                      transparent
+                      bordered={isFollowing}
+                      small
+                      full
+                      style={[styles.editOrFollowButton, !isFollowing && { backgroundColor: colors.active }]}
+                      onPress={this.onFollowOrUnfollow}>
+                      <Text style={[styles.editOrFollowButtonText, !isFollowing && { color: colors.white }]}>
+                        {isFollowing ? I18n.t('profile.unfollow_button') : I18n.t('profile.follow_button')}
+                      </Text>
+                    </NBButton>
+                  </View>
+                )}
             </View>
           </View>
           <View style={{ paddingVertical: 15, paddingHorizontal: 10 }}>
@@ -600,31 +600,30 @@ class ProfileScreen extends React.Component<Props, State> {
         <Header>
           <Left style={styles.container}>
             {this.ifNavigatedFromProduct() ? (
-              <NBButton transparent dark onPress={() => navigation.goBack()}>
-                <NBIcon ios="ios-arrow-back" android="md-arrow-back" />
+              <NBButton transparent onPress={() => navigation.goBack()}>
+                <Icon ios="ios-arrow-back" android="md-arrow-back" />
               </NBButton>
             ) : (
-              <NBButton
-                style={skippedLogin ? { opacity: 0.2 } : {}}
-                disabled={skippedLogin}
-                transparent
-                dark
-                onPress={this.openNotifications}>
-                <NBIcon ios="ios-notifications" android="md-notifications" style={styles.icon} />
-              </NBButton>
-            )}
+                <NBButton
+                  style={skippedLogin ? { opacity: 0.2 } : {}}
+                  disabled={skippedLogin}
+                  transparent
+                  onPress={this.openNotifications}>
+                  <Icon ios="ios-notifications" android="md-notifications" style={styles.icon} />
+                </NBButton>
+              )}
           </Left>
           <Body style={styles.flex2AndCenter}>
             {/* eslint-disable-next-line react-native/no-raw-text */}
             <Title>@{username}</Title>
           </Body>
           <Right>
-            <NBButton transparent dark onPress={this.shareProfile}>
-              <NBIcon ios="ios-share" android="md-share" style={styles.icon} />
+            <NBButton transparent onPress={this.shareProfile}>
+              <Icon ios="ios-share" android="md-share" style={styles.icon} />
             </NBButton>
             {!this.ifNavigatedFromProduct() && this.isMe() && (
               <NBButton transparent onPress={this.onGoToSettings}>
-                <NBIcon ios="ios-settings" android="md-settings" style={styles.icon} />
+                <Icon ios="ios-settings" android="md-settings" style={styles.icon} />
               </NBButton>
             )}
             {!this.isMe() && (
@@ -632,9 +631,8 @@ class ProfileScreen extends React.Component<Props, State> {
                 style={skippedLogin ? { opacity: 0.2 } : {}}
                 disabled={skippedLogin}
                 transparent
-                dark
                 onPress={this.showReportUserActionSheet}>
-                <NBIcon ios="ios-more" android="md-more" style={styles.icon} />
+                <Icon ios="ios-more" android="md-more" style={styles.icon} />
               </NBButton>
             )}
           </Right>

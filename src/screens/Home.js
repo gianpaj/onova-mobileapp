@@ -139,8 +139,8 @@ class HomeComponent extends PureComponent<Props, State> {
       <View testID="Home" style={{ flex: 1 }}>
         <Header hasTabs>
           <Left style={styles.container}>
-            <Button transparent dark style={{ marginLeft: 5 }} onPress={this.toggleDialog}>
-              <MaterialCommunityIcons name="information-outline" size={18} />
+            <Button transparent style={{ marginLeft: 5 }} onPress={this.toggleDialog}>
+              <MaterialCommunityIcons color={colors.black} name="information-outline" size={18} />
             </Button>
           </Left>
           <Body style={styles.container}>

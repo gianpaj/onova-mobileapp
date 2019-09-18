@@ -54,29 +54,24 @@ class FollowingContainer extends Component<Props, State> {
 
   async componentDidMount() {
     try {
-      await this.getFollowingAndSetState();
+      const data = await this.getFollowing();
+      this.setState({ data });
     } catch (err) {
       console.error(err);
     }
     this.setState({ isLoading: false });
   }
 
-  async getFollowingAndSetState(): Promise<any> {
-    const { token } = this.props;
+  async getFollowing(): Promise<any> {
+    const { token, navigation } = this.props;
     // for development
     let userId = '5ac5ebcd939b7f1712b92baf';
 
-    if (this.props.navigation.state.params) {
-      userId = this.props.navigation.state.params.userId;
+    if (navigation.state.params) {
+      userId = navigation.state.params.userId;
     }
 
-    const res = await api.get(`/api/users/${userId}/following?limit=500`, {
-      token,
-    });
-    // get the first image size and then setState `data` for the FlatList
-    if (res.data && res.data.length) {
-      return this.setState({ data: res.data });
-    }
+    return api.getFollowing(userId, token);
   }
 
   goToProfile = (user: UserData) => {
@@ -142,14 +137,15 @@ class FollowingContainer extends Component<Props, State> {
     </View>
   );
 
-  refreshFollowing = () => {
+  refreshFollowing = async () => {
     this.setState({ isRefreshing: true });
-    this.getFollowingAndSetState()
-      .catch(err => {
-        console.debug(err);
-        // this.setState({ hasError: true });
-      })
-      .then(() => this.setState({ isRefreshing: false }));
+    try {
+      const data = await this.getFollowing();
+      this.setState({ data });
+    } catch (err) {
+      console.error(err);
+    }
+    this.setState({ isRefreshing: false });
   };
 
   renderLoading = (

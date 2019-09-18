@@ -221,9 +221,17 @@ export function getUserWeb(userId: string, token: string): Promise<UserData> {
   });
 }
 
-export function getFollowers(userId: string, token: string): Promise<Array<UserData> | Error> {
+export function getFollowing(userId: string, token: string, limit = 500): Promise<Array<UserData> | Error> {
   return new Promise((resolve, reject) => {
-    get(`/api/users/${userId}/followers?limit=500`, { token })
+    get(`/api/users/${userId}/following?limit=${limit}`, { token })
+      .then(res => resolve(res.data))
+      .catch(err => reject(err));
+  });
+}
+
+export function getFollowers(userId: string, token: string, limit = 500): Promise<Array<UserData> | Error> {
+  return new Promise((resolve, reject) => {
+    get(`/api/users/${userId}/followers?limit=${limit}`, { token })
       .then(res => resolve(res.data))
       .catch(err => reject(err));
   });

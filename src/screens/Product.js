@@ -3,7 +3,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { ActivityIndicator, Platform, Share, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { ActionSheet, Body, Button as NBButton, Container, Content, Icon as NBIcon, Left, Right } from 'native-base';
+import { ActionSheet, Body, Button as NBButton, Container, Content, Left, Right } from 'native-base';
 import { Button } from 'react-native-elements';
 import ParsedText from 'react-native-parsed-text';
 import { Modal } from 'antd-mobile-rn';
@@ -11,9 +11,8 @@ import axios from 'axios';
 import Analytics from 'react-native-analytics-segment-io';
 import { NavigationActions } from 'react-navigation';
 import { URL } from 'react-native-dotenv';
-// import LottieView from 'lottie-react-native';
 
-import { Avatar, Header, MediaView, Comments } from '../components';
+import { Avatar, Header, Icon, MediaView, Comments } from '../components';
 
 import I18n from '../i18n';
 import colors from '../config/colors';
@@ -40,7 +39,6 @@ type State = {
   item: ?ProductType,
   loading: boolean,
   loadingBuy: boolean,
-  // likeAnimValue: number,
 };
 
 const { analyticsEnabled } = api;
@@ -61,7 +59,6 @@ export class ProductContainer extends React.Component<Props, State> {
     item: null,
     loading: false,
     loadingBuy: false,
-    // likeAnimValue: new Animated.Value(0.35),
   };
 
   componentDidMount() {
@@ -203,16 +200,20 @@ export class ProductContainer extends React.Component<Props, State> {
     } else {
       promise = Share.share({ message: url });
     }
-    promise.then(res => {
-      if (this.props.skippedLogin) return;
-      // ios user shared it
-      // android probably user shared it
-      if ((Platform.OS === 'ios' && res.action !== Share.dismissedAction) || Platform.OS !== 'ios') {
-        return this.onSuccessfulShare();
-      }
-      throw new Error('not_shared');
-    });
-    if (analyticsEnabled) Analytics.track('press_share_product');
+    return promise
+      .then(res => {
+        if (this.props.skippedLogin) return;
+        // ios user shared it
+        // android probably user shared it
+        if ((Platform.OS === 'ios' && res.action !== Share.dismissedAction) || Platform.OS !== 'ios') {
+          return this.onSuccessfulShare();
+        }
+        throw new Error('not_shared');
+      })
+      .then(() => {
+        if (analyticsEnabled) Analytics.track('press_share_product');
+      })
+      .catch(e => console.debug(e));
   };
 
   onMandatoryShare(): Promise<null | Error> {
@@ -333,13 +334,6 @@ export class ProductContainer extends React.Component<Props, State> {
     });
   }
 
-  // onPressReserved = async () => {
-  //   const { status } = await this.refresh();
-  //   if (status === 'reserved') {
-  //     ui.showToast(I18n.t('product.reserved_message'), 'warning', I18n.t('product.toast_warning_ok_button'));
-  //   }
-  // };
-
   onPressBuy = () => {
     const { item, loadingBuy } = this.state;
     if (loadingBuy || !item) return;
@@ -414,13 +408,6 @@ export class ProductContainer extends React.Component<Props, State> {
     return item.seller._id == this.props.userData._id;
   }
 
-  // onPressLike = () => {
-  //   Animated.timing(this.state.likeAnimValue, {
-  //     toValue: 0.7,
-  //     duration: 800,
-  //   }).start();
-  // };
-
   handleHashtagPress = (matchingString: string) => {
     this.props.navigation.navigate({
       routeName: 'searchProductsResults',
@@ -451,14 +438,14 @@ export class ProductContainer extends React.Component<Props, State> {
       <Container>
         <Header>
           <Left>
-            <NBButton transparent dark onPress={() => navigation.goBack()}>
-              <NBIcon ios="ios-arrow-back" android="md-arrow-back" />
+            <NBButton transparent onPress={() => navigation.goBack()}>
+              <Icon ios="ios-arrow-back" android="md-arrow-back" />
             </NBButton>
           </Left>
           <Body />
           <Right>
-            <NBButton transparent dark onPress={this.showActionSheetForProduct}>
-              <NBIcon ios="ios-more" android="md-more" />
+            <NBButton transparent onPress={this.showActionSheetForProduct}>
+              <Icon ios="ios-more" android="md-more" />
             </NBButton>
           </Right>
         </Header>
@@ -496,26 +483,13 @@ export class ProductContainer extends React.Component<Props, State> {
                   // negative margin for the carousel dots
                   thereIsACarousel && { marginTop: -28 },
                 ]}>
-                <NBButton transparent dark onPress={this.shareProduct} style={styles.shareIconButton}>
-                  <NBIcon ios="ios-share" android="md-share" style={styles.shareIcon} />
+                <NBButton transparent onPress={this.shareProduct} style={styles.shareIconButton}>
+                  <Icon ios="ios-share" android="md-share" style={styles.shareIcon} />
                 </NBButton>
                 {!this.isMyProduct() && (
                   <View style={[styles.bottomSection, { marginTop: -40 }]}>
-                    {/* <NBIcon name="ios-bookmark-outline" style={styles.iconSave} /> */}
-                    {/* <TouchableOpacity
-                    onPress={() => this.onPressLike()}
-                    underlayColor="transparent"
-                    // disabled={this.state.midAnimation}>
-                    <LottieView
-                      ref={c => {
-                        this.anim = c;
-                      }}
-                      // $FlowFixMe
-                      source={require('../assets/animations/favorite_black.json')}
-                      progress={this.state.likeAnimValue}
-                    />
-                  </TouchableOpacity> */}
-                    {/* <NBIcon
+                    {/* <Icon name="ios-bookmark-outline" style={styles.iconSave} /> */}
+                    {/* <Icon
                     name="ios-text-outline"
                     style={styles.iconCommmentAndShare}
                   /> */}
@@ -533,19 +507,6 @@ export class ProductContainer extends React.Component<Props, State> {
                         loading={loadingBuy}
                       />
                     )}
-                    {/* {item.status === 'reserved' && (
-                      <Button
-                        // buttonStyle={styles.reservedButton}
-                        // containerViewStyle={styles.buyButtonContainer}
-                        // onPress={this.onPressReserved}
-                        // rightIcon={{
-                        //   name: 'timer-sand',
-                        //   type: 'material-community',
-                        }}
-                        textStyle={{ paddingLeft: 10 }}
-                        title={I18n.t('product.reserved_button')}
-                      />
-                    )} */}
                   </View>
                 )}
                 {/* <View style={styles.bottomSectionAfter}>
@@ -634,12 +595,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginRight: 15,
   },
-  // reservedButton: {
-  //   backgroundColor: colors.secondary,
-  //   borderRadius: 2,
-  //   paddingHorizontal: 4,
-  //   paddingVertical: 8,
-  // },
   row: {
     flexDirection: 'row',
   },
@@ -650,12 +605,14 @@ const styles = StyleSheet.create({
     marginRight: 0,
   },
   shareIconButton: {
-    marginLeft: -10,
+    left: -10,
     paddingBottom: Platform.select({
       ios: 5,
       android: 0,
     }),
     paddingHorizontal: 10,
+    paddingLeft: 10,
+    width: 50,
     zIndex: 999,
   },
   spinnerStyle: {

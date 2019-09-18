@@ -3,17 +3,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { ActivityIndicator, Keyboard, Image, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import {
-  Body,
-  Button as NBButton,
-  Container,
-  Content,
-  Icon as NBIcon,
-  Left,
-  Footer,
-  FooterTab,
-  Right,
-} from 'native-base';
+import { Body, Button as NBButton, Container, Content, Left, Footer, FooterTab, Right } from 'native-base';
 import { Toast, InputItem } from 'antd-mobile-rn';
 import { FormLabel } from 'react-native-elements';
 // import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -27,7 +17,7 @@ import type { CancelTokenSource } from 'axios';
 
 import { disableRefresh, enableCancelOrder, getPersonalUserData } from '../actions/actionCreator';
 
-import { Accordion, CardView, Header, HR, SearchableDropdown, Title } from '../components';
+import { Accordion, CardView, Header, HR, SearchableDropdown, Title, Icon } from '../components';
 
 import colors from '../config/colors';
 import { isPhoneNumberValid, validShippingAddress } from '../utils/validators';
@@ -118,9 +108,9 @@ class CheckoutContainer extends Component<Props, State> {
 
     // for development
     if (!item) {
-      item = { uuid: 'kSJn1hKZx' };
-      // prod (alex item)
-      // item = { uuid: 'GoSdu69xp' };
+      // item = { uuid: 'kSJn1hKZx' };
+      // prod
+      item = { uuid: 'yUO3qWxwpQ' };
     }
     console.log(item);
 
@@ -482,7 +472,7 @@ class CheckoutContainer extends Component<Props, State> {
   };
 
   renderPricingContainer() {
-    const { areFeesLoading, order, shippingFee, seller } = this.state;
+    const { areFeesLoading, order, shippingFee } = this.state;
     if (areFeesLoading)
       return (
         <View style={{ flex: 1, paddingTop: 10 }}>
@@ -539,7 +529,7 @@ class CheckoutContainer extends Component<Props, State> {
   renderMandatory = (
     <>
       <Text style={{ marginHorizontal: 20 }}>
-        <NBIcon name="ios-checkmark" style={{ color: colors.grey3 }} />
+        <Icon name="ios-checkmark" color={colors.grey3} />
         <Text>&nbsp;</Text>
         {I18n.t('checkout.paragraph_1').map((para, i) => (
           <React.Fragment key={i}>
@@ -582,8 +572,8 @@ class CheckoutContainer extends Component<Props, State> {
       <Container>
         <Header>
           <Left style={styles.container}>
-            <NBButton transparent dark onPress={() => this.props.navigation.goBack()}>
-              <NBIcon ios="ios-arrow-back" android="md-arrow-back" />
+            <NBButton transparent onPress={() => this.props.navigation.goBack()}>
+              <Icon ios="ios-arrow-back" android="md-arrow-back" />
             </NBButton>
           </Left>
           <Body style={styles.container}>

@@ -328,7 +328,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
       I18n.t('profile.alert_unsaved_changes_title'),
       I18n.t('profile.alert_unsaved_changes_body'),
       () => this.goBack(), // on continue
-      () => {},
+      () => { },
       I18n.t('profile.alert_unsaved_changes_button_cancel'),
       I18n.t('profile.alert_unsaved_changes_button_confirm')
     );
@@ -421,7 +421,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
       // OR if it doesn't match the regex
       if (
         textWithoutSeparators.length > settings.MAX_LENGTH_PER_TAG ||
-        (textWithoutSeparators.length > 1 && !settings.HASHTAG_REGEX.test(textWithoutSeparators))
+        !settings.HASHTAG_REGEX.test(textWithoutSeparators)
       )
         return;
 
@@ -652,7 +652,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
                           {control.isTouched && control.errors.required && (
                             <Text style={styles.minError}>{`${I18n.t('add_or_edit_item.min_quantity')} ${
                               inEditMode ? 0 : 1
-                            }`}</Text>
+                              }`}</Text>
                           )}
                         </View>
                       );

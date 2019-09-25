@@ -75,9 +75,8 @@ Currently supporting `Android 8.0 (SDK 27)` – for react-native-firebase
 
 #### Setup 🔨🤖
 
-1.  Install [fastlane](https://docs.fastlane.tools/getting-started/android/setup/)
-2.  Install Android SDK/Android Studio
-3.  (_optional_) Clone the [repo](https://bitbucket.org/onova/private.stuff) contaning the Android certificate for the release build (you need to have access)
+1.  Install Android SDK/Android Studio
+2.  (_optional_) Clone the [repo](https://bitbucket.org/onova/private.stuff) contaning the Android certificate for the release build (you need to have access)
 
     ```bash
     cd onova
@@ -91,7 +90,7 @@ Currently supporting `Android 8.0 (SDK 27)` – for react-native-firebase
 
     Put `private.stuff` folder at the same level as the `mobileapp`.
 
-4.  Now you're ready to make a prod build.
+3.  Now you're ready to make a prod build.
 
 #### Build Android 🤖
 
@@ -118,6 +117,15 @@ Currently supporting `Android 8.0 (SDK 27)` – for react-native-firebase
 #### Setup 🔨🍎
 
 1.  Install Xcode
+
+2.  Install Cocoapods
+
+    brew install cocoapods
+
+3.  Install CocoaPods dependencies
+
+    cd ios
+    pod install
 
 #### Build iOS 🍎
 

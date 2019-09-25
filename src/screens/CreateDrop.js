@@ -142,13 +142,13 @@ export class CreateDropScreen extends React.Component<Props, State> {
         // authorized
         await this.getLocationAndInitiate();
       }
-      this.setState({ isLoading: false });
+      // FIXME: await the alertForPermission() - it should return a promise
     } catch (error) {
       // TODO: show better error message if location is denied
       // translate
-      this.setState({ isLoading: false });
       console.debug(error);
     }
+    this.setState({ isLoading: false });
     Toast.hide();
   }
 

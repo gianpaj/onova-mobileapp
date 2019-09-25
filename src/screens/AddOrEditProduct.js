@@ -377,7 +377,11 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
       this.goBack();
     } catch (err) {
       console.debug(err);
-      ui.showToast(err.message, 'warning');
+      if (err.message == 'Invalid product tag') {
+        ui.showToast(I18n.t('add_or_edit_item.alert_invalid_hashtag'), 'warning');
+      } else {
+        ui.showToast(err.message, 'warning');
+      }
       this.setState({ pending: false });
     }
     Toast.hide();

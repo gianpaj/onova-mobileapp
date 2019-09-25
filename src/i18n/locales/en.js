@@ -183,6 +183,7 @@ For any questions regarding payments please contact UAPAY at (044) 364-11-44`,
     select_photo_source_gallery_android: 'Gallery (multiple images)',
     select_photo_source_cancel: 'Cancel',
     too_many_images: 'An item cannot have more than 6 images',
+    alert_invalid_hashtag: 'Invalid #tag',
     image_too_small:
       'The image is too small. The min width and height is {{MIN_WIDTH}} px. The image is {{width}}x{{height}} px',
     info_popup: `Чим якісніші твої фотографії тим більше ймовірності в тебе щось придбають:

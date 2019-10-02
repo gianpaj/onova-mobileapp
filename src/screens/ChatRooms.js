@@ -81,7 +81,7 @@ class ChatContainer extends Component<Props, State> {
   }
 
   componentWillUnmount() {
-    this.didFocusListener.remove();
+    if (this.didFocusListener) this.didFocusListener.remove();
   }
 
   initialise = () => {
@@ -110,7 +110,7 @@ class ChatContainer extends Component<Props, State> {
     // at least one room name == order generated name
     // console.log(orders);
     const thisOrders = orders.map(o => getRoomName(o));
-    let roomsAndTheirOrders = allRooms.filter(function (r) {
+    let roomsAndTheirOrders = allRooms.filter(function(r) {
       return this.indexOf(r.name) >= 0;
     }, thisOrders);
     // add order and room objects
@@ -319,15 +319,15 @@ class ChatContainer extends Component<Props, State> {
             </View>
           ) : (
             /* {allOrders.length > 0 && (
-                <FlatList
-                  style={{ height: 60 + 8 + 8 }}
-                  data={allOrders}
-                  keyExtractor={this._keyExtractor}
-                  horizontal
-                  ItemSeparatorComponent={this._renderSeparatorHorizontal}
-                  renderItem={this._renderOrderCircle}
-                />
-              )} */
+                  <FlatList
+                    style={{ height: 60 + 8 + 8 }}
+                    data={allOrders}
+                    keyExtractor={this._keyExtractor}
+                    horizontal
+                    ItemSeparatorComponent={this._renderSeparatorHorizontal}
+                    renderItem={this._renderOrderCircle}
+                  />
+                )} */
             <FlatList
               data={ordersAndChats}
               ItemSeparatorComponent={this._renderSeparator}

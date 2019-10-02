@@ -82,12 +82,13 @@ export type UserData = {
   pushToken: ?string,
   ratingsTotal: number,
   reviewsCount: number,
-  settings: ?{
-    enableInstagramAutoPosting: ?Boolean,
+  scraping: ?{
+    instagram: ?boolean,
   },
   shippingAddress?: ShippingAddress,
   token: string,
   username: string,
+  types: Array<string>,
 };
 
 export type PaymentInfo = {

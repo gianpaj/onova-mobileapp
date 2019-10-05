@@ -10,7 +10,7 @@ import { Modal } from 'antd-mobile-rn';
 import axios from 'axios';
 import Analytics from 'react-native-analytics-segment-io';
 import { NavigationActions } from 'react-navigation';
-import { URL } from 'react-native-dotenv';
+import { APP_NAME, URL } from 'react-native-dotenv';
 
 import { Avatar, Header, Icon, MediaView, Comments } from '../components';
 
@@ -319,20 +319,20 @@ export class ProductContainer extends React.Component<Props, State> {
     if (this.props.navigation) this.props.navigation.dispatch(navigateToProfile);
   };
 
-  hasUserShared(): Promise<boolean> {
-    return new Promise((resolve, reject) => {
+  hasUserShared = (): Promise<boolean> =>
+    new Promise((resolve, reject) => {
+      // on Onova do not require to share an item before buying
+      if (APP_NAME === 'onova') return resolve(true);
+
       api
         .get(`/api/users/${this.props.userData._id}`)
         .then((res: UserData) => {
           console.debug(res);
-          if (res.sharedCount > 0) {
-            return resolve(true);
-          }
+          if (res.sharedCount > 0) return resolve(true);
           resolve(false);
         })
         .catch(err => reject(err));
     });
-  }
 
   onPressBuy = () => {
     const { item, loadingBuy } = this.state;

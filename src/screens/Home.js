@@ -35,9 +35,9 @@ type Props = {
 
 type State = {
   ...NavigationState<
-  Route<{
-  key: string,
-    title: string,
+    Route<{
+      key: string,
+      title: string,
     }>
   >,
   dialogVisible: boolean,
@@ -60,9 +60,15 @@ class HomeComponent extends PureComponent<Props, State> {
     };
     if (APP_NAME == 'onova') {
       this.state.routes = [
-        { key: 0, title: I18n.t('home.clothes_tab') },
-        { key: 1, title: I18n.t('home.other_tab') }, // accessories
-        { key: 2, title: I18n.t('home.home_tab') },
+        { key: 0, title: I18n.t('home.clothes_men') },
+        { key: 1, title: I18n.t('home.clothes_women') },
+        { key: 2, title: I18n.t('home.clothes_shoes') },
+        { key: 10, title: I18n.t('home.accessories_jewelry') },
+        { key: 11, title: I18n.t('home.accessories_bags') },
+        { key: 12, title: I18n.t('home.accessories_accessories') },
+        { key: 20, title: I18n.t('home.forhome_furniture') },
+        { key: 21, title: I18n.t('home.forhome_art') },
+        { key: 22, title: I18n.t('home.forhome_interior') },
       ];
     }
   }
@@ -81,31 +87,25 @@ class HomeComponent extends PureComponent<Props, State> {
   );
 
   _renderScene = ({ route }) => {
-    let sellerType = 'reseller';
-    let categoryIdsTabs = {
+    const categoryIdsTabs = {
       0: '[0,1]',
       1: '2',
       2: '[10,11,12]',
     };
+    let sellerType = 'reseller';
     if (APP_NAME === 'onova') {
       sellerType = 'designer';
-      categoryIdsTabs = {
-        0: '[0,1,2]',
-        1: '[10,11,12]',
-        2: '[20,21,22]',
-      };
     }
+
     if (this.props.skippedLogin) {
-      switch (route.key) {
-        case 0:
-        case 1:
-        case 2:
-          return (
-            <ImageGrid apiURL={`/api/products/?categoryIds=${categoryIdsTabs[route.key]}&sellerType=${sellerType}`} />
-          );
-        default:
-          return null;
+      if (APP_NAME === 'onova') {
+        return <ImageGrid apiURL={`/api/products/?categoryIds=${route.key}&sellerType=${sellerType}`} />;
       }
+      return <ImageGrid apiURL={`/api/products/?categoryIds=${categoryIdsTabs[route.key]}&sellerType=${sellerType}`} />;
+    }
+
+    if (APP_NAME === 'onova') {
+      return <ImageGrid apiURL={`/api/products/?categoryIds=${route.key}&sellerType=${sellerType}`} />;
     }
 
     switch (route.key) {
@@ -117,11 +117,6 @@ class HomeComponent extends PureComponent<Props, State> {
         return null;
     }
   };
-
-  // onShare() {
-  //   Share.share({ message: I18n.t('product.share'), title: 'Share' });
-  //   if (analyticsEnabled) Analytics.track('press_share_invite');
-  // }
 
   goToDropsFeed = () => {
     if (this.props.skippedLogin) {

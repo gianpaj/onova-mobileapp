@@ -69,10 +69,21 @@ export default {
     retry: 'Спробуй ще раз',
   },
   home: {
+    // drop
     clothes_tab: 'Одяг',
     shoes_tab: 'Взуття',
     other_tab: 'Аксесуари',
     home_tab: 'Для дому',
+    // onova
+    clothes_men: 'Чоловіче',
+    clothes_women: 'Жіноче',
+    clothes_shoes: 'Взуття',
+    accessories_jewelry: 'Прикраси',
+    accessories_bags: 'Сумки',
+    accessories_accessories: 'Аксесуари',
+    forhome_furniture: 'Меблі',
+    forhome_art: 'Мистецтво',
+    forhome_interior: 'Побут',
     alert_info_title: 'Підтримка',
     alert_info_body: `З будь якими питаннями щодо додатку телефонуйте до ${APP_NAME_CC}
 (063) 419-75-03
@@ -203,7 +214,7 @@ export default {
     title: 'Створити Колекцію',
     ok: 'OK',
     cancel: 'Скасувати',
-    select: 'Оберіть час завантаження Колекції',
+    select: 'Оберіть час завантаження Анонси',
     success: 'Вашу Колекцію успішно заплановано!',
     permission_title: 'Доступ до місцезнаходження',
     permission_message: 'Нам потрібно відображати де знаходяться речі.',
@@ -229,10 +240,10 @@ export default {
     empty_state_message_others: 'Жодних запланованих Колекцій',
   },
   drops_feed: {
-    header: 'Колекції',
-    error: 'Помилка завантаження інформації про Колекції',
+    header: 'Анонси',
+    error: 'Помилка завантаження інформації про Анонси',
     empty_state_title: 'Поки що не заплановано нових колекцій',
-    empty_state_message: 'Додавайте бренди в контакти щоб бачити їх Колекції',
+    empty_state_message: 'Додавайте бренди в контакти щоб бачити їх Анонси',
     subscribe: 'Підписатись',
     unsubscribe: 'Відписатись',
     subscribers: 'підписалось',
@@ -263,7 +274,7 @@ export default {
     alert_block_subtitle: 'Тепер ви не будете бачити речей цього користувача, він не буде бачити ваших',
     alert_block_success: 'User blocked',
     shop_tab: 'Магазин',
-    drops_tab: 'Колекції',
+    drops_tab: 'Анонси',
   },
   chat_rooms: {
     header: 'Замовлення',

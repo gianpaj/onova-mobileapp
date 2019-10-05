@@ -67,10 +67,20 @@ export default {
     retry: 'Try again',
   },
   home: {
+    // drop
     clothes_tab: 'Clothes',
     shoes_tab: 'Shoes',
     other_tab: 'Accessories',
-    home_tab: 'For Home',
+    // onova
+    clothes_men: 'Men',
+    clothes_women: 'Women',
+    clothes_shoes: 'Shoes',
+    accessories_jewelry: 'Jewelry',
+    accessories_bags: 'Bags',
+    accessories_accessories: 'Accessories',
+    forhome_furniture: 'Furniture',
+    forhome_art: 'Art',
+    forhome_interior: 'Interior',
     alert_info_title: 'Information',
     alert_info_body: `For any questions regarding the app please contact ${APP_NAME_CC}
 (063) 419-75-03

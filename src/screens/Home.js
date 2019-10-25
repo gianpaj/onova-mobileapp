@@ -223,7 +223,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 0,
   },
   tab: {
-    width: initialLayout.width / 3,
+    width: initialLayout.width / 3 - 25,
   },
   url: {
     color: colors.active,

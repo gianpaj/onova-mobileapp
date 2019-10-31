@@ -328,7 +328,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
       I18n.t('profile.alert_unsaved_changes_title'),
       I18n.t('profile.alert_unsaved_changes_body'),
       () => this.goBack(), // on continue
-      () => { },
+      () => {},
       I18n.t('profile.alert_unsaved_changes_button_cancel'),
       I18n.t('profile.alert_unsaved_changes_button_confirm')
     );
@@ -409,11 +409,19 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
       // text has multiple spaces
       const textHasBeenPasted = tagsText.split(' ').filter(s => Boolean(s)).length > 1;
       if (textHasBeenPasted) {
-        const onBrandTags = tagsText.split(' ').filter(s => Boolean(s) && this.onlyOneBrand(s));
+        const onBrandTags = tagsText
+          .split(' ')
+          .filter(
+            s =>
+              Boolean(s) &&
+              settings.HASHTAG_REGEX.test(s) &&
+              s.length < settings.MAX_LENGTH_PER_TAG &&
+              this.onlyOneBrand(s)
+          );
         const uniqueTags = new Set([...this.state.tags, ...onBrandTags]);
         return this.setState(
           {
-            tags: Array.from(uniqueTags),
+            tags: Array.from(uniqueTags).slice(0, settings.MAX_TAGS),
             tagsText: '',
           },
           () => resolve()
@@ -636,31 +644,28 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
                   </Foect.Control>
                   <FormLabel labelStyle={styles.label}>{I18n.t('add_or_edit_item.quantity_label')}</FormLabel>
                   <Foect.Control name="quantity" required checkQuantity={{}}>
-                    {control => {
-                      // this.priceControl = control;
-                      return (
-                        <View style={{ paddingLeft: 6 }}>
-                          <InputItem
-                            autoCorrect={false}
-                            blurOnSubmit={false}
-                            clearButtonMode="while-editing"
-                            error={control.isTouched && control.isInvalid}
-                            // onErrorClick={ show toast with }
-                            last
-                            onBlur={control.markAsTouched}
-                            onChange={control.onChange}
-                            returnKeyType="go"
-                            type="number"
-                            value={control.value}
-                          />
-                          {control.isTouched && control.errors.required && (
-                            <Text style={styles.minError}>{`${I18n.t('add_or_edit_item.min_quantity')} ${
-                              inEditMode ? 0 : 1
-                              }`}</Text>
-                          )}
-                        </View>
-                      );
-                    }}
+                    {control => (
+                      <View style={{ paddingLeft: 6 }}>
+                        <InputItem
+                          autoCorrect={false}
+                          blurOnSubmit={false}
+                          clearButtonMode="while-editing"
+                          error={control.isTouched && control.isInvalid}
+                          // onErrorClick={ show toast with }
+                          last
+                          onBlur={control.markAsTouched}
+                          onChange={control.onChange}
+                          returnKeyType="go"
+                          type="number"
+                          value={control.value}
+                        />
+                        {control.isTouched && control.errors.required && (
+                          <Text style={styles.minError}>{`${I18n.t('add_or_edit_item.min_quantity')} ${
+                            inEditMode ? 0 : 1
+                          }`}</Text>
+                        )}
+                      </View>
+                    )}
                   </Foect.Control>
                   <FormLabel labelStyle={styles.label}>{I18n.t('add_or_edit_item.description_label')}</FormLabel>
                   <Foect.Control

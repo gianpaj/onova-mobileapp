@@ -716,68 +716,68 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
                   <Foect.Control name="grp_1" required pattern={/^\d+$/}>
                     {control => {
                       this.grp_1 = control;
-                      if (APP_NAME == 'drop') {
-                        return (
-                          <RadioForm animation formHorizontal>
-                            {ui.category_radio_grp_1.map((option, i) => (
-                              <RadioButton labelHorizontal={false} key={i}>
-                                <RadioButtonLabel
-                                  index={i}
-                                  labelStyle={styles.radioButtonLabel}
-                                  obj={option}
-                                  onPress={control.onChange}
-                                />
-                                {/* // FIXME: issue in foect library? */}
-                                <RadioButtonInput {...RadioButtonInputProps(control, option)} index={i} />
-                              </RadioButton>
-                            ))}
-                          </RadioForm>
-                        );
-                      }
+                      // if (APP_NAME == 'drop') {
                       return (
-                        <>
-                          <RadioForm animation formHorizontal>
-                            {ui.category_radio_grp_1.map((option, i) => (
-                              <RadioButton labelHorizontal={false} key={i}>
-                                <RadioButtonLabel
-                                  index={i}
-                                  labelStyle={styles.radioButtonLabel}
-                                  obj={option}
-                                  onPress={control.onChange}
-                                />
-                                {/* // FIXME: issue in foect library? */}
-                                <RadioButtonInput {...RadioButtonInputProps(control, option)} index={i} />
-                              </RadioButton>
-                            ))}
-                          </RadioForm>
-                          <RadioForm animation formHorizontal style={{ marginTop: 20 }}>
-                            {ui.category_radio_grp_2.map((option, i) => (
-                              <RadioButton labelHorizontal={false} key={i}>
-                                <RadioButtonLabel
-                                  index={i}
-                                  labelStyle={styles.radioButtonLabel}
-                                  obj={option}
-                                  onPress={control.onChange}
-                                />
-                                <RadioButtonInput {...RadioButtonInputProps(control, option)} index={i} />
-                              </RadioButton>
-                            ))}
-                          </RadioForm>
-                          <RadioForm animation formHorizontal style={{ marginTop: 20 }}>
-                            {ui.category_radio_grp_3.map((option, i) => (
-                              <RadioButton labelHorizontal={false} key={i}>
-                                <RadioButtonLabel
-                                  index={i}
-                                  labelStyle={styles.radioButtonLabel}
-                                  obj={option}
-                                  onPress={control.onChange}
-                                />
-                                <RadioButtonInput {...RadioButtonInputProps(control, option)} index={i} />
-                              </RadioButton>
-                            ))}
-                          </RadioForm>
-                        </>
+                        <RadioForm animation formHorizontal>
+                          {ui.category_radio_grp_1.map((option, i) => (
+                            <RadioButton labelHorizontal={false} key={i}>
+                              <RadioButtonLabel
+                                index={i}
+                                labelStyle={styles.radioButtonLabel}
+                                obj={option}
+                                onPress={control.onChange}
+                              />
+                              {/* // FIXME: issue in foect library? */}
+                              <RadioButtonInput {...RadioButtonInputProps(control, option)} index={i} />
+                            </RadioButton>
+                          ))}
+                        </RadioForm>
                       );
+                      // }
+                      // return (
+                      //   <>
+                      //     <RadioForm animation formHorizontal>
+                      //       {ui.category_radio_grp_1.map((option, i) => (
+                      //         <RadioButton labelHorizontal={false} key={i}>
+                      //           <RadioButtonLabel
+                      //             index={i}
+                      //             labelStyle={styles.radioButtonLabel}
+                      //             obj={option}
+                      //             onPress={control.onChange}
+                      //           />
+                      //           {/* // FIXME: issue in foect library? */}
+                      //           <RadioButtonInput {...RadioButtonInputProps(control, option)} index={i} />
+                      //         </RadioButton>
+                      //       ))}
+                      //     </RadioForm>
+                      //     <RadioForm animation formHorizontal style={{ marginTop: 20 }}>
+                      //       {ui.category_radio_grp_2.map((option, i) => (
+                      //         <RadioButton labelHorizontal={false} key={i}>
+                      //           <RadioButtonLabel
+                      //             index={i}
+                      //             labelStyle={styles.radioButtonLabel}
+                      //             obj={option}
+                      //             onPress={control.onChange}
+                      //           />
+                      //           <RadioButtonInput {...RadioButtonInputProps(control, option)} index={i} />
+                      //         </RadioButton>
+                      //       ))}
+                      //     </RadioForm>
+                      //     <RadioForm animation formHorizontal style={{ marginTop: 20 }}>
+                      //       {ui.category_radio_grp_3.map((option, i) => (
+                      //         <RadioButton labelHorizontal={false} key={i}>
+                      //           <RadioButtonLabel
+                      //             index={i}
+                      //             labelStyle={styles.radioButtonLabel}
+                      //             obj={option}
+                      //             onPress={control.onChange}
+                      //           />
+                      //           <RadioButtonInput {...RadioButtonInputProps(control, option)} index={i} />
+                      //         </RadioButton>
+                      //       ))}
+                      //     </RadioForm>
+                      //   </>
+                      // );
                     }}
                   </Foect.Control>
                 </View>
@@ -866,7 +866,7 @@ const styles = StyleSheet.create({
     paddingLeft: 12,
   },
   radioButtonInput: {
-    width: 120,
+    width: APP_NAME == 'drop' ? 120 : 90,
   },
   radioButtonLabel: {
     color: colors.grey1,

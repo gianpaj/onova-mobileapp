@@ -51,7 +51,7 @@ export function showConfirmAlert(
   title: string,
   message: string,
   onContinue: () => void | Promise<any>,
-  onDismiss?: () => void = () => { },
+  onDismiss?: () => void = () => {},
   cancelText: string = I18n.t('alerts.confirm_alert_button_cancel'),
   confirmText: string = I18n.t('alerts.confirm_alert_button_confirm')
 ) {
@@ -97,20 +97,20 @@ export function sleep(ms: number): Promise<any> {
 }
 
 const category_radio_grp_1_onova = [
-  { label: I18n.t('categories.clothes_men'), value: 0 },
-  { label: I18n.t('categories.clothes_women'), value: 1 },
-  { label: I18n.t('categories.clothes_shoes'), value: 2 },
+  // { label: I18n.t('categories.clothes_men'), value: 0 },
+  // { label: I18n.t('categories.clothes_women'), value: 1 },
+  { label: I18n.t('categories.clothes'), value: 3 },
 ];
 
 export const category_radio_grp_2 = [
   { label: I18n.t('categories.accessories_jewelry'), value: 10 },
   { label: I18n.t('categories.accessories_bags'), value: 11 },
-  { label: I18n.t('categories.accessories_accessories'), value: 12 },
+  // { label: I18n.t('categories.accessories_accessories'), value: 12 },
 ];
 
 export const category_radio_grp_3 = [
-  { label: I18n.t('categories.forhome_furniture'), value: 20 },
-  { label: I18n.t('categories.forhome_art'), value: 21 },
+  // { label: I18n.t('categories.forhome_furniture'), value: 20 },
+  // { label: I18n.t('categories.forhome_art'), value: 21 },
   { label: I18n.t('categories.forhome_interior'), value: 22 },
 ];
 
@@ -120,4 +120,7 @@ const category_radio_grp_1_drop = [
   { label: I18n.t('categories.other_cat'), value: 12 },
 ];
 
-export const category_radio_grp_1 = APP_NAME == 'onova' ? category_radio_grp_1_onova : category_radio_grp_1_drop;
+export const category_radio_grp_1 =
+  APP_NAME == 'onova'
+    ? [...category_radio_grp_1_onova, ...category_radio_grp_2, ...category_radio_grp_3]
+    : category_radio_grp_1_drop;

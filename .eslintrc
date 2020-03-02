@@ -8,14 +8,16 @@
     "plugin:import/warnings",
     "prettier",
     "prettier/flowtype",
-    "prettier/react"
+    "prettier/react",
+    "plugin:sonarjs/recommended"
   ],
   "plugins": [
     "flowtype",
     "react",
     "react-native",
     "react-native-a11y",
-    "prettier"
+    "prettier",
+    "sonarjs"
   ],
   "globals": {
     "__DEV__": true,

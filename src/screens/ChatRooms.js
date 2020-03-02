@@ -50,7 +50,6 @@ class ChatContainer extends Component<Props, State> {
             routeName: 'inAppAuth',
             key: 'inAppAuth',
           });
-          return;
         },
       };
     }

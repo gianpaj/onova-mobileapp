@@ -8,7 +8,9 @@
     "**/*.js.snap": true
   },
   "editor.formatOnSave": false,
-  "eslint.autoFixOnSave": true,
   "eslint.enable": true,
-  "eslint.packageManager": "yarn"
+  "eslint.packageManager": "yarn",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  }
 }

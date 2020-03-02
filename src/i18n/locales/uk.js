@@ -276,7 +276,7 @@ export default {
     alert_block_subtitle: 'Тепер ви не будете бачити речей цього користувача, він не буде бачити ваших',
     alert_block_success: 'User blocked',
     shop_tab: 'Магазин',
-    drops_tab: 'Анонси',
+    drops_tab: 'Дропи',
   },
   chat_rooms: {
     header: 'Замовлення',

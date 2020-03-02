@@ -179,13 +179,13 @@ export default {
     price_placeholder: `${settings.MIN_PRICE} ГРН`,
     min_price: 'Мінімальна ціна Х',
     price_info: 'Комісія',
-    price_popup_title: 'Комісія 5%+10грн',
+    price_popup_title: 'Комісія 1%+5 грн',
     price_popup_body:
       'Коли якусь річ успішно продано, UAPAY автоматично знімає від загальної вартості комісію, решта надходить на ваш рахунок',
-    description_label: 'Опис:',
+    description_label: 'Склад:',
     description_placeholder_onova: 'Опишіть деталі виробу',
-    description_placeholder_drop: 'В якому стані річ, якого розміру, бренду і тому подібне',
-    quantity_label: 'Кількість:',
+    description_placeholder_drop: 'виробу, його кількість, вага і тому подібне',
+    quantity_label: 'Кількість одиниць продукції:',
     min_quantity: 'Мінімальна кількість',
     hashtags_label: '#tags:',
     hashtags_placeholder: 'adidas, 43',
@@ -211,7 +211,7 @@ export default {
 З галереї можна обирати кілька фотографій одразу для завантаження`,
   },
   create_drop: {
-    title: 'Створити Колекцію',
+    title: 'Створити Дроп',
     ok: 'OK',
     cancel: 'Скасувати',
     select: 'Оберіть час завантаження Анонси',
@@ -234,9 +234,9 @@ export default {
     cancellation_success: 'Покупку скасовано',
   },
   drops_grid: {
-    empty_state_title: 'Створити Колекцію',
-    empty_state_message_mine: 'Завантаж кілька речей для одночасного виставлення у вказаний час',
-    empty_state_button_mine: 'Створити Колекцію',
+    empty_state_title: 'Створити Дроп',
+    empty_state_message_mine: 'Завантаж кілька товарів для одночасного виставлення на продаж у вказаний час',
+    empty_state_button_mine: 'Створити Дроп',
     empty_state_message_others: 'Жодних запланованих Колекцій',
   },
   drops_feed: {
@@ -259,10 +259,12 @@ export default {
     unfollow_button: 'видалити',
     display_name_placeholder: 'Назва твого профілю',
     bio_placeholder: 'Опис твого профілю',
-    empty_state_title: 'Немає речей на продаж',
+    // empty_state_title: 'Немає речей на продаж', // Onova
+    empty_state_title: 'Немає товарів на продаж',
     empty_state_message_others: 'Поки нічого не виставлено',
     empty_state_message_mine: 'Ти ще нічого не виставив ',
-    empty_state_button_mine: 'Створити Колекцію',
+    // empty_state_button_mine: 'Створити Колекцію', // Onova
+    empty_state_button_mine: 'Створити Дроп',
     toast_saving: 'Зберігаємо...',
     toast_updated: 'Твій профіль оновлено',
     alert_unsaved_changes_title: 'Незбережені зміни',
@@ -387,7 +389,7 @@ export default {
   settings: {
     header: 'Налаштування',
     instagram_label: 'Інстаграм:',
-    instagram_placeholder: 'Ваш юзернейм в інстаграмі',
+    instagram_placeholder: 'Юзернейм вашого бренду в інстаграмі',
     username_label: 'Username:',
     username_placeholder: 'Редагувати username',
     email_label: 'Email:',

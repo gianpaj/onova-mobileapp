@@ -115,9 +115,12 @@ export const category_radio_grp_3 = [
 ];
 
 const category_radio_grp_1_drop = [
-  { label: I18n.t('categories.clothes'), value: 0 },
-  { label: I18n.t('categories.shoes'), value: 2 },
-  { label: I18n.t('categories.other_cat'), value: 12 },
+  { label: 'Бакалія', value: 30 },
+  { label: 'Чай та кава', value: 31 },
+  { label: 'Оригінальна продукція', value: 34 },
+  { label: 'Снеки', value: 32 },
+  { label: 'Напої', value: 33 },
+  { label: "Здоров'я та краса", value: 35 },
 ];
 
 export const category_radio_grp_1 =

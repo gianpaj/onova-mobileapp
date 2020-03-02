@@ -68,7 +68,7 @@ class ShopTabContainer extends React.Component<Props, {}> {
                     style={styles.emptyStateIcon}
                   />
                   <Text style={styles.boldText}>{I18n.t('profile.empty_state_title')}</Text>
-                  <Text style={styles.centerText}>{I18n.t('profile.empty_state_message_mine')}</Text>
+                  {/* <Text style={styles.centerText}>{I18n.t('profile.empty_state_message_mine')}</Text> */}
                   <NBButton block dark style={styles.createDropButton} onPress={this.onCreateDrop}>
                     <Text
                       // eslint-disable-next-line

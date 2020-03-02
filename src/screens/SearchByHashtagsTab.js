@@ -87,99 +87,105 @@ class SearchByHashtagsTabContainer extends Component<Props, State> {
 
   renderCategories() {
     const { grp_1 } = this.state;
-    // if (APP_NAME == 'drop') {
+    if (APP_NAME == 'onova') {
+      return (
+        <View style={styles.grps}>
+          <RadioForm animation formHorizontal>
+            {category_radio_grp_1.map((option, i) => (
+              <RadioButton labelHorizontal={false} key={i}>
+                <RadioButtonLabel
+                  index={i}
+                  labelStyle={styles.radioButtonLabel}
+                  obj={option}
+                  onPress={this.setCategory}
+                />
+                <RadioButtonInput
+                  {...RadioButtonInputProps}
+                  index={i}
+                  isSelected={grp_1 === option.value}
+                  obj={option}
+                  onPress={this.setCategory}
+                />
+              </RadioButton>
+            ))}
+          </RadioForm>
+        </View>
+      );
+    }
     return (
-      <View style={styles.grps}>
-        <RadioForm animation formHorizontal>
-          {category_radio_grp_1.map((option, i) => (
-            <RadioButton labelHorizontal={false} key={i}>
-              <RadioButtonLabel
-                index={i}
-                labelStyle={styles.radioButtonLabel}
-                obj={option}
-                onPress={this.setCategory}
-              />
-              <RadioButtonInput
-                {...RadioButtonInputProps}
-                index={i}
-                isSelected={grp_1 === option.value}
-                obj={option}
-                onPress={this.setCategory}
-              />
-            </RadioButton>
-          ))}
-        </RadioForm>
-      </View>
-    );
-    // }
-    // return (
-    //   <>
-    //     <View style={styles.grps}>
-    //       <RadioForm animation formHorizontal>
-    //         {category_radio_grp_1.map((option, i) => (
-    //           <RadioButton labelHorizontal={false} key={i}>
-    //             <RadioButtonLabel
-    //               index={i}
-    //               labelStyle={styles.radioButtonLabel}
-    //               obj={option}
-    //               onPress={this.setCategory}
-    //             />
-    //             <RadioButtonInput
-    //               {...RadioButtonInputProps}
-    //               index={i}
-    //               isSelected={grp_1 === option.value}
-    //               obj={option}
-    //               onPress={this.setCategory}
-    //             />
-    //           </RadioButton>
-    //         ))}
-    //       </RadioForm>
-    //     </View>
+      <>
+        <View style={styles.grps}>
+          <RadioForm animation formHorizontal>
+            {category_radio_grp_1
+              .filter((_, i) => i < 2)
+              .map((option, i) => (
+                <RadioButton labelHorizontal={false} key={i}>
+                  <RadioButtonLabel
+                    index={i}
+                    labelStyle={styles.radioButtonLabel}
+                    obj={option}
+                    onPress={this.setCategory}
+                  />
+                  <RadioButtonInput
+                    {...RadioButtonInputProps}
+                    index={i}
+                    isSelected={grp_1 === option.value}
+                    obj={option}
+                    onPress={this.setCategory}
+                  />
+                </RadioButton>
+              ))}
+          </RadioForm>
+        </View>
 
-    //     <View style={styles.grps}>
-    //       <RadioForm animation formHorizontal>
-    //         {category_radio_grp_2.map((option, i) => (
-    //           <RadioButton labelHorizontal={false} key={i}>
-    //             <RadioButtonLabel
-    //               obj={option}
-    //               index={i}
-    //               onPress={this.setCategory}
-    //               labelStyle={styles.radioButtonLabel}
-    //             />
-    //             <RadioButtonInput
-    //               {...RadioButtonInputProps}
-    //               index={i}
-    //               isSelected={grp_1 === option.value}
-    //               obj={option}
-    //               onPress={this.setCategory}
-    //             />
-    //           </RadioButton>
-    //         ))}
-    //       </RadioForm>
-    //     </View>
-    //     <View style={styles.grps}>
-    //       <RadioForm animation formHorizontal>
-    //         {category_radio_grp_3.map((option, i) => (
-    //           <RadioButton labelHorizontal={false} key={i}>
-    //             <RadioButtonLabel
-    //               obj={option}
-    //               index={i}
-    //               onPress={this.setCategory}
-    //               labelStyle={styles.radioButtonLabel}
-    //             />
-    //             <RadioButtonInput
-    //               {...RadioButtonInputProps}
-    //               index={i}
-    //               isSelected={grp_1 === option.value}
-    //               obj={option}
-    //               onPress={this.setCategory}
-    //             />
-    //           </RadioButton>
-    //         ))}
-    //       </RadioForm>
-    //     </View>
-    //   </>
-    // );
+        <View style={styles.grps}>
+          <RadioForm animation formHorizontal>
+            {category_radio_grp_1
+              .filter((_, i) => i > 1 && i < 4)
+              .map((option, i) => (
+                <RadioButton labelHorizontal={false} key={i}>
+                  <RadioButtonLabel
+                    obj={option}
+                    index={i}
+                    onPress={this.setCategory}
+                    labelStyle={styles.radioButtonLabel}
+                  />
+                  <RadioButtonInput
+                    {...RadioButtonInputProps}
+                    index={i}
+                    isSelected={grp_1 === option.value}
+                    obj={option}
+                    onPress={this.setCategory}
+                  />
+                </RadioButton>
+              ))}
+          </RadioForm>
+        </View>
+        <View style={styles.grps}>
+          <RadioForm animation formHorizontal>
+            {category_radio_grp_1
+              .filter((_, i) => i > 3)
+              .map((option, i) => (
+                <RadioButton labelHorizontal={false} key={i}>
+                  <RadioButtonLabel
+                    obj={option}
+                    index={i}
+                    onPress={this.setCategory}
+                    labelStyle={styles.radioButtonLabel}
+                  />
+                  <RadioButtonInput
+                    {...RadioButtonInputProps}
+                    index={i}
+                    isSelected={grp_1 === option.value}
+                    obj={option}
+                    onPress={this.setCategory}
+                  />
+                </RadioButton>
+              ))}
+          </RadioForm>
+        </View>
+      </>
+    );
   }
 
   render() {
@@ -264,7 +270,7 @@ const styles = StyleSheet.create({
   },
   radioButtonInput: {
     marginBottom: 15,
-    width: APP_NAME == 'drop' ? 110 : 90,
+    width: APP_NAME == 'drop' ? 162 : 90,
   },
   radioButtonLabel: {
     color: colors.grey1,

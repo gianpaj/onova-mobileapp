@@ -232,7 +232,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 0,
   },
   tab: {
-    width: initialLayout.width / 3 - 25,
+    width: APP_NAME === 'onova' ? initialLayout.width / 2 - 25 : initialLayout.width / 3,
   },
   url: {
     color: colors.active,

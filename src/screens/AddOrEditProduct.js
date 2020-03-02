@@ -117,6 +117,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     tags: [],
     tagsText: '',
     uuid: '',
+    weight: '100',
   };
 
   async componentDidMount() {
@@ -150,6 +151,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
           quantity: item.quantity.toString(),
           tags: item.tags,
           uuid: item.uuid,
+          weight: item.weight.toString(),
         });
       } catch (error) {
         console.error(error);
@@ -339,13 +341,15 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     description,
     grp_1,
     quantity,
+    weight,
   }: {
     price: string,
     description: string,
     grp_1: number,
     quantity: string,
+    weight: string,
   }) => {
-    if (!this.canSave({ price, description, grp_1, quantity })) return;
+    if (!this.canSave({ price, description, grp_1, quantity, weight })) return;
 
     this.setState({ pending: true });
 
@@ -363,6 +367,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
       price,
       quantity: parseInt(quantity),
       tags: JSON.stringify(tags),
+      weight: parseInt(weight),
     };
 
     try {
@@ -480,11 +485,13 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     description,
     grp_1,
     quantity,
+    weight,
   }: {
     price: string,
     description: string,
     grp_1: number,
     quantity: string,
+    weight: string,
   }): boolean {
     // const tagsPattern = /^(\b[a-z][a-z0-9]*)$/i;
 
@@ -504,7 +511,9 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
       // if there's an product category selected
       grp_1 > -1 &&
       parseInt(quantity) > (inEditMode ? -1 : 0) &&
-      parseInt(quantity) <= 99
+      parseInt(quantity) <= 99 &&
+      parseInt(weight) >= settings.MIN_WEIGHT &&
+      parseInt(weight) <= settings.MAX_WEIGHT
     );
   }
 
@@ -544,6 +553,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
       quantity,
       tags,
       tagsText,
+      weight,
     } = this.state;
 
     if (isLoading) return null;
@@ -552,7 +562,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
       <React.Fragment>
         <Foect.Form
           onValidSubmit={this.onSave}
-          defaultValue={{ description, price, grp_1, quantity }}
+          defaultValue={{ description, price, grp_1, quantity, weight }}
           onInvalidSubmit={this.onInvalidSubmit}>
           {form => (
             <Container>
@@ -663,6 +673,29 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
                           <Text style={styles.minError}>{`${I18n.t('add_or_edit_item.min_quantity')} ${
                             inEditMode ? 0 : 1
                           }`}</Text>
+                        )}
+                      </View>
+                    )}
+                  </Foect.Control>
+                  <FormLabel labelStyle={styles.label}>{I18n.t('add_or_edit_item.weight_label')}</FormLabel>
+                  <Foect.Control name="weight" required checkWeight={{}}>
+                    {control => (
+                      <View style={{ paddingLeft: 6 }}>
+                        <InputItem
+                          autoCorrect={false}
+                          blurOnSubmit={false}
+                          clearButtonMode="while-editing"
+                          error={control.isTouched && control.isInvalid}
+                          last
+                          onBlur={control.markAsTouched}
+                          placeholder="100 грам"
+                          onChange={control.onChange}
+                          returnKeyType="go"
+                          type="number"
+                          value={control.value}
+                        />
+                        {control.isTouched && (control.errors.required || control.errors.checkWeight) && (
+                          <Text style={styles.minError}>{I18n.t('add_or_edit_item.min_max_weight')}</Text>
                         )}
                       </View>
                     )}
@@ -921,6 +954,16 @@ Foect.Validators.add('checkQuantity', (val: any) => {
   if (isNaN(val) || parseInt(val) < (inEditMode ? 0 : 1) || parseInt(val) > 99) {
     // error
     return { checkQuantity: true };
+    // valid
+  } else return null;
+});
+
+Foect.Validators.add('checkWeight', (val: any) => {
+  if (!val) return null; // valid
+
+  if (isNaN(val) || parseInt(val) < settings.MIN_WEIGHT || parseInt(val) > settings.MAX_WEIGHT) {
+    // error
+    return { checkWeight: true };
     // valid
   } else return null;
 });

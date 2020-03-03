@@ -71,9 +71,9 @@ export default {
   home: {
     // drop
     clothes_tab: 'Одяг',
-    shoes_tab: 'Взуття',
-    other_tab: 'Аксесуари',
-    home_tab: 'Для дому',
+    // shoes_tab: 'Взуття',
+    // other_tab: 'Аксесуари',
+    // home_tab: 'Для дому',
     // onova
     clothes_men: 'Чоловіче',
     clothes_women: 'Жіноче',

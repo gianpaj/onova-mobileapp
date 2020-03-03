@@ -16,6 +16,7 @@ import I18n from '../i18n';
 import { Header, ImageGrid, Title } from '../components';
 // import * as api from '../utils/api';
 import * as linking from '../utils/linking';
+import { category_radio_grp_1 } from '../utils/ui';
 import colors from '../config/colors';
 
 import Megaphone from '../assets/svg/megaphone';
@@ -53,9 +54,12 @@ class HomeComponent extends PureComponent<Props, State> {
       index: 0,
       dialogVisible: false,
       routes: [
-        { key: 0, title: I18n.t('home.clothes_tab') },
-        { key: 1, title: I18n.t('home.shoes_tab') },
-        { key: 2, title: I18n.t('home.other_tab') }, // accessories
+        { key: 0, title: 'Бакалія' },
+        { key: 1, title: 'Чай та кава' },
+        { key: 2, title: 'Оригінальна продукція' },
+        { key: 3, title: 'Снеки' },
+        { key: 4, title: 'Напої' },
+        { key: 5, title: "Здоров'я та краса" },
       ],
     };
     if (APP_NAME == 'onova') {
@@ -88,11 +92,7 @@ class HomeComponent extends PureComponent<Props, State> {
   );
 
   _renderScene = ({ route }) => {
-    let categoryIdsTabs = {
-      0: '[0,1]',
-      1: '2',
-      2: '[10,11,12]',
-    };
+    let categoryIdsTabs = category_radio_grp_1.map(cat => cat.value);
     let sellerType = 'reseller';
     if (APP_NAME === 'onova') {
       categoryIdsTabs = {
@@ -232,7 +232,8 @@ const styles = StyleSheet.create({
     marginHorizontal: 0,
   },
   tab: {
-    width: APP_NAME === 'onova' ? initialLayout.width / 2 - 25 : initialLayout.width / 3,
+    // width: APP_NAME === 'onova' ? initialLayout.width / 2 - 25 : initialLayout.width / 3,
+    width: initialLayout.width / 2,
   },
   url: {
     color: colors.active,

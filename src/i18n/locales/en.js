@@ -69,8 +69,8 @@ export default {
   home: {
     // drop
     clothes_tab: 'Clothes',
-    shoes_tab: 'Shoes',
-    other_tab: 'Accessories',
+    // shoes_tab: 'Shoes',
+    // other_tab: 'Accessories',
     // onova
     clothes_men: 'Men',
     clothes_women: 'Women',

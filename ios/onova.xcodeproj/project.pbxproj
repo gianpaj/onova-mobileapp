@@ -1582,7 +1582,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = DropAppIcon;
 				CODE_SIGN_ENTITLEMENTS = onova/onova.entitlements;
-				CURRENT_PROJECT_VERSION = 190002;
+				CURRENT_PROJECT_VERSION = 191000;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = MJ2ZTANXK8;
 				HEADER_SEARCH_PATHS = (
@@ -1592,6 +1592,7 @@
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/onova/drop-info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 1.9.1;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -1609,7 +1610,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = DropAppIcon;
 				CODE_SIGN_ENTITLEMENTS = onova/onova.entitlements;
-				CURRENT_PROJECT_VERSION = 190002;
+				CURRENT_PROJECT_VERSION = 191000;
 				DEVELOPMENT_TEAM = MJ2ZTANXK8;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1618,6 +1619,7 @@
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/onova/drop-info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 1.9.1;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -1635,7 +1637,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = OnovaAppIcon;
 				CODE_SIGN_ENTITLEMENTS = onova/onova.entitlements;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 191000;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = MJ2ZTANXK8;
 				HEADER_SEARCH_PATHS = (
@@ -1648,6 +1650,7 @@
 				INFOPLIST_PREFIX_HEADER = "$(SRCROOT)/../node_modules/react-native-config/ios/ReactNativeConfig/GeneratedInfoPlistDotEnv.h";
 				INFOPLIST_PREPROCESS = YES;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 1.9.1;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -1665,7 +1668,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = OnovaAppIcon;
 				CODE_SIGN_ENTITLEMENTS = onova/onova.entitlements;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 191000;
 				DEVELOPMENT_TEAM = MJ2ZTANXK8;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1677,6 +1680,7 @@
 				INFOPLIST_PREFIX_HEADER = "$(SRCROOT)/../node_modules/react-native-config/ios/ReactNativeConfig/GeneratedInfoPlistDotEnv.h";
 				INFOPLIST_PREPROCESS = YES;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 1.9.1;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",

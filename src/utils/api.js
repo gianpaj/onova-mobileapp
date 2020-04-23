@@ -181,11 +181,7 @@ async function handleResponse(path, response) {
 }
 
 function getRequestHeaders(body): Headers {
-  const headers = body
-    ? { Accept: 'application/json', 'Content-Type': 'application/json' }
-    : { Accept: 'application/json' };
-
-  return headers;
+  return body ? { Accept: 'application/json', 'Content-Type': 'application/json' } : { Accept: 'application/json' };
 }
 
 async function bodyOf(requestPromise): Promise<any> {

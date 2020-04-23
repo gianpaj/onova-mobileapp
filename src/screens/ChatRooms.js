@@ -70,6 +70,7 @@ class ChatContainer extends Component<Props, State> {
     // });
     if (!pusherCurrentUser) {
       console.error('no pusherCurrentUser');
+      this.setState({ hasError: true });
       return;
     }
     this.initialise();

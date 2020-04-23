@@ -182,7 +182,7 @@ export default {
     price_popup_title: 'Комісія 1%+5 грн',
     price_popup_body:
       'Коли якусь річ успішно продано, UAPAY автоматично знімає від загальної вартості комісію, решта надходить на ваш рахунок',
-    weight_label: 'Вага, гр:',
+    weight_label: 'Вага посилки, гр:',
     min_max_weight: `Вага має бути від ${settings.MIN_WEIGHT} до ${settings.MAX_WEIGHT} грам`,
     description_label: 'Склад:',
     description_placeholder_onova: 'Опишіть деталі виробу',

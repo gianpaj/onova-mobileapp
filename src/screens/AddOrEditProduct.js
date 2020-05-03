@@ -19,7 +19,7 @@ import I18n from '../i18n';
 import colors from '../config/colors';
 import settings from '../config/settings';
 import * as api from '../utils/api';
-import * as ui from '../utils/ui';
+import { categories, showToast, chunk } from '../utils/ui';
 import type { Dispatch, ReduxState } from '../types';
 
 import type { NavigationScreenProp } from 'react-navigation';
@@ -76,7 +76,7 @@ type State = {
   description: string,
   dialogInfoVisible: boolean,
   dialogPriceVisible: boolean,
-  grp_1: number,
+  categoryIds: number,
   images: Array<Image>,
   inEditMode: boolean,
   isLoading: boolean,
@@ -97,14 +97,14 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
   priceControl;
   priceInput;
   descriptionControl;
-  grp_1;
+  categoryIds;
   numberOfBrands = 0;
 
   state = {
     dialogInfoVisible: false,
     dialogPriceVisible: false,
     description: '',
-    grp_1: -1,
+    categoryIds: -1,
     images: [],
     inEditMode: false,
     isLoading: true,
@@ -144,7 +144,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
         }
         return this.setState({
           description: item.description,
-          grp_1: item.categoryIds[0],
+          categoryIds: item.categoryIds[0],
           images,
           isLoading: false,
           price: item.price,
@@ -243,7 +243,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     } catch (error) {
       console.error(error);
 
-      ui.showToast(error.message || JSON.stringify(error), 'warning', '', 5);
+      showToast(error.message || JSON.stringify(error), 'warning', '', 5);
     }
     this.setState({ isUploading: false });
   }
@@ -275,7 +275,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
       this.appendSinglePhoto(data, i);
     } catch (err) {
       this.removeSinglePhoto(i);
-      ui.showToast(typeof err.message == 'string' ? err.message : JSON.stringify(err), 'warning', '', 5);
+      showToast(typeof err.message == 'string' ? err.message : JSON.stringify(err), 'warning', '', 5);
       console.error(err);
     }
   }
@@ -339,17 +339,17 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
   onSave = async ({
     price,
     description,
-    grp_1,
+    categoryIds,
     quantity,
     weight,
   }: {
     price: string,
     description: string,
-    grp_1: number,
+    categoryIds: number,
     quantity: string,
     weight: string,
   }) => {
-    if (!this.canSave({ price, description, grp_1, quantity, weight })) return;
+    if (!this.canSave({ price, description, categoryIds, quantity, weight })) return;
 
     this.setState({ pending: true });
 
@@ -361,7 +361,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     const { images, inEditMode, tags, uuid } = this.state;
 
     const data: any = {
-      categoryIds: grp_1.toString(),
+      categoryIds: categoryIds.toString(),
       description: description.trim(),
       photos: images.map(i => i.url),
       price,
@@ -383,9 +383,9 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     } catch (err) {
       console.debug(err);
       if (err.message == 'Invalid product tag') {
-        ui.showToast(I18n.t('add_or_edit_item.alert_invalid_hashtag'), 'warning');
+        showToast(I18n.t('add_or_edit_item.alert_invalid_hashtag'), 'warning');
       } else {
-        ui.showToast(err.message, 'warning');
+        showToast(err.message, 'warning');
       }
       this.setState({ pending: false });
     }
@@ -483,13 +483,13 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
   canSave({
     price,
     description,
-    grp_1,
+    categoryIds,
     quantity,
     weight,
   }: {
     price: string,
     description: string,
-    grp_1: number,
+    categoryIds: number,
     quantity: string,
     weight: string,
   }): boolean {
@@ -509,7 +509,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
       // if there's the minimum required of tags
       tags.length >= settings.MIN_TAGS &&
       // if there's an product category selected
-      grp_1 > -1 &&
+      categoryIds > -1 &&
       parseInt(quantity) > (inEditMode ? -1 : 0) &&
       parseInt(quantity) <= 99 &&
       parseInt(weight) >= settings.MIN_WEIGHT &&
@@ -536,15 +536,25 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
     if (Object.keys(errors.description).length) {
       this.descriptionControl.markAsTouched();
     }
-    if (Object.keys(errors.grp_1).length) {
-      this.grp_1.markAsTouched();
+    if (Object.keys(errors.categoryIds).length) {
+      this.categoryIds.markAsTouched();
     }
   };
+
+  renderCategory(option, i, control) {
+    return (
+      <RadioButton labelHorizontal={false} key={i}>
+        <RadioButtonLabel index={i} labelStyle={styles.radioButtonLabel} obj={option} onPress={control.onChange} />
+        {/* // FIXME: issue in foect library? */}
+        <RadioButtonInput {...RadioButtonInputProps(control, option)} index={i} />
+      </RadioButton>
+    );
+  }
 
   render() {
     const {
       description,
-      grp_1,
+      categoryIds,
       images,
       inEditMode,
       isLoading,
@@ -562,7 +572,7 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
       <React.Fragment>
         <Foect.Form
           onValidSubmit={this.onSave}
-          defaultValue={{ description, price, grp_1, quantity, weight }}
+          defaultValue={{ description, price, categoryIds, quantity, weight }}
           onInvalidSubmit={this.onInvalidSubmit}>
           {form => (
             <Container>
@@ -745,87 +755,26 @@ export class AddOrEditProductScreen extends React.Component<Props, State> {
                     }}
                   />
                 </React.Fragment>
-                <>
-                  <Foect.Control name="grp_1" required pattern={/^\d+$/}>
-                    {control => {
-                      this.grp_1 = control;
-                      if (APP_NAME == 'onova') {
-                        return (
-                          <RadioForm animation formHorizontal>
-                            {ui.category_radio_grp_1.map((option, i) => (
-                              <RadioButton labelHorizontal={false} key={i}>
-                                <RadioButtonLabel
-                                  index={i}
-                                  labelStyle={styles.radioButtonLabel}
-                                  obj={option}
-                                  onPress={control.onChange}
-                                />
-                                {/* // FIXME: issue in foect library? */}
-                                <RadioButtonInput {...RadioButtonInputProps(control, option)} index={i} />
-                              </RadioButton>
-                            ))}
-                          </RadioForm>
-                        );
-                      }
+                <Foect.Control name="categoryIds" required pattern={/^\d+$/}>
+                  {control => {
+                    this.categoryIds = control;
+                    if (APP_NAME == 'onova') {
                       return (
-                        <>
-                          <View style={styles.grps}>
-                            <RadioForm animation formHorizontal>
-                              {ui.category_radio_grp_1
-                                .filter((_, i) => i < 2)
-                                .map((option, i) => (
-                                  <RadioButton labelHorizontal={false} key={i}>
-                                    <RadioButtonLabel
-                                      index={i}
-                                      labelStyle={styles.radioButtonLabel}
-                                      obj={option}
-                                      onPress={control.onChange}
-                                    />
-                                    {/* // FIXME: issue in foect library? */}
-                                    <RadioButtonInput {...RadioButtonInputProps(control, option)} index={i} />
-                                  </RadioButton>
-                                ))}
-                            </RadioForm>
-                          </View>
-                          <View style={styles.grps}>
-                            <RadioForm animation formHorizontal style={{ marginTop: 20 }}>
-                              {ui.category_radio_grp_1
-                                .filter((_, i) => i > 1 && i < 4)
-                                .map((option, i) => (
-                                  <RadioButton labelHorizontal={false} key={i}>
-                                    <RadioButtonLabel
-                                      index={i}
-                                      labelStyle={styles.radioButtonLabel}
-                                      obj={option}
-                                      onPress={control.onChange}
-                                    />
-                                    <RadioButtonInput {...RadioButtonInputProps(control, option)} index={i} />
-                                  </RadioButton>
-                                ))}
-                            </RadioForm>
-                          </View>
-                          <View style={styles.grps}>
-                            <RadioForm animation formHorizontal style={{ marginTop: 20 }}>
-                              {ui.category_radio_grp_1
-                                .filter((_, i) => i > 3)
-                                .map((option, i) => (
-                                  <RadioButton labelHorizontal={false} key={i}>
-                                    <RadioButtonLabel
-                                      index={i}
-                                      labelStyle={styles.radioButtonLabel}
-                                      obj={option}
-                                      onPress={control.onChange}
-                                    />
-                                    <RadioButtonInput {...RadioButtonInputProps(control, option)} index={i} />
-                                  </RadioButton>
-                                ))}
-                            </RadioForm>
-                          </View>
-                        </>
+                        <RadioForm animation formHorizontal>
+                          {categories.map((option, i) => this.renderCategory(option, i, control))}
+                        </RadioForm>
                       );
-                    }}
-                  </Foect.Control>
-                </>
+                    }
+                    return chunk(categories, 2).map((cats, j) => (
+                      <View key={j} style={styles.grps}>
+                        {/* eslint-disable-next-line react-native/no-inline-styles */}
+                        <RadioForm animation formHorizontal style={j > 0 ? { marginTop: 20 } : {}}>
+                          {cats.map((option, i) => this.renderCategory(option, i, control))}
+                        </RadioForm>
+                      </View>
+                    ));
+                  }}
+                </Foect.Control>
               </Content>
             </Container>
           )}

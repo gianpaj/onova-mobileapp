@@ -2,10 +2,9 @@
 
 import { Alert } from 'react-native';
 import { Toast } from 'native-base';
+import { APP_NAME } from 'react-native-dotenv';
 global.Intl = require('intl');
 require('intl/locale-data/jsonp/ru-UA.js');
-
-import { APP_NAME } from 'react-native-dotenv';
 
 import I18n from '../i18n';
 
@@ -115,15 +114,23 @@ export const category_radio_grp_3 = [
 ];
 
 const category_radio_grp_1_drop = [
-  { label: 'Бакалія', value: 30 },
-  { label: 'Чай та кава', value: 31 },
-  { label: 'Оригінальна продукція', value: 34 },
-  { label: 'Снеки', value: 32 },
-  { label: 'Напої', value: 33 },
-  { label: "Здоров'я та краса", value: 35 },
+  { label: 'Бакалія', value: 30 }, // groceries
+  // { label: 'Снеки', value: 32 },
+  { label: 'Сухофрукти-овочі', value: 36 }, // dried fruits-veggies
+  { label: 'Горіхи-насіння', value: 37 }, // nuts-seeds
+  { label: 'Солодке', value: 38 }, // sweet
+  { label: 'Несолодке', value: 39 }, // non-sweet
+  // { label: 'Напої', value: 33 },
+  { label: 'Оригінальна продукція', value: 34 }, // original products
+  { label: 'Чай та кава', value: 31 }, // tea-coffee
+  { label: "Здоров'я та краса", value: 35 }, // health and beauty
+  { label: 'Для дому', value: 40 }, // for home
 ];
 
-export const category_radio_grp_1 =
+export const categories =
   APP_NAME == 'onova'
     ? [...category_radio_grp_1_onova, ...category_radio_grp_2, ...category_radio_grp_3]
     : category_radio_grp_1_drop;
+
+export const chunk = (arr, size) =>
+  Array.from({ length: Math.ceil(arr.length / size) }, (v, i) => arr.slice(i * size, i * size + size));

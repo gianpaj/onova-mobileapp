@@ -13,18 +13,9 @@ import { Header, Title } from '../components';
 import I18n from '../i18n';
 import colors from '../config/colors';
 
-import type { NavigationScreenProp } from 'react-navigation';
-
-import type { Dispatch } from '../types';
-
 const initialLayout = {
   height: 0,
   width: Dimensions.get('window').width,
-};
-
-type Props = {
-  dispatch: Dispatch,
-  navigation: NavigationScreenProp<*>,
 };
 
 type State = {
@@ -32,7 +23,7 @@ type State = {
   routes: Array<any>,
 };
 
-class SearchContainer extends Component<Props, State> {
+class SearchContainer extends Component<State> {
   state = {
     index: 0,
     routes: [{ key: 'tags', title: I18n.t('search.tags_tab') }, { key: 'sellers', title: I18n.t('search.shops_tab') }],
@@ -45,14 +36,10 @@ class SearchContainer extends Component<Props, State> {
   );
 
   _renderScene = ({ route }) => {
-    switch (route.key) {
-      case 'tags':
-        return <SearchByHashtagsTab />;
-      case 'sellers':
-        return <SearchSellersTab />;
-      default:
-        return null;
+    if (route.key == 'tags') {
+      return <SearchByHashtagsTab />;
     }
+    return <SearchSellersTab />;
   };
 
   render() {

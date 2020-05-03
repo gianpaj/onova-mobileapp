@@ -14,7 +14,7 @@ import I18n from '../i18n';
 import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from '../components/SimpleRadioButton';
 import colors from '../config/colors';
 import settings from '../config/settings';
-import { category_radio_grp_1, category_radio_grp_2, category_radio_grp_3 } from '../utils/ui';
+import { categories, chunk } from '../utils/ui';
 
 type Props = {
   navigation: NavigationScreenProp<*>,
@@ -91,7 +91,7 @@ class SearchByHashtagsTabContainer extends Component<Props, State> {
       return (
         <View style={styles.grps}>
           <RadioForm animation formHorizontal>
-            {category_radio_grp_1.map((option, i) => (
+            {categories.map((option, i) => (
               <RadioButton labelHorizontal={false} key={i}>
                 <RadioButtonLabel
                   index={i}
@@ -112,80 +112,29 @@ class SearchByHashtagsTabContainer extends Component<Props, State> {
         </View>
       );
     }
-    return (
-      <>
-        <View style={styles.grps}>
-          <RadioForm animation formHorizontal>
-            {category_radio_grp_1
-              .filter((_, i) => i < 2)
-              .map((option, i) => (
-                <RadioButton labelHorizontal={false} key={i}>
-                  <RadioButtonLabel
-                    index={i}
-                    labelStyle={styles.radioButtonLabel}
-                    obj={option}
-                    onPress={this.setCategory}
-                  />
-                  <RadioButtonInput
-                    {...RadioButtonInputProps}
-                    index={i}
-                    isSelected={grp_1 === option.value}
-                    obj={option}
-                    onPress={this.setCategory}
-                  />
-                </RadioButton>
-              ))}
-          </RadioForm>
-        </View>
-
-        <View style={styles.grps}>
-          <RadioForm animation formHorizontal>
-            {category_radio_grp_1
-              .filter((_, i) => i > 1 && i < 4)
-              .map((option, i) => (
-                <RadioButton labelHorizontal={false} key={i}>
-                  <RadioButtonLabel
-                    obj={option}
-                    index={i}
-                    onPress={this.setCategory}
-                    labelStyle={styles.radioButtonLabel}
-                  />
-                  <RadioButtonInput
-                    {...RadioButtonInputProps}
-                    index={i}
-                    isSelected={grp_1 === option.value}
-                    obj={option}
-                    onPress={this.setCategory}
-                  />
-                </RadioButton>
-              ))}
-          </RadioForm>
-        </View>
-        <View style={styles.grps}>
-          <RadioForm animation formHorizontal>
-            {category_radio_grp_1
-              .filter((_, i) => i > 3)
-              .map((option, i) => (
-                <RadioButton labelHorizontal={false} key={i}>
-                  <RadioButtonLabel
-                    obj={option}
-                    index={i}
-                    onPress={this.setCategory}
-                    labelStyle={styles.radioButtonLabel}
-                  />
-                  <RadioButtonInput
-                    {...RadioButtonInputProps}
-                    index={i}
-                    isSelected={grp_1 === option.value}
-                    obj={option}
-                    onPress={this.setCategory}
-                  />
-                </RadioButton>
-              ))}
-          </RadioForm>
-        </View>
-      </>
-    );
+    return chunk(categories, 2).map((cats, j) => (
+      <View key={j} style={styles.grps}>
+        <RadioForm animation formHorizontal>
+          {cats.map((option, i) => (
+            <RadioButton labelHorizontal={false} key={i}>
+              <RadioButtonLabel
+                index={i}
+                labelStyle={styles.radioButtonLabel}
+                obj={option}
+                onPress={this.setCategory}
+              />
+              <RadioButtonInput
+                {...RadioButtonInputProps}
+                index={i}
+                isSelected={grp_1 === option.value}
+                obj={option}
+                onPress={this.setCategory}
+              />
+            </RadioButton>
+          ))}
+        </RadioForm>
+      </View>
+    ));
   }
 
   render() {

@@ -16,7 +16,7 @@ import I18n from '../i18n';
 import { Header, ImageGrid, Title } from '../components';
 // import * as api from '../utils/api';
 import * as linking from '../utils/linking';
-import { category_radio_grp_1 } from '../utils/ui';
+import { categories } from '../utils/ui';
 import colors from '../config/colors';
 
 import Megaphone from '../assets/svg/megaphone';
@@ -92,7 +92,7 @@ class HomeComponent extends PureComponent<Props, State> {
   );
 
   _renderScene = ({ route }) => {
-    let categoryIdsTabs = category_radio_grp_1.map(cat => cat.value);
+    let categoryIdsTabs = categories.map(cat => cat.value);
     let sellerType = 'reseller';
     if (APP_NAME === 'onova') {
       categoryIdsTabs = {

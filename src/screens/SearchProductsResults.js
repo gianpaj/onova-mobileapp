@@ -5,11 +5,9 @@ import { StyleSheet, View } from 'react-native';
 import { Body, Button as NBButton, Left, Right } from 'native-base';
 
 import { Header, Icon, ImageGridSearch, Title } from '../components';
-import { category_radio_grp_1, category_radio_grp_2, category_radio_grp_3 } from '../utils/ui';
+import { categories } from '../utils/ui';
 
 import type { NavigationScreenProp } from 'react-navigation';
-
-const categories = [...category_radio_grp_1, ...category_radio_grp_2, ...category_radio_grp_3];
 
 type Props = {
   navigation: NavigationScreenProp<*>,
@@ -41,9 +39,7 @@ export class SearchProductsResults extends Component<Props, State> {
     this.setState({ terms });
   }
 
-  getCategoryLabel = (num: number): string =>
-    // $FlowFixMe
-    categories.find(g => g.value == num).label;
+  getCategoryLabel = (num: number): string => categories.find(g => g.value == num).label;
 
   render() {
     const { terms } = this.state;

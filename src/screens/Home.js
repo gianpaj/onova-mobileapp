@@ -53,16 +53,10 @@ class HomeComponent extends PureComponent<Props, State> {
     this.state = {
       index: 0,
       dialogVisible: false,
-      routes: [
-        { key: 0, title: 'Бакалія' },
-        { key: 1, title: 'Чай та кава' },
-        { key: 2, title: 'Оригінальна продукція' },
-        { key: 3, title: 'Снеки' },
-        { key: 4, title: 'Напої' },
-        { key: 5, title: "Здоров'я та краса" },
-      ],
+      // for drop
+      routes: categories.map(c => ({ key: c.value, title: c.label })),
     };
-    if (APP_NAME == 'onova') {
+    if (APP_NAME === 'onova') {
       this.state.routes = [
         // { key: 0, title: I18n.t('home.clothes_men') },
         // { key: 1, title: I18n.t('home.clothes_women') },
@@ -92,6 +86,7 @@ class HomeComponent extends PureComponent<Props, State> {
   );
 
   _renderScene = ({ route }) => {
+    // for drop
     let categoryIdsTabs = categories.map(cat => cat.value);
     let sellerType = 'reseller';
     if (APP_NAME === 'onova') {
@@ -104,27 +99,15 @@ class HomeComponent extends PureComponent<Props, State> {
       sellerType = 'designer';
     }
 
-    if (this.props.skippedLogin) {
-      // if (APP_NAME === 'onova') {
-      //   return (
-      //     <ImageGrid apiURL={`/api/products/?categoryIds=${categoryIdsTabs[route.key]}&sellerType=${sellerType}`} />
-      //   );
-      // }
+    // if (this.props.skippedLogin) {
+    //   return <ImageGrid apiURL={`/api/products/?categoryIds=${categoryIdsTabs[route.key]}&sellerType=${sellerType}`} />;
+    // }
+
+    if (APP_NAME === 'onova') {
       return <ImageGrid apiURL={`/api/products/?categoryIds=${categoryIdsTabs[route.key]}&sellerType=${sellerType}`} />;
     }
 
-    // if (APP_NAME === 'onova') {
-    //   return <ImageGrid apiURL={`/api/products/?categoryIds=${route.key}&sellerType=${sellerType}`} />;
-    // }
-
-    // switch (route.key) {
-    //   case 0:
-    //   case 1:
-    //   case 2:
-    return <ImageGrid apiURL={`/api/products/?categoryIds=${categoryIdsTabs[route.key]}`} />;
-    //   default:
-    //     return null;
-    // }
+    return <ImageGrid apiURL={`/api/products/?categoryIds=${route.key}&sellerType=${sellerType}`} />;
   };
 
   goToDropsFeed = () => {

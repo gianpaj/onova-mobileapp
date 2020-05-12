@@ -1,5 +1,3 @@
-// @flow
-
 export default {
   MIN_LENGTH_DESCRIPTION: 7,
   MAX_LENGTH_DESCRIPTION: 1000,
@@ -11,7 +9,7 @@ export default {
   MAX_LENGTH_PER_TAG: 30,
   MIN_LENGTH_REPORT: 7,
   MAX_LENGTH_REPORT: 300,
-  MIN_WEIGHT: 100,
+  MIN_WEIGHT: 50,
   MAX_WEIGHT: 5000,
   MIN_TAGS: 0,
   MAX_TAGS: 30,
@@ -22,6 +20,6 @@ export default {
   HASHTAG_REGEX: /^$|^[a-zA-Z\u0400-\u04FF0-9_]+$/,
   // INSTABUG_TOKEN: '***REMOVED***',
   // BRAINTREE_TOKENIZATION_KEY: 'sandbox_45rbtwk4_wpk6jkwxv5kpqp58',
-  MIN_PRICE: 150, // valid including
+  MIN_PRICE: 10, // valid including
   NUM_HOURS_FOR_SELLER_TO_CONFIRM: 48,
 };

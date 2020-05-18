@@ -1419,19 +1419,6 @@
   resolved "https://registry.yarnpkg.com/@nodelib/fs.stat/-/fs.stat-1.1.3.tgz#2b5a3ab3f918cca48a8c754c08168e3f03eba61b"
   integrity sha512-shAmDyaQC4H92APFoIaVDHCx5bStIocgvbwQyxPRrbUY20V1EYTbSDchWbuwlMG3V17cprZhA6+78JfB+3DTPw==
 
-"@pusher/chatkit-client@^1.2.2":
-  version "1.2.2"
-  resolved "https://registry.yarnpkg.com/@pusher/chatkit-client/-/chatkit-client-1.2.2.tgz#63326d25af119ab9b47bbd81e8191fa7cbd3352a"
-  integrity sha512-VTXVR+CRRkkqp1z1AK8NhDtWKsnvVwHT33b2Em7tlMbcpJT17YHm0wsOZLytKJkO1QG5WMdYuOsGPkymBnMYww==
-  dependencies:
-    "@pusher/platform" "^0.16.0"
-    ramda "^0.25.0"
-
-"@pusher/platform@^0.16.0":
-  version "0.16.0"
-  resolved "https://registry.yarnpkg.com/@pusher/platform/-/platform-0.16.0.tgz#82510641fc3b4b7ee492726799266d59c5f35178"
-  integrity sha512-fN8GgHejm1U/WC6h9KcWfqK3kptFxMNSVXAhyCBkVek9mr63vvHnWBUmFcOZ1DBNWj8zBRxTSazfm2OvGOkkuQ==
-
 "@react-native-community/async-storage@^1.4.1":
   version "1.4.1"
   resolved "https://registry.yarnpkg.com/@react-native-community/async-storage/-/async-storage-1.4.1.tgz#c774c74b94e48193d910d7c9b3f80dd9777975df"
@@ -2168,6 +2155,11 @@ agent-base@^4.1.0:
   integrity sha512-JVwXMr9nHYTUXsBFKUqhJwvlcYU/blreOEUkhNR2eXZIvwd+c+o5V4MgDPKWnMS/56awN3TRzIP+KoPn+roQtg==
   dependencies:
     es6-promisify "^5.0.0"
+
+agentkeepalive@2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/agentkeepalive/-/agentkeepalive-2.2.0.tgz#c5d1bd4b129008f1163f236f86e5faea2026e2ef"
+  integrity sha1-xdG9SxKQCPEWPyNvhuX66iAm4u8=
 
 "airbnb-js-shims@^1 || ^2":
   version "2.1.1"
@@ -10541,11 +10533,6 @@ ramda@^0.21.0:
   resolved "https://registry.yarnpkg.com/ramda/-/ramda-0.21.0.tgz#a001abedb3ff61077d4ff1d577d44de77e8d0a35"
   integrity sha1-oAGr7bP/YQd9T/HVd9RN536NCjU=
 
-ramda@^0.25.0:
-  version "0.25.0"
-  resolved "https://registry.yarnpkg.com/ramda/-/ramda-0.25.0.tgz#8fdf68231cffa90bc2f9460390a0cb74a29b29a9"
-  integrity sha512-GXpfrYVPwx3K7RQ6aYT8KPS8XViSXUVJT1ONhoKPE9VAleW42YE+U+8VEyGWt41EnEQW7gwecYJriTI0pKoecQ==
-
 randexp@0.4.6:
   version "0.4.6"
   resolved "https://registry.yarnpkg.com/randexp/-/randexp-0.4.6.tgz#e986ad5e5e31dae13ddd6f7b3019aa7c87f60ca3"
@@ -12262,6 +12249,15 @@ send@0.16.2:
     range-parser "~1.2.0"
     statuses "~1.4.0"
 
+sendbird@^3.0.122:
+  version "3.0.122"
+  resolved "https://registry.yarnpkg.com/sendbird/-/sendbird-3.0.122.tgz#a3e1cd926184e627f29421b4d68ab1f3272fe683"
+  integrity sha512-lnMPM259acJNySrXApmfEKHyyKVHMocsGkvUFjAzxU07BXmIZlBD5yDIVhYE3Q+fZPd6IdvHzw/TB6SgYPO1og==
+  dependencies:
+    agentkeepalive "2.2.0"
+    ws "6.0.0"
+    xhr2 "0.1.4"
+
 serialize-error@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/serialize-error/-/serialize-error-2.1.0.tgz#50b679d5635cdf84667bdc8e59af4e5b81d5f60a"
@@ -13744,6 +13740,13 @@ write@^0.2.1:
   dependencies:
     mkdirp "^0.5.1"
 
+ws@6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/ws/-/ws-6.0.0.tgz#eaa494aded00ac4289d455bac8d84c7c651cef35"
+  integrity sha512-c2UlYcAZp1VS8AORtpq6y4RJIkJ9dQz18W32SpR/qXGfLDZ2jU4y4wKvvZwqbi7U6gxFQTeE+urMbXU/tsDy4w==
+  dependencies:
+    async-limiter "~1.0.0"
+
 ws@^1.1.0, ws@^1.1.5:
   version "1.1.5"
   resolved "https://registry.yarnpkg.com/ws/-/ws-1.1.5.tgz#cbd9e6e75e09fc5d2c90015f21f0c40875e0dd51"
@@ -13791,6 +13794,11 @@ xcode@2.0.0, xcode@^2.0.0:
   dependencies:
     simple-plist "^1.0.0"
     uuid "^3.3.2"
+
+xhr2@0.1.4:
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/xhr2/-/xhr2-0.1.4.tgz#7f87658847716db5026323812f818cadab387a5f"
+  integrity sha1-f4dliEdxbbUCYyOBL4GMras4el8=
 
 xml-name-validator@^3.0.0:
   version "3.0.0"

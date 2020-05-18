@@ -7,7 +7,7 @@ import thunk from 'redux-thunk';
 import { createReactNavigationReduxMiddleware } from 'react-navigation-redux-helpers';
 
 import NavigationReducer from './reducers/navigationReducer';
-import loginReducer from './reducers/loginReducer';
+import LoginReducer from './reducers/loginReducer';
 import RefresherReducer from './reducers/screenRefreshReducer';
 
 import type { NavigationState } from './types/navigationReducer';
@@ -22,27 +22,23 @@ const config1 = {
 const reactNavigation = createReactNavigationReduxMiddleware(
   'root',
   (state: { LoginReducer: LoginState, NavigationReducer: NavigationState }) => {
-    return state.LoginReducer.isLoggedIn == true
+    return state.LoginReducer.isLoggedIn
       ? state.NavigationReducer.stateForLoggedIn
       : state.NavigationReducer.stateForLoggedOut;
   }
 );
 
 // We are only persisting the loginReducer
-const LoginReducer = persistReducer(config1, loginReducer);
+const LoginReducerPersisted = persistReducer(config1, LoginReducer);
 
-// combineReducer applied on persisted(loginReducer) and NavigationReducer
 const rootReducer = combineReducers({
   NavigationReducer,
-  LoginReducer,
+  LoginReducer: LoginReducerPersisted,
   RefresherReducer,
 });
 
-// TODO: create reducer to keep track screen navigations
-// Analytics.screen('Photo Screen', { feed: 'private' });
-
 if (__DEV__) {
-  console.debug('__DEV__ mode on');
+  console.debug('__DEV__ mode');
 }
 
 const middlewares = [thunk, reactNavigation /*, analytics */];

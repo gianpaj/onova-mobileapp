@@ -1,8 +1,7 @@
 {
   "API_URL": "http://192.168.1.5:4040",
   "URL_BASE": "https://api.demo.uapay.ua",
-  "PUSHER_INSTANCE": "",
-  "PUSHER_TOKEN_PROVIDER": "https://chat.onova.co/pusher/auth",
+  "SENDBIRD_APP_ID": "",
   "SENTRY_URL": "",
   "SEGMENT_API": "..."
 }

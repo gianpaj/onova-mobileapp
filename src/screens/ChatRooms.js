@@ -6,10 +6,11 @@ import { connect } from 'react-redux';
 import { ActivityIndicator, FlatList, RefreshControl, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Badge, Body, Container, Left, Right } from 'native-base';
 import { NavigationActions } from 'react-navigation';
-// import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Feather from 'react-native-vector-icons/Feather';
+import SendBird from 'sendbird';
 
+import type { GroupChannelListQuery } from 'sendbird';
 import type { NavigationScreenProp } from 'react-navigation';
 import type { UserData, ReduxState, Order, Room } from '../types';
 
@@ -20,8 +21,6 @@ import * as ui from '../utils/ui';
 import { Header, Avatar, Title } from '../components';
 import { getRoomName } from './Chat';
 import { store } from '../App';
-
-import { currentUser as pusherCurrentUser } from '../actions/actionCreator';
 
 const ONOVA_BOT_ID = '5bd1f7af46c62e6cdee546d0';
 
@@ -64,21 +63,36 @@ class ChatContainer extends Component<Props, State> {
   };
 
   componentDidMount() {
-    // return this.setState({
-    //   ordersAndChats: [],
-    //   isLoading: false,
-    // });
-    if (!pusherCurrentUser) {
-      console.error('no pusherCurrentUser');
+    const sb = SendBird.getInstance();
+    if (!sb) {
+      console.error('no sendBird');
       this.setState({ hasError: true });
       return;
     }
     this.initialise();
 
     this.didFocusListener = this.props.navigation.addListener('didFocus', () => {
-      if (pusherCurrentUser) this.initialise();
+      if (sb) this.initialise();
+      else console.error('no sendBird didFocus');
     });
   }
+
+  sbGetRooms = (groupChannelListQuery: GroupChannelListQuery) => {
+    return new Promise((resolve, reject) => {
+      groupChannelListQuery.next((channels, error) => {
+        if (error) {
+          return reject(error);
+        }
+        resolve(channels);
+      });
+    });
+  };
+
+  sbCreateGroupChannelListQuery = () => {
+    const sb = SendBird.getInstance();
+    sb.removeAllChannelHandlers();
+    return sb.GroupChannel.createMyGroupChannelListQuery();
+  };
 
   componentWillUnmount() {
     if (this.didFocusListener) this.didFocusListener.remove();
@@ -86,16 +100,21 @@ class ChatContainer extends Component<Props, State> {
 
   initialise = () => {
     this.setState({ isLoading: true });
-    this.getChatsAndTheirOrders()
+    const groupChannelListQuery = this.sbCreateGroupChannelListQuery();
+    if (!groupChannelListQuery || groupChannelListQuery.hasNext) {
+      this.setState({ hasError: true, isLoading: false });
+    }
+    this.sbGetRooms(groupChannelListQuery)
+      .then(this.getChatsAndTheirOrders)
       .then(ordersAndChats => this.setState({ ordersAndChats, isLoading: false }))
       .catch(err => {
         this.setState({ hasError: true, isLoading: false });
-        console.debug(err);
+        console.error(err);
         ui.showToast(err.message);
       });
   };
 
-  async getChatsAndTheirOrders(): Promise<Array<any>> {
+  getChatsAndTheirOrders = async (rooms: Array<SendBird.GroupChannel>): Promise<Array<Room>> => {
     console.debug('getChatsAndTheirOrders');
     const { token, userData } = this.props;
     const orders = (await api.getOrders(token)).filter(
@@ -103,71 +122,56 @@ class ChatContainer extends Component<Props, State> {
     );
     if (orders.length === 0) return [];
 
-    const rooms = await pusherCurrentUser.getJoinableRooms();
-    const allRooms = [...rooms, ...pusherCurrentUser.rooms];
+    // const sb = SendBird.getInstance();
+    // const rooms = await sb.getJoinableRooms();
+    const allRooms = [...rooms];
 
     // filter chat rooms by checking if there is
     // at least one room name == order generated name
     // console.log(orders);
-    const thisOrders = orders.map(o => getRoomName(o));
-    let roomsAndTheirOrders = allRooms.filter(function(r) {
-      return this.indexOf(r.name) >= 0;
-    }, thisOrders);
-    // add order and room objects
-    roomsAndTheirOrders = roomsAndTheirOrders.map(r => {
-      r.orders = orders.filter((o: Order) => getRoomName(o) == r.name);
-      return r;
+    // const thisOrders = orders.map(o => getRoomName(o));
+    // let roomsAndTheirOrders = allRooms.filter(function(r) {
+    //   return this.indexOf(r.name) >= 0;
+    // }, thisOrders);
+    // // add order and room objects
+    // roomsAndTheirOrders = roomsAndTheirOrders.map(r => {
+    //   r.orders = orders.filter((o: Order) => getRoomName(o) == r.name);
+    //   return r;
+    // });
+    let roomsAndTheirOrders = allRooms;
+
+    console.log(roomsAndTheirOrders);
+
+    const ordersAndChats = roomsAndTheirOrders.map(room => {
+      let partner;
+      // if (room.orders.filter(o => o.buyerType == 'UserWeb').length > 0) {
+      //   partner = {
+      //     userId: ONOVA_BOT_ID,
+      //     name: `${room.orders[0].buyer.displayName} (web)`,
+      //   };
+      // } else {
+      partner = room.members.filter(u => u.userId !== ONOVA_BOT_ID).find(u => u.userId !== userData._id);
+      // const cursor = await sb.readCursor({
+      //   roomId: room.id,
+      // });
+      // }
+
+      // const isPartnerOnline = partner.connectionStatus && partner.connectionStatus == 'online';
+      const isPartnerOnline = partner.connectionStatus === 'online';
+      return {
+        ...room,
+        // if no messages (very first order step)
+        lastMessage: room.lastMessage,
+        isPartnerOnline,
+        partner,
+      };
     });
-
-    const ordersAndChats = await Promise.all(
-      roomsAndTheirOrders.map(async room => {
-        let msgs;
-        try {
-          await pusherCurrentUser.subscribeToRoom({
-            roomId: room.id,
-            hooks: { onMessage: () => null },
-            messageLimit: 1,
-          });
-          msgs = await pusherCurrentUser.fetchMessages({
-            roomId: room.id,
-            direction: 'older',
-            limit: 1,
-          });
-        } catch (err) {
-          throw new Error(err);
-        }
-
-        let partner, unreadCount;
-        if (room.orders.filter(o => o.buyerType == 'UserWeb').length > 0) {
-          partner = {
-            _id: ONOVA_BOT_ID,
-            name: `${room.orders[0].buyer.displayName} (web)`,
-          };
-        } else {
-          partner = room.users.filter(u => u.id !== ONOVA_BOT_ID).find(u => u.id !== userData._id);
-          const cursor = await pusherCurrentUser.readCursor({
-            roomId: room.id,
-          });
-          unreadCount = unreads(cursor, msgs) || 0;
-        }
-
-        const isPartnerOnline = partner.presence && partner.presence.state == 'online';
-        return {
-          ...room,
-          // if no messages (very first order step)
-          lastMessage: msgs.length ? msgs[msgs.length - 1] : { createdAt: room.createdAt },
-          isPartnerOnline,
-          unreadCount,
-          partner,
-        };
-      })
-    );
 
     if (ordersAndChats.length > 1) {
       ordersAndChats.sort((a, b) => new Date(b.lastMessage.createdAt) - new Date(a.lastMessage.createdAt));
     }
     return ordersAndChats;
-  }
+  };
 
   goToChat = (roomId: string) => {
     const navigateToChat = NavigationActions.navigate({
@@ -215,14 +219,13 @@ class ChatContainer extends Component<Props, State> {
   };
   */
 
-  // eslint-disable-next-line react/no-unused-prop-types
   _renderRoomRow = ({ item }: { item: Room }) => {
-    let { lastMessage } = item;
+    const { lastMessage } = item;
     let from;
     const myUserId = this.props.userData._id;
 
     // if (lastMessage.messageType == 'user') {
-    const isMyMessage = lastMessage.senderId == myUserId;
+    const isMyMessage = lastMessage._sender.userId == myUserId;
 
     from = isMyMessage ? I18n.t('chat_rooms.my_message_prefix') : '';
     // } else {
@@ -237,26 +240,30 @@ class ChatContainer extends Component<Props, State> {
             onPress={() => this.goToChat(item.id)}
             size="verySmall"
             uri={item.partner.avatarURL}
-            placeholderText={item.partner.name}
+            placeholderText={item.partner.nickname}
           />
           <View style={[st.flex1, st.content]}>
             <View style={st.contentHeader}>
               <View style={{ flexDirection: 'row' }}>
-                <Text style={[st.name, item.unreadCount > 0 && st.unread]}>{item.partner.name}</Text>
+                <Text style={[st.name, item.unreadMessageCount > 0 && st.unread]}>{item.partner.nickname}</Text>
                 {lastMessage.senderId !== -1 && item.isPartnerOnline && <View style={st.onlineDot} />}
               </View>
-              <Text style={[st.datetime, item.unreadCount > 0 && st.unread]}>
+              <Text style={[st.datetime, item.unreadMessageCount > 0 && st.unread]}>
                 {ui.formatTime(lastMessage.createdAt)}
               </Text>
             </View>
             <View style={st.contentHeader}>
-              <Text numberOfLines={1} style={[st.text, item.unreadCount > 0 && st.unreadText]}>
+              <Text numberOfLines={1} style={[st.text, item.unreadMessageCount > 0 && st.unreadText]}>
                 {from}
-                {lastMessage.attachment ? <Feather name="camera" size={11} color={colors.grey3} /> : lastMessage.text}
+                {lastMessage.attachment ? (
+                  <Feather name="camera" size={11} color={colors.grey3} />
+                ) : (
+                  lastMessage.message
+                )}
               </Text>
-              {item.unreadCount > 0 && (
+              {item.unreadMessageCount > 0 && (
                 <Badge style={st.unreadBadge}>
-                  <Text style={st.unreadBadgeText}>{item.unreadCount}</Text>
+                  <Text style={st.unreadBadgeText}>{item.unreadMessageCount}</Text>
                 </Badge>
               )}
             </View>
@@ -266,7 +273,7 @@ class ChatContainer extends Component<Props, State> {
     );
   };
 
-  _keyExtractor = (item): string => item.id.toString();
+  _keyExtractor = (item: SendBird.GroupChannel): string => item.url;
 
   _renderSeparator = () => <View style={st.separator} />;
   _renderSeparatorHorizontal = () => <View style={st.separatorHorizontal} />;

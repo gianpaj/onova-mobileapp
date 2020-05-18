@@ -171,8 +171,8 @@ export class DropCardComponent extends Component<Props> {
           {willDropIn15Mins ? (
             <Countdown size={14} until={differenceInSeconds(scheduledAt, new Date())} />
           ) : (
-              <Text style={styles.dateStrings}>{format(scheduledAt, 'D MMM HH:mm')}</Text>
-            )}
+            <Text style={styles.dateStrings}>{format(scheduledAt, 'D MMM HH:mm')}</Text>
+          )}
         </List>
         <TouchableWithoutFeedback onLongPress={() => isAdmin && this.onDeleteDrop(drop.uuid)}>
           <FlatList

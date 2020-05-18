@@ -10,7 +10,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { NavigationActions } from 'react-navigation';
 import { GiftedChat, Bubble, SystemMessage } from 'react-native-gifted-chat';
 
-import { currentUser as pusherCurrentUser } from '../actions/actionCreator';
+import { currentUser as sendBirdCurrentUser } from '../actions/actionCreator';
 import I18n from '../i18n';
 
 import type { NavigationScreenProp } from 'react-navigation';
@@ -109,8 +109,8 @@ class ChatContainer extends Component<Props, State> {
 
   componentWillUnmount() {
     // stop receiving events from the chat room
-    if (pusherCurrentUser && pusherCurrentUser.roomSubscriptions[this.state.roomId])
-      pusherCurrentUser.roomSubscriptions[this.state.roomId].cancel();
+    if (sendBirdCurrentUser && sendBirdCurrentUser.roomSubscriptions[this.state.roomId])
+      sendBirdCurrentUser.roomSubscriptions[this.state.roomId].cancel();
 
     // cancel initialise(). i.e. when the Chat screen is opened and closed quickly
     if (this.rejectProm) {
@@ -125,43 +125,43 @@ class ChatContainer extends Component<Props, State> {
     const { userData } = this.props;
     let thisRoom;
     return new Promise((resolve, reject) => {
-      if (!pusherCurrentUser) return reject('no pusherCurrentUser');
-      if (!orderId && !roomId) return reject('orderId and roomId are missing');
+      if (!sendBirdCurrentUser) return reject('no sendBirdCurrentUser');
+      if (!orderId && !roomId) return reject('wither orderId or roomId are missing');
       this.rejectProm = reject;
 
       Promise.resolve()
         .then(() => {
           // coming from ChatRooms or a Push Notification
-          if (roomId) {
-            return pusherCurrentUser
-              .subscribeToRoom({
-                roomId,
-                hooks: { onMessage: this.onMessage },
-                messageLimit: 0,
-              })
-              .then(() =>
-                pusherCurrentUser
-                  .joinRoom({ roomId })
-                  .then(room => {
-                    console.debug('1 Joined room ID:', room.id);
-                    thisRoom = room;
-                    return room;
-                  })
-                  .then(room => room.userIds.filter(id => id !== ONOVA_BOT_ID).find(id => id !== userData._id))
-                  // if no user then it's a UserWeb
-                  .then(user => user && api.getUser(user))
-                  .then(partner => partner && this.setState({ partner }))
-                  .catch(err => {
-                    addErrorBreadcrumb({
-                      category: 'chat',
-                      errMsg: `Error joining room ID: ${roomId}`,
-                    });
-                    reject(err);
-                  })
-              );
+          if (!roomId) {
+            return api.getOrder(orderId, this.props.token);
           }
 
-          return api.getOrder(orderId, this.props.token);
+          return sendBirdCurrentUser
+            .subscribeToRoom({
+              roomId,
+              hooks: { onMessage: this.onMessage },
+              messageLimit: 0,
+            })
+            .then(() =>
+              sendBirdCurrentUser
+                .joinRoom({ roomId })
+                .then(room => {
+                  console.debug('1 Joined room ID:', room.id);
+                  thisRoom = room;
+                  return room;
+                })
+                .then(room => room.userIds.filter(id => id !== ONOVA_BOT_ID).find(id => id !== userData._id))
+                // if no user then it's a UserWeb
+                .then(user => user && api.getUser(user))
+                .then(partner => partner && this.setState({ partner }))
+                .catch(err => {
+                  addErrorBreadcrumb({
+                    category: 'chat',
+                    errMsg: `Error joining room ID: ${roomId}`,
+                  });
+                  reject(err);
+                })
+            );
         })
         .then(o => {
           // skip if coming from ChatRooms
@@ -172,10 +172,10 @@ class ChatContainer extends Component<Props, State> {
           // else join an existing room or create one
 
           // joinable rooms are those you're not a member of
-          return pusherCurrentUser
+          return sendBirdCurrentUser
             .getJoinableRooms()
             .then((rooms: Array<any>) => {
-              const allRooms = [...rooms, ...pusherCurrentUser.rooms];
+              const allRooms = [...rooms, ...sendBirdCurrentUser.rooms];
               return allRooms.filter(r => r.name == getRoomName(o));
             })
             .then(rooms => {
@@ -185,14 +185,14 @@ class ChatContainer extends Component<Props, State> {
               // by a partner (seller) or myself
               if (rooms.length > 0) {
                 const firstRoom = rooms[0].id;
-                return pusherCurrentUser
+                return sendBirdCurrentUser
                   .subscribeToRoom({
                     roomId,
                     hooks: { onMessage: this.onMessage },
                     messageLimit: 0,
                   })
                   .then(() =>
-                    pusherCurrentUser
+                    sendBirdCurrentUser
                       .joinRoom({ roomId: firstRoom })
                       .then(room => {
                         roomId = room.id;
@@ -220,7 +220,7 @@ class ChatContainer extends Component<Props, State> {
               }
 
               // no existing room existed
-              return pusherCurrentUser
+              return sendBirdCurrentUser
                 .createRoom({
                   name: getRoomName(o),
                   private: true,
@@ -250,7 +250,7 @@ class ChatContainer extends Component<Props, State> {
         })
         .then(() => this.setState({ roomId }))
         .then(() =>
-          pusherCurrentUser.fetchMessages({
+          sendBirdCurrentUser.fetchMessages({
             roomId,
             direction: 'newer',
             limit: 100,
@@ -266,7 +266,7 @@ class ChatContainer extends Component<Props, State> {
         .then(lastMsg => {
           if (!lastMsg) return;
           setTimeout(() => {
-            pusherCurrentUser
+            sendBirdCurrentUser
               .setReadCursor({
                 roomId,
                 position: lastMsg.id,
@@ -359,7 +359,7 @@ class ChatContainer extends Component<Props, State> {
     const newMsg = this.createGiftedMessage(m);
 
     setTimeout(() => {
-      pusherCurrentUser
+      sendBirdCurrentUser
         .setReadCursor({
           roomId: this.state.roomId,
           position: m.id,
@@ -376,7 +376,9 @@ class ChatContainer extends Component<Props, State> {
         });
     }, MARK_AS_READ_AFTER_MS);
 
-    if (this.state.messages && this.state.messages.length) {
+    const { messages } = this.state;
+
+    if (messages && messages.length) {
       return this.setState(prevState => {
         return {
           messages: [newMsg, ...prevState.messages],
@@ -437,7 +439,7 @@ class ChatContainer extends Component<Props, State> {
     if (messages[0].text) {
       const { text } = messages[0];
 
-      pusherCurrentUser
+      sendBirdCurrentUser
         .sendMessage({ text, roomId: this.state.roomId })
         .then(() => {
           // console.debug('Message sent:', id);
@@ -450,7 +452,7 @@ class ChatContainer extends Component<Props, State> {
 
       this.setState({ uploadingImage: true });
       // Sending Images via Pusher
-      // pusherCurrentUser
+      // sendBirdCurrentUser
       //   .sendMessage({
       //     text: ' ', // cannot be empty string or null
       //     roomId: this.state.roomId,
@@ -473,7 +475,7 @@ class ChatContainer extends Component<Props, State> {
           },
           token
         );
-        pusherCurrentUser
+        sendBirdCurrentUser
           .sendMessage({
             text: ' ', // cannot be empty string or null
             roomId: this.state.roomId,
@@ -482,12 +484,8 @@ class ChatContainer extends Component<Props, State> {
               link: res['thumb.jpeg'].path,
             },
           })
-          .then(id => {
-            console.debug('Image message sent:', id);
-          })
-          .catch(err => {
-            console.error(err);
-          })
+          .then(id => console.debug('Image message sent:', id))
+          .catch(err => console.error(err))
           .then(() => {
             this.setState({ uploadingImage: false });
           });

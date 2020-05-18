@@ -3,12 +3,11 @@
 import { Platform } from 'react-native';
 import { Toast } from 'antd-mobile-rn';
 import { Toast as ToastNB } from 'native-base';
-import { ChatManager, TokenProvider } from '@pusher/chatkit-client/react-native';
+import Sendbird from 'sendbird';
 import { Sentry } from 'react-native-sentry';
 import Analytics from 'react-native-analytics-segment-io';
 import { APP_NAME } from 'react-native-dotenv';
 
-import type { PusherUser } from '@pusher/chatkit-client';
 import {
   DO_REFRESH,
   DONOT_REFRESH,
@@ -43,7 +42,8 @@ let currentUser: PusherUser;
 
 const { isProd, analyticsEnabled, config } = api;
 
-const enabledPusher = false;
+// const enabledPusher = isProd == true;
+const enabledSendbird = true;
 
 const login = (data: LoginData) => (dispatch: Dispatch) => {
   dispatch({ type: LOGIN_PENDING });
@@ -76,7 +76,7 @@ const login = (data: LoginData) => (dispatch: Dispatch) => {
       }
       return userData;
     })
-    .then(userData => initializePusher(userData, userData.token))
+    .then(userData => initializeSendbird(userData))
     .then(userData => {
       // FIXME: use `userData` key in payload
       dispatch({ type: LOGIN_SUCCESS, payload: userData });
@@ -86,9 +86,9 @@ const login = (data: LoginData) => (dispatch: Dispatch) => {
         .catch(err => {
           console.warn(err);
           dispatch({ type: LOGIN_FAIL });
-        })
-        .then(() => Toast.hide());
+        });
     })
+    .then(() => Toast.hide())
     .catch((error: APIError) => {
       Toast.hide();
       if (error.message === 'NOT_VERIFIED') {
@@ -109,15 +109,15 @@ const login = (data: LoginData) => (dispatch: Dispatch) => {
     });
 };
 
-const PUSHER_CONN_TIMEOUT = 30 * 1000;
+const SENDBIRD_CONN_TIMEOUT = 30 * 1000;
 
-const initializePusher = (userData: UserData, token: string): Promise<any | Error> => {
+const initializeSendbird = (userData: UserData): Promise<any | Error> => {
   return new Promise((resolve, reject) => {
-    if (!enabledPusher) {
-      console.log('%cskipping Pusher', 'color: green');
+    if (!enabledSendbird) {
+      console.log('%cskipping Sendbird', 'color: green');
       return resolve(userData);
     }
-    console.log('initializePusher');
+    console.log('initializeSendbird');
 
     const timer = setTimeout(() => {
       addErrorBreadcrumb({
@@ -126,62 +126,17 @@ const initializePusher = (userData: UserData, token: string): Promise<any | Erro
         level: 'fatal',
       });
       reject(new Error('Error connecting to Chat provider'));
-    }, PUSHER_CONN_TIMEOUT);
+    }, SENDBIRD_CONN_TIMEOUT);
 
-    const chatManager = new ChatManager({
-      instanceLocator: config.PUSHER_INSTANCE,
-      userId: userData._id,
-      tokenProvider: new TokenProvider({
-        url: config.PUSHER_TOKEN_PROVIDER,
-        headers: {
-          token: token,
-          avatarURL: userData.profilePic,
-          username: userData.username,
-        },
-      }),
-      logger: {
-        error: error =>
-          addErrorBreadcrumb({
-            category: 'chat',
-            error,
-            level: 'fatal',
-          }),
-        warn: error =>
-          addErrorBreadcrumb({
-            category: 'chat',
-            error,
-          }),
-        info: () => {},
-        debug: () => {},
-        verbose: () => {},
-      },
-      connectionTimeout: PUSHER_CONN_TIMEOUT,
-    });
-    chatManager
-      .connect()
-      .then(user => {
-        console.log('Pusher: connected');
-        currentUser = user;
+    // const sb = Sendbird.getInstance();
+
+    // if (!sb) return reject('Sendbird is not initialized');
+
+    sbConnect(userData._id, userData.displayName)
+      .then(() => {
+        console.log('Sendbird: connected');
         clearTimeout(timer);
         resolve(userData);
-        //   // TODO: Subscribe to all rooms the user is a member of
-        //   user.rooms.map(room =>
-        //     user.subscribeToRoom({
-        //       roomId: room.id,
-        //       hooks: { onNewMessage: onNewMessage },
-        //       messageLimit: 1,
-        //     })
-        //   );
-        //   const r = user.rooms.map(room => {
-        //     const cursor = user.readCursor({
-        //       roomId: room.id,
-        //     });
-        //     return { [room.id]: cursor.position };
-        //   });
-        //   console.log(r);
-        // })
-        // .then(() => {
-        //   resolve(userData);
       })
       .catch(error => {
         addErrorBreadcrumb({
@@ -222,10 +177,19 @@ const checkLogin = (userData: UserData, token: string) => (dispatch: Dispatch) =
         Analytics.track('reload_login');
       }
     })
-    .then(() => initializePusher(userData, token))
+    .then(() => initializeSendbird(userData))
     .then(() => dispatch({ type: RELOAD_SUCCESS }))
     .then(() => registerPushNotifications())
     .then(pushToken => {
+      if (enabledSendbird) {
+        const sb = Sendbird.getInstance();
+        if (sb) {
+          sb.registerGCMPushTokenForCurrentUser(pushToken, (result, error) => {
+            if (error) throw error;
+            console.log(result);
+          });
+        }
+      }
       sendToken(pushToken, userData, token);
       addNavigationBreadcrumb({ message: RELOAD_SUCCESS });
     })
@@ -270,7 +234,7 @@ const signup = (data: SignupData) => (dispatch: Dispatch) => {
 
       // console.warn(userData);
 
-      // initializePusher(userData)
+      // initializeSendbird(userData)
       //   .then(() => registerPushNotifications())
       //   .then(pushToken => {
       //     if (pushToken) return sendToken(pushToken, userData);
@@ -416,8 +380,51 @@ const enableCancelOrder = () => ({ type: DO_CANCEL_ORDER });
 
 const disableCancelOrder = () => ({ type: DONOT_CANCEL_ORDER });
 
+const sbConnect = (userId: string, nickname: string) => {
+  return new Promise((resolve, reject) => {
+    if (!userId) {
+      reject('UserID is required.');
+      return;
+    }
+    if (!nickname) {
+      reject('Nickname is required.');
+      return;
+    }
+    const sb = new Sendbird({ appId: config.SENDBIRD_APP_ID });
+    sb.connect(userId, (user, error) => {
+      if (error) {
+        reject('Sendbird Login Failed.');
+        return;
+      }
+      sbUpdateProfile(nickname)
+        .then(() => resolve())
+        .catch(e => reject(e));
+    });
+  });
+};
+
+const sbUpdateProfile = nickname => {
+  return new Promise((resolve, reject) => {
+    if (!nickname) {
+      reject('Nickname is required.');
+      return;
+    }
+    const sb = Sendbird.getInstance();
+    // if (!sb) sb = new SendBird({ appId: APP_ID });
+    let profileUrl = '';
+    sb.updateCurrentUserInfo(nickname, profileUrl, (user, error) => {
+      if (error) {
+        console.warn('Update profile failed.');
+        reject(error);
+        return;
+      }
+      resolve();
+    });
+  });
+};
+
 export {
-  initializePusher,
+  initializeSendbird,
   login,
   checkLogin,
   signup,

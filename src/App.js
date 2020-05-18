@@ -4,7 +4,7 @@ import React from 'react';
 
 // eslint-disable-next-line import/default
 import codePush from 'react-native-code-push';
-import { ActivityIndicator, ImageBackground, StyleSheet } from 'react-native';
+import { ActivityIndicator, ImageBackground, StyleSheet, AppState } from 'react-native';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/lib/integration/react';
 import { Root } from 'native-base';
@@ -67,8 +67,13 @@ class App extends React.Component<*> {
     }
   }
 
+  componentDidMount() {
+    AppState.addEventListener('change', this._handleAppStateChange);
+  }
+
   componentWillUnmount() {
     if (analyticsEnabled) Analytics.flush();
+    AppState.removeEventListener('change', this._handleAppStateChange);
   }
 
   enableSegmentCom() {
@@ -86,6 +91,18 @@ class App extends React.Component<*> {
       <ActivityIndicator size="large" color={colors.black} />
     </ImageBackground>
   );
+
+  _handleAppStateChange = nextAppState => {
+    const sb = SendBird.getInstance();
+    if (!sb) return;
+    if (nextAppState === 'active') {
+      console.log('app is in foreground');
+      sb.setForegroundState();
+    } else if (nextAppState === 'background') {
+      console.log('app is in background');
+      sb.setBackgroundState();
+    }
+  };
 
   render() {
     return (

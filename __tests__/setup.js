@@ -23,14 +23,6 @@ global.FormData = function() {
 
 jest.mock('NativeAnimatedHelper');
 
-jest.mock('@pusher/chatkit-client', () => {
-  class ChatManager {
-    connect = jest.fn(() => Promise.resolve({}));
-  }
-  class TokenProvider {}
-  return { ChatManager, TokenProvider };
-});
-
 jest.mock('react-native-modal-datetime-picker');
 
 const mockNativeModules = {

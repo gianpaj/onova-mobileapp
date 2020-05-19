@@ -1,7 +1,5 @@
 // @flow
 
-import { APP_NAME } from 'react-native-dotenv';
-
 import {
   GETUSER_FAIL,
   GETUSER_PENDING,

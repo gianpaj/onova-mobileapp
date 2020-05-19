@@ -7,15 +7,18 @@ export type Action = {
   },
 };
 
+import type { UserData } from './index';
+
 export type LoginState = {
-  +checkedLoggedIn: boolean,
-  +isAdmin: boolean,
-  +data: any,
-  +fetchLoading: boolean,
-  +hasError: boolean,
-  +isLoggedIn: boolean,
-  +loading: boolean,
-  +isVerifyAccountModalVisible: false,
-  +token: string,
-  // +errorMsg: string,
+  // errorMsg: string,
+  checkedLoggedIn: boolean,
+  data?: UserData,
+  fetchLoading: boolean,
+  hasError: boolean,
+  isAdmin: boolean,
+  isLoggedIn: boolean,
+  isVerifyAccountModalVisible: false,
+  loading: boolean,
+  skippedLogin: boolean,
+  token: string,
 };

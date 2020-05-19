@@ -848,9 +848,9 @@ const st = StyleSheet.create({
   },
 });
 
-const mapStateToProps: any = (state: ReduxState) => ({
-  userData: state.LoginReducer.data,
-  token: state.LoginReducer.token,
+const mapStateToProps: any = ({ LoginReducer }: ReduxState) => ({
+  userData: LoginReducer.data,
+  token: LoginReducer.token,
 });
 
 export const Chat = connect(mapStateToProps)(ChatContainer);

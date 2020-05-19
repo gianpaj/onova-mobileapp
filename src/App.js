@@ -9,6 +9,7 @@ import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/lib/integration/react';
 import { Root } from 'native-base';
 import { Sentry } from 'react-native-sentry';
+import Sendbird from 'sendbird';
 import Analytics, { AnalyticsConstants } from 'react-native-analytics-segment-io';
 
 import configureStore from './store';
@@ -93,7 +94,7 @@ class App extends React.Component<*> {
   );
 
   _handleAppStateChange = nextAppState => {
-    const sb = SendBird.getInstance();
+    const sb = Sendbird.getInstance();
     if (!sb) return;
     if (nextAppState === 'active') {
       console.log('app is in foreground');

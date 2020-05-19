@@ -9,8 +9,9 @@ import ParsedText from 'react-native-parsed-text';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { NavigationActions } from 'react-navigation';
 import { GiftedChat, Bubble, SystemMessage } from 'react-native-gifted-chat';
+import Sendbird from 'sendbird';
 
-import { currentUser as sendBirdCurrentUser } from '../actions/actionCreator';
+import { registerChannelHandler, getPrevMessageList, sbCreatePreviousMessageListQuery } from '../actions/actionCreator';
 import I18n from '../i18n';
 
 import type { NavigationScreenProp } from 'react-navigation';
@@ -121,13 +122,19 @@ class ChatContainer extends Component<Props, State> {
     this.willFocusListener.remove();
   }
 
-  initialise(roomId: number, orderId?: string) {
+  initialise(roomId: string, orderId?: string) {
     const { userData } = this.props;
     let thisRoom;
     return new Promise((resolve, reject) => {
-      if (!sendBirdCurrentUser) return reject('no sendBirdCurrentUser');
-      if (!orderId && !roomId) return reject('wither orderId or roomId are missing');
+      const sb = Sendbird.getInstance();
+      if (!sb) return reject('Sendbird is not initialized');
+      if (!orderId && !roomId) return reject('either orderId or roomId are missing');
       this.rejectProm = reject;
+
+      registerChannelHandler(roomId);
+      this._getMessageList(true);
+
+      return resolve();
 
       Promise.resolve()
         .then(() => {
@@ -288,6 +295,23 @@ class ChatContainer extends Component<Props, State> {
         .catch(err => reject(err));
     });
   }
+
+  _getMessageList = (init: boolean) => {
+    if (!this.state.previousMessageListQuery && !init) {
+      return;
+    }
+    const { roomId }: { roomId: string } = this.props.navigation.state.params;
+    // if (!init) {
+    //   this.props.getPrevMessageList(this.state.previousMessageListQuery);
+    //   return;
+    // }
+
+    sbCreatePreviousMessageListQuery(roomId).then(previousMessageListQuery => {
+      this.setState({ previousMessageListQuery });
+      getPrevMessageList(previousMessageListQuery);
+    });
+    // .catch(() => this.props.navigation.goBack());
+  };
 
   setPartner = async (order: Order, room?: any) => {
     let partner;

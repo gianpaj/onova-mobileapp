@@ -161,17 +161,16 @@ export type PusherMessage = {
 //   users: Array<any>,
 // };
 
-export type Room = {
+export type Room = SendBird.GroupChannel & {
   createdAt: string,
-  id: number,
-  isPrivate: boolean,
   name: string,
   updatedAt: string,
-  users: Array<string>,
-  lastMessage: *,
   isPartnerOnline: *,
-  partner: PusherUser,
-  order: any,
+  partner: SendBird.User,
+  lastMessage: SendBird.UserMessage & {
+    _sender: SendBird.User,
+  },
+  order: Order,
 };
 
 type UserDataShorter = {

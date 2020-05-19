@@ -410,7 +410,6 @@ const sbUpdateProfile = nickname => {
       return;
     }
     const sb = Sendbird.getInstance();
-    // if (!sb) sb = new SendBird({ appId: APP_ID });
     let profileUrl = '';
     sb.updateCurrentUserInfo(nickname, profileUrl, (user, error) => {
       if (error) {
@@ -423,8 +422,166 @@ const sbUpdateProfile = nickname => {
   });
 };
 
+const registerChannelHandler = (channelUrl, dispatch) => {
+  const sb = Sendbird.getInstance();
+  const channelHandler = new sb.ChannelHandler();
+  registerCommonHandler(channelHandler, channelUrl, dispatch);
+  channelHandler.onUserJoined = (channel, user) => {
+    if (channel.url === channelUrl) {
+      console.log('user joined');
+      console.log(user);
+      // dispatch({
+      //   type: CHANNEL_CHANGED,
+      //   title: sbGetChannelTitle(channel),
+      //   memberCount: channel.memberCount,
+      // });
+    }
+  };
+  // channelHandler.onUserLeft = (channel, user) => {
+  //   if (channel.url === channelUrl) {
+  //     dispatch({
+  //       type: CHANNEL_CHANGED,
+  //       title: sbGetChannelTitle(channel),
+  //       memberCount: channel.memberCount,
+  //     });
+  //   }
+  // };
+  channelHandler.onReadReceiptUpdated = channel => {
+    if (channel.url === channelUrl) {
+      console.log('onReadReceiptUpdated');
+      // dispatch({ type: READ_RECEIPT_UPDATED });
+    }
+  };
+  channelHandler.onTypingStatusUpdated = channel => {
+    if (channel.url === channelUrl) {
+      const typing = sbIsTyping(channel);
+      console.log(typing);
+      // dispatch({
+      //   type: TYPING_STATUS_UPDATED,
+      //   typing: typing,
+      // });
+    }
+  };
+  sb.addChannelHandler(channelUrl, channelHandler);
+};
+
+const sbIsTyping = channel => {
+  if (channel.isTyping()) {
+    const typingMembers = channel.getTypingMembers();
+    if (typingMembers.length == 1) {
+      return `${typingMembers[0].nickname} is typing...`;
+    }
+    return 'several member are typing...';
+  }
+  return '';
+};
+
+const registerCommonHandler = (channelHandler: Sendbird.ChannelHandler, channelUrl, dispatch) => {
+  channelHandler.onMessageReceived = (channel, message) => {
+    if (channel.url === channelUrl) {
+      // if (channel.isGroupChannel()) {
+      // sbMarkAsRead({ channel });
+      // }
+      console.log(message);
+      // dispatch({
+      //   type: MESSAGE_RECEIVED,
+      //   payload: message,
+      // });
+    }
+  };
+  // channelHandler.onMessageUpdated = (channel, message) => {
+  //   if (channel.url === channelUrl) {
+  //     // dispatch({
+  //     //   type: MESSAGE_UPDATED,
+  //     //   payload: message,
+  //     // });
+  //   }
+  // };
+  // channelHandler.onMessageDeleted = (channel, messageId) => {
+  //   if (channel.url === channelUrl) {
+  //     // dispatch({
+  //     //   type: MESSAGE_DELETED,
+  //     //   payload: messageId,
+  //     // });
+  //   }
+  // };
+};
+
+const getPrevMessageList = (previousMessageListQuery: Sendbird.PreviousMessageListQuery) => {
+  if (!previousMessageListQuery.hasMore) {
+    console.log('!previousMessageListQuery.hasMore');
+    // dispatch({ type: MESSAGE_LIST_FAIL });
+    return Promise.resolve(true);
+  }
+  return sbGetMessageList(previousMessageListQuery)
+    .then(messages => {
+      console.log(messages);
+      // dispatch({
+      //   type: MESSAGE_LIST_SUCCESS,
+      //   list: messages
+      // });
+    })
+    .catch(err => console.error(err));
+  // .catch(() => dispatch({ type: MESSAGE_LIST_FAIL }));
+};
+// const getPrevMessageList = previousMessageListQuery => dispatch => {
+//   if (!previousMessageListQuery.hasMore) {
+//     dispatch({ type: MESSAGE_LIST_FAIL });
+//     return Promise.resolve(true);
+//   }
+//   return sbGetMessageList(previousMessageListQuery)
+//     .then(messages => {
+//       console.log(messages);
+//       // dispatch({
+//       //   type: MESSAGE_LIST_SUCCESS,
+//       //   list: messages
+//       // });
+//     })
+//     .catch(err => console.error(err));
+//   // .catch(() => dispatch({ type: MESSAGE_LIST_FAIL }));
+// };
+
+const sbGetMessageList = (previousMessageListQuery: Sendbird.PreviousMessageListQuery) => {
+  const limit = 30;
+  const reverse = true;
+  return new Promise((resolve, reject) => {
+    previousMessageListQuery.load(limit, reverse, (messages, error) => {
+      if (error) {
+        reject(error);
+        return;
+      }
+
+      resolve(messages);
+    });
+  });
+};
+
+const sbCreatePreviousMessageListQuery = (channelUrl: string): Promise<Sendbird.PreviousMessageListQuery> => {
+  return new Promise((resolve, reject) => {
+    sbGetGroupChannel(channelUrl)
+      .then(channel => resolve(channel.createPreviousMessageListQuery()))
+      .catch(error => reject(error));
+  });
+};
+
+const sbGetGroupChannel = (channelUrl): Promise<Sendbird.GroupChannel> => {
+  return new Promise((resolve, reject) => {
+    const sb = Sendbird.getInstance();
+    sb.GroupChannel.getChannel(channelUrl, (channel, error) => {
+      if (error) {
+        reject(error);
+        return;
+      }
+      resolve(channel);
+    });
+  });
+};
+
 export {
   initializeSendbird,
+  registerChannelHandler,
+  getPrevMessageList,
+  sbCreatePreviousMessageListQuery,
   login,
   checkLogin,
   signup,

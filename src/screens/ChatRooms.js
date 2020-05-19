@@ -8,7 +8,7 @@ import { Badge, Body, Container, Left, Right } from 'native-base';
 import { NavigationActions } from 'react-navigation';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Feather from 'react-native-vector-icons/Feather';
-import SendBird from 'sendbird';
+import Sendbird from 'sendbird';
 
 import type { GroupChannelListQuery } from 'sendbird';
 import type { NavigationScreenProp } from 'react-navigation';
@@ -63,7 +63,7 @@ class ChatContainer extends Component<Props, State> {
   };
 
   componentDidMount() {
-    const sb = SendBird.getInstance();
+    const sb = Sendbird.getInstance();
     if (!sb) {
       console.error('no sendBird');
       this.setState({ hasError: true });
@@ -89,7 +89,7 @@ class ChatContainer extends Component<Props, State> {
   };
 
   sbCreateGroupChannelListQuery = () => {
-    const sb = SendBird.getInstance();
+    const sb = Sendbird.getInstance();
     sb.removeAllChannelHandlers();
     return sb.GroupChannel.createMyGroupChannelListQuery();
   };
@@ -101,7 +101,7 @@ class ChatContainer extends Component<Props, State> {
   initialise = () => {
     this.setState({ isLoading: true });
     const groupChannelListQuery = this.sbCreateGroupChannelListQuery();
-    if (!groupChannelListQuery || groupChannelListQuery.hasNext) {
+    if (!groupChannelListQuery || !groupChannelListQuery.hasNext) {
       this.setState({ hasError: true, isLoading: false });
     }
     this.sbGetRooms(groupChannelListQuery)
@@ -114,7 +114,7 @@ class ChatContainer extends Component<Props, State> {
       });
   };
 
-  getChatsAndTheirOrders = async (rooms: Array<SendBird.GroupChannel>): Promise<Array<Room>> => {
+  getChatsAndTheirOrders = async (rooms: Array<Sendbird.GroupChannel>): Promise<Array<Room>> => {
     console.debug('getChatsAndTheirOrders');
     const { token, userData } = this.props;
     const orders = (await api.getOrders(token)).filter(
@@ -122,7 +122,7 @@ class ChatContainer extends Component<Props, State> {
     );
     if (orders.length === 0) return [];
 
-    // const sb = SendBird.getInstance();
+    // const sb = Sendbird.getInstance();
     // const rooms = await sb.getJoinableRooms();
     const allRooms = [...rooms];
 
@@ -234,7 +234,7 @@ class ChatContainer extends Component<Props, State> {
     // }
 
     return (
-      <TouchableOpacity onPress={() => this.goToChat(item.id)}>
+      <TouchableOpacity onPress={() => this.goToChat(item.url)}>
         <View style={st.itemContainer}>
           <Avatar
             onPress={() => this.goToChat(item.id)}
@@ -273,7 +273,7 @@ class ChatContainer extends Component<Props, State> {
     );
   };
 
-  _keyExtractor = (item: SendBird.GroupChannel): string => item.url;
+  _keyExtractor = (item: Sendbird.GroupChannel): string => item.url;
 
   _renderSeparator = () => <View style={st.separator} />;
   _renderSeparatorHorizontal = () => <View style={st.separatorHorizontal} />;

@@ -641,7 +641,7 @@ class ChatContainer extends Component<Props, State> {
       <Image
         style={st.itemImage}
         source={{
-          uri: item.product.photoURIs[0].replace('.jpg', '-thumb.jpg'),
+          uri: item.product.photoURIs[0]?.replace('.jpg', '-thumb.jpg'),
         }}
       />
     </TouchableOpacity>
@@ -650,6 +650,8 @@ class ChatContainer extends Component<Props, State> {
   _keyExtractor = (item): string => item.id;
 
   _renderSeparatorHorizontal = () => <View style={st.separatorHorizontal} />;
+
+  _renderEmptyComponent = () => <Text style={st.noOrders}>{I18n.t('chat.no_orders')}</Text>;
 
   toggleInfoDialog = () =>
     this.setState(prevState => ({
@@ -676,9 +678,33 @@ class ChatContainer extends Component<Props, State> {
     </React.Fragment>
   );
 
+  renderHeader() {
+    const { partner } = this.state;
+    return (
+      <Header>
+        <Left style={st.containerHeader}>
+          <NBButton transparent onPress={() => this.props.navigation.goBack()}>
+            <Icon ios="ios-arrow-back" android="md-arrow-back" />
+          </NBButton>
+        </Left>
+        <Body style={st.flex4AndCenter}>
+          {partner && (
+            <>
+              <Title withIcon onPress={this.goToProfileOrShowWebUserInfo}>
+                {'@' + partner.username}
+              </Title>
+              <Info onPress={this.toggleInfoDialog} />
+            </>
+          )}
+        </Body>
+        <Right />
+      </Header>
+    );
+  }
+
   render() {
-    const { navigation, userData } = this.props;
-    const { buyerType, messages, isLoading, partner, orders } = this.state;
+    const { userData } = this.props;
+    const { buyerType, messages, isLoading, orders } = this.state;
 
     if (isLoading) {
       return (
@@ -692,67 +718,34 @@ class ChatContainer extends Component<Props, State> {
 
     return (
       <Container style={st.flex1}>
-        <Header>
-          <Left style={st.containerHeader}>
-            <NBButton transparent onPress={() => navigation.goBack()}>
-              <Icon ios="ios-arrow-back" android="md-arrow-back" />
-            </NBButton>
-          </Left>
-          <Body style={st.flex4AndCenter}>
-            {partner && (
-              <>
-                {/* eslint-disable-next-line react-native/no-raw-text */}
-                <Title withIcon onPress={this.goToProfileOrShowWebUserInfo}>
-                  @{partner.username}
-                </Title>
-                <Info onPress={this.toggleInfoDialog} />
-              </>
-            )}
-          </Body>
-          <Right />
-        </Header>
+        {this.renderHeader()}
         <View style={st.flex1}>
           <View style={st.orderSquaresContainer}>
             <FlatList
+              // contentContainerStyle={{ flexGrow: 1 }}
               data={orders}
-              keyExtractor={this._keyExtractor}
               horizontal
-              contentContainerStyle={{ flexGrow: 1 }}
               ItemSeparatorComponent={this._renderSeparatorHorizontal}
+              keyExtractor={this._keyExtractor}
+              ListEmptyComponent={this._renderEmptyComponent}
               renderItem={this._renderOrderSquare}
-              ListEmptyComponent={() => <Text style={st.noOrders}>{I18n.t('chat.no_orders')}</Text>}
             />
           </View>
           <GiftedChat
             messages={messages}
+            maxInputLength={settings.MAX_CHAT_INPUT_LENGTH}
             onSend={this.onSend}
             placeholder={isWebUser ? I18n.t('chat.send_msg_placeholder_disabled') : I18n.t('chat.send_msg_placeholder')}
+            renderActions={this.renderActions}
+            renderBubble={this.renderBubble}
+            renderMessageImage={MessageImage}
+            renderSend={this.renderSend}
+            renderSystemMessage={this.renderSystemMessage}
             user={{
               _id: userData._id,
               name: userData.username,
               avatar: userData.profilePic,
             }}
-            // locale=""
-            // timeformat="LT"
-            // dateformat="ll"
-            renderSend={this.renderSend}
-            renderSystemMessage={this.renderSystemMessage}
-            renderBubble={this.renderBubble}
-            renderMessageImage={props => <MessageImage {...props} />}
-            // parsePatterns={linkStyle => [
-            //   {
-            //     pattern: /: (\w+)/,
-            //     style: { ...linkStyle, color: 'darkorange' },
-            //     onPress: this.onUrlPress,
-            //   },
-            //   // {type: 'phone', style: linkStyle, onPress: this.onPhonePress},
-            //   // {type: 'email', style: linkStyle, onPress: this.onEmailPress},
-            // ]}
-            renderActions={this.renderActions}
-            // keyboardShouldPersistTaps="handled"
-            maxInputLength={settings.MAX_CHAT_INPUT_LENGTH}
-            // renderInputToolbar={this.renderInputToolbar}
-            // renderAvatar={null}
             textInputProps={{ editable: !isWebUser }}
           />
         </View>
@@ -799,7 +792,6 @@ const st = StyleSheet.create({
     justifyContent: 'center',
   },
   itemImage: {
-    // borderRadius: 50, // FIXME:
     height: 50,
     width: 50,
   },

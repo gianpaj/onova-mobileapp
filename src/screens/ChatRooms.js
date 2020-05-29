@@ -304,6 +304,18 @@ class ChatContainer extends Component<Props, State> {
       .then(() => this.setState({ isRefreshing: false }));
   };
 
+  renderHeader() {
+    return (
+      <Header>
+        <Left style={st.container} />
+        <Body style={st.container}>
+          <Title>{I18n.t('chat_rooms.header')}</Title>
+        </Body>
+        <Right />
+      </Header>
+    );
+  }
+
   render() {
     const { hasError, ordersAndChats, isLoading } = this.state;
 
@@ -311,13 +323,7 @@ class ChatContainer extends Component<Props, State> {
 
     return (
       <Container>
-        <Header>
-          <Left style={st.container} />
-          <Body style={st.container}>
-            <Title>{I18n.t('chat_rooms.header')}</Title>
-          </Body>
-          <Right />
-        </Header>
+        {this.renderHeader()}
         <View style={st.flex1}>
           {/* check userData to fix logout issue */}
           {(!hasError && isLoading) || !this.props.userData ? (
@@ -325,18 +331,19 @@ class ChatContainer extends Component<Props, State> {
               <ActivityIndicator size="large" />
             </View>
           ) : (
-            /* {allOrders.length > 0 && (
-                  <FlatList
-                    style={{ height: 60 + 8 + 8 }}
-                    data={allOrders}
-                    keyExtractor={this._keyExtractor}
-                    horizontal
-                    ItemSeparatorComponent={this._renderSeparatorHorizontal}
-                    renderItem={this._renderOrderCircle}
-                  />
-                )} */
+            // {allOrders.length > 0 && (
+            //     <FlatList
+            //       style={{ height: 60 + 8 + 8 }}
+            //       data={allOrders}
+            //       keyExtractor={this._keyExtractor}
+            //       horizontal
+            //       ItemSeparatorComponent={this._renderSeparatorHorizontal}
+            //       renderItem={this._renderOrderCircle}
+            //     />
+            //   )}
             <FlatList
               data={ordersAndChats}
+              // data={Array.from({ length: 15 }, _ => ordersAndChats[0])}
               ItemSeparatorComponent={this._renderSeparator}
               keyExtractor={this._keyExtractor}
               ListEmptyComponent={this.renderEmptyState}
@@ -344,8 +351,8 @@ class ChatContainer extends Component<Props, State> {
                 <RefreshControl refreshing={this.state.isRefreshing} onRefresh={this.refreshOrdersAndChats} />
               }
               renderItem={this._renderRoomRow}
-              style={st.root}
-              contentContainerStyle={{ flexGrow: 1 }}
+              // style={st.root}
+              // contentContainerStyle={{ flexGrow: 1 }}
             />
           )}
         </View>
@@ -353,11 +360,6 @@ class ChatContainer extends Component<Props, State> {
     );
   }
 }
-
-const unreads = (cursor, messages = {}) => {
-  // compare the message id with the cursor position id
-  return (cursor && messages.map(a => a.id).filter(x => x > cursor.position).length) || undefined;
-};
 
 const st = StyleSheet.create({
   container: {
@@ -401,9 +403,6 @@ const st = StyleSheet.create({
     width: 4,
     zIndex: 2,
   },
-  root: {
-    height: '100%',
-  },
   separator: {
     backgroundColor: colors.grey5,
     height: StyleSheet.hairlineWidth,
@@ -442,7 +441,7 @@ const st = StyleSheet.create({
   // },
 });
 
-const mapStateToProps: any = (state: ReduxState) => ({
+const mapStateToProps = (state: ReduxState) => ({
   userData: state.LoginReducer.data,
   token: state.LoginReducer.token,
 });

@@ -2,6 +2,7 @@
 import type { Store as ReduxStore } from 'redux';
 // import type { Reducers } from '../reducers';
 import type { Action as LoginAction, LoginState } from './loginReducer';
+import type { Action as ChatAction, ChatState } from '../types/chatReducer';
 import type { ScreenRefreshState } from '../reducers/screenRefreshReducer';
 import type { Action as NavigationAction, NavigationState } from './navigationReducer';
 
@@ -271,12 +272,13 @@ export type Department = {
 };
 
 export type ReduxState = {
+  ChatReducer: ChatState,
   LoginReducer: LoginState,
   RefresherReducer: ScreenRefreshState,
   NavigationReducer: NavigationState,
 };
 
-export type ReduxAction = LoginAction | NavigationAction;
+export type ReduxAction = LoginAction | NavigationAction | ChatAction;
 export type Store = ReduxStore<ReduxState, ReduxAction>;
 
 type PromiseAction = Promise<ReduxAction>;

@@ -8,13 +8,20 @@ import I18n from '../i18n';
 import type { City, Department, Order, Product, UserData } from '../types';
 
 const NODE_ENV = process.env.NODE_ENV;
-let config;
+let config: {
+  API_URL: string,
+  URL_BASE: string,
+  SENDBIRD_APP_ID: string,
+  SENTRY_URL: string,
+  SEGMENT_API: string,
+};
+
 let isProd = false;
 if (NODE_ENV === 'prod' || NODE_ENV === 'production') {
   isProd = true;
-  config = require('../../config-prod.json');
-} else {
   config = require('../../config-dev.json');
+} else {
+  config = require('../../config-prod.json');
 }
 
 const analyticsEnabled = !__DEV__;

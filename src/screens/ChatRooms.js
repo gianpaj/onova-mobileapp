@@ -65,7 +65,7 @@ class ChatContainer extends Component<Props, State> {
   componentDidMount() {
     const sb = Sendbird.getInstance();
     if (!sb) {
-      console.error('no sendBird');
+      console.error('no Sendbird');
       this.setState({ hasError: true });
       return;
     }
@@ -73,7 +73,7 @@ class ChatContainer extends Component<Props, State> {
 
     this.didFocusListener = this.props.navigation.addListener('didFocus', () => {
       if (sb) this.initialise();
-      else console.error('no sendBird didFocus');
+      else console.error('no Sendbird didFocus');
     });
   }
 

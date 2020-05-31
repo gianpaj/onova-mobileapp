@@ -8,28 +8,9 @@ import { Sentry } from 'react-native-sentry';
 import Analytics from 'react-native-analytics-segment-io';
 import { APP_NAME } from 'react-native-dotenv';
 
-import {
-  DO_REFRESH,
-  DONOT_REFRESH,
-  DO_CANCEL_ORDER,
-  DONOT_CANCEL_ORDER,
-  GETUSER_FAIL,
-  GETUSER_PENDING,
-  GETUSER_SUCCESS,
-  // INTRO,
-  LOGIN_FAIL,
-  LOGIN_PENDING,
-  LOGIN_SUCCESS,
-  LOGOUT,
-  RELOAD_FAIL,
-  RELOAD_PENDING,
-  RELOAD_SUCCESS,
-  SIGNUP_FAIL,
-  SIGNUP_PENDING,
-  SIGNUP_SUCCESS,
-  SKIPPED,
-} from './actionTypes';
+import * as ACTION_TYPES from './actionTypes';
 import type { Dispatch, LoginData, SignupData, GetState, UserData } from '../types';
+import type { SendbirdMessage } from '../types/chatReducer';
 import type { Options, APIError } from '../utils/api';
 import { addAuthBreadcrumb, addNavigationBreadcrumb, addErrorBreadcrumb } from '../utils/analytics';
 
@@ -38,15 +19,13 @@ import * as api from '../utils/api';
 import * as ui from '../utils/ui';
 import I18n from '../i18n';
 
-let currentUser: PusherUser;
-
 const { isProd, analyticsEnabled, config } = api;
 
 // const enabledPusher = isProd == true;
 const enabledSendbird = true;
 
 const login = (data: LoginData) => (dispatch: Dispatch) => {
-  dispatch({ type: LOGIN_PENDING });
+  dispatch({ type: ACTION_TYPES.LOGIN_PENDING });
   Toast.loading('', 30);
   return api
     .post('/api/auth/login', {
@@ -79,13 +58,13 @@ const login = (data: LoginData) => (dispatch: Dispatch) => {
     .then(userData => initializeSendbird(userData))
     .then(userData => {
       // FIXME: use `userData` key in payload
-      dispatch({ type: LOGIN_SUCCESS, payload: userData });
-      addNavigationBreadcrumb({ message: LOGIN_SUCCESS });
+      dispatch({ type: ACTION_TYPES.LOGIN_SUCCESS, payload: userData });
+      addNavigationBreadcrumb({ message: ACTION_TYPES.LOGIN_SUCCESS });
       return registerPushNotifications()
         .then(pushToken => sendToken(pushToken, userData, userData.token))
         .catch(err => {
           console.warn(err);
-          dispatch({ type: LOGIN_FAIL });
+          dispatch({ type: ACTION_TYPES.LOGIN_FAIL });
         });
     })
     .then(() => Toast.hide())
@@ -97,10 +76,10 @@ const login = (data: LoginData) => (dispatch: Dispatch) => {
           error,
           level: 'info',
         });
-        dispatch({ type: LOGIN_FAIL });
+        dispatch({ type: ACTION_TYPES.LOGIN_FAIL });
         throw error;
       }
-      dispatch(handleErrorWithAlert({ type: LOGIN_FAIL }, error));
+      dispatch(handleErrorWithAlert({ type: ACTION_TYPES.LOGIN_FAIL }, error));
       addErrorBreadcrumb({
         category: 'auth',
         error,
@@ -168,7 +147,7 @@ function trackUser(userData: UserData) {
 
 const checkLogin = (userData: UserData, token: string) => (dispatch: Dispatch) => {
   console.debug('checkLogin');
-  dispatch({ type: RELOAD_PENDING });
+  dispatch({ type: ACTION_TYPES.RELOAD_PENDING });
   return api
     .get(`/api/users/${userData._id}/personal`, { token })
     .then(() => {
@@ -178,7 +157,7 @@ const checkLogin = (userData: UserData, token: string) => (dispatch: Dispatch) =
       }
     })
     .then(() => initializeSendbird(userData))
-    .then(() => dispatch({ type: RELOAD_SUCCESS }))
+    .then(() => dispatch({ type: ACTION_TYPES.RELOAD_SUCCESS }))
     .then(() => registerPushNotifications())
     .then(pushToken => {
       if (enabledSendbird) {
@@ -191,10 +170,10 @@ const checkLogin = (userData: UserData, token: string) => (dispatch: Dispatch) =
         }
       }
       sendToken(pushToken, userData, token);
-      addNavigationBreadcrumb({ message: RELOAD_SUCCESS });
+      addNavigationBreadcrumb({ message: ACTION_TYPES.RELOAD_SUCCESS });
     })
     .catch(error => {
-      dispatch({ type: RELOAD_FAIL });
+      dispatch({ type: ACTION_TYPES.RELOAD_FAIL });
       ui.showToast(error.message || JSON.stringify(error), 'danger', 'OK', 5);
       addErrorBreadcrumb({
         category: 'auth',
@@ -205,7 +184,7 @@ const checkLogin = (userData: UserData, token: string) => (dispatch: Dispatch) =
 };
 
 const signup = (data: SignupData) => (dispatch: Dispatch) => {
-  dispatch({ type: SIGNUP_PENDING });
+  dispatch({ type: ACTION_TYPES.SIGNUP_PENDING });
   const timer = setTimeout(() => {
     Toast.loading('', 30);
   }, 300);
@@ -221,12 +200,12 @@ const signup = (data: SignupData) => (dispatch: Dispatch) => {
       Toast.hide();
       if (!res.data) {
         console.warn(res);
-        dispatch({ type: SIGNUP_FAIL });
-        addNavigationBreadcrumb({ message: SIGNUP_FAIL });
+        dispatch({ type: ACTION_TYPES.SIGNUP_FAIL });
+        addNavigationBreadcrumb({ message: ACTION_TYPES.SIGNUP_FAIL });
         return;
       }
-      addNavigationBreadcrumb({ message: SIGNUP_SUCCESS });
-      dispatch({ type: SIGNUP_SUCCESS });
+      dispatch({ type: ACTION_TYPES.SIGNUP_SUCCESS });
+      addNavigationBreadcrumb({ message: ACTION_TYPES.SIGNUP_SUCCESS });
       if (analyticsEnabled) {
         trackUser(res.data);
         Analytics.track('signup');
@@ -239,17 +218,19 @@ const signup = (data: SignupData) => (dispatch: Dispatch) => {
       //   .then(pushToken => {
       //     if (pushToken) return sendToken(pushToken, userData);
       //   })
-      //   .then(() => dispatch({ type: SIGNUP_SUCCESS, payload: userData }))
+      //   .then(() => dispatch({ type: ACTION_TYPES.SIGNUP_SUCCESS, payload: userData }))
       //   .catch(err => {
       //     console.warn(err);
-      //     dispatch({ type: SIGNUP_FAIL });
+      //     dispatch({ type: ACTION_TYPES.SIGNUP_FAIL });
       //   });
       // if (analyticsEnabled) trackUser(userData)
     })
     .catch((error: APIError) => {
       clearTimeout(timer);
       Toast.hide();
-      dispatch(handleErrorWithAlert({ type: SIGNUP_FAIL }, error, I18n.t('product.toast_warning_ok_button')));
+      dispatch(
+        handleErrorWithAlert({ type: ACTION_TYPES.SIGNUP_FAIL }, error, I18n.t('product.toast_warning_ok_button'))
+      );
       addErrorBreadcrumb({
         category: 'auth',
         error,
@@ -262,43 +243,41 @@ const signup = (data: SignupData) => (dispatch: Dispatch) => {
 const getPersonalUserData = (options?: Options = {}) => (dispatch: Dispatch, getState: GetState) => {
   const { token, data } = getState().LoginReducer;
   Toast.loading(I18n.t('alerts.loading_message'), 30);
-  dispatch({ type: GETUSER_PENDING });
+  dispatch({ type: ACTION_TYPES.GETUSER_PENDING });
   return api
     .get(`/api/users/${data._id}/personal`, { ...options, token })
-    .then((res: UserData) => dispatch({ type: GETUSER_SUCCESS, payload: res }))
-    .catch(err => dispatch(handleErrorWithAlert({ type: GETUSER_FAIL }, err)))
+    .then((res: UserData) => dispatch({ type: ACTION_TYPES.GETUSER_SUCCESS, payload: res }))
+    .catch(err => dispatch(handleErrorWithAlert({ type: ACTION_TYPES.GETUSER_FAIL }, err)))
     .then(() => Toast.hide());
 };
 
 const getUserData = (userId: string, options?: Options = {}) => (dispatch: Dispatch) => (
   Toast.loading(I18n.t('alerts.loading_message'), 30),
-  dispatch({ type: GETUSER_PENDING }),
+  dispatch({ type: ACTION_TYPES.GETUSER_PENDING }),
   api
     .get(`/api/users/${userId}`, options)
-    .then((res: UserData) => dispatch({ type: GETUSER_SUCCESS, payload: res }))
-    .catch(err => dispatch(handleErrorWithAlert({ type: GETUSER_FAIL }, err)))
+    .then((res: UserData) => dispatch({ type: ACTION_TYPES.GETUSER_SUCCESS, payload: res }))
+    .catch(err => dispatch(handleErrorWithAlert({ type: ACTION_TYPES.GETUSER_FAIL }, err)))
     .then(() => Toast.hide())
 );
 
 const logout = () => {
-  addNavigationBreadcrumb({ message: LOGOUT });
-  // dispatch({ type: INTRO });
+  addNavigationBreadcrumb({ message: ACTION_TYPES.LOGOUT });
+  // dispatch({ type: ACTION_TYPES.INTRO });
 
-  if (currentUser) {
-    currentUser.disconnect();
-    console.log('disconnected from Pusher');
-  }
+  console.log('disconnected from Sendbird');
+
   if (analyticsEnabled) {
     Sentry.captureBreadcrumb({
       category: 'chat',
-      message: 'disconnected from Pusher',
+      message: 'disconnected from Sendbird',
       level: 'info',
     });
     Analytics.flush();
     Analytics.reset();
   }
 
-  return { type: LOGOUT };
+  return { type: ACTION_TYPES.LOGOUT };
 };
 
 const skip = () => (dispatch: Dispatch) => {
@@ -309,7 +288,7 @@ const skip = () => (dispatch: Dispatch) => {
     .get(`/api/users/${userId}`)
     .then((res: UserData) => {
       addAuthBreadcrumb({ message: 'skipped' });
-      dispatch({ type: SKIPPED, payload: res });
+      dispatch({ type: ACTION_TYPES.SKIPPED, payload: res });
     })
     .catch(err => dispatch(handleErrorWithAlert({ type: 'SKIPPED_FAIL' }, err)))
     .finally(() => Toast.hide());
@@ -372,13 +351,13 @@ const handleErrorWithAlert = (data: any, error: any, buttonText?) => {
   return { type: data.type };
 };
 
-const enableRefresh = () => ({ type: DO_REFRESH });
+const enableRefresh = () => ({ type: ACTION_TYPES.DO_REFRESH });
 
-const disableRefresh = () => ({ type: DONOT_REFRESH });
+const disableRefresh = () => ({ type: ACTION_TYPES.DONOT_REFRESH });
 
-const enableCancelOrder = () => ({ type: DO_CANCEL_ORDER });
+const enableCancelOrder = () => ({ type: ACTION_TYPES.DO_CANCEL_ORDER });
 
-const disableCancelOrder = () => ({ type: DONOT_CANCEL_ORDER });
+const disableCancelOrder = () => ({ type: ACTION_TYPES.DONOT_CANCEL_ORDER });
 
 const sbConnect = (userId: string, nickname: string) => {
   return new Promise((resolve, reject) => {
@@ -422,7 +401,7 @@ const sbUpdateProfile = nickname => {
   });
 };
 
-const registerChannelHandler = (channelUrl, dispatch) => {
+const registerChannelHandler = (channelUrl: string, dispatch: Dispatch) => {
   const sb = Sendbird.getInstance();
   const channelHandler = new sb.ChannelHandler();
   registerCommonHandler(channelHandler, channelUrl, dispatch);
@@ -431,41 +410,41 @@ const registerChannelHandler = (channelUrl, dispatch) => {
       console.log('user joined');
       console.log(user);
       // dispatch({
-      //   type: CHANNEL_CHANGED,
+      //   type: ACTION_TYPES.CHANNEL_CHANGED,
       //   title: sbGetChannelTitle(channel),
       //   memberCount: channel.memberCount,
       // });
     }
   };
-  // channelHandler.onUserLeft = (channel, user) => {
+  // channelHandler.onUserLeft = (channel: Sendbird.GroupChannel): void => {
   //   if (channel.url === channelUrl) {
   //     dispatch({
-  //       type: CHANNEL_CHANGED,
-  //       title: sbGetChannelTitle(channel),
-  //       memberCount: channel.memberCount,
+  //       type: ACTION_TYPES.CHANNEL_CHANGED,
+  //       // title: sbGetChannelTitle(channel),
+  //       // memberCount: channel.memberCount,
   //     });
   //   }
   // };
-  channelHandler.onReadReceiptUpdated = channel => {
+  channelHandler.onReadReceiptUpdated = (channel: Sendbird.GroupChannel) => {
     if (channel.url === channelUrl) {
       console.log('onReadReceiptUpdated');
-      // dispatch({ type: READ_RECEIPT_UPDATED });
+      dispatch({ type: ACTION_TYPES.READ_RECEIPT_UPDATED });
     }
   };
-  channelHandler.onTypingStatusUpdated = channel => {
+  channelHandler.onTypingStatusUpdated = (channel: Sendbird.GroupChannel) => {
     if (channel.url === channelUrl) {
       const typing = sbIsTyping(channel);
       console.log(typing);
-      // dispatch({
-      //   type: TYPING_STATUS_UPDATED,
-      //   typing: typing,
-      // });
+      dispatch({
+        type: ACTION_TYPES.TYPING_STATUS_UPDATED,
+        typing: typing,
+      });
     }
   };
   sb.addChannelHandler(channelUrl, channelHandler);
 };
 
-const sbIsTyping = channel => {
+const sbIsTyping = (channel: Sendbird.GroupChannel): string => {
   if (channel.isTyping()) {
     const typingMembers = channel.getTypingMembers();
     if (typingMembers.length == 1) {
@@ -476,75 +455,63 @@ const sbIsTyping = channel => {
   return '';
 };
 
-const registerCommonHandler = (channelHandler: Sendbird.ChannelHandler, channelUrl, dispatch) => {
-  channelHandler.onMessageReceived = (channel, message) => {
+const registerCommonHandler = (channelHandler: Sendbird.ChannelHandler, channelUrl: string, dispatch) => {
+  channelHandler.onMessageReceived = (channel: Sendbird.GroupChannel, message) => {
     if (channel.url === channelUrl) {
       // if (channel.isGroupChannel()) {
       // sbMarkAsRead({ channel });
       // }
       console.log(message);
-      // dispatch({
-      //   type: MESSAGE_RECEIVED,
-      //   payload: message,
-      // });
+      dispatch({
+        type: ACTION_TYPES.MESSAGE_RECEIVED,
+        payload: message,
+      });
     }
   };
   // channelHandler.onMessageUpdated = (channel, message) => {
   //   if (channel.url === channelUrl) {
-  //     // dispatch({
-  //     //   type: MESSAGE_UPDATED,
-  //     //   payload: message,
-  //     // });
+  //     dispatch({
+  //       type: ACTION_TYPES.MESSAGE_UPDATED,
+  //       payload: message,
+  //     });
   //   }
   // };
-  // channelHandler.onMessageDeleted = (channel, messageId) => {
-  //   if (channel.url === channelUrl) {
-  //     // dispatch({
-  //     //   type: MESSAGE_DELETED,
-  //     //   payload: messageId,
-  //     // });
-  //   }
-  // };
+  channelHandler.onMessageDeleted = (channel: Sendbird.GroupChannel, messageId: string) => {
+    if (channel.url === channelUrl) {
+      dispatch({
+        type: ACTION_TYPES.MESSAGE_DELETED,
+        payload: messageId,
+      });
+    }
+  };
 };
 
-const getPrevMessageList = (previousMessageListQuery: Sendbird.PreviousMessageListQuery) => {
+const getPrevMessageList = (previousMessageListQuery: Sendbird.PreviousMessageListQuery) => (dispatch: Dispatch) => {
   if (!previousMessageListQuery.hasMore) {
     console.log('!previousMessageListQuery.hasMore');
-    // dispatch({ type: MESSAGE_LIST_FAIL });
+    dispatch({ type: ACTION_TYPES.MESSAGE_LIST_FAIL });
     return Promise.resolve(true);
   }
-  return sbGetMessageList(previousMessageListQuery)
-    .then(messages => {
-      console.log(messages);
-      // dispatch({
-      //   type: MESSAGE_LIST_SUCCESS,
-      //   list: messages
-      // });
-    })
-    .catch(err => console.error(err));
-  // .catch(() => dispatch({ type: MESSAGE_LIST_FAIL }));
+  return (
+    sbGetMessageList(previousMessageListQuery)
+      .then(messages => {
+        console.log(messages);
+        dispatch({
+          type: ACTION_TYPES.MESSAGE_LIST_SUCCESS,
+          list: messages,
+        });
+      })
+      // .catch(err => console.error(err));
+      .catch(() => dispatch({ type: ACTION_TYPES.MESSAGE_LIST_FAIL }))
+  );
 };
-// const getPrevMessageList = previousMessageListQuery => dispatch => {
-//   if (!previousMessageListQuery.hasMore) {
-//     dispatch({ type: MESSAGE_LIST_FAIL });
-//     return Promise.resolve(true);
-//   }
-//   return sbGetMessageList(previousMessageListQuery)
-//     .then(messages => {
-//       console.log(messages);
-//       // dispatch({
-//       //   type: MESSAGE_LIST_SUCCESS,
-//       //   list: messages
-//       // });
-//     })
-//     .catch(err => console.error(err));
-//   // .catch(() => dispatch({ type: MESSAGE_LIST_FAIL }));
-// };
 
-const sbGetMessageList = (previousMessageListQuery: Sendbird.PreviousMessageListQuery) => {
-  const limit = 30;
-  const reverse = true;
-  return new Promise((resolve, reject) => {
+const sbGetMessageList = (
+  previousMessageListQuery: Sendbird.PreviousMessageListQuery
+): Promise<Array<SendbirdMessage> | Sendbird.SendBirdError> =>
+  new Promise((resolve, reject) => {
+    const limit = 30;
+    const reverse = true;
     previousMessageListQuery.load(limit, reverse, (messages, error) => {
       if (error) {
         reject(error);
@@ -554,7 +521,6 @@ const sbGetMessageList = (previousMessageListQuery: Sendbird.PreviousMessageList
       resolve(messages);
     });
   });
-};
 
 const sbCreatePreviousMessageListQuery = (channelUrl: string): Promise<Sendbird.PreviousMessageListQuery> => {
   return new Promise((resolve, reject) => {
@@ -590,7 +556,6 @@ export {
   getUserData,
   logout,
   skip,
-  currentUser,
   enableRefresh,
   disableRefresh,
   enableCancelOrder,

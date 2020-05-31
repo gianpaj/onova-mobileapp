@@ -26,6 +26,7 @@ import colors from '../config/colors';
 import settings from '../config/settings';
 import * as api from '../utils/api';
 import * as linking from '../utils/linking';
+import { channelExit } from '../actions/sendbird.actions';
 
 const MARK_AS_READ_AFTER_MS = 300;
 const ONOVA_BOT_ID = '5bd1f7af46c62e6cdee546d0';
@@ -57,15 +58,15 @@ class ChatContainer extends Component<Props, State> {
   state = {
     buyerType: 'User',
     infoDialogVisible: false,
-    userDialogVisible: false,
-    partner: null,
     isLoading: true,
     // isTyping: false,
-    orders: [],
     messages: [],
+    orders: [],
+    partner: null,
     roomId: -1,
     shouldRefresh: false,
     uploadingImage: false,
+    userDialogVisible: false,
   };
 
   componentDidMount() {
@@ -76,16 +77,13 @@ class ChatContainer extends Component<Props, State> {
       const { roomId, shouldRefresh } = this.state;
       // do not initiate twice at the beginning
       // OR
-      // when it should not refresh (review hasn't been added or order archived)
+      // when it should not refresh (a review hasn't been added or order archived)
       if (!roomId || !shouldRefresh) return;
-
-      // TODO: maybe only refresh the orders?
-      // this.fetchOrders(thisRoom)
 
       this.setState({ isLoading: true }, () =>
         this.initialise(roomId)
-          .then(this.setState({ isLoading: false, shouldRefresh: false }))
-          .catch(e => console.error(e))
+          .then(() => this.setState({ isLoading: false, shouldRefresh: false }))
+          .catch(console.error)
       );
     });
 
@@ -109,9 +107,8 @@ class ChatContainer extends Component<Props, State> {
   }
 
   componentWillUnmount() {
-    // stop receiving events from the chat room
-    if (sendBirdCurrentUser && sendBirdCurrentUser.roomSubscriptions[this.state.roomId])
-      sendBirdCurrentUser.roomSubscriptions[this.state.roomId].cancel();
+    // stop receiving events from the chat room (channel URL)
+    this.state.roomId && channelExit(this.state.roomId);
 
     // cancel initialise(). i.e. when the Chat screen is opened and closed quickly
     if (this.rejectProm) {
@@ -126,10 +123,10 @@ class ChatContainer extends Component<Props, State> {
     const { userData } = this.props;
     let thisRoom;
     return new Promise((resolve, reject) => {
+      this.rejectProm = reject;
       const sb = Sendbird.getInstance();
       if (!sb) return reject('Sendbird is not initialized');
       if (!orderId && !roomId) return reject('either orderId or roomId are missing');
-      this.rejectProm = reject;
 
       registerChannelHandler(roomId);
       this._getMessageList(true);
@@ -296,7 +293,7 @@ class ChatContainer extends Component<Props, State> {
     });
   }
 
-  _getMessageList = (init: boolean) => {
+  _getMessageList = async (init: boolean) => {
     if (!this.state.previousMessageListQuery && !init) {
       return;
     }
@@ -306,11 +303,13 @@ class ChatContainer extends Component<Props, State> {
     //   return;
     // }
 
-    sbCreatePreviousMessageListQuery(roomId).then(previousMessageListQuery => {
+    try {
+      const previousMessageListQuery = await sbCreatePreviousMessageListQuery(roomId);
       this.setState({ previousMessageListQuery });
-      getPrevMessageList(previousMessageListQuery);
-    });
-    // .catch(() => this.props.navigation.goBack());
+      await this.props.getPrevMessageList(previousMessageListQuery);
+    } catch (error) {
+      this.props.navigation.goBack();
+    }
   };
 
   setPartner = async (order: Order, room?: any) => {
@@ -636,22 +635,17 @@ class ChatContainer extends Component<Props, State> {
     });
   }
 
-  _renderOrderSquare = ({ item }: { item: Order }) => (
+  _orderSquare = ({ item }: { item: Order }) => (
     <TouchableOpacity style={st.orderSquare} onPress={() => this.goToAddReviewOrArchiveOrder(item.id)}>
-      <Image
-        style={st.itemImage}
-        source={{
-          uri: item.product.photoURIs[0]?.replace('.jpg', '-thumb.jpg'),
-        }}
-      />
+      <Image style={st.itemImage} source={{ uri: item.product.photoURIs[0]?.replace('.jpg', '-thumb.jpg') }} />
     </TouchableOpacity>
   );
 
-  _keyExtractor = (item): string => item.id;
+  _orderKeyExtractor = (item): string => item.id;
 
-  _renderSeparatorHorizontal = () => <View style={st.separatorHorizontal} />;
+  _orderSeparatorHorizontal = () => <View style={st.separatorHorizontal} />;
 
-  _renderEmptyComponent = () => <Text style={st.noOrders}>{I18n.t('chat.no_orders')}</Text>;
+  _orderEmptyComponent = () => <Text style={st.noOrders}>{I18n.t('chat.no_orders')}</Text>;
 
   toggleInfoDialog = () =>
     this.setState(prevState => ({
@@ -720,15 +714,15 @@ class ChatContainer extends Component<Props, State> {
       <Container style={st.flex1}>
         {this.renderHeader()}
         <View style={st.flex1}>
-          <View style={st.orderSquaresContainer}>
+          <View style={st.orderSquaresView}>
             <FlatList
-              // contentContainerStyle={{ flexGrow: 1 }}
+              contentContainerStyle={st.orderSquaresContainer}
               data={orders}
               horizontal
-              ItemSeparatorComponent={this._renderSeparatorHorizontal}
-              keyExtractor={this._keyExtractor}
-              ListEmptyComponent={this._renderEmptyComponent}
-              renderItem={this._renderOrderSquare}
+              ItemSeparatorComponent={this._orderSeparatorHorizontal}
+              keyExtractor={this._orderKeyExtractor}
+              ListEmptyComponent={this._orderEmptyComponent}
+              renderItem={this._orderSquare}
             />
           </View>
           <GiftedChat
@@ -805,12 +799,13 @@ const st = StyleSheet.create({
     borderBottomWidth: 2,
     borderColor: colors.active,
     marginBottom: 3,
+    paddingLeft: 8,
   },
-  orderSquaresContainer: {
+  orderSquaresContainer: { flexGrow: 1 },
+  orderSquaresView: {
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderColor: colors.grey5,
     height: 50 + 16 + 1,
-    paddingLeft: 8,
     paddingVertical: 4,
   },
   send: {

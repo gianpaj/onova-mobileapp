@@ -152,7 +152,7 @@ class ChatContainer extends Component<Props, State> {
       // } else {
       partner = room.members.filter(u => u.userId !== ONOVA_BOT_ID).find(u => u.userId !== userData._id);
       // const cursor = await sb.readCursor({
-      //   roomId: room.id,
+      //   channelUrl: room.id,
       // });
       // }
 
@@ -173,11 +173,11 @@ class ChatContainer extends Component<Props, State> {
     return ordersAndChats;
   };
 
-  goToChat = (roomId: string) => {
+  goToChat = (channelUrl: string) => {
     const navigateToChat = NavigationActions.navigate({
       routeName: 'chat',
-      params: { roomId },
-      key: `chat-${roomId}`, // TODO: use OrderId
+      params: { channelUrl },
+      key: `chat-${channelUrl}`,
     });
     this.props.navigation.dispatch(navigateToChat);
   };

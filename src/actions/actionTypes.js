@@ -20,38 +20,59 @@ export const SIGNUP_SUCCESS = 'SIGNUP_SUCCESS';
 export const SKIPPED = 'SKIPPED';
 
 // Chat
-export const INIT_CHAT_SCREEN = 'init_chat_screen';
-export const CREATE_CHAT_HANDLER_SUCCESS = 'create_chat_handler_success';
-export const CREATE_CHAT_HANDLER_FAIL = 'create_chat_handler_fail';
-export const CHANNEL_TITLE_CHANGED = 'channel_title_changed';
-export const CHANNEL_TITLE_CHANGED_FAIL = 'channel_title_changed_fail';
-export const MESSAGE_LIST_SUCCESS = 'message_list_success';
-export const MESSAGE_LIST_FAIL = 'message_list_fail';
-export const SEND_MESSAGE_TEMPORARY = 'send_message_temporary';
-export const SEND_MESSAGE_SUCCESS = 'send_message_success';
-export const SEND_MESSAGE_FAIL = 'send_message_fail';
+export const INIT_CHAT_SCREEN = 'INIT_CHAT_SCREEN';
+export const CREATE_CHAT_HANDLER_SUCCESS = 'CREATE_CHAT_HANDLER_SUCCESS';
+export const CREATE_CHAT_HANDLER_FAIL = 'CREATE_CHAT_HANDLER_FAIL';
+export const CHANNEL_TITLE_CHANGED = 'CHANNEL_TITLE_CHANGED';
+export const CHANNEL_TITLE_CHANGED_FAIL = 'CHANNEL_TITLE_CHANGED_FAIL';
+export const MESSAGE_LIST_SUCCESS = 'MESSAGE_LIST_SUCCESS';
+export const MESSAGE_LIST_FAIL = 'MESSAGE_LIST_FAIL';
+export const SEND_MESSAGE_TEMPORARY = 'SEND_MESSAGE_TEMPORARY';
+export const SEND_MESSAGE_SUCCESS = 'SEND_MESSAGE_SUCCESS';
+export const SEND_MESSAGE_FAIL = 'SEND_MESSAGE_FAIL';
 
-export const SEND_TYPING_START_SUCCESS = 'send_typing_start_success';
-export const SEND_TYPING_START_FAIL = 'send_typing_start_fail';
-export const SEND_TYPING_END_SUCCESS = 'send_typing_end_success';
-export const SEND_TYPING_END_FAIL = 'send_typing_end_fail';
+export const SEND_TYPING_START_SUCCESS = 'SEND_TYPING_START_SUCCESS';
+export const SEND_TYPING_START_FAIL = 'SEND_TYPING_START_FAIL';
+export const SEND_TYPING_END_SUCCESS = 'SEND_TYPING_END_SUCCESS';
+export const SEND_TYPING_END_FAIL = 'SEND_TYPING_END_FAIL';
 
-export const CHANNEL_EXIT_SUCCESS = 'channel_exit_success';
-export const CHANNEL_EXIT_FAIL = 'channel_exit_fail';
+export const CHANNEL_EXIT_SUCCESS = 'CHANNEL_EXIT_SUCCESS';
+export const CHANNEL_EXIT_FAIL = 'CHANNEL_EXIT_FAIL';
 
-export const MESSAGE_RECEIVED = 'message_received';
-export const MESSAGE_UPDATED = 'message_updated';
-export const MESSAGE_DELETED = 'message_deleted';
-export const CHANNEL_CHANGED = 'channel_changed';
-export const CHANNEL_CHANGED_FAIL = 'channel_changed_fail';
-export const TYPING_STATUS_UPDATED = 'typing_status_updated';
-export const READ_RECEIPT_UPDATED = 'read_receipt_updated';
+export const MESSAGE_RECEIVED = 'MESSAGE_RECEIVED';
+export const MESSAGE_UPDATED = 'MESSAGE_UPDATED';
+export const MESSAGE_DELETED = 'MESSAGE_DELETED';
+export const CHANNEL_CHANGED = 'CHANNEL_CHANGED';
+export const CHANNEL_CHANGED_FAIL = 'CHANNEL_CHANGED_FAIL';
+export const TYPING_STATUS_UPDATED = 'TYPING_STATUS_UPDATED';
+export const READ_RECEIPT_UPDATED = 'READ_RECEIPT_UPDATED';
 
-export const USER_MESSAGE_PRESS = 'message_selected';
-export const USER_MESSAGE_SELECTION_CLEAR = 'selection_messages_clear';
+export const USER_MESSAGE_PRESS = 'MESSAGE_SELECTED';
+export const USER_MESSAGE_SELECTION_CLEAR = 'SELECTION_MESSAGES_CLEAR';
 
-export const OWN_MESSAGE_DELETED = 'own_message_was_deleted';
-export const OWN_MESSAGE_DELETED_FAIL = 'failed_own_message_was_deleted';
-export const OWN_MESSAGE_UPDATED = 'own_message_was_updated';
-export const OWN_MESSAGE_UPDATED_FAIL = 'fail_own_message_was_updated';
-export const MESSAGE_COPY = 'message_was_copied';
+export const OWN_MESSAGE_DELETED = 'OWN_MESSAGE_WAS_DELETED';
+export const OWN_MESSAGE_DELETED_FAIL = 'FAILED_OWN_MESSAGE_WAS_DELETED';
+export const OWN_MESSAGE_UPDATED = 'OWN_MESSAGE_WAS_UPDATED';
+export const OWN_MESSAGE_UPDATED_FAIL = 'FAIL_OWN_MESSAGE_WAS_UPDATED';
+export const MESSAGE_COPY = 'MESSAGE_WAS_COPIED';
+
+// Channel
+export const INIT_CHANNEL = 'INIT_CHANNEL';
+export const CHANNEL_PROGRESS_START = 'CHANNEL_PROGRESS_START';
+export const CHANNEL_PROGRESS_END = 'CHANNEL_PROGRESS_END';
+export const CHANNEL_LIST_SUCCESS = 'CHANNEL_LIST_SUCCESS';
+export const CHANNEL_LIST_FAIL = 'CHANNEL_LIST_FAIL';
+export const GET_CHANNEL_SUCCESS = 'GET_CHANNEL_SUCCESS';
+export const GET_CHANNEL_FAIL = 'GET_CHANNEL_FAIL';
+export const CHANNEL_EDIT_SUCCESS = 'CHANNEL_EDIT_SUCCESS';
+export const CHANNEL_EDIT_FAIL = 'CHANNEL_EDIT_FAIL';
+export const ADD_CHANNEL_ITEM = 'ADD_CHANNEL_ITEM';
+export const CLEAR_SELECTED_CHANNEL = 'CLEAR_SELECTED_CHANNEL';
+
+export const INIT_INVITE = 'INIT_INVITE';
+export const USER_LIST_SUCCESS = 'USER_LIST_SUCCESS';
+export const USER_LIST_FAIL = 'USER_LIST_FAIL';
+export const CREATE_CHANNEL_SUCCESS = 'CREATE_CHANNEL_SUCCESS';
+export const CREATE_CHANNEL_FAIL = 'CREATE_CHANNEL_FAIL';
+export const INVITE_CHANNEL_SUCCESS = 'INVITE_CHANNEL_SUCCESS';
+export const INVITE_CHANNEL_FAIL = 'INVITE_CHANNEL_FAIL';

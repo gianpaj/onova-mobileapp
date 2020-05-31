@@ -8,6 +8,7 @@ import { createReactNavigationReduxMiddleware } from 'react-navigation-redux-hel
 
 import NavigationReducer from './reducers/navigationReducer';
 import LoginReducer from './reducers/loginReducer';
+import ChatReducer from './reducers/chatReducer';
 import RefresherReducer from './reducers/screenRefreshReducer';
 
 import type { NavigationState } from './types/navigationReducer';
@@ -34,6 +35,7 @@ const LoginReducerPersisted = persistReducer(config1, LoginReducer);
 const rootReducer = combineReducers({
   NavigationReducer,
   LoginReducer: LoginReducerPersisted,
+  ChatReducer,
   RefresherReducer,
 });
 

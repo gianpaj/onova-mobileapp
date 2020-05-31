@@ -2,6 +2,7 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import type { MapStateToProps } from 'react-redux';
 import { ActivityIndicator, FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Body, Button as NBButton, Container, Left, Right } from 'native-base';
 import Dialog from 'react-native-dialog';
@@ -11,7 +12,18 @@ import { NavigationActions } from 'react-navigation';
 import { GiftedChat, Bubble, SystemMessage } from 'react-native-gifted-chat';
 import Sendbird from 'sendbird';
 
-import { registerChannelHandler, getPrevMessageList, sbCreatePreviousMessageListQuery } from '../actions/actionCreator';
+import {
+  channelExit,
+  getPrevMessageList,
+  initChatScreen,
+  sbCreatePreviousMessageListQuery,
+  getChannelTitle,
+  createChatHandler,
+  channelProgress,
+  sbGetChannel,
+  sbAdjustMessageList,
+} from '../actions/sendbird.actions';
+
 import I18n from '../i18n';
 
 import type { NavigationScreenProp } from 'react-navigation';
@@ -21,20 +33,21 @@ import { Header, Send, Info, Title, Icon } from '../components';
 import ChatActions from '../components/ChatActions';
 import MessageImage from '../components/MessageImage';
 
-import type { Order, ReduxState, PusherMessage, UserData } from '../types';
+import type { SendbirdMessage } from '../types/chatReducer';
+import type { Order, ReduxState, UserData } from '../types';
 import colors from '../config/colors';
 import settings from '../config/settings';
 import * as api from '../utils/api';
 import * as linking from '../utils/linking';
-import { channelExit } from '../actions/sendbird.actions';
 
 const MARK_AS_READ_AFTER_MS = 300;
 const ONOVA_BOT_ID = '5bd1f7af46c62e6cdee546d0';
 
-type Props = {
+type Props = typeof actionCreators & {
   navigation: NavigationScreenProp<*>,
   userData: UserData,
   token: string,
+  messages: Array<SendbirdMessage>,
 };
 
 type State = {
@@ -43,9 +56,9 @@ type State = {
   partner: UserData,
   isLoading: boolean,
   // isTyping: boolean,
-  messages: Array<PusherMessage>,
   orders: Array<Order>,
-  roomId: number,
+  channel?: Sendbird.GroupChannel,
+  previousMessageListQuery?: Sendbird.PreviousMessageListQuery,
   shouldRefresh: boolean,
   uploadingImage: boolean,
 };
@@ -60,42 +73,42 @@ class ChatContainer extends Component<Props, State> {
     infoDialogVisible: false,
     isLoading: true,
     // isTyping: false,
-    messages: [],
     orders: [],
     partner: null,
-    roomId: -1,
+    channel: null,
+    previousMessageListQuery: null,
     shouldRefresh: false,
     uploadingImage: false,
     userDialogVisible: false,
   };
 
   componentDidMount() {
-    let { params } = this.props.navigation.state;
+    let { params }: { params: { channelUrl: string, orderId?: string } } = this.props.navigation.state;
 
     // refresh after leaving a review or archiving an order
     this.willFocusListener = this.props.navigation.addListener('willFocus', () => {
-      const { roomId, shouldRefresh } = this.state;
+      const { channel, shouldRefresh } = this.state;
       // do not initiate twice at the beginning
       // OR
       // when it should not refresh (a review hasn't been added or order archived)
-      if (!roomId || !shouldRefresh) return;
+      if (!channel || !shouldRefresh) return;
 
-      this.setState({ isLoading: true }, () =>
-        this.initialise(roomId)
-          .then(() => this.setState({ isLoading: false, shouldRefresh: false }))
-          .catch(console.error)
-      );
+      // this.setState({ isLoading: true }, () =>
+      //   this.initialise(channelUrl)
+      //     .then(() => this.setState({ isLoading: false, shouldRefresh: false }))
+      //     .catch(console.error)
+      // );
     });
 
     // for development on 'onova' Pusher Instance
     if (!params) {
       // for development on 'onova-test' Pusher Instance (local env)
-      params = { roomId: 19372253 };
+      params = { channelUrl: '19372253' };
       // for prod between Alex-Gian
-      // params = { roomId: 16463859 };
+      // params = { channelUrl: 16463859 };
     }
 
-    this.initialise(params.roomId, params.orderId)
+    this.initialise(params.channelUrl, params.orderId)
       .then(() => this.setState({ isLoading: false }))
       .catch(err => {
         if (err && err.message !== 'no partner') console.error(err);
@@ -119,16 +132,30 @@ class ChatContainer extends Component<Props, State> {
     this.willFocusListener.remove();
   }
 
-  initialise(roomId: string, orderId?: string) {
+  _componentInit = () => {
+    const { params }: { params: { channelUrl: string, orderId?: string } } = this.props.navigation.state;
+    this.props.channelProgress(false);
+    this.props.getChannelTitle(params.channelUrl);
+    this.props.createChatHandler(params.channelUrl);
+    // this._getMessageList(true);
+    // if (!isOpenChannel) {
+    //   sbMarkAsRead({ channelUrl });
+    // }
+  };
+
+  initialise(channelUrl: string, orderId?: string) {
     const { userData } = this.props;
     let thisRoom;
     return new Promise((resolve, reject) => {
       this.rejectProm = reject;
       const sb = Sendbird.getInstance();
       if (!sb) return reject('Sendbird is not initialized');
-      if (!orderId && !roomId) return reject('either orderId or roomId are missing');
+      if (!orderId && !channelUrl) return reject('either orderId or channelUrl are missing');
 
-      registerChannelHandler(roomId);
+      this.props.initChatScreen();
+      sbGetChannel(channelUrl)
+        .then(channel => this.setState({ channel }))
+        .then(() => this._componentInit());
       this._getMessageList(true);
 
       return resolve();
@@ -136,156 +163,156 @@ class ChatContainer extends Component<Props, State> {
       Promise.resolve()
         .then(() => {
           // coming from ChatRooms or a Push Notification
-          if (!roomId) {
+          if (!channelUrl) {
             return api.getOrder(orderId, this.props.token);
           }
 
-          return sendBirdCurrentUser
-            .subscribeToRoom({
-              roomId,
-              hooks: { onMessage: this.onMessage },
-              messageLimit: 0,
-            })
-            .then(() =>
-              sendBirdCurrentUser
-                .joinRoom({ roomId })
-                .then(room => {
-                  console.debug('1 Joined room ID:', room.id);
-                  thisRoom = room;
-                  return room;
-                })
-                .then(room => room.userIds.filter(id => id !== ONOVA_BOT_ID).find(id => id !== userData._id))
-                // if no user then it's a UserWeb
-                .then(user => user && api.getUser(user))
-                .then(partner => partner && this.setState({ partner }))
-                .catch(err => {
-                  addErrorBreadcrumb({
-                    category: 'chat',
-                    errMsg: `Error joining room ID: ${roomId}`,
-                  });
-                  reject(err);
-                })
-            );
+          // return sendBirdCurrentUser
+          //   .subscribeToRoom({
+          //     roomId,
+          //     hooks: { onMessage: this.onMessage },
+          //     messageLimit: 0,
+          //   })
+          //   .then(() =>
+          //     sendBirdCurrentUser
+          //       .joinRoom({ roomId })
+          //       .then(room => {
+          //         console.debug('1 Joined room ID:', room.id);
+          //         thisRoom = room;
+          //         return room;
+          //       })
+          //       .then(room => room.userIds.filter(id => id !== ONOVA_BOT_ID).find(id => id !== userData._id))
+          //       // if no user then it's a UserWeb
+          //       .then(user => user && api.getUser(user))
+          //       .then(partner => partner && this.setState({ partner }))
+          //       .catch(err => {
+          //         addErrorBreadcrumb({
+          //           category: 'chat',
+          //           errMsg: `Error joining room ID: ${roomId}`,
+          //         });
+          //         reject(err);
+          //       })
+          //   );
         })
         .then(o => {
           // skip if coming from ChatRooms
-          if (roomId) return;
+          if (channelUrl) return;
 
-          console.debug(o);
+          // console.debug(o);
 
-          // else join an existing room or create one
+          // // else join an existing room or create one
 
-          // joinable rooms are those you're not a member of
-          return sendBirdCurrentUser
-            .getJoinableRooms()
-            .then((rooms: Array<any>) => {
-              const allRooms = [...rooms, ...sendBirdCurrentUser.rooms];
-              return allRooms.filter(r => r.name == getRoomName(o));
-            })
-            .then(rooms => {
-              // console.debug(rooms);
+          // // joinable rooms are those you're not a member of
+          // return sendBirdCurrentUser
+          //   .getJoinableRooms()
+          //   .then((rooms: Array<any>) => {
+          //     const allRooms = [...rooms, ...sendBirdCurrentUser.rooms];
+          //     return allRooms.filter(r => r.name == getRoomName(o));
+          //   })
+          //   .then(rooms => {
+          //     // console.debug(rooms);
 
-              // check if there's a previously created room,
-              // by a partner (seller) or myself
-              if (rooms.length > 0) {
-                const firstRoom = rooms[0].id;
-                return sendBirdCurrentUser
-                  .subscribeToRoom({
-                    roomId,
-                    hooks: { onMessage: this.onMessage },
-                    messageLimit: 0,
-                  })
-                  .then(() =>
-                    sendBirdCurrentUser
-                      .joinRoom({ roomId: firstRoom })
-                      .then(room => {
-                        roomId = room.id;
-                        thisRoom = room;
-                        console.debug('2 Joined room ID:', room.id);
-                        return room;
-                      })
-                      .then(room =>
-                        api.getUser(room.userIds.filter(id => id !== ONOVA_BOT_ID).find(id => id !== userData._id))
-                      )
-                      .then(partner => this.setState({ partner }))
-                      .catch(err => {
-                        addErrorBreadcrumb({
-                          category: 'chat',
-                          errMsg: `Error joining room ID: ${firstRoom}`,
-                        });
-                        console.log(err);
-                      })
-                  );
-              }
+          //     // check if there's a previously created room,
+          //     // by a partner (seller) or myself
+          //     if (rooms.length > 0) {
+          //       const firstRoom = rooms[0].id;
+          //       return sendBirdCurrentUser
+          //         .subscribeToRoom({
+          //           roomId,
+          //           hooks: { onMessage: this.onMessage },
+          //           messageLimit: 0,
+          //         })
+          //         .then(() =>
+          //           sendBirdCurrentUser
+          //             .joinRoom({ roomId: firstRoom })
+          //             .then(room => {
+          //               roomId = room.id;
+          //               thisRoom = room;
+          //               console.debug('2 Joined room ID:', room.id);
+          //               return room;
+          //             })
+          //             .then(room =>
+          //               api.getUser(room.userIds.filter(id => id !== ONOVA_BOT_ID).find(id => id !== userData._id))
+          //             )
+          //             .then(partner => this.setState({ partner }))
+          //             .catch(err => {
+          //               addErrorBreadcrumb({
+          //                 category: 'chat',
+          //                 errMsg: `Error joining room ID: ${firstRoom}`,
+          //               });
+          //               console.log(err);
+          //             })
+          //         );
+          //     }
 
-              let addUserIds = [o.buyer._id, userData._id];
-              if (o.buyerType === 'UserWeb') {
-                addUserIds = [ONOVA_BOT_ID, userData._id];
-              }
+          //     let addUserIds = [o.buyer._id, userData._id];
+          //     if (o.buyerType === 'UserWeb') {
+          //       addUserIds = [ONOVA_BOT_ID, userData._id];
+          //     }
 
-              // no existing room existed
-              return sendBirdCurrentUser
-                .createRoom({
-                  name: getRoomName(o),
-                  private: true,
-                  addUserIds,
-                })
-                .then(room => {
-                  roomId = room.id;
-                  thisRoom = room;
-                  console.debug('Created room id', roomId);
-                })
-                .then(() => this.setPartner(o))
-                .catch(err => {
-                  addErrorBreadcrumb({
-                    category: 'chat',
-                    errMsg: 'Error creating room',
-                  });
-                  reject(err);
-                });
-            })
-            .catch(err => {
-              addErrorBreadcrumb({
-                category: 'chat',
-                errMsg: 'Error getting joinable rooms',
-              });
-              reject(err);
-            });
+          //     // no existing room existed
+          //     return sendBirdCurrentUser
+          //       .createRoom({
+          //         name: getRoomName(o),
+          //         private: true,
+          //         addUserIds,
+          //       })
+          //       .then(room => {
+          //         roomId = room.id;
+          //         thisRoom = room;
+          //         console.debug('Created room id', roomId);
+          //       })
+          //       .then(() => this.setPartner(o))
+          //       .catch(err => {
+          //         addErrorBreadcrumb({
+          //           category: 'chat',
+          //           errMsg: 'Error creating room',
+          //         });
+          //         reject(err);
+          //       });
+          //   })
+          //   .catch(err => {
+          //     addErrorBreadcrumb({
+          //       category: 'chat',
+          //       errMsg: 'Error getting joinable rooms',
+          //     });
+          //     reject(err);
+          //   });
         })
-        .then(() => this.setState({ roomId }))
-        .then(() =>
-          sendBirdCurrentUser.fetchMessages({
-            roomId,
-            direction: 'newer',
-            limit: 100,
-          })
-        )
-        .then(async messages => {
-          // if (!this.state.partner) throw new Error('no partner');
+        .then(() => this.setState({ channelUrl }))
+        // .then(() =>
+        //   sendBirdCurrentUser.fetchMessages({
+        //     roomId,
+        //     direction: 'newer',
+        //     limit: 100,
+        //   })
+        // )
+        // .then(async messages => {
+        //   // if (!this.state.partner) throw new Error('no partner');
 
-          const newMsgs = messages.map(m => this.createGiftedMessage(m));
-          this.setState({ messages: newMsgs.reverse() });
-          return messages[messages.length - 1];
-        })
+        //   // const newMsgs = messages.map(m => this.createGiftedMessage(m));
+        //   // this.setState({ messages: newMsgs.reverse() });
+        //   return messages[messages.length - 1];
+        // })
         .then(lastMsg => {
           if (!lastMsg) return;
-          setTimeout(() => {
-            sendBirdCurrentUser
-              .setReadCursor({
-                roomId,
-                position: lastMsg.id,
-              })
-              .then(() => {
-                // console.debug('setReadCursor success');
-              })
-              .catch(err => {
-                addErrorBreadcrumb({
-                  category: 'chat',
-                  errMsg: 'Error setting cursor',
-                });
-                console.error(err);
-              });
-          }, MARK_AS_READ_AFTER_MS);
+          // setTimeout(() => {
+          //   sendBirdCurrentUser
+          //     .setReadCursor({
+          //       roomId,
+          //       position: lastMsg.id,
+          //     })
+          //     .then(() => {
+          //       // console.debug('setReadCursor success');
+          //     })
+          //     .catch(err => {
+          //       addErrorBreadcrumb({
+          //         category: 'chat',
+          //         errMsg: 'Error setting cursor',
+          //       });
+          //       console.error(err);
+          //     });
+          // }, MARK_AS_READ_AFTER_MS);
         })
         .then(() => this.fetchOrders(thisRoom))
         .then(() => resolve())
@@ -297,17 +324,18 @@ class ChatContainer extends Component<Props, State> {
     if (!this.state.previousMessageListQuery && !init) {
       return;
     }
-    const { roomId }: { roomId: string } = this.props.navigation.state.params;
+    const { channelUrl }: { channelUrl: string } = this.props.navigation.state.params;
     // if (!init) {
     //   this.props.getPrevMessageList(this.state.previousMessageListQuery);
     //   return;
     // }
 
     try {
-      const previousMessageListQuery = await sbCreatePreviousMessageListQuery(roomId);
+      const previousMessageListQuery = await sbCreatePreviousMessageListQuery(channelUrl);
       this.setState({ previousMessageListQuery });
       await this.props.getPrevMessageList(previousMessageListQuery);
     } catch (error) {
+      console.error(error);
       this.props.navigation.goBack();
     }
   };
@@ -378,38 +406,38 @@ class ChatContainer extends Component<Props, State> {
     });
   };
 
-  onMessage = (m: PusherMessage) => {
-    const newMsg = this.createGiftedMessage(m);
+  // onMessage = (m: PusherMessage) => {
+  //   const newMsg = this.createGiftedMessage(m);
 
-    setTimeout(() => {
-      sendBirdCurrentUser
-        .setReadCursor({
-          roomId: this.state.roomId,
-          position: m.id,
-        })
-        .then(() => {
-          // console.debug('setReadCursor success');
-        })
-        .catch(err => {
-          addErrorBreadcrumb({
-            category: 'chat',
-            errMsg: 'Error setting cursor',
-          });
-          console.log(`Error setting cursor: ${err}`);
-        });
-    }, MARK_AS_READ_AFTER_MS);
+  //   setTimeout(() => {
+  //     sendBirdCurrentUser
+  //       .setReadCursor({
+  //         roomId: this.state.roomId,
+  //         position: m.id,
+  //       })
+  //       .then(() => {
+  //         // console.debug('setReadCursor success');
+  //       })
+  //       .catch(err => {
+  //         addErrorBreadcrumb({
+  //           category: 'chat',
+  //           errMsg: 'Error setting cursor',
+  //         });
+  //         console.log(`Error setting cursor: ${err}`);
+  //       });
+  //   }, MARK_AS_READ_AFTER_MS);
 
-    const { messages } = this.state;
+  //   const { messages } = this.state;
 
-    if (messages && messages.length) {
-      return this.setState(prevState => {
-        return {
-          messages: [newMsg, ...prevState.messages],
-        };
-      });
-    }
-    this.setState({ messages: [newMsg] });
-  };
+  //   if (messages && messages.length) {
+  //     return this.setState(prevState => {
+  //       return {
+  //         messages: [newMsg, ...prevState.messages],
+  //       };
+  //     });
+  //   }
+  //   this.setState({ messages: [newMsg] });
+  // };
 
   getPartner(): { _id: string, name: string, avatar: string } {
     const { partner }: { partner: UserData | any } = this.state;
@@ -417,44 +445,6 @@ class ChatContainer extends Component<Props, State> {
       _id: partner._id,
       name: partner.username,
       avatar: partner.profilePic,
-    };
-  }
-
-  createGiftedMessage(msg: PusherMessage): PusherMessage {
-    const { userData } = this.props;
-    if (msg.senderId === ONOVA_BOT_ID) {
-      return this.createGiftedSystemMessage(msg);
-    }
-    const otherUser = this.getPartner();
-    const user = msg.senderId == userData._id ? userData : otherUser;
-    const message = {
-      _id: msg.id,
-      createdAt: new Date(msg.createdAt),
-      text: msg.text,
-      user: {
-        _id: user._id,
-        name: user.username || user.name,
-        avatar: user.avatar || user.profilePic,
-      },
-      sent: msg.sent ? msg.sent : false,
-      received: msg.received ? msg.received : false,
-    };
-
-    if (msg.attachment) {
-      return {
-        ...message,
-        image: msg.attachment,
-      };
-    }
-    return message;
-  }
-
-  createGiftedSystemMessage(msg: PusherMessage) {
-    return {
-      _id: msg.id,
-      createdAt: new Date(msg.createdAt),
-      text: msg.text,
-      system: true,
     };
   }
 
@@ -697,8 +687,8 @@ class ChatContainer extends Component<Props, State> {
   }
 
   render() {
-    const { userData } = this.props;
-    const { buyerType, messages, isLoading, orders } = this.state;
+    const { userData, messages } = this.props;
+    const { buyerType, isLoading, orders } = this.state;
 
     if (isLoading) {
       return (
@@ -728,7 +718,7 @@ class ChatContainer extends Component<Props, State> {
           <GiftedChat
             messages={messages}
             maxInputLength={settings.MAX_CHAT_INPUT_LENGTH}
-            onSend={this.onSend}
+            // onSend={this.onSend}
             placeholder={isWebUser ? I18n.t('chat.send_msg_placeholder_disabled') : I18n.t('chat.send_msg_placeholder')}
             renderActions={this.renderActions}
             renderBubble={this.renderBubble}
@@ -835,9 +825,21 @@ const st = StyleSheet.create({
   },
 });
 
-const mapStateToProps: any = ({ LoginReducer }: ReduxState) => ({
+const mapStateToProps: MapStateToProps<*> = ({ LoginReducer, ChatReducer }: ReduxState) => ({
   userData: LoginReducer.data,
   token: LoginReducer.token,
+  messages: sbAdjustMessageList(ChatReducer.list),
 });
 
-export const Chat = connect(mapStateToProps)(ChatContainer);
+const actionCreators = {
+  initChatScreen,
+  getPrevMessageList,
+  channelProgress,
+  getChannelTitle,
+  createChatHandler,
+};
+
+export const Chat = connect(
+  mapStateToProps,
+  actionCreators
+)(ChatContainer);

@@ -10,7 +10,6 @@ import { APP_NAME } from 'react-native-dotenv';
 
 import * as ACTION_TYPES from './actionTypes';
 import type { Dispatch, LoginData, SignupData, GetState, UserData } from '../types';
-import type { SendbirdMessage } from '../types/chatReducer';
 import type { Options, APIError } from '../utils/api';
 import { addAuthBreadcrumb, addNavigationBreadcrumb, addErrorBreadcrumb } from '../utils/analytics';
 
@@ -18,11 +17,12 @@ import { registerPushNotifications } from '../utils/push';
 import * as api from '../utils/api';
 import * as ui from '../utils/ui';
 import I18n from '../i18n';
+import { initializeSendbird } from './sendbird.actions';
 
-const { isProd, analyticsEnabled, config } = api;
+const { isProd, analyticsEnabled } = api;
 
 // const enabledPusher = isProd == true;
-const enabledSendbird = true;
+export const enabledSendbird = true;
 
 const login = (data: LoginData) => (dispatch: Dispatch) => {
   dispatch({ type: ACTION_TYPES.LOGIN_PENDING });
@@ -86,47 +86,6 @@ const login = (data: LoginData) => (dispatch: Dispatch) => {
         level: 'warning',
       });
     });
-};
-
-const SENDBIRD_CONN_TIMEOUT = 30 * 1000;
-
-const initializeSendbird = (userData: UserData): Promise<any | Error> => {
-  return new Promise((resolve, reject) => {
-    if (!enabledSendbird) {
-      console.log('%cskipping Sendbird', 'color: green');
-      return resolve(userData);
-    }
-    console.log('initializeSendbird');
-
-    const timer = setTimeout(() => {
-      addErrorBreadcrumb({
-        category: 'chat',
-        errMsg: 'Error connecting to Chat provider',
-        level: 'fatal',
-      });
-      reject(new Error('Error connecting to Chat provider'));
-    }, SENDBIRD_CONN_TIMEOUT);
-
-    // const sb = Sendbird.getInstance();
-
-    // if (!sb) return reject('Sendbird is not initialized');
-
-    sbConnect(userData._id, userData.displayName)
-      .then(() => {
-        console.log('Sendbird: connected');
-        clearTimeout(timer);
-        resolve(userData);
-      })
-      .catch(error => {
-        addErrorBreadcrumb({
-          category: 'chat',
-          error,
-          level: 'fatal',
-        });
-        clearTimeout(timer);
-        reject(error);
-      });
-  });
 };
 
 function trackUser(userData: UserData) {
@@ -359,195 +318,7 @@ const enableCancelOrder = () => ({ type: ACTION_TYPES.DO_CANCEL_ORDER });
 
 const disableCancelOrder = () => ({ type: ACTION_TYPES.DONOT_CANCEL_ORDER });
 
-const sbConnect = (userId: string, nickname: string) => {
-  return new Promise((resolve, reject) => {
-    if (!userId) {
-      reject('UserID is required.');
-      return;
-    }
-    if (!nickname) {
-      reject('Nickname is required.');
-      return;
-    }
-    const sb = new Sendbird({ appId: config.SENDBIRD_APP_ID });
-    sb.connect(userId, (user, error) => {
-      if (error) {
-        reject('Sendbird Login Failed.');
-        return;
-      }
-      sbUpdateProfile(nickname)
-        .then(() => resolve())
-        .catch(e => reject(e));
-    });
-  });
-};
-
-const sbUpdateProfile = nickname => {
-  return new Promise((resolve, reject) => {
-    if (!nickname) {
-      reject('Nickname is required.');
-      return;
-    }
-    const sb = Sendbird.getInstance();
-    let profileUrl = '';
-    sb.updateCurrentUserInfo(nickname, profileUrl, (user, error) => {
-      if (error) {
-        console.warn('Update profile failed.');
-        reject(error);
-        return;
-      }
-      resolve();
-    });
-  });
-};
-
-const registerChannelHandler = (channelUrl: string, dispatch: Dispatch) => {
-  const sb = Sendbird.getInstance();
-  const channelHandler = new sb.ChannelHandler();
-  registerCommonHandler(channelHandler, channelUrl, dispatch);
-  channelHandler.onUserJoined = (channel, user) => {
-    if (channel.url === channelUrl) {
-      console.log('user joined');
-      console.log(user);
-      // dispatch({
-      //   type: ACTION_TYPES.CHANNEL_CHANGED,
-      //   title: sbGetChannelTitle(channel),
-      //   memberCount: channel.memberCount,
-      // });
-    }
-  };
-  // channelHandler.onUserLeft = (channel: Sendbird.GroupChannel): void => {
-  //   if (channel.url === channelUrl) {
-  //     dispatch({
-  //       type: ACTION_TYPES.CHANNEL_CHANGED,
-  //       // title: sbGetChannelTitle(channel),
-  //       // memberCount: channel.memberCount,
-  //     });
-  //   }
-  // };
-  channelHandler.onReadReceiptUpdated = (channel: Sendbird.GroupChannel) => {
-    if (channel.url === channelUrl) {
-      console.log('onReadReceiptUpdated');
-      dispatch({ type: ACTION_TYPES.READ_RECEIPT_UPDATED });
-    }
-  };
-  channelHandler.onTypingStatusUpdated = (channel: Sendbird.GroupChannel) => {
-    if (channel.url === channelUrl) {
-      const typing = sbIsTyping(channel);
-      console.log(typing);
-      dispatch({
-        type: ACTION_TYPES.TYPING_STATUS_UPDATED,
-        typing: typing,
-      });
-    }
-  };
-  sb.addChannelHandler(channelUrl, channelHandler);
-};
-
-const sbIsTyping = (channel: Sendbird.GroupChannel): string => {
-  if (channel.isTyping()) {
-    const typingMembers = channel.getTypingMembers();
-    if (typingMembers.length == 1) {
-      return `${typingMembers[0].nickname} is typing...`;
-    }
-    return 'several member are typing...';
-  }
-  return '';
-};
-
-const registerCommonHandler = (channelHandler: Sendbird.ChannelHandler, channelUrl: string, dispatch) => {
-  channelHandler.onMessageReceived = (channel: Sendbird.GroupChannel, message) => {
-    if (channel.url === channelUrl) {
-      // if (channel.isGroupChannel()) {
-      // sbMarkAsRead({ channel });
-      // }
-      console.log(message);
-      dispatch({
-        type: ACTION_TYPES.MESSAGE_RECEIVED,
-        payload: message,
-      });
-    }
-  };
-  // channelHandler.onMessageUpdated = (channel, message) => {
-  //   if (channel.url === channelUrl) {
-  //     dispatch({
-  //       type: ACTION_TYPES.MESSAGE_UPDATED,
-  //       payload: message,
-  //     });
-  //   }
-  // };
-  channelHandler.onMessageDeleted = (channel: Sendbird.GroupChannel, messageId: string) => {
-    if (channel.url === channelUrl) {
-      dispatch({
-        type: ACTION_TYPES.MESSAGE_DELETED,
-        payload: messageId,
-      });
-    }
-  };
-};
-
-const getPrevMessageList = (previousMessageListQuery: Sendbird.PreviousMessageListQuery) => (dispatch: Dispatch) => {
-  if (!previousMessageListQuery.hasMore) {
-    console.log('!previousMessageListQuery.hasMore');
-    dispatch({ type: ACTION_TYPES.MESSAGE_LIST_FAIL });
-    return Promise.resolve(true);
-  }
-  return (
-    sbGetMessageList(previousMessageListQuery)
-      .then(messages => {
-        console.log(messages);
-        dispatch({
-          type: ACTION_TYPES.MESSAGE_LIST_SUCCESS,
-          list: messages,
-        });
-      })
-      // .catch(err => console.error(err));
-      .catch(() => dispatch({ type: ACTION_TYPES.MESSAGE_LIST_FAIL }))
-  );
-};
-
-const sbGetMessageList = (
-  previousMessageListQuery: Sendbird.PreviousMessageListQuery
-): Promise<Array<SendbirdMessage> | Sendbird.SendBirdError> =>
-  new Promise((resolve, reject) => {
-    const limit = 30;
-    const reverse = true;
-    previousMessageListQuery.load(limit, reverse, (messages, error) => {
-      if (error) {
-        reject(error);
-        return;
-      }
-
-      resolve(messages);
-    });
-  });
-
-const sbCreatePreviousMessageListQuery = (channelUrl: string): Promise<Sendbird.PreviousMessageListQuery> => {
-  return new Promise((resolve, reject) => {
-    sbGetGroupChannel(channelUrl)
-      .then(channel => resolve(channel.createPreviousMessageListQuery()))
-      .catch(error => reject(error));
-  });
-};
-
-const sbGetGroupChannel = (channelUrl): Promise<Sendbird.GroupChannel> => {
-  return new Promise((resolve, reject) => {
-    const sb = Sendbird.getInstance();
-    sb.GroupChannel.getChannel(channelUrl, (channel, error) => {
-      if (error) {
-        reject(error);
-        return;
-      }
-      resolve(channel);
-    });
-  });
-};
-
 export {
-  initializeSendbird,
-  registerChannelHandler,
-  getPrevMessageList,
-  sbCreatePreviousMessageListQuery,
   login,
   checkLogin,
   signup,

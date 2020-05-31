@@ -12,7 +12,7 @@ const initialState: ChatState = {
   selectedMessages: [],
 };
 
-const uniqueList = (list: Array<SendbirdMessage>) =>
+const uniqueList = (list: Array<SendbirdMessage>): Array<SendbirdMessage> =>
   list.reduce((uniqList, currentValue) => {
     const ids = uniqList.map(item => item.messageId);
     if (ids.indexOf(currentValue.messageId) < 0) {
@@ -33,7 +33,7 @@ export default (state: ChatState = initialState, action: Action): ChatState => {
     case ACTION_TYPES.CHANNEL_CHANGED_FAIL:
       return { ...state };
     case ACTION_TYPES.MESSAGE_LIST_SUCCESS:
-      return { ...state, list: uniqueList([...state.list, ...action.list]) };
+      return { ...state, list: uniqueList([...state.list, ...(action.list || [])]) };
     case ACTION_TYPES.MESSAGE_LIST_FAIL:
       return { ...state };
     case ACTION_TYPES.SEND_MESSAGE_TEMPORARY:

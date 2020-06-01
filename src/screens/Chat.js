@@ -9,7 +9,7 @@ import Dialog from 'react-native-dialog';
 import ParsedText from 'react-native-parsed-text';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { NavigationActions } from 'react-navigation';
-import { GiftedChat, Bubble, SystemMessage } from 'react-native-gifted-chat';
+import { GiftedChat, Bubble, SystemMessage, SendProps } from 'react-native-gifted-chat';
 import Sendbird from 'sendbird';
 
 import {
@@ -19,6 +19,7 @@ import {
   sbCreatePreviousMessageListQuery,
   getChannelTitle,
   createChatHandler,
+  onSendButtonPress,
   channelProgress,
   sbGetChannel,
   sbAdjustMessageList,
@@ -27,7 +28,6 @@ import {
 import I18n from '../i18n';
 
 import type { NavigationScreenProp } from 'react-navigation';
-
 import { addErrorBreadcrumb } from '../utils/analytics';
 import { Header, Send, Info, Title, Icon } from '../components';
 import ChatActions from '../components/ChatActions';
@@ -406,7 +406,7 @@ class ChatContainer extends Component<Props, State> {
     });
   };
 
-  // onMessage = (m: PusherMessage) => {
+  // onMessage = (m: SendbirdMessage) => {
   //   const newMsg = this.createGiftedMessage(m);
 
   //   setTimeout(() => {
@@ -448,38 +448,46 @@ class ChatContainer extends Component<Props, State> {
     };
   }
 
-  onSend = async (messages: Array<PusherMessage>) => {
-    if (messages[0].text) {
-      const { text } = messages[0];
+  onSend = async (messages: Array<SendbirdMessage>) => {
+    const { token, onSendButtonPress } = this.props;
+    try {
+      if (messages[0].text) {
+        const { text } = messages[0];
+        const { channelUrl }: { channelUrl: string } = this.props.navigation.state.params;
 
-      sendBirdCurrentUser
-        .sendMessage({ text, roomId: this.state.roomId })
-        .then(() => {
-          // console.debug('Message sent:', id);
-        })
-        .catch(err => {
-          console.error(err);
-        });
-    } else {
-      const { token } = this.props;
+        onSendButtonPress(channelUrl, text);
+        // if (this.props && this.props.list && this.props.list.length > 0) {
+        //   this.flatList.scrollToIndex({
+        //     index: 0,
+        //     viewOffset: 0
+        //   });
+        // }
 
-      this.setState({ uploadingImage: true });
-      // Sending Images via Pusher
-      // sendBirdCurrentUser
-      //   .sendMessage({
-      //     text: ' ', // cannot be empty string or null
-      //     roomId: this.state.roomId,
-      //     attachment: {
-      //       file: {
-      //         uri: messages[0].image,
-      //         type: 'image/jpeg',
-      //         name: 'image.jpg',
-      //       },
-      //       name: 'myfile.jpg',
-      //     },
-      //   })
-      // Sending Images via our API
-      try {
+        // sendBirdCurrentUser
+        //   .sendMessage({ text, roomId: this.state.roomId })
+        //   .then(() => {
+        //     // console.debug('Message sent:', id);
+        //   })
+        //   .catch(err => {
+        //     console.error(err);
+        //   });
+      } else {
+        this.setState({ uploadingImage: true });
+        // Sending Images via Pusher
+        // sendBirdCurrentUser
+        //   .sendMessage({
+        //     text: ' ', // cannot be empty string or null
+        //     roomId: this.state.roomId,
+        //     attachment: {
+        //       file: {
+        //         uri: messages[0].image,
+        //         type: 'image/jpeg',
+        //         name: 'image.jpg',
+        //       },
+        //       name: 'myfile.jpg',
+        //     },
+        //   })
+        // Sending Images via our API
         const res = await api.sendChatPhoto(
           {
             uri: messages[0].image,
@@ -502,10 +510,10 @@ class ChatContainer extends Component<Props, State> {
           .then(() => {
             this.setState({ uploadingImage: false });
           });
-      } catch (err) {
-        addErrorBreadcrumb({ category: 'chat', err });
-        console.error(err);
       }
+    } catch (err) {
+      addErrorBreadcrumb({ category: 'chat', err });
+      console.error(err);
     }
   };
 
@@ -513,7 +521,8 @@ class ChatContainer extends Component<Props, State> {
     <SystemMessage {...props} containerStyle={st.systemContainer} textStyle={st.systemText} />
   );
 
-  renderSend = (props): React$Element<*> => {
+  renderSend = (props: SendProps): React$Element<*> => {
+    // do allow to sellers to send messages to a buyer from the web
     const disabled = this.state.buyerType === 'UserWeb';
     const showActiveOpacity = props.text.trim().length > 0 && !disabled;
     return (
@@ -718,7 +727,10 @@ class ChatContainer extends Component<Props, State> {
           <GiftedChat
             messages={messages}
             maxInputLength={settings.MAX_CHAT_INPUT_LENGTH}
-            // onSend={this.onSend}
+            onSend={this.onSend}
+            // onInputTextChanged
+            /* Custom footer component on the ListView, e.g. 'User is typing...' */
+            // renderFooter
             placeholder={isWebUser ? I18n.t('chat.send_msg_placeholder_disabled') : I18n.t('chat.send_msg_placeholder')}
             renderActions={this.renderActions}
             renderBubble={this.renderBubble}
@@ -731,6 +743,8 @@ class ChatContainer extends Component<Props, State> {
               avatar: userData.profilePic,
             }}
             textInputProps={{ editable: !isWebUser }}
+            // onEndReached={() => this._getMessageList(false)}
+            // onEndReachedThreshold={0}
           />
         </View>
         {this.renderInfoDialog()}
@@ -837,6 +851,7 @@ const actionCreators = {
   channelProgress,
   getChannelTitle,
   createChatHandler,
+  onSendButtonPress,
 };
 
 export const Chat = connect(

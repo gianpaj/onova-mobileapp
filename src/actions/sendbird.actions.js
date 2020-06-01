@@ -428,7 +428,6 @@ export const getChannelTitle = (channelUrl: string) => (dispatch: Dispatch) =>
     .catch(() => dispatch({ type: ACTION_TYPES.CHANNEL_CHANGED_FAIL }));
 
 export const sbAdjustMessageList = (list: Array<SendbirdMessage>) => {
-  console.log(list);
   // $FlowFixMe
   return list.map((message, i) => {
     message['time'] = sbUnixTimestampToDate(message.createdAt);
@@ -509,3 +508,25 @@ export const createGiftedSystemMessage = (msg: SendbirdMessage) => {
     system: true,
   };
 };
+
+export const onSendButtonPress = (channelUrl: string, text: string) => (dispatch: Dispatch) =>
+  sbGetChannel(channelUrl)
+    .then(channel => sbSendTextMessage(channel, text))
+    .then(message =>
+      dispatch({
+        type: ACTION_TYPES.SEND_MESSAGE_SUCCESS,
+        message,
+      })
+    )
+    .catch(() => dispatch({ type: ACTION_TYPES.SEND_MESSAGE_FAIL }));
+
+export const sbSendTextMessage = (channel: Sendbird.GroupChannel, text: string): Promise<string> =>
+  new Promise((resolve, reject) => {
+    if (channel.isGroupChannel()) {
+      channel.endTyping();
+    }
+    channel.sendUserMessage(text, (message, error) => {
+      if (error) return reject(error);
+      resolve(message);
+    });
+  });

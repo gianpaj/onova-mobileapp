@@ -3,6 +3,7 @@ import Sendbird from 'sendbird';
 
 import type { SendbirdMessage, Action } from '../types/chatReducer';
 import type { Dispatch, UserData } from '../types';
+import type { IMessage } from 'react-native-gifted-chat';
 
 import * as ACTION_TYPES from './actionTypes';
 import { config } from '../utils/api';
@@ -61,10 +62,7 @@ const sbGetMessageList = (
     const limit = 30;
     const reverse = true;
     previousMessageListQuery.load(limit, reverse, (messages, error) => {
-      if (error) {
-        reject(error);
-        return;
-      }
+      if (error) return reject(error);
 
       resolve(messages);
     });
@@ -113,7 +111,6 @@ const sbIsTyping = (channel: Sendbird.GroupChannel): string => {
 export const registerChannelHandler = (channelUrl: string, dispatch: Dispatch) => {
   const sb = Sendbird.getInstance();
   const channelHandler = new sb.ChannelHandler();
-  registerCommonHandler(channelHandler, channelUrl, dispatch);
   channelHandler.onUserJoined = (channel, user) => {
     if (channel.url === channelUrl) {
       console.log('user joined');
@@ -150,6 +147,7 @@ export const registerChannelHandler = (channelUrl: string, dispatch: Dispatch) =
       });
     }
   };
+  registerCommonHandler(channelHandler, channelUrl, dispatch);
   sb.addChannelHandler(channelUrl, channelHandler);
 };
 
@@ -164,10 +162,10 @@ export const initializeSendbird = (userData: UserData): Promise<any | Error> =>
     const timer = setTimeout(() => {
       addErrorBreadcrumb({
         category: 'chat',
-        errMsg: 'Error connecting to Chat provider',
+        errMsg: 'Error connecting to Sendbird',
         level: 'fatal',
       });
-      reject(new Error('Error connecting to Chat provider'));
+      reject(new Error('Error connecting to Sendbird'));
     }, SENDBIRD_CONN_TIMEOUT);
 
     // const sb = Sendbird.getInstance();
@@ -305,10 +303,8 @@ export const createChannelListHandler = () => (dispatch: Dispatch) => {
 
 export const createChatHandler = (channelUrl: string) => (dispatch: Dispatch) =>
   sbGetChannel(channelUrl)
-    .then(() => {
-      registerChannelHandler(channelUrl, dispatch);
-      dispatch({ type: ACTION_TYPES.CREATE_CHAT_HANDLER_SUCCESS });
-    })
+    .then(() => registerChannelHandler(channelUrl, dispatch))
+    .then(() => dispatch({ type: ACTION_TYPES.CREATE_CHAT_HANDLER_SUCCESS }))
     .catch(() => dispatch({ type: ACTION_TYPES.CREATE_CHAT_HANDLER_FAIL }));
 
 export const sbCreateChannelListQuery = () => {
@@ -422,9 +418,9 @@ export const getChannelTitle = (channelUrl: string) => (dispatch: Dispatch) =>
     })
     .catch(() => dispatch({ type: ACTION_TYPES.CHANNEL_CHANGED_FAIL }));
 
-export const sbAdjustMessageList = (list: Array<SendbirdMessage>) => {
+export const sbAdjustMessageList = (list: Array<SendbirdMessage>) =>
   // $FlowFixMe
-  return list.map((message, i) => {
+  list.map((message, i) => {
     message['time'] = sbUnixTimestampToDate(message.createdAt);
     message.readCount = 0;
     if (message.isUserMessage() || message.isFileMessage()) {
@@ -449,9 +445,21 @@ export const sbAdjustMessageList = (list: Array<SendbirdMessage>) => {
         message.sender.isShow = false;
       }
     }
-    return { ...message, _id: message.messageId, text: message.message, user: message.sender };
+    return createGiftedMessage(message);
   });
-};
+
+const createGiftedMessage = (msg: SendbirdMessage): IMessage => ({
+  ...msg,
+  _id: msg.messageId,
+  text: msg.message,
+  user: {
+    _id: msg.sender.userId,
+    name: msg.sender.username,
+    avatar: msg.sender.profileUrl,
+  },
+  image: Boolean(msg.messageType == 'file'),
+  // system: Boolean(msg.messageType == 'admin'),
+});
 
 export const sbUnixTimestampToDate = (unixTimestamp: number) => {
   const today = new Date();
@@ -466,34 +474,44 @@ export const sbUnixTimestampToDate = (unixTimestamp: number) => {
 };
 
 const ONOVA_BOT_ID = '5bd1f7af46c62e6cdee546d0';
-export const createGiftedMessage = (msg: SendbirdMessage): SendbirdMessage => {
-  // const { userData } = this.props;
-  if (msg.senderId === ONOVA_BOT_ID) {
-    return createGiftedSystemMessage(msg);
-  }
-  // const otherUser = this.getPartner();
-  // const user = msg.senderId == userData._id ? userData : otherUser;
-  const message = {
-    _id: msg.id,
-    createdAt: new Date(msg.createdAt),
-    text: msg.text,
-    // user: {
-    //   _id: user._id,
-    //   name: user.username || user.name,
-    //   avatar: user.avatar || user.profilePic,
-    // },
-    sent: msg.sent ? msg.sent : false,
-    received: msg.received ? msg.received : false,
-  };
 
-  if (msg.attachment) {
-    return {
-      ...message,
-      image: msg.attachment,
-    };
-  }
-  return message;
-};
+// export const createGiftedMessage = (msg: SendbirdMessage): SendbirdMessage => {
+//   // const { userData } = this.props;
+//   if (msg.senderId === ONOVA_BOT_ID) {
+//     return createGiftedSystemMessage(msg);
+//   }
+//   // const otherUser = getPartner();
+//   // const user = msg.senderId == userData._id ? userData : otherUser;
+//   const message = {
+//     _id: msg.id,
+//     createdAt: new Date(msg.createdAt),
+//     text: msg.text,
+//     // user: {
+//     //   _id: user._id,
+//     //   name: user.username || user.name,
+//     //   avatar: user.avatar || user.profilePic,
+//     // },
+//     sent: msg.sent ? msg.sent : false,
+//     received: msg.received ? msg.received : false,
+//   };
+
+//   if (msg.attachment) {
+//     return {
+//       ...message,
+//       image: msg.attachment,
+//     };
+//   }
+//   return message;
+// };
+
+// const getPartner = (): { _id: string, name: string, avatar: string } => {
+//   const { partner }: { partner: UserData | any } = this.state;
+//   return {
+//     _id: partner._id,
+//     name: partner.username,
+//     avatar: partner.profilePic,
+//   };
+// };
 
 export const createGiftedSystemMessage = (msg: SendbirdMessage) => {
   return {
@@ -537,5 +555,10 @@ export const sbMarkAsRead = ({
     channel.markAsRead();
     return;
   }
-  sbGetChannel(channelUrl).then(channel => channel.markAsRead());
+  if (channelUrl) {
+    sbGetChannel(channelUrl).then(channel => channel.markAsRead());
+  }
 };
+
+export const getPartner = (channel: Sendbird.GroupChannel, myUserId: string): Sendbird.User =>
+  channel.members.filter(m => m.userId !== ONOVA_BOT_ID).find(m => m.userId !== myUserId);

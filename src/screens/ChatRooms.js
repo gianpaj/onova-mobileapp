@@ -117,51 +117,45 @@ class ChatContainer extends Component<Props, State> {
   getChatsAndTheirOrders = async (rooms: Array<Sendbird.GroupChannel>): Promise<Array<Room>> => {
     console.debug('getChatsAndTheirOrders');
     const { token, userData } = this.props;
-    const orders = (await api.getOrders(token)).filter(
-      (o: Order) => !['paid', 'cancelled', 'pending', 'reserved'].includes(o.status)
-    );
+    let orders = await api.getOrders(token);
+    orders = orders.filter((o: Order) => !['paid', 'cancelled', 'pending', 'reserved'].includes(o.status));
     if (orders.length === 0) return [];
 
     // const sb = Sendbird.getInstance();
-    // const rooms = await sb.getJoinableRooms();
+    // const rooms = await sb.getJoinableRooms(); // invited
     const allRooms = [...rooms];
 
+    // TODO:
     // filter chat rooms by checking if there is
     // at least one room name == order generated name
     // console.log(orders);
-    // const thisOrders = orders.map(o => getRoomName(o));
-    // let roomsAndTheirOrders = allRooms.filter(function(r) {
-    //   return this.indexOf(r.name) >= 0;
-    // }, thisOrders);
+    const theseOrders = orders.map(o => getRoomName(o));
+    let roomsAndTheirOrders = allRooms.filter(function(r) {
+      return this.indexOf(r.name) >= 0;
+    }, theseOrders);
     // // add order and room objects
     // roomsAndTheirOrders = roomsAndTheirOrders.map(r => {
     //   r.orders = orders.filter((o: Order) => getRoomName(o) == r.name);
     //   return r;
     // });
-    let roomsAndTheirOrders = allRooms;
 
-    console.log(roomsAndTheirOrders);
+    roomsAndTheirOrders = allRooms;
 
     const ordersAndChats = roomsAndTheirOrders.map(room => {
       let partner;
+      // TODO:
       // if (room.orders.filter(o => o.buyerType == 'UserWeb').length > 0) {
       //   partner = {
       //     userId: ONOVA_BOT_ID,
       //     name: `${room.orders[0].buyer.displayName} (web)`,
       //   };
       // } else {
-      partner = room.members.filter(u => u.userId !== ONOVA_BOT_ID).find(u => u.userId !== userData._id);
-      // const cursor = await sb.readCursor({
-      //   channelUrl: room.id,
-      // });
+      partner = room.members.filter(m => m.userId !== ONOVA_BOT_ID).find(m => m.userId !== userData._id);
       // }
 
-      // const isPartnerOnline = partner.connectionStatus && partner.connectionStatus == 'online';
       const isPartnerOnline = partner.connectionStatus === 'online';
       return {
         ...room,
-        // if no messages (very first order step)
-        lastMessage: room.lastMessage,
         isPartnerOnline,
         partner,
       };
@@ -221,17 +215,11 @@ class ChatContainer extends Component<Props, State> {
 
   _renderRoomRow = ({ item }: { item: Room }) => {
     const { lastMessage } = item;
-    let from;
     const myUserId = this.props.userData._id;
 
-    // if (lastMessage.messageType == 'user') {
     const isMyMessage = lastMessage._sender.userId == myUserId;
 
-    from = isMyMessage ? I18n.t('chat_rooms.my_message_prefix') : '';
-    // } else {
-    //   // admin messages
-    //   from = `${lastMessage.messageType}: `;
-    // }
+    const from = isMyMessage ? I18n.t('chat_rooms.my_message_prefix') : '';
 
     return (
       <TouchableOpacity onPress={() => this.goToChat(item.url)}>

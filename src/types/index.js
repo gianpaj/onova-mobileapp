@@ -5,6 +5,7 @@ import type { Action as LoginAction, LoginState } from './loginReducer';
 import type { Action as ChatAction, ChatState } from '../types/chatReducer';
 import type { ScreenRefreshState } from '../reducers/screenRefreshReducer';
 import type { Action as NavigationAction, NavigationState } from './navigationReducer';
+import Sendbird from 'sendbird';
 
 export type Drop = {
   _id: string,
@@ -162,14 +163,14 @@ export type PusherMessage = {
 //   users: Array<any>,
 // };
 
-export type Room = SendBird.GroupChannel & {
+export type Room = Sendbird.GroupChannel & {
   createdAt: string,
   name: string,
   updatedAt: string,
   isPartnerOnline: *,
-  partner: SendBird.User,
-  lastMessage: SendBird.UserMessage & {
-    _sender: SendBird.User,
+  partner: Sendbird.Member,
+  lastMessage: (Sendbird.AdminMessage | Sendbird.UserMessage | Sendbird.FileMessage) & {
+    _sender: Sendbird.User,
   },
   order: Order,
 };

@@ -23,10 +23,13 @@ import {
   channelProgress,
   sbGetChannel,
   sbAdjustMessageList,
+  sbMarkAsRead,
+  getPartner,
 } from '../actions/sendbird.actions';
 
 import I18n from '../i18n';
 
+import type { IMessage } from 'react-native-gifted-chat';
 import type { NavigationScreenProp } from 'react-navigation';
 import { addErrorBreadcrumb } from '../utils/analytics';
 import { Header, Send, Info, Title, Icon } from '../components';
@@ -44,7 +47,12 @@ const MARK_AS_READ_AFTER_MS = 300;
 const ONOVA_BOT_ID = '5bd1f7af46c62e6cdee546d0';
 
 type Props = typeof actionCreators & {
-  navigation: NavigationScreenProp<*>,
+  navigation: NavigationScreenProp<{|
+    params: {|
+      orderId: string,
+      channelUrl: string,
+    |},
+  |}>,
   userData: UserData,
   token: string,
   messages: Array<SendbirdMessage>,
@@ -53,20 +61,22 @@ type Props = typeof actionCreators & {
 type State = {
   buyerType: 'User' | 'UserWeb',
   infoDialogVisible: boolean,
-  partner: UserData,
+  partner?: UserData,
   isLoading: boolean,
   // isTyping: boolean,
   orders: Array<Order>,
   channel?: Sendbird.GroupChannel,
-  previousMessageListQuery?: Sendbird.PreviousMessageListQuery,
+  channelUrl?: string,
   shouldRefresh: boolean,
   uploadingImage: boolean,
+  userDialogVisible: boolean,
 };
 
 class ChatContainer extends Component<Props, State> {
   willFocusListener;
   sb;
-  rejectProm;
+  previousMessageListQuery: Sendbird.PreviousMessageListQuery;
+  // rejectProm;
 
   state = {
     buyerType: 'User',
@@ -74,9 +84,7 @@ class ChatContainer extends Component<Props, State> {
     isLoading: true,
     // isTyping: false,
     orders: [],
-    partner: null,
     channel: null,
-    previousMessageListQuery: null,
     shouldRefresh: false,
     uploadingImage: false,
     userDialogVisible: false,
@@ -87,31 +95,29 @@ class ChatContainer extends Component<Props, State> {
 
     // refresh after leaving a review or archiving an order
     this.willFocusListener = this.props.navigation.addListener('willFocus', () => {
-      const { channel, shouldRefresh } = this.state;
+      const { params }: { params: { channelUrl: string } } = this.props.navigation.state;
       // do not initiate twice at the beginning
       // OR
       // when it should not refresh (a review hasn't been added or order archived)
-      if (!channel || !shouldRefresh) return;
+      if (!params.channelUrl || !this.state.shouldRefresh) return;
 
-      // this.setState({ isLoading: true }, () =>
-      //   this.initialise(channelUrl)
-      //     .then(() => this.setState({ isLoading: false, shouldRefresh: false }))
-      //     .catch(console.error)
-      // );
+      this.setState({ isLoading: true }, () =>
+        this.initialise(params.channelUrl)
+          .then(() => this.setState({ isLoading: false, shouldRefresh: false }))
+          .catch(console.error)
+      );
     });
 
-    // for development on 'onova' Pusher Instance
+    // for development on 'onova' Sendbird Instance
     if (!params) {
-      // for development on 'onova-test' Pusher Instance (local env)
-      params = { channelUrl: '19372253' };
-      // for prod between Alex-Gian
-      // params = { channelUrl: 16463859 };
+      // for development on 'onova' Sendbird Instance
+      params = { channelUrl: 'sendbird_group_channel_203293808_b22cd74d4d812d57be87fe5936a8aa8647527a77' };
     }
 
     this.initialise(params.channelUrl, params.orderId)
       .then(() => this.setState({ isLoading: false }))
       .catch(err => {
-        if (err && err.message !== 'no partner') console.error(err);
+        if (err) console.error(err);
       });
   }
 
@@ -121,13 +127,13 @@ class ChatContainer extends Component<Props, State> {
 
   componentWillUnmount() {
     // stop receiving events from the chat room (channel URL)
-    this.state.roomId && channelExit(this.state.roomId);
+    this.state.channelUrl && channelExit(this.state.channelUrl);
 
-    // cancel initialise(). i.e. when the Chat screen is opened and closed quickly
-    if (this.rejectProm) {
-      this.rejectProm();
-      this.rejectProm = null;
-    }
+    // // cancel initialise(). i.e. when the Chat screen is opened and closed quickly
+    // if (this.rejectProm) {
+    //   this.rejectProm();
+    //   this.rejectProm = null;
+    // }
 
     this.willFocusListener.remove();
   }
@@ -138,199 +144,129 @@ class ChatContainer extends Component<Props, State> {
     this.props.getChannelTitle(params.channelUrl);
     this.props.createChatHandler(params.channelUrl);
     this._getMessageList(true);
-    sbMarkAsRead({ channelUrl: params.channelUrl });
+    setTimeout(() => {
+      sbMarkAsRead({ channelUrl: params.channelUrl });
+    }, MARK_AS_READ_AFTER_MS);
   };
 
-  initialise(channelUrl: string, orderId?: string) {
+  async initialise(channelUrl: string, orderId?: string) {
     const { userData } = this.props;
     let thisRoom;
-    return new Promise((resolve, reject) => {
-      this.rejectProm = reject;
-      const sb = Sendbird.getInstance();
-      if (!sb) return reject('Sendbird is not initialized');
-      if (!orderId && !channelUrl) return reject('either orderId or channelUrl are missing');
+    // return new Promise((resolve, reject) => {
+    // this.rejectProm = reject;
+    const sb = Sendbird.getInstance();
+    if (!sb) return Promise.reject('Sendbird is not initialized');
+    if (!orderId && !channelUrl) return Promise.reject('either orderId or channelUrl are missing');
 
-      this.props.initChatScreen();
-      sbGetChannel(channelUrl)
-        .then(channel => this.setState({ channel }))
-        .then(() => this._componentInit());
-      this._getMessageList(true);
+    this.props.initChatScreen();
+    const Promises = [
+      sbGetChannel(channelUrl).then(channel => {
+        const partner = getPartner(channel, userData._id);
+        if (!partner) {
+          return this.setState({ channel, channelUrl });
+        }
+        return api.getUser(partner.userId).then(partner => partner && this.setState({ partner, channel, channelUrl }));
+      }),
 
-      return resolve();
+      this.fetchOrders(thisRoom),
+      this._componentInit(),
+    ];
 
-      Promise.resolve()
-        .then(() => {
-          // coming from ChatRooms or a Push Notification
-          if (!channelUrl) {
-            return api.getOrder(orderId, this.props.token);
-          }
+    // coming from ChatRooms or a Push Notification
+    if (!channelUrl && orderId) {
+      Promises.push(api.getOrder(orderId, this.props.token));
+    }
+    try {
+      await Promise.all(Promises);
+    } catch (error) {
+      addErrorBreadcrumb({
+        category: 'chat',
+        errMsg: `Error joining room ID: ${channelUrl}`,
+      });
+    }
+    // .then(() => this.setState({ channelUrl }))
 
-          // return sendBirdCurrentUser
-          //   .subscribeToRoom({
-          //     roomId,
-          //     hooks: { onMessage: this.onMessage },
-          //     messageLimit: 0,
-          //   })
-          //   .then(() =>
-          //     sendBirdCurrentUser
-          //       .joinRoom({ roomId })
-          //       .then(room => {
-          //         console.debug('1 Joined room ID:', room.id);
-          //         thisRoom = room;
-          //         return room;
-          //       })
-          //       .then(room => room.userIds.filter(id => id !== ONOVA_BOT_ID).find(id => id !== userData._id))
-          //       // if no user then it's a UserWeb
-          //       .then(user => user && api.getUser(user))
-          //       .then(partner => partner && this.setState({ partner }))
-          //       .catch(err => {
-          //         addErrorBreadcrumb({
-          //           category: 'chat',
-          //           errMsg: `Error joining room ID: ${roomId}`,
-          //         });
-          //         reject(err);
-          //       })
-          //   );
-        })
-        .then(o => {
-          // skip if coming from ChatRooms
-          if (channelUrl) return;
+    // // if no user then it's a UserWeb
+    // .then(user => user && api.getUser(user))
 
-          // console.debug(o);
+    // .then(o => {
+    //   // skip if coming from ChatRooms
+    //   if (channelUrl) return;
 
-          // // else join an existing room or create one
+    // console.debug(o);
 
-          // // joinable rooms are those you're not a member of
-          // return sendBirdCurrentUser
-          //   .getJoinableRooms()
-          //   .then((rooms: Array<any>) => {
-          //     const allRooms = [...rooms, ...sendBirdCurrentUser.rooms];
-          //     return allRooms.filter(r => r.name == getRoomName(o));
-          //   })
-          //   .then(rooms => {
-          //     // console.debug(rooms);
+    // else join an existing room or create one
 
-          //     // check if there's a previously created room,
-          //     // by a partner (seller) or myself
-          //     if (rooms.length > 0) {
-          //       const firstRoom = rooms[0].id;
-          //       return sendBirdCurrentUser
-          //         .subscribeToRoom({
-          //           roomId,
-          //           hooks: { onMessage: this.onMessage },
-          //           messageLimit: 0,
-          //         })
-          //         .then(() =>
-          //           sendBirdCurrentUser
-          //             .joinRoom({ roomId: firstRoom })
-          //             .then(room => {
-          //               roomId = room.id;
-          //               thisRoom = room;
-          //               console.debug('2 Joined room ID:', room.id);
-          //               return room;
-          //             })
-          //             .then(room =>
-          //               api.getUser(room.userIds.filter(id => id !== ONOVA_BOT_ID).find(id => id !== userData._id))
-          //             )
-          //             .then(partner => this.setState({ partner }))
-          //             .catch(err => {
-          //               addErrorBreadcrumb({
-          //                 category: 'chat',
-          //                 errMsg: `Error joining room ID: ${firstRoom}`,
-          //               });
-          //               console.log(err);
-          //             })
-          //         );
-          //     }
+    // // joinable rooms are those you're not a member of
+    // return sendBirdCurrentUser
+    //   .getJoinableRooms()
+    //   .then((rooms: Array<any>) => {
+    //     const allRooms = [...rooms, ...sendBirdCurrentUser.rooms];
+    //     return allRooms.filter(r => r.name == getRoomName(o));
+    //   })
 
-          //     let addUserIds = [o.buyer._id, userData._id];
-          //     if (o.buyerType === 'UserWeb') {
-          //       addUserIds = [ONOVA_BOT_ID, userData._id];
-          //     }
+    //     // check if there's a previously created room,
+    //     // by a partner (seller) or myself
+    //     if (rooms.length > 0) {
+    //       const firstRoom = rooms[0].id;
+    //       return sendBirdCurrentUser
+    //         .then(() =>
+    //           sendBirdCurrentUser
+    //             .joinRoom({ roomId: firstRoom })
+    //             .then(room => {
+    //               roomId = room.id;
+    //               thisRoom = room;
+    //               console.debug('2 Joined room ID:', room.id);
+    //               return room;
+    //             })
+    //             .then(room =>
+    //               api.getUser(room.userIds.filter(id => id !== ONOVA_BOT_ID).find(id => id !== userData._id))
+    //             )
+    //             .then(partner => this.setState({ partner }))
+    //             .catch(err => {
+    //               addErrorBreadcrumb({
+    //                 category: 'chat',
+    //                 errMsg: `Error joining room ID: ${firstRoom}`,
+    //               });
+    //               console.log(err);
+    //             })
+    //         );
+    //     }
 
-          //     // no existing room existed
-          //     return sendBirdCurrentUser
-          //       .createRoom({
-          //         name: getRoomName(o),
-          //         private: true,
-          //         addUserIds,
-          //       })
-          //       .then(room => {
-          //         roomId = room.id;
-          //         thisRoom = room;
-          //         console.debug('Created room id', roomId);
-          //       })
-          //       .then(() => this.setPartner(o))
-          //       .catch(err => {
-          //         addErrorBreadcrumb({
-          //           category: 'chat',
-          //           errMsg: 'Error creating room',
-          //         });
-          //         reject(err);
-          //       });
-          //   })
-          //   .catch(err => {
-          //     addErrorBreadcrumb({
-          //       category: 'chat',
-          //       errMsg: 'Error getting joinable rooms',
-          //     });
-          //     reject(err);
-          //   });
-        })
-        .then(() => this.setState({ channelUrl }))
-        // .then(() =>
-        //   sendBirdCurrentUser.fetchMessages({
-        //     roomId,
-        //     direction: 'newer',
-        //     limit: 100,
-        //   })
-        // )
-        // .then(async messages => {
-        //   // if (!this.state.partner) throw new Error('no partner');
+    //     let addUserIds = [o.buyer._id, userData._id];
+    //     if (o.buyerType === 'UserWeb') {
+    //       addUserIds = [ONOVA_BOT_ID, userData._id];
+    //     }
 
-        //   // const newMsgs = messages.map(m => this.createGiftedMessage(m));
-        //   // this.setState({ messages: newMsgs.reverse() });
-        //   return messages[messages.length - 1];
-        // })
-        .then(lastMsg => {
-          if (!lastMsg) return;
-          // setTimeout(() => {
-          //   sendBirdCurrentUser
-          //     .setReadCursor({
-          //       roomId,
-          //       position: lastMsg.id,
-          //     })
-          //     .then(() => {
-          //       // console.debug('setReadCursor success');
-          //     })
-          //     .catch(err => {
-          //       addErrorBreadcrumb({
-          //         category: 'chat',
-          //         errMsg: 'Error setting cursor',
-          //       });
-          //       console.error(err);
-          //     });
-          // }, MARK_AS_READ_AFTER_MS);
-        })
-        .then(() => this.fetchOrders(thisRoom))
-        .then(() => resolve())
-        .catch(err => reject(err));
-    });
+    //     // no existing room existed
+    //     return sendBirdCurrentUser
+    //       .createRoom({
+    //         name: getRoomName(o),
+    //         private: true,
+    //         addUserIds,
+    //       })
+    //       .then(room => {
+    //         roomId = room.id;
+    //         thisRoom = room;
+    //         console.debug('Created room id', roomId);
+    //       })
+    //       .then(() => this.setPartner(o))
+    // .then(() => this.setState({ channelUrl }))
   }
 
   _getMessageList = async (init: boolean) => {
-    if (!this.state.previousMessageListQuery && !init) {
+    if (!this.previousMessageListQuery && !init) {
       return;
     }
     const { channelUrl }: { channelUrl: string } = this.props.navigation.state.params;
-    // if (!init) {
-    //   this.props.getPrevMessageList(this.state.previousMessageListQuery);
-    //   return;
-    // }
+    if (!init) {
+      this.props.getPrevMessageList(this.previousMessageListQuery);
+      return;
+    }
 
     try {
       const previousMessageListQuery = await sbCreatePreviousMessageListQuery(channelUrl);
-      this.setState({ previousMessageListQuery });
+      this.previousMessageListQuery = previousMessageListQuery;
       await this.props.getPrevMessageList(previousMessageListQuery);
     } catch (error) {
       console.error(error);
@@ -404,48 +340,6 @@ class ChatContainer extends Component<Props, State> {
     });
   };
 
-  // onMessage = (m: SendbirdMessage) => {
-  //   const newMsg = this.createGiftedMessage(m);
-
-  //   setTimeout(() => {
-  //     sendBirdCurrentUser
-  //       .setReadCursor({
-  //         roomId: this.state.roomId,
-  //         position: m.id,
-  //       })
-  //       .then(() => {
-  //         // console.debug('setReadCursor success');
-  //       })
-  //       .catch(err => {
-  //         addErrorBreadcrumb({
-  //           category: 'chat',
-  //           errMsg: 'Error setting cursor',
-  //         });
-  //         console.log(`Error setting cursor: ${err}`);
-  //       });
-  //   }, MARK_AS_READ_AFTER_MS);
-
-  //   const { messages } = this.state;
-
-  //   if (messages && messages.length) {
-  //     return this.setState(prevState => {
-  //       return {
-  //         messages: [newMsg, ...prevState.messages],
-  //       };
-  //     });
-  //   }
-  //   this.setState({ messages: [newMsg] });
-  // };
-
-  getPartner(): { _id: string, name: string, avatar: string } {
-    const { partner }: { partner: UserData | any } = this.state;
-    return {
-      _id: partner._id,
-      name: partner.username,
-      avatar: partner.profilePic,
-    };
-  }
-
   onSend = async (messages: Array<SendbirdMessage>) => {
     const { token, onSendButtonPress } = this.props;
     try {
@@ -485,20 +379,20 @@ class ChatContainer extends Component<Props, State> {
           },
           token
         );
-        sendBirdCurrentUser
-          .sendMessage({
-            text: ' ', // cannot be empty string or null
-            roomId: this.state.roomId,
-            attachment: {
-              type: 'image',
-              link: res['thumb.jpeg'].path,
-            },
-          })
-          .then(id => console.debug('Image message sent:', id))
-          .catch(err => console.error(err))
-          .then(() => {
-            this.setState({ uploadingImage: false });
-          });
+        // sendBirdCurrentUser
+        //   .sendMessage({
+        //     text: ' ', // cannot be empty string or null
+        //     roomId: this.state.roomId,
+        //     attachment: {
+        //       type: 'image',
+        //       link: res['thumb.jpeg'].path,
+        //     },
+        //   })
+        //   .then(id => console.debug('Image message sent:', id))
+        //   .catch(err => console.error(err))
+        //   .then(() => {
+        //     this.setState({ uploadingImage: false });
+        //   });
       }
     } catch (err) {
       addErrorBreadcrumb({ category: 'chat', err });
@@ -585,9 +479,14 @@ class ChatContainer extends Component<Props, State> {
     </React.Fragment>
   );
 
-  renderBubble = props => {
+  renderBubble = (props: { currentMessage: IMessage }) => {
     // this prevent the <MessageText /> from rendering when an image has been sent
-    props.currentMessage.text = props.currentMessage.text.trim();
+    if (props.currentMessage.text) props.currentMessage.text = props.currentMessage.text.trim();
+
+    if (props.currentMessage.image) {
+      // FIXME:
+      return null;
+    }
 
     return (
       <Bubble
@@ -635,10 +534,7 @@ class ChatContainer extends Component<Props, State> {
 
   _orderEmptyComponent = () => <Text style={st.noOrders}>{I18n.t('chat.no_orders')}</Text>;
 
-  toggleInfoDialog = () =>
-    this.setState(prevState => ({
-      infoDialogVisible: !prevState.infoDialogVisible,
-    }));
+  toggleInfoDialog = () => this.setState(prevState => ({ infoDialogVisible: !prevState.infoDialogVisible }));
 
   toggleUserDialog = () =>
     this.setState(prevState => ({
@@ -660,29 +556,26 @@ class ChatContainer extends Component<Props, State> {
     </React.Fragment>
   );
 
-  renderHeader() {
-    const { partner } = this.state;
-    return (
-      <Header>
-        <Left style={st.containerHeader}>
-          <NBButton transparent onPress={() => this.props.navigation.goBack()}>
-            <Icon ios="ios-arrow-back" android="md-arrow-back" />
-          </NBButton>
-        </Left>
-        <Body style={st.flex4AndCenter}>
-          {partner && (
-            <>
-              <Title withIcon onPress={this.goToProfileOrShowWebUserInfo}>
-                {'@' + partner.username}
-              </Title>
-              <Info onPress={this.toggleInfoDialog} />
-            </>
-          )}
-        </Body>
-        <Right />
-      </Header>
-    );
-  }
+  renderHeader = () => (
+    <Header>
+      <Left style={st.containerHeader}>
+        <NBButton transparent onPress={() => this.props.navigation.goBack()}>
+          <Icon ios="ios-arrow-back" android="md-arrow-back" />
+        </NBButton>
+      </Left>
+      <Body style={st.flex4AndCenter}>
+        {this.state.partner && (
+          <>
+            <Title withIcon onPress={this.goToProfileOrShowWebUserInfo}>
+              {'@' + this.state.partner.username}
+            </Title>
+            <Info onPress={this.toggleInfoDialog} />
+          </>
+        )}
+      </Body>
+      <Right />
+    </Header>
+  );
 
   render() {
     const { userData, messages } = this.props;
@@ -723,7 +616,8 @@ class ChatContainer extends Component<Props, State> {
             placeholder={isWebUser ? I18n.t('chat.send_msg_placeholder_disabled') : I18n.t('chat.send_msg_placeholder')}
             renderActions={this.renderActions}
             renderBubble={this.renderBubble}
-            renderMessageImage={MessageImage}
+            // TODO:
+            // renderMessageImage={MessageImage}
             renderSend={this.renderSend}
             renderSystemMessage={this.renderSystemMessage}
             user={{
@@ -732,8 +626,11 @@ class ChatContainer extends Component<Props, State> {
               avatar: userData.profilePic,
             }}
             textInputProps={{ editable: !isWebUser }}
-            // onEndReached={() => this._getMessageList(false)}
+            // TODO: hide if have loaded all the messages
+            loadEarlier
+            infiniteScroll
             // onEndReachedThreshold={0}
+            onLoadEarlier={() => this._getMessageList(false)}
           />
         </View>
         {this.renderInfoDialog()}

@@ -239,14 +239,14 @@ class ChatContainer extends Component<Props, State> {
           <Avatar
             onPress={() => this.goToChat(item.id)}
             size="verySmall"
-            uri={item.partner.avatarURL}
+            uri={item.partner.profileUrl}
             placeholderText={item.partner.nickname}
           />
           <View style={[st.flex1, st.content]}>
             <View style={st.contentHeader}>
               <View style={{ flexDirection: 'row' }}>
                 <Text style={[st.name, item.unreadMessageCount > 0 && st.unread]}>{item.partner.nickname}</Text>
-                {lastMessage.senderId !== -1 && item.isPartnerOnline && <View style={st.onlineDot} />}
+                {item.partner.connectionStatus === 'online' && <View style={st.onlineDot} />}
               </View>
               <Text style={[st.datetime, item.unreadMessageCount > 0 && st.unread]}>
                 {ui.formatTime(lastMessage.createdAt)}
@@ -255,7 +255,7 @@ class ChatContainer extends Component<Props, State> {
             <View style={st.contentHeader}>
               <Text numberOfLines={1} style={[st.text, item.unreadMessageCount > 0 && st.unreadText]}>
                 {from}
-                {lastMessage.attachment ? (
+                {lastMessage.messageType === 'file' ? (
                   <Feather name="camera" size={11} color={colors.grey3} />
                 ) : (
                   lastMessage.message

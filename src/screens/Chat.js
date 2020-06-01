@@ -137,10 +137,8 @@ class ChatContainer extends Component<Props, State> {
     this.props.channelProgress(false);
     this.props.getChannelTitle(params.channelUrl);
     this.props.createChatHandler(params.channelUrl);
-    // this._getMessageList(true);
-    // if (!isOpenChannel) {
-    //   sbMarkAsRead({ channelUrl });
-    // }
+    this._getMessageList(true);
+    sbMarkAsRead({ channelUrl: params.channelUrl });
   };
 
   initialise(channelUrl: string, orderId?: string) {
@@ -462,15 +460,6 @@ class ChatContainer extends Component<Props, State> {
         //     viewOffset: 0
         //   });
         // }
-
-        // sendBirdCurrentUser
-        //   .sendMessage({ text, roomId: this.state.roomId })
-        //   .then(() => {
-        //     // console.debug('Message sent:', id);
-        //   })
-        //   .catch(err => {
-        //     console.error(err);
-        //   });
       } else {
         this.setState({ uploadingImage: true });
         // Sending Images via Pusher

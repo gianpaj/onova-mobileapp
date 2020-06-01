@@ -124,7 +124,6 @@ const checkLogin = (userData: UserData, token: string) => (dispatch: Dispatch) =
         if (sb) {
           sb.registerGCMPushTokenForCurrentUser(pushToken, (result, error) => {
             if (error) throw error;
-            console.log(result);
           });
         }
       }

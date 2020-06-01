@@ -73,9 +73,7 @@ const sbGetMessageList = (
 const registerCommonHandler = (channelHandler: Sendbird.ChannelHandler, channelUrl: string, dispatch: Dispatch) => {
   channelHandler.onMessageReceived = (channel: Sendbird.GroupChannel, message: SendbirdMessage) => {
     if (channel.url === channelUrl) {
-      // if (channel.isGroupChannel()) {
-      // sbMarkAsRead({ channel });
-      // }
+      sbMarkAsRead({ channel });
       console.log(message);
       dispatch({
         type: ACTION_TYPES.MESSAGE_RECEIVED,
@@ -203,21 +201,18 @@ export const initializeSendbird = (userData: UserData): Promise<any | Error> =>
     // TODO: Subscribe to all rooms the user is a member of
   });
 
-const sbConnect = (userId: string, nickname: string) =>
+const sbConnect = (userId: string, nickname: string): Promise<void> =>
   new Promise((resolve, reject) => {
     if (!userId) {
-      reject('UserID is required.');
-      return;
+      return reject('UserID is required.');
     }
     if (!nickname) {
-      reject('Nickname is required.');
-      return;
+      return reject('Nickname is required.');
     }
     const sb = new Sendbird({ appId: config.SENDBIRD_APP_ID });
     sb.connect(userId, (user, error) => {
       if (error) {
-        reject('Sendbird Login Failed.');
-        return;
+        return reject('Sendbird Login Failed.');
       }
       sbUpdateProfile(nickname)
         .then(() => resolve())
@@ -530,3 +525,17 @@ export const sbSendTextMessage = (channel: Sendbird.GroupChannel, text: string):
       resolve(message);
     });
   });
+
+export const sbMarkAsRead = ({
+  channelUrl,
+  channel,
+}: {
+  channelUrl?: string,
+  channel?: Sendbird.GroupChannel,
+}): void => {
+  if (channel) {
+    channel.markAsRead();
+    return;
+  }
+  sbGetChannel(channelUrl).then(channel => channel.markAsRead());
+};

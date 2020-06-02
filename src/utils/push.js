@@ -76,12 +76,12 @@ export async function registerPushNotifications(): Promise<string> {
       });
   }
 
-  firebase.messaging().onTokenRefresh((token: string) => {
-    addPushNotifBreadcrumb({ message: 'onTokenRefresh' });
-    console.debug('onTokenRefresh');
-    console.debug(token);
-    // registerPushToken(token);
-  });
+  // firebase.messaging().onTokenRefresh((token: string) => {
+  //   addPushNotifBreadcrumb({ message: 'onTokenRefresh' });
+  //   console.debug('onTokenRefresh');
+  //   console.debug(token);
+  //   // registerPushToken(token);
+  // });
 
   // From Android 8.0 (API Level 26), notifications must specify a Notification Channel
   const channel = new firebase.notifications.Android.Channel(

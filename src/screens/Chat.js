@@ -150,7 +150,6 @@ class ChatContainer extends Component<Props, State> {
   };
 
   async initialise(channelUrl: string, orderId?: string) {
-    const { userData } = this.props;
     let thisRoom;
     // return new Promise((resolve, reject) => {
     // this.rejectProm = reject;
@@ -161,11 +160,8 @@ class ChatContainer extends Component<Props, State> {
     this.props.initChatScreen();
     const Promises = [
       sbGetChannel(channelUrl).then(channel => {
-        const partner = getPartner(channel, userData._id);
-        if (!partner) {
-          return this.setState({ channel, channelUrl });
-        }
-        return api.getUser(partner.userId).then(partner => partner && this.setState({ partner, channel, channelUrl }));
+        this.setPartner(channel, channel);
+        return this.setState({ channel, channelUrl });
       }),
 
       this.fetchOrders(thisRoom),
@@ -184,16 +180,6 @@ class ChatContainer extends Component<Props, State> {
         errMsg: `Error joining room ID: ${channelUrl}`,
       });
     }
-    // .then(() => this.setState({ channelUrl }))
-
-    // // if no user then it's a UserWeb
-    // .then(user => user && api.getUser(user))
-
-    // .then(o => {
-    //   // skip if coming from ChatRooms
-    //   if (channelUrl) return;
-
-    // console.debug(o);
 
     // else join an existing room or create one
 
@@ -207,31 +193,6 @@ class ChatContainer extends Component<Props, State> {
 
     //     // check if there's a previously created room,
     //     // by a partner (seller) or myself
-    //     if (rooms.length > 0) {
-    //       const firstRoom = rooms[0].id;
-    //       return sendBirdCurrentUser
-    //         .then(() =>
-    //           sendBirdCurrentUser
-    //             .joinRoom({ roomId: firstRoom })
-    //             .then(room => {
-    //               roomId = room.id;
-    //               thisRoom = room;
-    //               console.debug('2 Joined room ID:', room.id);
-    //               return room;
-    //             })
-    //             .then(room =>
-    //               api.getUser(room.userIds.filter(id => id !== ONOVA_BOT_ID).find(id => id !== userData._id))
-    //             )
-    //             .then(partner => this.setState({ partner }))
-    //             .catch(err => {
-    //               addErrorBreadcrumb({
-    //                 category: 'chat',
-    //                 errMsg: `Error joining room ID: ${firstRoom}`,
-    //               });
-    //               console.log(err);
-    //             })
-    //         );
-    //     }
 
     //     let addUserIds = [o.buyer._id, userData._id];
     //     if (o.buyerType === 'UserWeb') {
@@ -242,16 +203,8 @@ class ChatContainer extends Component<Props, State> {
     //     return sendBirdCurrentUser
     //       .createRoom({
     //         name: getRoomName(o),
-    //         private: true,
     //         addUserIds,
     //       })
-    //       .then(room => {
-    //         roomId = room.id;
-    //         thisRoom = room;
-    //         console.debug('Created room id', roomId);
-    //       })
-    //       .then(() => this.setPartner(o))
-    // .then(() => this.setState({ channelUrl }))
   }
 
   _getMessageList = async (init: boolean) => {
@@ -274,12 +227,15 @@ class ChatContainer extends Component<Props, State> {
     }
   };
 
-  setPartner = async (order: Order, room?: any) => {
-    let partner;
-    // existing room
-    if (room) {
-      partner = await api.getUser(room.userIds.filter(id => id !== ONOVA_BOT_ID).find(id => id !== userData._id));
+  setPartner = async (order: Order, channel?: Sendbird.GroupChannel) => {
+    const { userData } = this.props;
+    let partner: UserData;
+    // existing channel
+    if (channel) {
+      const sbPartner = getPartner(channel, userData._id);
+      partner = await api.getUser(sbPartner.userId);
     } else if (order.buyerType === 'UserWeb') {
+      // $FlowFixMe
       partner = {
         _id: ONOVA_BOT_ID,
         username: `${order.buyer.displayName} (web)`,
@@ -289,7 +245,7 @@ class ChatContainer extends Component<Props, State> {
       // creating new room (order confirmed by seller)
       partner = await api.getUser(order.buyer._id);
     }
-    return this.setState({ partner });
+    this.setState({ partner });
   };
 
   // and set partner (if UserWeb)
@@ -428,6 +384,7 @@ class ChatContainer extends Component<Props, State> {
   };
 
   goToProfileOrShowWebUserInfo = () => {
+    // $FlowFixMe
     const { buyerType, partner } = this.state;
     const { _id } = this.props.userData;
 
@@ -614,7 +571,7 @@ class ChatContainer extends Component<Props, State> {
             /* Custom footer component on the ListView, e.g. 'User is typing...' */
             // renderFooter
             placeholder={isWebUser ? I18n.t('chat.send_msg_placeholder_disabled') : I18n.t('chat.send_msg_placeholder')}
-            renderActions={this.renderActions}
+            // renderActions={this.renderActions}
             renderBubble={this.renderBubble}
             // TODO:
             // renderMessageImage={MessageImage}

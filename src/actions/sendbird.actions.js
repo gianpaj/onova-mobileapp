@@ -11,7 +11,8 @@ import { addErrorBreadcrumb } from '../utils/analytics';
 
 import { enabledSendbird } from './actionCreator';
 
-const SENDBIRD_CONN_TIMEOUT = 30 * 1000;
+const CONN_TIMEOUT = 30 * 1000;
+const LIMIT = 30;
 
 export const channelExit = (channelUrl: string) => (dispatch: Dispatch): Promise<boolean> => {
   const sb = Sendbird.getInstance();
@@ -59,12 +60,11 @@ const sbGetMessageList = (
   previousMessageListQuery: Sendbird.PreviousMessageListQuery
 ): Promise<Array<SendbirdMessage> | Sendbird.SendBirdError> =>
   new Promise((resolve, reject) => {
-    const limit = 30;
     const reverse = true;
-    previousMessageListQuery.load(limit, reverse, (messages, error) => {
+    previousMessageListQuery.load(LIMIT, reverse, (messages, error) => {
       if (error) return reject(error);
 
-      resolve(messages);
+      resolve(messages.filter(m => m.messageType !== 'admin'));
     });
   });
 
@@ -166,7 +166,7 @@ export const initializeSendbird = (userData: UserData): Promise<any | Error> =>
         level: 'fatal',
       });
       reject(new Error('Error connecting to Sendbird'));
-    }, SENDBIRD_CONN_TIMEOUT);
+    }, CONN_TIMEOUT);
 
     // const sb = Sendbird.getInstance();
 

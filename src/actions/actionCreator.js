@@ -260,7 +260,7 @@ const sendToken = (pushToken: string, userData: UserData, token: string): Promis
 
   // hack iOS01: to allow the login to continue even though the user denied permission
   if (typeof pushToken !== 'string') return Promise.resolve();
-  if (__DEV__) {
+  if (!enabledSendbird) {
     ToastNB.show({
       text: 'sendToken skipped',
       type: 'warning',

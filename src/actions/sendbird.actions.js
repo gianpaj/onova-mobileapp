@@ -45,7 +45,6 @@ export const getPrevMessageList = (previousMessageListQuery: Sendbird.PreviousMe
   return (
     sbGetMessageList(previousMessageListQuery)
       .then(messages => {
-        console.log(messages);
         dispatch({
           type: ACTION_TYPES.MESSAGE_LIST_SUCCESS,
           list: messages,
@@ -72,7 +71,6 @@ const registerCommonHandler = (channelHandler: Sendbird.ChannelHandler, channelU
   channelHandler.onMessageReceived = (channel: Sendbird.GroupChannel, message: SendbirdMessage) => {
     if (channel.url === channelUrl) {
       sbMarkAsRead({ channel });
-      console.log(message);
       dispatch({
         type: ACTION_TYPES.MESSAGE_RECEIVED,
         payload: message,
@@ -114,7 +112,6 @@ export const registerChannelHandler = (channelUrl: string, dispatch: Dispatch) =
   channelHandler.onUserJoined = (channel, user) => {
     if (channel.url === channelUrl) {
       console.log('user joined');
-      console.log(user);
       dispatch({
         type: ACTION_TYPES.CHANNEL_CHANGED,
         title: getChannelTitle(channel),
@@ -140,7 +137,6 @@ export const registerChannelHandler = (channelUrl: string, dispatch: Dispatch) =
   channelHandler.onTypingStatusUpdated = (channel: Sendbird.GroupChannel) => {
     if (channel.url === channelUrl) {
       const typing = sbIsTyping(channel);
-      console.log(typing);
       dispatch({
         type: ACTION_TYPES.TYPING_STATUS_UPDATED,
         typing: typing,

@@ -93,30 +93,7 @@ export async function registerPushNotifications(): Promise<string> {
 
   // only subscribe for messages on one place to fix "no completion handler" error is iOS
   if (onMessageSubscription == null) {
-    onMessageSubscription = firebase.notifications().onNotification(async (msg: Notification) => {
-      const { title, body, data } = msg;
-      addPushNotifBreadcrumb({ data: { title, body, data } });
-      const notification = new firebase.notifications.Notification()
-        .setNotificationId(msg.notificationId)
-        .setTitle(msg.title)
-        .setBody(msg.body)
-        .setData(msg.data);
-
-      if (Platform.OS === 'android') {
-        notification.android.setPriority(parseInt(msg.data.priority) || firebase.notifications.Android.Priority.High);
-        notification.android.setSmallIcon('ic_stat_ic_notification').android.setChannelId('channelId');
-      }
-      // You've received a notification that hasn't been displayed by the OS
-      // To display it whilst the app is in the foreground, simply call the following
-      try {
-        await firebase.notifications().displayNotification(notification);
-      } catch (error) {
-        addErrorBreadcrumb({
-          category: 'push-notifications',
-          error,
-        });
-      }
-    });
+    onMessageSubscription = firebase.notifications().onNotification(handleNotification);
   }
   try {
     const token = await firebase.messaging().getToken();
@@ -205,4 +182,39 @@ async function navigate(notif) {
  */
 export function setBadgeNumber(num: number): Promise<void> {
   return firebase.notifications().setBadge(num);
+}
+
+async function handleNotification(msg: Notification) {
+  console.log('push-notification');
+  console.log(msg);
+  const { title, body, data } = msg;
+  addPushNotifBreadcrumb({ data: { title, body, data } });
+  const notification = new firebase.notifications.Notification()
+    .setNotificationId(msg.notificationId) //messageId for SB?
+    .setTitle(msg.title)
+    .setSubtitle('Number of unread messages: ${payload.unread_message_count}')
+    .setBody(msg.body)
+    .setData(msg.data);
+
+  if (data.sendbird) {
+    console.log('data.sendbird');
+    const payload = JSON.parse(data.sendbird);
+    notification.setData(payload);
+    notification.setBody(data.message);
+  }
+
+  if (Platform.OS === 'android') {
+    notification.android.setPriority(parseInt(msg.data.priority) || firebase.notifications.Android.Priority.High);
+    notification.android.setSmallIcon('ic_stat_ic_notification').android.setChannelId('channelId');
+  }
+  // You've received a notification that hasn't been displayed by the OS
+  // To display it whilst the app is in the foreground, simply call the following
+  try {
+    await firebase.notifications().displayNotification(notification);
+  } catch (error) {
+    addErrorBreadcrumb({
+      category: 'push-notifications',
+      error,
+    });
+  }
 }

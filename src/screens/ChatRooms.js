@@ -103,6 +103,7 @@ class ChatContainer extends Component<Props, State> {
     const groupChannelListQuery = this.sbCreateGroupChannelListQuery();
     if (!groupChannelListQuery || !groupChannelListQuery.hasNext) {
       this.setState({ hasError: true, isLoading: false });
+      return;
     }
     this.sbGetRooms(groupChannelListQuery)
       .then(this.getChatsAndTheirOrders)
@@ -217,7 +218,7 @@ class ChatContainer extends Component<Props, State> {
     const { lastMessage } = item;
     const myUserId = this.props.userData._id;
 
-    const isMyMessage = lastMessage._sender.userId == myUserId;
+    const isMyMessage = lastMessage.messageType !== 'admin' && lastMessage._sender.userId == myUserId;
 
     const from = isMyMessage ? I18n.t('chat_rooms.my_message_prefix') : '';
 
@@ -283,7 +284,14 @@ class ChatContainer extends Component<Props, State> {
 
   refreshOrdersAndChats = () => {
     this.setState({ isRefreshing: true });
-    this.getChatsAndTheirOrders()
+
+    const groupChannelListQuery = this.sbCreateGroupChannelListQuery();
+    if (!groupChannelListQuery || !groupChannelListQuery.hasNext) {
+      this.setState({ hasError: true, isRefreshing: false });
+      return;
+    }
+    this.sbGetRooms(groupChannelListQuery)
+      .then(this.getChatsAndTheirOrders)
       .then(ordersAndChats => this.setState({ ordersAndChats }))
       .catch(err => {
         console.debug(err);

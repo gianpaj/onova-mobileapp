@@ -4,7 +4,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { ActivityIndicator, FlatList, RefreshControl, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { Badge, Body, Container, Left, Right } from 'native-base';
+import { Body, Container, Left, Right } from 'native-base';
+import { Badge } from 'react-native-elements';
 import { NavigationActions } from 'react-navigation';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Feather from 'react-native-vector-icons/Feather';
@@ -222,6 +223,8 @@ class ChatContainer extends Component<Props, State> {
 
     const from = isMyMessage ? I18n.t('chat_rooms.my_message_prefix') : '';
 
+    const unreadCount = item.unreadMessageCount > 0 ? item.unreadMessageCount > 9 && '9+' : item.unreadMessageCount;
+
     return (
       <TouchableOpacity onPress={() => this.goToChat(item.url)}>
         <View style={st.itemContainer}>
@@ -251,9 +254,7 @@ class ChatContainer extends Component<Props, State> {
                 )}
               </Text>
               {item.unreadMessageCount > 0 && (
-                <Badge style={st.unreadBadge}>
-                  <Text style={st.unreadBadgeText}>{item.unreadMessageCount}</Text>
-                </Badge>
+                <Badge containerStyle={st.unreadBadge} textStyle={st.unreadBadgeText} value={unreadCount} />
               )}
             </View>
           </View>
@@ -411,10 +412,8 @@ const st = StyleSheet.create({
   },
   unreadBadge: {
     backgroundColor: colors.active,
-    height: 20,
     position: 'absolute',
     right: 0,
-    width: 20,
   },
   unreadBadgeText: {
     color: colors.white,

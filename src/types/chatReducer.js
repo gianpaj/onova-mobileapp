@@ -1,7 +1,4 @@
 /* @flow */
-import Sendbird from 'sendbird';
-
-export type SendbirdMessage = Sendbird.AdminMessage | Sendbird.UserMessage | Sendbird.FileMessage;
 
 export type Action = {
   contents?: SendbirdMessage,

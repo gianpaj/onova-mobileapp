@@ -1,8 +1,8 @@
 // @flow
 import Sendbird from 'sendbird';
 
-import type { SendbirdMessage, Action } from '../types/chatReducer';
-import type { Dispatch, UserData } from '../types';
+import type { Action } from '../types/chatReducer';
+import type { Dispatch, UserData, SendbirdMessage } from '../types';
 import type { IMessage } from 'react-native-gifted-chat';
 
 import * as ACTION_TYPES from './actionTypes';

@@ -125,6 +125,11 @@ const checkLogin = (userData: UserData, token: string) => (dispatch: Dispatch) =
           sb.registerGCMPushTokenForCurrentUser(pushToken, (result, error) => {
             if (error) throw error;
           });
+
+          // If you want to trigger notification messages
+          sb.setPushTriggerOption('all', function(response, error) {
+            if (error) throw error;
+          });
         }
       }
       sendToken(pushToken, userData, token);

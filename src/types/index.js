@@ -175,6 +175,8 @@ export type Room = Sendbird.GroupChannel & {
   order: Order,
 };
 
+export type SendbirdMessage = Sendbird.AdminMessage | Sendbird.UserMessage | Sendbird.FileMessage;
+
 type UserDataShorter = {
   _id: string,
   accountStatus: string,

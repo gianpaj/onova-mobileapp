@@ -3,11 +3,12 @@
 import { Platform } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import firebase from 'react-native-firebase';
-import type { Notification, NotificationOpen } from 'react-native-firebase';
+import type { Notification, NotificationOpen, RemoteMessage } from 'react-native-firebase';
 // import Instabug from 'instabug-reactnative';
 
 import NavigationService from '../navigation/NavigationService';
 import * as api from '../utils/api';
+import type { SendbirdMessage } from '../types';
 import { addPushNotifBreadcrumb, addErrorBreadcrumb } from '../utils/analytics';
 
 let onMessageSubscription, onNotificationOpenedSubscription;
@@ -184,28 +185,43 @@ export function setBadgeNumber(num: number): Promise<void> {
   return firebase.notifications().setBadge(num);
 }
 
-async function handleNotification(msg: Notification) {
+type OnovaNotification = Notification & {
+  data: {
+    [string]: string,
+    sendbird?: string,
+  },
+  sentTime?: number,
+};
+
+async function handleNotification(msg: OnovaNotification) {
   console.log('push-notification');
   console.log(msg);
-  const { title, body, data } = msg;
-  addPushNotifBreadcrumb({ data: { title, body, data } });
-  const notification = new firebase.notifications.Notification()
-    .setNotificationId(msg.notificationId) //messageId for SB?
-    .setTitle(msg.title)
-    .setSubtitle('Number of unread messages: ${payload.unread_message_count}')
-    .setBody(msg.body)
-    .setData(msg.data);
+  const { data } = msg;
 
+  let notification;
   if (data.sendbird) {
     console.log('data.sendbird');
-    const payload = JSON.parse(data.sendbird);
-    notification.setData(payload);
-    notification.setBody(data.message);
+    const payload: SendbirdMessage = JSON.parse(data.sendbird);
+    console.log(payload);
+    notification = new firebase.notifications.Notification({ show_in_foreground: true })
+      .setNotificationId(msg.messageId)
+      .setTitle(payload.push_alert)
+      .setSubtitle(`Number of unread messages: ${payload.unread_message_count}`)
+      // .setBody(data.message)
+      .setData(payload);
+    addPushNotifBreadcrumb({ message: payload.push_alert, data: { sentTime: msg.sentTime, ...payload } });
+  } else {
+    notification = new firebase.notifications.Notification()
+      .setTitle(msg.title)
+      .setBody(msg.body)
+      .setData(msg.data);
+    addPushNotifBreadcrumb({ data: { title: msg.title, body: msg.body, data } });
   }
 
   if (Platform.OS === 'android') {
     notification.android.setPriority(parseInt(msg.data.priority) || firebase.notifications.Android.Priority.High);
-    notification.android.setSmallIcon('ic_stat_ic_notification').android.setChannelId('channelId');
+    notification.android.setSmallIcon('ic_stat_ic_notification');
+    notification.android.setChannelId('channelId');
   }
   // You've received a notification that hasn't been displayed by the OS
   // To display it whilst the app is in the foreground, simply call the following
@@ -217,4 +233,9 @@ async function handleNotification(msg: Notification) {
       error,
     });
   }
+}
+
+export async function bgMessaging(message: RemoteMessage) {
+  console.log('bgMessaging');
+  return handleNotification(message);
 }

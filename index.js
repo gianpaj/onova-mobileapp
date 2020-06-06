@@ -3,6 +3,8 @@
  */
 
 import { AppRegistry, YellowBox } from 'react-native';
+
+import { bgMessaging } from './src/utils/push';
 import App from './src/App';
 import { name as appName } from './app.json';
 
@@ -10,3 +12,5 @@ import { name as appName } from './app.json';
 YellowBox.ignoreWarnings(['Require cycle:']);
 
 AppRegistry.registerComponent(appName, () => App);
+
+AppRegistry.registerHeadlessTask('RNFirebaseBackgroundMessage', () => bgMessaging);

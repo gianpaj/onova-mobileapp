@@ -40,17 +40,14 @@
           <action android:name="com.google.firebase.MESSAGING_EVENT" />
         </intent-filter>
       </service>
-      <service android:name="io.invertase.firebase.messaging.RNFirebaseInstanceIdService">
-        <intent-filter>
-          <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
-        </intent-filter>
-      </service>
 
       <!-- for react-native-firebase w/ notifications (icon) -->
       <meta-data
         android:name="com.google.firebase.messaging.default_notification_icon"
         android:resource="@drawable/ic_stat_ic_notification" />
 
+
+      <service android:name="io.invertase.firebase.messaging.RNFirebaseBackgroundMessagingService" />
     </application>
 
 </manifest>

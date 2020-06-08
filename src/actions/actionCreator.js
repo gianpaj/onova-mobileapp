@@ -119,19 +119,7 @@ const checkLogin = (userData: UserData, token: string) => (dispatch: Dispatch) =
     .then(() => dispatch({ type: ACTION_TYPES.RELOAD_SUCCESS }))
     .then(() => registerPushNotifications())
     .then(pushToken => {
-      if (enabledSendbird) {
-        const sb = Sendbird.getInstance();
-        if (sb) {
-          sb.registerGCMPushTokenForCurrentUser(pushToken, (result, error) => {
-            if (error) throw error;
-          });
-
-          // If you want to trigger notification messages
-          sb.setPushTriggerOption('all', function(response, error) {
-            if (error) throw error;
-          });
-        }
-      }
+      sendBirdPushSetup(pushToken);
       sendToken(pushToken, userData, token);
       addNavigationBreadcrumb({ message: ACTION_TYPES.RELOAD_SUCCESS });
     })
@@ -173,20 +161,16 @@ const signup = (data: SignupData) => (dispatch: Dispatch) => {
         trackUser(res.data);
         Analytics.track('signup');
       }
-
-      // console.warn(userData);
-
-      // initializeSendbird(userData)
-      //   .then(() => registerPushNotifications())
-      //   .then(pushToken => {
-      //     if (pushToken) return sendToken(pushToken, userData);
-      //   })
-      //   .then(() => dispatch({ type: ACTION_TYPES.SIGNUP_SUCCESS, payload: userData }))
-      //   .catch(err => {
-      //     console.warn(err);
-      //     dispatch({ type: ACTION_TYPES.SIGNUP_FAIL });
-      //   });
-      // if (analyticsEnabled) trackUser(userData)
+      return res.data;
+    })
+    .then(userData => initializeSendbird(userData))
+    .then(userData => {
+      dispatch({ type: ACTION_TYPES.SIGNUP_SUCCESS, payload: userData });
+      addNavigationBreadcrumb({ message: ACTION_TYPES.SIGNUP_SUCCESS });
+      return registerPushNotifications().then(pushToken => {
+        sendBirdPushSetup(pushToken);
+        sendToken(pushToken, userData, userData.token);
+      });
     })
     .catch((error: APIError) => {
       clearTimeout(timer);
@@ -201,6 +185,28 @@ const signup = (data: SignupData) => (dispatch: Dispatch) => {
       });
       throw error;
     });
+};
+
+const sendBirdPushSetup = (pushToken: string) => {
+  if (!enabledSendbird) {
+    return Promise.resolve();
+  }
+  const sb = Sendbird.getInstance();
+  if (!sb) {
+    return Promise.reject(new Error('no sendbird instance'));
+  }
+
+  return new Promise((resolve, reject) => {
+    sb.registerGCMPushTokenForCurrentUser(pushToken, (result, error) => {
+      if (error) reject(error);
+
+      // trigger notification messages (just to be sure)
+      sb.setPushTriggerOption('all', function(response, error) {
+        if (error) reject(error);
+      });
+      resolve();
+    });
+  });
 };
 
 const getPersonalUserData = (options?: Options = {}) => (dispatch: Dispatch, getState: GetState) => {

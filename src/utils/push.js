@@ -71,9 +71,10 @@ export async function registerPushNotifications(): Promise<string> {
         //  Get the action triggered by the notification being opened
         // const action = notificationOpen.action;
         // console.log(action);
+
         // Get information about the notification that was opened
-        const notification: Notification = notificationOpen.notification;
-        navigate(notification);
+        // $FlowFixMe
+        navigate(notificationOpen.notification);
       });
   }
 
@@ -94,6 +95,7 @@ export async function registerPushNotifications(): Promise<string> {
 
   // only subscribe for messages on one place to fix "no completion handler" error is iOS
   if (onMessageSubscription == null) {
+    // $FlowFixMe
     onMessageSubscription = firebase.notifications().onNotification(handleNotification);
   }
   try {

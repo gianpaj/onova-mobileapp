@@ -223,7 +223,8 @@ class ChatContainer extends Component<Props, State> {
 
     const from = isMyMessage ? I18n.t('chat_rooms.my_message_prefix') : '';
 
-    const unreadCount = item.unreadMessageCount > 0 ? item.unreadMessageCount > 9 && '9+' : item.unreadMessageCount;
+    let unreadCount = item.unreadMessageCount;
+    if (item.unreadMessageCount > 9) unreadCount = '9+';
 
     return (
       <TouchableOpacity onPress={() => this.goToChat(item.url)}>

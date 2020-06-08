@@ -63,7 +63,7 @@ const sbGetMessageList = (
     previousMessageListQuery.load(LIMIT, reverse, (messages, error) => {
       if (error) return reject(error);
 
-      resolve(messages.filter(m => m.messageType !== 'admin'));
+      resolve(messages);
     });
   });
 
@@ -147,7 +147,7 @@ export const registerChannelHandler = (channelUrl: string, dispatch: Dispatch) =
   sb.addChannelHandler(channelUrl, channelHandler);
 };
 
-export const initializeSendbird = (userData: UserData): Promise<any | Error> =>
+export const initializeSendbird = (userData: UserData): Promise<UserData> =>
   new Promise((resolve, reject) => {
     if (!enabledSendbird) {
       console.log('%cskipping Sendbird', 'color: green');
@@ -362,9 +362,10 @@ export const sbCreateUserListQuery = () => {
 //     });
 //   });
 
-export const sbCreateChannel = (inviteUserIdList: string[], isDistinct: boolean): Promise<Sendbird.GroupChannel> =>
+export const sbCreateChannel = (inviteUserIdList: string[]): Promise<Sendbird.GroupChannel> =>
   new Promise((resolve, reject) => {
     const sb = Sendbird.getInstance();
+    const isDistinct = true;
     // eslint-disable-next-line sonarjs/no-identical-functions
     sb.GroupChannel.createChannelWithUserIds(inviteUserIdList, isDistinct, (channel, error) => {
       if (error) {
@@ -448,13 +449,17 @@ const createGiftedMessage = (msg: SendbirdMessage): IMessage => ({
   ...msg,
   _id: msg.messageId,
   text: msg.message,
-  user: {
-    _id: msg.sender.userId,
-    name: msg.sender.username,
-    avatar: msg.sender.profileUrl,
-  },
+  ...(msg.sender
+    ? {
+        user: {
+          _id: msg.sender.userId,
+          name: msg.sender.username,
+          avatar: msg.sender.profileUrl,
+        },
+      }
+    : {}),
   image: Boolean(msg.messageType == 'file'),
-  // system: Boolean(msg.messageType == 'admin'),
+  system: Boolean(msg.messageType == 'admin'),
 });
 
 export const sbUnixTimestampToDate = (unixTimestamp: number) => {

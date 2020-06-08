@@ -36,8 +36,7 @@ import { Header, Send, Info, Title, Icon } from '../components';
 import ChatActions from '../components/ChatActions';
 import MessageImage from '../components/MessageImage';
 
-import type { SendbirdMessage } from '../types/chatReducer';
-import type { Order, ReduxState, UserData } from '../types';
+import type { Order, ReduxState, UserData, SendbirdMessage } from '../types';
 import colors from '../config/colors';
 import settings from '../config/settings';
 import * as api from '../utils/api';
@@ -107,12 +106,6 @@ class ChatContainer extends Component<Props, State> {
           .catch(console.error)
       );
     });
-
-    // for development on 'onova' Sendbird Instance
-    if (!params) {
-      // for development on 'onova' Sendbird Instance
-      params = { channelUrl: 'sendbird_group_channel_203293808_b22cd74d4d812d57be87fe5936a8aa8647527a77' };
-    }
 
     this.initialise(params.channelUrl, params.orderId)
       .then(() => this.setState({ isLoading: false }))

@@ -17,7 +17,15 @@ const ActionForLoggedOut = NavigationStack.router.getActionForPathAndParams('sig
 
 const ActionForLoggedIn = NavigationActions.reset({
   index: 0,
-  actions: [NavigationActions.navigate({ routeName: 'tabs' })],
+  actions: [
+    // for development on 'onova' Sendbird Instance
+    // NavigationActions.navigate({
+    //   routeName: 'chat',
+    //   params: { channelUrl: 'sendbird_group_channel_203293808_364e94bc029b5b2008c4612548495cb613390d1a' },
+    // }),
+    // PROD
+    NavigationActions.navigate({ routeName: 'tabs' }),
+  ],
 });
 
 const stateForLoggedOut = NavigationStack.router.getStateForAction(ActionForLoggedOut);
@@ -39,6 +47,7 @@ const navigationReducer = (state: NavigationState = initialState, action: Action
 
     case LOGOUT:
       return {
+        stateForLoggedIn: null,
         stateForLoggedOut: NavigationStack.router.getStateForAction(
           NavigationActions.reset({
             index: 0,

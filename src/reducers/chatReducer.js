@@ -1,11 +1,14 @@
 // @flow
 
 import * as ACTION_TYPES from '../actions/actionTypes';
-import type { Action, ChatState, SendbirdMessage } from '../types/chatReducer';
+import type { Action, ChatState } from '../types/chatReducer';
+
+import type { SendbirdMessage } from '../types';
 
 const initialState: ChatState = {
   list: [],
   memberCount: 0,
+  unreadCount: 0,
   title: '',
   exit: false,
   typing: '',
@@ -97,6 +100,17 @@ export default (state: ChatState = initialState, action: Action): ChatState => {
         return message;
       });
       return { ...state, selectedMessages: [], list: updatedList2 };
+    case 'SENDBIRD_UNREADCOUNTER_FAIL':
+      return {
+        ...state,
+        unreadCount: 0,
+        isFetchinUnreadCount: false,
+      };
+    case 'SENDBIRD_UNREADCOUNTER_SUCCESS':
+      return {
+        ...state,
+        unreadCount: action.payload,
+      };
     case ACTION_TYPES.OWN_MESSAGE_UPDATED_FAIL:
     default:
       return state;

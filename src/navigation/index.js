@@ -48,8 +48,7 @@ class AppNavigation extends React.PureComponent<Props, *> {
 
     this.onCheckLogin();
 
-    if (Platform.OS === 'ios') return;
-    BackHandler.addEventListener('hardwareBackPress', this.onBackPress);
+    if (Platform.OS === 'android') BackHandler.addEventListener('hardwareBackPress', this.onBackPress);
   }
 
   onCheckLogin = () => {
@@ -78,8 +77,7 @@ class AppNavigation extends React.PureComponent<Props, *> {
   };
 
   componentWillUnmount() {
-    if (Platform.OS === 'ios') return;
-    BackHandler.removeEventListener('hardwareBackPress', this.onBackPress);
+    if (Platform.OS === 'android') BackHandler.removeEventListener('hardwareBackPress', this.onBackPress);
   }
 
   onBackPress = () => {
@@ -112,7 +110,7 @@ class AppNavigation extends React.PureComponent<Props, *> {
     if (this.state.canReload) return this._renderRetry();
     if ((isLoggedIn && !checkedLoggedIn) || (!isLoggedIn && skippedLogin)) return this._renderLoading();
 
-    const state = isLoggedIn == true ? navigationState.stateForLoggedIn : navigationState.stateForLoggedOut;
+    const state = isLoggedIn ? navigationState.stateForLoggedIn : navigationState.stateForLoggedOut;
 
     return (
       <SafeAreaView style={{ flex: 1 }} forceInset={{ bottom: 'never' }}>

@@ -121,6 +121,7 @@ const checkLogin = (userData: UserData, token: string) => (dispatch: Dispatch) =
     .then(pushToken => {
       sendBirdPushSetup(pushToken);
       sendToken(pushToken, userData, token);
+      dispatch(sendBirdMessageCounter());
       addNavigationBreadcrumb({ message: ACTION_TYPES.RELOAD_SUCCESS });
     })
     .catch(error => {
@@ -132,6 +133,26 @@ const checkLogin = (userData: UserData, token: string) => (dispatch: Dispatch) =
       });
       throw error;
     });
+};
+
+const sendBirdMessageCounter = () => (dispatch: Dispatch) => {
+  if (!enabledSendbird) {
+    return;
+  }
+  const sb = Sendbird.getInstance();
+  if (!sb) {
+    console.error('no sendbird instance');
+    return dispatch({ type: 'SENDBIRD_UNREADCOUNTER_FAIL' });
+  }
+  sb.getTotalUnreadMessageCount((count, error) => {
+    if (error) {
+      console.error(error);
+      dispatch({ type: 'SENDBIRD_UNREADCOUNTER_FAIL' });
+      return;
+    }
+    console.log('total unread message', count);
+    dispatch({ type: 'SENDBIRD_UNREADCOUNTER_SUCCESS', payload: count });
+  });
 };
 
 const signup = (data: SignupData) => (dispatch: Dispatch) => {

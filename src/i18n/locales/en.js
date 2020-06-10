@@ -279,7 +279,7 @@ For any questions regarding payments please contact UAPAY at (044) 364-11-44`,
   chat_rooms: {
     header: 'Chats and Orders',
     error: 'Error fetching chats',
-    empty_state_message: 'No chats/orders found - yet',
+    empty_state_message: 'No conversation/orders found - yet',
     my_message_prefix: 'You: ',
   },
   chat: {

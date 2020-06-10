@@ -25,6 +25,7 @@ import { store } from '../App';
 import type { Dispatch, UserData, ReduxState, Product } from '../types';
 
 import type { NavigationScreenProp } from 'react-navigation';
+import Loader from '../components/Loader';
 
 type Props = {
   dispatch: Dispatch,
@@ -81,6 +82,8 @@ export class CreateDropScreen extends React.Component<Props, State> {
       }
     },
   });
+
+  initialDate: Date;
 
   state = {
     datetime: new Date(),
@@ -153,11 +156,13 @@ export class CreateDropScreen extends React.Component<Props, State> {
   }
 
   canCreateDrop() {
-    const { mobileNumber, paymentInfo, shippingAddress: s } = this.props.userData;
+    const { mobileNumber, paymentInfo: p, shippingAddress: s } = this.props.userData;
 
     return (
       mobileNumber &&
-      ((paymentInfo.short && paymentInfo.short.last_four) || (paymentInfo.full && paymentInfo.full.last_four)) &&
+      p &&
+      ((p.short && p.short.last_four) || (p.full && p.full.last_four)) &&
+      s &&
       s.firstName &&
       s.lastName &&
       s.city &&
@@ -450,7 +455,9 @@ export class CreateDropScreen extends React.Component<Props, State> {
             </NBButton>
           </Right>
         </Header>
-        {isLoading ? null : (
+        {isLoading ? (
+          <Loader />
+        ) : (
           <>
             <>
               {this.shouldShowAccountNotVerifiedNoticeBar() ? (

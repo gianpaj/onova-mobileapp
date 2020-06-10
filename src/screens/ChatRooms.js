@@ -350,7 +350,7 @@ class ChatContainer extends Component<Props, State> {
               }
               renderItem={this._renderRoomRow}
               // style={st.root}
-              // contentContainerStyle={{ flexGrow: 1 }}
+              contentContainerStyle={{ flexGrow: 1 }}
             />
           )}
         </View>

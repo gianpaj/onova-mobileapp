@@ -19,9 +19,9 @@ let config: {
 let isProd = false;
 if (NODE_ENV === 'prod' || NODE_ENV === 'production') {
   isProd = true;
-  config = require('../../config-dev.json');
-} else {
   config = require('../../config-prod.json');
+} else {
+  config = require('../../config-dev.json');
 }
 
 const analyticsEnabled = !__DEV__;

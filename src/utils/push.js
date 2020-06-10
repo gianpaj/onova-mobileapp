@@ -124,10 +124,17 @@ export async function registerPushNotifications(): Promise<string> {
 //   });
 // }
 
-async function navigate(notif) {
+async function navigate(notif: OnovaNotification) {
   console.log(notif);
   firebase.notifications().removeDeliveredNotification(notif.notificationId);
-  if (notif.data && notif.data.triggeredType) {
+  if (!notif.data) {
+    addErrorBreadcrumb({
+      category: 'push-notifications',
+      error: new Error('navigate: no data key in push notification'),
+    });
+    return;
+  }
+  if (notif.data.triggeredType) {
     const { triggeredType, triggeredBy, productUuid, senderName } = notif.data;
     // TODO: show Toast error cannot navigate
 
@@ -193,23 +200,27 @@ type OnovaNotification = Notification & {
     sendbird?: string,
   },
   sentTime?: number,
+  from?: string,
+  messageId?: string,
 };
 
 async function handleNotification(msg: OnovaNotification) {
+  const { data } = msg;
   console.log('push-notification');
   console.log(msg);
-  const { data } = msg;
 
   let notification;
+  let payload: SendbirdMessage;
   if (data.sendbird) {
+    payload = JSON.parse(data.sendbird);
     console.log('data.sendbird');
-    const payload: SendbirdMessage = JSON.parse(data.sendbird);
     console.log(payload);
     notification = new firebase.notifications.Notification({ show_in_foreground: true })
       .setNotificationId(msg.messageId)
-      .setTitle(payload.push_alert)
-      .setSubtitle(`Number of unread messages: ${payload.unread_message_count}`)
-      // .setBody(data.message)
+      .setTitle(payload.sender.name)
+      // .setTitle(payload.push_alert)
+      // .setSubtitle(`Number of unread messages: ${payload.unread_message_count}`)
+      .setBody(payload.message)
       .setData(payload);
     addPushNotifBreadcrumb({ message: payload.push_alert, data: { sentTime: msg.sentTime, ...payload } });
   } else {
@@ -224,6 +235,9 @@ async function handleNotification(msg: OnovaNotification) {
     notification.android.setPriority(parseInt(msg.data.priority) || firebase.notifications.Android.Priority.High);
     notification.android.setSmallIcon('ic_stat_ic_notification');
     notification.android.setChannelId('channelId');
+    if (payload && payload.sender.profile_url) {
+      notification.android.setLargeIcon(payload.sender.profile_url);
+    }
   }
   // You've received a notification that hasn't been displayed by the OS
   // To display it whilst the app is in the foreground, simply call the following

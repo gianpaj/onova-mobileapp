@@ -29,8 +29,10 @@ if (__DEV__ && !global.__TESTING__) {
     // firstperson
     emailAddress: 'gianpa+test@gmail.com',
     password: 'expressos',
+    // emailAddress: 'gianpa@gmail.com',
+    // password: '***REMOVED***',
   };
-  if (Platform.OS === 'android') {
+  if (Platform.OS == 'ios') {
     // iosuser
     defaultState = {
       emailAddress: 'gianpa+test3@gmail.com',

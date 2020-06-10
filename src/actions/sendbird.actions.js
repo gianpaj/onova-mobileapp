@@ -168,7 +168,7 @@ export const initializeSendbird = (userData: UserData): Promise<UserData> =>
 
     // if (!sb) return reject('Sendbird is not initialized');
 
-    sbConnect(userData._id, userData.displayName)
+    sbConnect(userData._id, userData.username)
       .then(() => {
         console.log('Sendbird: connected');
         clearTimeout(timer);

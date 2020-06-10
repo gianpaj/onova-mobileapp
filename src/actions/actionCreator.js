@@ -182,16 +182,16 @@ const signup = (data: SignupData) => (dispatch: Dispatch) => {
         trackUser(res.data);
         Analytics.track('signup');
       }
+      clearTimeout(timer);
+      Toast.hide();
       return res.data;
-    })
-    .then(userData => initializeSendbird(userData))
-    .then(userData => {
-      dispatch({ type: ACTION_TYPES.SIGNUP_SUCCESS, payload: userData });
-      addNavigationBreadcrumb({ message: ACTION_TYPES.SIGNUP_SUCCESS });
-      return registerPushNotifications().then(pushToken => {
-        sendBirdPushSetup(pushToken);
-        sendToken(pushToken, userData, userData.token);
-      });
+      // .then(userData => initializeSendbird(userData))
+      // .then(userData => {
+      // User needs to first verify the account and then login
+      // return registerPushNotifications().then(pushToken => {
+      //   sendBirdPushSetup(pushToken);
+      //   sendToken(pushToken, userData, userData.token);
+      // });
     })
     .catch((error: APIError) => {
       clearTimeout(timer);
@@ -285,11 +285,6 @@ const skip = () => (dispatch: Dispatch) => {
 };
 
 const sendToken = (pushToken: string, userData: UserData, token: string): Promise<any> => {
-  const data = {
-    platform: Platform.OS,
-    pushToken,
-  };
-
   // hack iOS01: to allow the login to continue even though the user denied permission
   if (typeof pushToken !== 'string') return Promise.resolve();
   if (!enabledSendbird) {
@@ -301,6 +296,11 @@ const sendToken = (pushToken: string, userData: UserData, token: string): Promis
 
     return Promise.resolve();
   }
+
+  const data = {
+    platform: Platform.OS,
+    pushToken,
+  };
 
   return api
     .put(`/api/users/${userData._id}`, data, { token })
@@ -333,7 +333,7 @@ const handleErrorWithAlert = (data: any, error: any, buttonText?) => {
   addErrorBreadcrumb({
     category: 'misc',
     error,
-    level: errorType == 'danger' ? 'error ' : 'warning',
+    level: errorType == 'danger' ? 'error' : 'warning',
   });
   if (!global.__TESTING__) {
     ui.showToast(error.message, errorType || '', buttonText);

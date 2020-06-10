@@ -138,47 +138,54 @@ async function navigate(notif: OnovaNotification) {
     const { triggeredType, triggeredBy, productUuid, senderName } = notif.data;
     // TODO: show Toast error cannot navigate
 
-    // follow or new drop has been listed
-    if (triggeredType == 'User') {
-      console.debug(triggeredBy);
-      addPushNotifBreadcrumb({
-        message: `should navigate to: ${triggeredType} ${senderName}`,
-      });
-      return NavigationService.navigate('profileInStack', { _id: triggeredBy }, `profile-${senderName}`);
+    console.debug(triggeredBy);
+    switch (triggeredType) {
+      // follow or new drop has been listed
+      case 'User':
+        addPushNotifBreadcrumb({
+          message: `should navigate to: ${triggeredType} ${senderName}`,
+        });
+        return NavigationService.navigate('profileInStack', { _id: triggeredBy }, `profile-${senderName}`);
+      case 'Product':
+        console.debug(productUuid);
+        addPushNotifBreadcrumb({
+          message: `should navigate to: ${triggeredType} ${productUuid}`,
+        });
+        const product = await api.getProduct(productUuid); // TODO: unnecessary API call??
+        return NavigationService.navigate('product', product, `product-${product.uuid}`);
+      case 'Sendbird':
+        const channelUrl = notif.data.channel.channel_url;
+        addPushNotifBreadcrumb({
+          message: `should navigate to: ${triggeredType} ${channelUrl}`,
+        });
+        return NavigationService.navigate('chat', { channelUrl }, `chat-${channelUrl}`);
+      case 'Order':
+        const extra = JSON.parse(notif.data.extra);
+        console.debug(extra);
+        addPushNotifBreadcrumb({
+          message: `should navigate to: ${triggeredType} ${triggeredBy}`,
+        });
+        // order needs confirmation
+        if (extra.status == 'paid')
+          return NavigationService.navigate('confirmOrder', { id: triggeredBy }, 'confirmOrder');
+        break;
+      case 'Drop':
+        addPushNotifBreadcrumb({
+          message: `should navigate to: ${triggeredType} ${triggeredBy}`,
+        });
+        return NavigationService.navigate(
+          'profileInStack',
+          { _id: triggeredBy, tab: 'drops' },
+          `profile-${senderName}`
+        );
+      default:
+        break;
     }
-    if (triggeredType == 'Product') {
-      console.debug(productUuid);
-      addPushNotifBreadcrumb({
-        message: `should navigate to: ${triggeredType} ${productUuid}`,
-      });
-      const product = await api.getProduct(productUuid);
-      return NavigationService.navigate('product', product, `product-${product.uuid}`);
-    }
-    if (triggeredType == 'Room') {
-      console.debug(triggeredBy);
-      addPushNotifBreadcrumb({
-        message: `should navigate to: ${triggeredType} ${triggeredBy}`,
-      });
-      return NavigationService.navigate('chat', { roomId: triggeredBy }, `chat-${triggeredBy}`);
-    }
-    const extra = JSON.parse(notif.data.extra);
-    if (triggeredType === 'Order') {
-      console.debug(triggeredBy);
-      console.debug(extra);
-      addPushNotifBreadcrumb({
-        message: `should navigate to: ${triggeredType} ${triggeredBy}`,
-      });
-      // order needs confirmation
-      if (extra.status == 'paid')
-        return NavigationService.navigate('confirmOrder', { id: triggeredBy }, 'confirmOrder');
-    }
-    if (triggeredType === 'Drop') {
-      console.debug(triggeredBy);
-      addPushNotifBreadcrumb({
-        message: `should navigate to: ${triggeredType} ${triggeredBy}`,
-      });
-      return NavigationService.navigate('profileInStack', { _id: triggeredBy, tab: 'drops' }, `profile-${senderName}`);
-    }
+  }
+
+  if (notif.isSendbirdNotification) {
+    console.log('send bird push navigation');
+    console.log(notif.data);
   }
 }
 // TODO: on log out
@@ -198,6 +205,10 @@ type OnovaNotification = Notification & {
   data: {
     [string]: string,
     sendbird?: string,
+    triggeredType?: string,
+    channel?: {
+      channel_url: string,
+    },
   },
   sentTime?: number,
   from?: string,
@@ -221,7 +232,7 @@ async function handleNotification(msg: OnovaNotification) {
       // .setTitle(payload.push_alert)
       // .setSubtitle(`Number of unread messages: ${payload.unread_message_count}`)
       .setBody(payload.message)
-      .setData(payload);
+      .setData({ ...payload, triggeredType: 'Sendbird' });
     addPushNotifBreadcrumb({ message: payload.push_alert, data: { sentTime: msg.sentTime, ...payload } });
   } else {
     notification = new firebase.notifications.Notification()

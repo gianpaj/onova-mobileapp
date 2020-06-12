@@ -72,7 +72,12 @@ const StackNav = StackNavigator(
       screen: Chat,
       path: 'chat/:name',
     },
-    checkout: { screen: Checkout },
+    checkout: {
+      screen: Checkout,
+      navigationOptions: {
+        gesturesEnabled: false,
+      },
+    },
     enterCardInfo: { screen: EnterCardInfo },
     paymentView: { screen: PaymentView },
     // suggestions: { screen: Suggestions },

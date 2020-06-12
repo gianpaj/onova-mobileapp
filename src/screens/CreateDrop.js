@@ -217,7 +217,6 @@ export class CreateDropScreen extends React.Component<Props, State> {
   }
 
   requestPermission = () => {
-    // $FlowFixMe
     Permissions.request('location').then(response => {
       // Returns once the user has chosen to 'allow' or to 'not allow' access
       // Response is one of: 'authorized', 'denied', 'restricted' or 'undetermined'

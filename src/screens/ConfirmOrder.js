@@ -18,7 +18,7 @@ import * as ui from '../utils/ui';
 import * as api from '../utils/api';
 
 import type { NavigationScreenProp } from 'react-navigation';
-import type { Order, UserData, ReduxState, Product } from '../types';
+import type { Order, UserData, ReduxState, Product, BuyerType } from '../types';
 
 const { width } = Dimensions.get('window');
 
@@ -31,8 +31,9 @@ type State = {
   isLoading: boolean,
   isPending: boolean,
   dialogVisible: boolean,
-  order: ?Order,
-  buyer: ?UserData,
+  order?: Order,
+  buyer?: UserData,
+  buyerType?: BuyerType,
 };
 
 export class ConfirmOrderContainer extends Component<Props, State> {
@@ -40,9 +41,6 @@ export class ConfirmOrderContainer extends Component<Props, State> {
     isLoading: true,
     isPending: false,
     dialogVisible: false,
-    order: null,
-    buyer: null,
-    buyerType: null,
   };
 
   async componentDidMount() {
@@ -90,6 +88,8 @@ export class ConfirmOrderContainer extends Component<Props, State> {
 
     this.setState({ isPending: true });
     try {
+      if (!this.state.order) throw new Error('no order');
+
       await api.put(`/api/orders/${this.state.order.id}`, { reason, status: 'cancelled' }, { token });
       // console.warn('cancelled', this.state.order.id, reason);
       Toast.info(I18n.t('confirm_order.cancellation_success'));
@@ -105,23 +105,23 @@ export class ConfirmOrderContainer extends Component<Props, State> {
 
   onConfirm = async () => {
     const { token } = this.props;
-    const { order } = this.state;
 
     Toast.loading(I18n.t('alerts.loading_message'), 30);
 
     this.setState({ isPending: true });
     try {
+      if (!this.state.order) throw new Error('no order');
+      const { order } = this.state;
       const { data } = await api.put(`/api/orders/${order.id}`, { status: 'confirmed' }, { token });
       console.debug(data);
-      Toast.hide();
       Toast.success(I18n.t('confirm_order.confirmation_success'), 5);
       this.goToChat(order.id);
     } catch (err) {
-      Toast.hide();
       Toast.fail(err.message, 3);
       console.log(err);
       this.setState({ isPending: false });
     }
+    Toast.hide();
   };
 
   goBackAndRefresh() {

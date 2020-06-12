@@ -322,6 +322,7 @@ class CheckoutContainer extends Component<Props, State> {
       });
   }
 
+  // FIXME:
   goToChat(orderId: string) {
     this.props.navigation.dispatch({
       key: `chat-${orderId}`,
@@ -377,6 +378,7 @@ class CheckoutContainer extends Component<Props, State> {
   };
 
   goToPay = async (orderId: string, cvc: string) =>
+    // $FlowFixMe
     this.props.navigation.navigate({
       routeName: 'paymentView',
       key: 'paymentView',

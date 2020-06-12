@@ -34,7 +34,7 @@ import type { NavigationScreenProp } from 'react-navigation';
 import { addErrorBreadcrumb } from '../utils/analytics';
 import { Header, Send, Info, Title, Icon } from '../components';
 import ChatActions from '../components/ChatActions';
-import MessageImage from '../components/MessageImage';
+// import MessageImage from '../components/MessageImage';
 
 import type { Order, ReduxState, UserData, SendbirdMessage } from '../types';
 import colors from '../config/colors';

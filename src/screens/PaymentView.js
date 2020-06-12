@@ -12,7 +12,7 @@ import * as ui from '../utils/ui';
 import I18n from '../i18n';
 
 import type { NavigationScreenProp } from 'react-navigation';
-import type { ReduxState, Dispatch } from '../types';
+import type { ReduxState, Dispatch, PaymentResponse } from '../types';
 
 // for development
 // const params = { orderId: '5bdb0ced6a7aef00de9da722', cvc: '111' };
@@ -24,11 +24,7 @@ type Props = {
 };
 
 type State = {
-  payment?: {
-    redirectUrl: string,
-    PaReq: string,
-    url: string,
-  },
+  payment?: PaymentResponse,
   isLoading: boolean,
   showFooter: boolean,
 };
@@ -48,10 +44,10 @@ class PaymentView extends Component<Props, State> {
     Toast.loading('', 30);
     try {
       const payment = await this.createPayment();
-      console.debug(payment);
+      console.log(payment);
       this.setState({ payment, isLoading: false });
     } catch (error) {
-      console.debug(error);
+      console.log(error);
       ui.showToast(error.message, 'danger');
       this.props.navigation.goBack();
     }
@@ -72,7 +68,7 @@ class PaymentView extends Component<Props, State> {
 
   _keyboardDidHide = () => this.setState({ showFooter: true });
 
-  async createPayment(): Promise<any> {
+  async createPayment(): Promise<PaymentResponse> {
     const { token, navigation } = this.props;
     const { params } = navigation.state;
     const { data } = await api.post(`/api/orders/${params.orderId}/pay`, { cvc: params.cvc }, { token });

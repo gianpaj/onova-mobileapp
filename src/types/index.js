@@ -187,12 +187,14 @@ type UserDataShorter = {
   username: string,
 };
 
+export type BuyerType = 'User' | 'UserWeb';
+
 export type Order = {
   archivedByBuyer: boolean,
   archivedBySeller: boolean,
   id: string,
   buyer: UserDataShorter,
-  buyerType: 'User' | 'UserWeb',
+  buyerType: BuyerType,
   cityRecipient: string,
   citySender: string,
   currency: string,
@@ -289,3 +291,5 @@ type PromiseAction = Promise<ReduxAction>;
 type ThunkAction = (dispatch: Dispatch, getState: GetState) => any;
 export type Dispatch = (action: ReduxAction | ThunkAction | PromiseAction) => any;
 export type GetState = () => ReduxState;
+
+export * from './order';

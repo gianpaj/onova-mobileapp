@@ -376,14 +376,6 @@ export class ProductContainer extends React.Component<Props, State> {
         }
         if (analyticsEnabled) Analytics.track('press_buy', { uuid: product.uuid });
 
-        // this.props.navigation.navigate({
-        //   routeName: 'chat',
-        //   params: {
-        //     productUuid: product.uuid,
-        //     roomId: -1,
-        //     userId: product.seller.id,
-        //   },
-        // });
         this.props.navigation.navigate({
           routeName: 'checkout',
           params: product,

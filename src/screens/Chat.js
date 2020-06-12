@@ -36,7 +36,7 @@ import { Header, Send, Info, Title, Icon } from '../components';
 import ChatActions from '../components/ChatActions';
 // import MessageImage from '../components/MessageImage';
 
-import type { Order, ReduxState, UserData, SendbirdMessage } from '../types';
+import type { Order, ReduxState, UserData, SendbirdMessage, BuyerType } from '../types';
 import colors from '../config/colors';
 import settings from '../config/settings';
 import * as api from '../utils/api';
@@ -58,7 +58,7 @@ type Props = typeof actionCreators & {
 };
 
 type State = {
-  buyerType: 'User' | 'UserWeb',
+  buyerType: BuyerType,
   infoDialogVisible: boolean,
   partner?: UserData,
   isLoading: boolean,
@@ -90,7 +90,7 @@ class ChatContainer extends Component<Props, State> {
   };
 
   componentDidMount() {
-    let { params }: { params: { channelUrl: string, orderId?: string } } = this.props.navigation.state;
+    let { params }: { params: { channelUrl: string } } = this.props.navigation.state;
 
     // refresh after leaving a review or archiving an order
     this.willFocusListener = this.props.navigation.addListener('willFocus', () => {
@@ -132,7 +132,7 @@ class ChatContainer extends Component<Props, State> {
   }
 
   _componentInit = () => {
-    const { params }: { params: { channelUrl: string, orderId?: string } } = this.props.navigation.state;
+    const { params }: { params: { channelUrl: string } } = this.props.navigation.state;
     this.props.channelProgress(false);
     this.props.getChannelTitle(params.channelUrl);
     this.props.createChatHandler(params.channelUrl);
@@ -142,62 +142,31 @@ class ChatContainer extends Component<Props, State> {
     }, MARK_AS_READ_AFTER_MS);
   };
 
-  async initialise(channelUrl: string, orderId?: string) {
-    let thisRoom;
+  async initialise(channelUrl: string) {
     // return new Promise((resolve, reject) => {
     // this.rejectProm = reject;
     const sb = Sendbird.getInstance();
     if (!sb) return Promise.reject('Sendbird is not initialized');
-    if (!orderId && !channelUrl) return Promise.reject('either orderId or channelUrl are missing');
+    if (!channelUrl) return Promise.reject('channelUrl ise missing');
 
     this.props.initChatScreen();
-    const Promises = [
-      sbGetChannel(channelUrl).then(channel => {
-        this.setPartner(channel, channel);
-        return this.setState({ channel, channelUrl });
-      }),
 
-      this.fetchOrders(thisRoom),
-      this._componentInit(),
-    ];
-
-    // coming from ChatRooms or a Push Notification
-    if (!channelUrl && orderId) {
-      Promises.push(api.getOrder(orderId, this.props.token));
-    }
     try {
-      await Promise.all(Promises);
+      await Promise.all([
+        sbGetChannel(channelUrl).then(channel => {
+          this.setPartner(channel, channel);
+          return this.setState({ channel, channelUrl });
+        }),
+
+        this.fetchOrders(channelUrl),
+        this._componentInit(),
+      ]);
     } catch (error) {
       addErrorBreadcrumb({
         category: 'chat',
-        errMsg: `Error joining room ID: ${channelUrl}`,
+        errMsg: `Error joining channelUrl: ${channelUrl}`,
       });
     }
-
-    // else join an existing room or create one
-
-    // // joinable rooms are those you're not a member of
-    // return sendBirdCurrentUser
-    //   .getJoinableRooms()
-    //   .then((rooms: Array<any>) => {
-    //     const allRooms = [...rooms, ...sendBirdCurrentUser.rooms];
-    //     return allRooms.filter(r => r.name == getRoomName(o));
-    //   })
-
-    //     // check if there's a previously created room,
-    //     // by a partner (seller) or myself
-
-    //     let addUserIds = [o.buyer._id, userData._id];
-    //     if (o.buyerType === 'UserWeb') {
-    //       addUserIds = [ONOVA_BOT_ID, userData._id];
-    //     }
-
-    //     // no existing room existed
-    //     return sendBirdCurrentUser
-    //       .createRoom({
-    //         name: getRoomName(o),
-    //         addUserIds,
-    //       })
   }
 
   _getMessageList = async (init: boolean) => {
@@ -242,7 +211,7 @@ class ChatContainer extends Component<Props, State> {
   };
 
   // and set partner (if UserWeb)
-  fetchOrders = (thisRoom: any) => {
+  fetchOrders = (channelUrl: string) => {
     const { userData, token } = this.props;
     console.debug('fetchOrders');
     return new Promise((resolve, reject) => {
@@ -252,7 +221,7 @@ class ChatContainer extends Component<Props, State> {
         // orders which are with the person I'm chatting with
         .then(orders =>
           orders
-            .filter((o: Order) => getRoomName(o) == thisRoom.name)
+            .filter((o: Order) => getRoomName(o) == channelUrl)
             .filter((o: Order) => !['paid', 'cancelled', 'pending', 'reserved'].includes(o.status))
         )
         // show orders which i have not archived
@@ -290,13 +259,13 @@ class ChatContainer extends Component<Props, State> {
   };
 
   onSend = async (messages: Array<SendbirdMessage>) => {
-    const { token, onSendButtonPress } = this.props;
+    const { token } = this.props;
     try {
       if (messages[0].text) {
         const { text } = messages[0];
         const { channelUrl }: { channelUrl: string } = this.props.navigation.state.params;
 
-        onSendButtonPress(channelUrl, text);
+        this.props.onSendButtonPress(channelUrl, text);
         // if (this.props && this.props.list && this.props.list.length > 0) {
         //   this.flatList.scrollToIndex({
         //     index: 0,

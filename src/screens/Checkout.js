@@ -184,7 +184,7 @@ class CheckoutContainer extends Component<Props, State> {
         if (err.data && err.data.data) {
           const { data } = err.data;
           if (err.message == 'Duplicate order' && data.status == 'confirmed') {
-            return this.goToChat(data.id);
+            return this.goToChat(data.channelUrl);
           }
 
           if (data.status == 'pending' || data.status == 'cancelled') {
@@ -322,13 +322,13 @@ class CheckoutContainer extends Component<Props, State> {
       });
   }
 
-  // FIXME:
-  goToChat(orderId: string) {
+  goToChat(channelUrl: string) {
+    // $FlowFixMe
     this.props.navigation.dispatch({
-      key: `chat-${orderId}`,
+      key: `chat-${channelUrl}`,
       type: 'ReplaceCurrentScreen',
       routeName: 'chat',
-      params: { orderId },
+      params: { channelUrl },
     });
   }
 

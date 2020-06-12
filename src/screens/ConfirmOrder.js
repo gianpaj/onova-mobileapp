@@ -113,11 +113,11 @@ export class ConfirmOrderContainer extends Component<Props, State> {
       if (!this.state.order) throw new Error('no order');
       const { order } = this.state;
       const { data } = await api.put(`/api/orders/${order.id}`, { status: 'confirmed' }, { token });
-      console.debug(data);
+      console.log(data);
       Toast.success(I18n.t('confirm_order.confirmation_success'), 5);
-      this.goToChat(order.id);
+      this.goToChat(data.channelUrl);
     } catch (err) {
-      Toast.fail(err.message, 3);
+      ui.showToast(err.message, 'danger', 'OK', 3);
       console.log(err);
       this.setState({ isPending: false });
     }
@@ -129,13 +129,13 @@ export class ConfirmOrderContainer extends Component<Props, State> {
     this.props.navigation.goBack();
   }
 
-  goToChat(orderId: string) {
+  goToChat(channelUrl: string) {
     // $FlowFixMe
     this.props.navigation.dispatch({
-      key: `chat-${orderId}`,
+      key: `chat-${channelUrl}`,
       type: 'ReplaceCurrentScreen',
       routeName: 'chat',
-      params: { orderId },
+      params: { channelUrl },
     });
   }
 

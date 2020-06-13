@@ -45,6 +45,13 @@ class PaymentView extends Component<Props, State> {
     try {
       const payment = await this.createPayment();
       console.log(payment);
+
+      // if demo using a virtual card, and ??
+      if (payment.type == 'LOOKUP') {
+        Toast.hide();
+        this.onFinished();
+        return;
+      }
       this.setState({ payment, isLoading: false });
     } catch (error) {
       console.log(error);

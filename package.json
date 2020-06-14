@@ -1,6 +1,6 @@
 {
   "name": "onova",
-  "version": "1.9.2",
+  "version": "1.9.3",
   "private": true,
   "repository": {
     "type": "git",
@@ -8,8 +8,10 @@
   },
   "scripts": {
     "build-android-drop": "cd android/ && ENVFILE=.env.drop ./gradlew bundleDropRelease",
+    "assemble-android-drop": "cd android/ && ENVFILE=.env.drop ./gradlew assembleDropRelease",
     "build-android-drop-codepush": "ENVFILE=.env.drop appcenter codepush release-react --app onova/drop-android --target-binary-version '^1.9.0' --extra-bundler-option=\"--reset-cache\"",
     "build-android-onova": "cd android/ && ENVFILE=.env.onova ./gradlew bundleOnovaRelease",
+    "assemble-android-onova": "cd android/ && ENVFILE=.env.onova ./gradlew assembleDropRelease",
     "build-android-onova-codepush": "ENVFILE=.env.onova appcenter codepush release-react --app onova/onova-android --target-binary-version '^1.9.0' --extra-bundler-option=\"--reset-cache\"",
     "build-ios-drop-codepush": "ENVFILE=.env.drop appcenter codepush release-react --plist-file-prefix drop --app onova/drop-ios --target-binary-version '^1.9.0' --extra-bundler-option=\"--reset-cache\"",
     "build-ios-onova-codepush": "ENVFILE=.env.onova appcenter codepush release-react --plist-file-prefix onova --app onova/onova-ios --target-binary-version '^1.9.0' --extra-bundler-option=\"--reset-cache\"",

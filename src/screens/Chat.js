@@ -152,13 +152,13 @@ class ChatContainer extends Component<Props, State> {
     this.props.initChatScreen();
 
     try {
+      await this.fetchOrders(channelUrl);
       await Promise.all([
         sbGetChannel(channelUrl).then(channel => {
-          this.setPartner(channel, channel);
+          this.setPartner(channel);
           return this.setState({ channel, channelUrl });
         }),
 
-        this.fetchOrders(channelUrl),
         this._componentInit(),
       ]);
     } catch (error) {
@@ -189,23 +189,21 @@ class ChatContainer extends Component<Props, State> {
     }
   };
 
-  setPartner = async (order: Order, channel?: Sendbird.GroupChannel) => {
-    const { userData } = this.props;
+  setPartner = async (channel: Sendbird.GroupChannel) => {
+    const { userData, token } = this.props;
+    const {
+      orders: [order],
+    } = this.state;
     let partner: UserData;
-    // existing channel
-    if (channel) {
-      const sbPartner = getPartner(channel, userData._id);
-      partner = await api.getUser(sbPartner.userId);
-    } else if (order.buyerType === 'UserWeb') {
-      // $FlowFixMe
-      partner = {
-        _id: ONOVA_BOT_ID,
-        username: `${order.buyer.displayName} (web)`,
-      };
+    const sbPartner = getPartner(channel, userData._id);
+    console.warn('orders', order);
+    if (order.buyerType == 'UserWeb') {
+      this.setState({ buyerType: 'UserWeb' });
+      partner = await api.getUserWeb(sbPartner.userId, token);
+      partner.username = `${order.buyer.displayName} (web)`;
       this.setState({ buyerType: 'UserWeb' });
     } else {
-      // creating new room (order confirmed by seller)
-      partner = await api.getUser(order.buyer._id);
+      partner = await api.getUser(sbPartner.userId);
     }
     this.setState({ partner });
   };
@@ -377,7 +375,7 @@ class ChatContainer extends Component<Props, State> {
         <Dialog.Title>{I18n.t('home.alert_info_title')}</Dialog.Title>
 
         <ParsedText
-          style={{ marginTop: 4, margin: 18 }}
+          style={{ marginTop: 4, margin: 18, textAlign: 'center' }}
           parse={[
             {
               pattern: linking.URLpattern,
@@ -391,7 +389,9 @@ class ChatContainer extends Component<Props, State> {
             },
           ]}>
           {/* eslint-disable-next-line react-native/no-raw-text */}
-          {I18n.t('chat.user_dialog.mobile_mumber') + ': ' + this.state.partner.mobileNumber}
+          {`${this.state.partner.displayName}\n${I18n.t('chat.user_dialog.mobile_mumber')}: ${
+            this.state.partner.mobileNumber
+          }`}
         </ParsedText>
         <Dialog.Button label={I18n.t('product.toast_warning_ok_button')} onPress={this.toggleUserDialog} />
       </Dialog.Container>

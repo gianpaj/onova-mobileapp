@@ -43,7 +43,6 @@ import * as api from '../utils/api';
 import * as linking from '../utils/linking';
 
 const MARK_AS_READ_AFTER_MS = 300;
-const ONOVA_BOT_ID = '5bd1f7af46c62e6cdee546d0';
 
 type Props = typeof actionCreators & {
   navigation: NavigationScreenProp<{|

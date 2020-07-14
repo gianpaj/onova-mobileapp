@@ -117,6 +117,9 @@ def getNpmVersion() {
 def getGitVersion() {
     def process = "git rev-list master --first-parent --count".execute()
     return process.text.toInteger()
+    // for the Drop
+    // return 4195695 + process.text.toInteger()
+    // project.env.get("VERSION_CODE_INITIAL")
 }
 
 def userVer = getNpmVersion()

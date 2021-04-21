@@ -8,12 +8,7 @@ workflows:
         instance_type: mac_mini
         environment:
             vars:
-                GCLOUD_SERVICE_ACCOUNT_CREDENTIALS: Encrypted(...) # <-- Put encrypted CONTENTS of your Gloud crendentials file here
                 PACKAGE_NAME: "com.onova.co" # <-- Put your package name here e.g. com.domain.myapp
-                CM_KEYSTORE: Encrypted(...) # <-- Put your encrypted keystore file here
-                CM_KEYSTORE_PASSWORD: Encrypted(...) # <-- Put your encrypted keystore password here
-                CM_KEY_ALIAS_PASSWORD: Encrypted(...) # <-- Put your encrypted keystore alias password here
-                CM_KEY_ALIAS_USERNAME: Encrypted(...) # <-- Put your encrypted keystore alias username here 
             node: latest
         triggering:
             events:

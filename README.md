@@ -1,16 +1,48 @@
+# Onova and Drop mobile apps (`mobileapp`)
+
+> Part of [Onova](https://www.onova.co/), a mobile marketplace for second-hand and sustainable clothing that [Gianfranco Palumbo](https://github.com/gianpaj) and Alex Kostinskyi built in Lviv, Ukraine. The company ran until September 2019. This repository is an archive and is not maintained.
+
+One React Native codebase that builds two apps, Onova and Drop, through Android product flavours and iOS targets. The app mixes e-commerce with a social network: buyers follow shops to build a personal feed, "Instagram with a buy button". Sellers list clothing in batches called drops and announce each one ahead of time. Buyers subscribe to a drop, get a notification when it opens and compete to buy the items. Checkout, escrow payments and delivery tracking all happen in the app.
+
+- React Native 0.59, Redux and Flow, with English and Ukrainian translations
+- Chat on Pusher ChatKit, later Sendbird; push notifications with Firebase Cloud Messaging
+- Over-the-air updates with CodePush; builds on CodeShip and Codemagic
+
+| | |
+|---|---|
+| First commit | 2017-11-17 |
+| Last commit | 2021-04-25 (the company ran until September 2019) |
+| Commits | 1,565 by Gianfranco (1,127 of them in 2018) |
+| Code | about 22,300 lines of JavaScript across 32 screens |
+| Tests | 19 test files (Jest and Enzyme) |
+| Releases | 12 tags, from 1.0.0 (2018-07-29) to Android build 13 / iOS build 11 (2019-09-12) |
+
+### Onova repositories
+
+- [onova-mobileapp](https://github.com/gianpaj/onova-mobileapp): the Onova and Drop iOS and Android apps
+- [onova-server.data](https://github.com/gianpaj/onova-server.data): the REST API
+- [onova-server.data.global](https://github.com/gianpaj/onova-server.data.global): the API fork for an international version
+- [onova-server.push](https://github.com/gianpaj/onova-server.push): push notifications
+- [onova-server.chat](https://github.com/gianpaj/onova-server.chat): order messages in buyer–seller chats
+- [onova-webapp-drop](https://github.com/gianpaj/onova-webapp-drop): the Drop web app
+- [onova-forest-admin](https://github.com/gianpaj/onova-forest-admin): the back office
+- [onova-automl-server](https://github.com/gianpaj/onova-automl-server): an image classifier prototype
+
+---
+
 <!-- @prettier -->
 
-# Onova and Drop mobile apps
+## Original README
 
 Onova
 
 - Android app: [link](https://play.google.com/store/apps/details?id=uno.drop.app&hl=uk)
-- iOS app: [link](https://itunes.apple.com/ua/app/drop/id1462884885?mt=8)
+- iOS app: [link](https://itunes.apple.com/ua/app/onova/id1365771422?mt=8)
 
 Drop
 
 - Android app: [link](https://play.google.com/store/apps/details?id=com.onova.app&hl=uk)
-- iOS app: [link](https://itunes.apple.com/ua/app/onova/id1365771422?mt=8)
+- iOS app: [link](https://itunes.apple.com/ua/app/drop/id1462884885?mt=8)
 
 > Created using React Native CLI (`react-native`), not the Create React Native App (CRNA) or Expo client.
 
